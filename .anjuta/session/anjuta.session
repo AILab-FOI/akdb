@@ -1,0 +1,12 @@
+
+[Anjuta]
+Maximized=1
+Geometry=1280x949+0+27
+
+[File Loader]
+Files=file:///media/disk-3/myProgramming/kalashnikovdb/src/main.c#22%%%///media/disk-3/myProgramming/kalashnikovdb/src/dbman.h#54%%%///media/disk-3/myProgramming/kalashnikovdb/src/dbman.c#20
+
+[Execution]
+Program arguments=
+Run in terminal=2
+Last selected uri=file:///media/disk-3/myProgramming/kalashnikovdb/src/kalashnikov-db
