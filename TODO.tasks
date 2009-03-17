@@ -1,6 +1,22 @@
 <?xml version="1.0"?>
 <gtodo>
-  <category title="Personal" place="0"/>
+  <category title="Personal" place="0">
+    <item>
+      <attribute id="1237308491" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237308491"/>
+      <summary>Sustavski katalog - relacije, indeksi, pogledi, ...</summary>
+      <comment>Sustavski katalog - inicijalizacija
+
+Potrebno je implementirati funkciju int KK_init_sc_data_objects() koja &#x107;e kreirati 5 novih segmenata:
+
+- KK_relations
+- KK_indices
+- KK_views
+- KK_sequences
+- KK_triggers
+
+Pretpostavite da postoji funkcija KK_new_segment( </comment>
+    </item>
+  </category>
   <category title="Business" place="1"/>
   <category title="Unfiled" place="2"/>
 </gtodo>

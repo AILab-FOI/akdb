@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-
 typedef struct {
 	int type;
 	char att_name[ MAX_ATT_NAME ];
