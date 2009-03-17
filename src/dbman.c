@@ -25,7 +25,8 @@ int KK_init_db_file( int size )
 	register int i, j, k;
 	
 	KK_header head[ MAX_ATTRIBUTES ];
-	KK_tuple_dict data[ DATA_BLOCK_SIZE ];
+	KK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
+	int data[ DATA_BLOCK_SIZE ][ DATA_ENTRY_SIZE ];
 	KK_block * block = ( KK_block * ) malloc ( sizeof( KK_block ) );
 	
 	db_file_size = size;
@@ -64,9 +65,13 @@ int KK_init_db_file( int size )
 
 	for( i = 0; i < DATA_BLOCK_SIZE; i++ )
 	{
-		data[ i ].type = FREE_INT;
-		data[ i ].address = FREE_INT;
-		data[ i ].size = FREE_INT;
+		tuple_dict[ i ].type = FREE_INT;
+		tuple_dict[ i ].address = FREE_INT;
+		tuple_dict[ i ].size = FREE_INT;
+		for( j = 0; j < DATA_ENTRY_SIZE; j++ )
+		{
+			data[ i ][ j ] = FREE_INT;
+		}
 	}
 
 	for( i = 0; i < db_file_size; i++ )
@@ -80,8 +85,9 @@ int KK_init_db_file( int size )
 		block->address = i;
 		block->type = BLOCK_TYPE_FREE;
 		block->chained_with = NOT_CHAINED;
-		block->free_space = BLOCK_DATA_BEGIN;
+		block->free_space = DATA_BLOCK_SIZE * DATA_ENTRY_SIZE * sizeof( int );
 		memcpy( block->header, head, sizeof( *head ) );
+		memcpy( block->tuple_dict, tuple_dict, sizeof( *tuple_dict ) );
 		memcpy( block->data, data, sizeof( *data ) );		
 		
 		if( fwrite( block, sizeof( *block ), 1, db ) != 1 )

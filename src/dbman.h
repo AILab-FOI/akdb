@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+
 typedef struct {
 	int type;
 	char att_name[ MAX_ATT_NAME ];
@@ -22,7 +24,8 @@ typedef struct {
 	int chained_with;
 	int free_space;
 	KK_header header[ MAX_ATTRIBUTES ];
-	KK_tuple_dict data[ DATA_BLOCK_SIZE ];
+	KK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
+	int data[ DATA_BLOCK_SIZE ][ DATA_ENTRY_SIZE ];
 } KK_block;
 
 typedef struct {

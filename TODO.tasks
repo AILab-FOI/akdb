@@ -2,19 +2,118 @@
 <gtodo>
   <category title="Personal" place="0">
     <item>
-      <attribute id="1237308491" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237308491"/>
-      <summary>Sustavski katalog - relacije, indeksi, pogledi, ...</summary>
+      <attribute id="1237318046" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237318046"/>
+      <summary>Sustavski katalog - brisanje segmenta</summary>
+      <comment/>
+    </item>
+    <item>
+      <attribute id="1237318493" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237318576"/>
+      <summary>Brisanje bloka</summary>
+      <comment>Potrebno je implementirati funkciju int KK_delete_block( int address ) koja &#x107;e za zadanu adresu bloka isti obrisati (ispuniti praznim zapisima i ozna&#x10D;iti kao prazan). Valja prou&#x10D;iti kako je to u&#x10D;injeno u funkciji KK_init_db_file pri inicijalizaciji datoteke baze podataka.</comment>
+    </item>
+    <item>
+      <attribute id="1237308491" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237325848"/>
+      <summary>Sustavski katalog - inicijalizacija</summary>
       <comment>Sustavski katalog - inicijalizacija
 
-Potrebno je implementirati funkciju int KK_init_sc_data_objects() koja &#x107;e kreirati 5 novih segmenata:
+Potrebno je implementirati funkciju int KK_init_system_catalog() koja &#x107;e kreirati 7 novih segmenata:
 
-- KK_relations
-- KK_indices
-- KK_views
-- KK_sequences
-- KK_triggers
+- KK_relation (obj_id INT, name VARCHAR, address INT) - katalog svih relacija u sustavu
+- KK_attribute (obj_id INT, name VARCHAR, type INT, table_id INT) katalog svih atributa u sustavu
+- KK_index (obj_id INT, name VARCHAR, address INT, table_id INT, attribute_id INT) - katalog svih indeksa u sustavu
+- KK_view (obj_id INT, name VARCHAR, query VARCHAR) - katalog svih pogleda u sustavu
+- KK_sequence (obj_id INT, name VARCHAR, current_value INT, increment INT, max INT, min INT, cycle BOOL) - katalog svih sekvenci u sustavu
+- KK_function (obj_id INT, name VARCHAR, arg_num INT, return_type INT) - katalog svih funkcija u sustavu
+- KK_function_arguments(func_id INT, att_num INT, att_type INT)
+- KK_trigger (obj_id INT, name VARCHAR, event VARCHAR, condition VARCHAR, action INT) - katalog svih okida&#x10D;a u sustavu
+- KK_db (obj_id INT, name VARCHAR) - katalog svih baza podataka u sustavu
+- KK_db_obj (db_id INT, artifact_id INT) - katalog poveznica izme&#x111;u baza podataka i objekata (artifact_id) - koji objekat pripada kojoj bazi podataka
+- KK_user (obj_id INT, username VARCHAR, password INT) - katalog svih korisnika sustava
+- KK_group (obj_id INT, name VARCHAR) - katalog svih korisni&#x10D;kih grupa
+- KK_right (obj_id INT, name VARCHAR, group_id INT, artifact_id INT, right_type INT) - katalog svih prava pristupa objektima u sustavu
 
-Pretpostavite da postoji funkcija KK_new_segment( </comment>
+Pretpostavite da postoji funkcija int KK_new_segment( char* name, int type, KK_header *header ) koja kreira novi segment te pri uspjehu vra&#x107;a adresu na kojoj je alociran novi segment.
+
+name - naziv segmenta &#x107;e biti jedan od gore definiranih naziva
+
+type - tip segmenta &#x107;e uvijek biti SEGMENT_TYPE_SYSTEM_TABLE
+
+Za svaki od navedenih segmenata valja konstruirati odgovraraju&#x107;e zaglavlje (KK_header) na sljede&#x107;i na&#x10D;in:
+
+int type - odnosi se na tip podatka koji je zapisan (definirano u globalnim varijablama u configuration.h)
+
+#define TYPE_INTERNAL 0
+#define TYPE_INT 1
+#define TYPE_FLOAT 2
+#define TYPE_NUMBER 3
+#define TYPE_VARCHAR 4
+#define TYPE_DATE 5
+#define TYPE_DATETIME 6
+#define TYPE_TIME 7
+#define TYPE_BLOB 8
+
+char att_name[ MAX_ATT_NAME ] - odnosi se na naziv atributa (definirano gore)
+
+int integrity[ MAX_CONSTRAINTS ] - odnosi se na integritetna ograni&#x10D;enja (popuniti s FREE_INT vrijednostima)
+
+char constr_name[ MAX_CONSTRAINTS ][ MAX_CONSTR_NAME ] - odnosi se na dodatna ograni&#x10D;enja (popuniti s FREE_CHAR vrijednostima)
+char constr_code[ MAX_CONSTRAINTS ][ MAX_CONSTR_CODE ] - odnosi se na kod dodatnih ograni&#x10D;enja (popuniti s FREE_CHAR vrijednostima)
+
+Funkcija ukoliko uspije vra&#x107;a EXIT_SUCCESS, odnosno EXIT_ERROR pri neuspjehu s odgovaraju&#x107;om porukom pogre&#x161;ke.</comment>
+    </item>
+    <item>
+      <attribute id="1237318074" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237326065"/>
+      <summary>Novi ekstent</summary>
+      <comment>Potrebno je implementirati funkciju int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header ) koja &#x107;e u datoteci baze podataka alocirati novi ekstent.
+
+Parametar start_address odnosi se na po&#x10D;etnu adresu bloka na kojoj se nalazi trenutni ekstent nekog segmenta. Valja po&#x10D;eti tra&#x17E;iti dovoljan slobodni prostor (slobodan blok pod type ima vrijednost BLOCK_TYPE_FREE) od te adrese uve&#x107;ane za veli&#x10D;inu starog ekstenta (old_size) puta veli&#x10D;inu bloka. Slobodan prostor mora biti minimalno veli&#x10D;ine starog ekstenta plus faktor uve&#x107;anja dobiven kroz globalnu varijablu (definirane u configuration.h):
+
+#define INITIAL_EXTENT_SIZE 20
+#define EXTENT_GROWTH_TABLE 0.5
+#define EXTENT_GROWTH_INDEX 0.2
+#define EXTENT_GROWTH_TRANSACTION 0.2
+#define EXTENT_GROWTH_TEMP 0.5
+
+#define SEGMENT_TYPE_TABLE 0
+#define SEGMENT_TYPE_INDEX 1
+#define SEGMENT_TYPE_TRANSACTION 2
+#define SEGMENT_TYPE_TEMP 3
+
+Ukoliko je old_size 0 zna&#x10D;i da je rije&#x10D; o prvom ekstentu za zadani segment te je potrebno prona&#x107;i prostor veli&#x10D;ine inicijalnog ekstenta (INITIAL_EXTENT_SIZE).
+
+Kada se prona&#x111;e takav prostor potrebno je u zadane blokove upisati vrijednost BLOCK_TYPE_NORMAL pod type, te parametar header pod header (vodite ra&#x10D;una o tome da se koristi funkcija memcpy iz string.h za kopiranje memorijskih vrijednosti!) kako bi se dalo do znanja da je blok zauzet. 
+
+Blokove prilikom pretra&#x17E;ivanja prvo treba u&#x10D;itati u memoriju (funkcija KK_block * KK_read_block( int address )) te prilikom pisanja koristiti funkciju int KK_write_block( KK_block * block ) (vra&#x107;a EXIT_SUCCESS prilikom uspje&#x161;nog upisivanja bloka).
+
+Funkcija KK_new_extent treba vratiti adresu bloka na kojem je novi ekstent alociran (pri uspjehu) odnosno EXIT_ERROR s odgovaraju&#x107;om porukom pogre&#x161;ke (pri neuspjehu).</comment>
+    </item>
+    <item>
+      <attribute id="1237318032" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237326458"/>
+      <summary>Sustavski katalog - novi segment</summary>
+      <comment>Potrebno je implementirati funkciju int KK_new_segment( char* name, int type, KK_header *header ) koja &#x107;e alocirati novi segment te u sustavskom katalogu to zapisati.
+
+Parametar name odnosi se na naziv segmenta (naziv tablice, indeksa i sl).
+
+Parametar type odnosi se na tip segmenta definiran nekom od vrijednosti globalnih varijabli:
+
+#define SEGMENT_TYPE_SYSTEM_TABLE 0
+#define SEGMENT_TYPE_TABLE 1
+#define SEGMENT_TYPE_INDEX 2
+#define SEGMENT_TYPE_TRANSACTION 3
+#define SEGMENT_TYPE_TEMP 4
+
+Paramater header odnosi se na zaglavlje segmenta (ponavlja se u svakom ekstentu).
+
+Pretpostavite da postoji funkcija int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header ) koja alocira novi ekstent te vra&#x107;a adresu na kojem je ekstent alociran.
+
+start_address - po&#x10D;etna adresa s koje valja po&#x10D;eti pretra&#x17E;ivati prazne blokove (u ovoj funkciji &#x107;e to uvijek biti 0)
+old_size - veli&#x10D;ina prethodnog ekstenta u segmentu (tako&#x111;er 0)
+header - zaglavlje novog ekstenta
+
+nakon uspje&#x161;ne alokacije i pridobivanja adrese po&#x10D;etka segmenta (po&#x10D;etna adresa prvog ekstenta jednaka je po&#x10D;etnoj adresi segmenta) potrebno je u sustavski katalog upisati dobivene vrijednosti i to:
+
+Ako je rije&#x10D; o SEGMENT_TYPE_SYSTEM_TABLE - ne &#x10D;initi ni&#x161;ta
+Ako je rije&#x10D; o SEGMENT_TYPE_TABLE</comment>
     </item>
   </category>
   <category title="Business" place="1"/>
