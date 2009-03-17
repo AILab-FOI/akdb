@@ -16,7 +16,8 @@ bin_PROGRAMS = kalashnikov-db
 kalashnikov_db_SOURCES = \
 	main.c          \
 	dbman.c          \
-	dbman.h
+	dbman.h          \
+	configuration.h
 
 kalashnikov_db_LDFLAGS = 
 

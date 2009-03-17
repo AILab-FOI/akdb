@@ -1,4 +1,4 @@
-dbman.o dbman.o: dbman.c dbman.h /usr/include/stdio.h \
+dbman.o dbman.o: dbman.c configuration.h dbman.h /usr/include/stdio.h \
   /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
   /usr/include/gnu/stubs-32.h \
@@ -15,6 +15,8 @@ dbman.o dbman.o: dbman.c dbman.h /usr/include/stdio.h \
   /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
   /usr/include/string.h /usr/include/bits/string.h \
   /usr/include/bits/string2.h
+
+configuration.h:
 
 dbman.h:
 

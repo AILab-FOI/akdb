@@ -17,9 +17,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "configuration.h"
 #include "dbman.h"
-
-
 
 int KK_init_db_file( int size )
 {

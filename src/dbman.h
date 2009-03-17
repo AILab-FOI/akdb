@@ -2,29 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define EXIT_SUCCESS 0
-#define EXIT_ERROR 1
 
-#define BLOCK_TYPE_FREE -1
-#define BLOCK_TYPE_NORMAL 0
-#define BLOCK_TYPE_CHAINED 1
-#define NOT_CHAINED -1
-#define BLOCK_DATA_BEGIN 0
-#define FREE_INT -1
-#define FREE_CHAR '\0'
-
-#define DB_FILE "kalashnikov.db"
-
-#define MAX_OBJECT_NAME 255
-#define MAX_EXTENTS 20
-#define MAX_ATTRIBUTES 10
-#define MAX_ATT_NAME 255
-#define MAX_CONSTRAINTS 5
-#define MAX_CONSTR_NAME 255
-#define MAX_CONSTR_CODE 255
-#define DATA_BLOCK_SIZE 500
-
-#define DB_FILE_SIZE 20
 
 typedef struct {
 	int type;

@@ -19,12 +19,12 @@
 
 #include <stdio.h>
 
+#include "configuration.h"
 #include "dbman.h"
 
 int main()
 {
 	printf( "Калашникова DB - STARTING\n\n" );
-
 
 	int size_in_mb = DB_FILE_SIZE;
 	float size = 1024 * 1024 * size_in_mb / sizeof( KK_block );
@@ -33,8 +33,6 @@ int main()
 
 	KK_init_db_file( ( int ) size );
 	
-
-
 	KK_block * block = KK_read_block( 55 );
 
 	block->header[ 0 ].integrity[ 0 ] = 23;	
@@ -45,7 +43,6 @@ int main()
 	free( block );
 	block = KK_read_block( 55 );
 	
-
 	printf( "Integrity: %d\nType: %d\nChained with: %d\nSize: %d\n", block->header[ 0 ].integrity[ 0 ], block->type, block->chained_with, sizeof( *block ) );
 
 	printf( "\nBye =)\n" );
