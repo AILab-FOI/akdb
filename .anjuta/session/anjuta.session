@@ -4,7 +4,7 @@ Maximized=1
 Geometry=1280x949+0+27
 
 [File Loader]
-Files=file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/dbman.h#5%%%///media/disk-4/myProgramming/myC/kalashnikovdb/src/configuration.h#44%%%file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/main.c#22%%%file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/dbman.c#20
+Files=file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/dbman.c#135%%%file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/main.c#34%%%file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/configuration.h#50%%%file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/dbman.h#7
 
 [Execution]
 Program arguments=

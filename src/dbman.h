@@ -28,15 +28,6 @@ typedef struct {
 	int data[ DATA_BLOCK_SIZE ][ DATA_ENTRY_SIZE ];
 } KK_block;
 
-typedef struct {
-	int block_begin;
-	int block_end;
-} KK_extent;
-
-typedef struct {
-	char obj_name[ MAX_OBJECT_NAME ];
-	KK_extent extent[ MAX_EXTENTS ];
-} KK_segment;
 
 FILE * db;
 unsigned int db_file_size;
