@@ -1,12 +1,11 @@
 
 [Anjuta]
 Maximized=1
-Geometry=1280x949+0+27
+Geometry=1280x726+0+25
 
 [File Loader]
-Files=file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/dbman.c#135%%%file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/main.c#34%%%file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/configuration.h#50%%%file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/dbman.h#7
+Files=file:///home/jars/kalashnikovdb/src/dbman.c#226%%%file:///home/jars/kalashnikovdb/src/dbman.h#10%%%file:///home/jars/kalashnikovdb/src/configuration.h#44%%%file:///home/jars/kalashnikovdb/src/main.c#54
 
 [Execution]
 Program arguments=
 Run in terminal=2
-Last selected uri=file:///media/disk-4/myProgramming/myC/kalashnikovdb/src/kalashnikov-db

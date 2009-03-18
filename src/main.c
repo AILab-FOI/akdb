@@ -46,5 +46,12 @@ int main()
 	printf( "Integrity: %d\nType: %d\nChained with: %d\nSize: %d\n", block->header[ 0 ].integrity[ 0 ], block->type, block->chained_with, sizeof( *block ) );
 
 	printf( "\nBye =)\n" );
+	
+	//nbakos test funkcije: int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header )
+	int address_of_extend=0;
+	KK_header *header;
+	header->integrity[ 0 ] = 23;
+	address_of_extend = KK_new_extent(0,0,0, header );
+	printf( "\nnbakos test: adresa extenda=%d\n",address_of_extend );
 	return ( EXIT_SUCCESS );
 }
