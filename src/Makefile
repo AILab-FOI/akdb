@@ -216,7 +216,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) *.db *.bak *~
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) *.db *.bak *~; rm -R ../doc
 kalashnikov-db$(EXEEXT): $(kalashnikov_db_OBJECTS) $(kalashnikov_db_DEPENDENCIES) 
 	@rm -f kalashnikov-db$(EXEEXT)
 	$(kalashnikov_db_LINK) $(kalashnikov_db_OBJECTS) $(kalashnikov_db_LDADD) $(LIBS)
@@ -357,6 +357,9 @@ distclean: distclean-am
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
+
+doc:
+	doxygen doxygen.config
 
 dvi: dvi-am
 

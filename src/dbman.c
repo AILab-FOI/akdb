@@ -1,3 +1,6 @@
+/**
+@file dbman.c Defines functions for the disk manager
+*/
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * dbman.c
@@ -20,6 +23,14 @@
 #include "configuration.h"
 #include "dbman.h"
 
+
+/**
+Initializes a new database file named DB_FILE
+
+@param size size of new file in in blocks
+@return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+
+*/
 int KK_init_db_file( int size )
 {
 	register int i, j, k;
@@ -81,7 +92,7 @@ int KK_init_db_file( int size )
 			printf( "KK_init_db_file: ERROR. Cannot allocate block %d\n", i );
 			exit( EXIT_ERROR );
 		}
-			
+		
 		block->address = i;
 		block->type = BLOCK_TYPE_FREE;
 		block->chained_with = NOT_CHAINED;
@@ -105,6 +116,13 @@ int KK_init_db_file( int size )
 	return ( EXIT_SUCCESS );
 }
 
+
+/**
+Reads a block at a given address (block number less than db_file_size)
+
+@param address block number (address)
+@return pointer to block allocated in memory
+*/
 KK_block * KK_read_block( int address )
 {
 	KK_block * block = ( KK_block * ) malloc ( sizeof( KK_block ) );
@@ -132,6 +150,12 @@ KK_block * KK_read_block( int address )
 	return ( block );
 }
 
+/**
+Writes a block to DB file
+
+@param block poiner to block allocated in memory to write
+@return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
+*/
 int KK_write_block( KK_block * block )
 {
 	if( ( db = fopen( DB_FILE, "r+" ) ) == NULL ) {
@@ -151,86 +175,106 @@ int KK_write_block( KK_block * block )
 	return ( EXIT_SUCCESS );
 }
 
-//Function to alocate new extent of blocks
-int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header )
+/**
+Function to alocate new extent of blocks
+
+@param start_address address (block number) to start searching for sufficient space
+@param old_size size of previous extent in same segment (in blocks)
+@param extent_type type of extent (can be one of: 
+	SEGMENT_TYPE_SYSTEM_TABLE, 
+	SEGMENT_TYPE_TABLE, 
+	SEGMENT_TYPE_INDEX, 
+	SEGMENT_TYPE_TRANSACTION, 
+	SEGMENT_TYPE_TEMP
+@param header pointer to header that should be written to the new extent (all blocks)
+@return address (block number) of new extent if successful, EXIT_ERROR otherwise
+*/
+int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *header )
 {
-	int REQ_FREE_SPACE; 				//var - How much of space is required for extent
-	int first_addr_of_extent = -1;			//var - Start address for extent
-	int nAlocated_blocks = 0; 			//var - Number of blocks to be alocated for extent
-	register int i, j; 				//vars for loop [for]
+	int req_free_space; 				/// var - How much of space is required for extent
+	int first_addr_of_extent = -1;			/// var - Start address for extent
+	int nAlocated_blocks = 0; 			/// var - Number of blocks to be alocated for extent
+	register int i, j; 				/// vars for loop [for]
 	KK_block *block;
 
-	//if the old_size is 0 then the size of new extent is INITIAL_EXTENT_SIZE
-    if(old_size == 0)
-    {
-        REQ_FREE_SPACE = INITIAL_EXTENT_SIZE;
-    }
-    else{
-        float RESIZE_FACTOR = 0;
+	/// if the old_size is 0 then the size of new extent is INITIAL_EXTENT_SIZE
+	if( old_size == 0 )
+	{
+		req_free_space = INITIAL_EXTENT_SIZE;
+	}
+	else
+	{
+		float RESIZE_FACTOR = 0;
 
-        switch(ekstent_type){
-            case SEGMENT_TYPE_TABLE: 		RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
-                    				 			break;
-            case SEGMENT_TYPE_INDEX: 		RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
-                   					 		break;
-            case SEGMENT_TYPE_TRANSACTION: 	RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
-                  					 		break;
-            case SEGMENT_TYPE_TEMP: 		RESIZE_FACTOR = EXTENT_GROWTH_TEMP;
-                   					 		break;
+		switch(extent_type)
+		{
+			case SEGMENT_TYPE_TABLE: 
+				RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
+				break;
+			case SEGMENT_TYPE_INDEX:
+				RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
+				break;
+			case SEGMENT_TYPE_TRANSACTION:
+				RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
+				break;
+			case SEGMENT_TYPE_TEMP:
+				RESIZE_FACTOR = EXTENT_GROWTH_TEMP;
+				break;
+		}
 
-        }   
-        REQ_FREE_SPACE = old_size + old_size * RESIZE_FACTOR; 
-    }
+		req_free_space = old_size + old_size * RESIZE_FACTOR; 
+	}
 	
-    for( i = start_address; i < db_file_size; i++ )			
-    {
-		if( ( ( int ) ( REQ_FREE_SPACE - 1 ) > ( db_file_size - i ) ) ){
-			printf( "KK_new_extent: ERROR. Not enought space for new extent. Requested space was: %d, %d, %d\n", REQ_FREE_SPACE, db_file_size - i, i );
+	for( i = start_address; i < db_file_size; i++ )			
+	{
+		if( ( ( int ) ( req_free_space - 1 ) > ( db_file_size - i ) ) )
+		{
+			printf( "KK_new_extent: ERROR. Not enought space for new extent. Requested space was: %d\n", req_free_space );
 			exit(EXIT_ERROR);
 		}
 		
-		//check the block is free
-		block = KK_read_block( i );   	//read block
+		/// check the block is free
+		block = KK_read_block( i );   /// read block
 
-		if( ( block->type ) != BLOCK_TYPE_FREE )  //if the block is used
+		if( ( block->type ) != BLOCK_TYPE_FREE )  /// if the block is used
         	{
-			//printf( "KK_new_extent: ERROR. Cannot allocate block %d\n", i );
+			
 			nAlocated_blocks = 0;
 			first_addr_of_extent = -1;
-			continue; 	//goto next iteration of for loop
+			continue; 	/// goto next iteration of for loop
 		}
 		else
 		{
 			if( nAlocated_blocks == 0 )
-				first_addr_of_extent = i;	//if is a first free block
+				first_addr_of_extent = i;	/// if is a first free block
 			
-			nAlocated_blocks++;		//increase number of block for 1
+			nAlocated_blocks++;		/// increase number of block for 1
 			
-			if( nAlocated_blocks !=0 && ( REQ_FREE_SPACE == nAlocated_blocks ) ) //if requested space for extent is OK
+			if( nAlocated_blocks !=0 && ( req_free_space == nAlocated_blocks ) ) /// if requested space for extent is OK
 			{
-				break;	//exit loop
+				break;	/// exit loop
 			}
 		}
 	}
-	int success = 0;    //var for chack of number of blocks written
+	int success = 0;    /// var for chack of number of blocks written
 	for( j = first_addr_of_extent; j < ( first_addr_of_extent + nAlocated_blocks ); j++)
 	{
-		block = KK_read_block( j );   	//read block
-		memcpy( block->header, header, sizeof( *header ) ); //copy header information	
-		block->type = BLOCK_TYPE_NORMAL; //set the block type
+		block = KK_read_block( j );   	/// read block
+		memcpy( block->header, header, sizeof( *header ) ); /// copy header information	
+		block->type = BLOCK_TYPE_NORMAL; /// set the block type
 		
-		if( KK_write_block ( block ) == EXIT_SUCCESS ) //if write of block succeded increase var success, else nothing
+		if( KK_write_block( block ) == EXIT_SUCCESS ) /// if write of block succeded increase var success, else nothing
 		{
 			success++;
 		}
 		
-		free(block);  //free the block
+		free(block);  /// free the block
 	}
 	
-	if( success != nAlocated_blocks ) //if some blocks are not succesfully alocated, whitch means the extend alocation has FAILED
+	if( success != nAlocated_blocks ) /// if some blocks are not succesfully alocated, whitch means the extend alocation has FAILED
 	{
-		printf( "KK_new_extent: ERROR. Cannot allocate extend %d, %d, %d\n", first_addr_of_extent, success, nAlocated_blocks );
-		exit(EXIT_ERROR);
+		printf( "KK_new_extent: ERROR. Cannot allocate extend %d\n", first_addr_of_extent );
+		exit( EXIT_ERROR );
 	}
 	
 	return(first_addr_of_extent);

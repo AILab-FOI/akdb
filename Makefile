@@ -636,6 +636,8 @@ uninstall-am: uninstall-kalashnikov_dbdocDATA
 	tags-recursive uninstall uninstall-am \
 	uninstall-kalashnikov_dbdocDATA
 
+doc:
+	cd src; make doc; cd ..
 
 # Copy all the spec files. Of cource, only one is actually used.
 dist-hook:

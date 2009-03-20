@@ -1,3 +1,6 @@
+/**
+@file main.c Main program file
+*/
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
  * main.c
@@ -22,6 +25,11 @@
 #include "configuration.h"
 #include "dbman.h"
 
+/**
+Main program function
+
+@return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
+*/
 int main()
 {
 	printf( "Калашникова DB - STARTING\n\n" );
