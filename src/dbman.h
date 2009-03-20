@@ -26,11 +26,16 @@
 \struct KK_header
 \brief Header structure of blocks (describes an attribute inside an object)
 */
-typedef struct {
+typedef struct { 
+	/// type of attribute
 	int type;
+	/// attribute name
 	char att_name[ MAX_ATT_NAME ];
+	/// standard integrity costraints
 	int integrity[ MAX_CONSTRAINTS ];
+	/// extra integrity constraint names
 	char constr_name[ MAX_CONSTRAINTS ][ MAX_CONSTR_NAME ];
+	/// extra integrity costraint codes
 	char constr_code[ MAX_CONSTRAINTS ][ MAX_CONSTR_CODE ];
 } KK_header;
 
@@ -40,8 +45,11 @@ typedef struct {
 \brief Defines a mapping in a header of an object to the actual entries (data)
 */
 typedef struct {
+	/// data entry type
 	int type;
+	/// data entry address (in KK_block->data)
 	int address;
+	/// data entry size (usind sizeof( *** ) )
 	int size;
 } KK_tuple_dict;
 
@@ -51,12 +59,19 @@ typedef struct {
 \brief Defines a block of data inside a DB file
 */
 typedef struct {
+	/// block number (address) in DB file
 	int address;
+	/// block type (can be BLOCK_TYPE_FREE, BLOCK_TYPE_NORMAL or BLOCK_TYPE_CHAINED)
 	int type;
+	/// address of chained block; NOT_CHAINED otherwise
 	int chained_with;
+	/// free space in block
 	int free_space;
+	/// attribute definitions
 	KK_header header[ MAX_ATTRIBUTES ];
+	/// dictionary of data entries
 	KK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
+	/// actual data entries
 	int data[ DATA_BLOCK_SIZE ][ DATA_ENTRY_SIZE ];
 } KK_block;
 
