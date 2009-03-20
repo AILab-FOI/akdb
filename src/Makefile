@@ -60,12 +60,12 @@ DIST_SOURCES = $(kalashnikov_db_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /media/disk-3/myProgramming/kalashnikovdb/missing --run aclocal-1.10
-AMTAR = ${SHELL} /media/disk-3/myProgramming/kalashnikovdb/missing --run tar
-AUTOCONF = ${SHELL} /media/disk-3/myProgramming/kalashnikovdb/missing --run autoconf
-AUTOHEADER = ${SHELL} /media/disk-3/myProgramming/kalashnikovdb/missing --run autoheader
-AUTOMAKE = ${SHELL} /media/disk-3/myProgramming/kalashnikovdb/missing --run automake-1.10
-AWK = mawk
+ACLOCAL = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run aclocal-1.10
+AMTAR = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run tar
+AUTOCONF = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run automake-1.10
+AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -89,8 +89,8 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAINT = 
-MAKEINFO = ${SHELL} /media/disk-3/myProgramming/kalashnikovdb/missing --run makeinfo
+MAINT = #
+MAKEINFO = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = kalashnikov-db
@@ -104,10 +104,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 0.1
-abs_builddir = /media/disk-3/myProgramming/kalashnikovdb/src
-abs_srcdir = /media/disk-3/myProgramming/kalashnikovdb/src
-abs_top_builddir = /media/disk-3/myProgramming/kalashnikovdb
-abs_top_srcdir = /media/disk-3/myProgramming/kalashnikovdb
+abs_builddir = /home/mschatte/myProgramming/kalashnikovdb/src
+abs_srcdir = /home/mschatte/myProgramming/kalashnikovdb/src
+abs_top_builddir = /home/mschatte/myProgramming/kalashnikovdb
+abs_top_srcdir = /home/mschatte/myProgramming/kalashnikovdb
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -126,7 +126,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = $(SHELL) /media/disk-3/myProgramming/kalashnikovdb/install-sh
+install_sh = $(SHELL) /home/mschatte/myProgramming/kalashnikovdb/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -165,7 +165,7 @@ all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: # $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -190,9 +190,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: # $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): # $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
@@ -216,7 +216,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) *.db *.bak *~
 kalashnikov-db$(EXEEXT): $(kalashnikov_db_OBJECTS) $(kalashnikov_db_DEPENDENCIES) 
 	@rm -f kalashnikov-db$(EXEEXT)
 	$(kalashnikov_db_LINK) $(kalashnikov_db_OBJECTS) $(kalashnikov_db_LDADD) $(LIBS)
