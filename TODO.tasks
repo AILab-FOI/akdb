@@ -2,32 +2,6 @@
 <gtodo>
   <category title="Personal" place="0">
     <item>
-      <attribute id="1237318074" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237326065"/>
-      <summary>Novi ekstent</summary>
-      <comment>Potrebno je implementirati funkciju int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header ) koja &#x107;e u datoteci baze podataka alocirati novi ekstent.
-
-Parametar start_address odnosi se na po&#x10D;etnu adresu bloka na kojoj se nalazi trenutni ekstent nekog segmenta. Valja po&#x10D;eti tra&#x17E;iti dovoljan slobodni prostor (slobodan blok pod type ima vrijednost BLOCK_TYPE_FREE) od te adrese uve&#x107;ane za veli&#x10D;inu starog ekstenta (old_size) puta veli&#x10D;inu bloka. Slobodan prostor mora biti minimalno veli&#x10D;ine starog ekstenta plus faktor uve&#x107;anja dobiven kroz globalnu varijablu (definirane u configuration.h):
-
-#define INITIAL_EXTENT_SIZE 20
-#define EXTENT_GROWTH_TABLE 0.5
-#define EXTENT_GROWTH_INDEX 0.2
-#define EXTENT_GROWTH_TRANSACTION 0.2
-#define EXTENT_GROWTH_TEMP 0.5
-
-#define SEGMENT_TYPE_TABLE 0
-#define SEGMENT_TYPE_INDEX 1
-#define SEGMENT_TYPE_TRANSACTION 2
-#define SEGMENT_TYPE_TEMP 3
-
-Ukoliko je old_size 0 zna&#x10D;i da je rije&#x10D; o prvom ekstentu za zadani segment te je potrebno prona&#x107;i prostor veli&#x10D;ine inicijalnog ekstenta (INITIAL_EXTENT_SIZE).
-
-Kada se prona&#x111;e takav prostor potrebno je u zadane blokove upisati vrijednost BLOCK_TYPE_NORMAL pod type, te parametar header pod header (vodite ra&#x10D;una o tome da se koristi funkcija memcpy iz string.h za kopiranje memorijskih vrijednosti!) kako bi se dalo do znanja da je blok zauzet. 
-
-Blokove prilikom pretra&#x17E;ivanja prvo treba u&#x10D;itati u memoriju (funkcija KK_block * KK_read_block( int address )) te prilikom pisanja koristiti funkciju int KK_write_block( KK_block * block ) (vra&#x107;a EXIT_SUCCESS prilikom uspje&#x161;nog upisivanja bloka).
-
-Funkcija KK_new_extent treba vratiti adresu bloka na kojem je novi ekstent alociran (pri uspjehu) odnosno EXIT_ERROR s odgovaraju&#x107;om porukom pogre&#x161;ke (pri neuspjehu).</comment>
-    </item>
-    <item>
       <attribute id="1237308491" priority="1" done="0" start_date="733483" enddate="99999999" notify="0" endtime="-60" last_edited="1237380170"/>
       <summary>Sustavski katalog - inicijalizacija</summary>
       <comment>Sustavski katalog - inicijalizacija
@@ -159,6 +133,32 @@ old_size - veli&#x10D;ina prethodnog ekstenta u segmentu (tako&#x111;er 0)
 header - zaglavlje novog ekstenta
 
 Funkcija ukoliko uspije vra&#x107;a EXIT_SUCCESS, odnosno EXIT_ERROR pri neuspjehu s odgovaraju&#x107;om porukom pogre&#x161;ke.</comment>
+    </item>
+    <item>
+      <attribute id="1237318074" priority="1" done="1" start_date="733483" completed_date="733486" notify="0" last_edited="1237572358"/>
+      <summary>Novi ekstent</summary>
+      <comment>Potrebno je implementirati funkciju int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header ) koja &#x107;e u datoteci baze podataka alocirati novi ekstent.
+
+Parametar start_address odnosi se na po&#x10D;etnu adresu bloka na kojoj se nalazi trenutni ekstent nekog segmenta. Valja po&#x10D;eti tra&#x17E;iti dovoljan slobodni prostor (slobodan blok pod type ima vrijednost BLOCK_TYPE_FREE) od te adrese uve&#x107;ane za veli&#x10D;inu starog ekstenta (old_size) puta veli&#x10D;inu bloka. Slobodan prostor mora biti minimalno veli&#x10D;ine starog ekstenta plus faktor uve&#x107;anja dobiven kroz globalnu varijablu (definirane u configuration.h):
+
+#define INITIAL_EXTENT_SIZE 20
+#define EXTENT_GROWTH_TABLE 0.5
+#define EXTENT_GROWTH_INDEX 0.2
+#define EXTENT_GROWTH_TRANSACTION 0.2
+#define EXTENT_GROWTH_TEMP 0.5
+
+#define SEGMENT_TYPE_TABLE 0
+#define SEGMENT_TYPE_INDEX 1
+#define SEGMENT_TYPE_TRANSACTION 2
+#define SEGMENT_TYPE_TEMP 3
+
+Ukoliko je old_size 0 zna&#x10D;i da je rije&#x10D; o prvom ekstentu za zadani segment te je potrebno prona&#x107;i prostor veli&#x10D;ine inicijalnog ekstenta (INITIAL_EXTENT_SIZE).
+
+Kada se prona&#x111;e takav prostor potrebno je u zadane blokove upisati vrijednost BLOCK_TYPE_NORMAL pod type, te parametar header pod header (vodite ra&#x10D;una o tome da se koristi funkcija memcpy iz string.h za kopiranje memorijskih vrijednosti!) kako bi se dalo do znanja da je blok zauzet. 
+
+Blokove prilikom pretra&#x17E;ivanja prvo treba u&#x10D;itati u memoriju (funkcija KK_block * KK_read_block( int address )) te prilikom pisanja koristiti funkciju int KK_write_block( KK_block * block ) (vra&#x107;a EXIT_SUCCESS prilikom uspje&#x161;nog upisivanja bloka).
+
+Funkcija KK_new_extent treba vratiti adresu bloka na kojem je novi ekstent alociran (pri uspjehu) odnosno EXIT_ERROR s odgovaraju&#x107;om porukom pogre&#x161;ke (pri neuspjehu).</comment>
     </item>
   </category>
   <category title="Business" place="1"/>
