@@ -1,5 +1,6 @@
 /**
 @file dbman.h Defines includes and datastructures for the disk manager
+ of Kalashnikov DB
 */
 /*
  * This program is free software; you can redistribute it and/or modify

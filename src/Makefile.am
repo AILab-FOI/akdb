@@ -17,7 +17,9 @@ kalashnikov_db_SOURCES = \
 	main.c          \
 	dbman.c          \
 	dbman.h          \
-	configuration.h
+	configuration.h          \
+	memoman.c          \
+	memoman.h
 
 kalashnikov_db_LDFLAGS = 
 

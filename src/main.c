@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 #include "configuration.h"
-#include "dbman.h"
+#include "memoman.h"
 
 /**
 Main program function
