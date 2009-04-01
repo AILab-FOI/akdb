@@ -6,13 +6,13 @@ main.o main.o: main.c /usr/include/stdio.h /usr/include/features.h \
   /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
   /usr/lib/gcc/i486-linux-gnu/4.2.4/include/stdarg.h \
   /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
-  /usr/include/bits/stdio.h configuration.h dbman.h /usr/include/stdlib.h \
-  /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
-  /usr/include/bits/endian.h /usr/include/sys/select.h \
-  /usr/include/bits/select.h /usr/include/bits/sigset.h \
-  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
-  /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
-  /usr/include/string.h /usr/include/bits/string.h \
+  /usr/include/bits/stdio.h configuration.h memoman.h dbman.h \
+  /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+  /usr/include/endian.h /usr/include/bits/endian.h \
+  /usr/include/sys/select.h /usr/include/bits/select.h \
+  /usr/include/bits/sigset.h /usr/include/bits/time.h \
+  /usr/include/sys/sysmacros.h /usr/include/bits/pthreadtypes.h \
+  /usr/include/alloca.h /usr/include/string.h /usr/include/bits/string.h \
   /usr/include/bits/string2.h
 
 /usr/include/stdio.h:
@@ -48,6 +48,8 @@ main.o main.o: main.c /usr/include/stdio.h /usr/include/features.h \
 /usr/include/bits/stdio.h:
 
 configuration.h:
+
+memoman.h:
 
 dbman.h:
 

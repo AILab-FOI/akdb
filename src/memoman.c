@@ -22,3 +22,66 @@
  */
 
 #include "memoman.h"
+
+/**
+Initializes the global cache memory (variable db_cache)
+
+@return EXIT_SUCCESS if the cache memory has been initialized, EXIT_ERROR otherwise
+*/
+int KK_cache_malloc()
+{
+	return EXIT_SUCCESS;
+}
+
+/**
+Initializes the global redo log memory (variable redo_log)
+
+@return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
+*/
+int KK_redo_log_malloc()
+{
+	return EXIT_SUCCESS;
+}
+
+/**
+Initializes the global query memory (variable query_mem)
+
+@return EXIT_SUCCESS if the query memory has been initialized, EXIT_ERROR otherwise
+*/
+int KK_query_mem_malloc()
+{
+	return EXIT_SUCCESS;
+}
+
+/**
+Initializes memory manager (cache, redo log and query memory)
+
+@return EXIT_SUCCESS if the query memory manager has been initialized, EXIT_ERROR otherwise
+*/
+int KK_memoman_init()
+{
+	return EXIT_SUCCESS;
+}
+
+/**
+Caches a block into memory (LIFO)
+
+@param num block number (address)
+@return EXIT_SUCCESS if the block has been successfully read into memory, EXIT_ERROR otherwise
+*/
+int KK_cache_block( int num )
+{
+	return EXIT_SUCCESS;
+}
+
+/**
+Reads a block from memory. If the block is cached returns the cached block. Else uses
+KK_cache_block to read the block to cache and then returns it.
+
+@param num block number (address)
+@return the block given i succesfull, EXIT_ERROR otherwise
+*/
+KK_mem_block * KK_read_block( int num )
+{
+	return EXIT_SUCCESS;
+}

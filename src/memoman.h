@@ -103,3 +103,19 @@ typedef struct {
 	/// obtained query results
 	KK_query_mem_result * result;
 } KK_query_mem;
+
+/**
+\var db_cache
+\brief Defines the db cache
+*/
+KK_db_cache * db_cache;
+/**
+\var redo_log
+\brief Defines the global redo log
+*/
+KK_redo_log * redo_log;
+/**
+\var query_mem
+\brief Defines the global query memory
+*/
+KK_query_mem * query_mem;
