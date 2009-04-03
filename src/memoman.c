@@ -50,6 +50,53 @@ Initializes the global query memory (variable query_mem)
 */
 int KK_query_mem_malloc()
 {
+	printf("Start query_mem_malloc");
+	if( (query_mem = ( KK_query_mem * ) malloc ( sizeof( KK_query_mem) ) ) == NULL )
+	{
+		printf( " KK_query_mem: ERROR. Cannot allocate memory \n");
+		exit( EXIT_ERROR );
+	}
+	
+	KK_query_mem_lib * query_mem_lib;
+	if(( query_mem_lib = (KK_query_mem_lib *) malloc(sizeof(KK_query_mem_lib)) ) == NULL )
+	{
+		printf( " KK_query_mem_lib: ERROR. Cannot allocate memory \n");
+		exit( EXIT_ERROR );
+	}
+	
+	KK_query_mem_dict * query_mem_dict;
+	if( (query_mem_dict = ( KK_query_mem_dict *) malloc(sizeof(KK_query_mem_dict)) ) == NULL )
+	{
+		printf( "  KK_query_mem_dict: ERROR. Cannot allocate memory \n");
+		exit( EXIT_ERROR );
+	}
+	
+	KK_query_mem_result * query_mem_result;
+	if(( query_mem_result = (KK_query_mem_result *) malloc(sizeof(KK_query_mem_result)) ) == NULL )
+	{
+		printf( "  KK_query_mem_result: ERROR. Cannot allocate memory \n");
+		exit( EXIT_ERROR );
+	}
+	
+	
+	KK_tuple_dict * tuple_dict = (KK_tuple_dict *) malloc(sizeof(KK_tuple_dict));
+	if(( tuple_dict = (KK_tuple_dict *) malloc(sizeof(KK_tuple_dict)) ) == NULL )
+	{
+		printf( "  KK_tuple_dict: ERROR. Cannot allocate memory \n");
+		exit( EXIT_ERROR );
+	}
+	
+
+	memcpy(query_mem_dict->dictionary,tuple_dict,sizeof(* tuple_dict));
+
+	query_mem->parsed = query_mem_lib;
+	query_mem->dictionary = query_mem_dict;
+	query_mem->result = query_mem_result;
+/*	memcpy(query_mem->parsed, query_mem_lib, sizeof(* query_mem_lib));
+	memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));
+	memcpy(query_mem->result,query_mem_result,sizeof(* query_mem_result));*/
+	
+	printf("END; Success query_mem_malloc");
 	return EXIT_SUCCESS;
 }
 

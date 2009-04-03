@@ -1,11 +1,15 @@
 
 [Anjuta]
 Maximized=1
-Geometry=1280x726+0+25
-
-[File Loader]
-Files=file:///home/jars/kalashnikovdb/src/dbman.c#226%%%file:///home/jars/kalashnikovdb/src/dbman.h#10%%%file:///home/jars/kalashnikovdb/src/configuration.h#44%%%file:///home/jars/kalashnikovdb/src/main.c#54
+Geometry=1280x725+0+25
 
 [Execution]
 Program arguments=
+Program uri=file:///home/pajdo/FOBP/kalashnikovdb/src/kalashnikov-db
 Run in terminal=2
+Working directories=file:///home/pajdo
+Environment variables=
+
+[Build]
+Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
+Selected Configuration=Default

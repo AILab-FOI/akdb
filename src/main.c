@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 
+
 #include "configuration.h"
 #include "memoman.h"
 
@@ -56,10 +57,48 @@ int main()
 	printf( "\nBye =)\n" );
 	
 	//nbakos test funkcije: int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header )
-	int address_of_extend=0;
-	KK_header *header;
+	int address_of_extend=2;
+	KK_header *header = ( KK_header * ) malloc ( sizeof( KK_header ) );
 	header->integrity[ 0 ] = 23;
 	address_of_extend = KK_new_extent(0,0,0, header );
 	printf( "\nnbakos test: adresa extenda=%d\n",address_of_extend );
+	
+	//matnovak test funkcije: KK_init_system_tables_catalog( int relation, int attribute, 
+								//	int index, int view, int sequence, int function, int function_arguments, 
+								//  int trigger, int db, int db_obj, int user, int group, int right)
+	
+	KK_init_system_tables_catalog(1,2,3,4,5,6,7,8,9,10,11,12,13);
+	KK_block  * catalog_block = KK_read_block( 0 );
+	
+	printf( "\nAtribut 1: %s\n Type: %d\n Integrity: %d\n Constr_name: %s\n", (char *) catalog_block->header[ 0 ].att_name, catalog_block->header[ 0 ].type ,  catalog_block->header[ 0 ].integrity[1],  (char *) catalog_block->header[ 0 ]. constr_name[0] );
+	printf( "\nAtribut 2: %s\n Type: %d\n Integrity: %d\n Constr_name: %s\n", (char *) catalog_block->header[ 1 ].att_name, catalog_block->header[ 1 ].type ,  catalog_block->header[ 1 ].integrity[1],  (char *) catalog_block->header[ 1 ]. constr_name[0] );
+	printf( "\nBlock: %d\n Type: %d\n Chained with: %d\n Free_space: %d\n", catalog_block->address, catalog_block->type ,  catalog_block->chained_with,  catalog_block->free_space);
+	
+	int i;
+	for(i=0;i<26;i++)
+	{
+		printf( "\nTupleDict%d \n Type: %d\n Address: %d\n Size: %d \n",i,catalog_block->tuple_dict[i].type, catalog_block->tuple_dict[i].address, catalog_block->tuple_dict[i].size);
+	}
+		
+	char neki[143];
+	i=0;
+	int j=0;
+	for(i; i < catalog_block->free_space;i++)
+	{
+		j=0;
+		memcpy(&neki, &catalog_block->data[i], 20);
+		printf("\ni:%d rj:%s", i,neki);
+	}
+	
+	
+/*	Try to write in alocated memory place
+	 
+	KK_query_mem_malloc();
+	query_mem->parsed->next_replace = 1;
+	printf("%d",query_mem->parsed->next_replace);
+	*/
+	//matnovak end test
+	
+	printf( "\nBye =)\n" );
 	return ( EXIT_SUCCESS );
 }

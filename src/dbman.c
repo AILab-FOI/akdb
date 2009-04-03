@@ -22,6 +22,7 @@
 
 #include "configuration.h"
 #include "dbman.h"
+//#include "memoman.h"
 
 
 /**
@@ -281,4 +282,130 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 
 }
 
+
+//MN function for creating header
+KK_header * KK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code ) 
+{
+	KK_header * catalog_header = ( KK_header * ) malloc ( sizeof( KK_header ) );
+	printf("\nHeder: %s, %d",name, strlen(name));
+	catalog_header->type = type;
+	memcpy(catalog_header->att_name,name, strlen(name));
+	int i=0;
+	int j=0;
+	int k=0;
+	for (i=0;i<MAX_CONSTRAINTS;i++)
+	{
+		catalog_header->integrity[ i ] = integrity;
+		for (j=0;j<MAX_CONSTR_NAME;j++)
+		{			
+			catalog_header->constr_name[ i ][ j ]= constr_name;
+		}
+		for (k=0;k<MAX_CONSTR_CODE;k++)
+		{
+			catalog_header->constr_code[ i ][ k ]=contr_code;
+		}
+	}
+	
+	return ( catalog_header );
+}
+
+//MN funciton for inserting entry in tuple_dict and data
+void KK_insert_entry(KK_block * block_address, int type, char * entry_data, int i )
+{
+	KK_tuple_dict * catalog_tuple_dict = (KK_tuple_dict *) malloc (sizeof( KK_tuple_dict ));
+	
+	printf("\nTU: %s Size of: %d", entry_data, strlen(entry_data));
+	
+	memcpy(block_address->data+block_address->free_space, entry_data, strlen( entry_data));
+	
+	catalog_tuple_dict->address=block_address->free_space;
+	
+	block_address->free_space+=1;
+	//no need for "+strlen(entry_data)" while "+1" is like "new line" 
+	
+	catalog_tuple_dict->type=type;
+	catalog_tuple_dict->size = strlen(entry_data);
+	
+	memcpy(& block_address->tuple_dict[i],catalog_tuple_dict, sizeof(* catalog_tuple_dict));
+}
+
+//MN function initialises the sytem table katalog
+int KK_init_system_tables_catalog( int relation, int attribute, int index, int view, int sequence, int function, int function_arguments, 
+								  int trigger, int db, int db_obj, int user, int group, int right)
+{	
+	printf("tu sam");
+	KK_block * catalog_block = ( KK_block * ) malloc ( sizeof( KK_block ) );
+	//first header attribute of catalog_block
+	KK_header * catalog_header_name  =  ( KK_header * ) malloc ( sizeof( KK_header ) );
+	catalog_header_name = KK_create_header( "Name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	//second attribute of catalog_block
+	KK_header * catalog_header_address = ( KK_header * ) malloc ( sizeof( KK_header ) );
+	catalog_header_address = KK_create_header( "Address", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	
+	//initialize other elements of block
+	catalog_block->address = 0;
+	catalog_block->type = BLOCK_TYPE_NORMAL;
+	catalog_block->chained_with = NOT_CHAINED;
+	catalog_block->free_space = 0; //using as an adrees for the last free_space of data
+
+	
+	//merge catalog_heder with heders created before
+	memcpy( & catalog_block->header[0], catalog_header_name, sizeof( * catalog_header_name ) );
+	memcpy( & catalog_block->header[1], catalog_header_address, sizeof( * catalog_header_address ) );
+	KK_tuple_dict tuple_dict[13];
+	memcpy(catalog_block->tuple_dict, tuple_dict, sizeof( *tuple_dict ) );
+	
+	char buf[5];
+	//insert data and tuple_dict in block
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_relation", 0 );
+	//convert int to char
+	sprintf(buf,"%d",relation);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 1 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_attribute", 2 );
+	sprintf(buf,"%d",attribute);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 3 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_index", 4 );
+	sprintf(buf,"%d",index);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 5 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_view", 6 );
+	sprintf(buf,"%d",view);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 7 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_sequence", 8 );
+	sprintf(buf,"%d",sequence);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 9 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_function",10 );
+	sprintf(buf,"%d",function);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 11 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_function_arguments", 12 );
+	sprintf(buf,"%d",function_arguments);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 13 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_trigger", 14 );
+	sprintf(buf,"%d",trigger);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 15 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_db", 16 );
+	sprintf(buf,"%d",db);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 17 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_db_obj", 18 );
+	sprintf(buf,"%d",db_obj);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 19 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_user", 20 );
+	sprintf(buf,"%d",user);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 21 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_group", 22 );
+	sprintf(buf,"%d",group);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 23 );
+	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_right", 24 );
+	sprintf(buf,"%d",right);
+	KK_insert_entry(catalog_block, TYPE_INT, buf, 25 );
+		
+	//call function for writing the block on the first place in the file (ie. first block is on position zero)
+	if (KK_write_block(catalog_block))
+	{
+		return EXIT_SUCCESS;
+	}
+	else
+	{
+		return EXIT_ERROR;
+	}
+}
 
