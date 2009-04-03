@@ -1,15 +1,20 @@
 
 [Anjuta]
 Maximized=1
-Geometry=1280x725+0+25
+Geometry=1440x825+0+25
 
 [Execution]
 Program arguments=
-Program uri=file:///home/pajdo/FOBP/kalashnikovdb/src/kalashnikov-db
+Program uri=file:///home/tomo/Desktop/kalashnikovdb/src/kalashnikov-db
 Run in terminal=2
-Working directories=file:///home/pajdo
+Working directories=file:///home/tomo/Desktop/kalashnikovdb
 Environment variables=
 
 [Build]
 Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
 Selected Configuration=Default
+
+[Debugger]
+Watch=header%%%current_extent_start_addr
+Source directories=
+Stop at beginning=1

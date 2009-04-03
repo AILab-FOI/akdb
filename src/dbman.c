@@ -283,6 +283,70 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 }
 
 
+/**
+ @author Tomislav Fotak
+ 
+ Function to allocate new segment of extents. In this phase of implementation, only extents
+ containing INITIAL_EXTENT_SIZE blocks can be allocated
+ 
+ @param name (character pointer) name of segment
+ @param type segment type (possible values:
+	SEGMENT_TYPE_SYSTEM_TABLE, 
+	SEGMENT_TYPE_TABLE, 
+	SEGMENT_TYPE_INDEX, 
+	SEGMENT_TYPE_TRANSACTION, 
+	SEGMENT_TYPE_TEMP
+							   )
+ @param header (header pointer) pointer to header that should be written to the new extent (all blocks)
+ @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
+ */
+int KK_new_segment(char* name, int type, KK_header *header)
+{
+	int segment_start_addr = 1; //start adress for segment because we can not allocate segment in block 0
+	int allocated_extents = 0; //number of allocated extents
+	int i; //counter
+	KK_block *block;
+	int current_extent_start_addr;
+	
+	
+	for ( i = segment_start_addr; i <= db_file_size; i++ )
+	{
+		// if there is max number of extent allocated, exit FOR loop
+		if( allocated_extents == MAX_EXTENTS )
+			break;
+		
+		// check if the block is free
+		block = KK_read_block(i);
+		
+		if ( block->type == BLOCK_TYPE_FREE )
+		{
+			current_extent_start_addr = KK_new_extent( i, 0, type, header ); //allocate new extent
+			
+			// if extent is successfully allocated, increment number of allocated extents and move to
+			// next block after allocated extent, else move for INITIAL_EXTENT_SIZE blocks, so in that way get
+			// either first block of new extent or some block in this extent which will not be free
+			if ( current_extent_start_addr != 0 )
+			{
+				allocated_extents++;
+				i += INITIAL_EXTENT_SIZE - 1;
+			}
+			else
+			{
+				i += INITIAL_EXTENT_SIZE - 1;
+			}
+		}
+	}
+	
+	if ( allocated_extents < MAX_EXTENTS )
+	{
+		printf("KK_new_extent: WARNING! Segment is allocated with less than %d extents.\nIt contains %d extents.\n", MAX_EXTENTS, allocated_extents);
+		exit(EXIT_ERROR);
+	}
+	
+	return (EXIT_SUCCESS);
+}
+
+
 //MN function for creating header
 KK_header * KK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code ) 
 {
@@ -408,4 +472,3 @@ int KK_init_system_tables_catalog( int relation, int attribute, int index, int v
 		return EXIT_ERROR;
 	}
 }
-

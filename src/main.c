@@ -40,6 +40,7 @@ int main()
 
 	printf( "We need %d blocks for %d MiB\n", ( int ) size, size_in_mb );
 
+	
 	KK_init_db_file( ( int ) size );
 	
 	KK_block * block = KK_read_block( 55 );
@@ -56,12 +57,25 @@ int main()
 
 	printf( "\nBye =)\n" );
 	
+	
+	/*
 	//nbakos test funkcije: int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header )
 	int address_of_extend=2;
 	KK_header *header = ( KK_header * ) malloc ( sizeof( KK_header ) );
 	header->integrity[ 0 ] = 23;
 	address_of_extend = KK_new_extent(0,0,0, header );
 	printf( "\nnbakos test: adresa extenda=%d\n",address_of_extend );
+	 */
+	
+	//tomislavfotak test funkcije: KK_new_segment(char* name, int type, KK_header *header)
+	//usput tesitra i funkciju KK_new_extent koju koristi :-)
+	KK_header header;
+	char ime = 'T';
+	header.type = 1;
+	header.integrity[0] = 23;
+	if(KK_new_segment(&ime, SEGMENT_TYPE_TABLE, &header) == EXIT_SUCCESS)
+		printf ("Jej, alocirao sam segment :-)\n");
+	
 	
 	//matnovak test funkcije: KK_init_system_tables_catalog( int relation, int attribute, 
 								//	int index, int view, int sequence, int function, int function_arguments, 
@@ -98,7 +112,7 @@ int main()
 	printf("%d",query_mem->parsed->next_replace);
 	*/
 	//matnovak end test
-	
+		
 	printf( "\nBye =)\n" );
 	return ( EXIT_SUCCESS );
 }
