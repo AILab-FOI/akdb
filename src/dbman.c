@@ -24,7 +24,6 @@
 #include "dbman.h"
 //#include "memoman.h"
 
-
 /**
 Initializes a new database file named DB_FILE
 
@@ -472,3 +471,6 @@ int KK_init_system_tables_catalog( int relation, int attribute, int index, int v
 		return EXIT_ERROR;
 	}
 }
+
+
+

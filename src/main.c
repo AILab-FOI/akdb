@@ -54,18 +54,32 @@ int main()
 	block = KK_read_block( 55 );
 	
 	printf( "Integrity: %d\nType: %d\nChained with: %d\nSize: %d\n", block->header[ 0 ].integrity[ 0 ], block->type, block->chained_with, sizeof( *block ) );
+	
+//nbakos test of function KK_cache_block(int block_address)
+	
+	int address_of_block = 55;
+	if( KK_cache_block( address_of_block ) == EXIT_SUCCESS)
+		printf("\nnbakos test: uspjesno kesiran blok: % ",address_of_block);
+	else{
+		printf("\nnbakos test: ERROR. NEuspjesno kesiran blok: % ",address_of_block);	
+	}
+	
+//end of KK_cache_block(int block_address) test
+	
+	
 
-	printf( "\nBye =)\n" );
+//nbakos test funkcije: int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header )
 	
-	
-	/*
-	//nbakos test funkcije: int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header )
-	int address_of_extend=2;
-	KK_header *header = ( KK_header * ) malloc ( sizeof( KK_header ) );
-	header->integrity[ 0 ] = 23;
-	address_of_extend = KK_new_extent(0,0,0, header );
+	int address_of_extend=0;
+	KK_header *zaglavlje = ( KK_header * ) malloc ( sizeof( KK_header ) );
+	zaglavlje->integrity[ 0 ] = 23;
+	address_of_extend = KK_new_extent(0,0,0, zaglavlje );
 	printf( "\nnbakos test: adresa extenda=%d\n",address_of_extend );
-	 */
+	
+//nbakos end of KK_new_extent test
+	
+	
+	
 	
 	//tomislavfotak test funkcije: KK_new_segment(char* name, int type, KK_header *header)
 	//usput tesitra i funkciju KK_new_extent koju koristi :-)
@@ -112,6 +126,9 @@ int main()
 	printf("%d",query_mem->parsed->next_replace);
 	*/
 	//matnovak end test
+	
+	
+	
 		
 	printf( "\nBye =)\n" );
 	return ( EXIT_SUCCESS );

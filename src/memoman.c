@@ -111,15 +111,42 @@ int KK_memoman_init()
 }
 
 /**
-Caches a block into memory (LIFO)
+Caches block into memory.
 
 @param num block number (address)
 @return EXIT_SUCCESS if the block has been successfully read into memory, EXIT_ERROR otherwise
 */
 int KK_cache_block( int num )
 {
-	return EXIT_SUCCESS;
+	KK_mem_block * mem_block;
+    KK_block * block_cache;
+	
+	//alocation of KK_mem_block
+	if( ( mem_block = ( KK_mem_block * ) malloc ( sizeof( KK_mem_block ) ) ) == NULL )
+	{
+		printf( " KK_mem_block: ERROR. Cannot allocate memory \n");
+		return (EXIT_ERROR);
+	}
+	//alocation of KK_block
+	if( ( block_cache = ( KK_block * ) malloc ( sizeof( KK_block ) ) ) == NULL )
+	{
+		printf( " KK_block: ERROR. Cannot allocate memory \n");
+		return (EXIT_ERROR);
+	}	
+
+	//read the block from the given address
+    block_cache = KK_read_block( num );   
+	
+	memcpy( &mem_block->block, block_cache, sizeof( *block_cache ) ); // copy pointer to given block   
+	mem_block->dirty = BLOCK_CLEAN; //set dirty bit in mem_block struct
+ 
+    int timestamp = clock();  //get the timestamp
+    mem_block->timestamp_read = timestamp; //set timestamp_read
+    mem_block->timestamp_last_change = timestamp; //set timestamp_last_change
+	
+	return (EXIT_SUCCESS); //if all is succesfull
 }
+
 
 /**
 Reads a block from memory. If the block is cached returns the cached block. Else uses

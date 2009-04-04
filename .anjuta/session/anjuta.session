@@ -1,20 +1,11 @@
 
 [Anjuta]
 Maximized=1
-Geometry=1440x825+0+25
+Geometry=1280x726+0+25
+
+[File Loader]
+Files=file:///home/jars/kalashnikovdb/src/memoman.c#147%%%file:///home/jars/kalashnikovdb/src/main.c#66%%%file:///home/jars/kalashnikovdb/src/dbman.c#25%%%file:///home/jars/kalashnikovdb/src/memoman.h#30
 
 [Execution]
 Program arguments=
-Program uri=file:///home/tomo/Desktop/kalashnikovdb/src/kalashnikov-db
 Run in terminal=2
-Working directories=file:///home/tomo/Desktop/kalashnikovdb
-Environment variables=
-
-[Build]
-Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
-Selected Configuration=Default
-
-[Debugger]
-Watch=header%%%current_extent_start_addr
-Source directories=
-Stop at beginning=1
