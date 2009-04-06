@@ -51,12 +51,14 @@ Initializes the global query memory (variable query_mem)
 int KK_query_mem_malloc()
 {
 	printf("Start query_mem_malloc");
+	//allocate memory for global variable query_mem
 	if( (query_mem = ( KK_query_mem * ) malloc ( sizeof( KK_query_mem) ) ) == NULL )
 	{
 		printf( " KK_query_mem: ERROR. Cannot allocate memory \n");
 		exit( EXIT_ERROR );
 	}
 	
+	//allocate memory for variable query_mem_lib which is used in query_mem->parsed
 	KK_query_mem_lib * query_mem_lib;
 	if(( query_mem_lib = (KK_query_mem_lib *) malloc(sizeof(KK_query_mem_lib)) ) == NULL )
 	{
@@ -64,6 +66,7 @@ int KK_query_mem_malloc()
 		exit( EXIT_ERROR );
 	}
 	
+	//allocate memory for variable query_mem_dict which is used in query_mem->dictionary
 	KK_query_mem_dict * query_mem_dict;
 	if( (query_mem_dict = ( KK_query_mem_dict *) malloc(sizeof(KK_query_mem_dict)) ) == NULL )
 	{
@@ -71,6 +74,7 @@ int KK_query_mem_malloc()
 		exit( EXIT_ERROR );
 	}
 	
+	//allocate memory for variable query_mem_result which is used in query_mem->result
 	KK_query_mem_result * query_mem_result;
 	if(( query_mem_result = (KK_query_mem_result *) malloc(sizeof(KK_query_mem_result)) ) == NULL )
 	{
@@ -78,21 +82,22 @@ int KK_query_mem_malloc()
 		exit( EXIT_ERROR );
 	}
 	
-	
+	//allocate memory for variable tuple_dict which is used in query_mem->dictionary->dictionary[]
 	KK_tuple_dict * tuple_dict = (KK_tuple_dict *) malloc(sizeof(KK_tuple_dict));
 	if(( tuple_dict = (KK_tuple_dict *) malloc(sizeof(KK_tuple_dict)) ) == NULL )
 	{
 		printf( "  KK_tuple_dict: ERROR. Cannot allocate memory \n");
 		exit( EXIT_ERROR );
 	}
-	
-
+	
 	memcpy(query_mem_dict->dictionary,tuple_dict,sizeof(* tuple_dict));
 
 	query_mem->parsed = query_mem_lib;
 	query_mem->dictionary = query_mem_dict;
 	query_mem->result = query_mem_result;
-/*	memcpy(query_mem->parsed, query_mem_lib, sizeof(* query_mem_lib));
+	
+/*	wrong way becouse we don't have data only adress which must be written in query_mem variables
+	memcpy(query_mem->parsed, query_mem_lib, sizeof(* query_mem_lib));
 	memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));
 	memcpy(query_mem->result,query_mem_result,sizeof(* query_mem_result));*/
 	

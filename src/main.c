@@ -57,12 +57,12 @@ int main()
 	
 //nbakos test of function KK_cache_block(int block_address)
 	
-	int address_of_block = 55;
-	if( KK_cache_block( address_of_block ) == EXIT_SUCCESS)
-		printf("\nnbakos test: uspjesno kesiran blok: % ",address_of_block);
-	else{
-		printf("\nnbakos test: ERROR. NEuspjesno kesiran blok: % ",address_of_block);	
-	}
+//	int address_of_block = 55;
+//	if( KK_cache_block( address_of_block ) == EXIT_SUCCESS)
+//		printf("\nnbakos test: uspjesno kesiran blok: % ",address_of_block);
+//	else{
+//		printf("\nnbakos test: ERROR. NEuspjesno kesiran blok: % ",address_of_block);	
+//	}
 	
 //end of KK_cache_block(int block_address) test
 	
@@ -83,14 +83,14 @@ int main()
 	
 	//tomislavfotak test funkcije: KK_new_segment(char* name, int type, KK_header *header)
 	//usput tesitra i funkciju KK_new_extent koju koristi :-)
-	KK_header header;
+/*	KK_header header;
 	char ime = 'T';
 	header.type = 1;
 	header.integrity[0] = 23;
 	if(KK_new_segment(&ime, SEGMENT_TYPE_TABLE, &header) == EXIT_SUCCESS)
 		printf ("Jej, alocirao sam segment :-)\n");
 	
-	
+	*/
 	//matnovak test funkcije: KK_init_system_tables_catalog( int relation, int attribute, 
 								//	int index, int view, int sequence, int function, int function_arguments, 
 								//  int trigger, int db, int db_obj, int user, int group, int right)
