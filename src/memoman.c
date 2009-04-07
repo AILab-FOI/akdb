@@ -158,9 +158,72 @@ Reads a block from memory. If the block is cached returns the cached block. Else
 KK_cache_block to read the block to cache and then returns it.
 
 @param num block number (address)
-@return the block given i succesfull, EXIT_ERROR otherwise
+@return the block given if succesfull, EXIT_ERROR otherwise
 */
 KK_mem_block * KK_read_block( int num )
 {
-	return EXIT_SUCCESS;
+	int i = 0; //counter
+	bool found_in_cache = false;
+	int first_free_mem_block = -1;
+	int oldest_block = &db_cache.next_replace;
+	int get_second_oldest = 0; // if block will be removed from cache, then second oldest should be
+								// marked in db_cache as the one that will be replaced next
+	KK_mem_block *cached_block; // cached memory block
+	KK_block *data_block;
+	int block_writed;
+	
+	while ( i < MAX_CACHE_MEMORY )
+	{
+		//if block is cached returns block
+		if ( &db_cache.cache[i]->block.address == num )
+		{
+			cached_block = (KK_mem_block*) db_cache.cache[i];
+			found_in_cache = true;
+		}
+		
+		//get first free memory block for possible block caching
+		//checking by timestamp of last block reading
+		if ( first_free_mem_block == -1 )
+		{
+			//assume that free block has timestamp_read set to -1
+			if ( &db_cache.cache[i].timestamp_read == -1 )
+				first_free_mem_block = i;
+		}
+		
+		// get second oldest block index in db_cache
+		if ( (&db_cache.cache[i].timestamp_read > &db_cache.cache[oldset_block].timestamp_read) &&
+			(&db_cache.cache[i].timestamp_read < &db_cache.cache[get_second_oldest].timestamp_read) )
+			get_second_oldest = i;
+				
+		i++;
+	}
+	
+	if ( !found_in_cache )
+	{
+		if ( first_free_mem_block != -1 )
+		{
+			// assume that function KK_cahce_block returns (KK_mem_block*)
+			// and ih takes two arguments (block_number, allocation_address)
+			cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[first_free_mem_block] );
+		}
+		else
+		{
+			if ( &db_cache.cache[oldest_block].dirty == BLOCK_DIRTY )
+			{
+				data_block = db_cache.cache[oldest_block]->block;
+				block_writed = KK_write_block ( data_block );
+				// if block form cache can not be writed to DB file -> EXIT_ERROR
+				if ( block_writed != EXIT_SUCCESS )
+				{
+					printf("KK_write_block: ERROR! Cannot write block from cache to DB File.\n");
+					exit ( EXIT_ERROR );
+				}
+				// if block is written to DB file, set next_replace to second oldest
+				&db_cache.next_replace = get_second_oldest;
+			}
+			cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[oldest_block] );
+		}
+	}
+	
+	return ( cached_block );
 }
