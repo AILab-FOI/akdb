@@ -744,3 +744,21 @@ int KK_init_system_catalog() {
 		return EXIT_ERROR;
 	}
 }
+
+
+/**
+This function call function for delete block.
+Function get two arguments, first is mark for begin of deleting blocks, second is mark for end of deleting blocks.
+*/
+int KK_delete_extent(int begin, int end)
+{
+int address;
+for(address = begin; address < end + 1; address++ )
+    {
+        if (KK_delete_block(address) == NULL)
+        {
+            return EXIT_ERROR;
+        }
+    }
+return ( EXIT_SUCCESS );
+}

@@ -40,6 +40,10 @@ Initializes the global redo log memory (variable redo_log)
 */
 int KK_redo_log_malloc()
 {
+	if(KK_redo_log * redo_log = ( KK_redo_log * ) malloc ( sizeof(KK_redo_log ) ) == NULL)
+    {
+        exit( EXIT_ERROR );
+    }
 	return EXIT_SUCCESS;
 }
 
@@ -89,7 +93,8 @@ int KK_query_mem_malloc()
 		printf( "  KK_tuple_dict: ERROR. Cannot allocate memory \n");
 		exit( EXIT_ERROR );
 	}
-
+
+
 	memcpy(query_mem_dict->dictionary,tuple_dict,sizeof(* tuple_dict));
 
 	query_mem->parsed = query_mem_lib;
