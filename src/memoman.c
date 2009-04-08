@@ -6,17 +6,17 @@
 /*
  * dbman.c
  * Copyright (C) Markus Schatten 2009 <markus.schatten@foi.hr>
- * 
+ *
  * main.c is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * main.c is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -57,7 +57,7 @@ int KK_query_mem_malloc()
 		printf( " KK_query_mem: ERROR. Cannot allocate memory \n");
 		exit( EXIT_ERROR );
 	}
-	
+
 	//allocate memory for variable query_mem_lib which is used in query_mem->parsed
 	KK_query_mem_lib * query_mem_lib;
 	if(( query_mem_lib = (KK_query_mem_lib *) malloc(sizeof(KK_query_mem_lib)) ) == NULL )
@@ -65,7 +65,7 @@ int KK_query_mem_malloc()
 		printf( " KK_query_mem_lib: ERROR. Cannot allocate memory \n");
 		exit( EXIT_ERROR );
 	}
-	
+
 	//allocate memory for variable query_mem_dict which is used in query_mem->dictionary
 	KK_query_mem_dict * query_mem_dict;
 	if( (query_mem_dict = ( KK_query_mem_dict *) malloc(sizeof(KK_query_mem_dict)) ) == NULL )
@@ -73,7 +73,7 @@ int KK_query_mem_malloc()
 		printf( "  KK_query_mem_dict: ERROR. Cannot allocate memory \n");
 		exit( EXIT_ERROR );
 	}
-	
+
 	//allocate memory for variable query_mem_result which is used in query_mem->result
 	KK_query_mem_result * query_mem_result;
 	if(( query_mem_result = (KK_query_mem_result *) malloc(sizeof(KK_query_mem_result)) ) == NULL )
@@ -81,7 +81,7 @@ int KK_query_mem_malloc()
 		printf( "  KK_query_mem_result: ERROR. Cannot allocate memory \n");
 		exit( EXIT_ERROR );
 	}
-	
+
 	//allocate memory for variable tuple_dict which is used in query_mem->dictionary->dictionary[]
 	KK_tuple_dict * tuple_dict = (KK_tuple_dict *) malloc(sizeof(KK_tuple_dict));
 	if(( tuple_dict = (KK_tuple_dict *) malloc(sizeof(KK_tuple_dict)) ) == NULL )
@@ -89,18 +89,18 @@ int KK_query_mem_malloc()
 		printf( "  KK_tuple_dict: ERROR. Cannot allocate memory \n");
 		exit( EXIT_ERROR );
 	}
-	
+
 	memcpy(query_mem_dict->dictionary,tuple_dict,sizeof(* tuple_dict));
 
 	query_mem->parsed = query_mem_lib;
 	query_mem->dictionary = query_mem_dict;
 	query_mem->result = query_mem_result;
-	
+
 /*	wrong way becouse we don't have data only adress which must be written in query_mem variables
 	memcpy(query_mem->parsed, query_mem_lib, sizeof(* query_mem_lib));
 	memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));
 	memcpy(query_mem->result,query_mem_result,sizeof(* query_mem_result));*/
-	
+
 	printf("END; Success query_mem_malloc");
 	return EXIT_SUCCESS;
 }
@@ -112,6 +112,21 @@ Initializes memory manager (cache, redo log and query memory)
 */
 int KK_memoman_init()
 {
+    if(KK_cache_malloc() == EXIT_ERROR) {
+        printf( "KK_memoman_init: ERROR. KK_cache_malloc() failed.\n");
+        return EXIT_ERROR;
+    }
+
+    if(KK_redo_log_malloc() == EXIT_ERROR) {
+        printf( "KK_memoman_init: ERROR. KK_redo_log_malloc() failed.\n");
+        return EXIT_ERROR;
+    }
+
+    if(KK_query_mem_malloc() == EXIT_ERROR) {
+        printf( "KK_memoman_init: ERROR. KK_query_mem_malloc() failed.\n");
+        return EXIT_ERROR;
+    }
+
 	return EXIT_SUCCESS;
 }
 
@@ -125,7 +140,7 @@ int KK_cache_block( int num )
 {
 	KK_mem_block * mem_block;
     KK_block * block_cache;
-	
+
 	//alocation of KK_mem_block
 	if( ( mem_block = ( KK_mem_block * ) malloc ( sizeof( KK_mem_block ) ) ) == NULL )
 	{
@@ -137,18 +152,18 @@ int KK_cache_block( int num )
 	{
 		printf( " KK_block: ERROR. Cannot allocate memory \n");
 		return (EXIT_ERROR);
-	}	
+	}
 
 	//read the block from the given address
-    block_cache = KK_read_block( num );   
-	
-	memcpy( &mem_block->block, block_cache, sizeof( *block_cache ) ); // copy pointer to given block   
+    block_cache = KK_read_block( num );
+
+	memcpy( &mem_block->block, block_cache, sizeof( *block_cache ) ); // copy pointer to given block
 	mem_block->dirty = BLOCK_CLEAN; //set dirty bit in mem_block struct
- 
+
     int timestamp = clock();  //get the timestamp
     mem_block->timestamp_read = timestamp; //set timestamp_read
     mem_block->timestamp_last_change = timestamp; //set timestamp_last_change
-	
+
 	return (EXIT_SUCCESS); //if all is succesfull
 }
 
@@ -171,7 +186,7 @@ KK_mem_block * KK_read_block( int num )
 	KK_mem_block *cached_block; // cached memory block
 	KK_block *data_block;
 	int block_writed;
-	
+
 	while ( i < MAX_CACHE_MEMORY )
 	{
 		//if block is cached returns block
@@ -180,7 +195,7 @@ KK_mem_block * KK_read_block( int num )
 			cached_block = (KK_mem_block*) db_cache.cache[i];
 			found_in_cache = true;
 		}
-		
+
 		//get first free memory block for possible block caching
 		//checking by timestamp of last block reading
 		if ( first_free_mem_block == -1 )
@@ -189,15 +204,15 @@ KK_mem_block * KK_read_block( int num )
 			if ( &db_cache.cache[i].timestamp_read == -1 )
 				first_free_mem_block = i;
 		}
-		
+
 		// get second oldest block index in db_cache
 		if ( (&db_cache.cache[i].timestamp_read > &db_cache.cache[oldset_block].timestamp_read) &&
 			(&db_cache.cache[i].timestamp_read < &db_cache.cache[get_second_oldest].timestamp_read) )
 			get_second_oldest = i;
-				
+
 		i++;
 	}
-	
+
 	if ( !found_in_cache )
 	{
 		if ( first_free_mem_block != -1 )
@@ -224,6 +239,6 @@ KK_mem_block * KK_read_block( int num )
 			cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[oldest_block] );
 		}
 	}
-	
+
 	return ( cached_block );
 }
