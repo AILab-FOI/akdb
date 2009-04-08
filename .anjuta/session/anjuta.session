@@ -4,13 +4,13 @@ Maximized=1
 Geometry=1440x825+0+25
 
 [File Loader]
-Files=file:///home/tomo/Desktop/kalashnikovdb/src/memoman.c#23%%%file:///home/tomo/Desktop/kalashnikovdb/src/main.c#1
+Files=file:///home/tomo/Desktop/kalashnikovdb/src/main.c#125
 
 [Execution]
 Program arguments=
 Program uri=file:///home/pajdo/FOBP/kalashnikovdb/src/kalashnikov-db
 Run in terminal=2
-Working directories=
+Working directories=file:///home/tomo/Desktop/kalashnikovdb
 Environment variables=
 
 [Build]

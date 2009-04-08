@@ -37,7 +37,9 @@ int main()
 
 	int size_in_mb = DB_FILE_SIZE;
 	float size = 1024 * 1024 * size_in_mb / sizeof( KK_block );
-
+	
+	//db_file_size = size;
+	
 	printf( "We need %d blocks for %d MiB\n", ( int ) size, size_in_mb );
 
 	
@@ -58,7 +60,7 @@ int main()
 //nbakos test of function KK_cache_block(int block_address)
 	
 //	int address_of_block = 55;
-//	if( KK_cache_block( address_of_block ) == EXIT_SUCCESS)
+//	if( KK_cache_block( address_of_block,  ) == EXIT_SUCCESS)
 //		printf("\nnbakos test: uspjesno kesiran blok: % ",address_of_block);
 //	else{
 //		printf("\nnbakos test: ERROR. NEuspjesno kesiran blok: % ",address_of_block);	
@@ -69,13 +71,13 @@ int main()
 	
 
 //nbakos test funkcije: int KK_new_extent( int start_address, int old_size, int ekstent_type, KK_header *header )
-	
+	/*
 	int address_of_extend=0;
 	KK_header *zaglavlje = ( KK_header * ) malloc ( sizeof( KK_header ) );
 	zaglavlje->integrity[ 0 ] = 23;
 	address_of_extend = KK_new_extent(0,0,0, zaglavlje );
 	printf( "\nnbakos test: adresa extenda=%d\n",address_of_extend );
-	
+	*/
 //nbakos end of KK_new_extent test
 	
 	
@@ -83,14 +85,17 @@ int main()
 	
 	//tomislavfotak test funkcije: KK_new_segment(char* name, int type, KK_header *header)
 	//usput tesitra i funkciju KK_new_extent koju koristi :-)
-/*	KK_header header;
+	KK_header header;
 	char ime = 'T';
+	int adresaSegmenta;
 	header.type = 1;
 	header.integrity[0] = 23;
-	if(KK_new_segment(&ime, SEGMENT_TYPE_TABLE, &header) == EXIT_SUCCESS)
-		printf ("Jej, alocirao sam segment :-)\n");
+	adresaSegmenta = KK_new_segment(&ime, SEGMENT_TYPE_TABLE, &header);
+	if(adresaSegmenta != 0)
+		printf ("Jej, alocirao sam segment s pocetnom adresom %d :-)\n", adresaSegmenta);
+	//nikako neće alocirati blokove 41 - 56 (nemam pojma zašto)
 	
-	*/
+	
 	//matnovak test funkcije: KK_init_system_tables_catalog( int relation, int attribute, 
 								//	int index, int view, int sequence, int function, int function_arguments, 
 								//  int trigger, int db, int db_obj, int user, int group, int right)
@@ -117,7 +122,7 @@ int main()
 		memcpy(&neki, &catalog_block->data[i], 20);
 		printf("\ni:%d rj:%s", i,neki);
 	}
-	
+		
 	
 /*	Try to write in alocated memory place
 	 

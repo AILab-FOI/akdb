@@ -134,36 +134,30 @@ int KK_memoman_init()
 Caches block into memory.
 
 @param num block number (address)
+@param mem_block address of memmory block
 @return EXIT_SUCCESS if the block has been successfully read into memory, EXIT_ERROR otherwise
 */
-int KK_cache_block( int num )
+int KK_cache_block( int num, KK_mem_block * mem_block )
 {
-	KK_mem_block * mem_block;
     KK_block * block_cache;
-
-	//alocation of KK_mem_block
-	if( ( mem_block = ( KK_mem_block * ) malloc ( sizeof( KK_mem_block ) ) ) == NULL )
-	{
-		printf( " KK_mem_block: ERROR. Cannot allocate memory \n");
-		return (EXIT_ERROR);
-	}
+	
 	//alocation of KK_block
 	if( ( block_cache = ( KK_block * ) malloc ( sizeof( KK_block ) ) ) == NULL )
 	{
 		printf( " KK_block: ERROR. Cannot allocate memory \n");
 		return (EXIT_ERROR);
-	}
+	}	
 
 	//read the block from the given address
-    block_cache = KK_read_block( num );
-
-	memcpy( &mem_block->block, block_cache, sizeof( *block_cache ) ); // copy pointer to given block
+    block_cache = KK_read_block( num );   
+	
+	memcpy( &mem_block->block, block_cache, sizeof( *block_cache ) ); // copy block to given mem_block   
 	mem_block->dirty = BLOCK_CLEAN; //set dirty bit in mem_block struct
-
+ 
     int timestamp = clock();  //get the timestamp
     mem_block->timestamp_read = timestamp; //set timestamp_read
     mem_block->timestamp_last_change = timestamp; //set timestamp_last_change
-
+	
 	return (EXIT_SUCCESS); //if all is succesfull
 }
 
@@ -173,7 +167,7 @@ Reads a block from memory. If the block is cached returns the cached block. Else
 KK_cache_block to read the block to cache and then returns it.
 
 @param num block number (address)
-@return the block given if succesfull, EXIT_ERROR otherwise
+@return segment start address
 */
 KK_mem_block * KK_read_block( int num )
 {
@@ -186,7 +180,7 @@ KK_mem_block * KK_read_block( int num )
 	KK_mem_block *cached_block; // cached memory block
 	KK_block *data_block;
 	int block_writed;
-
+	
 	while ( i < MAX_CACHE_MEMORY )
 	{
 		//if block is cached returns block
@@ -195,7 +189,7 @@ KK_mem_block * KK_read_block( int num )
 			cached_block = (KK_mem_block*) db_cache.cache[i];
 			found_in_cache = true;
 		}
-
+		
 		//get first free memory block for possible block caching
 		//checking by timestamp of last block reading
 		if ( first_free_mem_block == -1 )
@@ -204,22 +198,27 @@ KK_mem_block * KK_read_block( int num )
 			if ( &db_cache.cache[i].timestamp_read == -1 )
 				first_free_mem_block = i;
 		}
-
+		
 		// get second oldest block index in db_cache
 		if ( (&db_cache.cache[i].timestamp_read > &db_cache.cache[oldset_block].timestamp_read) &&
 			(&db_cache.cache[i].timestamp_read < &db_cache.cache[get_second_oldest].timestamp_read) )
 			get_second_oldest = i;
-
+				
 		i++;
 	}
-
+	
 	if ( !found_in_cache )
 	{
 		if ( first_free_mem_block != -1 )
 		{
 			// assume that function KK_cahce_block returns (KK_mem_block*)
 			// and ih takes two arguments (block_number, allocation_address)
-			cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[first_free_mem_block] );
+			//cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[first_free_mem_block] );
+			
+			//if KK_cahce_block returns INT
+			if ( KK_cache_block (num, db_cache.cache[first_free_mem_block]) == EXIT_SUCCESS )
+				cached_block = (KK_mem_block*) db_cache.cache[first_free_mem_block];
+
 		}
 		else
 		{
@@ -236,9 +235,12 @@ KK_mem_block * KK_read_block( int num )
 				// if block is written to DB file, set next_replace to second oldest
 				&db_cache.next_replace = get_second_oldest;
 			}
-			cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[oldest_block] );
+			//cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[oldest_block] );
+			
+			if ( KK_cache_block (num, db_cache.cache[first_free_mem_block]) == EXIT_SUCCESS )
+				cached_block = (KK_mem_block*) db_cache.cache[oldest_block];
 		}
 	}
-
+	
 	return ( cached_block );
 }
