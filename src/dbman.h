@@ -73,7 +73,7 @@ typedef struct {
 	/// dictionary of data entries
 	KK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
 	/// actual data entries
-	int data[ DATA_BLOCK_SIZE ][ DATA_ENTRY_SIZE ];
+	unsigned char data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
 } KK_block;
 
 /**

@@ -85,14 +85,14 @@ int main()
 	
 	//tomislavfotak test funkcije: KK_new_segment(char* name, int type, KK_header *header)
 	//usput tesitra i funkciju KK_new_extent koju koristi :-)
-	KK_header header;
+/*	KK_header header;
 	char ime = 'T';
 	int adresaSegmenta;
 	header.type = 1;
 	header.integrity[0] = 23;
 	adresaSegmenta = KK_new_segment(&ime, SEGMENT_TYPE_TABLE, &header);
 	if(adresaSegmenta != 0)
-		printf ("Jej, alocirao sam segment s pocetnom adresom %d :-)\n", adresaSegmenta);
+		printf ("Jej, alocirao sam segment s pocetnom adresom %d :-)\n", adresaSegmenta);*/
 	//nikako neće alocirati blokove 41 - 56 (nemam pojma zašto)
 	
 	
@@ -108,7 +108,8 @@ int main()
 	printf( "\nBlock: %d\n Type: %d\n Chained with: %d\n Free_space: %d\n", catalog_block->address, catalog_block->type ,  catalog_block->chained_with,  catalog_block->free_space);
 	
 	int i;
-	for(i=0;i<26;i++)
+	for(i=0;i<26;i++) 
+		
 	{
 		printf( "\nTupleDict%d \n Type: %d\n Address: %d\n Size: %d \n",i,catalog_block->tuple_dict[i].type, catalog_block->tuple_dict[i].address, catalog_block->tuple_dict[i].size);
 	}
@@ -119,8 +120,8 @@ int main()
 	for(i; i < catalog_block->free_space;i++)
 	{
 		j=0;
-		memcpy(&neki, &catalog_block->data[i], 20);
-		printf("\ni:%d rj:%s", i,neki);
+		memcpy(&neki, catalog_block->data+i, 1);
+		printf("\nZnak i:%d rj:%s", i,neki);
 	}
 		
 	

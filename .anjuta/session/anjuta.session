@@ -1,22 +1,18 @@
 
 [Anjuta]
 Maximized=1
-Geometry=1440x825+0+25
+Geometry=1280x725+0+25
 
 [File Loader]
-Files=file:///home/tomo/Desktop/kalashnikovdb/src/main.c#125
+Files=file:///home/pajdo/FOBP/kalashnikovdb/src/main.c#121%%%file:///home/pajdo/FOBP/kalashnikovdb/src/memoman.c#1%%%file:///home/pajdo/FOBP/kalashnikovdb/src/memoman.h#1%%%file:///home/pajdo/FOBP/kalashnikovdb/src/dbman.h#71%%%file:///home/pajdo/FOBP/kalashnikovdb/src/configuration.h#1%%%file:///home/pajdo/FOBP/kalashnikovdb/src/dbman.c#351
 
 [Execution]
 Program arguments=
 Program uri=file:///home/pajdo/FOBP/kalashnikovdb/src/kalashnikov-db
 Run in terminal=2
-Working directories=file:///home/tomo/Desktop/kalashnikovdb
+Working directories=file:///home/pajdo/FOBP/kalashnikovdb
 Environment variables=
 
 [Build]
 Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
 Selected Configuration=Default
-
-[Debugger]
-Source directories=
-Stop at beginning=2
