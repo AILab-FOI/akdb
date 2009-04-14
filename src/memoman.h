@@ -17,9 +17,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
- 
-#include "configuration.h"
-#include "dbman.h"
+#ifndef MEMOMAN
+#define MEMOMAN
+
 
 /**
 \struct KK_mem_block
@@ -119,3 +119,6 @@ KK_redo_log * redo_log;
 \brief Defines the global query memory
 */
 KK_query_mem * query_mem;
+
+
+#endif

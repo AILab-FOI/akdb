@@ -25,3 +25,11 @@ kalashnikov_db_LDFLAGS =
 
 kalashnikov_db_LDADD = 
 
+doc_DATA = 
+
+docdir = \
+	$(pkgdatadir)
+
+EXTRA_DIST = \
+	$(doc_DATA)
+

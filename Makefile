@@ -78,12 +78,12 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run aclocal-1.10
-AMTAR = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run tar
-AUTOCONF = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run automake-1.10
-AWK = gawk
+ACLOCAL = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run aclocal-1.10
+AMTAR = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run tar
+AUTOCONF = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run autoconf
+AUTOHEADER = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run autoheader
+AUTOMAKE = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run automake-1.10
+AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -108,7 +108,7 @@ LIBOBJS =
 LIBS = 
 LTLIBOBJS = 
 MAINT = #
-MAKEINFO = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run makeinfo
+MAKEINFO = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = kalashnikov-db
@@ -122,10 +122,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 0.1
-abs_builddir = /home/mschatte/myProgramming/kalashnikovdb
-abs_srcdir = /home/mschatte/myProgramming/kalashnikovdb
-abs_top_builddir = /home/mschatte/myProgramming/kalashnikovdb
-abs_top_srcdir = /home/mschatte/myProgramming/kalashnikovdb
+abs_builddir = /media/disk/myProgramming/myC/kalashnikovdb
+abs_srcdir = /media/disk/myProgramming/myC/kalashnikovdb
+abs_top_builddir = /media/disk/myProgramming/myC/kalashnikovdb
+abs_top_srcdir = /media/disk/myProgramming/myC/kalashnikovdb
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -144,7 +144,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = $(SHELL) /home/mschatte/myProgramming/kalashnikovdb/install-sh
+install_sh = $(SHELL) /media/disk/myProgramming/myC/kalashnikovdb/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -636,8 +636,6 @@ uninstall-am: uninstall-kalashnikov_dbdocDATA
 	tags-recursive uninstall uninstall-am \
 	uninstall-kalashnikov_dbdocDATA
 
-doc:
-	cd src; make doc; cd ..
 
 # Copy all the spec files. Of cource, only one is actually used.
 dist-hook:

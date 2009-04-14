@@ -18,10 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+#ifndef DBMAN
+#define DBMAN
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 
 /**
 \struct KK_header
@@ -87,3 +89,6 @@ FILE * db;
 \brief Defines the size of the DB file (in blocks)
 */
 unsigned int db_file_size;
+
+
+#endif

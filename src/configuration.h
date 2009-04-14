@@ -1,5 +1,5 @@
 /**
-@file configuration.h Defines global macros and variables
+@file configuration.h Defines global macros, constants and variables
 */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,14 @@
 #define CONFIGURATION
 
 /**
+\def DEBUG
+\brief constant for debugging
+*/
+#define DEBUG 0
+
+
+
+/**
 \def EXIT_SUCCESS
 \brief succesful exit return variable
 */
@@ -31,7 +39,7 @@
 \def EXIT_ERROR
 \brief unsuccesfull exit return variable
 */
-#define EXIT_ERROR 1
+#define EXIT_ERROR -1
 
 /**
 \def BLOCK_TYPE_FREE
@@ -249,13 +257,46 @@
 */
 #define TYPE_BOOL 9
 
+/**
+\def BLOCK_CLEAN
+\brief clean block (not changed since read from disk)
+*/
 #define BLOCK_CLEAN 0
+
+/**
+\def BLOCK_DIRTY
+\brief dirty block (changed since read from disk, has to be written)
+*/
 #define BLOCK_DIRTY 1
 
+/**
+\def MAX_CACHE_MEMORY
+\brief maximum size of DB cache memory
+*/
 #define MAX_CACHE_MEMORY 255
+
+/**
+\def MAX_REDO_LOG_MEMORY
+\brief maximum size of REDO log memory
+*/
 #define MAX_REDO_LOG_MEMORY 255
+
+/**
+\def MAX_QUERY_LIB_MEMORY
+\brief maximum size of query lib memory
+*/
 #define MAX_QUERY_LIB_MEMORY 255
+
+/**
+\def MAX_QUERY_DICT_MEMORY
+\brief maximum size of query dictionary memory
+*/
 #define MAX_QUERY_DICT_MEMORY 255
+
+/**
+\def MAX_QUERY_RESULT_MEMORY
+\brief maximum size of query result cache memory
+*/
 #define MAX_QUERY_RESULT_MEMORY 255
 
 #endif

@@ -15,6 +15,7 @@
 
 
 
+
 pkgdatadir = $(datadir)/kalashnikov-db
 pkglibdir = $(libdir)/kalashnikov-db
 pkgincludedir = $(includedir)/kalashnikov-db
@@ -40,10 +41,12 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)"
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_kalashnikov_db_OBJECTS = main.$(OBJEXT) dbman.$(OBJEXT)
+am_kalashnikov_db_OBJECTS = main.$(OBJEXT) dbman.$(OBJEXT) \
+	memoman.$(OBJEXT) btree.$(OBJEXT) hash.$(OBJEXT) files.$(OBJEXT) \
+	filesort.$(OBJEXT) filesearch.$(OBJEXT) fileio.$(OBJEXT)
 kalashnikov_db_OBJECTS = $(am_kalashnikov_db_OBJECTS)
 kalashnikov_db_DEPENDENCIES =
 kalashnikov_db_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -57,15 +60,23 @@ CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(kalashnikov_db_SOURCES)
 DIST_SOURCES = $(kalashnikov_db_SOURCES)
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
+docDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(doc_DATA)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run aclocal-1.10
-AMTAR = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run tar
-AUTOCONF = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run automake-1.10
-AWK = gawk
+ACLOCAL = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run aclocal-1.10
+AMTAR = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run tar
+AUTOCONF = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run autoconf
+AUTOHEADER = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run autoheader
+AUTOMAKE = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run automake-1.10
+AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -90,7 +101,7 @@ LIBOBJS =
 LIBS = 
 LTLIBOBJS = 
 MAINT = #
-MAKEINFO = ${SHELL} /home/mschatte/myProgramming/kalashnikovdb/missing --run makeinfo
+MAKEINFO = ${SHELL} /media/disk/myProgramming/myC/kalashnikovdb/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = kalashnikov-db
@@ -104,10 +115,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = 
 VERSION = 0.1
-abs_builddir = /home/mschatte/myProgramming/kalashnikovdb/src
-abs_srcdir = /home/mschatte/myProgramming/kalashnikovdb/src
-abs_top_builddir = /home/mschatte/myProgramming/kalashnikovdb
-abs_top_srcdir = /home/mschatte/myProgramming/kalashnikovdb
+abs_builddir = /media/disk/myProgramming/myC/kalashnikovdb/src
+abs_srcdir = /media/disk/myProgramming/myC/kalashnikovdb/src
+abs_top_builddir = /media/disk/myProgramming/myC/kalashnikovdb
+abs_top_srcdir = /media/disk/myProgramming/myC/kalashnikovdb
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -119,14 +130,16 @@ build_alias =
 builddir = .
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
-docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
+docdir = \
+	$(pkgdatadir)
+
 dvidir = ${docdir}
 exec_prefix = ${prefix}
 host_alias = 
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = $(SHELL) /home/mschatte/myProgramming/kalashnikovdb/install-sh
+install_sh = $(SHELL) /media/disk/myProgramming/myC/kalashnikovdb/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -157,10 +170,29 @@ AM_CFLAGS = \
 kalashnikov_db_SOURCES = \
 	main.c          \
 	dbman.c          \
-	dbman.h
+	dbman.h          \
+	configuration.h          \
+	memoman.c          \
+	memoman.h        \
+	btree.c        \
+	btree.h        \
+	hash.c        \
+	hash.h        \
+	files.c        \
+	files.h        \
+	filesort.c        \
+	filesort.h        \
+	filesearch.c        \
+	filesearch.h        \
+	fileio.c        \
+	fileio.h
 
 kalashnikov_db_LDFLAGS = 
 kalashnikov_db_LDADD = 
+doc_DATA = 
+EXTRA_DIST = \
+	$(doc_DATA)
+
 all: all-am
 
 .SUFFIXES:
@@ -216,7 +248,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) *.db *.bak *~; rm -R ../doc
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) *~ *.db; rm -R ../doc
 kalashnikov-db$(EXEEXT): $(kalashnikov_db_OBJECTS) $(kalashnikov_db_DEPENDENCIES) 
 	@rm -f kalashnikov-db$(EXEEXT)
 	$(kalashnikov_db_LINK) $(kalashnikov_db_OBJECTS) $(kalashnikov_db_LDADD) $(LIBS)
@@ -229,6 +261,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/dbman.Po
 include ./$(DEPDIR)/main.Po
+include ./$(DEPDIR)/memoman.Po
 
 .c.o:
 	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -243,6 +276,23 @@ include ./$(DEPDIR)/main.Po
 #	source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+install-docDATA: $(doc_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(docdir)" || $(MKDIR_P) "$(DESTDIR)$(docdir)"
+	@list='$(doc_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(docDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(docdir)/$$f'"; \
+	  $(docDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(docdir)/$$f"; \
+	done
+
+uninstall-docDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(doc_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(docdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(docdir)/$$f"; \
+	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -319,9 +369,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS)
+all-am: Makefile $(PROGRAMS) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -358,9 +408,6 @@ distclean: distclean-am
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
 
-doc:
-	doxygen doxygen.config
-
 dvi: dvi-am
 
 dvi-am:
@@ -371,7 +418,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-docDATA
 
 install-dvi: install-dvi-am
 
@@ -406,7 +453,9 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS
+uninstall-am: uninstall-binPROGRAMS uninstall-docDATA
+
+doc: doxygen doxygen.config
 
 .MAKE: install-am install-strip
 
@@ -414,14 +463,15 @@ uninstall-am: uninstall-binPROGRAMS
 	clean-generic ctags distclean distclean-compile \
 	distclean-generic distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-binPROGRAMS \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS
+	install-data install-data-am install-docDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-docDATA
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
