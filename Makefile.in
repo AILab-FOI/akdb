@@ -616,6 +616,9 @@ ps-am:
 
 uninstall-am: uninstall-kalashnikov_dbdocDATA
 
+doc: 
+	cd src; make doc; cd ..; cd doc/latex; make; cd ../..
+
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) install-am \
 	install-strip
 

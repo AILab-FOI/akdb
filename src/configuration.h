@@ -25,7 +25,7 @@
 \def DEBUG
 \brief constant for debugging
 */
-#define DEBUG 0
+#define DEBUG 1
 
 
 

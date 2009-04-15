@@ -455,7 +455,8 @@ ps-am:
 
 uninstall-am: uninstall-binPROGRAMS uninstall-docDATA
 
-doc: doxygen doxygen.config
+doc: 
+	doxygen doxygen.config
 
 .MAKE: install-am install-strip
 
