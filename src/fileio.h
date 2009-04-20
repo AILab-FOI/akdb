@@ -16,3 +16,143 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "configuration.h"
+
+typedef struct{
+	int address_from[200];
+	int address_to[200];
+
+}table_addresses;
+
+typedef struct {
+	///START row_element
+	///structure that reperesents one row of table that is inserted, updated, or deleted
+	int type;
+	char data[500];
+	char table[ MAX_ATT_NAME ];
+	char attribute_name[ MAX_ATT_NAME ];
+//možda dodati dali je atribut ograničenje ili nova vrijednost treba kod update-a
+	///END row_element
+	//you can add here your own attributes, but then you must implement your own special functions
+	struct list_structure *next;
+}list_structure;
+
+typedef list_structure *element;
+typedef list_structure list;
+
+///START GLOBAL FUNCTIONS
+
+//Alocate empty list
+void InitializeList(list *L)
+{
+	L->next = 0;
+}
+ 
+//returns frst list elementint type;
+	char data[255];
+	char table;
+	char attribute_name;
+element GetFirstElement(list *L)
+{
+	return L->next;
+}
+
+//returns last list element
+element GetLastElement(list *L)
+{
+	list *CurrentElement;
+	CurrentElement = L;
+	while (CurrentElement->next) 
+		CurrentElement = CurrentElement->next;
+	if(CurrentElement!=L)
+		return CurrentElement;
+	else 
+		return 0;
+}
+
+//returns next element of given current element 
+element GetNextElement(element CurrentElement)
+{
+	if (CurrentElement->next == 0) {
+//		cout << "Element ne postoji!" <<endl;
+		return 0;
+	} else {
+		list *NextElement;
+		NextElement = CurrentElement->next;
+		return NextElement;
+	}
+}
+
+//returns previous element of given current element, must alsa give list as second parameter
+element GetPreviousElement(element CurrentElement, list *L)
+{
+	list *PreviousElement;
+	PreviousElement = L;
+	while (PreviousElement->next != 0 && PreviousElement->next != CurrentElement)
+		PreviousElement = PreviousElement->next;
+	if (PreviousElement->next != 0 && PreviousElement!=L) {
+		return PreviousElement;
+	} else {
+//		cout << "Element ne postoji!" <<endl;
+		return 0;
+	}
+}
+
+//Retruns number positon of some element 
+int GetPositionOfElement(element SearchedElement, list *L)
+{
+	list *CurrentElement;
+	int i = 0;
+	CurrentElement = L;
+	while (CurrentElement->next != 0 && CurrentElement != SearchedElement) {
+		CurrentElement = CurrentElement->next;
+		i++;
+	}
+	return i;
+}
+
+///Delete element in list
+void DeleteElement(element DeletedElement, list *L)
+{
+	element PreviousElement = GetPreviousElement(DeletedElement,L);
+		if(PreviousElement!=0)
+		{	
+			PreviousElement->next = DeletedElement->next;
+		}
+		else
+		{
+			L->next=DeletedElement->next;
+		}
+	free(DeletedElement);
+}
+
+//delete all list elements
+void DeleteAllElements(list *L)
+{
+	list *CurrentElement = L, *DeletedElement=L->next;	
+	while (CurrentElement->next != 0) {
+		CurrentElement->next = DeletedElement->next;
+		free(DeletedElement);
+		DeletedElement = CurrentElement->next;
+	}	
+}
+
+///END GLOBAL FUNCTIONS
+
+///START SPECIAL FUNCTIONS FOR WORK WITH row_element_structure
+
+///Insert new element after some element, to insert on first place give list as before element
+void InsertNewElement(int newtype, char * data, char * table, char * attribute_name, element ElementBefore)
+{
+	list *newElement = (list *) malloc( sizeof(list) );
+	newElement->type = newtype;
+	memcpy(newElement->data, data, strlen(data));
+	memcpy(newElement->table, table, strlen(table));
+	memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
+	newElement->next = ElementBefore->next;
+	ElementBefore->next = newElement;
+}
+///END SPECIAL FUNCTIONS row_element_structure

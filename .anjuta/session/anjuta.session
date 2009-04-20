@@ -1,10 +1,17 @@
 
 [Anjuta]
-Geometry=1278x801+0+25
+Geometry=1270x721+0+25
 
 [File Loader]
-Files=file:///media/disk/myProgramming/myC/kalashnikovdb/src/memoman.c#35%%%file:///media/disk/myProgramming/myC/kalashnikovdb/src/memoman.h#20%%%file:///media/disk/myProgramming/myC/kalashnikovdb/src/main.c#1%%%file:///media/disk/myProgramming/myC/kalashnikovdb/src/configuration.h#36%%%file:///media/disk/myProgramming/myC/kalashnikovdb/src/dbman.h#28
+Files=file:///home/pajdo/FOBP/kalashnikovdb/src/main.c#58%%%file:///home/pajdo/FOBP/kalashnikovdb/src/filesort.c#1%%%file:///home/pajdo/FOBP/kalashnikovdb/configure#13%%%file:///home/pajdo/FOBP/kalashnikovdb/src/hash.c#12
 
 [Execution]
 Program arguments=
+Program uri=file:///home/pajdo/FOBP/kalashnikovdb/src/kalashnikov-db
 Run in terminal=2
+Working directories=file:///home/pajdo/FOBP/kalashnikovdb
+Environment variables=
+
+[Build]
+Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
+Selected Configuration=Default

@@ -267,6 +267,7 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 		}
 	}
 	int success = 0;    /// var for chack of number of blocks written
+	
 	for( j = first_addr_of_extent; j < ( first_addr_of_extent + nAlocated_blocks ); j++)
 	{
 		block = KK_read_block( j );   	/// read block
@@ -315,8 +316,7 @@ int KK_new_segment(char* name, int type, KK_header *header)
 	KK_block *block;
 	int current_extent_start_addr;
 	int first_allocated_block = -1;
-	
-	
+
 	for ( i = segment_start_addr; i <= db_file_size; i++ )
 	{
 		if( DEBUG )
@@ -328,7 +328,7 @@ int KK_new_segment(char* name, int type, KK_header *header)
 		{			
 			current_extent_start_addr = KK_new_extent( i, 0, type, header ); /// allocate new extent
 			
-			/// if extent is successfully allocated, increment number of allocated extents and move to
+			/// if extent is successfully allocatt_nameated, increment number of allocated extents and move to
 			/// next block after allocated extent, else move for INITIAL_EXTENT_SIZE blocks, so in that way get
 			/// either first block of new extent or some block in this extent which will not be free
 			if ( current_extent_start_addr != EXIT_ERROR )
@@ -388,7 +388,7 @@ KK_header * KK_create_header(char * name, int type, int integrity, char * constr
 		}
 	}
 	
-	return ( catalog_header );
+	return catalog_header;
 }
 /**
  @author Matija Novak
@@ -574,7 +574,7 @@ int KK_init_system_catalog() {
 		{TYPE_INT, "address", 0, '\0', '\0'},
 		{0, '\0', 0, '\0', '\0'}
 	};
-
+	
 	KK_header hAttribute[5] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
