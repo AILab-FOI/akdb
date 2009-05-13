@@ -1,17 +1,21 @@
 
 [Anjuta]
-Geometry=1270x721+0+25
+Geometry=1272x882+-71+25
 
 [File Loader]
-Files=file:///home/pajdo/FOBP/kalashnikovdb/src/main.c#58%%%file:///home/pajdo/FOBP/kalashnikovdb/src/filesort.c#1%%%file:///home/pajdo/FOBP/kalashnikovdb/configure#13%%%file:///home/pajdo/FOBP/kalashnikovdb/src/hash.c#12
+Files=file:///home/smp/Desktop/29/src/filesearch.c#114%%%file:///home/smp/Desktop/29/src/dbman.h#23%%%file:///home/smp/Desktop/29/src/dbman.c#766%%%file:///home/smp/Desktop/29/src/filesearch.h#14%%%file:///home/smp/Desktop/29/src/configuration.h#256%%%file:///home/smp/Desktop/29/src/auxiliary.c#55%%%file:///home/smp/Desktop/29/src/auxiliary.h#2%%%file:///home/smp/Desktop/29/src/main.c#1%%%file:///home/smp/Desktop/29/src/memoman.h#23%%%file:///home/smp/Desktop/29/src/memoman.c#1
+
+[Document Manager]
+bookmarks=<?xml version="1.0" encoding="UTF-8"?>\n<bookmarks/>\n
 
 [Execution]
-Program arguments=
 Program uri=file:///home/pajdo/FOBP/kalashnikovdb/src/kalashnikov-db
 Run in terminal=2
 Working directories=file:///home/pajdo/FOBP/kalashnikovdb
-Environment variables=
 
 [Build]
 Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
 Selected Configuration=Default
+BuildArgs/Debug='CFLAGS=-g -O0' 'CXXFLAGS=-g -O0' 'JFLAGS=-g -O0' 'FFLAGS=-g -O0'
+BuildArgs/Profiling='CFLAGS=-g -pg' 'CXXFLAGS=-g -pg' 'JFLAGS=-g -pg' 'FFLAGS=-g -pg'
+BuildArgs/Optimized='CFLAGS=-O2' 'CXXFLAGS=-O2' 'JFLAGS=-O2' 'FFLAGS=-O2'
