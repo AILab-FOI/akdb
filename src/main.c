@@ -41,22 +41,22 @@ int main()
 
 			/* component test area --- begin */
 
-		//	btree_test();
+			btree_test();
 
 
-		//	hash_test();
+			hash_test();
 
 
-		//	files_test();
+			files_test();
 
 
-		//	filesort_test();
+			filesort_test();
 
 
-		//	filesearch_test();
+//			filesearch_test();
 
 
-//			fileio_test();
+			fileio_test();
 
 
 			/* component test area --- end */

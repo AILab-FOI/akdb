@@ -421,7 +421,9 @@ void KK_insert_entry(KK_block * block_address, int type, void * entry_data, int 
 	/// copy data into bloc->data on start position bloc->free_space
 	if (type==TYPE_INT)
 	{
-		printf("KK_insert_entry: prije Insert data: %d  Size of data:\n", entry_data);
+		int mm = entry_data;		
+		printf("KK_insert_entry: prije Insert data: %d  Size of data:\n", mm);
+		
 		//memcpy(block_address->data+block_address->free_space, 4, 4);
 		//block_address->data+block_address->free_space=entry_data;
 		memcpy(block_address->data+block_address->free_space,entry_data, KK_type_size(type, entry_data));

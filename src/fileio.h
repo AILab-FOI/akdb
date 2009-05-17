@@ -31,7 +31,7 @@ typedef struct {
 	///START row_element
 	///structure that reperesents one row of table that is inserted, updated, or deleted
 	int type;
-	char data[500];
+	unsigned char data[200];
 	char table[ MAX_ATT_NAME ];
 	char attribute_name[ MAX_ATT_NAME ];
 	int constraint;
@@ -136,6 +136,7 @@ void DeleteAllElements(list *L)
 	list *CurrentElement = L, *DeletedElement=L->next;	
 	while (CurrentElement->next != 0) {
 		CurrentElement->next = DeletedElement->next;
+		//clear(DeletedElement);
 		free(DeletedElement);
 		DeletedElement = CurrentElement->next;
 	}	
@@ -146,13 +147,25 @@ void DeleteAllElements(list *L)
 ///START SPECIAL FUNCTIONS FOR WORK WITH row_element_structure
 
 ///Insert new element after some element, to insert on first place give list as before element
-void InsertNewElement(int newtype, char * data, char * table, char * attribute_name, element ElementBefore)
+void InsertNewElement(int newtype, void * data, char * table, char * attribute_name, element ElementBefore)
 {
 	list *newElement = (list *) malloc( sizeof(list) );
 	newElement->type = newtype;
-	memcpy(newElement->data, data, strlen(data));
+	memcpy(newElement->data, data, KK_type_size(newtype, data));
 	memcpy(newElement->table, table, strlen(table));
 	memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
+	newElement->next = ElementBefore->next;
+	ElementBefore->next = newElement;
+}
+
+void InsertNewElementForUpdate(int newtype, void * data, char * table, char * attribute_name, element ElementBefore, int newconstraint)
+{
+	list *newElement = (list *) malloc( sizeof(list) );
+	newElement->type = newtype;
+	memcpy(newElement->data, data, KK_type_size(newtype, data));
+	memcpy(newElement->table, table, strlen(table));
+	memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
+	newElement->constraint = newconstraint;
 	newElement->next = ElementBefore->next;
 	ElementBefore->next = newElement;
 }

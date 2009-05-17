@@ -16,13 +16,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "filesearch.h"
-#include "memoman.h"
 #include "configuration.h"
+#include "dbman.h"
+#include "memoman.h"
+
+
 
 void filesearch_test()
 {

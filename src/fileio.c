@@ -16,91 +16,132 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  17 */
+#include <stdio.h>
+#include <stdlib.h>
 #include "fileio.h"
 #include "dbman.h"
 #include "memoman.h"
 #include "string.h"
 
-
+/**
+function for geting addresses of some table 
+@return structure table_addresses witch contains start and end adress of table extents, 
+when form and to are 0 you are on the end of addresses
+@param table - table that you search
+*/
 table_addresses * get_table_addresses(char * table)
 {
-	KK_mem_block *catalog_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	//promjentiti temp_block u block i odati ispred catalog_block->
+	//KK_mem_block *catalog_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
 	//printf("te %s", table);
-	catalog_block = KK_get_block( 0 );
+	//catalog_block = KK_get_block( 0 );
+	temp_block=KK_read_block(0);
 	int trazi=1;
 	int i=0;
 	int data_adr=0;
 	int data_size=0;
 	int data_type=0;
 	char name_sys[100];
-	char address_sys[20];
-	while(trazi)
+	int address_sys;
+	int free=0;
+	
+	printf("\nTražim systemsku tablicu relacija \n");
+	for(i;i<DATA_BLOCK_SIZE;)
 	{
 		
-		trazi=0;
-		printf("\ntu sam\n");
-		data_adr=catalog_block->block->tuple_dict[i].address;
-		data_size=catalog_block->block->tuple_dict[i].size;
-		data_type=catalog_block->block->tuple_dict[i].type;
-		memcpy(name_sys,catalog_block->block->data+data_adr,data_size);
+		//trazi=0;
+		free=0;
+		for(free;free<100;free++)
+			name_sys[free]='\0';
+		data_adr=temp_block->tuple_dict[i].address;
+		//printf("\n adr: %d",data_adr);
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(name_sys,temp_block->data+data_adr,data_size);
+		printf("\n adr: %s",name_sys);
 		i++;
-		data_adr=catalog_block->block->tuple_dict[i].address;
-		data_size=catalog_block->block->tuple_dict[i].size;
-		data_type=catalog_block->block->tuple_dict[i].type;
-		memcpy(address_sys,catalog_block->block->data+data_adr,data_size);
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(&address_sys,temp_block->data+data_adr,data_size);
 		if(strcmp(name_sys,"KK_relation")==0)
 		{	
-			printf("\npronasao adresu relacijeske sys tablice %s \n",address_sys);
+			printf("\npronasao adresu relacijeske sys tablice: %d \n",address_sys);
 			trazi=0;
+			break;
 		}
+		i++;
+		
+		//printf("aaaaa");
 	}
 	
-	trazi=1;
+	//trazi=1;
 	i=0;
-	catalog_block = KK_get_block( address_sys );
+	//catalog_block = KK_get_block( address_sys );
+	temp_block=KK_read_block(address_sys);
 	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
+	free=0;	
+	for(free;free<200;free++)
+	{	
+		addresses->address_from[free] = 0;
+		addresses->address_to[free] = 0;
+	}
+	//return addresses;
 	char name[200];
-	char address_from[200];
-	char address_to[200];
+	int address_from;
+	int address_to;
 	int j=0;
-	while(trazi)
+	for(i;i<DATA_BLOCK_SIZE;)
 	{
 		i++;
-		printf("\ntu sam\n");
-		data_adr=catalog_block->block->tuple_dict[i].address;
-		data_size=catalog_block->block->tuple_dict[i].size;
-		data_type=catalog_block->block->tuple_dict[i].type;
-		memcpy(name,catalog_block->block->data+data_adr,data_size);
+		//printf("\ntu sam\n");
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(name,temp_block->data+data_adr,data_size);
+		//printf("table: %s, name: %s, brojac: %d, addres: %d, size: %d",table,name,i,data_adr,data_size);
 		i++;
-		data_adr=catalog_block->block->tuple_dict[i].address;
-		data_size=catalog_block->block->tuple_dict[i].size;
-		data_type=catalog_block->block->tuple_dict[i].type;
-		memcpy(address_from,catalog_block->block->data+data_adr,data_size);
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(&address_from,temp_block->data+data_adr,data_size);
 		i++;
-		data_adr=catalog_block->block->tuple_dict[i].address;
-		data_size=catalog_block->block->tuple_dict[i].size;
-		data_type=catalog_block->block->tuple_dict[i].type;
-		memcpy(address_to,catalog_block->block->data+data_adr,data_size);
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(&address_to,temp_block->data+data_adr,data_size);
 		i++;
-		if(name==table) //možda neka funkcija tu ide a ne običan =
+		
+		if(strcmp(name,table)==0) //možda neka funkcija tu ide a ne običan =
 		{	
-			addresses->address_from[j]= (int) address_from; //možda i neka funkcija
-			addresses->address_to[j]= (int) address_from;
+			addresses->address_from[j]= address_from; //možda i neka funkcija
+			addresses->address_to[j]= address_to;
 			j++;
-			printf("\npronasao adrese tražene tablice %s \n",address_sys);
+			printf("\npronasao adrese tražene tablice: %d , %d \n",address_from, address_to);	
 		}
-		if(name=="\0")
+		if(strcmp(name,"")==0)
 		{
+			//printf("nema ničeg");
 			trazi=0;
 		}
+		free=0;
+		//free the variable name
+		for(free;free<200;free++)
+			name[free]='\0';
 	}
+	//free( temp_block);
+	//printf("aaaaaaaaaaaaaaaaa");
 	return addresses;
 }
 
 int find_free_space(table_addresses * addresses)
 {
-	KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
 	int from=0,to=0,j=0,i=0;
+	//return 100;
+	printf("\n Searching for block that has free space<4000 \n");
 	for (j=0;j<200;j++)
 	{
 		if(addresses->address_from!=0)
@@ -109,8 +150,8 @@ int find_free_space(table_addresses * addresses)
 			to=addresses->address_to[j];
 			for(i=from;i<=to;i++)
 			{
-				 mem_block = KK_get_block( i );
-				if(mem_block->block->free_space<4000);
+				temp_block = KK_read_block( i );
+				if(temp_block->free_space<4000);
 				{
 					return i; 
 				}
@@ -128,50 +169,64 @@ int find_free_space(table_addresses * addresses)
 int insert_row(list *row_root)
 {
 	if(DEBUG){ 
-		printf("Start inserting data");
+		printf("\n \n \n Start inserting data");
 	}
 	element some_element;
 	some_element=GetFirstElement(row_root);
 	char table[100];
 	memcpy(&table,some_element->table,strlen(some_element->table));
-	printf("te %s", table);
-
+	printf("\n Insert into table: %s", table);
 	int adr_to_write;
+	
 	adr_to_write=find_free_space(get_table_addresses(&table));
 
-	KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
-	mem_block = KK_get_block(adr_to_write);
+	printf("\n Insert into block on adress: %d",adr_to_write);
+	
+
+	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
+	temp_block=KK_read_block(adr_to_write);
+	//mem_block = KK_get_block(adr_to_write);
 	
 	int unosi=1; //used to run while until all heders are inserted
 	int type; //type od entry data
-	char entry_data[2000]; 
+	unsigned char entry_data[200]; 
 	int size;	//size of entry data
 	int id=-1; //id tuple dict in which is inserted next data
 	int head=0; //index of header which is curently inserted
 	int search_tuple_id, search_elem;//serch for tuple dict id and searc for data in list 
+	
 	while(unosi)
 	{
 		search_tuple_id=1;
 		while(search_tuple_id)
 		{
 			id++;
-			if(mem_block->block->tuple_dict[id].size==0)
+			if(temp_block->tuple_dict[id].size==0)
 			{
 				search_tuple_id=0;
 			}
 		}
-		
-		if(mem_block->block->header[head].att_name!="\0")//opet možda treba funkcija neka za usporedbu znakova
+		printf("\n pozicija za pisanje %d, heder_att_name %s",id,temp_block->header[head].att_name);
+		if(strcmp(temp_block->header[head].att_name,"")!=0)//opet možda treba funkcija neka za usporedbu znakova
 		{ 
 		
 			search_elem=1;
 			some_element=GetFirstElement(row_root);
+			//printf("\n tražim element u listi");
 			while(search_elem)
 			{
-				if(some_element->attribute_name==mem_block->block->header[head].att_name)
+				//printf("\nsome_element->attribute_name %s", some_element->attribute_name);
+				if((strcmp(some_element->attribute_name,temp_block->header[head].att_name)==0)&&(some_element->constraint==0))
 				{//isto funkcija za usporedbu
+					
+					int free=0;
+					//free the variable name
+					for(free;free<200;free++)
+						entry_data[free]='\0';
 					type=some_element->type;
-					memcpy(entry_data,some_element->data,strlen(some_element->data));
+					memcpy(entry_data,some_element->data,KK_type_size(type,some_element->data));
+					//printf("\nnašao %s, vrijednsot: %d", some_element->attribute_name, entry_data );
 					search_elem=0;
 				}
 				else
@@ -187,13 +242,13 @@ int insert_row(list *row_root)
 				}
 			}
 		
-			memcpy(mem_block->block->data+mem_block->block->free_space, entry_data, strlen( entry_data));		
-			mem_block->block->tuple_dict[id].address=mem_block->block->free_space;
-			mem_block->block->free_space+=strlen(entry_data);
-			mem_block->block->tuple_dict[id].type=type;
-			mem_block->block->tuple_dict[id].size = strlen(entry_data);
+			memcpy(temp_block->data+temp_block->free_space, entry_data,KK_type_size(type,entry_data));		
+			temp_block->tuple_dict[id].address=temp_block->free_space;
+			temp_block->free_space+=KK_type_size(type,entry_data);
+			temp_block->tuple_dict[id].type=type;
+			temp_block->tuple_dict[id].size = KK_type_size(type,entry_data);
 			if( DEBUG )
-				printf("Insert;y: Insert data: %s Size of data: %d\n", entry_data, strlen(entry_data));
+				printf("\nInsert: Insert data: %s Size of data: %d\n", entry_data, KK_type_size(type,entry_data));
 			head++;
 		}
 		else
@@ -201,53 +256,72 @@ int insert_row(list *row_root)
 			unosi=0;
 		}
 	}
+	KK_write_block(temp_block);
 	return EXIT_SUCCESS;
 	
 }
 
-void delete_row_from_block(KK_mem_block *mem_block, list *row_root)
+void delete_row_from_block(KK_block *temp_block, list *row_root)
 {
 	int next=1; //moving through headers
 	int head=0; //counting headers
 	int i; //go through all tuple_dicts
 	int delete=1; //if can delete gorup of tuple dict which are in same row of table
 	int search_elem=1; //search throug list elemnts if contains some header
-	char entry_data[2000]; //entry data when haeader is found in list which is copied to compare with data in block
+	unsigned char entry_data[200]; //entry data when haeader is found in list which is copied to compare with data in block
 	int exits_equal_attrib=0; //if we fund at least one header in list
 	element some_element; //element of list
-	for (i=0;i<DATA_BLOCK_SIZE; )
+	
+	for (i=0;i<20; )
 	{//going through headers i=i+head	
 		next=1;
 		head=0;
+		//printf("\n for: %d", i);
+		
 		while(next)
-		{
-			if(mem_block->block->header[head].att_name!="\0")//opet možda treba funkcija neka za usporedbu znakova
+		{//printf("\n while next: %d, header: %s", next,temp_block->header[head].att_name);
+			if(strcmp(temp_block->header[head].att_name,"")!=0)//opet možda treba funkcija neka za usporedbu znakova
 			{
+				
 				search_elem=1;
 				some_element=GetFirstElement(row_root);
 				while(search_elem)
-				{
-					if(some_element->attribute_name==mem_block->block->header[head].att_name)
+				{//printf("\n while search element");
+					if((strcmp(some_element->attribute_name,temp_block->header[head].att_name)==0)&&(some_element->constraint==1))
 					{//isto funkcija za usporedbu
+						
+						int free=0;
+						//free the variable name
+						for(free;free<200;free++)
+							entry_data[free]='\0';
+
 						exits_equal_attrib=1;
-						memcpy(&entry_data,
-							mem_block->block->data+mem_block->block->tuple_dict[i].address,
-							mem_block->block->tuple_dict[i].size);
-						if(entry_data!=some_element->data)
+						//printf("\n isti heder");
+						memcpy(entry_data,
+							temp_block->data+temp_block->tuple_dict[i].address,
+								temp_block->tuple_dict[i].size);
+						int prvi;
+						 memcpy(&prvi,some_element->data,4);
+						int drugi = entry_data;
+					         memcpy(&drugi,entry_data,4);
+						printf("\n entry_data: %d,some_element_data: %d",prvi, drugi);
+						if(strcmp(entry_data,some_element->data)!=0)
 						{//funkcija usporedbe
+							printf("\n nije identičan podatak");
 							delete=0;
 						}
-						search_elem=0;
+						
+						//search_elem=0;
 					}
-					else
-					{
+					
+					//printf("tu");
 						some_element=GetNextElement(some_element);
 						if(some_element==0)
 						{
 							search_elem=0;
 						}
 					
-					}
+					
 				}
 				head++;	
 			} 
@@ -256,23 +330,38 @@ void delete_row_from_block(KK_mem_block *mem_block, list *row_root)
 				next=0;
 			}
 			
+			
 		}
-		
-		if((exits_equal_attrib==1) && (delete=1))
+		//printf("za brisanje: %d,%d",exits_equal_attrib,delete);
+		if((exits_equal_attrib==1) && (delete==1))
 		{	
 			int j=0;
 			for(j=i;j<i+head;j++)
-			{	
-				int k=mem_block->block->tuple_dict[j].address;
-				for(k;k<k+mem_block->block->tuple_dict[j].size;k++)
-					memcpy(mem_block->block->data+k,"0",1);
-				mem_block->block->tuple_dict[j].size=0;
-				mem_block->block->tuple_dict[j].type=0;
-				mem_block->block->tuple_dict[j].address=0;
+			{//printf("\nfor brisanje: %d", j);	
+				int k=temp_block->tuple_dict[j].address;
+				
+				int l=k+temp_block->tuple_dict[j].size;	
+				printf("\nod: %d, do: %d \n",k,l);			
+				for(k;k<l;k++)
+				{
+					char prazan='\0';
+					memcpy(temp_block->data+k,&prazan,1);
+					//return 0;
+					printf("brojac, %d",k);
+				}
+				
+				temp_block->tuple_dict[j].size=0;
+				temp_block->tuple_dict[j].type=0;
+				temp_block->tuple_dict[j].address=0;
 			}
+	//		printf("head: %d, i: %d",head,i);
+			//return 0;
 		}
+		delete=1;
+		exits_equal_attrib=0;
 		i+=head;
 	}
+	//write();
 }
 
 int delete_row(list *row_root)
@@ -281,25 +370,32 @@ int delete_row(list *row_root)
 	some_element=GetFirstElement(row_root);
 	char table[100];
 	memcpy(&table,some_element->table,strlen(some_element->table));
-	printf("te %s", table);
+	printf("\n \n \n table to delete from: %s", table);
 
 	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
 	addresses=get_table_addresses(&table);
 
-	KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
+	
 	int from=0,to=0,j=0,i=0;
 	for (j=0;j<200;j++)
 	{
-		if(addresses->address_from!=0)
+		from=addresses->address_from[j];
+		if(from!=0)
 		{
-			from=addresses->address_from[j];
+			printf("\n brišem ekstent: %d", j);
+			
 			to=addresses->address_to[j];
 			for(i=from;i<=to;i++)
 			{
-				mem_block = KK_get_block( i );
-				
+				printf("\nbrisanje iz bloka: %d",i);
+				//mem_block = KK_get_block( i );
+				temp_block=KK_read_block( i );
 				//traženje sad u bloku zapis  i brisanje
-				delete_row_from_block(mem_block, row_root);
+				delete_row_from_block(temp_block, row_root);
+				KK_write_block(temp_block);
+				
 			}
 		}
 		else break;
@@ -310,7 +406,7 @@ int delete_row(list *row_root)
 
 void update_row()
 {
-
+		
 }
 
 
@@ -354,54 +450,83 @@ void fileio_test()
 	memcpy( & block2->header[1], header_name, sizeof( * header_name ) );
 	memcpy( & block2->header[2], header_surname, sizeof( * header_surname ) );
 	memcpy( & block2->header[2], header_surname2, sizeof( * header_surname ) );
-
-	KK_insert_entry(block2, TYPE_INT, "1", 0 );
+	
+	int broj;
+	broj=1;
+	KK_insert_entry(block2, TYPE_INT, &broj, 0 );
 	KK_insert_entry(block2, TYPE_VARCHAR, "testna_druga", 1 );
-	KK_insert_entry(block2, TYPE_INT, "20", 2 );
-	KK_insert_entry(block2, TYPE_INT, "22", 3 );
+	broj=20;
+	KK_insert_entry(block2, TYPE_INT, &broj, 2 );
+	broj=22;
+	KK_insert_entry(block2, TYPE_INT, &broj, 3 );
 
-	KK_insert_entry(block2, TYPE_INT, "2", 4 );
+	broj=2;
+	KK_insert_entry(block2, TYPE_INT, &broj, 4 );
 	KK_insert_entry(block2, TYPE_VARCHAR, "testna", 5 );
-	KK_insert_entry(block2, TYPE_INT, "10", 6 );
-	KK_insert_entry(block2, TYPE_INT, "10", 7 );
+	broj=10;
+	KK_insert_entry(block2, TYPE_INT, &broj, 6 );
+	broj=10;
+	KK_insert_entry(block2, TYPE_INT, &broj, 7 );
 
 
 	KK_write_block( block2 );
+
+
 /*OVO JE UBITI SVE VEĆ SPREMNO*/
 //priprema podataka radi viši sloj
 	list *row_root =  (list *) malloc( sizeof(list) );
 	InitializeList(row_root);
-	InsertNewElement(TYPE_INT,"1","testna","redni_broj",row_root);
-	InsertNewElement(TYPE_VARCHAR,"Matija","testna","Ime",row_root);
+	broj=1;
+	element some_element;
+	InsertNewElement(TYPE_INT,&broj,"testna","Redni_broj",row_root);
+	some_element=GetFirstElement(row_root);
+	printf("\nTip: %d ",some_element->type);
+	printf("\nTablica: %s ",some_element->table);
+	printf("\nAtribut: %s ",some_element->attribute_name);
+	int aa;
+	memcpy(&aa,some_element->data,4);
+	printf("\nData: %d ",aa);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Matija","testna","Ime",row_root,1);
+	some_element=GetFirstElement(row_root);
+	printf("\nData: %s ",some_element->data);
 	InsertNewElement(TYPE_VARCHAR,"Novak","testna","Prezime",row_root);
+	some_element=GetFirstElement(row_root);
+	printf("\nData: %s ",some_element->data);
 
 	insert_row(row_root); //prvi poziv funkcije koja je moja
 	
 	//priprema podataka radi viši sloj
 	DeleteAllElements(row_root);
-	InsertNewElement(TYPE_INT,"2","testna","redni_broj",row_root);
-	InsertNewElement(TYPE_VARCHAR,"Nikola","testna","Ime",row_root);
-	InsertNewElement(TYPE_VARCHAR,"Bakoš","testna","Prezime",row_root);
-
+	broj=2;
+	InsertNewElement(TYPE_INT,&broj,"testna","Redni_broj",row_root);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Nikola","testna","Ime",row_root,0);
+	InsertNewElement(TYPE_VARCHAR,"Bakoššš","testna","Prezime",row_root);
+	some_element=GetFirstElement(row_root);
+	printf("\n \n \n tu %d",(int) some_element);
 	insert_row(row_root); //drugi poziv funkcije koja je moja
 	
 	DeleteAllElements(row_root);
-	InsertNewElement(TYPE_INT,"1","testna","redni_broj",row_root);
+	broj=1;
+	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
 	delete_row(row_root);
 
 	DeleteAllElements(row_root);
-	InsertNewElement(TYPE_INT,"2","testna","redni_broj",row_root);
-	InsertNewElement(TYPE_VARCHAR,"Nikol","testna","Ime",row_root);
-	InsertNewElement(TYPE_VARCHAR,"Bako","testna","Prezime",row_root);
-	update_row(row_root);
+	broj=2;
+	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Matija","testna","Ime",row_root,0);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Novak","testna","Prezime",row_root,0);
+	//update_row(row_root);
 
 	//ispis elementa
-	element some_element;
+	
 	some_element=GetFirstElement(row_root);
 	printf("\nTip: %d ",some_element->type);
 	printf("\nTablica: %s ",some_element->table);
 	printf("\nAtribut: %s ",some_element->attribute_name);
 	printf("\nData: %s ",some_element->data);
+	
+	//počitisti memorijske lokacije jer se ponovo koriste.
+	printf("tu2 %d",(int) some_element);
 
 /*LIST TEST	
 	int a;
