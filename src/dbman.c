@@ -271,7 +271,13 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 	for( j = first_addr_of_extent; j < ( first_addr_of_extent + nAlocated_blocks ); j++)
 	{
 		block = KK_read_block( j );   	/// read block
-		memcpy( block->header, header, sizeof( *header ) ); /// copy header information	
+		int x=0;
+		for(x=0;x<MAX_ATTRIBUTES;x++)
+		{
+			if(header[x].type==0)
+			{break;}
+			memcpy( & block->header[x], & header[x], sizeof( *header ) ); /// copy header information	
+		}
 		block->type = BLOCK_TYPE_NORMAL; /// set the block type
 		
 		if( KK_write_block( block ) == EXIT_SUCCESS ) /// if write of block succeded increase var success, else nothing
@@ -404,30 +410,41 @@ KK_header * KK_create_header(char * name, int type, int integrity, char * constr
  and works directly with the orginal block
  */
 
-void KK_insert_entry(KK_block * block_address, int type, char * entry_data, int i )
+void KK_insert_entry(KK_block * block_address, int type, void * entry_data, int i )
 {
 	KK_tuple_dict * catalog_tuple_dict = (KK_tuple_dict *) malloc (sizeof( KK_tuple_dict ));
 	
 	if( DEBUG )
-		printf("KK_insert_entry: Insert data: %s Size of data: %d\n", entry_data, strlen(entry_data));
+		//printf("KK_insert_entry: Insert data: %d  Size of data:\n",(int)*entry_data);
 	
 	/// using strlen becuse sizeof(entry_data) is always 4
 	/// copy data into bloc->data on start position bloc->free_space
-	memcpy(block_address->data+block_address->free_space, entry_data, strlen( entry_data));
-	
+	if (type==TYPE_INT)
+	{
+		printf("KK_insert_entry: prije Insert data: %d  Size of data:\n", entry_data);
+		//memcpy(block_address->data+block_address->free_space, 4, 4);
+		//block_address->data+block_address->free_space=entry_data;
+		memcpy(block_address->data+block_address->free_space,entry_data, KK_type_size(type, entry_data));
+		printf("KK_insert_entry: poslije Insert data: %d  Size of data:\n", entry_data);
+	}
+	else
+	{
+		memcpy(block_address->data+block_address->free_space,entry_data, KK_type_size(type, entry_data));
+		printf("KK_insert_entry: Insert data: %s  Size of data:\n",entry_data);
+	}	
 	/// address of entry data in block->data
 	catalog_tuple_dict->address=block_address->free_space;
 	
 	/// calculate next free space for the next entry data
 	/// printf("\nxxxxxxxxxxxxxxx: %d,%d,%d,%d",strlen(int),sizeof(entry_data),strlen(entry_data),block_address->free_space);
-	block_address->free_space+=strlen(entry_data);///sizeof(entry_data)+1);///(sizeof(int));
+	block_address->free_space+=KK_type_size(type, entry_data);///sizeof(entry_data)+1);///(sizeof(int));
 	/// printf("\nxxxxxxxx:%d",block_address);
 	/// no need for "+strlen(entry_data)" while "+1" is like "new line" 
 	
 	/// type of entry data 
 	catalog_tuple_dict->type=type;
 	/// size of entry data
-	catalog_tuple_dict->size = strlen(entry_data);
+	catalog_tuple_dict->size = KK_type_size(type, entry_data);
 	
 	/// copy tuple_dict to block->tuple_dict[i]
 	/// must use & becouse tuple_dict[i] is value and catalog_tuple_dict adress
@@ -473,57 +490,57 @@ int KK_init_system_tables_catalog( int relation, int attribute, int index, int v
 	/// insert data and tuple_dict in block
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_relation", 0 );
 	/// convert int to char
-	sprintf(buf,"%d",relation);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 1 );
+	//sprintf(buf,"%d",relation);
+	KK_insert_entry(catalog_block, TYPE_INT, &relation, 1 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_attribute", 2 );
-	sprintf(buf,"%d",attribute);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 3 );
+	//sprintf(buf,"%d",attribute);
+	KK_insert_entry(catalog_block, TYPE_INT, &attribute, 3 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_index", 4 );
-	sprintf(buf,"%d",index);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 5 );
+	//sprintf(buf,"%d",index);
+	KK_insert_entry(catalog_block, TYPE_INT, &index, 5 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_view", 6 );
-	sprintf(buf,"%d",view);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 7 );
+	//sprintf(buf,"%d",view);
+	KK_insert_entry(catalog_block, TYPE_INT, &view, 7 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_sequence", 8 );
-	sprintf(buf,"%d",sequence);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 9 );
+	//sprintf(buf,"%d",sequence);
+	KK_insert_entry(catalog_block, TYPE_INT, &sequence, 9 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_function",10 );
-	sprintf(buf,"%d",function);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 11 );
+	//sprintf(buf,"%d",function);
+	KK_insert_entry(catalog_block, TYPE_INT, &function, 11 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_function_arguments", 12 );
-	sprintf(buf,"%d",function_arguments);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 13 );
+	//sprintf(buf,"%d",function_arguments);
+	KK_insert_entry(catalog_block, TYPE_INT, &function_arguments, 13 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_trigger", 14 );
-	sprintf(buf,"%d",trigger);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 15 );
+	//sprintf(buf,"%d",trigger);
+	KK_insert_entry(catalog_block, TYPE_INT, &trigger, 15 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_db", 16 );
-	sprintf(buf,"%d",db);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 17 );
+	//sprintf(buf,"%d",db);
+	KK_insert_entry(catalog_block, TYPE_INT, &db, 17 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_db_obj", 18 );
-	sprintf(buf,"%d",db_obj);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 19 );
+	//sprintf(buf,"%d",db_obj);
+	KK_insert_entry(catalog_block, TYPE_INT, &db_obj, 19 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_user", 20 );
-	sprintf(buf,"%d",user);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 21 );
+	//sprintf(buf,"%d",user);
+	KK_insert_entry(catalog_block, TYPE_INT, &user, 21 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_group", 22 );
-	sprintf(buf,"%d",group);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 23 );
+	//sprintf(buf,"%d",group);
+	KK_insert_entry(catalog_block, TYPE_INT, &group, 23 );
 	
 	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_right", 24 );
-	sprintf(buf,"%d",right);
-	KK_insert_entry(catalog_block, TYPE_INT, buf, 25 );
-		
+	//sprintf(buf,"%d",right);
+	KK_insert_entry(catalog_block, TYPE_INT, &right, 25 );
+	
 	/// call function for writing the block on the first place in the file (ie. first block is on position zero)
 	if ( KK_write_block(catalog_block) == EXIT_SUCCESS )
 	{

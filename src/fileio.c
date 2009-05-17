@@ -19,6 +19,7 @@
 #include "fileio.h"
 #include "dbman.h"
 #include "memoman.h"
+#include "string.h"
 
 
 table_addresses * get_table_addresses(char * table)
@@ -47,7 +48,7 @@ table_addresses * get_table_addresses(char * table)
 		data_size=catalog_block->block->tuple_dict[i].size;
 		data_type=catalog_block->block->tuple_dict[i].type;
 		memcpy(address_sys,catalog_block->block->data+data_adr,data_size);
-		if(name_sys=="KK_relation")
+		if(strcmp(name_sys,"KK_relation")==0)
 		{	
 			printf("\npronasao adresu relacijeske sys tablice %s \n",address_sys);
 			trazi=0;
@@ -118,7 +119,8 @@ int find_free_space(table_addresses * addresses)
 		else break;
 	}	
 	
-	int adr = 13; //KK_initialize_new_ekstent(i); //funkcija ne postoji koja znači inicjalizira novi prostor ekstenta, spozapiše sve što treba i vrati početnu adresu ekstenta u koji ja mogu dalje zapisivati tablicu;
+	int adr = 13; 
+	//KK_initialize_new_ekstent(i); //funkcija ne postoji koja znači inicjalizira novi prostor ekstenta, spozapiše sve što treba i vrati početnu adresu ekstenta u koji ja mogu dalje zapisivati tablicu;
 	//i je adresa bloka koji sadrži tu tablicu pa da se može samo kopirati heder
 	return adr;
 }

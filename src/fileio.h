@@ -34,6 +34,7 @@ typedef struct {
 	char data[500];
 	char table[ MAX_ATT_NAME ];
 	char attribute_name[ MAX_ATT_NAME ];
+	int constraint;
 //možda dodati dali je atribut ograničenje ili nova vrijednost treba kod update-a
 	///END row_element
 	//you can add here your own attributes, but then you must implement your own special functions
