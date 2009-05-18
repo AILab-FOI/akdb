@@ -152,8 +152,17 @@ void InsertNewElement(int newtype, void * data, char * table, char * attribute_n
 	list *newElement = (list *) malloc( sizeof(list) );
 	newElement->type = newtype;
 	memcpy(newElement->data, data, KK_type_size(newtype, data));
+/*	int free=0;
+	for(free;free< MAX_ATT_NAME;free++)
+			newElement->table[free]='\0';*/
 	memcpy(newElement->table, table, strlen(table));
+	newElement->table[strlen(table)]='\0';
 	memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
+	newElement->attribute_name[strlen(attribute_name)]='\0';
+	if(newtype==TYPE_VARCHAR)
+	{
+		newElement->data[KK_type_size(newtype, data)]='\0';
+	}
 	newElement->next = ElementBefore->next;
 	ElementBefore->next = newElement;
 }
@@ -163,8 +172,20 @@ void InsertNewElementForUpdate(int newtype, void * data, char * table, char * at
 	list *newElement = (list *) malloc( sizeof(list) );
 	newElement->type = newtype;
 	memcpy(newElement->data, data, KK_type_size(newtype, data));
+/*	int free=0;
+	for(free;free< MAX_ATT_NAME;free++)
+			newElement->table[free]='\0';*/
+	printf("\n u hederu: %s",table);
 	memcpy(newElement->table, table, strlen(table));
+	printf("\n u hederu: %s",newElement->table);
+	newElement->table[strlen(table)]='\0';
+	printf("\n u hederu: %s",newElement->table);
 	memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
+	newElement->attribute_name[strlen(attribute_name)]='\0';
+	if(newtype==TYPE_VARCHAR)
+	{
+		newElement->data[KK_type_size(newtype, data)]='\0';
+	}
 	newElement->constraint = newconstraint;
 	newElement->next = ElementBefore->next;
 	ElementBefore->next = newElement;
