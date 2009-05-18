@@ -287,7 +287,7 @@ void update_delete_row_from_block(KK_block *temp_block, list *row_root, int what
 	int free=0;
 //	printf("tu");
 //OBAVEZNO STAVITI NA CJELU VELIČINU
-	for (i=0;i<10; ) 
+	for (i=0;i<DATA_BLOCK_SIZE; ) 
 	{//going through headers i=i+head	
 		next=1;
 		head=0;
