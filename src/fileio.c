@@ -23,6 +23,7 @@
 #include "memoman.h"
 #include "string.h"
 
+
 /**
 function for geting addresses of some table 
 @return structure table_addresses witch contains start and end adress of table extents, 

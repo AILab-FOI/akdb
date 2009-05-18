@@ -17,8 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 #include "filesort.h"
+#include "memoman.h"
 
 void filesort_test()
 {
 	printf( "filesort_test: Present!\n" );
+	int adresa_novog =0;
+	adresa_novog = KK_init_new_extent("testna",SEGMENT_TYPE_TABLE);
+	
 }

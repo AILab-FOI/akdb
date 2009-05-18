@@ -277,3 +277,267 @@ KK_mem_block * KK_get_block( int num )
 	
 	return ( cached_block );
 }
+
+
+/**
+function for geting addresses of some table 
+@return structure table_addresses witch contains start and end adress of table extents, 
+when form and to are 0 you are on the end of addresses
+@param table - table that you search
+*/
+table_addresses * get_table_addresses(char * table)
+{
+	//promjentiti temp_block u block i odati ispred catalog_block->
+	//KK_mem_block *catalog_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
+	//printf("te %s", table);
+	//catalog_block = KK_get_block( 0 );
+	temp_block=KK_read_block(0);
+	int trazi=1;
+	int i=0;
+	int data_adr=0;
+	int data_size=0;
+	int data_type=0;
+	char name_sys[100];
+	int address_sys;
+	int free=0;
+	
+	printf("\nTražim systemsku tablicu relacija \n");
+	for(i;i<DATA_BLOCK_SIZE;)
+	{
+		
+		//trazi=0;
+		free=0;
+		for(free;free<100;free++)
+			name_sys[free]='\0';
+		data_adr=temp_block->tuple_dict[i].address;
+		//printf("\n adr: %d",data_adr);
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(name_sys,temp_block->data+data_adr,data_size);
+		printf("\n adr: %s",name_sys);
+		i++;
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(&address_sys,temp_block->data+data_adr,data_size);
+		if(strcmp(name_sys,"KK_relation")==0)
+		{	
+			printf("\npronasao adresu relacijeske sys tablice: %d \n",address_sys);
+			trazi=0;
+			break;
+		}
+		i++;
+		
+		//printf("aaaaa");
+	}
+	
+	//trazi=1;
+	i=0;
+	//catalog_block = KK_get_block( address_sys );
+	temp_block=KK_read_block(address_sys);
+	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
+	free=0;	
+	for(free;free<200;free++)
+	{	
+		addresses->address_from[free] = 0;
+		addresses->address_to[free] = 0;
+	}
+	//return addresses;
+	char name[200];
+	int address_from;
+	int address_to;
+	int j=0;
+	for(i;i<DATA_BLOCK_SIZE;)
+	{
+		i++;
+		//printf("\ntu sam\n");
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(name,temp_block->data+data_adr,data_size);
+		//printf("table: %s, name: %s, brojac: %d, addres: %d, size: %d",table,name,i,data_adr,data_size);
+		i++;
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(&address_from,temp_block->data+data_adr,data_size);
+		i++;
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(&address_to,temp_block->data+data_adr,data_size);
+		i++;
+		
+		if(strcmp(name,table)==0) //možda neka funkcija tu ide a ne običan =
+		{	
+			addresses->address_from[j]= address_from; //možda i neka funkcija
+			addresses->address_to[j]= address_to;
+			j++;
+			printf("\npronasao adrese tražene tablice: %d , %d \n",address_from, address_to);	
+		}
+		if(strcmp(name,"")==0)
+		{
+			//printf("nema ničeg");
+			trazi=0;
+		}
+		free=0;
+		//free the variable name
+		for(free;free<200;free++)
+			name[free]='\0';
+	}
+	//free( temp_block);
+	//printf("aaaaaaaaaaaaaaaaa");
+	return addresses;
+}
+
+
+
+/**
+ @author Nikola Bakoš
+
+ Extents the segment
+ @param table_name name of segment to extent
+ @param extent_type type of extent (can be one of: 
+	SEGMENT_TYPE_SYSTEM_TABLE, 
+	SEGMENT_TYPE_TABLE, 
+	SEGMENT_TYPE_INDEX, 
+	SEGMENT_TYPE_TRANSACTION, 
+	SEGMENT_TYPE_TEMP
+ @return address of new extent, otherwise EXIT_ERROR
+
+*/
+int KK_init_new_extent ( char *table_name , int extent_type){
+	table_addresses *adrese;
+	adrese = get_table_addresses(table_name);
+	int adr_bloka = adrese->address_from[1];
+	int old_size=0;
+	
+	//promjentiti temp_block = mem_block->block
+	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
+	//mem_block = KK_get_block(adr_bloka); // bilo koji blok tablice, samo da se dobije header iz njega
+	
+			KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
+			temp_block = KK_read_block(adr_bloka);
+	
+		
+	int velicina=0;
+	register int i=0;
+	for(i=0; i<200; i++){					//jer je tak novak stavio (fileio.h)
+		if(adrese->address_from[i] == 0)		//ako smo prošli cijelo polje
+			break;
+		velicina = adrese->address_to[i] - adrese->address_from[i];
+		if(velicina > old_size)			//trazim najveći extent
+			old_size = velicina;	
+	}
+	
+	old_size += 1; 
+	int pocetna_adr = 0;
+	if ( (pocetna_adr = KK_new_extent(1, old_size, extent_type, temp_block->header)) == EXIT_ERROR){
+		printf("KK_init_new_extent: Could not alocate new extent\n");
+		return EXIT_ERROR;
+	}
+	if(DEBUG)
+		printf("KK_init_new_extent: pocetna_adr=%i, old_size=%i, extent_type=%i\n",pocetna_adr, old_size, extent_type);
+	
+	int zavrsna_adr = pocetna_adr;
+	
+	float RESIZE_FACTOR = 0;
+
+		switch(extent_type)
+		{
+			case SEGMENT_TYPE_TABLE: 
+				RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
+				break;
+			case SEGMENT_TYPE_INDEX:
+				RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
+				break;
+			case SEGMENT_TYPE_TRANSACTION:
+				RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
+				break;
+			case SEGMENT_TYPE_TEMP:
+				RESIZE_FACTOR = EXTENT_GROWTH_TEMP;
+				break;
+		}
+
+		zavrsna_adr = pocetna_adr + ( old_size + old_size * RESIZE_FACTOR ); 
+	
+	
+	//mem_block = KK_get_block( 0 );
+	
+		temp_block=KK_read_block( 0 );						//tu zamjena
+	
+	
+	
+	int trazi=1;
+	char name_sys[100];
+	int address_sys;
+	int free=0;
+	if(DEBUG)
+		printf("\nKK_init_new_extent: Tražim systemsku tablicu relacija \n");
+	
+	for(i=0;i<DATA_BLOCK_SIZE;)
+	{
+		
+		//trazi=0;
+		free=0;
+		for(free;free<100;free++)
+			name_sys[free]='\0';
+		
+		memcpy(name_sys,
+			   temp_block->data + temp_block->tuple_dict[i].address,
+			   temp_block->tuple_dict[i].size );
+		
+		printf("\n adresa: %s",name_sys);
+		i++;
+		
+		memcpy(&address_sys,
+			   temp_block->data + temp_block->tuple_dict[i].address,
+			   temp_block->tuple_dict[i].size);
+		
+		if(strcmp(name_sys,"KK_relation")==0)
+		{	if(DEBUG)
+				printf("\nKK_init_new_extent: Pronasao adresu relacijeske sys tablice: %d \n",address_sys);
+			trazi=0;
+			break;
+		}
+		i++;
+		
+	}
+	
+	//adresa relacijske sistemske tablice je pronađena
+	// zapisati u sistemski katalog relacije
+	
+		//mem_block = KK_get_block( address_sys );
+	
+		temp_block=KK_read_block(address_sys);						//tu zamjena
+	
+	//trazi mjesto za slijedeci unos u sis katalogu	
+	int id=0;
+	int nadjeno=1;
+	while ( nadjeno )
+	{
+		id++; //to je vrijednost gdje se pise
+		if( temp_block->tuple_dict[id].size == 0 )
+		{
+			nadjeno=0;
+		}
+	}
+	
+	
+	//to je kaj unesem nutra
+		int obj_id=2;
+	if(DEBUG)
+		printf("unosim: %d , %s, %i, %i", obj_id, table_name, pocetna_adr, zavrsna_adr);
+	KK_insert_entry(temp_block, TYPE_INT, &obj_id, id );
+	KK_insert_entry(temp_block, TYPE_VARCHAR, table_name, id + 1 );
+	KK_insert_entry(temp_block, TYPE_INT, &pocetna_adr, id + 2 );
+	KK_insert_entry(temp_block, TYPE_INT, &zavrsna_adr, id + 3);
+	
+	return pocetna_adr;
+}
+
+
+
+
+

@@ -259,9 +259,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/dbman.Po
-include ./$(DEPDIR)/main.Po
-include ./$(DEPDIR)/memoman.Po
 
 .c.o:
 	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

@@ -247,8 +247,7 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 		block = KK_read_block( i );   /// read block
 
 		if( ( block->type ) != BLOCK_TYPE_FREE )  /// if the block is used
-        	{
-			
+        {
 			nAlocated_blocks = 0;
 			first_addr_of_extent = -1;
 			continue; 	/// goto next iteration of for loop
@@ -260,13 +259,14 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 			
 			nAlocated_blocks++;		/// increase number of block for 1
 			
-			if( nAlocated_blocks !=0 && ( req_free_space == nAlocated_blocks ) ) /// if requested space for extent is OK
+			if( nAlocated_blocks != 0 && ( req_free_space == nAlocated_blocks ) ) /// if requested space for extent is OK
 			{
 				break;	/// exit loop
 			}
 		}
 	}
 	int success = 0;    /// var for chack of number of blocks written
+
 	
 	for( j = first_addr_of_extent; j < ( first_addr_of_extent + nAlocated_blocks ); j++)
 	{
@@ -287,13 +287,15 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 		
 		free(block);  /// free the block
 	}
+		if(DEBUG)
+			printf( "KK_new_extent: first_addr_of_extent= %i , nAlocated_blocks= %i , zavrsna_adresa= %i, success= %i\n",first_addr_of_extent, nAlocated_blocks, j, success);
 	
 	if( success != nAlocated_blocks ) /// if some blocks are not succesfully alocated, whitch means the extend alocation has FAILED
 	{
 		printf( "KK_new_extent: ERROR. Cannot allocate extent %d\n", first_addr_of_extent );
 		return( EXIT_ERROR );
 	}
-	
+	//printf("vracam: %i\n",first_addr_of_extent);
 	return( first_addr_of_extent );
 
 }
@@ -587,10 +589,11 @@ int KK_init_system_catalog() {
 	if( DEBUG )
 		printf( "KK_init_system_catalog: System catalog initialization started...\n" );
 
-	KK_header hRelation[4] = {
+	KK_header hRelation[5] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0'},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0'},
-		{TYPE_INT, "address", 0, '\0', '\0'},
+		{TYPE_INT, "start_address", 0, '\0', '\0'},
+		{TYPE_INT, "end_address", 0, '\0', '\0'},
 		{0, '\0', 0, '\0', '\0'}
 	};
 	
@@ -602,10 +605,11 @@ int KK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hIndex[6] = {
+	KK_header hIndex[7] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
-		{TYPE_INT, "address", 0, '\0', '\0',},
+		{TYPE_INT, "start_address", 0, '\0', '\0',},
+		{TYPE_INT, "end_address", 0, '\0', '\0'},
 		{TYPE_INT, "table_id", 0, '\0', '\0',},
 		{TYPE_INT, "attribute_id", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
@@ -688,7 +692,7 @@ int KK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	for( i = 0; i < 3; i++) {
+	for( i = 0; i < 4; i++) {
 		KK_memset_int(hRelation[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hRelation[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hRelation[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
@@ -700,7 +704,7 @@ int KK_init_system_catalog() {
 		memset(hAttribute[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
-	for( i = 0; i < 5; i++) {
+	for( i = 0; i < 6; i++) {
 		KK_memset_int(hIndex[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hIndex[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hIndex[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);

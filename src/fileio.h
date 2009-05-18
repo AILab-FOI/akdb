@@ -21,11 +21,7 @@
 #include <string.h>
 #include "configuration.h"
 
-typedef struct{
-	int address_from[200];
-	int address_to[200];
 
-}table_addresses;
 
 typedef struct {
 	///START row_element
