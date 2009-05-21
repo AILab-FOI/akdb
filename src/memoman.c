@@ -22,8 +22,10 @@
  */
 
 #include "configuration.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
+
 
 /**
  @author Markus Schatten
@@ -280,140 +282,6 @@ KK_mem_block * KK_get_block( int num )
 
 
 /**
-function for geting addresses of some table 
-@return structure table_addresses witch contains start and end adress of table extents, 
-when form and to are 0 you are on the end of addresses
-@param table - table that you search
-*/
-table_addresses * get_table_addresses(char * table)
-{
-	//promjentiti temp_block u block i odati ispred catalog_block->
-	//KK_mem_block *catalog_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
-	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
-	//printf("te %s", table);
-	//catalog_block = KK_get_block( 0 );
-	temp_block=KK_read_block(0);
-	int trazi=1;
-	int i=0;
-	int data_adr=0;
-	int data_size=0;
-	int data_type=0;
-	char name_sys[100];
-	int address_sys;
-	int free=0;
-	
-	printf("\nTražim systemsku tablicu relacija \n");
-	for(i;i<DATA_BLOCK_SIZE;)
-	{
-		
-		//trazi=0;
-		free=0;
-		for(free;free<100;free++)
-			name_sys[free]='\0';
-		data_adr=temp_block->tuple_dict[i].address;
-		//printf("\n adr: %d",data_adr);
-		data_size=temp_block->tuple_dict[i].size;
-		data_type=temp_block->tuple_dict[i].type;
-		memcpy(name_sys,temp_block->data+data_adr,data_size);
-		printf("\n adr: %s",name_sys);
-		i++;
-		data_adr=temp_block->tuple_dict[i].address;
-		data_size=temp_block->tuple_dict[i].size;
-		data_type=temp_block->tuple_dict[i].type;
-		memcpy(&address_sys,temp_block->data+data_adr,data_size);
-		if(strcmp(name_sys,"KK_relation")==0)
-		{	
-			printf("\npronasao adresu relacijeske sys tablice: %d \n",address_sys);
-			trazi=0;
-			break;
-		}
-		i++;
-		
-		//printf("aaaaa");
-	}
-	
-	//trazi=1;
-	i=0;
-	//catalog_block = KK_get_block( address_sys );
-	temp_block=KK_read_block(address_sys);
-	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
-	free=0;	
-	for(free;free<200;free++)
-	{	
-		addresses->address_from[free] = 0;
-		addresses->address_to[free] = 0;
-	}
-	//return addresses;
-	char name[200];
-	int address_from;
-	int address_to;
-	int j=0;
-	for(i;i<DATA_BLOCK_SIZE;)
-	{
-		i++;
-		//printf("\ntu sam\n");
-		data_adr=temp_block->tuple_dict[i].address;
-		data_size=temp_block->tuple_dict[i].size;
-		data_type=temp_block->tuple_dict[i].type;
-		memcpy(name,temp_block->data+data_adr,data_size);
-		//printf("table: %s, name: %s, brojac: %d, addres: %d, size: %d",table,name,i,data_adr,data_size);
-		i++;
-		data_adr=temp_block->tuple_dict[i].address;
-		data_size=temp_block->tuple_dict[i].size;
-		data_type=temp_block->tuple_dict[i].type;
-		memcpy(&address_from,temp_block->data+data_adr,data_size);
-		i++;
-		data_adr=temp_block->tuple_dict[i].address;
-		data_size=temp_block->tuple_dict[i].size;
-		data_type=temp_block->tuple_dict[i].type;
-		memcpy(&address_to,temp_block->data+data_adr,data_size);
-		i++;
-		
-		if(strcmp(name,table)==0) //možda neka funkcija tu ide a ne običan =
-		{	
-			addresses->address_from[j]= address_from; //možda i neka funkcija
-			addresses->address_to[j]= address_to;
-			j++;
-			printf("\npronasao adrese tražene tablice: %d , %d \n",address_from, address_to);	
-		}
-		if(strcmp(name,"")==0)
-		{
-			//printf("nema ničeg");
-			trazi=0;
-		}
-		free=0;
-		//free the variable name
-		for(free;free<200;free++)
-			name[free]='\0';
-	}
-	//free( temp_block);
-	//printf("aaaaaaaaaaaaaaaaa");
-	return addresses;
-}
-
-/**
-@author Nikola Bakoš
-@return returns address of free block
-*/
-int KK_get_free_block(){
-	register int i=0;
-	KK_block * iBlock=(KK_block*) malloc (sizeof(KK_block));
-	for( i = 0; i < db_file_size; i++ ){
-		iBlock = KK_read_block(i);
-		if(iBlock->type == BLOCK_TYPE_FREE){
-			KK_delete_block(i);
-			iBlock->type = BLOCK_TYPE_NORMAL;
-			KK_write_block(iBlock);
-			return i;
-		}
-	}
-	printf("KK_get_free_block: ERROR: Cannot find free block!\n");
-	exit(0);
-}
-
-
-
-/**
  @author Nikola Bakoš
 
  Extents the segment
@@ -480,7 +348,7 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 				break;
 		}
 
-		zavrsna_adr = pocetna_adr + ( old_size + INITIAL_EXTENT_SIZE * RESIZE_FACTOR ); 
+		zavrsna_adr = pocetna_adr + ( old_size + old_size * RESIZE_FACTOR ); 
 	
 	
 	//mem_block = KK_get_block( 0 );

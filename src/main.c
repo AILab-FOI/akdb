@@ -57,7 +57,7 @@ int main()
 
 
 			fileio_test();
-			filesort_test();
+		//	filesort_test();
 
 
 			/* component test area --- end */

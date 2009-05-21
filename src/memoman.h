@@ -122,10 +122,5 @@ KK_redo_log * redo_log;
 KK_query_mem * query_mem;
 
 
-typedef struct{
-	int address_from[200];
-	int address_to[200];
-
-}table_addresses;
 
 #endif
