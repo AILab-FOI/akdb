@@ -391,6 +391,26 @@ table_addresses * get_table_addresses(char * table)
 	return addresses;
 }
 
+/**
+@author Nikola Bakoš
+@return returns address of free block
+*/
+int KK_get_free_block(){
+	register int i=0;
+	KK_block * iBlock=(KK_block*) malloc (sizeof(KK_block));
+	for( i = 0; i < db_file_size; i++ ){
+		iBlock = KK_read_block(i);
+		if(iBlock->type == BLOCK_TYPE_FREE){
+			KK_delete_block(i);
+			iBlock->type = BLOCK_TYPE_NORMAL;
+			KK_write_block(iBlock);
+			return i;
+		}
+	}
+	printf("KK_get_free_block: ERROR: Cannot find free block!\n");
+	exit(0);
+}
+
 
 
 /**
@@ -460,7 +480,7 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 				break;
 		}
 
-		zavrsna_adr = pocetna_adr + ( old_size + old_size * RESIZE_FACTOR ); 
+		zavrsna_adr = pocetna_adr + ( old_size + INITIAL_EXTENT_SIZE * RESIZE_FACTOR ); 
 	
 	
 	//mem_block = KK_get_block( 0 );
