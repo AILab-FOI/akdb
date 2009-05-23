@@ -21,6 +21,7 @@
 #include "dbman.h"
 #include "memoman.h"
 #include <string.h>
+#include "auxiliary.h"
 //#include "fileio.h"
 
 
@@ -118,7 +119,7 @@ void filesort_test(){
 
 
 void sort_segment(char * table_name, char * atr_name){
-//	table_addresses * adrese = get_table_addresses(table_name);
+	table_addresses * adrese = get_table_addresses(table_name);
 	
 	int ORG_blokovi[MAX_NUM_OF_BLOCKS];
 	int TEMP_blokovi[MAX_NUM_OF_BLOCKS];
@@ -968,6 +969,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 	KK_write_block(cTemp2);
 	
 }
+
 
 
 

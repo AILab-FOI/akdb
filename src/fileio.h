@@ -49,9 +49,6 @@ void InitializeList(list *L)
 }
  
 //returns frst list elementint type;
-	char data[255];
-	char table;
-	char attribute_name;
 element GetFirstElement(list *L)
 {
 	return L->next;

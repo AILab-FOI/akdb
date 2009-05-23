@@ -26,6 +26,8 @@
 \brief constant for debugging
 */
 #define DEBUG 1
+#define DEBUG_SORT 1
+
 
 
 
@@ -225,6 +227,7 @@
 \def TYPE_VARCHAR
 \brief varchar data type (used in KK_header->type and KK_tuple_dict->type)
 */
+
 #define TYPE_VARCHAR 4
 
 /**

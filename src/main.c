@@ -59,6 +59,8 @@ int main()
 			fileio_test();
 		//	filesort_test();
 
+			op_projekcija_test();
+
 
 			/* component test area --- end */
 
