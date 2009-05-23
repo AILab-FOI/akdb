@@ -156,7 +156,7 @@ table_addresses * get_table_addresses ( char * table)
 		data_type=temp_block->tuple_dict[i].type;
 		memcpy(&address_to,temp_block->data+data_adr,data_size);
 		i++;
-		printf("\n table: %s, name: %s,",table, name);
+		//printf("\n table: %s, name: %s,",table, name);
 		if(strcmp(name,table)==0) //možda neka funkcija tu ide a ne običan =
 		{	
 			addresses->address_from[j]= address_from; //možda i neka funkcija
@@ -198,7 +198,7 @@ int find_free_space ( table_addresses * addresses )
 				temp_block = KK_read_block( i );
 				int free_space_on=temp_block->free_space;
 				printf("FRRE SPACE %d",temp_block->free_space);
-				if(free_space_on < 4500)
+				if(free_space_on < 2000)
 				{
 				//	printf("TU SAM");
 					return i; 

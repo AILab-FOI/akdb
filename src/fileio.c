@@ -142,6 +142,7 @@ void InsertNewElement(int newtype, void * data, char * table, char * attribute_n
 	{
 		newElement->data[KK_type_size(newtype, data)]='\0';
 	}
+	newElement->constraint=0;
 	newElement->next = ElementBefore->next;
 	ElementBefore->next = newElement;
 }
@@ -212,6 +213,7 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 					for(free;free<200;free++)
 						entry_data[free]='\0';
 					type=some_element->type;
+					printf("\nINSERT BLOCK: DATA: %s",some_element->data);
 					memcpy(entry_data,some_element->data,KK_type_size(type,some_element->data));
 					//printf("\nnašao %s, vrijednsot: %d", some_element->attribute_name, entry_data );
 					search_elem=0;
@@ -228,15 +230,15 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 					
 				}
 			}
-		
+			//printf("\nDATA: %s",entry_data);
 			memcpy(temp_block->data+temp_block->free_space, entry_data,KK_type_size(type,entry_data));		
 			temp_block->tuple_dict[id].address=temp_block->free_space;
 			temp_block->free_space+=KK_type_size(type,entry_data);
 			temp_block->tuple_dict[id].type=type;
 			temp_block->tuple_dict[id].size = KK_type_size(type,entry_data);
-			temp_block->tuple_dict[id+1].size=0;
+			//temp_block->tuple_dict[id+1].size=0;
 			memcpy(entry_data,temp_block->data+temp_block->tuple_dict[id].address,temp_block->tuple_dict[id].size);
-			printf("\nDATA: %s",entry_data);
+			//printf("\nDATA: %s",entry_data);
 			if( DEBUG )
 				printf("\nInsert: Insert data: %s Size of data: %d\n", entry_data, KK_type_size(type,entry_data));
 			head++;
@@ -277,6 +279,7 @@ int insert_row(list *row_root)
 	temp_block=KK_read_block(adr_to_write);
 //	printf("\n PRIJE POZIVA \n");
 	//mem_block = KK_get_block(adr_to_write);
+	printf("INSERT: DATA: %s",some_element->data);
 	int end=insert_row_to_block(row_root, temp_block);
 //	printf("\n POSLIJE POZIVA \n");
 	KK_write_block(temp_block);
@@ -760,7 +763,7 @@ void fileio_test()
 	//printf("\n \n \n tu %d",(int) some_element);
 	insert_row(row_root); //drugi poziv funkcije koja je moja
 	int i;
-	for (i=0;i<20;i++)
+	for (i=0;i<300;i++)
 	{
 		broj=i;
 		printf("\n BROJ %d\n",i);
@@ -774,36 +777,36 @@ void fileio_test()
 	DeleteAllElements(row_root);
 	broj=1;
 	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
-	//delete_row(row_root);
+	delete_row(row_root);
 
 	DeleteAllElements(row_root);
 	broj=1;
 	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Nikola","testna","Ime",row_root,0);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Bakoš","testna","Prezime",row_root,0);
-	//update_row(row_root);
+	update_row(row_root);
 
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Matija","testna","Ime",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Pajdo","testna","Prezime",row_root,0);
-	//update_row(row_root);
+	update_row(row_root);
 
 	DeleteAllElements(row_root);
 	broj=3;
 	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Slonic","testna","Ime",row_root,0);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Marko","testna","Prezime",row_root,0);
-	//update_row(row_root);
+	update_row(row_root);
 	//ispis elementa
 	
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Slonic","testna","Ime",row_root,1);
-	//delete_row(row_root);	
+	delete_row(row_root);	
 
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Maja","testna","Ime",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Mihi","testna","Ime",row_root,0);
-	//update_row(row_root);	
+	update_row(row_root);	
 
 	some_element=GetFirstElement(row_root);
 	//printf("\nTip: %d ",some_element->type);

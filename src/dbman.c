@@ -279,7 +279,7 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 			memcpy( & block->header[x], & header[x], sizeof( *header ) ); /// copy header information	
 		}
 		block->type = BLOCK_TYPE_NORMAL; /// set the block type
-		
+		block->free_space=0;
 		if( KK_write_block( block ) == EXIT_SUCCESS ) /// if write of block succeded increase var success, else nothing
 		{
 			success++;
