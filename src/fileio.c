@@ -25,6 +25,153 @@
 #include "configuration.h"
 #include "auxiliary.h"
 
+
+///START GLOBAL FUNCTIONS TO WORK WITH LIST
+
+//Alocate empty list
+void InitializeList(list *L)
+{
+	L->next = 0;
+}
+ 
+//returns frst list elementint type;
+element GetFirstElement(list *L)
+{
+	return L->next;
+}
+
+//returns last list element
+element GetLastElement(list *L)
+{
+	list *CurrentElement;
+	CurrentElement = L;
+	while (CurrentElement->next) 
+		CurrentElement = CurrentElement->next;
+	if(CurrentElement!=L)
+		return CurrentElement;
+	else 
+		return 0;
+}
+
+//returns next element of given current element 
+element GetNextElement(element CurrentElement)
+{
+	if (CurrentElement->next == 0) {
+//		cout << "Element ne postoji!" <<endl;
+		return 0;
+	} else {
+		list *NextElement;
+		NextElement = CurrentElement->next;
+		return NextElement;
+	}
+}
+
+//returns previous element of given current element, must alsa give list as second parameter
+element GetPreviousElement(element CurrentElement, list *L)
+{
+	list *PreviousElement;
+	PreviousElement = L;
+	while (PreviousElement->next != 0 && PreviousElement->next != CurrentElement)
+		PreviousElement = PreviousElement->next;
+	if (PreviousElement->next != 0 && PreviousElement!=L) {
+		return PreviousElement;
+	} else {
+//		cout << "Element ne postoji!" <<endl;
+		return 0;
+	}
+}
+
+//Retruns number positon of some element 
+int GetPositionOfElement(element SearchedElement, list *L)
+{
+	list *CurrentElement;
+	int i = 0;
+	CurrentElement = L;
+	while (CurrentElement->next != 0 && CurrentElement != SearchedElement) {
+		CurrentElement = CurrentElement->next;
+		i++;
+	}
+	return i;
+}
+
+///Delete element in list
+void DeleteElement(element DeletedElement, list *L)
+{
+	element PreviousElement = GetPreviousElement(DeletedElement,L);
+		if(PreviousElement!=0)
+		{	
+			PreviousElement->next = DeletedElement->next;
+		}
+		else
+		{
+			L->next=DeletedElement->next;
+		}
+	free(DeletedElement);
+}
+
+//delete all list elements
+void DeleteAllElements(list *L)
+{
+	list *CurrentElement = L, *DeletedElement=L->next;	
+	while (CurrentElement->next != 0) {
+		CurrentElement->next = DeletedElement->next;
+		//clear(DeletedElement);
+		free(DeletedElement);
+		DeletedElement = CurrentElement->next;
+	}	
+}
+
+///END GLOBAL FUNCTIONS
+
+///START SPECIAL FUNCTIONS FOR WORK WITH row_element_structure
+
+///Insert new element after some element, to insert on first place give list as before element
+void InsertNewElement(int newtype, void * data, char * table, char * attribute_name, element ElementBefore)
+{
+	list *newElement = (list *) malloc( sizeof(list) );
+	newElement->type = newtype;
+	memcpy(newElement->data, data, KK_type_size(newtype, data));
+/*	int free=0;
+	for(free;free< MAX_ATT_NAME;free++)
+			newElement->table[free]='\0';*/
+	memcpy(newElement->table, table, strlen(table));
+	newElement->table[strlen(table)]='\0';
+	memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
+	newElement->attribute_name[strlen(attribute_name)]='\0';
+	if(newtype==TYPE_VARCHAR)
+	{
+		newElement->data[KK_type_size(newtype, data)]='\0';
+	}
+	newElement->next = ElementBefore->next;
+	ElementBefore->next = newElement;
+}
+
+void InsertNewElementForUpdate(int newtype, void * data, char * table, char * attribute_name, element ElementBefore, int newconstraint)
+{
+	list *newElement = (list *) malloc( sizeof(list) );
+	newElement->type = newtype;
+	memcpy(newElement->data, data, KK_type_size(newtype, data));
+/*	int free=0;
+	for(free;free< MAX_ATT_NAME;free++)
+			newElement->table[free]='\0';*/
+	//printf("\n u hederu: %s",table);
+	memcpy(newElement->table, table, strlen(table));
+	//printf("\n u hederu: %s",newElement->table);
+	newElement->table[strlen(table)]='\0';
+	//printf("\n u hederu: %s",newElement->table);
+	memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
+	newElement->attribute_name[strlen(attribute_name)]='\0';
+	if(newtype==TYPE_VARCHAR)
+	{
+		newElement->data[KK_type_size(newtype, data)]='\0';
+	}
+	newElement->constraint = newconstraint;
+	newElement->next = ElementBefore->next;
+	ElementBefore->next = newElement;
+}
+///END SPECIAL FUNCTIONS row_element_structure
+
+
 int insert_row_to_block(list *row_root, KK_block *temp_block)
 {
 	element some_element;	
@@ -35,7 +182,7 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 	int id=-1; //id tuple dict in which is inserted next data
 	int head=0; //index of header which is curently inserted
 	int search_tuple_id, search_elem;//serch for tuple dict id and searc for data in list 
-	printf("tu1 ");
+//	printf("tu1 ");
 	while(unosi)
 	{
 		search_tuple_id=1;
@@ -87,17 +234,20 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 			temp_block->free_space+=KK_type_size(type,entry_data);
 			temp_block->tuple_dict[id].type=type;
 			temp_block->tuple_dict[id].size = KK_type_size(type,entry_data);
+			temp_block->tuple_dict[id+1].size=0;
+			memcpy(entry_data,temp_block->data+temp_block->tuple_dict[id].address,temp_block->tuple_dict[id].size);
+			printf("\nDATA: %s",entry_data);
 			if( DEBUG )
 				printf("\nInsert: Insert data: %s Size of data: %d\n", entry_data, KK_type_size(type,entry_data));
 			head++;
 		}
 		else
 		{
-			printf("tu9 ");
+			//printf("tu9 ");
 			unosi=0;
 		}
 	}
-	printf("tu10 ");
+	//printf("tu10 ");
 	return EXIT_SUCCESS; 
 }
 
@@ -107,28 +257,28 @@ int insert_row(list *row_root)
 		printf("\n \n \n Start inserting data");
 	}
 	element some_element;
-	printf("\n TUUU0");
+//	printf("\n TUUU0");
 	some_element=GetFirstElement(row_root);
-	printf("\n TUUU1");
+//	printf("\n TUUU1");
 	char table[100];
 	memcpy(&table,some_element->table,strlen(some_element->table));
-	printf("\n TUUU2");
+//	printf("\n TUUU2");
 	printf("\n Insert into table: %s", table);
 	int adr_to_write;
-	printf("\n TUUU3");
+//	printf("\n TUUU3");
 	adr_to_write=find_free_space(get_table_addresses(&table));
 
 	printf("\n Insert into block on adress: %d",adr_to_write);
 	
 	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
-	printf("\n TUUU4");
+//	printf("\n TUUU4");
 	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
-	printf("\n TUUU5");
+//	printf("\n TUUU5");
 	temp_block=KK_read_block(adr_to_write);
-	printf("\n PRIJE POZIVA \n");
+//	printf("\n PRIJE POZIVA \n");
 	//mem_block = KK_get_block(adr_to_write);
 	int end=insert_row_to_block(row_root, temp_block);
-	printf("\n POSLIJE POZIVA \n");
+//	printf("\n POSLIJE POZIVA \n");
 	KK_write_block(temp_block);
 	//free(temp_block);
 	free( temp_block );
@@ -192,7 +342,7 @@ void update_delete_row_from_block(KK_block *temp_block, list *row_root, int what
 						
 						if(strcmp(entry_data,some_element->data)!=0)
 						{//funkcija usporedbe
-							printf("\n nije identičan podatak: %s, %s",entry_data,some_element->data);
+							//printf("\n nije identičan podatak: %s, %s",entry_data,some_element->data);
 							delete=0;
 						}
 						else
@@ -502,9 +652,9 @@ void fileio_test()
 	KK_block * block2 = ( KK_block * ) malloc ( sizeof( KK_block ) );	
 	header_red_br = KK_create_header( "obj_id", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	header_name = KK_create_header( "Name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
-	header_surname = KK_create_header( "address", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_surname = KK_create_header( "start_addres", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	KK_header * header_surname2 = ( KK_header * ) malloc ( sizeof( KK_header ) );
-	header_surname2 = KK_create_header( "addressKraj", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_surname2 = KK_create_header( "end_addres", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	
 	block2->address = 1;
 	block2->type = BLOCK_TYPE_NORMAL;
@@ -514,8 +664,11 @@ void fileio_test()
 	memcpy( & block2->header[0], header_red_br, sizeof( * header_red_br ) );
 	memcpy( & block2->header[1], header_name, sizeof( * header_name ) );
 	memcpy( & block2->header[2], header_surname, sizeof( * header_surname ) );
-	memcpy( & block2->header[2], header_surname2, sizeof( * header_surname ) );
+	memcpy( & block2->header[3], header_surname2, sizeof( * header_surname ) );
 	
+	//block2=KK_read_block(1);
+	//printf("\naaaaaaaaaaaaaaa");
+	//printf("\n RELACIJA: %d,%s",block2->address,block2->header[2].att_name);
 	int broj;
 	broj=1;
 	KK_insert_entry(block2, TYPE_INT, &broj, 0 );
@@ -524,7 +677,7 @@ void fileio_test()
 	KK_insert_entry(block2, TYPE_INT, &broj, 2 );
 	broj=22;
 	KK_insert_entry(block2, TYPE_INT, &broj, 3 );
-
+	
 	broj=2;
 	KK_insert_entry(block2, TYPE_INT, &broj, 4 );
 	KK_insert_entry(block2, TYPE_VARCHAR, "testna", 5 );
@@ -533,10 +686,39 @@ void fileio_test()
 	broj=13;
 	KK_insert_entry(block2, TYPE_INT, &broj, 7 );
 
-
+	int cisti;
 	KK_write_block( block2 );
+	block2=KK_read_block(10);
+	
+	for(cisti=0;cisti<DATA_BLOCK_SIZE;cisti++)
+	{
+		block2->tuple_dict[cisti].size=0;
+	}
+	KK_write_block( block2 );
+	block2=KK_read_block(11);
+	
+	for(cisti=0;cisti<DATA_BLOCK_SIZE;cisti++)
+	{
+		block2->tuple_dict[cisti].size=0;
+	}
+	KK_write_block( block2 );
+	block2=KK_read_block(12);
+	
+	for(cisti=0;cisti<DATA_BLOCK_SIZE;cisti++)
+	{
+		block2->tuple_dict[cisti].size=0;
+	}
+	KK_write_block( block2 );
+	block2=KK_read_block(13);
+	
+	for(cisti=0;cisti<DATA_BLOCK_SIZE;cisti++)
+	{
+		block2->tuple_dict[cisti].size=0;
+	}
+	KK_write_block( block2 );
+	
 
-
+	//return 0;
 /*OVO JE UBITI SVE VEĆ SPREMNO*/
 //priprema podataka radi viši sloj
 	list *row_root =  (list *) malloc( sizeof(list) );
@@ -578,7 +760,7 @@ void fileio_test()
 	//printf("\n \n \n tu %d",(int) some_element);
 	insert_row(row_root); //drugi poziv funkcije koja je moja
 	int i;
-	for (i=0;i<270;i++)
+	for (i=0;i<20;i++)
 	{
 		broj=i;
 		printf("\n BROJ %d\n",i);
@@ -592,36 +774,36 @@ void fileio_test()
 	DeleteAllElements(row_root);
 	broj=1;
 	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
-	delete_row(row_root);
+	//delete_row(row_root);
 
 	DeleteAllElements(row_root);
 	broj=1;
 	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Nikola","testna","Ime",row_root,0);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Bakoš","testna","Prezime",row_root,0);
-	update_row(row_root);
+	//update_row(row_root);
 
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Matija","testna","Ime",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Pajdo","testna","Prezime",row_root,0);
-	update_row(row_root);
+	//update_row(row_root);
 
 	DeleteAllElements(row_root);
 	broj=3;
 	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Slonic","testna","Ime",row_root,0);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Marko","testna","Prezime",row_root,0);
-	update_row(row_root);
+	//update_row(row_root);
 	//ispis elementa
 	
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Slonic","testna","Ime",row_root,1);
-	delete_row(row_root);	
+	//delete_row(row_root);	
 
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Maja","testna","Ime",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Mihi","testna","Ime",row_root,0);
-	update_row(row_root);	
+	//update_row(row_root);	
 
 	some_element=GetFirstElement(row_root);
 	//printf("\nTip: %d ",some_element->type);
@@ -632,7 +814,7 @@ void fileio_test()
 	//počitisti memorijske lokacije jer se ponovo koriste.
 	//printf("tu2 %d",(int) some_element);
 
-/*LIST TEST	
+/*LIST TEST	memcpy(temp_block->data+temp_block->free_space, entry_data,KK_type_size(type,entry_data));
 	int a;
 	list *ListaKorjen =  (list *) malloc( sizeof(list) );
 	element elementListe;

@@ -70,11 +70,11 @@ table_addresses * get_table_addresses ( char * table)
 {
 	//promjentiti temp_block u block i odati ispred catalog_block->
 	//KK_mem_block *catalog_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
-	printf("\n GET TEABLE ADDTESES SPACE TUUU0");
+	//printf("\n GET TEABLE ADDTESES SPACE TUUU0");
 	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
 	//printf("te %s", table);
 	//catalog_block = KK_get_block( 0 );
-	printf("\n GET TEABLE ADDTESES SPACE TUUU1");
+	//printf("\n GET TEABLE ADDTESES SPACE TUUU1");
 	temp_block=KK_read_block(0);
 	int trazi=1;
 	int i=0;
@@ -112,7 +112,7 @@ table_addresses * get_table_addresses ( char * table)
 		}
 		i++;
 		
-		//printf("aaaaa");
+		printf("\naaaaa");
 	}
 	
 	//trazi=1;
@@ -156,7 +156,7 @@ table_addresses * get_table_addresses ( char * table)
 		data_type=temp_block->tuple_dict[i].type;
 		memcpy(&address_to,temp_block->data+data_adr,data_size);
 		i++;
-		//printf("\n table: %s, name: %s,",table, name);
+		printf("\n table: %s, name: %s,",table, name);
 		if(strcmp(name,table)==0) //možda neka funkcija tu ide a ne običan =
 		{	
 			addresses->address_from[j]= address_from; //možda i neka funkcija
@@ -180,10 +180,10 @@ table_addresses * get_table_addresses ( char * table)
 
 int find_free_space ( table_addresses * addresses )
 {
-	printf("\n FIND FREE SPACE TUUU1");
+	//printf("\n FIND FREE SPACE TUUU1");
 	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
 	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
-	printf("\n FIND FREE SPACE TUUU1");
+	//printf("\n FIND FREE SPACE TUUU1");
 	int from=0,to=0,j=0,i=0;
 	//return 100;
 	printf("\n Searching for block that has free space<500 \n");
@@ -198,7 +198,7 @@ int find_free_space ( table_addresses * addresses )
 				temp_block = KK_read_block( i );
 				int free_space_on=temp_block->free_space;
 				printf("FRRE SPACE %d",temp_block->free_space);
-				if(free_space_on < 2000)
+				if(free_space_on < 4500)
 				{
 				//	printf("TU SAM");
 					return i; 
