@@ -23,6 +23,7 @@
 #include <stdio.h>
 
 #include "configuration.h"
+#include "dbman.h"
 
 /**
 Main program function
@@ -32,8 +33,7 @@ Main program function
 int main()
 {
 	printf( "Калашникова DB - STARTING\n\n" );
-
-
+	
 	if( KK_init_disk_manager() == EXIT_SUCCESS )
 	{
 		if( KK_memoman_init() == EXIT_SUCCESS )
@@ -50,16 +50,13 @@ int main()
 			files_test();
 
 
-			
+			//			filesearch_test();
 
 
-//			filesearch_test();
-
-
-			fileio_test();
+			//fileio_test();
 		//	filesort_test();
 
-			op_projekcija_test();
+			//op_projekcija_test();
 
 
 			/* component test area --- end */

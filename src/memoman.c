@@ -21,6 +21,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdio.h>
+#include <ncurses.h>
 #include "configuration.h"
 #include "auxiliary.h"
 #include "dbman.h"
@@ -210,6 +212,8 @@ KK_mem_block * KK_get_block( int num )
 	int found_in_cache = 0;
 	int first_free_mem_block = -1;
 	int oldest_block = &db_cache->next_replace;
+	for(i; i<5; i++)
+		printf("%d\n", &(*db_cache).next_replace);
 	int get_second_oldest = 0; /// if block will be removed from cache, then second oldest should be
 								/// marked in db_cache as the one that will be replaced next
 	KK_mem_block *cached_block; /// cached memory block
