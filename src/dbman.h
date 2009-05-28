@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "configuration.h"
 
 /**
 \struct KK_header
@@ -90,5 +91,11 @@ FILE * db;
 */
 unsigned int db_file_size;
 
+
+typedef struct{
+	int address_from[200];
+	int address_to[200];
+
+}table_addresses;
 
 #endif

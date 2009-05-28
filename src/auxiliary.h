@@ -20,11 +20,6 @@
 #ifndef AUXILIARY
 #define AUXILIARY
 
-typedef struct{
-	int address_from[200];
-	int address_to[200];
-
-}table_addresses;
 
 
 #endif

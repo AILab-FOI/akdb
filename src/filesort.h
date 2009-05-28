@@ -25,7 +25,7 @@
 //velicina podatka koji se mora kopirati
 #define DATA_TUPLE_SIZE 500
 
-#define MAX_NUM_OF_BLOCKS 200
+
 
 
 

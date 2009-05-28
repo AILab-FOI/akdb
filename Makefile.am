@@ -10,7 +10,8 @@ kalashnikov_dbdoc_DATA = \
 	AUTHORS\
 	ChangeLog\
 	INSTALL\
-	NEWS
+	NEWS \
+	op_preimenovanje.c
 
 EXTRA_DIST = $(kalashnikov_dbdoc_DATA)
 

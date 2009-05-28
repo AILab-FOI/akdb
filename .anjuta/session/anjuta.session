@@ -1,24 +1,11 @@
 
 [Anjuta]
 Maximized=1
-Geometry=1440x825+0+25
+Geometry=1280x726+0+25
 
 [File Loader]
-Files=file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/memoman.c#424%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/dbman.c#417%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/auxiliary.c#63%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/main.c#35%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/hash.c#26%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/files.c#132%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/filesort.c#50%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/fileio.c#1%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/dbman.h#1%%%file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/memoman.h#1
+Files=file:///home/jars/kalashnikovdb/src/main.c#68
 
 [Execution]
 Program arguments=
-Program uri=file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/kalashnikov-db
 Run in terminal=2
-Working directories=file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src
-Environment variables=
-
-[Build]
-Configuration list=1:Default:%%%1:Debug:Debug%%%1:Profiling:Profiling%%%1:Optimized:Optimized
-Selected Configuration=Default
-
-[Debugger]
-Watch=db_cache
-Breakpoint=1:file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/memoman.c:436:0:%%%1:file:///home/tomo/Desktop/kalashnikodbTrenutni/kalashnikovdb/src/memoman.c:436:0:
-Source directories=
-Stop at beginning=1

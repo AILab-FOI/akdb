@@ -24,6 +24,7 @@
 
 #include "configuration.h"
 #include "dbman.h"
+#include "rename.h"
 
 /**
 Main program function
@@ -41,13 +42,15 @@ int main()
 
 			/* component test area --- begin */
 
-			//btree_test();
+
+		//	btree_test();
+
 
 
 			//hash_test();
 
+		//	files_test();
 
-			//files_test();
 
 
 			//filesearch_test();
@@ -55,12 +58,14 @@ int main()
 
 			fileio_test();
 
+
 			
 			//filesort_test();
 
 
 			//op_projekcija_test();
-
+			
+	rename_test();
 
 			/* component test area --- end */
 

@@ -22,6 +22,7 @@
 #include "memoman.h"
 #include <string.h>
 #include "auxiliary.h"
+#include "files.h"
 //#include "fileio.h"
 
 
@@ -147,11 +148,14 @@ void sort_segment(char * table_name, char * atr_name){
 	
 	//CREATE NEW TEMP SEGMENT WITCH SIZE IS EQUAL TO SIZE OF ORGINAL SEGMENT
 	char *temp_segment;
-	strcat(temp_segment,"SORT_TEMP_");
+	strcat(temp_segment,"SORT_TEMP_HELP_");
 	strcat(temp_segment,table_name);		//npr: SORT_TEMP_PESONS this is the name of temp segment
 	
-	//neznam koju da funkciju koristim za kreiranje novog segmenta?
-	//kad se segment kreira dodajem u njega extente
+	KK_block * Hblock = KK_read_block(ORG_blokovi[0]);
+	KK_header *head = (KK_header*) malloc (sizeof(KK_header));
+	memcpy(&head,Hblock->header,sizeof(KK_header));
+	
+	KK_initialize_new_segment(temp_segment,1,head);
 	
 	for (i=1; i<num_extents; i++){
 		KK_init_new_extent(temp_segment, 1);		//init new table extent 
