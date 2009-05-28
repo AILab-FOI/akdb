@@ -119,7 +119,8 @@ void DeleteAllElements(list *L)
 		free(DeletedElement);
 		DeletedElement = CurrentElement->next;
 	}	
-}
+}
+
 
 ///END GLOBAL FUNCTIONS
 
@@ -669,7 +670,7 @@ void fileio_test()
 	memcpy( & block2->header[2], header_surname, sizeof( * header_surname ) );
 	memcpy( & block2->header[3], header_surname2, sizeof( * header_surname ) );
 	
-	//block2=KK_read_block(1);
+	block2=KK_get_block(1);
 	//printf("\naaaaaaaaaaaaaaa");
 	//printf("\n RELACIJA: %d,%s",block2->address,block2->header[2].att_name);
 	int broj;

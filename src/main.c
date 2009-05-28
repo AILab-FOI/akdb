@@ -41,20 +41,23 @@ int main()
 
 			/* component test area --- begin */
 
-			btree_test();
+			//btree_test();
 
 
-			hash_test();
+			//hash_test();
 
 
-			files_test();
+			//files_test();
 
 
-			//			filesearch_test();
+			//filesearch_test();
 
 
-			//fileio_test();
-		//	filesort_test();
+			fileio_test();
+
+			
+			//filesort_test();
+
 
 			//op_projekcija_test();
 

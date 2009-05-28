@@ -24,7 +24,6 @@
 #include "configuration.h"
 #include "dbman.h"
 #include "auxiliary.h"
-#include "auxiliary.c"
 
 /**
  @author Markus Schatten
@@ -329,8 +328,8 @@ int KK_new_segment(char* name, int type, KK_header *header)
 
 	for ( i = segment_start_addr; i <= db_file_size; i++ )
 	{
-		if( DEBUG )
-			printf( "KK_new_segment: Reading block %d.\n", i );
+		/*if( DEBUG )
+			printf( "KK_new_segment: Reading block %d.\n", i );*/
 		/// check if the block is free
 		block = KK_read_block(i);
 		

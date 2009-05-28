@@ -33,7 +33,7 @@ typedef struct {
 	int dirty;
 	/// timestamp when the block has lastly been read
 	int timestamp_read;
-	/// rimestam when the block has lastly been changed
+	/// timestamp when the block has lastly been changed
 	int timestamp_last_change;	
 } KK_mem_block;
 
@@ -43,7 +43,7 @@ typedef struct {
 */
 typedef struct {
 	/// last recently read blocks
-	KK_mem_block cache[ MAX_CACHE_MEMORY ];
+	KK_mem_block * cache[ MAX_CACHE_MEMORY ];
 	/// next cached block to be replaced (0 - MAX_CACHE_MEMORY-1); depends on caching algorithm
 	int next_replace;
 } KK_db_cache;

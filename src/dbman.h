@@ -52,7 +52,7 @@ typedef struct {
 	int type;
 	/// data entry address (in KK_block->data)
 	int address;
-	/// data entry size (usind sizeof( *** ) )
+	/// data entry size (using sizeof( *** ) )
 	int size;
 } KK_tuple_dict;
 
