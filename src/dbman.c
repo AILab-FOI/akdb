@@ -425,26 +425,23 @@ void KK_insert_entry(KK_block * block_address, int type, void * entry_data, int 
 	/// copy data into bloc->data on start position bloc->free_space
 	if (type==TYPE_INT)
 	{
-		int mm = entry_data;		
-		printf("KK_insert_entry: prije Insert data: %d  Size of data:\n", mm);
-		
-		//memcpy(block_address->data+block_address->free_space, 4, 4);
-		//block_address->data+block_address->free_space=entry_data;
 		memcpy(block_address->data+block_address->free_space,entry_data, KK_type_size(type, entry_data));
-		printf("KK_insert_entry: poslije Insert data: %d  Size of data:\n", entry_data);
+		if(DEBUG){		
+			//printf("KK_insert_entry: Insert data: %d  Size of data:\n", (int) entry_data);
+		}
 	}
 	else
 	{
 		memcpy(block_address->data+block_address->free_space,entry_data, KK_type_size(type, entry_data));
-		printf("KK_insert_entry: Insert data: %s  Size of data:\n",entry_data);
+		if(DEBUG){			
+			//printf("KK_insert_entry: Insert data: %s  Size of data:\n", (char *) entry_data);
+		}
 	}	
 	/// address of entry data in block->data
 	catalog_tuple_dict->address=block_address->free_space;
 	
 	/// calculate next free space for the next entry data
-	/// printf("\nxxxxxxxxxxxxxxx: %d,%d,%d,%d",strlen(int),sizeof(entry_data),strlen(entry_data),block_address->free_space);
 	block_address->free_space+=KK_type_size(type, entry_data);///sizeof(entry_data)+1);///(sizeof(int));
-	/// printf("\nxxxxxxxx:%d",block_address);
 	/// no need for "+strlen(entry_data)" while "+1" is like "new line" 
 	
 	/// type of entry data 
@@ -925,149 +922,145 @@ int KK_init_disk_manager()
 
 
 
+//////////////////////////
+//FUNKCIJA IZ AUXILIARY-a
 
-
-/**
-function for geting addresses of some table 
-@return structure table_addresses witch contains start and end adress of table extents, 
-when form and to are 0 you are on the end of addresses
-@param table - table that you search
+/** 	@author Matija Novak
+	function for geting addresses of some table 
+	@return structure table_addresses witch contains start and end adress of table extents, 
+	when form and to are 0 you are on the end of addresses
+	@param table - table name that you search for
 */
 table_addresses * get_table_addresses ( char * table)
 {
-	//promjentiti temp_block u block i odati ispred catalog_block->
-	//KK_mem_block *catalog_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
-	//printf("\n GET TEABLE ADDTESES SPACE TUUU0");
-	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
-	//printf("te %s", table);
-	//catalog_block = KK_get_block( 0 );
-	//printf("\n GET TEABLE ADDTESES SPACE TUUU1");
-	temp_block = KK_read_block(0);
-	int trazi=1;
+	KK_block *temp_block;
+
+	temp_block = (KK_block *) KK_read_block(0);
+
 	int i=0;
 	int data_adr=0;
 	int data_size=0;
 	int data_type=0;
-	char name_sys[100];
+	char name_sys[MAX_ATT_NAME];
 	int address_sys;
-	int free=0;
+	int free2=0;//var to clear char varijavble
 	
-	printf("\nTražim systemsku tablicu relacija \n");
+	if(DEBUG)
+		printf("\nSerching for system_relation table \n");
+
 	for(i;i<DATA_BLOCK_SIZE;)
-	{
+	{//going throught headers
 		
-		//trazi=0;
-		free=0;
-		for(free;free<100;free++)
-			name_sys[free]='\0';
+		free2=0;
+		for(free2;free2<MAX_ATT_NAME;free2++)
+			name_sys[free2]='\0';
+
 		data_adr=temp_block->tuple_dict[i].address;
-		//printf("\n adr: %d",data_adr);
 		data_size=temp_block->tuple_dict[i].size;
 		data_type=temp_block->tuple_dict[i].type;
 		memcpy(name_sys,temp_block->data+data_adr,data_size);
-		printf("\n adr: %s",name_sys);
+
 		i++;
 		data_adr=temp_block->tuple_dict[i].address;
 		data_size=temp_block->tuple_dict[i].size;
 		data_type=temp_block->tuple_dict[i].type;
 		memcpy(&address_sys,temp_block->data+data_adr,data_size);
+
 		if(strcmp(name_sys,"KK_relation")==0)
-		{	
-			printf("\npronasao adresu relacijeske sys tablice: %d \n",address_sys);
-			trazi=0;
+		{
+			if(DEBUG)	
+				printf("\nFoud the address of the system_relation table: %d \n",address_sys);
 			break;
 		}
 		i++;
-		
-		printf("\naaaaa");
 	}
 	
-	//trazi=1;
 	i=0;
-	//catalog_block = KK_get_block( address_sys );
-	temp_block=KK_read_block(address_sys);
+	free(temp_block);
+	temp_block= (KK_block *) KK_read_block(address_sys);
 	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
-	free=0;	
-	for(free;free<200;free++)
-	{	
-		addresses->address_from[free] = 0;
-		addresses->address_to[free] = 0;
+
+	free2=0;	
+	for(free2;free2<MAX_EXTENTS_IN_SEGMENT;free2++)
+	{//intialize address structure
+		addresses->address_from[free2] = 0;
+		addresses->address_to[free2] = 0;
 	}
-	//return addresses;
-	char name[200];
+
+	char name[MAX_VARCHAR_LENGHT];
 	int address_from;
 	int address_to;
 	int j=0;
+
 	for(i;i<DATA_BLOCK_SIZE;)
 	{
-		free=0;
+		free2=0;
 		//free the variable name
-		for(free;free<200;free++)
-			name[free]='\0';
+		for(free2;free2<MAX_VARCHAR_LENGHT;free2++)
+			name[free2]='\0';
 
 		i++;
-		//printf("\ntu sam\n");
 		data_adr=temp_block->tuple_dict[i].address;
 		data_size=temp_block->tuple_dict[i].size;
 		data_type=temp_block->tuple_dict[i].type;
 		memcpy(name,temp_block->data+data_adr,data_size);
-		//printf("table: %s, name: %s, brojac: %d, addres: %d, size: %d",table,name,i,data_adr,data_size);
+
 		i++;
 		data_adr=temp_block->tuple_dict[i].address;
 		data_size=temp_block->tuple_dict[i].size;
 		data_type=temp_block->tuple_dict[i].type;
 		memcpy(&address_from,temp_block->data+data_adr,data_size);
+
 		i++;
 		data_adr=temp_block->tuple_dict[i].address;
 		data_size=temp_block->tuple_dict[i].size;
 		data_type=temp_block->tuple_dict[i].type;
 		memcpy(&address_to,temp_block->data+data_adr,data_size);
+
 		i++;
-		//printf("\n table: %s, name: %s,",table, name);
-		if(strcmp(name,table)==0) //možda neka funkcija tu ide a ne običan =
-		{	
-			addresses->address_from[j]= address_from; //možda i neka funkcija
+		if(strcmp(name,table)==0) 
+		{//if found the table that addresses we need
+			addresses->address_from[j]= address_from;
 			addresses->address_to[j]= address_to;
 			j++;
-			printf("\npronasao adrese tražene tablice: %d , %d \n",address_from, address_to);	
+			if(DEBUG)
+				printf("\nFound addresses of searching table: %d , %d \n",address_from, address_to);	
 		}
-		if(strcmp(name,"")==0)
-		{
-			//printf("nema ničeg");
-			trazi=0;
-		}
-		
 	}
-	//free( temp_block);
-	//printf("aaaaaaaaaaaaaaaaa");
-	//free( temp_block ); 
+
+	free(temp_block);
 	return addresses;
 }
 
-
+/** 	@author Matija Novak
+	function to find free space in some block betwen block addresses
+	function made for insert_row()
+	@param address - addresses of extents
+	@raturns int - address of the block to write in
+*/
 int find_free_space ( table_addresses * addresses )
 {
-	//printf("\n FIND FREE SPACE TUUU1");
-	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
-	KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
-	//printf("\n FIND FREE SPACE TUUU1");
+	KK_block *temp_block;
 	int from=0,to=0,j=0,i=0;
-	//return 100;
-	printf("\n Searching for block that has free space<500 \n");
-	for (j=0;j<200;j++)
-	{
+
+	if(DEBUG)
+		printf("\n Searching for block that has free space<500 \n");
+
+	for (j=0;j<MAX_EXTENTS_IN_SEGMENT;j++)
+	{//searching extent
 		if(addresses->address_from!=0)
 		{
 			from=addresses->address_from[j];
 			to=addresses->address_to[j];
+
 			for(i=from;i<=to;i++)
-			{
-				temp_block = KK_read_block( i );
+			{//searching block
+				temp_block = (KK_block *) KK_read_block( i );
 				int free_space_on=temp_block->free_space;
 				printf("FRRE SPACE %d",temp_block->free_space);
-				if((free_space_on < 4000)&&(temp_block->last_tuple_dict_id<470))
-				{
-				//	printf("TU SAM");
+				if((free_space_on < MAX_FREE_SPACE_SIZE)&&
+					(temp_block->last_tuple_dict_id<MAX_LAST_TUPLE_DICT_SIZE_TO_USE))
+				{//found free block to write
 					return i; 
 				}
 			}
@@ -1075,9 +1068,10 @@ int find_free_space ( table_addresses * addresses )
 		else break;
 	}	
 	
-	int adr = 122; 
-	//KK_initialize_new_ekstent(i); //funkcija ne postoji koja znači inicjalizira novi prostor ekstenta, spozapiše sve što treba i vrati početnu adresu ekstenta u koji ja mogu dalje zapisivati tablicu;
-	//i je adresa bloka koji sadrži tu tablicu pa da se može samo kopirati heder
+	//I cant call function from memoman must consider another solituon to place these functions
+	int adr = -1; 
+
 	free( temp_block );
+	//need to create new extent
 	return adr;
 }

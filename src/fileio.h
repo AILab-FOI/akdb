@@ -22,19 +22,17 @@
 #include "configuration.h"
 
 
-
+///@author Matija Novak
 typedef struct {
 	///START row_element
 	///structure that reperesents one row of table that is inserted, updated, or deleted
-	int type;
-	unsigned char data[200];
-	char table[ MAX_ATT_NAME ];
-	char attribute_name[ MAX_ATT_NAME ];
-	int constraint;
-//možda dodati dali je atribut ograničenje ili nova vrijednost treba kod update-a
+	int type; //type of data
+	unsigned char data[MAX_VARCHAR_LENGHT]; //data
+	char table[ MAX_ATT_NAME ]; //table name
+	char attribute_name[ MAX_ATT_NAME ]; //attribute name
+	int constraint; //if ist 0 then its new data to be inserted in, when is it 1 then its a constraint on which update and delete searches the data
 	///END row_element
-	//you can add here your own attributes, but then you must implement your own special functions
-	struct list_structure *next;
+	struct list_structure *next;//next element in the list
 }list_structure;
 
 typedef list_structure *element;

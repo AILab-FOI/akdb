@@ -196,7 +196,7 @@ int KK_cache_block( int num, KK_mem_block * mem_block )
 	}	
 
 	/// read the block from the given address
-	block_cache = KK_read_block( num );
+	block_cache = (KK_block *) KK_read_block( num );
 	
 	memcpy( mem_block->block, block_cache, sizeof( *block_cache ) ); /// copy block to given mem_block   
 	mem_block->dirty = BLOCK_CLEAN; /// set dirty bit in mem_block struct
@@ -282,7 +282,7 @@ KK_mem_block * KK_get_block( int num )
 		{
 			if ( &db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY )
 			{
-				data_block = &db_cache->cache[oldest_block]->block;
+				data_block = (KK_block *) &db_cache->cache[oldest_block]->block;
 				block_written = KK_write_block ( data_block );
 				/// if block form cache can not be writed to DB file -> EXIT_ERROR
 				if ( block_written != EXIT_SUCCESS )
@@ -319,7 +319,7 @@ KK_mem_block * KK_get_block( int num )
 */
 int KK_init_new_extent ( char *table_name , int extent_type){
 	table_addresses *adrese;
-	adrese = get_table_addresses(table_name);
+	adrese = (table_addresses *) get_table_addresses(table_name);
 	int adr_bloka = adrese->address_from[1];
 	int old_size=0;
 	
@@ -328,7 +328,7 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	//mem_block = KK_get_block(adr_bloka); // bilo koji blok tablice, samo da se dobije header iz njega
 	
 			KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
-			temp_block = KK_read_block(adr_bloka);
+			temp_block = (KK_block *) KK_read_block(adr_bloka);
 	
 		
 	int velicina=0;
@@ -375,7 +375,7 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	
 	//mem_block = KK_get_block( 0 );
 	
-		temp_block=KK_read_block( 0 );						//tu zamjena
+		temp_block= (KK_block *) KK_read_block( 0 );						//tu zamjena
 	
 	
 	
@@ -420,7 +420,7 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	
 		//mem_block = KK_get_block( address_sys );
 	
-		temp_block=KK_read_block(address_sys);						//tu zamjena
+		temp_block=(KK_block *)KK_read_block(address_sys);						//tu zamjena
 	
 	//trazi mjesto za slijedeci unos u sis katalogu	
 	int id=0;

@@ -31,7 +31,13 @@
 //maximalni broj blokova u jednom segmentu
 #define MAX_NUM_OF_BLOCKS 200
 
+//Maximum char thah can be entered
+#define MAX_VARCHAR_LENGHT 200
+#define MAX_EXTENTS_IN_SEGMENT 200
 
+//MAX to use block, space
+#define MAX_FREE_SPACE_SIZE 4000
+#define MAX_LAST_TUPLE_DICT_SIZE_TO_USE 470
 
 /**
 \def EXIT_SUCCESS

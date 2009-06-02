@@ -22,12 +22,15 @@
 #include "configuration.h"
 
 
-
+///@author Matija Novak
 typedef struct {
-	///START row_element_op	///structure that reperesents one row of table that is inserted, updated, or deleted
-
+	///START row_element_op	///structure that reperesents one attribute which is used for projection or to nat_join ect.
+	
+	///table name
 	char table[ MAX_ATT_NAME ];
+	///needed atribute in the table
 	char attribute_name[ MAX_ATT_NAME ];
+	///next element in list
 	struct list_structure_op *next;
 }list_structure_op;
 
