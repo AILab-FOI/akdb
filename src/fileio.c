@@ -196,6 +196,7 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 				search_tuple_id=0;
 			}
 		}
+		
 		printf("\n pozicija za pisanje %d, heder_att_name %s",id,temp_block->header[head].att_name);
 		if(strcmp(temp_block->header[head].att_name,"")!=0)//opet možda treba funkcija neka za usporedbu znakova
 		{ 
@@ -231,7 +232,7 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 					
 				}
 			}
-			//printf("\nDATA: %s",entry_data);
+			//printf("\nDATA: %d",entry_data);
 			memcpy(temp_block->data+temp_block->free_space, entry_data,KK_type_size(type,entry_data));		
 			temp_block->tuple_dict[id].address=temp_block->free_space;
 			temp_block->free_space+=KK_type_size(type,entry_data);
@@ -250,6 +251,7 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 			unosi=0;
 		}
 	}
+	temp_block->last_tuple_dict_id=id;
 	//printf("tu10 ");
 	return EXIT_SUCCESS; 
 }
@@ -264,6 +266,9 @@ int insert_row(list *row_root)
 	some_element=GetFirstElement(row_root);
 //	printf("\n TUUU1");
 	char table[100];
+	int free2=0;
+	for(free2;free2<100;free2++)
+		table[free2]='\0';
 	memcpy(&table,some_element->table,strlen(some_element->table));
 //	printf("\n TUUU2");
 	printf("\n Insert into table: %s", table);
@@ -637,7 +642,8 @@ void fileio_test()
 	block->address = 10;
 	block->type = BLOCK_TYPE_NORMAL;
 	block->chained_with = NOT_CHAINED;
-	block->free_space = 0; ///using as an address for the first free space in block->dat
+	block->free_space = 0;
+	block->last_tuple_dict_id=0; ///using as an address for the first free space in block->dat
 
 	memcpy( & block->header[0], header_red_br, sizeof( * header_red_br ) );
 	memcpy( & block->header[1], header_name, sizeof( * header_name ) );
@@ -649,6 +655,28 @@ void fileio_test()
 	block->address = 12;
 	KK_write_block( block );
 	block->address = 13;
+	KK_write_block( block );
+
+	header_red_br = KK_create_header( "Adresa", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_name = KK_create_header( "Ime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_surname = KK_create_header( "Prezime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	
+	block->address = 20;
+	block->type = BLOCK_TYPE_NORMAL;
+	block->chained_with = NOT_CHAINED;
+	block->free_space = 0;
+	block->last_tuple_dict_id=0; ///using as an address for the first free space in block->dat
+
+	memcpy( & block->header[0], header_red_br, sizeof( * header_red_br ) );
+	memcpy( & block->header[1], header_name, sizeof( * header_name ) );
+	memcpy( & block->header[2], header_surname, sizeof( * header_surname ) );
+
+	KK_write_block( block );
+	block->address = 21;	
+	KK_write_block( block );
+	block->address = 22;
+	KK_write_block( block );
+	block->address = 23;
 	KK_write_block( block );
 
 
@@ -764,7 +792,7 @@ void fileio_test()
 	//printf("\n \n \n tu %d",(int) some_element);
 	insert_row(row_root); //drugi poziv funkcije koja je moja
 	int i;
-	for (i=0;i<300;i++)
+	for (i=0;i<10;i++)
 	{
 		broj=i;
 		printf("\n BROJ %d\n",i);
@@ -810,6 +838,50 @@ void fileio_test()
 	update_row(row_root);	
 
 	some_element=GetFirstElement(row_root);
+
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_VARCHAR,"Brace Radica 13","testna_druga","Adresa",row_root);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Nikola","testna_durga","Ime",row_root,0);
+	InsertNewElement(TYPE_VARCHAR,"Bakoš","testna_druga","Prezime",row_root);
+	some_element=GetFirstElement(row_root);
+	//printf("\n \n \n tu %d",(int) some_element);
+	insert_row(row_root); //drugi poziv funkcije koja je moja
+
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_VARCHAR,"Kalnička 54","testna_druga","Adresa",row_root);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Mihi","testna_durga","Ime",row_root,0);
+	InsertNewElement(TYPE_VARCHAR,"Vacenovski","testna_druga","Prezime",row_root);
+	some_element=GetFirstElement(row_root);
+	//printf("\n \n \n tu %d",(int) some_element);
+	insert_row(row_root); //drugi poziv funkcije koja je moja
+
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_VARCHAR,"Neka","testna_druga","Adresa",row_root);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Maja","testna_durga","Ime",row_root,0);
+	InsertNewElement(TYPE_VARCHAR,"Vacenovski","testna_druga","Prezime",row_root);
+	some_element=GetFirstElement(row_root);
+	//printf("\n \n \n tu %d",(int) some_element);
+	insert_row(row_root); //drugi poziv funkcije koja je moja
+
+	DeleteAllElements(row_root);
+	broj=133;
+	InsertNewElement(TYPE_INT,&broj,"testna","Redni_broj",row_root);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Maja","testna","Ime",row_root,0);
+	InsertNewElement(TYPE_VARCHAR,"Vacenovski","testna","Prezime",row_root);
+	some_element=GetFirstElement(row_root);
+	//printf("\n \n \n tu %d",(int) some_element);
+	insert_row(row_root); //drugi poziv funkcije koja je moja
+
+	DeleteAllElements(row_root);
+	broj=1334;
+	InsertNewElement(TYPE_INT,&broj,"testna","Redni_broj",row_root);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Matija","testna","Ime",row_root,0);
+	InsertNewElement(TYPE_VARCHAR,"Novak","testna","Prezime",row_root);
+	some_element=GetFirstElement(row_root);
+	//printf("\n \n \n tu %d",(int) some_element);
+	insert_row(row_root); //drugi poziv funkcije koja je moja
+	
+	
 	//printf("\nTip: %d ",some_element->type);
 	//printf("\nTablica: %s ",some_element->table);
 	//printf("\nAtribut: %s ",some_element->attribute_name);

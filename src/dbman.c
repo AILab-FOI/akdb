@@ -281,6 +281,7 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 		}
 		block->type = BLOCK_TYPE_NORMAL; /// set the block type
 		block->free_space=0;
+		block->last_tuple_dict_id=0;
 		if( KK_write_block( block ) == EXIT_SUCCESS ) /// if write of block succeded increase var success, else nothing
 		{
 			success++;
@@ -1064,7 +1065,7 @@ int find_free_space ( table_addresses * addresses )
 				temp_block = KK_read_block( i );
 				int free_space_on=temp_block->free_space;
 				printf("FRRE SPACE %d",temp_block->free_space);
-				if(free_space_on < 2000)
+				if((free_space_on < 4000)&&(temp_block->last_tuple_dict_id<470))
 				{
 				//	printf("TU SAM");
 					return i; 

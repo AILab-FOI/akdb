@@ -71,6 +71,7 @@ typedef struct {
 	int chained_with;
 	/// free space in block
 	int free_space;
+	int last_tuple_dict_id;
 	/// attribute definitions
 	KK_header header[ MAX_ATTRIBUTES ];
 	/// dictionary of data entries

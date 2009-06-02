@@ -58,14 +58,17 @@ int main()
 
 			fileio_test();
 
+			op_projekcija_test();
+
+			op_spoj_test();
 
 			
 			//filesort_test();
 
 
-			//op_projekcija_test();
 			
-	rename_test();
+			
+			//rename_test();
 
 			/* component test area --- end */
 
