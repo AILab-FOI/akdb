@@ -510,7 +510,7 @@ void update_delete_row_from_block(KK_block *temp_block, list *row_root, int what
 			{	
 				int j=0;
 				int up_type;
-				char up_entry[200];
+				char up_entry[MAX_VARCHAR_LENGHT];
 				for(j=i-head;j<i;j++)
 				{//go through row	
 					if(difrent_varchar_exist==1)
@@ -840,7 +840,7 @@ void fileio_test()
 	insert_row(row_root); 
 
 	int i;
-	for (i=5;i<40;i++)
+	for (i=5;i<100;i++)
 	{
 		DeleteAllElements(row_root);
 		broj=i;
