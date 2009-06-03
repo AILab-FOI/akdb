@@ -88,7 +88,7 @@ int KK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 		block2 = KK_read_block(new_tab_adrese[i]);
 		
 		memcpy(block2,block1,sizeof(block1));				//kopiram cijeli stari blok u novi
-		
+		block2->address = new_tab_adrese[i];
 		memcpy(block2->header, iHeader, sizeof(*iHeader)); 	// u novom mijenjam samo header
 		KK_write_block(block2);								//zapisem novi block
 		
