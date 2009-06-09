@@ -31,7 +31,7 @@
 void intersect_test()
 {
 	printf( "\nintersect_test: Present!\n\n\n" );
-	KK_intersect("testna","testna_bakos","INTERSECT_table");
+	KK_intersect("testna","testna","INTERSECT_table");
 }
 
 
@@ -55,12 +55,11 @@ int KK_intersect(char *table1, char *table2, char *new_table){
 		if(address1->address_from[i] == 0) break;
 		for(j = address1->address_from[i]; j <= address1->address_to[i]; j++){
 			adr1[brojac1] = j;
-			adr2[brojac2] = j;
 			brojac1++;
-			brojac2++;
+
 		}
 	}
-	/*
+	
 	for (i=0; ;i++){
 		if(address2->address_from[i] == 0) break;
 		for(j = address2->address_from[i]; j <= address2->address_to[i]; j++){
@@ -68,7 +67,6 @@ int KK_intersect(char *table1, char *table2, char *new_table){
 			brojac2++;
 		}
 	}
-*/
 
 	
 	//uzeti header iz prve tablice i to je lista atributa po kojima se radi presjek
