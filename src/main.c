@@ -24,7 +24,7 @@
 
 #include "configuration.h"
 #include "dbman.h"
-#include "rename.h"
+#include "intersect.h"
 
 /**
 Main program function
@@ -61,7 +61,7 @@ int main()
 			op_projekcija_test();
 
 			op_spoj_test();
-
+			intersect_test();
 			
 			//filesort_test();
 

@@ -27,6 +27,7 @@
 */
 #define DEBUG 1
 #define DEBUG_SORT 1
+#define INTERSECT_DEBUG 1
 
 //maximalni broj blokova u jednom segmentu
 #define MAX_NUM_OF_BLOCKS 200
