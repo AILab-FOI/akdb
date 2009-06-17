@@ -20,15 +20,24 @@
 #ifndef FILESEARCH
 #define FILESEARCH
 
+#define SEARCH_NULL       0
+#define SEARCH_ALL        1
+#define SEARCH_PARTICULAR 2
+#define SEARCH_RANGE      3
+
 /**
 \struct search_params
-\brief Attribute, lower and upper data value, type - input for KK_equisearch_unsorted and KK_rangesearch_unsorted
+\brief Attribute name, lower and upper data value, special(NULL or *) - input for KK_equisearch_unsorted and KK_rangesearch_unsorted
 */
 typedef struct {
+    /// name of attribute
     char *szAttribute;
+    /// pointer to lower value of search range
     void *pData_lower;
+    /// pointer to upper value of search range
     void *pData_upper;
-    int   iType;
+    /// if searching for NULL values, set to SEARCH_NULL, all values -> SEARCH_ALL, particular value -> SEARCH_PARTICULAR, range of values -> SEARCH_RANGE
+    int iSearchType;
 } search_params;
 
 /**
@@ -38,7 +47,9 @@ typedef struct {
 typedef struct {
     /// array of tuple addresses
     int *aiTuple_addresses;
-    /// number of tuple addresses in array
+    /// array of blocks to which the tuple addresses are relative
+    int *aiBlocks;
+    /// number of tuple addresses/blocks in corresponding arrays
     int iNum_tuple_addresses;
     /// array of indexes of searched-for attributes
     int *aiSearch_attributes;

@@ -6,12 +6,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -23,7 +23,7 @@
 
 
 ///@author Matija Novak
-typedef struct {
+typedef struct list_structure_ {
 	///START row_element
 	///structure that reperesents one row of table that is inserted, updated, or deleted
 	int type; //type of data
@@ -32,7 +32,7 @@ typedef struct {
 	char attribute_name[ MAX_ATT_NAME ]; //attribute name
 	int constraint; //if ist 0 then its new data to be inserted in, when is it 1 then its a constraint on which update and delete searches the data
 	///END row_element
-	struct list_structure *next;//next element in the list
+	struct list_structure_ *next;//next element in the list
 }list_structure;
 
 typedef list_structure *element;

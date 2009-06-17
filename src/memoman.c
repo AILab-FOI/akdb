@@ -38,22 +38,22 @@
 int KK_cache_malloc()
 {
 	register int i;
-	
+
 	if( ( db_cache = ( KK_db_cache * ) malloc ( sizeof( KK_db_cache ) ) ) == NULL )
 	{
 		exit( EXIT_ERROR );
 	}
-	db_cache->next_replace = -1;
+	db_cache->next_replace = MAX_CACHE_MEMORY - 1;
 	for( i = 0; i < MAX_CACHE_MEMORY; i++ )
 	{
 		db_cache->cache[ i ] = ( KK_mem_block * ) malloc ( sizeof( KK_mem_block ) );
-		if( ( KK_cache_block( i, &(db_cache->cache[ i ]) ) ) == EXIT_ERROR )
+		if( ( KK_cache_block( i, db_cache->cache[ i ] ) ) == EXIT_ERROR )
 		{
 			exit( EXIT_ERROR );
 		}
 		//printf( "Cached block %d with address %d\n", i,  &db_cache->cache[ i ]->block->address );
 	}
-	
+
 	return EXIT_SUCCESS;
 }
 
@@ -151,7 +151,7 @@ int KK_memoman_init()
 {
 	printf( "KK_memoman_init: Initializing memory manager...\n\n" );
 
-	if(KK_cache_malloc() == EXIT_ERROR) 
+	if(KK_cache_malloc() == EXIT_ERROR)
 	{
 		printf( "KK_memoman_init: ERROR. KK_cache_malloc() failed.\n");
 		return EXIT_ERROR;
@@ -186,27 +186,27 @@ int KK_memoman_init()
 int KK_cache_block( int num, KK_mem_block * mem_block )
 {
 	KK_block * block_cache;
-	int timestamp;	
+	int timestamp;
 
 	/// allocation of KK_block
-	if( ( block_cache = ( KK_block * ) malloc ( sizeof( KK_block ) ) ) == NULL )
+	/*if( ( block_cache = ( KK_block * ) malloc ( sizeof( KK_block ) ) ) == NULL )
 	{
 		printf( " KK_cache_block: ERROR. Cannot allocate block memory \n");
 		return ( EXIT_ERROR );
-	}	
+	}*/
 
 	/// read the block from the given address
 	block_cache = (KK_block *) KK_read_block( num );
-	
-	memcpy( mem_block->block, block_cache, sizeof( *block_cache ) ); /// copy block to given mem_block   
+
+	mem_block->block = block_cache; /// copy block to given mem_block
 	mem_block->dirty = BLOCK_CLEAN; /// set dirty bit in mem_block struct
- 
+
 	timestamp = clock();  /// get the timestamp
 	mem_block->timestamp_read = timestamp; /// set timestamp_read
 	mem_block->timestamp_last_change = timestamp; /// set timestamp_last_change
 
-	free( block_cache );
-	
+	//free( block_cache );
+
 	return (EXIT_SUCCESS); /// if all is succesfull
 }
 
@@ -237,34 +237,37 @@ KK_mem_block * KK_get_block( int num )
 
 	while ( i < MAX_CACHE_MEMORY )
 	{
-		printf( "i is now %d\n", i );
+	    if(DEBUG)
+            printf( "i is now %d\n", i );
 		/// if block is cached returns block
-		if ( &db_cache->cache[ i ]->block->address == num )
+		if ( db_cache->cache[ i ]->block->address == num )
 		{
 			cached_block =  db_cache->cache[i];
 			found_in_cache = 1;
-			printf( "Found block %d in cache\n", i );
+			if(DEBUG)
+                printf( "Found block %d in cache\n", i );
 		}
 
-		printf( "Passed first if-block\n" );		
+        if(DEBUG)
+            printf( "Passed first if-block\n" );
 
 		/// get first free memory block for possible block caching
 		/// checking by timestamp of last block reading
 		if ( first_free_mem_block == -1 )
 		{
 			/// assume that free block has timestamp_read set to -1
-			if ( &db_cache->cache[i]->timestamp_read == -1 )
+			if ( db_cache->cache[i]->timestamp_read == -1 )
 				first_free_mem_block = i;
 		}
-		
+
 		/// get second oldest block index in db_cache
-		if ( ( &db_cache->cache[i]->timestamp_read > &db_cache->cache[ oldest_block ]->timestamp_read ) &&
-			( &db_cache->cache[ i ]->timestamp_read < &db_cache->cache[ get_second_oldest ]->timestamp_read ) )
+		if ( ( db_cache->cache[i]->timestamp_read > db_cache->cache[ oldest_block ]->timestamp_read ) &&
+			( db_cache->cache[ i ]->timestamp_read < db_cache->cache[ get_second_oldest ]->timestamp_read ) )
 			get_second_oldest = i;
-				
+
 		i++;
 	}
-	
+
 	if ( !found_in_cache )
 	{
 		if ( first_free_mem_block != -1 )
@@ -272,17 +275,17 @@ KK_mem_block * KK_get_block( int num )
 			/// assume that function KK_cahce_block returns (KK_mem_block*)
 			/// and ih takes two arguments (block_number, allocation_address)
 			/// cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[first_free_mem_block] );
-			
+
 			/// if KK_cahce_block returns INT
-			if ( KK_cache_block (num, &( db_cache->cache[ first_free_mem_block ] ) ) == EXIT_SUCCESS )
-				cached_block = &db_cache->cache[first_free_mem_block];
+			if ( KK_cache_block (num, db_cache->cache[ first_free_mem_block ] ) == EXIT_SUCCESS )
+				cached_block = db_cache->cache[first_free_mem_block];
 
 		}
 		else
 		{
-			if ( &db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY )
+			if ( db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY )
 			{
-				data_block = (KK_block *) &db_cache->cache[oldest_block]->block;
+				data_block = (KK_block *) db_cache->cache[oldest_block]->block;
 				block_written = KK_write_block ( data_block );
 				/// if block form cache can not be writed to DB file -> EXIT_ERROR
 				if ( block_written != EXIT_SUCCESS )
@@ -294,9 +297,9 @@ KK_mem_block * KK_get_block( int num )
 				db_cache->next_replace = get_second_oldest;
 			}
 			/// cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[oldest_block] );
-			
+
 			if ( KK_cache_block (num, db_cache->cache[ first_free_mem_block ] ) == EXIT_SUCCESS )
-				cached_block = &db_cache->cache[ oldest_block ];
+				cached_block = db_cache->cache[ oldest_block ];
 		}
 	}
 	return ( cached_block );
@@ -308,11 +311,11 @@ KK_mem_block * KK_get_block( int num )
 
  Extents the segment
  @param table_name name of segment to extent
- @param extent_type type of extent (can be one of: 
-	SEGMENT_TYPE_SYSTEM_TABLE, 
-	SEGMENT_TYPE_TABLE, 
-	SEGMENT_TYPE_INDEX, 
-	SEGMENT_TYPE_TRANSACTION, 
+ @param extent_type type of extent (can be one of:
+	SEGMENT_TYPE_SYSTEM_TABLE,
+	SEGMENT_TYPE_TABLE,
+	SEGMENT_TYPE_INDEX,
+	SEGMENT_TYPE_TRANSACTION,
 	SEGMENT_TYPE_TEMP
  @return address of new extent, otherwise EXIT_ERROR
 
@@ -322,15 +325,15 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	adrese = (table_addresses *) get_table_addresses(table_name);
 	int adr_bloka = adrese->address_from[1];
 	int old_size=0;
-	
+
 	//promjentiti temp_block = mem_block->block
 	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
 	//mem_block = KK_get_block(adr_bloka); // bilo koji blok tablice, samo da se dobije header iz njega
-	
+
 			KK_block *temp_block = (KK_block *) malloc(sizeof(KK_block));
 			temp_block = (KK_block *) KK_read_block(adr_bloka);
-	
-		
+
+
 	int velicina=0;
 	register int i=0;
 	for(i=0; i<200; i++){					//jer je tak novak stavio (fileio.h)
@@ -338,10 +341,10 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 			break;
 		velicina = adrese->address_to[i] - adrese->address_from[i];
 		if(velicina > old_size)			//trazim najveći extent
-			old_size = velicina;	
+			old_size = velicina;
 	}
-	
-	old_size += 1; 
+
+	old_size += 1;
 	int pocetna_adr = 0;
 	if ( (pocetna_adr = KK_new_extent(1, old_size, extent_type, temp_block->header)) == EXIT_ERROR){
 		printf("KK_init_new_extent: Could not alocate new extent\n");
@@ -349,14 +352,14 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	}
 	if(DEBUG)
 		printf("KK_init_new_extent: pocetna_adr=%i, old_size=%i, extent_type=%i\n",pocetna_adr, old_size, extent_type);
-	
+
 	int zavrsna_adr = pocetna_adr;
-	
+
 	float RESIZE_FACTOR = 0;
 
 		switch(extent_type)
 		{
-			case SEGMENT_TYPE_TABLE: 
+			case SEGMENT_TYPE_TABLE:
 				RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
 				break;
 			case SEGMENT_TYPE_INDEX:
@@ -370,41 +373,41 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 				break;
 		}
 
-		zavrsna_adr = pocetna_adr + ( old_size + old_size * RESIZE_FACTOR ); 
-	
-	
+		zavrsna_adr = pocetna_adr + ( old_size + old_size * RESIZE_FACTOR );
+
+
 	//mem_block = KK_get_block( 0 );
-	
+
 		temp_block= (KK_block *) KK_read_block( 0 );						//tu zamjena
-	
-	
-	
+
+
+
 	int trazi=1;
 	char name_sys[100];
 	int address_sys;
 	int free=0;
 	if(DEBUG)
 		printf("\nKK_init_new_extent: Tražim systemsku tablicu relacija \n");
-	
+
 	for(i=0;i<DATA_BLOCK_SIZE;)
 	{
-		
+
 		//trazi=0;
 		free=0;
 		for(free;free<100;free++)
 			name_sys[free]='\0';
-		
+
 		memcpy(name_sys,
 			   temp_block->data + temp_block->tuple_dict[i].address,
 			   temp_block->tuple_dict[i].size );
-		
+
 		printf("\n adresa: %s",name_sys);
 		i++;
-		
+
 		memcpy(&address_sys,
 			   temp_block->data + temp_block->tuple_dict[i].address,
 			   temp_block->tuple_dict[i].size);
-		
+
 		if(strcmp(name_sys,"KK_relation")==0)
 		{	if(DEBUG)
 				printf("\nKK_init_new_extent: Pronasao adresu relacijeske sys tablice: %d \n",address_sys);
@@ -412,17 +415,17 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 			break;
 		}
 		i++;
-		
+
 	}
-	
+
 	//adresa relacijske sistemske tablice je pronađena
 	// zapisati u sistemski katalog relacije
-	
+
 		//mem_block = KK_get_block( address_sys );
-	
+
 		temp_block=(KK_block *)KK_read_block(address_sys);						//tu zamjena
-	
-	//trazi mjesto za slijedeci unos u sis katalogu	
+
+	//trazi mjesto za slijedeci unos u sis katalogu
 	int id=0;
 	int nadjeno=1;
 	while ( nadjeno )
@@ -433,8 +436,8 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 			nadjeno=0;
 		}
 	}
-	
-	
+
+
 	//to je kaj unesem nutra
 		int obj_id=2;
 	if(DEBUG)
@@ -443,7 +446,7 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	KK_insert_entry(temp_block, TYPE_VARCHAR, table_name, id + 1 );
 	KK_insert_entry(temp_block, TYPE_INT, &pocetna_adr, id + 2 );
 	KK_insert_entry(temp_block, TYPE_INT, &zavrsna_adr, id + 3);
-	
+
 	return pocetna_adr;
 }
 
