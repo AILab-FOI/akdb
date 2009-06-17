@@ -20,7 +20,10 @@ kalashnikov_db_SOURCES = \
 	configuration.h          \
 	memoman.c          \
 	memoman.h          \
-	op_preimenovanje.c
+	op_preimenovanje.c          \
+	difference.c          \
+	union.c          \
+	union.h
 
 kalashnikov_db_LDFLAGS = 
 

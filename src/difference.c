@@ -17,6 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+#include "fileio.h"
+#include "files.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "dbman.h"
+#include "memoman.h"
+#include <string.h>
+#include "configuration.h"
+
+
 int KK_difference(char *table1, char *table2, char *new_table)
 {
 	register int i, j, k;
@@ -72,7 +82,7 @@ int KK_difference(char *table1, char *table2, char *new_table)
 	
 	for(i = 0; i < MAX_ATTRIBUTES; i++)
 	{
-		if(strcmp((char *)iBlock1->header[i].att_name, (char *)iBlock2->header[i].att_name) != 0)
+		if(strcmp((char *)iBlock->header[i].att_name, (char *)iBlock2->header[i].att_name) != 0)
 		{
 			printf("DIFFERENCE ERROR: Relation shemas are not same! \n");
 			return EXIT_ERROR;
@@ -111,7 +121,7 @@ int KK_difference(char *table1, char *table2, char *new_table)
 				iBlock2 = (KK_block*) KK_read_block(adr2[j]);
 
 				int imaJosElemenata2=0;
-				poklapanje =0;
+
 				while(iBlock2->free_space > imaJosElemenata2)
 				{
 					//through the header
@@ -139,15 +149,13 @@ int KK_difference(char *table1, char *table2, char *new_table)
 							razlicito = 1;
 							break;
 						}
-						else
-							poklapanje=0;
 					}
 					// next position in second table
 					pozicija_block2++;
 
 					//if there is a difference between tuple_dicts
 					if(razlicito == 1)
-					{;
+					{
 						DeleteAllElements(row_root); //remove row from further action
 						
 						for(k = 0; k < num_attr_t1; k++){//through the header
@@ -158,8 +166,8 @@ int KK_difference(char *table1, char *table2, char *new_table)
 							
 							//copy tuple_dict to new block
 							memcpy(podatak1,
-								   iBlock->data + iBlock->tuple_dict[pozicija_block1 * sum_attr1 +k].address,
-								   iBlock->tuple_dict[pozicija_block1 * sum_attr1 +k].size);
+								   iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].address,
+								   iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].size);
 							
 							imaJosElemenata = iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].address + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].size;
 							
@@ -177,4 +185,5 @@ int KK_difference(char *table1, char *table2, char *new_table)
 			pozicija_block1++; //move to next position in block
 		}
 	}
+	return EXIT_SUCCESS;
 }

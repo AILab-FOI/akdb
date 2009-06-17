@@ -15,9 +15,24 @@ bin_PROGRAMS = kalashnikov-db
 
 kalashnikov_db_SOURCES = \
 	main.c          \
-	dbman.c
+	dbman.c          \
+	dbman.h          \
+	configuration.h          \
+	memoman.c          \
+	memoman.h          \
+	op_preimenovanje.c          \
+	difference.c          \
+	union.c
 
 kalashnikov_db_LDFLAGS = 
 
 kalashnikov_db_LDADD = 
+
+doc_DATA = 
+
+docdir = \
+	$(pkgdatadir)
+
+EXTRA_DIST = \
+	$(doc_DATA)
 

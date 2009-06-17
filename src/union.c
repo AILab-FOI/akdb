@@ -17,12 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+#include "union.h"
+
+/**
+ * Union is implemented for working with multiple sets of data, i.e. duplicate 
+ * tuples can be written in same table (union)
+ */
 int KK_union(char *table1, char *table2, char *new_table)
 {
 	register int i, j, k;
 	int num_attr_t1 = 0, num_attr_t2 = 0; //number of attributes in table
 	int adr1[MAX_EXTENTS_IN_SEGMENT], adr2[MAX_EXTENTS_IN_SEGMENT];
 	int brojac1 = 0, brojac2 = 0;
+	int free;
 	
 	//get table addresses
 	table_addresses *address1 = (table_addresses*) get_table_addresses(table1);
@@ -66,13 +73,13 @@ int KK_union(char *table1, char *table2, char *new_table)
 			num_attr_t2++;
 	}
 	
-	if(sum_attr1 != sum_attr2){
+	if(num_attr_t1 != num_attr_t2){
 		printf("UNION ERROR: Not same number of attributes! \n");
 		return EXIT_ERROR;
 	
 	for(i = 0; i < MAX_ATTRIBUTES; i++)
 	{
-		if(strcmp((char *)iBlock1->header[i].att_name, (char *)iBlock2->header[i].att_name) != 0)
+		if(strcmp((char *)iBlock->header[i].att_name, (char *)iBlock2->header[i].att_name) != 0)
 		{
 			printf("UNION ERROR: Relation shemas are not same! \n");
 			return EXIT_ERROR;
@@ -83,16 +90,82 @@ int KK_union(char *table1, char *table2, char *new_table)
 	KK_header *iHeader = (KK_header *) malloc(sizeof(KK_header));
 	memcpy(iHeader, iBlock->header, sizeof(KK_header));
 	KK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE ,iHeader);
-	free(iHeader);
 		
 	char podatak1[MAX_VARCHAR_LENGHT];
 	char podatak2[MAX_VARCHAR_LENGHT];
 	int pozicija_block1=0, pozicija_block2=0;
-	
-	int free=0;
-	int zapisano =0;
-	int razlicito=0;
-	int broj_jednakih=0;
-	i = 0;
+		
 	list * row_root = (list *) malloc( sizeof(list) );
+	
+	//writing first block or table to new segment
+	while ( i < brojac1 )
+	{
+		iBlock = (KK_block*) KK_read_block(adr1[i]); //read block from first table
+		
+		i++;
+		int imaJosElemenata=0; //indicates if there are more elements in block
+		
+		memcpy(podatak1, 
+			   iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].address, 
+			   iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].size);
+		
+		if (row_root != NULL)
+			DeleteAllElements(row_root); //remove row from further action
+						
+		for(k = 0; k < num_attr_t1; k++)
+		{//through the header
+			for(free=0;free<MAX_VARCHAR_LENGHT;free++){
+				podatak1[free]=FREE_CHAR;
+			}
+							
+			//copy tuple_dict to new block
+			memcpy(podatak1,
+				   iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].address,
+				   iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].size);
+							
+			imaJosElemenata = iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].address + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].size;
+							
+			InsertNewElementForUpdate(iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].type, &podatak1, new_table, iBlock->header[ k ].att_name, row_root, 0);
+							
+		}
+						
+		insert_row(row_root);
+	}
+		
+	
+	//writing second block or table to new segment	
+	while ( i < brojac2 )
+	{
+		iBlock = (KK_block*) KK_read_block(adr2[i]); //read block from first table
+		
+		i++;
+		int imaJosElemenata=0; //indicates if there are more elements in block
+		
+		memcpy(podatak1, 
+			   iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].address, 
+			   iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].size);
+		
+		if (row_root != NULL)
+			DeleteAllElements(row_root); //remove row from further action
+						
+		for(k = 0; k < num_attr_t1; k++)
+		{//through the header
+			for(free=0;free<MAX_VARCHAR_LENGHT;free++){
+				podatak1[free]=FREE_CHAR;
+			}
+							
+			//copy tuple_dict to new block
+			memcpy(podatak1,
+				   iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].address,
+				   iBlock->tuple_dict[pozicija_block1 * num_attr_t1 +k].size);
+							
+			imaJosElemenata = iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].address + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].size;
+							
+			InsertNewElementForUpdate(iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].type, &podatak1, new_table, iBlock->header[ k ].att_name, row_root, 0);
+							
+		}
+						
+		insert_row(row_root);
+	}
+	return EXIT_SUCCESS;
 }
