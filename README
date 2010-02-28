@@ -1,0 +1,16 @@
+Kalashnikov DB
+
+Kalashnikov DB is a simple relational database management system developed
+by students of the Faculty of Organization and Informatics in Varaždin,
+Croatia.
+
+The system is currently in alpha development status. If you want to compile
+it to se what it does so far do:
+
+# cd src
+src/# make clean
+src/# make
+
+If everything works out then you should have a runnable binary file kdb in 
+/bin and some documentation in /doc. The system requires doxygen and latex
+for documentation.
