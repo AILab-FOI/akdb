@@ -29,6 +29,10 @@
 #include "files.h"
 #include "fileio.h"
 
+//file is under construction but some functions however work ;-)
+//you can: get number of attributes in table, table header, print table
+//selection is still under construction
+
 //returns number of attributes in table
 int AK_num_attr( char * tblName ){
     int num_attr = 0;
@@ -87,6 +91,7 @@ int AK_get_num_records( char *tblName ){
     return num_rec / num_head;
 }
 
+//print table
 void AK_print_table( char *tblName ){
         int num_attr, num_rec;
         int i, j, k;
