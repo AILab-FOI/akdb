@@ -311,5 +311,16 @@
 */
 #define MAX_QUERY_RESULT_MEMORY 255
 
+/**
+\def relational operators
+*/
+#define RO_SELECTION 's'
+#define RO_PROJECTION 'p'
+#define RO_NAT_JOIN 'n'
+#define RO_RENAME 'r'
+#define RO_UNION 'u'
+#define RO_INTERSECT 'i'
+#define RO_EXCEPT 'e'
+
 #endif
 
