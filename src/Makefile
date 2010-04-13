@@ -11,8 +11,7 @@ RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selecti
 
 OUTDIR = ../bin
 
-all: kalashnikov-db
-#doc
+all: kalashnikov-db doc
 
 kalashnikov-db: auxiliary.o $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
 	$(CC) main.o $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
