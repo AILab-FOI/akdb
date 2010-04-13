@@ -67,11 +67,11 @@ int main()
 			/* component test area --- begin */
 
 
-			btree_test();
+			//btree_test();
 
 
 
-			hash_test();
+			//hash_test();
 
 			//files_test();
 
@@ -86,7 +86,7 @@ int main()
 
 
 			//op_projekcija_test();
-
+                        op_selection_test();
 			//op_spoj_test();
 			//intersect_test();
 

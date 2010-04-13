@@ -26,6 +26,7 @@
 #include<string.h>
 
 #include "dbman.h"
+#include "memoman.h"
 #include "files.h"
 #include "fileio.h"
 
@@ -42,30 +43,14 @@ int AK_num_attr( char * tblName ){
     else{
         KK_block *temp = (KK_block *)KK_read_block( addresses->address_from[0] );
         int i = 0;
-        while( strcmp( temp->header[i++].att_name,"" ) != 0 )
+        while( strcmp( temp->header[i].att_name,"" ) != 0 ){
             num_attr++;
+            i++;
+        }
     }
     return num_attr;
 }
 
-//returns complete table header
-KK_header* AK_get_header( char *tblName ){
-    int num_attr = AK_num_attr( tblName );
-    KK_header* t_header = (KK_header* ) malloc( num_attr * sizeof( KK_header ));
-    table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-    if( addresses->address_from[0] == 0 )
-        t_header = NULL;
-    else{
-        KK_block *temp_block = (KK_block *) KK_read_block( addresses->address_from[0] );
-        int i = 0;
-
-        while( strcmp( temp_block->header[i].att_name,"") != 0 ){
-            memcpy( t_header + i, &(temp_block->header[i]), sizeof( KK_header ));
-            i++;
-        }
-    }
-    return t_header;
-}
 
 //returns number of records
 int AK_get_num_records( char *tblName ){
@@ -101,15 +86,15 @@ void AK_print_table( char *tblName ){
         num_attr = AK_num_attr( tblName );
         num_rec = AK_get_num_records( tblName );
 
-        KK_header *temp_head = (KK_header *) AK_get_header( tblName );
-        
+        KK_block *temp = (KK_block*)KK_read_block( addresses->address_from[0]);
+        KK_header *temp_head = &(temp->header[ 0 ]);
         int temp_int;
         char temp_char[ MAX_VARCHAR_LENGHT ];
         float temp_float;
 
         printf( "\n");
         for( i = 0; i < num_attr; i++ )
-            printf( "%-10s", temp_head[ i ].att_name );
+            printf( "%-10s", (temp_head+i)->att_name );
         printf( "\n----------------------------------------------\n");
         
         i = 0;
@@ -148,15 +133,6 @@ void AK_print_table( char *tblName ){
         printf( "(%d RECORDS FOUND)\n\n", num_rec );
 }
 
-//function for selection
-void AK_selection( char *tblSrc, char *tblDest, char **expr, int num_str ){
-    KK_header *srcHeader = (KK_header * ) AK_get_header( tblSrc );
-
-    int startAddress = KK_initialize_new_segment( tblDest, SEGMENT_TYPE_TABLE, srcHeader );
-
-    if( startAddress != EXIT_ERROR )
-        printf( "\nSelection table: %s CREATED!\n", tblDest );
-}
 
 void op_selection_test(){
     printf( "\n********** SELECTION TEST by Matija Šestak **********\n");
@@ -168,10 +144,8 @@ void op_selection_test(){
     temp = (KK_header*)KK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header, temp, sizeof( KK_header ));
 
-
     temp = (KK_header*)KK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 1, temp, sizeof( KK_header ));
-
 
     temp = (KK_header*)KK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 2, temp, sizeof( KK_header ));
@@ -252,9 +226,5 @@ void op_selection_test(){
     
     //print table "student"
     AK_print_table( tblName );
-
-    //execute selection
-    AK_selection( tblName, "test_selection", NULL, 0 );
-    
-    //dealocate variables ;)
+    //dealocate variables
 }
