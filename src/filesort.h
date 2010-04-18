@@ -17,7 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+#ifndef FILESORT
+#define FILESORT
+
+#include <string.h>
 #include "configuration.h"
+#include "dbman.h"
+#include "memoman.h"
+#include "auxiliary.h"
+#include "files.h"
+#include "fileio.h"
 
 //velicina podatke koji se usporedjuje
 #define DATA_ROW_SIZE 200
@@ -26,7 +35,7 @@
 #define DATA_TUPLE_SIZE 500
 
 
-
+#endif
 
 
 

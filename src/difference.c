@@ -17,11 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 #include "difference.h"
-#include "fileio.h"
-#include "files.h"
-#include "dbman.h"
-#include "memoman.h"
-#include "configuration.h"
 
 
 int KK_difference(char *table1, char *table2, char *new_table)

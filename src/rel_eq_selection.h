@@ -1,5 +1,5 @@
 /**
-@file selection.h Provides data structures for relational selection operation
+@file rel_eq_selection.h Provides data structures for relational equivalences in selection
 */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -17,18 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-#ifndef SELECTION
-#define SELECTION
+#ifndef REL_EQ_SELECTION
+#define REL_EQ_SELECTION
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
 
-#include "projection.h"
-#include "configuration.h"
-#include "dbman.h"
-#include "memoman.h"
-#include "files.h"
-#include "fileio.h"
 
 #endif

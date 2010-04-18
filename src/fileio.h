@@ -16,10 +16,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+#ifndef FILEIO
+#define FILEIO
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "dbman.h"
+#include "memoman.h"
+#include "string.h"
 #include "configuration.h"
+#include "auxiliary.h"
 
 
 ///@author Matija Novak
@@ -38,3 +45,4 @@ typedef struct list_structure_ {
 typedef list_structure *element;
 typedef list_structure list;
 
+#endif

@@ -19,14 +19,7 @@
 
 
 #include "intersect.h"
-#include "fileio.h"
-#include "files.h"
-#include <stdio.h>
-#include <stdlib.h>
-//#include "dbman.h"
-//#include "memoman.h"
-#include <string.h>
-//#include "configuration.h"
+
 
 void intersect_test()
 {

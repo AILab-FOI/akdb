@@ -23,5 +23,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "configuration.h"
+#include "projection.h"
+#include "dbman.h"
+#include "memoman.h"
+#include "string.h"
+#include "auxiliary.h"
+#include "fileio.h"
 
 #endif

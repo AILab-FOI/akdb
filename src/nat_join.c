@@ -18,13 +18,6 @@
  17 */
 
 #include "nat_join.h"
-#include "projection.h"
-#include "dbman.h"
-#include "memoman.h"
-#include "string.h"
-#include "configuration.h"
-#include "auxiliary.h"
-#include "fileio.h"
 
 /** 	@author Matija Novak
 	function makes header for the new table and call the function to create the segment

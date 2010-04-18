@@ -21,9 +21,7 @@
  */
 
 
-#include "configuration.h"
 #include "dbman.h"
-#include "auxiliary.h"
 
 /**
  @author Markus Schatten

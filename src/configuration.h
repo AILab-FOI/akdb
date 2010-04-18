@@ -25,9 +25,9 @@
 \def DEBUG
 \brief constant for debugging
 */
-#define DEBUG 1
-#define DEBUG_SORT 1
-#define INTERSECT_DEBUG 1
+#define DEBUG 0
+#define DEBUG_SORT 0
+#define INTERSECT_DEBUG 0
 
 //maximal number of blocks in a segment
 #define MAX_NUM_OF_BLOCKS 200

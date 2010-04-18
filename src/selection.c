@@ -18,17 +18,6 @@
  17 */
 
 #include "selection.h"
-#include "projection.h"
-#include "configuration.h"
-
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-#include "dbman.h"
-#include "memoman.h"
-#include "files.h"
-#include "fileio.h"
 
 //file is under construction but some functions however work ;-)
 //you can: get number of attributes in table, table header, print table

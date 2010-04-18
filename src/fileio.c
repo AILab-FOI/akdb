@@ -16,14 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  17 */
-#include <stdio.h>
-#include <stdlib.h>
 #include "fileio.h"
-#include "dbman.h"
-#include "memoman.h"
-#include "string.h"
-#include "configuration.h"
-#include "auxiliary.h"
 
 
 //START GLOBAL FUNCTIONS TO WORK WITH LIST

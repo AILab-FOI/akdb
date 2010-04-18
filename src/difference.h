@@ -23,4 +23,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "fileio.h"
+#include "files.h"
+#include "dbman.h"
+#include "memoman.h"
+#include "configuration.h"
+
 #endif

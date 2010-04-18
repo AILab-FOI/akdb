@@ -18,12 +18,6 @@
  17 */
 
 #include "projection.h"
-#include "dbman.h"
-#include "memoman.h"
-#include "string.h"
-#include "configuration.h"
-#include "auxiliary.h"
-#include "fileio.h"
 
 
 ///START GLOBAL FUNCTIONS for work with list for relational operators

@@ -49,6 +49,7 @@
 #include "rename.h"
 #include "selection.h"
 #include "union.h"
+#include "aggregation.h"
 
 /**
 Main program function
@@ -68,30 +69,25 @@ int main()
 
 
 			//btree_test();
-
-
-
 			//hash_test();
+			bitmap_test();
 
 			//files_test();
-
-
-
 			//fileio_test();
-
 			//filesearch_test();
-
 			//filesort_test();
 
-
-
 			//op_projekcija_test();
-                        op_selection_test();
+                        //op_selection_test();
 			//op_spoj_test();
 			//intersect_test();
-
-
-			//rename_test();
+			//rename_test();			
+			
+			aggregation_test();
+			rel_eq_projection_test();
+			rel_eq_selection_test();
+			rel_eq_assoc_test();
+			rel_eq_comut_test();
 
 			/* component test area --- end */
 

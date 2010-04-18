@@ -20,6 +20,11 @@
 #ifndef MEMOMAN
 #define MEMOMAN
 
+#include <stdio.h>
+
+#include "configuration.h"
+#include "auxiliary.h"
+#include "dbman.h"
 #include "configuration.h"
 #include "dbman.h"
 /**

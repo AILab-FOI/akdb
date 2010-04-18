@@ -22,6 +22,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "configuration.h"
+#include "dbman.h"
+#include "memoman.h"
+#include "string.h"
+#include "configuration.h"
+#include "auxiliary.h"
+#include "fileio.h"
 
 
 ///@author Matija Novak

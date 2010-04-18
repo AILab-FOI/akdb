@@ -6,18 +6,34 @@ CFLAGS = $(DEBUG) -c -Wall
 
 DISKTARGETS = dbman.o 
 MEMORYTARGETS = memoman.o
-FILETARGETS = files.o fileio.o filesearch.o filesort.o btree.o hash.o
-RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.h
+FILETARGETS = files.o fileio.o filesearch.o filesort.o btree.o hash.o bitmap.o
+RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o
+OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o
 
 OUTDIR = ../bin
 
 all: kalashnikov-db doc
 
-kalashnikov-db: auxiliary.o $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
-	$(CC) main.o $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
+kalashnikov-db: auxiliary.o $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
+	$(CC) main.o $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
 
 main.o: main.c
 	$(CC) $(CFLAGS) main.c
+
+rel_eq_comut.o: rel_eq_comut.c
+	$(CC) $(CFLAGS) rel_eq_comut.c
+
+rel_eq_assoc.o: rel_eq_assoc.c
+	$(CC) $(CFLAGS) rel_eq_assoc.c
+
+rel_eq_selection.o: rel_eq_selection.c
+	$(CC) $(CFLAGS) rel_eq_selection.c
+
+rel_eq_projection.o: rel_eq_projection.c
+	$(CC) $(CFLAGS) rel_eq_projection.c
+
+aggregation.o: aggregation.c
+	$(CC) $(CFLAGS) aggregation.c
 
 union.o: union.c
 	$(CC) $(CFLAGS) union.c
@@ -39,6 +55,9 @@ intersect.o: intersect.c
 
 difference.o: difference.c
 	$(CC) $(CFLAGS) difference.c
+
+bitmap.o: bitmap.c
+	$(CC) $(CFLAGS) bitmap.c
 
 btree.o: btree.c
 	$(CC) $(CFLAGS) btree.c

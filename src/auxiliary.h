@@ -20,5 +20,8 @@
 #ifndef AUXILIARY
 #define AUXILIARY
 
+#include <string.h>
+#include "configuration.h"
+
 #endif
 
