@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-
-#ifndef SELECTION_H
-#define SELECTION_H
+#ifndef SELECTION
+#define SELECTION
 
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 
 #include "configuration.h"
 #include "projection.h"

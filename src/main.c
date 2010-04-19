@@ -47,6 +47,7 @@
 #include "nat_join.h"
 #include "projection.h"
 #include "rename.h"
+//#include "selection.h"
 #include "union.h"
 #include "aggregation.h"
 
@@ -71,14 +72,14 @@ int main()
 			//hash_test();
 			//bitmap_test();
 
-			//files_test();
+			files_test();
 			//fileio_test();
 			//filesearch_test();
 			//filesort_test();
 
 			//op_projekcija_test();
-                        op_selection_test();
-			//op_join_test();
+                        //op_selection_test();
+			//op_spoj_test();
 			//intersect_test();
 			//rename_test();			
 			
@@ -87,6 +88,13 @@ int main()
 			//rel_eq_selection_test();
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
+			
+			char * table = "Tomo";
+			printf( "Test %s\n", table );
+			
+			table_addresses * tbl = get_table_addresses ( table );
+ 			printf( "Table address from: %d\n", (tbl->address_from)[ 0 ] );
+ 			printf( "Table address to: %d\n", (tbl->address_to)[ 0 ] );
 
 			/* component test area --- end */
 

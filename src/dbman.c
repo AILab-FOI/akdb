@@ -173,6 +173,9 @@ int KK_write_block( KK_block * block )
 		printf( "KK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address );
 		exit( EXIT_ERROR );
 	}
+	fclose( db );
+	if( DEBUG )
+		printf( "KK_write_block: Written block at address %d\n", block->address * sizeof( KK_block ) );
 	return ( EXIT_SUCCESS );
 }
 
@@ -908,11 +911,11 @@ int KK_init_disk_manager()
 
 /** 	@author Matija Novak
 	function for geting addresses of some table
-	@return structure table_addresses witch contains start and end adress of table extents,
+	@return structure table_addresses witch contains start and end adresses of table extents,
 	when form and to are 0 you are on the end of addresses
 	@param table - table name that you search for
 */
-table_addresses * get_table_addresses ( char * table)
+table_addresses * get_table_addresses ( char * table )
 {
 	KK_block *temp_block;
 
@@ -924,7 +927,7 @@ table_addresses * get_table_addresses ( char * table)
 	int data_type=0;
 	char name_sys[MAX_ATT_NAME];
 	int address_sys;
-	int free2=0;//var to clear char varijavble
+	int free2=0;//var to clear char variable
 
 	if(DEBUG)
 		printf("get_table_addresses: Serching for system_relation table \n");
@@ -937,7 +940,7 @@ table_addresses * get_table_addresses ( char * table)
 			name_sys[free2]='\0';
 
 		if(temp_block->tuple_dict[i].address == FREE_INT)
-                    break;
+			break;
 		data_adr=temp_block->tuple_dict[i].address;
 		data_size=temp_block->tuple_dict[i].size;
 		data_type=temp_block->tuple_dict[i].type;

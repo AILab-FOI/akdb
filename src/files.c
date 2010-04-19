@@ -118,8 +118,17 @@ int KK_initialize_new_segment(char *name, int type, KK_header *header)
 				KK_insert_entry(tempBlock, TYPE_VARCHAR, name, tupleDictID + 1);
 				KK_insert_entry(tempBlock, TYPE_INT, &start_address, tupleDictID + 2);
 				KK_insert_entry(tempBlock, TYPE_INT, &end_address, tupleDictID + 3);
+				printf("KK_init_new_segment__NOTIFICATION: Writing block at address %d\n", start_address );
 				KK_write_block(tempBlock);
+				KK_new_extent( start_address, 0, type, header );
 			}
+			else
+			{
+				if (DEBUG)
+					printf("KK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
+				return EXIT_ERROR;
+			}
+			
 		}
 		if (DEBUG)
 			printf("KK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
@@ -135,7 +144,15 @@ void files_test()
 	header.integrity[0] = 21;
 	header.type = 1;
 	char *ime = "Tomo";
-	i = KK_initialize_new_segment( ime, SEGMENT_TYPE_TABLE, &header);
+	KK_header header1;
+	int i1;
+	header1.integrity[0] = 21;
+	header1.type = 1;
+	char *ime1 = "Tomo1";
+	i = KK_initialize_new_segment(ime, SEGMENT_TYPE_TABLE, &header);
 	if (i != EXIT_ERROR)
 		printf("KK_init_new_segment: Test succeded!\n");
+	i1 = KK_initialize_new_segment(ime1, SEGMENT_TYPE_TABLE, &header1);
+	if (i1 != EXIT_ERROR)
+		printf("KK_init_new_segment: Test1 succeded!\n");
 }
