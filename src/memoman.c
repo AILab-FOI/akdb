@@ -189,8 +189,8 @@ int KK_cache_block( int num, KK_mem_block * mem_block )
 	{
 		printf( " KK_cache_block: ERROR. Cannot allocate block memory \n");
 		return ( EXIT_ERROR );
-	}*/
-
+         }
+         */
 	/// read the block from the given address
 	block_cache = (KK_block *) KK_read_block( num );
 

@@ -135,7 +135,7 @@ void files_test()
 	header.integrity[0] = 21;
 	header.type = 1;
 	char *ime = "Tomo";
-	i = KK_initialize_new_segment(&ime, SEGMENT_TYPE_TABLE, &header);
+	i = KK_initialize_new_segment( ime, SEGMENT_TYPE_TABLE, &header);
 	if (i != EXIT_ERROR)
 		printf("KK_init_new_segment: Test succeded!\n");
 }

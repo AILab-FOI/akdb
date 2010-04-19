@@ -19,9 +19,13 @@
 
 #include "selection.h"
 
+#define TYPE_OPERAND 10
+#define TYPE_OPERATOR 11
 //file is under construction but some functions however work ;-)
 //you can: get number of attributes in table, table header, print table
 //selection is still under construction
+
+
 
 //returns number of attributes in table
 int AK_num_attr( char * tblName ){
@@ -40,12 +44,11 @@ int AK_num_attr( char * tblName ){
     return num_attr;
 }
 
-
 //returns number of records
 int AK_get_num_records( char *tblName ){
     int num_rec = 0;
     table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-    if( addresses->address_from[0] == 0 )
+    if( addresses->address_from[0] == NULL )
         num_rec = -1;
     else{
         int i, j, k;
@@ -54,8 +57,9 @@ int AK_get_num_records( char *tblName ){
             for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
                 KK_block *temp = (KK_block*) KK_read_block( j );
                 for( k = 0; k < DATA_BLOCK_SIZE; k++ ){
-                    if( temp->tuple_dict[k].size>0 )
-                        num_rec++;
+                    if( temp->tuple_dict[k].type == FREE_INT )
+                        break;
+                    num_rec++;
                 }
             }
             i++;
@@ -63,6 +67,18 @@ int AK_get_num_records( char *tblName ){
     }
     int num_head = AK_num_attr( tblName );
     return num_rec / num_head;
+}
+
+KK_header* AK_get_header( char *tblName ){
+    table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
+    if( addresses->address_from[0] == NULL )
+        return 0;
+    KK_block *temp = (KK_block*) KK_read_block( addresses->address_from[0] );
+
+    int num_attr = AK_num_attr( tblName );
+    KK_header *head = (KK_header*)malloc( num_attr * sizeof(KK_header));
+    memcpy( head, temp->header, num_attr * sizeof(KK_header));
+    return head;
 }
 
 //print table
@@ -76,7 +92,7 @@ void AK_print_table( char *tblName ){
         num_rec = AK_get_num_records( tblName );
 
         KK_block *temp = (KK_block*)KK_read_block( addresses->address_from[0]);
-        KK_header *temp_head = &(temp->header[ 0 ]);
+        KK_header *temp_head = AK_get_header( tblName );
         int temp_int;
         char temp_char[ MAX_VARCHAR_LENGHT ];
         float temp_float;
@@ -85,6 +101,7 @@ void AK_print_table( char *tblName ){
         for( i = 0; i < num_attr; i++ )
             printf( "%-10s", (temp_head+i)->att_name );
         printf( "\n----------------------------------------------\n");
+        free( temp_head );
         
         i = 0;
         while( addresses->address_from[ i ] != 0 ){
@@ -122,6 +139,52 @@ void AK_print_table( char *tblName ){
         printf( "(%d RECORDS FOUND)\n\n", num_rec );
 }
 
+int AK_selection_check_expr( KK_block *block, KK_header *header, int num_attr, AK_list *expr, int current_tuple ){
+    return 1;
+}
+
+int AK_selection( char *srcTable, char *dstTable, AK_list *expr ){
+    KK_header *t_header = AK_get_header( srcTable );
+    int num_attr = AK_num_attr( srcTable );
+
+    int startAddress = KK_initialize_new_segment( dstTable, SEGMENT_TYPE_TABLE, t_header);
+
+    if( startAddress != EXIT_ERROR )
+        printf( "\nTABLE %s CREATED!\n", dstTable );
+
+    table_addresses *src_addr = (table_addresses*) get_table_addresses( srcTable );
+
+    element row_root =  (element) malloc( sizeof(list) );
+    InitializeList(row_root);
+
+    int i, j, k, l;
+    char data[ MAX_VARCHAR_LENGHT ];
+    
+    i = 0;
+    while( src_addr->address_from[ i ] != 0 ){
+        for( j = src_addr->address_from[ i ]; j < src_addr->address_to[ i ]; j++ ){
+            KK_block *temp = (KK_block*) KK_read_block( j );
+            for( k = 0; k < DATA_BLOCK_SIZE; k+=num_attr ){
+                if( temp->tuple_dict[k].type == FREE_INT )
+                    break;
+                if( AK_selection_check_expr( temp, t_header, num_attr, expr, k ) ){
+                    for( l = 0; l < num_attr; l++ ){
+                        int type = temp->tuple_dict[ k+l ].type;
+                        int size = temp->tuple_dict[ k+l ].size;
+                        int address = temp->tuple_dict[ k + l ].address;
+                        memcpy( data, &(temp->data[address]), size );
+                        data[ size] = '\0';
+                        InsertNewElement(type, data, dstTable, t_header[ l ].att_name, row_root );
+                   }
+                    insert_row( row_root );
+                    DeleteAllElements(row_root);
+                }
+            }
+        }
+        i++;
+    }
+    AK_print_table( dstTable );
+}
 
 void op_selection_test(){
     printf( "\n********** SELECTION TEST by Matija Šestak **********\n");
@@ -215,5 +278,14 @@ void op_selection_test(){
     
     //print table "student"
     AK_print_table( tblName );
-    //dealocate variables
+
+    AK_list expr;
+    InitL( &expr );
+    InsertAtEndL( TYPE_OPERAND, "ime", 4, &expr );
+    InsertAtEndL( TYPE_VARCHAR, "matija", 8, &expr );
+    InsertAtEndL( TYPE_OPERATOR, "=", 1, &expr );
+    
+    AK_selection( tblName, "selection_test", &expr );
+    DeleteAllL( &expr );
+    //dealocate variables ;)
 }

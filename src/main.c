@@ -47,7 +47,6 @@
 #include "nat_join.h"
 #include "projection.h"
 #include "rename.h"
-#include "selection.h"
 #include "union.h"
 #include "aggregation.h"
 
@@ -70,7 +69,7 @@ int main()
 
 			//btree_test();
 			//hash_test();
-			bitmap_test();
+			//bitmap_test();
 
 			//files_test();
 			//fileio_test();
@@ -78,16 +77,16 @@ int main()
 			//filesort_test();
 
 			//op_projekcija_test();
-                        //op_selection_test();
-			//op_spoj_test();
+                        op_selection_test();
+			//op_join_test();
 			//intersect_test();
 			//rename_test();			
 			
-			aggregation_test();
-			rel_eq_projection_test();
-			rel_eq_selection_test();
-			rel_eq_assoc_test();
-			rel_eq_comut_test();
+			//aggregation_test();
+			//rel_eq_projection_test();
+			//rel_eq_selection_test();
+			//rel_eq_assoc_test();
+			//rel_eq_comut_test();
 
 			/* component test area --- end */
 

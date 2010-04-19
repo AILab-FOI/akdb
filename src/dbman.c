@@ -937,7 +937,7 @@ table_addresses * get_table_addresses ( char * table)
 			name_sys[free2]='\0';
 
 		if(temp_block->tuple_dict[i].address == FREE_INT)
-            break;
+                    break;
 		data_adr=temp_block->tuple_dict[i].address;
 		data_size=temp_block->tuple_dict[i].size;
 		data_type=temp_block->tuple_dict[i].type;
@@ -977,43 +977,25 @@ table_addresses * get_table_addresses ( char * table)
 
 	for(i=0;i<DATA_BLOCK_SIZE;i++)
 	{
-		free2=0;
-		//free the variable name
-		for(free2=0;free2<MAX_VARCHAR_LENGHT;free2++)
-			name[free2]='\0';
+            if( temp_block->tuple_dict[i].type == FREE_INT )
+                break;
+            i++;
+            memcpy( name, &(temp_block->data[temp_block->tuple_dict[i].address]), temp_block->tuple_dict[i].size );
+            name[ temp_block->tuple_dict[i].size] = '\0';
 
-		i++;
-		if(temp_block->tuple_dict[i].address == FREE_INT)
-            break;
-		data_adr=temp_block->tuple_dict[i].address;
-		data_size=temp_block->tuple_dict[i].size;
-		data_type=temp_block->tuple_dict[i].type;
-		memcpy(name,temp_block->data+data_adr,data_size);
+            i++;
+            memcpy( &address_from, &(temp_block->data[temp_block->tuple_dict[i].address]),temp_block->tuple_dict[i].size);
 
-		i++;
-		if(temp_block->tuple_dict[i].address == FREE_INT)
-            break;
-		data_adr=temp_block->tuple_dict[i].address;
-		data_size=temp_block->tuple_dict[i].size;
-		data_type=temp_block->tuple_dict[i].type;
-		memcpy(&address_from,temp_block->data+data_adr,data_size);
+            i++;
+            memcpy( &address_to, &(temp_block->data[temp_block->tuple_dict[i].address]),temp_block->tuple_dict[i].size);
 
-		i++;
-		if(temp_block->tuple_dict[i].address == FREE_INT)
-            break;
-		data_adr=temp_block->tuple_dict[i].address;
-		data_size=temp_block->tuple_dict[i].size;
-		data_type=temp_block->tuple_dict[i].type;
-		memcpy(&address_to,temp_block->data+data_adr,data_size);
-
-		i++;
 		if(strcmp(name,table)==0)
 		{//if found the table that addresses we need
 			addresses->address_from[j]= address_from;
 			addresses->address_to[j]= address_to;
 			j++;
 			if(DEBUG)
-				printf("get_table_addresses: Found addresses of searching table: %d , %d \n",address_from, address_to);
+				printf("get_table_addresses(%s): Found addresses of searching table: %d , %d \n", name, address_from, address_to);
 		}
 	}
 
