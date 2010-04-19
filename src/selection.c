@@ -140,7 +140,205 @@ void AK_print_table( char *tblName ){
 }
 
 int AK_selection_check_expr( KK_block *block, KK_header *header, int num_attr, AK_list *expr, int current_tuple ){
-    return 1;
+    AK_list temp;
+    InitL( &temp );
+    int true = 1, false = 0;
+    
+    AK_list_elem el = FirstL( expr );
+    AK_list_elem a,b,c;
+    
+    int i;
+    int found;
+
+    char data[ MAX_VARCHAR_LENGHT ];
+    while( el ){
+        if( el->type == TYPE_OPERAND ){
+            found = 0;
+            for( i = 0; i < num_attr; i++ ){
+                if( strcmp( el->data, header[i].att_name) == 0 ){
+                    found = 1;
+                    break;
+                }
+            }
+            if( !found )
+                return 0;
+            else{
+                int type = block->tuple_dict[ current_tuple + i ].type;
+                int size = block->tuple_dict[ current_tuple + i ].size;
+                memcpy( data, &(block->data[block->tuple_dict[current_tuple + i].address]), size );
+                InsertAtEndL( type, data, size, &temp );
+            }
+        }
+        else
+            if( el->type == TYPE_OPERATOR ){
+                //operators implementation                    
+                a = EndL( &temp );
+                b = PreviousL( a, &temp );
+
+                if( strcmp( el->data, "=") == 0 ){
+                    if( memcmp( a->data, b->data, a->size ) == 0 )
+                        InsertAtEndL( TYPE_INT, &true, sizeof( int ), &temp );
+                    else
+                        InsertAtEndL( TYPE_INT, &false, sizeof( int ), &temp );
+                }
+                else
+                    if( strcmp( el->data, "<>") == 0 ){
+                        if( memcmp( a->data, b->data, a->size ) != 0 )
+                            InsertAtEndL( TYPE_INT, &true, sizeof( int ), &temp );
+                        else
+                            InsertAtEndL( TYPE_INT, &false, sizeof( int ), &temp );
+                    }
+                else
+                    if( strcmp( el->data, "OR") == 0 ){
+                        int val_a, val_b;
+                        memcpy( &val_a, a->data, sizeof(int));
+                        memcpy( &val_b, b->data, sizeof( int));
+                        if( val_a || val_b )
+                            InsertAtEndL( TYPE_INT, &true, sizeof( int ), &temp );
+                        else
+                            InsertAtEndL( TYPE_INT, &false, sizeof( int ), &temp );
+                    }
+                else
+                    if( strcmp( el->data, "AND") == 0 ){
+                        int val_a, val_b;
+                        memcpy( &val_a, a->data, sizeof(int));
+                        memcpy( &val_b, b->data, sizeof( int));
+                        if( val_a && val_b )
+                            InsertAtEndL( TYPE_INT, &true, sizeof( int ), &temp );
+                        else
+                            InsertAtEndL( TYPE_INT, &false, sizeof( int ), &temp );
+                    }
+                else
+                    {
+                        int v1_int, v2_int;
+                        float v1_float, v2_float;
+                        char v1_varchar[ MAX_VARCHAR_LENGHT], v2_varchar[ MAX_VARCHAR_LENGHT];
+
+                        switch( b->type ){
+                            case TYPE_INT:
+                                memcpy( &v1_int, b->data, b->size);
+                                memcpy( &v2_int, a->data, a->size);
+                                break;
+                            case TYPE_FLOAT:
+                                memcpy( &v1_float, b->data, b->size);
+                                memcpy( &v2_float, a->data, a->size);
+                                break;
+                            case TYPE_VARCHAR:
+                                memcpy( v1_varchar, b->data, b->size);
+                                memcpy( v2_varchar, a->data, a->size);
+                                break;
+                        }
+
+                    int rs;
+                    if( strcmp( el->data, "<") == 0 ){
+                        switch( b->type ){
+                            case TYPE_INT:
+                                if( v1_int < v2_int )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                            case TYPE_FLOAT:
+                                if( v1_float < v2_float )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                            case TYPE_VARCHAR:
+                                if( strcmp( v1_varchar, v2_varchar) < 0 )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                        }
+                    }
+                    else
+                        if( strcmp( el->data, ">") == 0 ){
+                        switch( b->type ){
+                            case TYPE_INT:
+                                if( v1_int > v2_int )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                            case TYPE_FLOAT:
+                                if( v1_float > v2_float )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                            case TYPE_VARCHAR:
+                                if( strcmp( v1_varchar, v2_varchar) > 0 )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                        }
+                        }
+                    else
+                        if( strcmp( el->data, "<=") == 0 ){
+                        switch( b->type ){
+                            case TYPE_INT:
+                                if( v1_int <= v2_int )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                            case TYPE_FLOAT:
+                                if( v1_float <= v2_float )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                            case TYPE_VARCHAR:
+                                if( strcmp( v1_varchar, v2_varchar) <= 0 )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                        }
+                        }
+                    else
+                        if( strcmp( el->data, ">=") == 0 ){
+                        switch( b->type ){
+                            case TYPE_INT:
+                                if( v1_int >= v2_int )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                            case TYPE_FLOAT:
+                                if( v1_float >= v2_float )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                            case TYPE_VARCHAR:
+                                if( strcmp( v1_varchar, v2_varchar) >= 0 )
+                                    rs = 1;
+                                else
+                                    rs = 0;
+                                break;
+                        }
+                      }
+                      if( rs )
+                           InsertAtEndL( TYPE_INT, &true, sizeof( int ), &temp );
+                      else
+                           InsertAtEndL( TYPE_INT, &false, sizeof( int ), &temp );
+                    }
+                    DeleteL( a, &temp );
+                    DeleteL( b, &temp );
+                }
+            else{
+                InsertAtEndL( el->type, el->data, el->size, &temp );
+            }
+        el = NextL( el, expr );
+    }
+    int result;
+    memcpy( &result, FirstL( &temp )->data, sizeof(int));
+    DeleteAllL( &temp );
+
+    return result;
 }
 
 int AK_selection( char *srcTable, char *dstTable, AK_list *expr ){
@@ -281,9 +479,15 @@ void op_selection_test(){
 
     AK_list expr;
     InitL( &expr );
-    InsertAtEndL( TYPE_OPERAND, "ime", 4, &expr );
-    InsertAtEndL( TYPE_VARCHAR, "matija", 8, &expr );
+    int num = 2002;
+    
+    InsertAtEndL( TYPE_OPERAND, "year", 4, &expr );
+    InsertAtEndL( TYPE_INT, &num, sizeof(int), &expr );
+    InsertAtEndL( TYPE_OPERATOR, ">", 1, &expr );
+    InsertAtEndL( TYPE_OPERAND, "firstname", 9, &expr );
+    InsertAtEndL( TYPE_VARCHAR, "Matija", 6, &expr );
     InsertAtEndL( TYPE_OPERATOR, "=", 1, &expr );
+    InsertAtEndL( TYPE_OPERATOR, "OR", 2, &expr );
     
     AK_selection( tblName, "selection_test", &expr );
     DeleteAllL( &expr );
