@@ -96,9 +96,9 @@ unsigned int db_file_size;
 
 ///@author Matija Novak
 typedef struct{
-	///sturcture for ekstents start end stop adresses
-	int address_from[MAX_EXTENTS_IN_SEGMENT]; //start adress of the extent
-	int address_to[MAX_EXTENTS_IN_SEGMENT]; //end adress of the extent
+	///sturcture for extents start end stop adresses
+	int address_from[ MAX_EXTENTS_IN_SEGMENT ]; //start adress of the extent
+	int address_to[ MAX_EXTENTS_IN_SEGMENT ]; //end adress of the extent
 }table_addresses;
 
 #endif

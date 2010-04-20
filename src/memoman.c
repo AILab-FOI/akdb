@@ -305,7 +305,7 @@ KK_mem_block * KK_get_block( int num )
 /**
  @author Nikola Bakoš
 
- Extents the segment
+ Extends the segment
  @param table_name name of segment to extent
  @param extent_type type of extent (can be one of:
 	SEGMENT_TYPE_SYSTEM_TABLE,

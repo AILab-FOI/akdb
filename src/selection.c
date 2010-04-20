@@ -36,7 +36,7 @@ int AK_num_attr( char * tblName ){
     else{
         KK_block *temp = (KK_block *)KK_read_block( addresses->address_from[0] );
         int i = 0;
-        while( strcmp( temp->header[i].att_name,"" ) != 0 ){
+        while( strcmp( temp->header[i].att_name,"\0" ) != 0 ){
             num_attr++;
             i++;
         }
@@ -371,7 +371,7 @@ int AK_selection( char *srcTable, char *dstTable, AK_list *expr ){
                         int size = temp->tuple_dict[ k+l ].size;
                         int address = temp->tuple_dict[ k + l ].address;
                         memcpy( data, &(temp->data[address]), size );
-                        data[ size] = '\0';
+                        data[ size ] = '\0';
                         InsertNewElement(type, data, dstTable, t_header[ l ].att_name, row_root );
                    }
                     insert_row( row_root );

@@ -6,7 +6,7 @@ CFLAGS = $(DEBUG) -c -Wall
 
 DISKTARGETS = dbman.o 
 MEMORYTARGETS = memoman.o
-FILETARGETS = files.o fileio.o filesearch.o filesort.o btree.o hash.o bitmap.o
+FILETARGETS = files.o fileio.o filesearch.o filesort.o btree.o hash.o bitmap.o table.o
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o
 
@@ -67,6 +67,9 @@ hash.o: hash.c
 
 files.o: files.c
 	$(CC) $(CFLAGS) files.c
+
+table.o: table.c
+	$(CC) $(CFLAGS) table.c
 
 filesort.o: filesort.c
 	$(CC) $(CFLAGS) filesort.c

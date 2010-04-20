@@ -36,10 +36,12 @@
 #include "files.h"
 #include "filesearch.h"
 #include "filesort.h"
+#include "table.h"
 
 // Indices
 #include "hash.h"
 #include "btree.h"
+#include "bitmap.h"
 
 // Relational operators
 #include "difference.h"
@@ -72,13 +74,14 @@ int main()
 			//hash_test();
 			//bitmap_test();
 
-			files_test();
+			//files_test();
 			//fileio_test();
 			//filesearch_test();
 			//filesort_test();
+			table_test();
 
 			//op_projekcija_test();
-                        //op_selection_test();
+                        op_selection_test();
 			//op_spoj_test();
 			//intersect_test();
 			//rename_test();			
@@ -89,12 +92,6 @@ int main()
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
 			
-			char * table = "Tomo";
-			printf( "Test %s\n", table );
-			
-			table_addresses * tbl = get_table_addresses ( table );
- 			printf( "Table address from: %d\n", (tbl->address_from)[ 0 ] );
- 			printf( "Table address to: %d\n", (tbl->address_to)[ 0 ] );
 
 			/* component test area --- end */
 
