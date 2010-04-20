@@ -118,8 +118,10 @@ int KK_initialize_new_segment(char *name, int type, KK_header *header)
 				KK_insert_entry(tempBlock, TYPE_VARCHAR, name, tupleDictID + 1);
 				KK_insert_entry(tempBlock, TYPE_INT, &start_address, tupleDictID + 2);
 				KK_insert_entry(tempBlock, TYPE_INT, &end_address, tupleDictID + 3);
-				printf("KK_init_new_segment__NOTIFICATION: Writing block at address %d\n", start_address );
+				if( DEBUG )
+					printf("KK_init_new_segment__NOTIFICATION: Writing block at address %d\n", start_address );
 				KK_write_block(tempBlock);
+				
 				KK_new_extent( start_address, 0, type, header );
 			}
 			else

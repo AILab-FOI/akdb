@@ -81,7 +81,7 @@
 \def FREE_INT
 \brief dummy data for empty integers
 */
-#define FREE_INT -1
+#define FREE_INT -10
 
 /**
 \def FREE_CHAR

@@ -250,7 +250,7 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 			}
 		}
 		if(DEBUG)
-		printf("insert_row_to_block: Position to write (tuple_dict_index) %d, heder_att_name %s",id,temp_block->header[head].att_name);
+			printf("insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n",id,temp_block->header[head].att_name);
 
 		if(strcmp(temp_block->header[head].att_name,"")!=0)
 		{ //if exist more headers
@@ -264,7 +264,7 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 				{//found correct element
 
 					int free2=0;//free varchar varijable
-					for(free2;free2< MAX_VARCHAR_LENGHT;free2++)
+					for(free2;free2 < MAX_VARCHAR_LENGHT;free2++)
 						entry_data[free2]='\0';
 
 					type=some_element->type;
@@ -343,7 +343,7 @@ int insert_row(list *row_root)
 		return EXIT_ERROR;
 	}
 
-	printf("insert_row: Insert into block on adress: %d",adr_to_write);
+	printf("insert_row: Insert into block on adress: %d\n",adr_to_write);
 
 	KK_block *temp_block;
 

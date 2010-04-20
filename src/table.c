@@ -107,9 +107,6 @@ void AK_print_row( AK_list * row )
 	  memcpy( temp_char, data, size);
 	  temp_char[ size ] = '\0';
 	  
-	  if( temp_char[ 0 ] == 'n' && temp_char[ 1 ] == 'u' && temp_char[ 1 ] == 'u' && temp_char[ 1 ] == 'u' && size == 6 )
-	    break;
-	  
 	  printf( "%-10s", temp_char );
 	  break;
     }

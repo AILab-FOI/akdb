@@ -85,7 +85,7 @@ int main()
 			//intersect_test();
 			//rename_test();			
 			
-			table_test();
+			//table_test();
 			
 			//aggregation_test();
 			//rel_eq_projection_test();

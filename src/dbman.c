@@ -252,9 +252,9 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 		else
 		{
 			if( nAlocated_blocks == 0 )
-				first_addr_of_extent = i;	/// if is a first free block
+				first_addr_of_extent = i;	/// if it is a first free block
 
-			nAlocated_blocks++;		/// increase number of block for 1
+			nAlocated_blocks++;		/// increase the number of block by 1
 
 			if( nAlocated_blocks != 0 && ( req_free_space == nAlocated_blocks ) ) /// if requested space for extent is OK
 			{
@@ -262,22 +262,27 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 			}
 		}
 	}
-	int success = 0;    /// var for chack of number of blocks written
+	int success = 0;    /// var to check the number of written blocks
 
 
 	for( j = first_addr_of_extent; j < ( first_addr_of_extent + nAlocated_blocks ); j++)
 	{
 		block = KK_read_block( j );   	/// read block
-		int x=0;
-		for(x=0;x<MAX_ATTRIBUTES;x++)
+		int x = 0;
+		for( x = 0; x < MAX_ATTRIBUTES; x++ )
 		{
-			if(header[x].type==0)
-			{break;}
-			memcpy( & block->header[x], & header[x], sizeof( *header ) ); /// copy header information
+			if( header[ x ].type == 0 )
+			{
+			  break;
+			}
+			else
+			{
+			  memcpy( & block->header[ x ], & header[ x ], sizeof( *header ) ); /// copy header information
+			}
 		}
 		block->type = BLOCK_TYPE_NORMAL; /// set the block type
-		block->free_space=0;
-		block->last_tuple_dict_id=0;
+		block->free_space = 0;
+		block->last_tuple_dict_id = 0;
 		if( KK_write_block( block ) == EXIT_SUCCESS ) /// if write of block succeded increase var success, else nothing
 		{
 			success++;
@@ -314,7 +319,7 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
  @param header (header pointer) pointer to header that should be written to the new extent (all blocks)
  @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
  */
-int KK_new_segment(char* name, int type, KK_header *header)
+int KK_new_segment(char * name, int type, KK_header *header)
 {
 	int segment_start_addr = 1; /// start adress for segment because we can not allocate segment in block 0
 	int i; /// counter
@@ -325,7 +330,7 @@ int KK_new_segment(char* name, int type, KK_header *header)
 	for ( i = segment_start_addr; i <= db_file_size; i++ )
 	{
 		if( DEBUG )
-			printf( "KK_new_segment: Reading block %d.\n", i );
+			printf( "KK_new_segment: Reading block %d, %s.\n", i, name );
 		/// check if the block is free
 		block = KK_read_block(i);
 
@@ -333,7 +338,7 @@ int KK_new_segment(char* name, int type, KK_header *header)
 		{
 			current_extent_start_addr = KK_new_extent( i, 0, type, header ); /// allocate new extent
 
-			/// if extent is successfully allocatt_nameated, increment number of allocated extents and move to
+			/// if extent is successfully allocated, increment number of allocated extents and move to
 			/// next block after allocated extent, else move for INITIAL_EXTENT_SIZE blocks, so in that way get
 			/// either first block of new extent or some block in this extent which will not be free
 			if ( current_extent_start_addr != EXIT_ERROR )

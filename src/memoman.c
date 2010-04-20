@@ -184,13 +184,6 @@ int KK_cache_block( int num, KK_mem_block * mem_block )
 	KK_block * block_cache;
 	int timestamp;
 
-	/// allocation of KK_block
-	/*if( ( block_cache = ( KK_block * ) malloc ( sizeof( KK_block ) ) ) == NULL )
-	{
-		printf( " KK_cache_block: ERROR. Cannot allocate block memory \n");
-		return ( EXIT_ERROR );
-         }
-         */
 	/// read the block from the given address
 	block_cache = (KK_block *) KK_read_block( num );
 
@@ -201,7 +194,7 @@ int KK_cache_block( int num, KK_mem_block * mem_block )
 	mem_block->timestamp_read = timestamp; /// set timestamp_read
 	mem_block->timestamp_last_change = timestamp; /// set timestamp_last_change
 
-	//free( block_cache );
+	free( block_cache );
 
 	return (EXIT_SUCCESS); /// if all is succesfull
 }
@@ -233,8 +226,6 @@ KK_mem_block * KK_get_block( int num )
 
 	while ( i < MAX_CACHE_MEMORY )
 	{
-	    if(DEBUG)
-            printf( "i is now %d\n", i );
 		/// if block is cached returns block
 		if ( db_cache->cache[ i ]->block->address == num )
 		{
@@ -244,8 +235,6 @@ KK_mem_block * KK_get_block( int num )
                 printf( "Found block %d in cache\n", i );
 		}
 
-        if(DEBUG)
-            printf( "Passed first if-block\n" );
 
 		/// get first free memory block for possible block caching
 		/// checking by timestamp of last block reading

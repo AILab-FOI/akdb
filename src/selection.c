@@ -92,11 +92,11 @@ void InsertAfterL( int type, char* data, int size, AK_list_elem current, AK_list
 }
 
 void InsertAtBeginL( int type, char* data, int size, AK_list *L ){
-    InsertBeforeL( type, data, size, FirstL( L), L );
+    InsertBeforeL( type, data, size, FirstL( L ), L );
 }
 
 void InsertAtEndL( int type, char* data, int size, AK_list *L ){
-    InsertAfterL( type, data, size, EndL( L), L );
+    InsertAfterL( type, data, size, EndL( L ), L );
 }
 
 void DeleteL( AK_list_elem current, AK_list *L){
@@ -504,8 +504,9 @@ int AK_selection( char *srcTable, char *dstTable, AK_list *expr ){
 void op_selection_test(){
     printf( "\n********** SELECTION TEST by Matija Šestak **********\n");
 
+    int i;
     //create header
-    KK_header t_header[ 5 ];
+    KK_header t_header[ MAX_ATTRIBUTES ];
     KK_header* temp;
 
     temp = (KK_header*)KK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -523,13 +524,24 @@ void op_selection_test(){
     temp = (KK_header*)KK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 4, temp, sizeof( KK_header ));
 
+    for( i = 5; i < MAX_ATTRIBUTES; i++ )
+    {
+	memcpy( t_header + i, "\0", sizeof( "\0" ));
+    }
+    
     //create table
     char *tblName = "student";
+    
+    printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
+    
     int startAddress = KK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
-
+    
     if( startAddress != EXIT_ERROR )
         printf( "\nTABLE %s CREATED!\n", tblName );
-
+    
+    
+    printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
+    
     element row_root =  (element) malloc( sizeof(list) );
     InitializeList(row_root);
     
@@ -591,8 +603,14 @@ void op_selection_test(){
     InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
     insert_row( row_root );
     
+    
+    printf("op_selection_test: After data insertion: %d\n", AK_num_attr( tblName ) );
+    
     //print table "student"
     AK_print_table( tblName );
+    
+    
+    printf("op_selection_test: After print: %d\n", AK_num_attr( tblName ) );
 
     AK_list expr;
     InitL( &expr );
@@ -608,5 +626,9 @@ void op_selection_test(){
     
     AK_selection( tblName, "selection_test", &expr );
     DeleteAllL( &expr );
+    
+    
+    printf("op_selection_test: After selection: %d\n", AK_num_attr( tblName ) );
+    
     //dealocate variables ;)
 }
