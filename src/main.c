@@ -49,7 +49,7 @@
 #include "nat_join.h"
 #include "projection.h"
 #include "rename.h"
-//#include "selection.h"
+#include "selection.h"
 #include "union.h"
 #include "aggregation.h"
 
@@ -78,13 +78,14 @@ int main()
 			//fileio_test();
 			//filesearch_test();
 			//filesort_test();
-			table_test();
 
 			//op_projekcija_test();
                         op_selection_test();
 			//op_spoj_test();
 			//intersect_test();
 			//rename_test();			
+			
+			table_test();
 			
 			//aggregation_test();
 			//rel_eq_projection_test();

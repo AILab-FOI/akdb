@@ -28,6 +28,7 @@
 #define DEBUG 0
 #define DEBUG_SORT 0
 #define INTERSECT_DEBUG 0
+#define DEBUG_TABLE 1
 
 //maximal number of blocks in a segment
 #define MAX_NUM_OF_BLOCKS 200

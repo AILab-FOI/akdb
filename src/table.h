@@ -20,4 +20,10 @@
 #ifndef TABLE
 #define TABLE
 
+#include "selection.h"
+#include "projection.h"
+#include "dbman.h"
+#include "memoman.h"
+#include "configuration.h"
+
 #endif
