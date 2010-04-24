@@ -29,10 +29,18 @@
 #include "dbman.h"
 #include "memoman.h"
 
+/**
+ * \struct list_elem
+ * \brief defines a list element
+ */
 struct list_elem{
+    ///data type
     int type;
+    //data size in list element
     int size;
+    ///loaded data
     char data[ MAX_VARCHAR_LENGHT ];
+    ///point to next element
     struct list_elem *next;
 };
 

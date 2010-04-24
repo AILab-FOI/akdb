@@ -21,6 +21,7 @@
 #define MEMOMAN
 
 #include <stdio.h>
+#include <time.h>
 
 #include "configuration.h"
 #include "auxiliary.h"

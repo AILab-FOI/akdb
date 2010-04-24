@@ -93,11 +93,12 @@ int main()
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
 			
-
 			/* component test area --- end */
 
-			printf( "\nEverything was fine!\nBye =)\n" );
-			return ( EXIT_SUCCESS ); 
+                        if ( AK_flush_cache() == EXIT_SUCCESS ){
+                            printf( "\nEverything was fine!\nBye =)\n" );
+                            return ( EXIT_SUCCESS );
+                        }
 		}
 		printf( "ERROR. Failed to initialize memory manager\n" );
 		return ( EXIT_ERROR );

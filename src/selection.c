@@ -19,20 +19,38 @@
 
 #include "selection.h"
 
+///constant that indicates operand in the AK_list
 #define TYPE_OPERAND 10
-#define TYPE_OPERATOR 11
-//file is under construction but some functions however work ;-)
-//you can: get number of attributes in table, table header, print table
-//selection is still under construction
 
+///constant that indicates operator in the AK_list
+#define TYPE_OPERATOR 11
+
+/**
+ * @author Matija Šestak.
+ * @brief  Alocate empty list
+ * @param AK_list* - root of the list
+ * @result void
+ */
 void InitL( AK_list *L ){
     L->next = NULL;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Get the first element of the list
+ * @param AK_list* - root of the list
+ * @result AK_list_elem - first element of the list
+ */
 AK_list_elem FirstL( AK_list *L ){
     return L->next;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Get the last element of the list
+ * @param AK_list* - root of the list
+ * @result AK_list_elem - last element of the list
+ */
 AK_list_elem EndL( AK_list *L ){
     AK_list_elem current = FirstL( L );
     if( current == NULL )
@@ -42,12 +60,26 @@ AK_list_elem EndL( AK_list *L ){
     return current;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Get the next element of the list
+ * @param AK_list_elem - current element in the list
+ * @param AK_list* - root of the list
+ * @result AK_list_elem - next element in the list
+ */
 AK_list_elem NextL( AK_list_elem current, AK_list *L ){
     if( current == NULL )
         return NULL;
     return current->next;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Get the previous element of the list
+ * @param AK_list_elem - current element in the list
+ * @param AK_list* - root of the list
+ * @result AK_list_elem - previous element in the list
+ */
 AK_list_elem PreviousL( AK_list_elem current, AK_list *L ){
     if( current == NULL || current == L )
         return NULL;
@@ -57,10 +89,26 @@ AK_list_elem PreviousL( AK_list_elem current, AK_list *L ){
     return previous;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Test whether the list is empty
+ * @param AK_list* - root of the list
+ * @result int - returns 1 if the list is empty, otherwise returns 0
+ */
 int IsEmptyL( AK_list *L ){
     return FirstL( L ) == NULL ? 1 : 0;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Inserts new element before the current element in the list
+ * @param int - data type of the new element
+ * @param char* - new data
+ * @param int - data size of the new element in the list
+ * @param AK_list_elem - current element in the list
+ * @param AK_list* - root of the list
+ * @result void
+ */
 void InsertBeforeL( int type, char* data, int size, AK_list_elem current, AK_list *L ){
     AK_list_elem new_elem = (AK_list_elem)malloc( sizeof( struct list_elem ));
     new_elem->size = size;
@@ -76,6 +124,16 @@ void InsertBeforeL( int type, char* data, int size, AK_list_elem current, AK_lis
     new_elem->next = current;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Inserts new element after the current element in the list
+ * @param int - data type of the new element
+ * @param char* - new data
+ * @param int - data size of the new element in the list
+ * @param AK_list_elem - current element in the list
+ * @param AK_list* - root of the list
+ * @result void
+ */
 void InsertAfterL( int type, char* data, int size, AK_list_elem current, AK_list *L ){
     AK_list_elem new_elem = (AK_list_elem)malloc( sizeof( struct list_elem ));
     new_elem->size = size;
@@ -91,14 +149,39 @@ void InsertAfterL( int type, char* data, int size, AK_list_elem current, AK_list
     current->next = new_elem;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Inserts new element at the begin of the list
+ * @param int - data type of the new element
+ * @param char* - new data
+ * @param int - data size of the new element in the list
+ * @param AK_list* - root of the list
+ * @result void
+ */
 void InsertAtBeginL( int type, char* data, int size, AK_list *L ){
     InsertBeforeL( type, data, size, FirstL( L ), L );
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Inserts new element at the end of the list
+ * @param int - data type of the new element
+ * @param char* - new data
+ * @param int - data size of the new element in the list
+ * @param AK_list* - root of the list
+ * @result void
+ */
 void InsertAtEndL( int type, char* data, int size, AK_list *L ){
     InsertAfterL( type, data, size, EndL( L ), L );
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Deletes the current element in the list
+ * @param AK_list_elem - current element in the list
+ * @param AK_list* - root of the list
+ * @result void
+ */
 void DeleteL( AK_list_elem current, AK_list *L){
     if( current == NULL )
         return;
@@ -109,6 +192,12 @@ void DeleteL( AK_list_elem current, AK_list *L){
     free( current );
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Makes list empty.
+ * @param AK_list* - root of the list
+ * @result void
+ */
 void DeleteAllL( AK_list *L ){
     AK_list_elem current;
     while( current = FirstL(L)){
@@ -117,6 +206,12 @@ void DeleteAllL( AK_list *L ){
     }
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Get a number of the elements in the list
+ * @param AK_list* - root of the list
+ * @result int - size of the list
+ */
 int SizeL( AK_list *L ){
     int size = 0;
     AK_list_elem current = FirstL( L );
@@ -127,6 +222,13 @@ int SizeL( AK_list *L ){
     return size;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Retrieves data from the current element in the list
+ * @param AK_list_elem - current element in the list
+ * @param AK_list* - root of the list
+ * @result char* - data from the list element
+ */
 char* RetrieveL( AK_list_elem current, AK_list *L ){
     if( current == NULL )
         return NULL;
@@ -135,16 +237,41 @@ char* RetrieveL( AK_list_elem current, AK_list *L ){
     return data;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Get a type of the current list element
+ * @param AK_list_elem - current list element
+ * @param AK_list* - root of the list
+ * @result int - data type  of the current list element
+ */
 int GetTypeL( AK_list_elem current, AK_list *L ){
     return (current == NULL ) ? 0:current->type;
 }
 
+/**
+ * @author Matija Šestak.
+ * @brief  Get a data size of the element
+ * @param AK_list_elem - current list element
+ * @param AK_list* - root of the list
+ * @result int - data size of the current list element
+ */
 int GetSizeL( AK_list_elem current, AK_list *L ){
     return (current == NULL ) ? 0:current->size;
 }
 
 
-//returns number of attributes in table
+/**
+ * @brief  Determine the number of attributes in the table
+ * <ol>
+ * <li>Read addresses of extents</li>
+ * <li>If there is no extents in the table, return -1</li>
+ * <li>else read the first block</li>
+ * <li>while  header tuple exists in the block, increment num_attr</li>
+ * </ol>
+ * @author Matija Šestak.
+ * @param char* - table name
+ * @result int - number of attributes in the table
+ */
 int AK_num_attr( char * tblName ){
     int num_attr = 0;
     table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
@@ -161,7 +288,22 @@ int AK_num_attr( char * tblName ){
     return num_attr;
 }
 
-//returns number of records
+/**
+ * @brief  Determine number of rows in the table
+ * <ol>
+ * <li>Read addresses of extents</li>
+ * <li>If there is no extents in the table, return -1</li>
+ * <li>For each extent from table</li>
+ * <li>For each block in the extent</li>
+ * <li>Get a block</li>
+ * <li>Exit if there is no records in block</li>
+ * <li>Count tuples in block</li>
+ * <li>Return the number of tuples divided by number of attributes</li>
+ * </ol>
+ * @author Matija Šestak.
+ * @param char* - table name
+ * @result int - number of rows in the table
+ */
 int AK_get_num_records( char *tblName ){
     int num_rec = 0;
     table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
@@ -172,9 +314,11 @@ int AK_get_num_records( char *tblName ){
         i = 0;
         while( addresses->address_from[ i ] != 0 ){
             for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-                KK_block *temp = (KK_block*) KK_read_block( j );
+                KK_mem_block *temp = (KK_mem_block*) KK_get_block( j );
+                if( temp->block->last_tuple_dict_id == 0)
+                    break;
                 for( k = 0; k < DATA_BLOCK_SIZE; k++ ){
-                    if( temp->tuple_dict[k].type == FREE_INT )
+                    if( temp->block->tuple_dict[k].type == FREE_INT )
                         break;
                     num_rec++;
                 }
@@ -186,19 +330,37 @@ int AK_get_num_records( char *tblName ){
     return num_rec / num_head;
 }
 
+/**
+ * @brief  Get table header
+ * <ol>
+ * <li>Read addresses of extents</li>
+ * <li>If there is no extents in the table, return -1</li>
+ * <li>else read the first block</li>
+ * <li>allocate array</li>
+ * <li>copy table header to the array</li>
+ * </ol>
+ * @author Matija Šestak.
+ * @param char* - table name
+ * @result KK_header* - array of table header
+ */
 KK_header* AK_get_header( char *tblName ){
     table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
     if( addresses->address_from[0] == NULL )
         return 0;
-    KK_block *temp = (KK_block*) KK_read_block( addresses->address_from[0] );
+    KK_mem_block *temp = (KK_mem_block*) KK_get_block( addresses->address_from[0] );
 
     int num_attr = AK_num_attr( tblName );
     KK_header *head = (KK_header*)malloc( num_attr * sizeof(KK_header));
-    memcpy( head, temp->header, num_attr * sizeof(KK_header));
+    memcpy( head, temp->block->header, num_attr * sizeof(KK_header));
     return head;
 }
 
-//print table
+/**
+ * @brief  Print table
+ * @author Matija Šestak.
+ * @param char* - table name
+ * @result void
+ */
 void AK_print_table( char *tblName ){
         int num_attr, num_rec;
         int i, j, k;
@@ -208,7 +370,7 @@ void AK_print_table( char *tblName ){
         num_attr = AK_num_attr( tblName );
         num_rec = AK_get_num_records( tblName );
 
-        KK_block *temp = (KK_block*)KK_read_block( addresses->address_from[0]);
+        KK_mem_block *temp = (KK_mem_block*)KK_get_block( addresses->address_from[0]);
         KK_header *temp_head = AK_get_header( tblName );
         int temp_int;
         char temp_char[ MAX_VARCHAR_LENGHT ];
@@ -223,25 +385,27 @@ void AK_print_table( char *tblName ){
         i = 0;
         while( addresses->address_from[ i ] != 0 ){
             for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-                KK_block *temp = (KK_block*) KK_read_block( j );
+                temp = (KK_mem_block*) KK_get_block( j );
+                if( temp->block->last_tuple_dict_id == 0)
+                    break;
                 for( k = 0; k < DATA_BLOCK_SIZE; k++ ){
-                    if( temp->tuple_dict[ k ].size > 0 ){
-                        switch( temp->tuple_dict[ k ].type ){
+                    if( temp->block->tuple_dict[ k ].size > 0 ){
+                        switch( temp->block->tuple_dict[ k ].type ){
                             case TYPE_INT:
-                                memcpy( &temp_int, &(temp->data[ temp->tuple_dict[ k ].address]),
-                                        temp->tuple_dict[k].size);
+                                memcpy( &temp_int, &(temp->block->data[ temp->block->tuple_dict[ k ].address]),
+                                        temp->block->tuple_dict[k].size);
                                 printf( "%-10d", temp_int );
                                 break;
                             case TYPE_FLOAT:
-                                memcpy( &temp_float, &(temp->data[ temp->tuple_dict[ k ].address]),
-                                        temp->tuple_dict[k].size);
+                                memcpy( &temp_float, &(temp->block->data[ temp->block->tuple_dict[ k ].address]),
+                                        temp->block->tuple_dict[k].size);
                                 printf( "%-10.2f", temp_float );
                                 break;
 
                             case TYPE_VARCHAR:
-                                memcpy( temp_char, &(temp->data[ temp->tuple_dict[ k ].address]),
-                                        temp->tuple_dict[k].size);
-                                temp_char[ temp->tuple_dict[k].size ] = '\0';
+                                memcpy( temp_char, &(temp->block->data[ temp->block->tuple_dict[ k ].address]),
+                                        temp->block->tuple_dict[k].size);
+                                temp_char[ temp->block->tuple_dict[k].size ] = '\0';
                                 printf( "%-10s", temp_char );
                                 break;
                         }
@@ -256,7 +420,17 @@ void AK_print_table( char *tblName ){
         printf( "(%d RECORDS FOUND)\n\n", num_rec );
 }
 
-int AK_selection_check_expr( KK_block *block, KK_header *header, int num_attr, AK_list *expr, int current_tuple ){
+/**
+ * @brief  Evaluate logical expression
+ * @author Matija Šestak.
+ * @param KK_mem_block* - memory block from cache
+ * @param KK_header* - table header
+ * @param int - number of the attributes
+ * @param AK_list* - list with posfix notation of the logical expression
+ * @param int - current tuple (first in row)
+ * @result int - 0 if false, 1 if true
+ */
+int AK_selection_check_expr( KK_mem_block *mem_block, KK_header *header, int num_attr, AK_list *expr, int current_tuple ){
     AK_list temp;
     InitL( &temp );
     int true = 1, false = 0;
@@ -280,9 +454,9 @@ int AK_selection_check_expr( KK_block *block, KK_header *header, int num_attr, A
             if( !found )
                 return 0;
             else{
-                int type = block->tuple_dict[ current_tuple + i ].type;
-                int size = block->tuple_dict[ current_tuple + i ].size;
-                memcpy( data, &(block->data[block->tuple_dict[current_tuple + i].address]), size );
+                int type = mem_block->block->tuple_dict[ current_tuple + i ].type;
+                int size = mem_block->block->tuple_dict[ current_tuple + i ].size;
+                memcpy( data, &(mem_block->block->data[mem_block->block->tuple_dict[current_tuple + i].address]), size );
                 InsertAtEndL( type, data, size, &temp );
             }
         }
@@ -458,6 +632,14 @@ int AK_selection_check_expr( KK_block *block, KK_header *header, int num_attr, A
     return result;
 }
 
+/**
+ * @brief  Implementation of selection
+ * @author Matija Šestak.
+ * @param char* - source table name
+ * @param char* - destination table name
+ * @param AK_list* - list with posfix notation of the logical expression
+ * @result int - return EXIT_SUCCESS
+ */
 int AK_selection( char *srcTable, char *dstTable, AK_list *expr ){
     KK_header *t_header = AK_get_header( srcTable );
     int num_attr = AK_num_attr( srcTable );
@@ -478,16 +660,18 @@ int AK_selection( char *srcTable, char *dstTable, AK_list *expr ){
     i = 0;
     while( src_addr->address_from[ i ] != 0 ){
         for( j = src_addr->address_from[ i ]; j < src_addr->address_to[ i ]; j++ ){
-            KK_block *temp = (KK_block*) KK_read_block( j );
+            KK_mem_block *temp = (KK_mem_block*) KK_get_block( j );
+            if( temp->block->last_tuple_dict_id == 0)
+               break;
             for( k = 0; k < DATA_BLOCK_SIZE; k+=num_attr ){
-                if( temp->tuple_dict[k].type == FREE_INT )
+                if( temp->block->tuple_dict[k].type == FREE_INT )
                     break;
                 if( AK_selection_check_expr( temp, t_header, num_attr, expr, k ) ){
                     for( l = 0; l < num_attr; l++ ){
-                        int type = temp->tuple_dict[ k+l ].type;
-                        int size = temp->tuple_dict[ k+l ].size;
-                        int address = temp->tuple_dict[ k + l ].address;
-                        memcpy( data, &(temp->data[address]), size );
+                        int type = temp->block->tuple_dict[ k+l ].type;
+                        int size = temp->block->tuple_dict[ k+l ].size;
+                        int address = temp->block->tuple_dict[ k + l ].address;
+                        memcpy( data, &(temp->block->data[address]), size );
                         data[ size ] = '\0';
                         InsertNewElement(type, data, dstTable, t_header[ l ].att_name, row_root );
                    }
@@ -498,9 +682,10 @@ int AK_selection( char *srcTable, char *dstTable, AK_list *expr ){
         }
         i++;
     }
-    AK_print_table( dstTable );
+    return (EXIT_SUCCESS);
 }
 
+///Function for selection testing
 void op_selection_test(){
     printf( "\n********** SELECTION TEST by Matija Šestak **********\n");
 
@@ -603,7 +788,15 @@ void op_selection_test(){
     InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
     insert_row( row_root );
     
-    
+    mbr++; year++;weight += 0.75;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Netko", tblName, "firstname", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root );
+    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
+    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
+    insert_row( row_root );
+
     printf("op_selection_test: After data insertion: %d\n", AK_num_attr( tblName ) );
     
     //print table "student"
@@ -623,8 +816,11 @@ void op_selection_test(){
     InsertAtEndL( TYPE_VARCHAR, "Matija", 6, &expr );
     InsertAtEndL( TYPE_OPERATOR, "=", 1, &expr );
     InsertAtEndL( TYPE_OPERATOR, "OR", 2, &expr );
-    
+
+    printf( "QUERY:\nSELECT * FROM student WHERE year > 2002 OR firstname = 'Matija';\n");
     AK_selection( tblName, "selection_test", &expr );
+    AK_print_table( "selection_test" );
+
     DeleteAllL( &expr );
     
     

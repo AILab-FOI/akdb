@@ -25,7 +25,7 @@
 
 
 /**
- @author Markus Schatten
+ @author Markus Schatten, Matija Šestak(revised)
 
  Initializes the global cache memory (variable db_cache)
 
@@ -39,10 +39,11 @@ int KK_cache_malloc()
 	{
 		exit( EXIT_ERROR );
 	}
-	db_cache->next_replace = MAX_CACHE_MEMORY - 1;
+	db_cache->next_replace = 0;
 	for( i = 0; i < MAX_CACHE_MEMORY; i++ )
 	{
 		db_cache->cache[ i ] = ( KK_mem_block * ) malloc ( sizeof( KK_mem_block ) );
+                db_cache->cache[ i ]->block = ( KK_block * ) malloc( sizeof( KK_block ));
 		if( ( KK_cache_block( i, db_cache->cache[ i ] ) ) == EXIT_ERROR )
 		{
 			exit( EXIT_ERROR );
@@ -170,7 +171,7 @@ int KK_memoman_init()
 }
 
 /**
- @author Nikola Bakoš
+ @author Nikola Bakoš, Matija Šestak(revised)
 
  Caches block into memory.
 
@@ -187,7 +188,7 @@ int KK_cache_block( int num, KK_mem_block * mem_block )
 	/// read the block from the given address
 	block_cache = (KK_block *) KK_read_block( num );
 
-	mem_block->block = block_cache; /// copy block to given mem_block
+        memcpy( mem_block->block, block_cache, sizeof( KK_block ));
 	mem_block->dirty = BLOCK_CLEAN; /// set dirty bit in mem_block struct
 
 	timestamp = clock();  /// get the timestamp
@@ -201,7 +202,7 @@ int KK_cache_block( int num, KK_mem_block * mem_block )
 
 
 /**
- @author Tomislav Fotak
+ @author Tomislav Fotak, Matija Šestak(revised)
 
  Reads a block from memory. If the block is cached returns the cached block. Else uses
  KK_cache_block to read the block to cache and then returns it.
@@ -212,85 +213,70 @@ int KK_cache_block( int num, KK_mem_block * mem_block )
 */
 KK_mem_block * KK_get_block( int num )
 {
-	int i = 0; /// counter
-	int found_in_cache = 0;
-	int first_free_mem_block = -1;
-	int oldest_block = db_cache->next_replace;
+    int i = 0;
+    int pos;
+    int oldest_block = db_cache->next_replace;
+    int second_oldest = 0;
+    int found_in_cache = 0;
+    int first_free_mem_block = -1;
+    int block_written = 0;
 
-	int get_second_oldest = 0; /// if block will be removed from cache, then second oldest should be
-								/// marked in db_cache as the one that will be replaced next
-	KK_mem_block *cached_block; /// cached memory block
-	KK_block *data_block;
-	int block_written;
-	i = 0;
+    KK_mem_block *cached_block;
+    KK_block *data_block;
 
-	while ( i < MAX_CACHE_MEMORY )
-	{
-		/// if block is cached returns block
-		if ( db_cache->cache[ i ]->block->address == num )
-		{
-			cached_block =  db_cache->cache[i];
-			found_in_cache = 1;
-			if(DEBUG)
-                printf( "Found block %d in cache\n", i );
-		}
+    while( i < MAX_CACHE_MEMORY ){
+        if( db_cache->cache[i]->timestamp_read == -1 ){
+            first_free_mem_block = i;
+            break;
+        }
+        if( db_cache->cache[i]->block->address == num ){
+            found_in_cache = 1;
+            pos = i;
+            cached_block = db_cache->cache[i];
+            break;
+        }
+        i++;
+    }
+    if( !found_in_cache ){
+        if( first_free_mem_block != -1 ){
+            if ( KK_cache_block (num, db_cache->cache[ first_free_mem_block ] ) == EXIT_SUCCESS )
+                cached_block = db_cache->cache[first_free_mem_block];
+        }else{
+                if ( db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY ){
+                        data_block = (KK_block *) db_cache->cache[oldest_block]->block;
+                        block_written = KK_write_block ( data_block );
+                        /// if block form cache can not be writed to DB file -> EXIT_ERROR
+                        if ( block_written != EXIT_SUCCESS ){
+                                exit ( EXIT_ERROR );
+                        }
+                }
+                if ( KK_cache_block (num, db_cache->cache[ oldest_block ] ) == EXIT_SUCCESS )
+                    cached_block = db_cache->cache[ oldest_block ];
+            }
+    }
+    else{
+        if ( db_cache->cache[pos]->dirty == BLOCK_DIRTY ){
+            data_block = (KK_block *) db_cache->cache[pos]->block;
+            block_written = KK_write_block ( data_block );
+            /// if block form cache can not be writed to DB file -> EXIT_ERROR
+            if ( block_written != EXIT_SUCCESS ){
+                    exit ( EXIT_ERROR );
+            }
+        }
+   }
 
-
-		/// get first free memory block for possible block caching
-		/// checking by timestamp of last block reading
-		if ( first_free_mem_block == -1 )
-		{
-			/// assume that free block has timestamp_read set to -1
-			if ( db_cache->cache[i]->timestamp_read == -1 )
-				first_free_mem_block = i;
-		}
-
-		/// get second oldest block index in db_cache
-		if ( ( db_cache->cache[i]->timestamp_read > db_cache->cache[ oldest_block ]->timestamp_read ) &&
-			( db_cache->cache[ i ]->timestamp_read < db_cache->cache[ get_second_oldest ]->timestamp_read ) )
-			get_second_oldest = i;
-
-		i++;
-	}
-
-	if ( !found_in_cache )
-	{
-		if ( first_free_mem_block != -1 )
-		{
-			/// assume that function KK_cahce_block returns (KK_mem_block*)
-			/// and ih takes two arguments (block_number, allocation_address)
-			/// cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[first_free_mem_block] );
-
-			/// if KK_cahce_block returns INT
-			if ( KK_cache_block (num, db_cache->cache[ first_free_mem_block ] ) == EXIT_SUCCESS )
-				cached_block = db_cache->cache[first_free_mem_block];
-
-		}
-		else
-		{
-			if ( db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY )
-			{
-				data_block = (KK_block *) db_cache->cache[oldest_block]->block;
-				block_written = KK_write_block ( data_block );
-				/// if block form cache can not be writed to DB file -> EXIT_ERROR
-				if ( block_written != EXIT_SUCCESS )
-				{
-					printf("KK_read_block: ERROR! Cannot write block from cache to DB File.\n");
-					exit ( EXIT_ERROR );
-				}
-				/// if block is written to DB file, set next_replace to second oldest
-				db_cache->next_replace = get_second_oldest;
-			}
-			/// cached_block = (KK_mem_block*) KK_cache_block ( num, db_cache.cache[oldest_block] );
-
-			if ( KK_cache_block (num, db_cache->cache[ first_free_mem_block ] ) == EXIT_SUCCESS )
-				cached_block = db_cache->cache[ oldest_block ];
-		}
-	}
-	return ( cached_block );
+    int min = 0;
+    i = 1;
+    while( i < MAX_CACHE_MEMORY ){
+        if( db_cache->cache[i]->timestamp_read != -1 ){
+            if( db_cache->cache[i]->timestamp_read < db_cache->cache[ min ]->timestamp_read )
+                min = i;
+        }
+        i++;
+    }
+    db_cache->next_replace = min;
+    return cached_block;
 }
-
-
 /**
  @author Nikola Bakoš
 
@@ -310,6 +296,7 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	adrese = (table_addresses *) get_table_addresses(table_name);
 	int adr_bloka = adrese->address_from[1];
 	int old_size=0;
+        int block_written;
 
 	//promjentiti temp_block = mem_block->block
 	//KK_mem_block *mem_block = (KK_mem_block *) malloc(sizeof(KK_mem_block));
@@ -413,7 +400,10 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	{
 		id++; //to je vrijednost gdje se pise
 		if( temp_block->tuple_dict[id].size == 0 )
-		{
+		{if ( block_written != EXIT_SUCCESS ){
+            printf("KK_read_block: ERROR! Cannot write block from cache to DB File.\n");
+            exit ( EXIT_ERROR );
+    }
 			nadjeno=0;
 		}
 	}
@@ -431,7 +421,26 @@ int KK_init_new_extent ( char *table_name , int extent_type){
 	return pocetna_adr;
 }
 
-
-
-
-
+/**
+ * @brief Flush memory blocks to disk file
+ * @author Matija Šestak
+ * @param void
+ * @result int - EXIT_SUCCESS
+*/
+int AK_flush_cache(){
+    int i = 0;
+    KK_block *data_block;
+    int block_written;
+    while( i < MAX_CACHE_MEMORY ){
+        if ( db_cache->cache[i]->dirty == BLOCK_DIRTY ){
+            data_block = (KK_block *) db_cache->cache[i]->block;
+            block_written = KK_write_block ( data_block );
+            /// if block form cache can not be writed to DB file -> EXIT_ERROR
+            if ( block_written != EXIT_SUCCESS ){
+                    exit ( EXIT_ERROR );
+            }
+        }
+        i++;
+    }
+    return EXIT_SUCCESS;
+}
