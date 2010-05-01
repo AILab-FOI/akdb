@@ -41,8 +41,8 @@ AK_list * AK_get_row( int num, char * tblName )
   KK_header *t_header = AK_get_header( tblName );
   int num_attr = AK_num_attr( tblName );
   
-  element row_root =  (element) malloc( sizeof(list) );
-  InitializeList(row_root);
+  AK_list *row_root =  (AK_list*) malloc( sizeof(AK_list) );
+  InitL(row_root);
   
 
   int i, j, k, l, counter;
@@ -85,7 +85,7 @@ void AK_print_row( AK_list * row )
   int temp_int;
   float temp_float;
   char temp_char[ MAX_VARCHAR_LENGHT ];
-  element * e = FirstL( row );
+  AK_list_elem e = FirstL( row );
   while( e )
   {
     int type = GetTypeL( e, row );
