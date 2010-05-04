@@ -323,13 +323,13 @@ void createTableTest()
 	some_element = GetFirstelementOp(att_root);
 	InsertNewelementOp("student","year",some_element);
 
-    createHeader( tblName, att_root );
+    AKcreateIndex( tblName, att_root );
 
 }
 
 
 
-void createHeader(char *tblName, list_op *attributes)
+void AKcreateIndex(char *tblName, list_op *attributes)
 {
     int num_attr, num_rec;
         int i, j, k;
@@ -459,6 +459,7 @@ void createHeader(char *tblName, list_op *attributes)
                         //inicijalizira se fajl za index s novim headerom
                         strcpy(inde,tblName);
                         indexName = strcat(inde,(temp_head+i)->att_name);
+                        indexName = strcat(indexName,"_bmapIndex");
 
                         startAddress = KK_initialize_new_segment( indexName, SEGMENT_TYPE_TABLE, t_header);
                            if( startAddress != EXIT_ERROR )
@@ -496,6 +497,7 @@ void createHeader(char *tblName, list_op *attributes)
                         //inicijalizira se fajl za index s novim headerom
                         strcpy(inde,tblName);
                         indexName = strcat(inde,(temp_head+i)->att_name);
+                        indexName = strcat(indexName,"_bmapIndex");
 
                         startAddress = KK_initialize_new_segment( indexName, SEGMENT_TYPE_TABLE, t_headerr);
                            if( startAddress != EXIT_ERROR )
@@ -753,10 +755,10 @@ void createListAddressTest()
 }
 
 //sluzi za testiranje dohvacanja adresa atributa pomocu indexa
-void printAttTest()
+void printAttTest(list_ad *list)
 {
 
-    list_ad *list = getAttribute("studentfirstname","Matija");
+    //list_ad *list = getAttribute("studentfirstname","Matija");
        element_ad ele = GetFirstelementAd(list);
         while(ele != 0)
         {
@@ -765,4 +767,54 @@ void printAttTest()
         }
 }
 
+//ovo je glavna funkcija za dohvacanje, nju treba pokrenuti pri selekciji
+list_ad* AKgetAttribute(char *tableName, char *attributeName, char *attributeValue)
+{
+    list_ad *list =  (list_ad *) malloc( sizeof(list_ad) );
+    InitializelistAd(list);
+    char inde[50];
+    char *indexName;
 
+
+
+    strcpy(inde,tableName);
+    indexName = strcat(inde,attributeName);
+    indexName = strcat(indexName,"_bmapIndex");
+
+   // printf("Naziv indexa: %s",indexName);
+
+    table_addresses *addresses = (table_addresses* ) get_table_addresses( indexName );
+    KK_block *temp = (KK_block*)KK_read_block( addresses->address_from[0]);
+    if(addresses->address_from[ 0 ] == 0)
+    {
+        printf("Ne postoji index za tablicu: %s nad atributom: %s", tableName, attributeName);
+    }
+    else
+    {
+       list = getAttribute(indexName, attributeValue);
+    }
+
+    return list;
+}
+
+/*
+void AKupdate(int addBlock, int addTd, char *att)
+{
+
+}
+ * */
+/*
+za testiranje potrebno u main.c :
+ * createTableTest();
+ * printAttTest(AKgetAttribute("student","firstname","Oleg"));
+ *
+ * moguce koristiti i neke od slijedecih funkcija:
+ *
+ * printHeaderTest("studentfirstname_bmapIndex");
+ *      printHeaderTest("studentyear_bmapIndex");
+ *      AK_print_table( "student" );
+ *      AK_print_table( "studentfirstname_bmapIndex" );
+ *      AK_print_table( "studentyear_bmapIndex" );
+ *      createListAddressTest();
+ *
+ * */
