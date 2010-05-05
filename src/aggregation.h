@@ -20,6 +20,29 @@
 #ifndef AGGREGATION
 #define AGGREGATION
 
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+#include "configuration.h"
+#include "dbman.h"
+#include "selection.h"
+#include "projection.h"
+#include "filesearch.h"
+#include "fileio.h"
+
+#define AGG_TASK_GROUP 1
+#define AGG_TASK_COUNT 2
+#define AGG_TASK_SUM 3
+#define AGG_TASK_MAX 4
+#define AGG_TASK_MIN 5
+#define AGG_TASK_AVG 6
+
+typedef struct {
+    char att_name[MAX_ATT_NAME];
+    char data[ MAX_VARCHAR_LENGHT ];
+    int agg_task;
+} AK_agg_value;
 
 
 #endif
