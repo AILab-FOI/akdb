@@ -37,6 +37,8 @@
 #define AGG_TASK_MAX 4
 #define AGG_TASK_MIN 5
 #define AGG_TASK_AVG 6
+#define AGG_TASK_AVG_COUNT 10 //used internaly
+#define AGG_TASK_AVG_SUM 11 //used internaly
 
 typedef struct {
     char att_name[MAX_ATT_NAME];
@@ -44,5 +46,10 @@ typedef struct {
     int agg_task;
 } AK_agg_value;
 
+typedef struct {
+    KK_header attributes[MAX_ATTRIBUTES];
+    int tasks[MAX_ATTRIBUTES];
+    int counter;
+} AK_agg_input;
 
 #endif
