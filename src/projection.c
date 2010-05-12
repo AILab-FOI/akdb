@@ -104,15 +104,16 @@
 	*/	
 	int GetPositionOfelementOp(element_op Searchedelement_op, list_op *L)
 	{
-		list_op *Currentelement_op;
+                element_op Currentelement_op = L->next;
 		int i = 0;
-		Currentelement_op = L;
-		while (Currentelement_op->next != 0 && Currentelement_op != Searchedelement_op) {
-			Currentelement_op = (list_op *) Currentelement_op->next;
-			i++;
-		}
+                do{
+                    if(Currentelement_op == Searchedelement_op) break;
+                    Currentelement_op = Currentelement_op->next;
+                    i++;
+		}while (Currentelement_op);
 		return i;
 	}
+	
 
 	/** 	@author Matija Novak
 		Delete given elelment from the list
