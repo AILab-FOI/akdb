@@ -29,7 +29,7 @@
 
  @return size of provided data type in bytes if provided data type is valid, else 0
 */
-size_t KK_type_size(int iDB_type, char *szVarchar) {
+size_t AK_type_size(int iDB_type, char *szVarchar) {
     switch(iDB_type) {
         case TYPE_INTERNAL:
             return sizeof(int);

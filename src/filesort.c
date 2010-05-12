@@ -26,7 +26,7 @@
 total number of headers in block
 @return returns num - number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
 */
-int get_total_headers(KK_block *iBlock){
+int get_total_headers(AK_block *iBlock){
 	register int i;
 	for(i = 0; i < MAX_ATTRIBUTES; i++){
 		if(strcmp((char *)iBlock->header[i].att_name,"")==0) //if there is no more attributes
@@ -41,7 +41,7 @@ int get_total_headers(KK_block *iBlock){
 number of header in block witch to sort
 @return returns num - number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
 */
-int get_header_number(KK_block *iBlock, char *attribute_name){
+int get_header_number(AK_block *iBlock, char *attribute_name){
 	register int i;
 	if(DEBUG_SORT)
 		printf("\natribut: %s\n", attribute_name);
@@ -62,7 +62,7 @@ int get_header_number(KK_block *iBlock, char *attribute_name){
 vrati broj zapisa u bloku
 
 */
-int get_num_of_tuples(KK_block *iBlock){
+int get_num_of_tuples(AK_block *iBlock){
 
 	int i=0;
 	int kraj = 1;
@@ -84,14 +84,14 @@ int get_num_of_tuples(KK_block *iBlock){
 ucita slijedeci block s obzirom da funkcija za to još ne radi. Ova služi kao pomoćna a kasnije i za lakšu zamjenu
 */
 
-KK_mem_block * get_next_block(int num){
+AK_mem_block * get_next_block(int num){
 
-	KK_mem_block * iCache = (KK_mem_block * )malloc(sizeof(KK_mem_block));
-	//iCache=KK_get_block(num);
+	AK_mem_block * iCache = (AK_mem_block * )malloc(sizeof(AK_mem_block));
+	//iCache=AK_get_block(num);
 
-	KK_block * iBlock = KK_read_block(num); // tu poslije komentirati
+	AK_block * iBlock = AK_read_block(num); // tu poslije komentirati
 
-	memcpy(iCache->block, iBlock , sizeof (KK_block));  // i ovo zakomentirati
+	memcpy(iCache->block, iBlock , sizeof (AK_block));  // i ovo zakomentirati
 
 	return iCache;
 
@@ -144,14 +144,14 @@ void sort_segment(char * table_name, char * atr_name){
 	strcat(temp_segment,"SORT_TEMP_HELP_");
 	strcat(temp_segment,table_name);		//npr: SORT_TEMP_PESONS this is the name of temp segment
 	
-	KK_block * Hblock = KK_read_block(ORG_blokovi[0]);
-	KK_header *head = (KK_header*) malloc (sizeof(KK_header));
-	memcpy(&head,Hblock->header,sizeof(KK_header));
+	AK_block * Hblock = AK_read_block(ORG_blokovi[0]);
+	AK_header *head = (AK_header*) malloc (sizeof(AK_header));
+	memcpy(&head,Hblock->header,sizeof(AK_header));
 	
-	KK_initialize_new_segment(temp_segment,1,head);
+	AK_initialize_new_segment(temp_segment,1,head);
 	
 	for (i=1; i<num_extents; i++){
-		KK_init_new_extent(temp_segment, 1);		//init new table extent 
+		AK_init_new_extent(temp_segment, 1);		//init new table extent 
 		
 	}
 	
@@ -178,7 +178,7 @@ void sort_segment(char * table_name, char * atr_name){
 	int r1, r2, free;
 	
 	
-	KK_mem_block * iCache1 = (KK_mem_block*) malloc (sizeof(KK_mem_block));
+	AK_mem_block * iCache1 = (AK_mem_block*) malloc (sizeof(AK_mem_block));
 	
 
 	int BR_org1 = 0;
@@ -194,7 +194,7 @@ void sort_segment(char * table_name, char * atr_name){
 	
 	int max_header_num = get_total_headers( iCache1->block );				//ukupni broj headera za jedan zapis
 	
-	KK_mem_block * iCache2 = (KK_mem_block*) malloc (sizeof(KK_mem_block));
+	AK_mem_block * iCache2 = (AK_mem_block*) malloc (sizeof(AK_mem_block));
 	int BR_org2 = 0;
 	int iCache2_position=0;  
 	//iCache2 = get_next_block(ORG_blokovi[BR_org2]);
@@ -203,7 +203,7 @@ void sort_segment(char * table_name, char * atr_name){
 	
 	return(0);	
 	//u taj tek zapisujemo
-	KK_mem_block * iCacheTemp = (KK_mem_block*) malloc (sizeof(KK_mem_block));
+	AK_mem_block * iCacheTemp = (AK_mem_block*) malloc (sizeof(AK_mem_block));
 	int BR_temp=0;
 	int iCacheTemp_position_td=0; //for tuple dict
 	int iCacheTemp_size = 0;   // zauzetost iCacheTemp bloka
@@ -297,7 +297,7 @@ void sort_segment(char * table_name, char * atr_name){
 							   iCache1->block->tuple_dict[ i + (iCache1_position * max_header_num) ].size);
 						
 						
-						KK_insert_entry(iCacheTemp->block, 
+						AK_insert_entry(iCacheTemp->block, 
 										iCache1->block->tuple_dict[ i + (iCache1_position * max_header_num) ].type, 
 										podatak, 
 										iCacheTemp_position_td );
@@ -354,7 +354,7 @@ void sort_segment(char * table_name, char * atr_name){
 							   iCache2->block->tuple_dict[ i + (iCache2_position * max_header_num) ].size);
 						
 						
-						KK_insert_entry(iCacheTemp->block, 
+						AK_insert_entry(iCacheTemp->block, 
 										iCache2->block->tuple_dict[ i + (iCache2_position * max_header_num) ].type, 
 										podatak, 
 										iCacheTemp_position_td );
@@ -420,7 +420,7 @@ void sort_segment(char * table_name, char * atr_name){
 							   iCache2->block->tuple_dict[ i + (iCache2_position * max_header_num) ].size);
 						
 						
-						KK_insert_entry(iCacheTemp->block, 
+						AK_insert_entry(iCacheTemp->block, 
 										iCache2->block->tuple_dict[ i + (iCache2_position * max_header_num) ].type, 
 										podatak, 
 										iCacheTemp_position_td );
@@ -488,7 +488,7 @@ void sort_segment(char * table_name, char * atr_name){
 							   iCache1->block->tuple_dict[ i + (iCache1_position * max_header_num) ].size);
 						
 						
-						KK_insert_entry(iCacheTemp->block, 
+						AK_insert_entry(iCacheTemp->block, 
 										iCache1->block->tuple_dict[ i + (iCache1_position * max_header_num) ].type, 
 										podatak, 
 										iCacheTemp_position_td );
@@ -563,12 +563,12 @@ void sort_segment(char * table_name, char * atr_name){
 
 
 
-int reset_block( KK_block * iBlock )
+int reset_block( AK_block * iBlock )
 {
 	register int i, j, k;
 	
-	KK_header prazni_head[ MAX_ATTRIBUTES ];
-	KK_tuple_dict prazni_tuple_dict[ DATA_BLOCK_SIZE ];
+	AK_header prazni_head[ MAX_ATTRIBUTES ];
+	AK_tuple_dict prazni_tuple_dict[ DATA_BLOCK_SIZE ];
 	unsigned char prazni_data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
 	
 	for( i = 0; i < MAX_ATTRIBUTES; i++ )
@@ -624,22 +624,22 @@ Sorts the given block
 */
 
 
-void block_sort(KK_block * iBlock, char * atr_name){
+void block_sort(AK_block * iBlock, char * atr_name){
 	register int t, n, j, k, q, i;
 	
 	char x[DATA_ROW_SIZE]; //bas podatak koji nas zanima
 	char y[DATA_ROW_SIZE]; //bas podatak s kojim se uspoređuje
 	int tip=0;
-	KK_block * cTemp1 = (KK_block*) malloc (sizeof(KK_block));
-	cTemp1 = KK_read_block(15);
+	AK_block * cTemp1 = (AK_block*) malloc (sizeof(AK_block));
+	cTemp1 = AK_read_block(15);
 	int free;
 	int broj_td;
 	
-	KK_block * cTemp2 = (KK_block*) malloc (sizeof(KK_block));
-	cTemp2 = KK_read_block(16);
+	AK_block * cTemp2 = (AK_block*) malloc (sizeof(AK_block));
+	cTemp2 = AK_read_block(16);
 	
-	KK_header * block_header = (KK_header * ) malloc (sizeof(KK_header));
-	memcpy(block_header,  iBlock->header,  sizeof(KK_header));
+	AK_header * block_header = (AK_header * ) malloc (sizeof(AK_header));
+	memcpy(block_header,  iBlock->header,  sizeof(AK_header));
 	
 	int sort_header_num = get_header_number(iBlock, atr_name);    //broj headera po kojem se sortira
 	
@@ -677,14 +677,14 @@ void block_sort(KK_block * iBlock, char * atr_name){
 					   iBlock->data + iBlock->tuple_dict[ i + (t * max_header_num) ].address,
 					   iBlock->tuple_dict[ i + (t * max_header_num) ].size);
 				//printf ("                          podatak: %s      na: %i \n", podatak, broj_td);
-				KK_insert_entry(cTemp1, iBlock->tuple_dict[ i + (t * max_header_num) ].type, podatak, broj_td );
+				AK_insert_entry(cTemp1, iBlock->tuple_dict[ i + (t * max_header_num) ].type, podatak, broj_td );
 				broj_td+=1;					
 			}
 			
 								
 		}
-		memcpy(cTemp1->header, block_header, sizeof(KK_header));
-		KK_write_block(cTemp1);				//tu treba nekaj napraviti
+		memcpy(cTemp1->header, block_header, sizeof(AK_header));
+		AK_write_block(cTemp1);				//tu treba nekaj napraviti
 		printf ("   \n\n               u cTemp1        podatak, brtd: %i\n",broj_td);
 		
 		for(i=0;i<broj_td; i++){
@@ -714,14 +714,14 @@ void block_sort(KK_block * iBlock, char * atr_name){
 					   iBlock->tuple_dict[ i + (t * max_header_num) ].size);
 				//printf ("                          podatak: %s      na: %i  adresa: %i\n", podatak, broj_td, iBlock->tuple_dict[ i + (t * max_header_num) ].address);
 				
-				KK_insert_entry(cTemp2, iBlock->tuple_dict[ i + (t * max_header_num) ].type, podatak, broj_td );
+				AK_insert_entry(cTemp2, iBlock->tuple_dict[ i + (t * max_header_num) ].type, podatak, broj_td );
 				broj_td+=1;						
 			}
 			
 								
 		}
-		memcpy(cTemp2->header, block_header, sizeof(KK_header));
-		if ( KK_write_block(cTemp2) == EXIT_ERROR)			//tu isto treba nekaj napraviti
+		memcpy(cTemp2->header, block_header, sizeof(AK_header));
+		if ( AK_write_block(cTemp2) == EXIT_ERROR)			//tu isto treba nekaj napraviti
 			printf("cTemp2 GREŠKA UPISA\n");
 		printf ("   \n\n               u cTemp2        podatak, brtd: %i\n",broj_td);
 		for(i=0;i<broj_td; i++){
@@ -744,7 +744,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 		if(DEBUG_SORT)
 			printf("                      , velicina: %i\n", iBlock->free_space);
 		
-		memcpy(iBlock->header,  block_header,  sizeof(KK_header));
+		memcpy(iBlock->header,  block_header,  sizeof(AK_header));
 		
 		
 		broj_td=0;
@@ -793,7 +793,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 							   cTemp1->tuple_dict[ i + (br1 * max_header_num) ].size);
 						
 						tip = cTemp1->tuple_dict[ i + (br1 * max_header_num) ].type;
-						KK_insert_entry(iBlock, tip, podatak, broj_td );
+						AK_insert_entry(iBlock, tip, podatak, broj_td );
 						broj_td+=1;						
 					}
 					br1++;
@@ -831,7 +831,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 							   cTemp2->data + cTemp2->tuple_dict[ i + (br2 * max_header_num) ].address,
 							   cTemp2->tuple_dict[ i + (br2 * max_header_num) ].size);
 						tip = cTemp2->tuple_dict[ i + (br2 * max_header_num) ].type;
-						KK_insert_entry(iBlock, tip, podatak, broj_td );
+						AK_insert_entry(iBlock, tip, podatak, broj_td );
 						broj_td+=1;						
 					}
 					br2++;
@@ -869,7 +869,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 							   cTemp1->data + cTemp1->tuple_dict[ i + (br1 * max_header_num) ].address,
 							   cTemp1->tuple_dict[ i + (br1 * max_header_num) ].size);
 						tip = cTemp1->tuple_dict[ i + (br1 * max_header_num) ].type;
-						KK_insert_entry(iBlock, tip, podatak, broj_td );
+						AK_insert_entry(iBlock, tip, podatak, broj_td );
 						broj_td+=1;						
 					}
 					br1++;
@@ -888,7 +888,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 							   cTemp2->data + cTemp2->tuple_dict[ i + (br2 * max_header_num) ].address,
 							   cTemp2->tuple_dict[ i + (br2 * max_header_num) ].size);
 						tip = cTemp2->tuple_dict[ i + (br2 * max_header_num) ].type;
-						KK_insert_entry(iBlock, tip, podatak, broj_td );
+						AK_insert_entry(iBlock, tip, podatak, broj_td );
 						broj_td+=1;						
 					}
 					br2++;
@@ -911,7 +911,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 							   cTemp1->data + cTemp1->tuple_dict[ i + (br1 * max_header_num) ].address,
 							   cTemp1->tuple_dict[ i + (br1 * max_header_num) ].size);
 						tip = cTemp1->tuple_dict[ i + (br1 * max_header_num) ].type;
-						KK_insert_entry(iBlock, tip, podatak, broj_td );
+						AK_insert_entry(iBlock, tip, podatak, broj_td );
 						broj_td+=1;						
 				
 					}
@@ -931,7 +931,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 							   cTemp2->data + cTemp2->tuple_dict[ i + (br2 * max_header_num) ].address,
 							   cTemp2->tuple_dict[ i + (br2 * max_header_num) ].size);
 						tip = cTemp2->tuple_dict[ i + (br2 * max_header_num) ].type;
-						KK_insert_entry(iBlock, tip, podatak, broj_td );
+						AK_insert_entry(iBlock, tip, podatak, broj_td );
 						broj_td+=1;						
 				
 					}
@@ -942,7 +942,7 @@ void block_sort(KK_block * iBlock, char * atr_name){
 		}
 
 	printf("\n\n KORAK ZAVRSIO \n\n");
-	KK_write_block(iBlock);					//tu treba nekaj drugo
+	AK_write_block(iBlock);					//tu treba nekaj drugo
 		
 		printf ("   \n\n               u iBlock        podatak, brtd: %i\n",broj_td);
 		for(i=0;i<broj_td; i++){
@@ -962,8 +962,8 @@ void block_sort(KK_block * iBlock, char * atr_name){
 	reset_block(cTemp1);
 	reset_block(cTemp2);				//tu treba sad još spremiti 
 	
-	KK_write_block(cTemp1);					// ali mislim da samo ide dirty bit
-	KK_write_block(cTemp2);
+	AK_write_block(cTemp1);					// ali mislim da samo ide dirty bit
+	AK_write_block(cTemp2);
 	
 }
 

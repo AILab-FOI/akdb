@@ -55,25 +55,25 @@
 
 /**
 \def BLOCK_TYPE_FREE
-\brief free block type (used in KK_block->type)
+\brief free block type (used in AK_block->type)
 */
 #define BLOCK_TYPE_FREE -1
 
 /**
 \def BLOCK_TYPE_NORMAL
-\brief normal block type e.g. used by some extent (used in KK_block->type)
+\brief normal block type e.g. used by some extent (used in AK_block->type)
 */
 #define BLOCK_TYPE_NORMAL 0
 
 /**
 \def BLOCK_TYPE_CHAINED
-\brief chained block type e.g. used if the block is chained with another (used in KK_block->type)
+\brief chained block type e.g. used if the block is chained with another (used in AK_block->type)
 */
 #define BLOCK_TYPE_CHAINED 1
 
 /**
 \def NOT_CHAINED
-\brief used in KK_block->chained_with if the block isn't chained
+\brief used in AK_block->chained_with if the block isn't chained
 */
 #define NOT_CHAINED -1
 
@@ -109,7 +109,7 @@
 
 /**
 \def MAX_ATT_NAME
-\brief maximum length of attribute name string (used in KK_header->att_name)
+\brief maximum length of attribute name string (used in AK_header->att_name)
 */
 #define MAX_ATT_NAME 255
 
@@ -121,7 +121,7 @@
 
 /**
 \def MAX_CONSTR_NAME
-\brief maximum length of constraint name string (used in KK_header->constr_name)
+\brief maximum length of constraint name string (used in AK_header->constr_name)
 */
 #define MAX_CONSTR_NAME 255
 
@@ -133,7 +133,7 @@
 
 /**
 \def DATA_BLOCK_SIZE
-\brief length of data block size (used in in KK_block->data)
+\brief length of data block size (used in in AK_block->data)
 */
 #define DATA_BLOCK_SIZE 500
 
@@ -211,62 +211,62 @@
 
 /**
 \def TYPE_INTERNAL
-\brief internal data type (used in KK_header->type and KK_tuple_dict->type)
+\brief internal data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_INTERNAL 0
 
 /**
 \def TYPE_INT
-\brief integer data type (used in KK_header->type and KK_tuple_dict->type)
+\brief integer data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_INT 1
 
 /**
 \def TYPE_FLOAT
-\brief float data type (used in KK_header->type and KK_tuple_dict->type)
+\brief float data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_FLOAT 2
 
 /**
 \def TYPE_NUMBER
-\brief number data type (used in KK_header->type and KK_tuple_dict->type)
+\brief number data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_NUMBER 3
 
 /**
 \def TYPE_VARCHAR
-\brief varchar data type (used in KK_header->type and KK_tuple_dict->type)
+\brief varchar data type (used in AK_header->type and AK_tuple_dict->type)
 */
 
 #define TYPE_VARCHAR 4
 
 /**
 \def TYPE_DATE
-\brief date data type (used in KK_header->type and KK_tuple_dict->type)
+\brief date data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_DATE 5
 
 /**
 \def TYPE_DATETIME
-\brief datetime data type (used in KK_header->type and KK_tuple_dict->type)
+\brief datetime data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_DATETIME 6
 
 /**
 \def TYPE_TIME
-\brief time data type (used in KK_header->type and KK_tuple_dict->type)
+\brief time data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_TIME 7
 
 /**
 \def TYPE_BLOB
-\brief blob data type (used in KK_header->type and KK_tuple_dict->type)
+\brief blob data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_BLOB 8
 
 /**
 \def TYPE_BOOL
-\brief boolean data type (used in KK_header->type and KK_tuple_dict->type)
+\brief boolean data type (used in AK_header->type and AK_tuple_dict->type)
 */
 #define TYPE_BOOL 9
 

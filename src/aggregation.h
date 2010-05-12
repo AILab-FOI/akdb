@@ -47,7 +47,7 @@ typedef struct {
 } AK_agg_value;
 
 typedef struct {
-    KK_header attributes[MAX_ATTRIBUTES];
+    AK_header attributes[MAX_ATTRIBUTES];
     int tasks[MAX_ATTRIBUTES];
     int counter;
 } AK_agg_input;

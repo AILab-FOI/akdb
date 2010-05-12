@@ -24,11 +24,11 @@
 void intersect_test()
 {
 	printf( "\nintersect_test: Present!\n\n\n" );
-	KK_intersect("testna","testna","INTERSECT_table");
+	AK_intersect("testna","testna","INTERSECT_table");
 }
 
 
-int KK_intersect(char *table1, char *table2, char *new_table){
+int AK_intersect(char *table1, char *table2, char *new_table){
 	register int i,j,k;
 	int brojac1=0, brojac2=0, brojac3=0, sum_attr1=0, sum_attr2 = 0;
 	int adr1[MAX_EXTENTS_IN_SEGMENT];
@@ -63,7 +63,7 @@ int KK_intersect(char *table1, char *table2, char *new_table){
 
 	
 	//uzeti header iz prve tablice i to je lista atributa po kojima se radi presjek
-	KK_block * iBlock = (KK_block*) KK_read_block(adr1[0]);
+	AK_block * iBlock = (AK_block*) AK_read_block(adr1[0]);
 
 	
 	for(i = 0; i < MAX_ATTRIBUTES; i++){
@@ -77,7 +77,7 @@ int KK_intersect(char *table1, char *table2, char *new_table){
 	}
 	//free(iBlock);
 	
-	KK_block * iBlock2 = (KK_block*) KK_read_block(adr2[0]);
+	AK_block * iBlock2 = (AK_block*) AK_read_block(adr2[0]);
 	
 	for(i = 0; i < MAX_ATTRIBUTES; i++){
 		if(strcmp((char *)iBlock2->header[i].att_name,"\0") == 0) //if there is no more attributes
@@ -92,10 +92,27 @@ int KK_intersect(char *table1, char *table2, char *new_table){
 		printf("INTERSECT ERROR: Not same number of attributes! \n");
 		return EXIT_ERROR;
 	}
+	
+	for(i=0;i<MAX_ATTRIBUTES;i++){
+		if(strcmp((char *)iBlock->header[i].type, (char *)iBlock2->header[i].type)!=0){
+			printf("INTERSECT ERROR: Attributes are not of the same type!");
+			return EXIT_ERROR;
+		}
+	}
+	
+	for(i = 0; i < MAX_ATTRIBUTES; i++)
+	{
+		if(strcmp((char *)iBlock->header[i].att_name, (char *)iBlock2->header[i].att_name) != 0)
+		{
+			printf("INTERSECT ERROR: Relation shemas are not same! \n");
+			return EXIT_ERROR;
+		}
+	}
+	
 	//initialize new segment
-	KK_header *iHeader = (KK_header *) malloc(sizeof(KK_header));
-	memcpy(iHeader, iBlock->header, sizeof(KK_header));
-	KK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE ,iHeader);
+	AK_header *iHeader = (AK_header *) malloc(sizeof(AK_header));
+	memcpy(iHeader, iBlock->header, sizeof(AK_header));
+	AK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE ,iHeader);
 	free(iHeader);
 	
 	
@@ -112,7 +129,7 @@ int KK_intersect(char *table1, char *table2, char *new_table){
 	list * row_root = (list *) malloc( sizeof(list) );
 	
 	while(i < brojac1){ //through the blocks of table 1
-		iBlock = (KK_block*) KK_read_block(adr1[i]);
+		iBlock = (AK_block*) AK_read_block(adr1[i]);
 printf("\ntu sam: %i\n",adr1[i]);
 
 		i++;
@@ -123,7 +140,7 @@ printf("\ntu sam: %i\n",adr1[i]);
 		while(iBlock->free_space > jos_u_data){ //if it is not the end of block
 			j=0;
 			while(j < brojac2){ //through the blocks of table 2
-				iBlock2 = (KK_block*) KK_read_block(adr2[j]);
+				iBlock2 = (AK_block*) AK_read_block(adr2[j]);
 printf("\ntu sam2: %i\n",adr2[j]);
 
 				int jos_u_data2=0;

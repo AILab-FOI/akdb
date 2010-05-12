@@ -62,9 +62,9 @@ int main()
 {
 	printf( "Калашникова DB - STARTING\n\n" );
 
-	if( KK_init_disk_manager() == EXIT_SUCCESS )
+	if( AK_init_disk_manager() == EXIT_SUCCESS )
 	{
-		if( KK_memoman_init() == EXIT_SUCCESS )
+		if( AK_memoman_init() == EXIT_SUCCESS )
 		{
 
 			/* component test area --- begin */

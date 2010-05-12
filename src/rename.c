@@ -23,10 +23,10 @@
 void rename_test()
 {
 	printf( "rename_test: Present!\n" );
-	KK_rename("testna","Prezime","preim_test","novoPrezime");
+	AK_rename("testna","Prezime","preim_test","novoPrezime");
 }
 
-int KK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr){
+int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr){
 	table_addresses *adrese = get_table_addresses(old_table_name);
 	int tab_adrese[MAX_NUM_OF_BLOCKS];
 	int num_extents=0, brojac = 0;
@@ -41,8 +41,8 @@ int KK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 		num_extents++;
 	}
 	
-	KK_header iHeader[MAX_ATTRIBUTES];
-	KK_block * iBlock = KK_read_block(tab_adrese[0]);
+	AK_header iHeader[MAX_ATTRIBUTES];
+	AK_block * iBlock = AK_read_block(tab_adrese[0]);
 	memcpy(&iHeader, iBlock->header, sizeof(iBlock->header));
 	
 	for(i = 0; i < MAX_ATTRIBUTES; i++){
@@ -52,14 +52,14 @@ int KK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 			break;
 		}
 		else if(!strcmp(iHeader[i].att_name , "/0")){		//if there is no more attributes
-			printf("KK_op_preimenovanje: ERROR: in this table does not exist atribute: %s", old_attr);
+			printf("AK_op_preimenovanje: ERROR: in this table does not exist atribute: %s", old_attr);
 			return (EXIT_ERROR);
 		}
 	}
 	
-	KK_initialize_new_segment(new_table_name,1,&iHeader);
+	AK_initialize_new_segment(new_table_name,1,&iHeader);
 	for (i=1; i<num_extents; i++){
-		KK_init_new_extent(new_table_name, 1);		//init new table extent 
+		AK_init_new_extent(new_table_name, 1);		//init new table extent 
 	}
 	table_addresses *adrese_new = get_table_addresses(new_table_name);
 	int new_tab_adrese[MAX_NUM_OF_BLOCKS];
@@ -74,17 +74,17 @@ int KK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 	}
 	
 	//PREIMENOVANJE
-	KK_block * block1;
-	KK_block * block2;
+	AK_block * block1;
+	AK_block * block2;
 	
 	for(i=0; i< brojac; i++){
-		block1 = KK_read_block(tab_adrese[i]);
-		block2 = KK_read_block(new_tab_adrese[i]);
+		block1 = AK_read_block(tab_adrese[i]);
+		block2 = AK_read_block(new_tab_adrese[i]);
 		
 		memcpy(block2,block1,sizeof(block1));				//kopiram cijeli stari blok u novi
 		block2->address = new_tab_adrese[i];
 		memcpy(block2->header, iHeader, sizeof(*iHeader)); 	// u novom mijenjam samo header
-		KK_write_block(block2);								//zapisem novi block
+		AK_write_block(block2);								//zapisem novi block
 		
 	}
 	free(block1);

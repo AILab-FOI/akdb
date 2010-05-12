@@ -19,7 +19,7 @@
 
 #include "aggregation.h"
 
-extern search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params);
+extern search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params);
 
 /**
  Function calculates how meany attributes there are in a header.
@@ -27,7 +27,7 @@ extern search_result KK_search_unsorted(char *szRelation, search_params *aspPara
  @return Number of attributes defined in header array
  @author Dejan Frankovic
 */
-int AK_header_size(KK_header *header) {
+int AK_header_size(AK_header *header) {
     int counter = 0;
     while (*((char*)&header[counter])!='\0') {
         counter++;
@@ -57,7 +57,7 @@ void AK_agg_input_init(AK_agg_input *input) {
 @return On success, returns EXIT_SUCCESS, otherwise EXIT_FAILURE
  @author Dejan Frankovic
  */
-int AK_agg_input_add(KK_header header, int agg_task, AK_agg_input *input) {
+int AK_agg_input_add(AK_header header, int agg_task, AK_agg_input *input) {
     if ((char*)&header == '\0' || agg_task<0 || (*input).counter == MAX_ATTRIBUTES)
         return EXIT_FAILURE;
     (*input).attributes[(*input).counter] = header;
@@ -74,7 +74,7 @@ int AK_agg_input_add(KK_header header, int agg_task, AK_agg_input *input) {
 @return On success, returns EXIT_SUCCESS, otherwise EXIT_FAILURE
  @author Dejan Frankovic
  */
-int AK_agg_input_add_to_beginning(KK_header header, int agg_task, AK_agg_input *input) {
+int AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *input) {
     if ((char*)&header == '\0' || agg_task<0 || (*input).counter == MAX_ATTRIBUTES)
         return EXIT_FAILURE;
 
@@ -118,14 +118,14 @@ Function aggregates a given table by given attributes
 @author Dejan Frankovic
 */
 int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
-//int AK_aggregation (KK_header *att_root,int *att_tasks,char *source_table, char *new_table) {
+//int AK_aggregation (AK_header *att_root,int *att_tasks,char *source_table, char *new_table) {
     int i,j;
     AK_agg_input_fix(input);
-    KK_header *att_root = (*input).attributes;
+    AK_header *att_root = (*input).attributes;
     int *att_tasks = (*input).tasks;
     int header_size = (*input).counter;
    // int header_size = AK_header_size(att_root);
-    KK_header agg_head[MAX_ATTRIBUTES];
+    AK_header agg_head[MAX_ATTRIBUTES];
     int agg_group_number = 0;
     int inttemp;
     double doubletemp;
@@ -182,7 +182,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
         }
         needed_values[i].agg_task = att_tasks[i];
         strcpy(needed_values[i].att_name,att_root[i].att_name);
-        agg_head[i] = *(KK_header*)KK_create_header(agg_h_name,agg_h_type,FREE_INT,FREE_CHAR,FREE_CHAR);
+        agg_head[i] = *(AK_header*)AK_create_header(agg_h_name,agg_h_type,FREE_INT,FREE_CHAR,FREE_CHAR);
     }
 
     for(i = header_size; i < MAX_ATTRIBUTES; i++ )
@@ -190,7 +190,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 	memcpy( &agg_head[i], "\0", sizeof( "\0" ));
     }
 
-    int startAddress = KK_initialize_new_segment( new_table, SEGMENT_TYPE_TABLE, agg_head);
+    int startAddress = AK_initialize_new_segment( new_table, SEGMENT_TYPE_TABLE, agg_head);
     
     if( startAddress != EXIT_ERROR )
         printf( "\nTABLE %s CREATED!\n", new_table );
@@ -208,7 +208,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 
     table_addresses *addresses = (table_addresses* ) get_table_addresses( source_table );
-    KK_header *t_header = AK_get_header( source_table );
+    AK_header *t_header = AK_get_header( source_table );
     int num_attr = AK_num_attr( source_table );
 
     
@@ -225,7 +225,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     counter = 0;
     while( addresses->address_from[ i ] != 0 ){
         for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-            KK_block *temp = (KK_block*) KK_read_block( j );
+            AK_block *temp = (AK_block*) AK_read_block( j );
             for( k = 0; k < DATA_BLOCK_SIZE; k+=num_attr ){
                 counter++;
                 if( temp->tuple_dict[k].type == FREE_INT )
@@ -251,8 +251,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
                     }
                 }
 
-                //sresult = KK_tunnel(&search_parameters);
-                sresult = KK_search_unsorted(new_table,&search_parameters,agg_group_number);
+                //sresult = AK_tunnel(&search_parameters);
+                sresult = AK_search_unsorted(new_table,&search_parameters,agg_group_number);
                 if (sresult.iNum_tuple_addresses == 0) {
                     DeleteAllElements(row_root);
                     for (l=0;l<header_size;l++) {
@@ -279,9 +279,9 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
                     insert_row( row_root );
                 }
                 else {
-                    //KK_mem_block *mem_block = KK_get_block(sresult.aiBlocks[0]);
-                    KK_mem_block *mem_block = malloc(sizeof(KK_mem_block)); // ovo isto treba maknuti jednog dana....
-                    mem_block->block = KK_read_block(sresult.aiBlocks[0]); // kad budu svi koristili KK_get_block umjesto KK_read_block..
+                    //AK_mem_block *mem_block = AK_get_block(sresult.aiBlocks[0]);
+                    AK_mem_block *mem_block = malloc(sizeof(AK_mem_block)); // ovo isto treba maknuti jednog dana....
+                    mem_block->block = AK_read_block(sresult.aiBlocks[0]); // kad budu svi koristili AK_get_block umjesto AK_read_block..
 
 
                     for (l=0;l<num_attr;l++) {
@@ -403,7 +403,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
                             }
                         }
                     }
-                    KK_deallocate_search_result(sresult);
+                    AK_deallocate_search_result(sresult);
 
                      /*  DeleteAllElements(row_root);
                     for (l = 0; l<header_size;l++) {
@@ -418,8 +418,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
                     mem_block->timestamp_last_change = clock();
                     mem_block->dirty = BLOCK_DIRTY;*/
                     
-                    // one day, when all other funcions will use KK_get_block appropriately, this can be uncommented and the line below deleted
-                    KK_write_block(mem_block->block);
+                    // one day, when all other funcions will use AK_get_block appropriately, this can be uncommented and the line below deleted
+                    AK_write_block(mem_block->block);
                 }
 
             }
@@ -436,10 +436,10 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
         }
     }
 
-    KK_projekcija(projection_att, agg_table);
+    AK_projekcija(projection_att, agg_table);
     addresses = (table_addresses* ) get_table_addresses( new_table );
     while( addresses->address_from[ i ] != 0 ){
-        KK_delete_extent(addresses->address_from[i],addresses->address_to[i]);
+        AK_delete_extent(addresses->address_from[i],addresses->address_to[i]);
     }
 
     DeleteAllelementsOp(projection_att);
@@ -454,23 +454,23 @@ void aggregation_test()
 
   int i;
     //create header
-    KK_header t_header[ MAX_ATTRIBUTES ];
-    KK_header* temp;
+    AK_header t_header[ MAX_ATTRIBUTES ];
+    AK_header* temp;
 
-    temp = (KK_header*)KK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header, temp, sizeof( AK_header ));
 
-    temp = (KK_header*)KK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 1, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 1, temp, sizeof( AK_header ));
 
-    temp = (KK_header*)KK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 2, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 2, temp, sizeof( AK_header ));
 
-    temp = (KK_header*)KK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 3, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 3, temp, sizeof( AK_header ));
 
-    temp = (KK_header*)KK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 4, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 4, temp, sizeof( AK_header ));
 
     for( i = 5; i < MAX_ATTRIBUTES; i++ )
     {
@@ -482,7 +482,7 @@ void aggregation_test()
 
     printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
 
-    int startAddress = KK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
+    int startAddress = AK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
 
     if( startAddress != EXIT_ERROR )
         printf( "\nTABLE %s CREATED!\n", tblName );

@@ -37,7 +37,7 @@
 
 /**
 \struct search_params
-\brief Attribute name, lower and upper data value, special(NULL or *) - input for KK_equisearch_unsorted and KK_rangesearch_unsorted
+\brief Attribute name, lower and upper data value, special(NULL or *) - input for AK_equisearch_unsorted and AK_rangesearch_unsorted
 */
 typedef struct {
     /// name of attribute
@@ -52,7 +52,7 @@ typedef struct {
 
 /**
 \struct search_result
-\brief Search result of KK_equisearch_unsorted and KK_rangesearch_unsorted
+\brief Search result of AK_equisearch_unsorted and AK_rangesearch_unsorted
 */
 typedef struct {
     /// array of tuple addresses

@@ -29,10 +29,10 @@
 */
 void crate_join_block_header(int one,int two,char * new_table,list_op * att_root)
 {
-	KK_block * temp_block;
-	KK_header header[MAX_ATTRIBUTES];
+	AK_block * temp_block;
+	AK_header header[MAX_ATTRIBUTES];
 	element_op some_element;
-	temp_block= (KK_block *) KK_read_block(one);
+	temp_block= (AK_block *) AK_read_block(one);
 
 	int next_header=1; //boolean var to indicate there are more headers
 	int search_elem;
@@ -80,7 +80,7 @@ void crate_join_block_header(int one,int two,char * new_table,list_op * att_root
 	}	
 
 	free(temp_block);
-	temp_block= (KK_block *) KK_read_block(two);
+	temp_block= (AK_block *) AK_read_block(two);
 	next_header=1;
 	head=0;
 
@@ -116,7 +116,7 @@ void crate_join_block_header(int one,int two,char * new_table,list_op * att_root
 	@param new_table - name of the naj_join table
 	@result void
 */
-void merge_block_join(list * row_root,list * row_root_insert, KK_block * temp_block,list_op * att_root, char * new_table)
+void merge_block_join(list * row_root,list * row_root_insert, AK_block * temp_block,list_op * att_root, char * new_table)
 {
 	if(DEBUG)
 		printf("\n MERGE NAT JOIN...");
@@ -244,7 +244,7 @@ void merge_block_join(list * row_root,list * row_root_insert, KK_block * temp_bl
 	@param new_table - name of the naj_join table
 	@result void
 */
-void copy_blocks_join(KK_block * temp_block,KK_block * temp_block2,list_op * att_root,char * new_table)
+void copy_blocks_join(AK_block * temp_block,AK_block * temp_block2,list_op * att_root,char * new_table)
 {
 	if(DEBUG)
 		printf("\n COPYING NAT JOIN");
@@ -361,7 +361,7 @@ void copy_blocks_join(KK_block * temp_block,KK_block * temp_block2,list_op * att
 	@param new_table - name of the naj_join table
 	@result if succes returns EXIT_SUCCESS
 */
-int KK_join(list_op * att_root,char * old_table_one, char * old_table_two, char * new_table)
+int AK_join(list_op * att_root,char * old_table_one, char * old_table_two, char * new_table)
 {
 	table_addresses * addresses_one;
 	table_addresses * addresses_two;
@@ -377,8 +377,8 @@ int KK_join(list_op * att_root,char * old_table_one, char * old_table_two, char 
 		//make a nat_join table
 		crate_join_block_header(addresses_one->address_from[0],addresses_two->address_from[0],new_table,att_root);
 
-		KK_block *temp_block;
-		KK_block *temp_block2;
+		AK_block *temp_block;
+		AK_block *temp_block2;
 	
 		int from=0,to=0,j=0,i=0;
 		int from2=0,to2=0,j2=0,i2=0;
@@ -396,7 +396,7 @@ int KK_join(list_op * att_root,char * old_table_one, char * old_table_two, char 
 					if(DEBUG)
 						printf("\n NAt join: copy block1: %d",i);
 					
-					temp_block=(KK_block *) KK_read_block( i );
+					temp_block=(AK_block *) AK_read_block( i );
 					
 					if(temp_block->free_space!=0)
 					{//if its some data in block
@@ -414,7 +414,7 @@ int KK_join(list_op * att_root,char * old_table_one, char * old_table_two, char 
 									if(DEBUG)	
 										printf("\n Nat join: copy block2: %d",i2);
 									
-									temp_block2= (KK_block *) KK_read_block( i2 );
+									temp_block2= (AK_block *) AK_read_block( i2 );
 									
 								  if(temp_block2->free_space!=0){
 								   copy_blocks_join(temp_block,temp_block2,att_root,new_table);}
@@ -436,7 +436,7 @@ int KK_join(list_op * att_root,char * old_table_one, char * old_table_two, char 
 	}
 	else
 	{	
-		printf("KK_join: Table from which I must read not exist");
+		printf("AK_join: Table from which I must read not exist");
 		free(addresses_one);
 		free(addresses_two);
 		return 0;
@@ -457,7 +457,7 @@ void op_join_test()
 	some_element = (element_op) GetFirstelementOp(att_root);
 
 	InsertNewelementOp("testna","Prezime",some_element);
-	KK_join(att_root,"testna","testna_druga","testna_join");
+	AK_join(att_root,"testna","testna_druga","testna_join");
 	
 	free( att_root );
 }

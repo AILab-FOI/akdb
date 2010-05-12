@@ -32,12 +32,12 @@
  @param aspParams array of search parameters
  @param iNum_search_params number of search parameters
 
- @return search_result structure defined in filesearch.h. Use KK_deallocate_search_result to deallocate.
+ @return search_result structure defined in filesearch.h. Use AK_deallocate_search_result to deallocate.
 */
 
-search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params) {
+search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params) {
     int              iBlock;
-    KK_mem_block    *mem_block = NULL, tmp;
+    AK_mem_block    *mem_block = NULL, tmp;
     int              i, j, k;
     int              iTupleMatches;
     search_result    srResult;
@@ -56,9 +56,9 @@ search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int
     /// iterate through all the blocks
     for(k = 0; k < 200 && taAddresses->address_from[k] > 0; k++) { // 200 == Novak's magic number :)
         for(iBlock = taAddresses->address_from[k]; iBlock <= taAddresses->address_to[k]; iBlock++) {
-            //mem_block = KK_get_block(iBlock);
+            //mem_block = AK_get_block(iBlock);
             mem_block = &tmp;
-            mem_block->block = KK_read_block(iBlock);
+            mem_block->block = AK_read_block(iBlock);
 
             /// count number of attributes in segment/relation
             srResult.iNum_tuple_attributes = 0;
@@ -70,7 +70,7 @@ search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int
 
             srResult.aiSearch_attributes = (int *) malloc(iNum_search_params * sizeof(int));
             if(srResult.aiSearch_attributes == NULL) {
-                printf("KK_search_unsorted: ERROR. Cannot allocate srResult.aiAttributes_searched.\n");
+                printf("AK_search_unsorted: ERROR. Cannot allocate srResult.aiAttributes_searched.\n");
                 exit(EXIT_ERROR);
             }
             srResult.iNum_search_attributes = 0;
@@ -97,7 +97,7 @@ search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int
                 for(j = 0; j < iNum_search_params && iTupleMatches; j++) {
                     switch(aspParams[j].iSearchType) {
                         case SEARCH_PARTICULAR: {
-                            size_t iSearchAttributeValueSize = KK_type_size(mem_block->block->header[srResult.aiSearch_attributes[j]].type, (char *) aspParams[j].pData_lower);
+                            size_t iSearchAttributeValueSize = AK_type_size(mem_block->block->header[srResult.aiSearch_attributes[j]].type, (char *) aspParams[j].pData_lower);
 
                             if(mem_block->block->tuple_dict[i + srResult.aiSearch_attributes[j]].size != iSearchAttributeValueSize
                                || memcmp(mem_block->block->data + mem_block->block->tuple_dict[i + srResult.aiSearch_attributes[j]].address, aspParams[j].pData_lower, iSearchAttributeValueSize)) {
@@ -107,7 +107,7 @@ search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int
                             break;
 
                         case SEARCH_RANGE: {
-                            size_t iSearchAttributeValueSize = KK_type_size(mem_block->block->header[srResult.aiSearch_attributes[j]].type, (char *) aspParams[j].pData_lower);
+                            size_t iSearchAttributeValueSize = AK_type_size(mem_block->block->header[srResult.aiSearch_attributes[j]].type, (char *) aspParams[j].pData_lower);
 
                             switch(mem_block->block->tuple_dict[i + srResult.aiSearch_attributes[j]].type) {
                                 case TYPE_INT:
@@ -140,7 +140,7 @@ search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int
                             break;
 
                         case SEARCH_NULL: {
-                            size_t iSearchAttributeValueSize = KK_type_size(mem_block->block->header[srResult.aiSearch_attributes[j]].type, (char *) aspParams[j].pData_lower);
+                            size_t iSearchAttributeValueSize = AK_type_size(mem_block->block->header[srResult.aiSearch_attributes[j]].type, (char *) aspParams[j].pData_lower);
 
                             if(mem_block->block->tuple_dict[i + srResult.aiSearch_attributes[j]].type != TYPE_VARCHAR
                                || iSearchAttributeValueSize != strlen("NULL")
@@ -164,7 +164,7 @@ search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int
                     srResult.aiTuple_addresses = (int *) realloc(srResult.aiTuple_addresses, srResult.iNum_tuple_addresses * sizeof(int));
 
                     if(srResult.aiTuple_addresses == NULL) {
-                        printf("KK_search_unsorted: ERROR. Cannot reallocate srResult.aiTuple_addresses, iteration %d.\n", i);
+                        printf("AK_search_unsorted: ERROR. Cannot reallocate srResult.aiTuple_addresses, iteration %d.\n", i);
                         exit(EXIT_ERROR);
                     }
 
@@ -172,7 +172,7 @@ search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int
                         puts("realloc srResult.aiBlocks");*/
                     srResult.aiBlocks = (int *) realloc(srResult.aiBlocks, srResult.iNum_tuple_addresses * sizeof(int));
                     if(srResult.aiBlocks == NULL) {
-                        printf("KK_search_unsorted: ERROR. Cannot reallocate srResult.aiBlocks, iteration %d.\n", i);
+                        printf("AK_search_unsorted: ERROR. Cannot reallocate srResult.aiBlocks, iteration %d.\n", i);
                         exit(EXIT_ERROR);
                     }
 
@@ -189,12 +189,12 @@ search_result KK_search_unsorted(char *szRelation, search_params *aspParams, int
 /**
  @author Miroslav Policki
 
- Deallocates memory used by search result returned by KK_search_unsorted.
+ Deallocates memory used by search result returned by AK_search_unsorted.
 
  @param srResult search result
 */
 
-void KK_deallocate_search_result(search_result srResult) {
+void AK_deallocate_search_result(search_result srResult) {
     free(srResult.aiTuple_addresses);
     free(srResult.aiSearch_attributes);
     free(srResult.aiBlocks);
@@ -204,20 +204,20 @@ void filesearch_test()
 {
     int            i;
     double         f;
-    KK_mem_block  *mem_block, tmp;
-    KK_header      hBroj_int[4], *hTmp;
+    AK_mem_block  *mem_block, tmp;
+    AK_header      hBroj_int[4], *hTmp;
     list          *row_root;
 
     // create table and fill it for testing purposes
-	hTmp = KK_create_header("Number int", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+	hTmp = AK_create_header("Number int", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
 	hBroj_int[0] = *hTmp;
-	hTmp = KK_create_header("Number float", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
+	hTmp = AK_create_header("Number float", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
 	hBroj_int[1] = *hTmp;
-	hTmp = KK_create_header("Varchar column", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+	hTmp = AK_create_header("Varchar column", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
 	hBroj_int[2] = *hTmp;
-	memset(&hBroj_int[3], 0, sizeof(KK_header));
+	memset(&hBroj_int[3], 0, sizeof(AK_header));
 
-	if(EXIT_ERROR == KK_initialize_new_segment("filesearch test table", SEGMENT_TYPE_TABLE, hBroj_int)) {
+	if(EXIT_ERROR == AK_initialize_new_segment("filesearch test table", SEGMENT_TYPE_TABLE, hBroj_int)) {
 		printf("filesearch_test: ERROR. Unable to create \"filesearch test table \"\n");
 		exit(EXIT_ERROR);
 	}
@@ -263,13 +263,13 @@ void filesearch_test()
     sp[2].pData_lower = &dTmp;
 
     if(DEBUG)
-        puts("Calling KK_search_unsorted");
-	sr = KK_search_unsorted("filesearch test table", &sp, 3);
+        puts("Calling AK_search_unsorted");
+	sr = AK_search_unsorted("filesearch test table", &sp, 3);
 
     for(i = 0; i < sr.iNum_tuple_addresses; i++) {
-        //mem_block = KK_get_block (sr.aiBlocks[i]); // caching should be used when available
+        //mem_block = AK_get_block (sr.aiBlocks[i]); // caching should be used when available
         mem_block = &tmp;
-        mem_block->block = KK_read_block(sr.aiBlocks[i]);
+        mem_block->block = AK_read_block(sr.aiBlocks[i]);
 
         printf("Found:%d\n", *((int *) (mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 0].address)));
         printf("Found:%f\n", *((double *) (mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 1].address)));
@@ -281,6 +281,6 @@ void filesearch_test()
         free(szTmp);
     }
 
-    KK_deallocate_search_result(sr);
+    AK_deallocate_search_result(sr);
     }
 }

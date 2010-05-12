@@ -168,10 +168,10 @@ void InsertNewElement(int newtype, void * data, char * table, char * attribute_n
 
 	newElement->type = newtype;
 
-	memcpy(newElement->data, data, KK_type_size(newtype, data));
+	memcpy(newElement->data, data, AK_type_size(newtype, data));
 	if(newtype==TYPE_VARCHAR)
 	{
-		newElement->data[KK_type_size(newtype, data)]='\0';
+		newElement->data[AK_type_size(newtype, data)]='\0';
 	}
 
 	memcpy(newElement->table, table, strlen(table));
@@ -201,10 +201,10 @@ void InsertNewElementForUpdate(int newtype, void * data, char * table, char * at
 	list *newElement = (list *) malloc( sizeof(list) );
 	newElement->type = newtype;
 
-	memcpy(newElement->data, data, KK_type_size(newtype, data));
+	memcpy(newElement->data, data, AK_type_size(newtype, data));
 	if(newtype==TYPE_VARCHAR)
 	{
-		newElement->data[KK_type_size(newtype, data)]='\0';
+		newElement->data[AK_type_size(newtype, data)]='\0';
 	}
 
 	memcpy(newElement->table, table, strlen(table));
@@ -227,7 +227,7 @@ void InsertNewElementForUpdate(int newtype, void * data, char * table, char * at
 	@param temp_block -block in which we insert data
 	@result int - EXIT SUCCES if success
 */
-int insert_row_to_block(list *row_root, KK_block *temp_block)
+int insert_row_to_block(list *row_root, AK_block *temp_block)
 {
 	element some_element;
 	int unosi=1; //used to run until all headers are inserted
@@ -269,7 +269,7 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 
 					type=some_element->type;
 
-					memcpy(entry_data,some_element->data,KK_type_size(type,some_element->data));
+					memcpy(entry_data,some_element->data,AK_type_size(type,some_element->data));
 
 					search_elem=0;
 				}
@@ -286,16 +286,16 @@ int insert_row_to_block(list *row_root, KK_block *temp_block)
 				}
 			}
 
-			memcpy(temp_block->data+temp_block->free_space, entry_data,KK_type_size(type,entry_data));
+			memcpy(temp_block->data+temp_block->free_space, entry_data,AK_type_size(type,entry_data));
 			temp_block->tuple_dict[id].address=temp_block->free_space;
-			temp_block->free_space+=KK_type_size(type,entry_data);
+			temp_block->free_space+=AK_type_size(type,entry_data);
 			temp_block->tuple_dict[id].type=type;
-			temp_block->tuple_dict[id].size = KK_type_size(type,entry_data);
+			temp_block->tuple_dict[id].size = AK_type_size(type,entry_data);
 
 			memcpy(entry_data,temp_block->data+temp_block->tuple_dict[id].address,temp_block->tuple_dict[id].size);
 
 			if( DEBUG )
-				printf("insert_row_to_block: Insert: Insert data: %s Size of data: %d\n", entry_data, KK_type_size(type,entry_data));
+				printf("insert_row_to_block: Insert: Insert data: %s Size of data: %d\n", entry_data, AK_type_size(type,entry_data));
 			head++;//go to next header
 		}
 		else
@@ -336,7 +336,7 @@ int insert_row(list *row_root)
 
 	adr_to_write= (int) find_free_space( get_table_addresses(&table) );
 	if(adr_to_write == -1)
-		adr_to_write = (int) KK_init_new_extent (table,SEGMENT_TYPE_TABLE);
+		adr_to_write = (int) AK_init_new_extent (table,SEGMENT_TYPE_TABLE);
 	
 	if(adr_to_write == 0)
 	{
@@ -345,13 +345,13 @@ int insert_row(list *row_root)
 
 	printf("insert_row: Insert into block on adress: %d\n",adr_to_write);
 
-	KK_block *temp_block;
+	AK_block *temp_block;
 
-	temp_block= (KK_block *) KK_read_block(adr_to_write);
+	temp_block= (AK_block *) AK_read_block(adr_to_write);
 
 	int end= (int) insert_row_to_block(row_root, temp_block);
 
-	KK_write_block(temp_block);
+	AK_write_block(temp_block);
 
 	free( temp_block );
 	return end;
@@ -364,7 +364,7 @@ int insert_row(list *row_root)
 	@param what -if 0 then update, if 1 then delete
 	@result void
 */
-void update_delete_row_from_block(KK_block *temp_block, list *row_root, int what)
+void update_delete_row_from_block(AK_block *temp_block, list *row_root, int what)
 {
 	int next=1; //moving through headers
 	int head=0; //counting headers
@@ -646,7 +646,7 @@ int delete_update_segment(list *row_root, int delete)
 	table_addresses * addresses;
 	addresses = (table_addresses * ) get_table_addresses(&table);
 
-	KK_block *temp_block;
+	AK_block *temp_block;
 
 	int from=0,to=0,j=0,i=0;
 	for (j=0;j<MAX_EXTENTS_IN_SEGMENT;j++)
@@ -663,10 +663,10 @@ int delete_update_segment(list *row_root, int delete)
 				if(DEBUG)
 					printf("delete_update_segment: delete_update block: %d",i);
 
-				temp_block=(KK_block *)KK_read_block( i );
+				temp_block=(AK_block *)AK_read_block( i );
 
 				update_delete_row_from_block(temp_block,row_root,delete);
-				KK_write_block(temp_block);
+				AK_write_block(temp_block);
 				free(temp_block);
 
 			}
@@ -703,13 +703,13 @@ void fileio_test()
 {
 /*OVO JE UBITI SVE VEĆ SPREMNO*/
 //CREATE table testna
-	KK_block * block = ( KK_block * ) malloc ( sizeof( KK_block ) );
-	KK_header * header_red_br;
-	header_red_br = (KK_header *) KK_create_header( "Redni_broj", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
-	KK_header * header_name;
-	header_name = (KK_header *) KK_create_header( "Ime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
-	KK_header * header_surname;
-	header_surname = (KK_header *) KK_create_header( "Prezime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	AK_block * block = ( AK_block * ) malloc ( sizeof( AK_block ) );
+	AK_header * header_red_br;
+	header_red_br = (AK_header *) AK_create_header( "Redni_broj", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	AK_header * header_name;
+	header_name = (AK_header *) AK_create_header( "Ime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	AK_header * header_surname;
+	header_surname = (AK_header *) AK_create_header( "Prezime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 
 	block->address = 10;
 	block->type = BLOCK_TYPE_NORMAL;
@@ -721,19 +721,19 @@ void fileio_test()
 	memcpy( & block->header[1], header_name, sizeof( * header_name ) );
 	memcpy( & block->header[2], header_surname, sizeof( * header_surname ) );
 
-	KK_write_block( block );
+	AK_write_block( block );
 	block->address = 11;
-	KK_write_block( block );
+	AK_write_block( block );
 	block->address = 12;
-	KK_write_block( block );
+	AK_write_block( block );
 	block->address = 13;
-	KK_write_block( block );
+	AK_write_block( block );
 
 //END CREATING TABLE TESTA
 //CREATE TABLE TESTNA_druga
-	header_red_br = (KK_header *) KK_create_header( "Adresa", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
-	header_name = (KK_header *) KK_create_header( "Ime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
-	header_surname = (KK_header *) KK_create_header( "Prezime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_red_br = (AK_header *) AK_create_header( "Adresa", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_name = (AK_header *) AK_create_header( "Ime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_surname = (AK_header *) AK_create_header( "Prezime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 
 	block->address = 20;
 	block->type = BLOCK_TYPE_NORMAL;
@@ -745,24 +745,24 @@ void fileio_test()
 	memcpy( & block->header[1], header_name, sizeof( * header_name ) );
 	memcpy( & block->header[2], header_surname, sizeof( * header_surname ) );
 
-	KK_write_block( block );
+	AK_write_block( block );
 	block->address = 21;
-	KK_write_block( block );
+	AK_write_block( block );
 	block->address = 22;
-	KK_write_block( block );
+	AK_write_block( block );
 	block->address = 23;
-	KK_write_block( block );
+	AK_write_block( block );
 
 	free(block);
 //END CREATING TABLE TESTNA_DRUGA
 
 //INSERT ENTRY TO SYSTEM_RELATION CATALOG
-	KK_block * block2;
-/*	header_red_br = (KK_header *) KK_create_header( "obj_id", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
-	header_name = (KK_header *) KK_create_header( "Name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
-	header_surname = (KK_header *) KK_create_header( "start_addres", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
-	KK_header * header_surname2;
-	header_surname2 = (KK_header *) KK_create_header( "end_addres", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	AK_block * block2;
+/*	header_red_br = (AK_header *) AK_create_header( "obj_id", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_name = (AK_header *) AK_create_header( "Name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	header_surname = (AK_header *) AK_create_header( "start_addres", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	AK_header * header_surname2;
+	header_surname2 = (AK_header *) AK_create_header( "end_addres", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 
 	block2->address = 1;
 	block2->type = BLOCK_TYPE_NORMAL;
@@ -774,26 +774,26 @@ void fileio_test()
 	memcpy( & block2->header[2], header_surname, sizeof( * header_surname ) );
 	memcpy( & block2->header[3], header_surname2, sizeof( * header_surname ) ); */
 
-	block2 = (KK_block *) KK_read_block(1);
+	block2 = (AK_block *) AK_read_block(1);
 	int broj;
 	broj=1;
-	KK_insert_entry(block2, TYPE_INT, &broj, 0 );
-	KK_insert_entry(block2, TYPE_VARCHAR, "testna_druga", 1 );
+	AK_insert_entry(block2, TYPE_INT, &broj, 0 );
+	AK_insert_entry(block2, TYPE_VARCHAR, "testna_druga", 1 );
 	broj=20;
-	KK_insert_entry(block2, TYPE_INT, &broj, 2 );
+	AK_insert_entry(block2, TYPE_INT, &broj, 2 );
 	broj=22;
-	KK_insert_entry(block2, TYPE_INT, &broj, 3 );
+	AK_insert_entry(block2, TYPE_INT, &broj, 3 );
 
 	broj=2;
-	KK_insert_entry(block2, TYPE_INT, &broj, 4 );
-	KK_insert_entry(block2, TYPE_VARCHAR, "testna", 5 );
+	AK_insert_entry(block2, TYPE_INT, &broj, 4 );
+	AK_insert_entry(block2, TYPE_VARCHAR, "testna", 5 );
 	broj=10;
-	KK_insert_entry(block2, TYPE_INT, &broj, 6 );
+	AK_insert_entry(block2, TYPE_INT, &broj, 6 );
 	broj=13;
-	KK_insert_entry(block2, TYPE_INT, &broj, 7 );
+	AK_insert_entry(block2, TYPE_INT, &broj, 7 );
 
 	int cisti;
-	KK_write_block( block2 );
+	AK_write_block( block2 );
 
 	free(header_red_br);
 	free(header_name);

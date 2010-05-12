@@ -23,7 +23,7 @@
  * Union is implemented for working with multiple sets of data, i.e. duplicate 
  * tuples can be written in same table (union)
  */
-int KK_union(char *table1, char *table2, char *new_table)
+int AK_union(char *table1, char *table2, char *new_table)
 {
 	register int i, j, k;
 	int num_attr_t1 = 0, num_attr_t2 = 0; //number of attributes in table
@@ -54,8 +54,8 @@ int KK_union(char *table1, char *table2, char *new_table)
 	}
 	
 	//attribute list for union
-	KK_block * iBlock = (KK_block*) KK_read_block(adr1[0]);
-	KK_block * iBlock2 = (KK_block*) KK_read_block(adr2[0]);
+	AK_block * iBlock = (AK_block*) AK_read_block(adr1[0]);
+	AK_block * iBlock2 = (AK_block*) AK_read_block(adr2[0]);
 	
 	//check for relation shemas
 	for(i = 0; i < MAX_ATTRIBUTES; i++){
@@ -78,6 +78,13 @@ int KK_union(char *table1, char *table2, char *new_table)
 		return EXIT_ERROR;
 	}
 	
+	for(i=0;i<MAX_ATTRIBUTES;i++){
+		if(strcmp((char *)iBlock->header[i].type, (char *)iBlock2->header[i].type)!=0){
+			printf("UNION ERROR: Attributes are not of the same type!");
+			return EXIT_ERROR;
+		}
+	}
+	
 	for(i = 0; i < MAX_ATTRIBUTES; i++)
 	{
 		if(strcmp((char *)iBlock->header[i].att_name, (char *)iBlock2->header[i].att_name) != 0)
@@ -88,9 +95,9 @@ int KK_union(char *table1, char *table2, char *new_table)
 	}
 	
 	//initialize new segment
-	KK_header *iHeader = (KK_header *) malloc(sizeof(KK_header));
-	memcpy(iHeader, iBlock->header, sizeof(KK_header));
-	KK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE ,iHeader);
+	AK_header *iHeader = (AK_header *) malloc(sizeof(AK_header));
+	memcpy(iHeader, iBlock->header, sizeof(AK_header));
+	AK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE ,iHeader);
 		
 	char podatak1[MAX_VARCHAR_LENGHT];
 	char podatak2[MAX_VARCHAR_LENGHT];
@@ -101,7 +108,7 @@ int KK_union(char *table1, char *table2, char *new_table)
 	//writing first block or table to new segment
 	while ( i < brojac1 )
 	{
-		iBlock = (KK_block*) KK_read_block(adr1[i]); //read block from first table
+		iBlock = (AK_block*) AK_read_block(adr1[i]); //read block from first table
 		
 		i++;
 		int imaJosElemenata=0; //indicates if there are more elements in block
@@ -137,7 +144,7 @@ int KK_union(char *table1, char *table2, char *new_table)
 	//writing second block or table to new segment	
 	while ( i < brojac2 )
 	{
-		iBlock = (KK_block*) KK_read_block(adr2[i]); //read block from first table
+		iBlock = (AK_block*) AK_read_block(adr2[i]); //read block from first table
 		
 		i++;
 		int imaJosElemenata=0; //indicates if there are more elements in block

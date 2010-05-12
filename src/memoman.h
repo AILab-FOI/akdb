@@ -29,44 +29,44 @@
 #include "configuration.h"
 #include "dbman.h"
 /**
-\struct KK_mem_block
+\struct AK_mem_block
 \brief Defines a block of data in memory
 */
 typedef struct {
 	/// pointer to block from DB file
-	KK_block * block;
+	AK_block * block;
 	/// dirty bit (BLOCK_CLEAN if unchanged; BLOCK_DIRTY if changed but not yet written to file)
 	int dirty;
 	/// timestamp when the block has lastly been read
-	int timestamp_read;
+	unsigned long timestamp_read;
 	/// timestamp when the block has lastly been changed
-	int timestamp_last_change;	
-} KK_mem_block;
+	unsigned long timestamp_last_change;	
+} AK_mem_block;
 
 /**
-\struct KK_db_cache
+\struct AK_db_cache
 \brief Global cache memory
 */
 typedef struct {
 	/// last recently read blocks
-	KK_mem_block * cache[ MAX_CACHE_MEMORY ];
+	AK_mem_block * cache[ MAX_CACHE_MEMORY ];
 	/// next cached block to be replaced (0 - MAX_CACHE_MEMORY-1); depends on caching algorithm
 	int next_replace;
-} KK_db_cache;
+} AK_db_cache;
 
 /**
-\struct KK_redo_log
+\struct AK_redo_log
 \brief Global redo log
 */
 typedef struct {
 	/// last recently changed blocks
-	KK_mem_block redo_log[ MAX_REDO_LOG_MEMORY ];
+	AK_mem_block redo_log[ MAX_REDO_LOG_MEMORY ];
 	/// next block to be replaced (0 - MAX_REDO_LOG_MEMORY-1); field pointer (LIFO)
 	int next_replace;
-} KK_redo_log;
+} AK_redo_log;
 
 /**
-\struct KK_query_mem_lib
+\struct AK_query_mem_lib
 \brief Global query memory for libraries
 */
 typedef struct {
@@ -74,21 +74,21 @@ typedef struct {
 	char parsed[ MAX_QUERY_LIB_MEMORY ];
 	/// next query to be replaced (0 - MAX_QUERY_LIB_MEMORY-1); field pointer (LIFO)
 	int next_replace;
-} KK_query_mem_lib;
+} AK_query_mem_lib;
 
 /**
-\struct KK_query_mem_dict
+\struct AK_query_mem_dict
 \brief Global query memory for data dictionaries
 */
 typedef struct {
 	/// last used data dictionaries
-	KK_tuple_dict * dictionary[ MAX_QUERY_DICT_MEMORY ];
+	AK_tuple_dict * dictionary[ MAX_QUERY_DICT_MEMORY ];
 	/// next dictionary to be replaced (0 - MAX_QUERY_DICT_MEMORY-1); field pointer (LIFO)
 	int next_replace;
-} KK_query_mem_dict;
+} AK_query_mem_dict;
 
 /**
-\struct KK_query_mem_result
+\struct AK_query_mem_result
 \brief Global query memory for results
 */
 typedef struct {
@@ -96,36 +96,36 @@ typedef struct {
 	char results[ MAX_QUERY_RESULT_MEMORY ];
 	/// next result to be replaced (0 - MAX_QUERY_RESULT_MEMORY-1); field pointer (LIFO)
 	int next_replace;
-} KK_query_mem_result;
+} AK_query_mem_result;
 
 /**
-\struct KK_query_mem
+\struct AK_query_mem
 \brief Global query memory
 */
 typedef struct {
 	/// parsed queries
-	KK_query_mem_lib * parsed;
+	AK_query_mem_lib * parsed;
 	/// obtained data dictionaries
-	KK_query_mem_dict * dictionary;
+	AK_query_mem_dict * dictionary;
 	/// obtained query results
-	KK_query_mem_result * result;
-} KK_query_mem;
+	AK_query_mem_result * result;
+} AK_query_mem;
 
 /**
 \var db_cache
 \brief Defines the db cache
 */
-KK_db_cache * db_cache;
+AK_db_cache * db_cache;
 /**
 \var redo_log
 \brief Defines the global redo log
 */
-KK_redo_log * redo_log;
+AK_redo_log * redo_log;
 /**
 \var query_mem
 \brief Defines the global query memory
 */
-KK_query_mem * query_mem;
+AK_query_mem * query_mem;
 
 
 

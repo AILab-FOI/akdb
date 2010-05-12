@@ -33,27 +33,27 @@
  @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
 
 */
-int KK_init_db_file( int size )
+int AK_init_db_file( int size )
 {
 	register int i = 0, j, k;
 
-	KK_block * block = NULL;
+	AK_block * block = NULL;
 
 	db_file_size = size;
 
 	if( ( db = fopen( DB_FILE, "wb" ) ) == NULL ) {
-		printf( "KK_init_db_file: ERROR. Cannot open db file %s.\n", DB_FILE );
+		printf( "AK_init_db_file: ERROR. Cannot open db file %s.\n", DB_FILE );
 		exit( EXIT_ERROR );
 	}
 
 
-	printf( "KK_init_db_file: Initializing DB file..."
+	printf( "AK_init_db_file: Initializing DB file..."
 		"\nPlease be patient, this can take several minutes depending "
 		"on disk performance.\n" );
 
-	if( ( block = ( KK_block * ) malloc ( sizeof( KK_block ) ) ) == NULL )
+	if( ( block = ( AK_block * ) malloc ( sizeof( AK_block ) ) ) == NULL )
 	{
-		printf( "KK_init_db_file: ERROR. Cannot allocate block %d\n", i );
+		printf( "AK_init_db_file: ERROR. Cannot allocate block %d\n", i );
 		exit( EXIT_ERROR );
 	}
 
@@ -100,7 +100,7 @@ int KK_init_db_file( int size )
         block->address = i;
 		if( fwrite( block, sizeof( *block ), 1, db ) != 1 )
 		{
-			printf( "KK_init_db_file: ERROR. Cannot write block %d\n", i );
+			printf( "AK_init_db_file: ERROR. Cannot write block %d\n", i );
 			exit( EXIT_ERROR );
 		}
 	}
@@ -108,7 +108,7 @@ int KK_init_db_file( int size )
 
 	fclose( db );
 
-	printf( "KK_init_db_file: Done!\n" );
+	printf( "AK_init_db_file: Done!\n" );
 
 	return ( EXIT_SUCCESS );
 }
@@ -122,25 +122,25 @@ int KK_init_db_file( int size )
  @param address block number (address)
  @return pointer to block allocated in memory
 */
-KK_block * KK_read_block( int address )
+AK_block * AK_read_block( int address )
 {
-	KK_block * block = ( KK_block * ) malloc ( sizeof( KK_block ) );
+	AK_block * block = ( AK_block * ) malloc ( sizeof( AK_block ) );
 
 	if( ( db = fopen( DB_FILE, "r" ) ) == NULL )
 	{
-		printf( "KK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE );
+		printf( "AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE );
 		exit( EXIT_ERROR );
 	}
 
-	if( fseek( db, address * sizeof( KK_block ), SEEK_SET ) != 0 )
+	if( fseek( db, address * sizeof( AK_block ), SEEK_SET ) != 0 )
 	{
-		printf( "KK_read_block: ERROR. Cannot set position to provided address block %d.\n", address );
+		printf( "AK_read_block: ERROR. Cannot set position to provided address block %d.\n", address );
 		exit( EXIT_ERROR );
 
 	}
-	if( fread( block, sizeof( KK_block ), 1, db ) == 0 )
+	if( fread( block, sizeof( AK_block ), 1, db ) == 0 )
 	{
-		printf( "KK_read_block: ERROR. Cannot read block %d.\n", address );
+		printf( "AK_read_block: ERROR. Cannot read block %d.\n", address );
 		exit( EXIT_ERROR );
 	}
 
@@ -157,25 +157,25 @@ KK_block * KK_read_block( int address )
  @param block poiner to block allocated in memory to write
  @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
 */
-int KK_write_block( KK_block * block )
+int AK_write_block( AK_block * block )
 {
 	if( ( db = fopen( DB_FILE, "r+" ) ) == NULL ) {
-		printf( "KK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE );
+		printf( "AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE );
 		exit( EXIT_ERROR );
 	}
-	if( fseek( db, block->address * sizeof( KK_block ), SEEK_SET ) != 0 )
+	if( fseek( db, block->address * sizeof( AK_block ), SEEK_SET ) != 0 )
 	{
-		printf( "KK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address );
+		printf( "AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address );
 		exit( EXIT_ERROR );
 	}
 	if( fwrite( block, sizeof( *block ), 1, db ) != 1 )
 	{
-		printf( "KK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address );
+		printf( "AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address );
 		exit( EXIT_ERROR );
 	}
 	fclose( db );
 	if( DEBUG )
-		printf( "KK_write_block: Written block at address %d\n", block->address * sizeof( KK_block ) );
+		printf( "AK_write_block: Written block at address %d\n", block->address * sizeof( AK_block ) );
 	return ( EXIT_SUCCESS );
 }
 
@@ -196,13 +196,13 @@ int KK_write_block( KK_block * block )
 
  @return address (block number) of new extent if successful, EXIT_ERROR otherwise
 */
-int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *header )
+int AK_new_extent( int start_address, int old_size, int extent_type, AK_header *header )
 {
 	int req_free_space; 				/// var - How much of space is required for extent
 	int first_addr_of_extent = -1;			/// var - Start address for extent
 	int nAlocated_blocks = 0; 			/// var - Number of blocks to be alocated for extent
 	register int i, j; 				/// vars for loop [for]
-	KK_block *block;
+	AK_block *block;
 
 	/// if the old_size is 0 then the size of new extent is INITIAL_EXTENT_SIZE
 	if( old_size == 0 )
@@ -236,12 +236,12 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 	{
 		if( ( ( int ) ( req_free_space - 1 ) > ( db_file_size - i ) ) )
 		{
-			printf( "KK_new_extent: ERROR. Not enought space for new extent. Requested space was: %d\n", req_free_space );
+			printf( "AK_new_extent: ERROR. Not enought space for new extent. Requested space was: %d\n", req_free_space );
 			return(EXIT_ERROR);
 		}
 
 		/// check the block is free
-		block = KK_read_block( i );   /// read block
+		block = AK_read_block( i );   /// read block
 
 		if( ( block->type ) != BLOCK_TYPE_FREE )  /// if the block is used
         {
@@ -267,7 +267,7 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 
 	for( j = first_addr_of_extent; j < ( first_addr_of_extent + nAlocated_blocks ); j++)
 	{
-		block = KK_read_block( j );   	/// read block
+		block = AK_read_block( j );   	/// read block
 		int x = 0;
 		for( x = 0; x < MAX_ATTRIBUTES; x++ )
 		{
@@ -283,7 +283,7 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 		block->type = BLOCK_TYPE_NORMAL; /// set the block type
 		block->free_space = 0;
 		block->last_tuple_dict_id = 0;
-		if( KK_write_block( block ) == EXIT_SUCCESS ) /// if write of block succeded increase var success, else nothing
+		if( AK_write_block( block ) == EXIT_SUCCESS ) /// if write of block succeded increase var success, else nothing
 		{
 			success++;
 		}
@@ -291,11 +291,11 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
 		free(block);  /// free the block
 	}
 		if(DEBUG)
-			printf( "KK_new_extent: first_addr_of_extent= %i , nAlocated_blocks= %i , zavrsna_adresa= %i, success= %i\n",first_addr_of_extent, nAlocated_blocks, j, success);
+			printf( "AK_new_extent: first_addr_of_extent= %i , nAlocated_blocks= %i , zavrsna_adresa= %i, success= %i\n",first_addr_of_extent, nAlocated_blocks, j, success);
 
 	if( success != nAlocated_blocks ) /// if some blocks are not succesfully alocated, whitch means the extend alocation has FAILED
 	{
-		printf( "KK_new_extent: ERROR. Cannot allocate extent %d\n", first_addr_of_extent );
+		printf( "AK_new_extent: ERROR. Cannot allocate extent %d\n", first_addr_of_extent );
 		return( EXIT_ERROR );
 	}
 	return( first_addr_of_extent );
@@ -319,24 +319,24 @@ int KK_new_extent( int start_address, int old_size, int extent_type, KK_header *
  @param header (header pointer) pointer to header that should be written to the new extent (all blocks)
  @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
  */
-int KK_new_segment(char * name, int type, KK_header *header)
+int AK_new_segment(char * name, int type, AK_header *header)
 {
 	int segment_start_addr = 1; /// start adress for segment because we can not allocate segment in block 0
 	int i; /// counter
-	KK_block *block;
+	AK_block *block;
 	int current_extent_start_addr;
 	int first_allocated_block = -1;
 
 	for ( i = segment_start_addr; i <= db_file_size; i++ )
 	{
 		if( DEBUG )
-			printf( "KK_new_segment: Reading block %d, %s.\n", i, name );
+			printf( "AK_new_segment: Reading block %d, %s.\n", i, name );
 		/// check if the block is free
-		block = KK_read_block(i);
+		block = AK_read_block(i);
 
 		if ( block->type == BLOCK_TYPE_FREE )
 		{
-			current_extent_start_addr = KK_new_extent( i, 0, type, header ); /// allocate new extent
+			current_extent_start_addr = AK_new_extent( i, 0, type, header ); /// allocate new extent
 
 			/// if extent is successfully allocated, increment number of allocated extents and move to
 			/// next block after allocated extent, else move for INITIAL_EXTENT_SIZE blocks, so in that way get
@@ -372,13 +372,13 @@ int KK_new_segment(char * name, int type, KK_header *header)
  @param integrity (int) - standard integrity costraint
  @param constr_name (char) - extra integrity constraint name
  @param contr_code - extra integrity costraint code
- @return KK_header
+ @return AK_header
  */
-KK_header * KK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code )
+AK_header * AK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code )
 {
-	KK_header * catalog_header = ( KK_header * ) malloc ( sizeof( KK_header ) );
+	AK_header * catalog_header = ( AK_header * ) malloc ( sizeof( AK_header ) );
 	if( DEBUG )
-	 printf("KK_create_header: Header: %s, %d\n",name, strlen(name));
+	 printf("AK_create_header: Header: %s, %d\n",name, strlen(name));
 	catalog_header->type = type;
 	memcpy(catalog_header->att_name,name, strlen(name));
 	int i=0;
@@ -405,7 +405,7 @@ KK_header * KK_create_header(char * name, int type, int integrity, char * constr
 
  Function for inserting entry in tuple_dict and data of a block
 
- @param block_adress (KK_block) - adress of a block in which we want insert data
+ @param block_adress (AK_block) - adress of a block in which we want insert data
  @param type (int) - type of entry_data
  @param entry_data (char) - data which is inserted, can be int but must first be converted to char
  @param i (int) -adress in tuple_dict array (example block_address->tuple_dict[i])
@@ -414,40 +414,40 @@ KK_header * KK_create_header(char * name, int type, int integrity, char * constr
  and works directly with the orginal block
  */
 
-void KK_insert_entry(KK_block * block_address, int type, void * entry_data, int i )
+void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int i )
 {
-	KK_tuple_dict * catalog_tuple_dict = (KK_tuple_dict *) malloc (sizeof( KK_tuple_dict ));
+	AK_tuple_dict * catalog_tuple_dict = (AK_tuple_dict *) malloc (sizeof( AK_tuple_dict ));
 
 	if( DEBUG )
-		printf("KK_insert_entry: Insert data: %d  Size of data:\n",*((int *) entry_data));
+		printf("AK_insert_entry: Insert data: %d  Size of data:\n",*((int *) entry_data));
 
 	/// using strlen becuse sizeof(entry_data) is always 4
 	/// copy data into bloc->data on start position bloc->free_space
 	if (type==TYPE_INT)
 	{
-		memcpy(block_address->data+block_address->free_space,entry_data, KK_type_size(type, entry_data));
+		memcpy(block_address->data+block_address->free_space,entry_data, AK_type_size(type, entry_data));
 		if(DEBUG){
-			printf("KK_insert_entry: Insert data: %d  Size of data:\n", (int) entry_data);
+			printf("AK_insert_entry: Insert data: %d  Size of data:\n", (int) entry_data);
 		}
 	}
 	else
 	{
-		memcpy(block_address->data+block_address->free_space,entry_data, KK_type_size(type, entry_data));
+		memcpy(block_address->data+block_address->free_space,entry_data, AK_type_size(type, entry_data));
 		if(DEBUG){
-			printf("KK_insert_entry: Insert data: %s  Size of data:\n", (char *) entry_data);
+			printf("AK_insert_entry: Insert data: %s  Size of data:\n", (char *) entry_data);
 		}
 	}
 	/// address of entry data in block->data
 	catalog_tuple_dict->address=block_address->free_space;
 
 	/// calculate next free space for the next entry data
-	block_address->free_space+=KK_type_size(type, entry_data);///sizeof(entry_data)+1);///(sizeof(int));
+	block_address->free_space+=AK_type_size(type, entry_data);///sizeof(entry_data)+1);///(sizeof(int));
 	/// no need for "+strlen(entry_data)" while "+1" is like "new line"
 
 	/// type of entry data
 	catalog_tuple_dict->type=type;
 	/// size of entry data
-	catalog_tuple_dict->size = KK_type_size(type, entry_data);
+	catalog_tuple_dict->size = AK_type_size(type, entry_data);
 
 	/// copy tuple_dict to block->tuple_dict[i]
 	/// must use & becouse tuple_dict[i] is value and catalog_tuple_dict adress
@@ -461,18 +461,18 @@ void KK_insert_entry(KK_block * block_address, int type, void * entry_data, int 
  @param adresses of system table blocks in db_file
  @return nothing EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
 */
-int KK_init_system_tables_catalog( int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
+int AK_init_system_tables_catalog( int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
 								  int trigger, int db, int db_obj, int user, int group, int right)
 {
 	if( DEBUG )
-	 printf("KK_init_system_tables_catalog: Initializing system tables catalog\n");
-	KK_block * catalog_block = ( KK_block * ) malloc ( sizeof( KK_block ) );
+	 printf("AK_init_system_tables_catalog: Initializing system tables catalog\n");
+	AK_block * catalog_block = ( AK_block * ) malloc ( sizeof( AK_block ) );
 	/// first header attribute of catalog_block
-	KK_header * catalog_header_name  =  ( KK_header * ) malloc ( sizeof( KK_header ) );
-	catalog_header_name = KK_create_header( "Name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	AK_header * catalog_header_name  =  ( AK_header * ) malloc ( sizeof( AK_header ) );
+	catalog_header_name = AK_create_header( "Name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	/// second attribute of catalog_block
-	KK_header * catalog_header_address = ( KK_header * ) malloc ( sizeof( KK_header ) );
-	catalog_header_address = KK_create_header( "Address", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	AK_header * catalog_header_address = ( AK_header * ) malloc ( sizeof( AK_header ) );
+	catalog_header_address = AK_create_header( "Address", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 
 	/// initialize other elements of block (adress, type, chained_with, free_space)
 	catalog_block->address = 0;
@@ -485,64 +485,64 @@ int KK_init_system_tables_catalog( int relation, int attribute, int index, int v
 	memcpy( & catalog_block->header[0], catalog_header_name, sizeof( * catalog_header_name ) );
 	memcpy( & catalog_block->header[1], catalog_header_address, sizeof( * catalog_header_address ) );
 
-	KK_tuple_dict tuple_dict[25];
+	AK_tuple_dict tuple_dict[25];
 	memcpy(catalog_block->tuple_dict, tuple_dict, sizeof( *tuple_dict ) );
 
 	/// insert data and tuple_dict in block
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_relation", 0 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_relation", 0 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &relation, 1 );
+	AK_insert_entry(catalog_block, TYPE_INT, &relation, 1 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_attribute", 2 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_attribute", 2 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &attribute, 3 );
+	AK_insert_entry(catalog_block, TYPE_INT, &attribute, 3 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_index", 4 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_index", 4 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &index, 5 );
+	AK_insert_entry(catalog_block, TYPE_INT, &index, 5 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_view", 6 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_view", 6 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &view, 7 );
+	AK_insert_entry(catalog_block, TYPE_INT, &view, 7 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_sequence", 8 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_sequence", 8 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &sequence, 9 );
+	AK_insert_entry(catalog_block, TYPE_INT, &sequence, 9 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_function",10 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_function",10 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &function, 11 );
+	AK_insert_entry(catalog_block, TYPE_INT, &function, 11 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_function_arguments", 12 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_function_arguments", 12 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &function_arguments, 13 );
+	AK_insert_entry(catalog_block, TYPE_INT, &function_arguments, 13 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_trigger", 14 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_trigger", 14 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &trigger, 15 );
+	AK_insert_entry(catalog_block, TYPE_INT, &trigger, 15 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_db", 16 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_db", 16 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &db, 17 );
+	AK_insert_entry(catalog_block, TYPE_INT, &db, 17 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_db_obj", 18 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_db_obj", 18 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &db_obj, 19 );
+	AK_insert_entry(catalog_block, TYPE_INT, &db_obj, 19 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_user", 20 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_user", 20 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &user, 21 );
+	AK_insert_entry(catalog_block, TYPE_INT, &user, 21 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_group", 22 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_group", 22 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &group, 23 );
+	AK_insert_entry(catalog_block, TYPE_INT, &group, 23 );
 
-	KK_insert_entry(catalog_block, TYPE_VARCHAR, "KK_right", 24 );
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_right", 24 );
 	
-	KK_insert_entry(catalog_block, TYPE_INT, &right, 25 );
+	AK_insert_entry(catalog_block, TYPE_INT, &right, 25 );
 
 	/// call function for writing the block on the first place in the file (ie. first block is on position zero)
-	if ( KK_write_block(catalog_block) == EXIT_SUCCESS )
+	if ( AK_write_block(catalog_block) == EXIT_SUCCESS )
 	{
 		return EXIT_SUCCESS;
 	}
@@ -561,7 +561,7 @@ int KK_init_system_tables_catalog( int relation, int attribute, int index, int v
  @param value int value to be set
  @param num number of ints in the block of memory to be set
 */
-void KK_memset_int(void *block, int value, size_t num)
+void AK_memset_int(void *block, int value, size_t num)
 {
 	size_t i;
 
@@ -578,14 +578,14 @@ void KK_memset_int(void *block, int value, size_t num)
  @return EXIT_SUCCESS if the system catalog has been initialized, EXIT_ERROR otherwise
 
 */
-int KK_init_system_catalog() {
+int AK_init_system_catalog() {
 	int relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right;
 	int i;
 
 	if( DEBUG )
-		printf( "KK_init_system_catalog: System catalog initialization started...\n" );
+		printf( "AK_init_system_catalog: System catalog initialization started...\n" );
 
-	KK_header hRelation[5] = {
+	AK_header hRelation[5] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0'},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0'},
 		{TYPE_INT, "start_address", 0, '\0', '\0'},
@@ -593,7 +593,7 @@ int KK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hAttribute[5] = {
+	AK_header hAttribute[5] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{TYPE_INT, "type", 0, '\0', '\0',},
@@ -601,7 +601,7 @@ int KK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hIndex[7] = {
+	AK_header hIndex[7] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{TYPE_INT, "start_address", 0, '\0', '\0',},
@@ -611,14 +611,14 @@ int KK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hView[4] = {
+	AK_header hView[4] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "query", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hSequence[8] = {
+	AK_header hSequence[8] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{TYPE_INT, "current_value", 0, '\0', '\0',},
@@ -629,7 +629,7 @@ int KK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hFunction[5] = {
+	AK_header hFunction[5] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{TYPE_INT, "arg_num", 0, '\0', '\0',},
@@ -637,14 +637,14 @@ int KK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hFunction_arguments[4] = {
+	AK_header hFunction_arguments[4] = {
 		{TYPE_INT, "func_id", 0, '\0', '\0',},
 		{TYPE_INT, "att_num", 0, '\0', '\0',},
 		{TYPE_INT, "att_type", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hTrigger[6] = {
+	AK_header hTrigger[6] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "event", 0, '\0', '\0',},
@@ -653,33 +653,33 @@ int KK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hDb[3] = {
+	AK_header hDb[3] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hDb_obj[3] = {
+	AK_header hDb_obj[3] = {
 		{TYPE_INT, "db_id", 0, '\0', '\0',},
 		{TYPE_INT, "artifact_id", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
 	};
 
 
-	KK_header hUser[4] = {
+	AK_header hUser[4] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "username", 0, '\0', '\0',},
 		{TYPE_INT, "password", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hGroup[3] = {
+	AK_header hGroup[3] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	KK_header hRight[6] = {
+	AK_header hRight[6] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{TYPE_INT, "group_id", 0, '\0', '\0',},
@@ -689,110 +689,110 @@ int KK_init_system_catalog() {
 	};
 
 	for( i = 0; i < 4; i++) {
-		KK_memset_int(hRelation[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hRelation[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hRelation[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hRelation[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 4; i++) {
-		KK_memset_int(hAttribute[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hAttribute[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hAttribute[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hAttribute[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 6; i++) {
-		KK_memset_int(hIndex[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hIndex[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hIndex[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hIndex[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 3; i++) {
-		KK_memset_int(hView[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hView[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hView[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hView[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 7; i++) {
-		KK_memset_int(hSequence[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hSequence[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hSequence[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hSequence[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 4; i++) {
-		KK_memset_int(hFunction[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hFunction[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hFunction[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hFunction[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 3; i++) {
-		KK_memset_int(hFunction_arguments[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hFunction_arguments[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hFunction_arguments[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hFunction_arguments[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 5; i++) {
-		KK_memset_int(hTrigger[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hTrigger[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hTrigger[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hTrigger[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 2; i++) {
-		KK_memset_int(hDb[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hDb[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hDb[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hDb[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 2; i++) {
-		KK_memset_int(hDb_obj[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hDb_obj[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hDb_obj[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hDb_obj[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 3; i++) {
-		KK_memset_int(hUser[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hUser[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hUser[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hUser[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 2; i++) {
-		KK_memset_int(hGroup[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hGroup[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hGroup[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hGroup[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	for( i = 0; i < 5; i++) {
-		KK_memset_int(hRight[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		AK_memset_int(hRight[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hRight[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hRight[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
 	if( DEBUG )
-		printf( "KK_init_system_catalog: Creating new segments...\n" );
+		printf( "AK_init_system_catalog: Creating new segments...\n" );
 
-	relation = KK_new_segment("KK_relation", SEGMENT_TYPE_SYSTEM_TABLE, hRelation);
-	attribute = KK_new_segment("KK_attribute", SEGMENT_TYPE_SYSTEM_TABLE, hAttribute);
-	index = KK_new_segment("KK_index", SEGMENT_TYPE_SYSTEM_TABLE, hIndex);
-	view = KK_new_segment("KK_view", SEGMENT_TYPE_SYSTEM_TABLE, hView);
-	sequence = KK_new_segment("KK_sequence", SEGMENT_TYPE_SYSTEM_TABLE, hSequence);
-	function = KK_new_segment("KK_function", SEGMENT_TYPE_SYSTEM_TABLE, hFunction);
-	function_arguments = KK_new_segment("KK_function_arguments", SEGMENT_TYPE_SYSTEM_TABLE, hFunction_arguments);
-	trigger = KK_new_segment("KK_trigger", SEGMENT_TYPE_SYSTEM_TABLE, hTrigger);
-	db = KK_new_segment("KK_db", SEGMENT_TYPE_SYSTEM_TABLE, hDb);
-	db_obj = KK_new_segment("KK_db_obj", SEGMENT_TYPE_SYSTEM_TABLE, hDb_obj);
-	user = KK_new_segment("KK_user", SEGMENT_TYPE_SYSTEM_TABLE, hUser);
-	group = KK_new_segment("KK_group", SEGMENT_TYPE_SYSTEM_TABLE, hGroup);
-	right = KK_new_segment("KK_right", SEGMENT_TYPE_SYSTEM_TABLE, hRight);
+	relation = AK_new_segment("AK_relation", SEGMENT_TYPE_SYSTEM_TABLE, hRelation);
+	attribute = AK_new_segment("AK_attribute", SEGMENT_TYPE_SYSTEM_TABLE, hAttribute);
+	index = AK_new_segment("AK_index", SEGMENT_TYPE_SYSTEM_TABLE, hIndex);
+	view = AK_new_segment("AK_view", SEGMENT_TYPE_SYSTEM_TABLE, hView);
+	sequence = AK_new_segment("AK_sequence", SEGMENT_TYPE_SYSTEM_TABLE, hSequence);
+	function = AK_new_segment("AK_function", SEGMENT_TYPE_SYSTEM_TABLE, hFunction);
+	function_arguments = AK_new_segment("AK_function_arguments", SEGMENT_TYPE_SYSTEM_TABLE, hFunction_arguments);
+	trigger = AK_new_segment("AK_trigger", SEGMENT_TYPE_SYSTEM_TABLE, hTrigger);
+	db = AK_new_segment("AK_db", SEGMENT_TYPE_SYSTEM_TABLE, hDb);
+	db_obj = AK_new_segment("AK_db_obj", SEGMENT_TYPE_SYSTEM_TABLE, hDb_obj);
+	user = AK_new_segment("AK_user", SEGMENT_TYPE_SYSTEM_TABLE, hUser);
+	group = AK_new_segment("AK_group", SEGMENT_TYPE_SYSTEM_TABLE, hGroup);
+	right = AK_new_segment("AK_right", SEGMENT_TYPE_SYSTEM_TABLE, hRight);
 
 	if( DEBUG )
-		printf( "KK_init_system_catalog: Segments created!\n" );
+		printf( "AK_init_system_catalog: Segments created!\n" );
 
-	if(EXIT_SUCCESS == KK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right))
+	if(EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right))
 	{
-		printf( "KK_init_system_catalog: System catalog initialized!\n" );
+		printf( "AK_init_system_catalog: System catalog initialized!\n" );
 		return EXIT_SUCCESS;
 	}
 	else {
-	    printf("KK_init_system_catalog: ERROR. KK_init_system_tables_catalog(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d) failed.\n", relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right);
+	    printf("AK_init_system_catalog: ERROR. AK_init_system_tables_catalog(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d) failed.\n", relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right);
 		return EXIT_ERROR;
 	}
 }
@@ -806,12 +806,12 @@ int KK_init_system_catalog() {
 
  @return returns EXIT_SUCCESS if deletion successful, else EXIT_ERROR
  */
-int KK_delete_block( int address )
+int AK_delete_block( int address )
 {
 	register int i, j, k;
 
-	KK_header head[ MAX_ATTRIBUTES ];
-	KK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
+	AK_header head[ MAX_ATTRIBUTES ];
+	AK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
 	unsigned char data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
 
 	for( i = 0; i < MAX_ATTRIBUTES; i++ )
@@ -846,7 +846,7 @@ int KK_delete_block( int address )
 		data[ i ] = FREE_CHAR;
 	}
 
-	KK_block * block = KK_read_block ( address );
+	AK_block * block = AK_read_block ( address );
 	block->type = BLOCK_TYPE_FREE;
 	block->chained_with = NOT_CHAINED;
 	block->free_space = DATA_BLOCK_SIZE * DATA_ENTRY_SIZE * sizeof( int );
@@ -854,7 +854,7 @@ int KK_delete_block( int address )
 	memcpy( block->tuple_dict, tuple_dict, sizeof( *tuple_dict ) );
 	memcpy( block->data, data, sizeof( *data ) );
 
-	if( KK_write_block ( block ) == EXIT_SUCCESS )
+	if( AK_write_block ( block ) == EXIT_SUCCESS )
 	{
 		return EXIT_SUCCESS;
 	}
@@ -871,12 +871,12 @@ int KK_delete_block( int address )
 
  @return returns EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
 */
-int KK_delete_extent(int begin, int end)
+int AK_delete_extent(int begin, int end)
 {
 	int address;
 	for(address = begin; address < end + 1; address++ )
 	{
-		if (KK_delete_block(address) == EXIT_ERROR)
+		if (AK_delete_block(address) == EXIT_ERROR)
 		{
 			return EXIT_ERROR;
 		}
@@ -888,29 +888,29 @@ int KK_delete_extent(int begin, int end)
  @author Markus Schatten
 
 */
-int KK_init_disk_manager()
+int AK_init_disk_manager()
 {
 	int size_in_mb = DB_FILE_SIZE;
-	float size = 1024 * 1024 * size_in_mb / sizeof( KK_block );
+	float size = 1024 * 1024 * size_in_mb / sizeof( AK_block );
 
-	printf( "KK_init_disk_manager: Initializing disk manager...\n\n" );
+	printf( "AK_init_disk_manager: Initializing disk manager...\n\n" );
 	if( DEBUG )
 	{
-		printf( "KK_init_disk_manager: Block size is: %d\n", sizeof( KK_block ) );
-		printf( "KK_init_disk_manager: We need %d blocks for %d MiB\n", ( int ) size, size_in_mb );
+		printf( "AK_init_disk_manager: Block size is: %d\n", sizeof( AK_block ) );
+		printf( "AK_init_disk_manager: We need %d blocks for %d MiB\n", ( int ) size, size_in_mb );
 	}
 
-	if( KK_init_db_file( ( int ) size ) == EXIT_SUCCESS )
+	if( AK_init_db_file( ( int ) size ) == EXIT_SUCCESS )
 	{
-		if( KK_init_system_catalog() == EXIT_SUCCESS )
+		if( AK_init_system_catalog() == EXIT_SUCCESS )
 		{
-			printf( "KK_init_disk_manager: Disk manager initialized!\n\n" );
+			printf( "AK_init_disk_manager: Disk manager initialized!\n\n" );
 			return EXIT_SUCCESS;
 		}
-		printf( "KK_init_disk_manager: ERROR. System catalog initialization failed!\n" );
+		printf( "AK_init_disk_manager: ERROR. System catalog initialization failed!\n" );
 		return( EXIT_ERROR );
 	}
-	printf( "KK_init_disk_manager: ERROR. DB file initialization failed!" );
+	printf( "AK_init_disk_manager: ERROR. DB file initialization failed!" );
 	return( EXIT_ERROR );
 }
 
@@ -922,9 +922,9 @@ int KK_init_disk_manager()
 */
 table_addresses * get_table_addresses ( char * table )
 {
-	KK_block *temp_block;
+	AK_block *temp_block;
 
-	temp_block = (KK_block *) KK_read_block(0);
+	temp_block = (AK_block *) AK_read_block(0);
 
 	int i=0;
 	int data_adr=0;
@@ -957,7 +957,7 @@ table_addresses * get_table_addresses ( char * table )
 		data_type=temp_block->tuple_dict[i].type;
 		memcpy(&address_sys,temp_block->data+data_adr,data_size);
 
-		if(strcmp(name_sys,"KK_relation")==0)
+		if(strcmp(name_sys,"AK_relation")==0)
 		{
 			if(DEBUG)
 				printf("get_table_addresses: Found the address of the system_relation table: %d \n",address_sys);
@@ -968,7 +968,7 @@ table_addresses * get_table_addresses ( char * table )
 
 	i=0;
 	free(temp_block);
-	temp_block= (KK_block *) KK_read_block(address_sys);
+	temp_block= (AK_block *) AK_read_block(address_sys);
 	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
 
 	free2=0;
@@ -1019,7 +1019,7 @@ table_addresses * get_table_addresses ( char * table )
 */
 int find_free_space ( table_addresses * addresses )
 {
-	KK_block *temp_block;
+	AK_block *temp_block;
 	int from=0,to=0,j=0,i=0;
 
 	if(DEBUG)
@@ -1034,7 +1034,7 @@ int find_free_space ( table_addresses * addresses )
 
 			for(i=from;i<=to;i++)
 			{//searching block
-				temp_block = (KK_block *) KK_read_block( i );
+				temp_block = (AK_block *) AK_read_block( i );
 				int free_space_on=temp_block->free_space;
 				if(DEBUG)
 					printf("find_free_space: FREE SPACE %d\n",temp_block->free_space);

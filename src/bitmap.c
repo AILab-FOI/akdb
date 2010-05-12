@@ -143,23 +143,23 @@ void createTableTest()
 
     int i;
     //create header
-    KK_header t_header[ MAX_ATTRIBUTES ];
-    KK_header* temp;
+    AK_header t_header[ MAX_ATTRIBUTES ];
+    AK_header* temp;
 
-    temp = (KK_header*)KK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header, temp, sizeof( AK_header ));
 
-    temp = (KK_header*)KK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 1, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 1, temp, sizeof( AK_header ));
 
-    temp = (KK_header*)KK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 2, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 2, temp, sizeof( AK_header ));
 
-    temp = (KK_header*)KK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 3, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 3, temp, sizeof( AK_header ));
 
-    temp = (KK_header*)KK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 4, temp, sizeof( KK_header ));
+    temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 4, temp, sizeof( AK_header ));
 
     for( i = 5; i < MAX_ATTRIBUTES; i++ )
     {
@@ -171,7 +171,7 @@ void createTableTest()
 
     printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
 
-    int startAddress = KK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
+    int startAddress = AK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
 
     if( startAddress != EXIT_ERROR )
         printf( "\nTABLE %s CREATED!\n", tblName );
@@ -339,8 +339,8 @@ void AKcreateIndex(char *tblName, list_op *attributes)
         num_attr = AK_num_attr( tblName );
         num_rec = AK_get_num_records( tblName );
 
-        KK_block *temp = (KK_block*)KK_read_block( addresses->address_from[0]);
-        KK_header *temp_head = AK_get_header( tblName );
+        AK_block *temp = (AK_block*)AK_read_block( addresses->address_from[0]);
+        AK_header *temp_head = AK_get_header( tblName );
         int temp_int;
         char temp_char[ MAX_VARCHAR_LENGHT ];
         float temp_float;
@@ -352,9 +352,9 @@ void AKcreateIndex(char *tblName, list_op *attributes)
         int br;
         char * indexName;
 
-        KK_header t_header[ MAX_ATTRIBUTES ];
-        KK_header t_headerr[ MAX_ATTRIBUTES ];
-        KK_header* tempHeader;
+        AK_header t_header[ MAX_ATTRIBUTES ];
+        AK_header t_headerr[ MAX_ATTRIBUTES ];
+        AK_header* tempHeader;
 
         for( i = 0; i < num_attr; i++ )
         {
@@ -369,7 +369,7 @@ void AKcreateIndex(char *tblName, list_op *attributes)
                  br = 0;
                  while( addresses->address_from[ br ] != 0 ){
                     for( j = addresses->address_from[ br ]; j < addresses->address_to[ br ]; j++ ){
-                        KK_block *temp = (KK_block*) KK_read_block( j );
+                        AK_block *temp = (AK_block*) AK_read_block( j );
                         for (k = i; k < DATA_BLOCK_SIZE; k=k+num_attr) {
                                 if (temp->tuple_dict[ k ].size > 0) {
                                     switch (temp->tuple_dict[ k ].type) {
@@ -438,18 +438,18 @@ void AKcreateIndex(char *tblName, list_op *attributes)
                          e = (element_op) GetFirstelementOp(headerAtributes);
                         while (e != 0) {
                             //printf("%s : %s \n", (temp_head + i)->att_name, e->attribute_name);
-                            tempHeader = (KK_header*)KK_create_header( e->attribute_name, TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-                            memcpy( t_header + brr, tempHeader, sizeof( KK_header ));
+                            tempHeader = (AK_header*)AK_create_header( e->attribute_name, TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+                            memcpy( t_header + brr, tempHeader, sizeof( AK_header ));
                             e = (element_op) GetNextelementOp(e);
                             brr++;
                         }
                         //dodaje se jos jedan atribut za pokazivac(adresu)
-                        tempHeader = (KK_header*)KK_create_header( "addBlock", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                        memcpy( t_header , tempHeader, sizeof( KK_header ));
-                        tempHeader = (KK_header*)KK_create_header( "addTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                        memcpy( t_header + 1 , tempHeader, sizeof( KK_header ));
-                        tempHeader = (KK_header*)KK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                        memcpy( t_header + 2 , tempHeader, sizeof( KK_header ));
+                        tempHeader = (AK_header*)AK_create_header( "addBlock", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                        memcpy( t_header , tempHeader, sizeof( AK_header ));
+                        tempHeader = (AK_header*)AK_create_header( "addTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                        memcpy( t_header + 1 , tempHeader, sizeof( AK_header ));
+                        tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                        memcpy( t_header + 2 , tempHeader, sizeof( AK_header ));
 
                         for(z = brr; z < MAX_ATTRIBUTES; z++ )
                         {
@@ -461,7 +461,7 @@ void AKcreateIndex(char *tblName, list_op *attributes)
                         indexName = strcat(inde,(temp_head+i)->att_name);
                         indexName = strcat(indexName,"_bmapIndex");
 
-                        startAddress = KK_initialize_new_segment( indexName, SEGMENT_TYPE_TABLE, t_header);
+                        startAddress = AK_initialize_new_segment( indexName, SEGMENT_TYPE_TABLE, t_header);
                            if( startAddress != EXIT_ERROR )
                              printf( "\nINDEX %s CREATED!\n", indexName );
 
@@ -472,18 +472,18 @@ void AKcreateIndex(char *tblName, list_op *attributes)
                      case TYPE_INT:
                             brr = 3;
 
-                            tempHeader = (KK_header*)KK_create_header( "addBlock", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                            memcpy( t_headerr , tempHeader, sizeof( KK_header ));
-                            tempHeader = (KK_header*)KK_create_header( "addTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                            memcpy( t_headerr + 1 , tempHeader, sizeof( KK_header ));
-                            tempHeader = (KK_header*)KK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                            memcpy( t_headerr + 2 , tempHeader, sizeof( KK_header ));
+                            tempHeader = (AK_header*)AK_create_header( "addBlock", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                            memcpy( t_headerr , tempHeader, sizeof( AK_header ));
+                            tempHeader = (AK_header*)AK_create_header( "addTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                            memcpy( t_headerr + 1 , tempHeader, sizeof( AK_header ));
+                            tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                            memcpy( t_headerr + 2 , tempHeader, sizeof( AK_header ));
 
                             e = (element_op) GetFirstelementOp(headerAtributes);
                             while (e != 0) {
                             //printf("%s : %s : %i \n", (temp_head + i)->att_name, e->attribute_name,brr);
-                            tempHeader = (KK_header*)KK_create_header( e->attribute_name, TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                            memcpy( t_headerr + brr, tempHeader, sizeof( KK_header ));
+                            tempHeader = (AK_header*)AK_create_header( e->attribute_name, TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                            memcpy( t_headerr + brr, tempHeader, sizeof( AK_header ));
                             e = (element_op) GetNextelementOp(e);
                             brr++;
                             }
@@ -499,7 +499,7 @@ void AKcreateIndex(char *tblName, list_op *attributes)
                         indexName = strcat(inde,(temp_head+i)->att_name);
                         indexName = strcat(indexName,"_bmapIndex");
 
-                        startAddress = KK_initialize_new_segment( indexName, SEGMENT_TYPE_TABLE, t_headerr);
+                        startAddress = AK_initialize_new_segment( indexName, SEGMENT_TYPE_TABLE, t_headerr);
                            if( startAddress != EXIT_ERROR )
                              printf( "\nINDEX %s CREATED!\n", indexName );
                         createIndex(tblName,indexName,(temp_head+i)->att_name,i,num_attr,t_headerr);
@@ -529,7 +529,7 @@ void AKcreateIndex(char *tblName, list_op *attributes)
 
 void printHeaderTest(char* tblName)
 {
-    KK_header *temp_head = AK_get_header( tblName );
+    AK_header *temp_head = AK_get_header( tblName );
     int i;
     int num_attr;
     num_attr = AK_num_attr( tblName );
@@ -551,12 +551,12 @@ void printHeaderTest(char* tblName)
  * @numAtributes - broj atributa u tablici
  * @headerIndex - header inicijalizirane inde tablice
 */
-void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, KK_header *headerIndex)
+void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex)
 {
     table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-    KK_block *temp = (KK_block*)KK_read_block( addresses->address_from[0]);
+    AK_block *temp = (AK_block*)AK_read_block( addresses->address_from[0]);
 
-    //KK_header *t_header = AK_get_header( tblNameIndex );
+    //AK_header *t_header = AK_get_header( tblNameIndex );
     int num_attrIndex = AK_num_attr( tblNameIndex );
 
     int i,j,k;
@@ -570,7 +570,7 @@ void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int pos
 
     while( addresses->address_from[ i ] != 0 ){
         for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-            KK_block *temp = (KK_block*) KK_read_block( j );
+            AK_block *temp = (AK_block*) AK_read_block( j );
             for( k = positionTbl; k < DATA_BLOCK_SIZE; k=k+numAtributes ){
                 if( temp->tuple_dict[ k ].size > 0 ){
                     switch( temp->tuple_dict[ k ].type ){
@@ -657,8 +657,8 @@ list_ad* getAttribute(char *indexName, char *attribute)
         num_attr = AK_num_attr( indexName );
         num_rec = AK_get_num_records( indexName );
 
-        KK_block *temp = (KK_block*)KK_read_block( addresses->address_from[0]);
-        KK_header *temp_head = AK_get_header( indexName );
+        AK_block *temp = (AK_block*)AK_read_block( addresses->address_from[0]);
+        AK_header *temp_head = AK_get_header( indexName );
         int temp_int;
         char temp_char[ MAX_VARCHAR_LENGHT ];
         float temp_float;
@@ -682,7 +682,7 @@ list_ad* getAttribute(char *indexName, char *attribute)
         i = 0;
         while( addresses->address_from[ i ] != 0 ){
             for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-                KK_block *temp = (KK_block*) KK_read_block( j );
+                AK_block *temp = (AK_block*) AK_read_block( j );
                 for( k = br; k < DATA_BLOCK_SIZE; k=k+num_attr ){
                     if( temp->tuple_dict[ k ].size > 0 ){
                         switch( temp->tuple_dict[ k ].type ){
@@ -784,7 +784,7 @@ list_ad* AKgetAttribute(char *tableName, char *attributeName, char *attributeVal
    // printf("Naziv indexa: %s",indexName);
 
     table_addresses *addresses = (table_addresses* ) get_table_addresses( indexName );
-    KK_block *temp = (KK_block*)KK_read_block( addresses->address_from[0]);
+    AK_block *temp = (AK_block*)AK_read_block( addresses->address_from[0]);
     if(addresses->address_from[ 0 ] == 0)
     {
         printf("Ne postoji index za tablicu: %s nad atributom: %s", tableName, attributeName);

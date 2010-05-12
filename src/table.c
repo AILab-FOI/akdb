@@ -38,7 +38,7 @@ AK_list * AK_get_row( int num, char * tblName )
   }
   
   table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-  KK_header *t_header = AK_get_header( tblName );
+  AK_header *t_header = AK_get_header( tblName );
   int num_attr = AK_num_attr( tblName );
   
   AK_list *row_root =  (AK_list*) malloc( sizeof(AK_list) );
@@ -52,7 +52,7 @@ AK_list * AK_get_row( int num, char * tblName )
   counter = 0;
   while( addresses->address_from[ i ] != 0 ){
       for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-	  KK_block *temp = (KK_block*) KK_read_block( j );
+	  AK_block *temp = (AK_block*) AK_read_block( j );
 	  for( k = 0; k < DATA_BLOCK_SIZE; k+=num_attr ){
 	      counter++;
 	      if( temp->tuple_dict[k].type == FREE_INT )

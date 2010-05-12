@@ -29,7 +29,7 @@
 #include "auxiliary.h"
 
 /**
-\struct KK_header
+\struct AK_header
 \brief Header structure of blocks (describes an attribute inside an object)
 */
 typedef struct { 
@@ -43,25 +43,25 @@ typedef struct {
 	char constr_name[ MAX_CONSTRAINTS ][ MAX_CONSTR_NAME ];
 	/// extra integrity costraint codes
 	char constr_code[ MAX_CONSTRAINTS ][ MAX_CONSTR_CODE ];
-} KK_header;
+} AK_header;
 
 
 /**
-\struct KK_tuple_dict
+\struct AK_tuple_dict
 \brief Defines a mapping in a header of an object to the actual entries (data)
 */
 typedef struct {
 	/// data entry type
 	int type;
-	/// data entry address (in KK_block->data)
+	/// data entry address (in AK_block->data)
 	int address;
 	/// data entry size (using sizeof( *** ) )
 	int size;
-} KK_tuple_dict;
+} AK_tuple_dict;
 
 
 /**
-\struct KK_block
+\struct AK_block
 \brief Defines a block of data inside a DB file
 */
 typedef struct {
@@ -75,12 +75,12 @@ typedef struct {
 	int free_space;
 	int last_tuple_dict_id;
 	/// attribute definitions
-	KK_header header[ MAX_ATTRIBUTES ];
+	AK_header header[ MAX_ATTRIBUTES ];
 	/// dictionary of data entries
-	KK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
+	AK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
 	/// actual data entries
 	unsigned char data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
-} KK_block;
+} AK_block;
 
 /**
 \var db

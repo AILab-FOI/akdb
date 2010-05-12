@@ -179,34 +179,34 @@
 /** 	@author Matija Novak
 	temporaly function to create table, and insert entry to the system_relation catalog
 	@param table - table name
-	@param header - KK_header of the new table
+	@param header - AK_header of the new table
 	@param type_segment - type of the new segment
 	@result void
 */
-void temp_crate_table(char * table, KK_header * header, int type_segment)
+void temp_crate_table(char * table, AK_header * header, int type_segment)
 {
-	KK_block * sys_block = ( KK_block * ) malloc ( sizeof( KK_block ) );
-	sys_block= (KK_block *) KK_read_block(1);
+	AK_block * sys_block = ( AK_block * ) malloc ( sizeof( AK_block ) );
+	sys_block= (AK_block *) AK_read_block(1);
 	
 	int first_block;
 	//create new segment
-	first_block= (int) KK_new_segment(table, type_segment, header);
+	first_block= (int) AK_new_segment(table, type_segment, header);
 	if(DEBUG)	
 		printf("temp_create_table: First block adress of new segmet: %d",first_block);	
 	
 	int broj=8;
 	//insert object_id
-	KK_insert_entry(sys_block, TYPE_INT, &broj, 8 );
+	AK_insert_entry(sys_block, TYPE_INT, &broj, 8 );
 	//insert table name	
-	KK_insert_entry(sys_block, TYPE_VARCHAR, table, 9 );
+	AK_insert_entry(sys_block, TYPE_VARCHAR, table, 9 );
 	//insett start address	
 	broj=first_block;	
-	KK_insert_entry(sys_block, TYPE_INT, &broj, 10 );	
+	AK_insert_entry(sys_block, TYPE_INT, &broj, 10 );	
 	//insert end address
 	broj=first_block+19;
-	KK_insert_entry(sys_block, TYPE_INT, &broj, 11 );
+	AK_insert_entry(sys_block, TYPE_INT, &broj, 11 );
 		
-	KK_write_block( sys_block );
+	AK_write_block( sys_block );
 	free(sys_block);	
 }
 
@@ -220,11 +220,11 @@ void temp_crate_table(char * table, KK_header * header, int type_segment)
 */
 void crate_block_header(int old_block_add,char * new_table,list_op * att_root)
 {
-	KK_block * temp_block = ( KK_block * ) malloc ( sizeof( KK_block ) );
+	AK_block * temp_block = ( AK_block * ) malloc ( sizeof( AK_block ) );
 	
-	KK_header header[MAX_ATTRIBUTES];
+	AK_header header[MAX_ATTRIBUTES];
 	element_op some_element;
-	temp_block= (KK_block *) KK_read_block(old_block_add);
+	temp_block= (AK_block *) AK_read_block(old_block_add);
 	int next_header=1; //boolean var to new if there is more headers
 	int search_elem; //boolean var to new if we have more elements in list
 	int head=0; //counter of the headers
@@ -278,7 +278,7 @@ void crate_block_header(int old_block_add,char * new_table,list_op * att_root)
 	@param att_root - list of the attributes which should the projeciton table contain
 	@result void
 */
-void copy_block_projekcija(KK_block * old_block, list_op * att_root,char * new_table)
+void copy_block_projekcija(AK_block * old_block, list_op * att_root,char * new_table)
 {
 	if(DEBUG)	
 		printf("\n COPYING PROJECTION DATA FORM BLOCK...");
@@ -372,7 +372,7 @@ Function makes a projection of some table
 @raturn EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
 @author Matija Novak
 */
-int KK_projekcija(list_op * att_root, char * new_table)
+int AK_projekcija(list_op * att_root, char * new_table)
 {
 	element_op some_element;
 	table_addresses * addresses;
@@ -396,10 +396,10 @@ int KK_projekcija(list_op * att_root, char * new_table)
 		crate_block_header(addresses->address_from[0],new_table,att_root);
 
 		if(DEBUG)
-			printf("\n KK_Porojekcija: start copying data");	
+			printf("\n AK_Porojekcija: start copying data");	
 
-			//KK_mem_block *mem_block;
-			KK_block *temp_block;
+			//AK_mem_block *mem_block;
+			AK_block *temp_block;
 	
 			int from=0,to=0,j=0,i=0;
 			///Going through blocks and make the projection
@@ -417,9 +417,9 @@ int KK_projekcija(list_op * att_root, char * new_table)
 						if(DEBUG)
 							printf("\n Projekcija: copy block: %d",i);
 						
-						//mem_block = KK_get_block( i );
+						//mem_block = AK_get_block( i );
 						//temp_block= &mem_block->block;
-						temp_block = (KK_block *) KK_read_block( i );
+						temp_block = (AK_block *) AK_read_block( i );
 						///making the projection from one block of the table  
 						copy_block_projekcija(temp_block,att_root,new_table);
 						free(temp_block);
@@ -438,7 +438,7 @@ int KK_projekcija(list_op * att_root, char * new_table)
 	else
 	{	
 		if(DEBUG)
-			printf("\n KK_projekcija: Table from which I must read dose not exist");
+			printf("\n AK_projekcija: Table from which I must read dose not exist");
 		return 0;
 	}
 	
@@ -458,7 +458,7 @@ void op_projekcija_test()
 	some_element = GetFirstelementOp(att_root);
 	InsertNewelementOp("testna","Prezime",some_element);
 
-	KK_projekcija(att_root,"testna_projekcija ");
+	AK_projekcija(att_root,"testna_projekcija ");
 	
 	DeleteAllelementsOp(att_root);
 	free( att_root );
