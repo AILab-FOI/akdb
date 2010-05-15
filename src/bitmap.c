@@ -1,5 +1,5 @@
 /**
-@file bitmapindex.c Provides functions for bitmap indexes
+@file bitmap.c Provides functions for bitmap indexes
 */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -19,107 +19,6 @@
 
 #include "bitmap.h"
 
-void InitializelistAd(list_ad *L)
-{
-        L->next = 0;
-}
-
-element_ad GetFirstelementAd(list_ad *L)
-{
-        return (element_ad) L->next;
-}
-
-
-element_ad GetLastelementAd(list_ad *L)
-{
-        list_ad *Currentelement_op;
-        Currentelement_op = L;
-        while (Currentelement_op->next)
-                Currentelement_op = (element_ad) Currentelement_op->next;
-        if(Currentelement_op!=L)
-                return (element_ad) Currentelement_op;
-        else
-                return 0;
-}
-
-
-element_ad GetNextelementAd(element_ad Currentelement_op)
-{
-        if (Currentelement_op->next == 0) {
-                return 0;
-        } else {
-                list_op *Nextelement_op;
-                Nextelement_op = (element_ad) Currentelement_op->next;
-                return (element_ad) Nextelement_op;
-        }
-}
-
-
-element_ad GetPreviouselementAd(element_ad Currentelement_op, element_ad L)
-{
-        element_ad Previouselement_op;
-        Previouselement_op = L;
-        while ((Previouselement_op->next != 0) && ((element_ad) Previouselement_op->next != Currentelement_op))
-                Previouselement_op = (element_op) Previouselement_op->next;
-        if (Previouselement_op->next != 0 && Previouselement_op!=L) {
-                return (element_ad) Previouselement_op;
-        } else {
-                return 0;
-        }
-}
-
-
-int GetPositionOfelementAd(element_ad Searchedelement_op, list_ad *L)
-{
-        list_ad *Currentelement_op;
-        int i = 0;
-        Currentelement_op = L;
-        while (Currentelement_op->next != 0 && Currentelement_op != Searchedelement_op) {
-                Currentelement_op = (list_ad *) Currentelement_op->next;
-                i++;
-        }
-        return i;
-}
-
-
-void DeleteelementAd(element_ad Deletedelement_op, list_ad *L)
-{
-        element_ad Previouselement_op = (element_ad) GetPreviouselementOp(Deletedelement_op,L);
-                if(Previouselement_op!=0)
-                {
-                        Previouselement_op->next = Deletedelement_op->next;
-                }
-                else
-                {
-                        L->next=Deletedelement_op->next;
-                }
-        free(Deletedelement_op);
-}
-
-
-void DeleteAllelementsAd(list_ad *L)
-{
-        list_ad *Currentelement_op = L;
-        list_ad *Deletedelement_op= (list_ad *) L->next;
-        while (Currentelement_op->next != 0) {
-                Currentelement_op->next = Deletedelement_op->next;
-                free(Deletedelement_op);
-                Deletedelement_op = (list_ad *) Currentelement_op->next;
-        }
-}
-
-void InsertNewelementAd(int addTd , int addBlock, int sizeTd, char *attName, element_ad elementBefore)
-{
-        list_ad *newelement_op = (list_ad *) malloc( sizeof(list_ad) );
-        newelement_op->addBlock = addBlock;
-        newelement_op->addTd = addTd;
-        newelement_op->sizeTd = sizeTd;
-        newelement_op->attName = attName;
-        newelement_op->next = elementBefore->next;
-        elementBefore->next = newelement_op;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////
 
 int IfExistOp(list_op *L, char *ele)
 {
@@ -137,7 +36,7 @@ int IfExistOp(list_op *L, char *ele)
         return 0;
 }
 //potrebno pokrenuti ovu metodu jer kreira testnu tablicu (podatke)
-void createTableTest()
+void bitmap_test()
 {
     printf( "\n********** Function for creating table **********\n");
 
@@ -762,7 +661,7 @@ void printAttTest(list_ad *list)
        element_ad ele = GetFirstelementAd(list);
         while(ele != 0)
         {
-            printf("Atribut : %s Blok: %i Adresa td: %i Size: %i\n",ele->attName,ele->addBlock,ele->addTd,ele->sizeTd);
+            printf("Atribut : %s Blok: %i Adresa td: %i Size: %i\n",ele->attName,ele->add.addBlock,ele->add.addTd,ele->add.sizeTd);
             ele = GetNextelementAd(ele);
         }
 }
