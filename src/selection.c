@@ -19,12 +19,6 @@
 
 #include "selection.h"
 
-///constant that indicates operand in the AK_list
-#define TYPE_OPERAND 10
-
-///constant that indicates operator in the AK_list
-#define TYPE_OPERATOR 11
-
 /**
  * @author Matija Šestak.
  * @brief  Alocate empty list
