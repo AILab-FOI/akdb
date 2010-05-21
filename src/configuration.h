@@ -271,6 +271,30 @@
 #define TYPE_BOOL 9
 
 /**
+\def TYPE_OPERAND
+\brief indicates operand in AK_list
+*/
+#define TYPE_OPERAND 10
+
+/**
+\def TYPE_OPERATOR
+\brief indicates operator in AK_list
+*/
+#define TYPE_OPERATOR 11
+
+/**
+\def TYPE_ATTRIBS
+\brief indicates attribute/s in AK_list
+*/
+#define TYPE_ATTRIBS 12
+
+/**
+\def TYPE_CONDITION
+\brief indicates condition in AK_list
+*/
+#define TYPE_CONDITION 13
+
+/**
 \def BLOCK_CLEAN
 \brief clean block (not changed since read from disk)
 */
@@ -311,6 +335,24 @@
 \brief maximum size of query result cache memory
 */
 #define MAX_QUERY_RESULT_MEMORY 255
+
+/**
+\def MAX_TOKENS
+\brief maximum number of attributes to handle in relation equivalence function
+*/
+#define MAX_TOKENS 128
+
+/**
+\def ATTR_DELIMITER
+\brief indicates attributes delimiter
+*/
+#define ATTR_DELIMITER ";"
+
+/**
+\def ATTR_ESCAPE
+\brief indicates attributes escape section
+*/
+#define ATTR_ESCAPE "`";
 
 /**
 \def relational operators
