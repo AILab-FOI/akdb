@@ -322,6 +322,7 @@
 #define RO_UNION 'u'
 #define RO_INTERSECT 'i'
 #define RO_EXCEPT 'e'
+#define RO_THETA_JOIN 't'
 
 #endif
 
