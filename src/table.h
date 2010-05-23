@@ -20,6 +20,8 @@
 #ifndef TABLE
 #define TABLE
 
+#include "stdlib.h"
+#include "stdio.h"
 #include "selection.h"
 #include "projection.h"
 #include "dbman.h"

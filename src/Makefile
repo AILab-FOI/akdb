@@ -12,7 +12,8 @@ OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut
 
 OUTDIR = ../bin
 
-all: kalashnikov-db doc
+all: kalashnikov-db 
+#doc
 
 kalashnikov-db: auxiliary.o $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
 	$(CC) main.o $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb

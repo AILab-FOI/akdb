@@ -80,7 +80,7 @@ int main()
 			//filesort_test();
 
 			//op_projekcija_test();
-                        op_selection_test();
+                        //op_selection_test();
 			//op_spoj_test();
 			//intersect_test();
 			//rename_test();			

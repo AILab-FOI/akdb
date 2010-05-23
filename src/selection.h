@@ -28,7 +28,7 @@
 #include "projection.h"
 #include "dbman.h"
 #include "memoman.h"
-
+#include "table.h"
 /**
  * \struct list_elem
  * \brief defines a list element
