@@ -20,5 +20,46 @@
 #ifndef HASH
 #define HASH
 
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<stdint.h>
+#include "dbman.h"
+#include "memoman.h"
+#include "files.h"
+#include "fileio.h"
+#include "projection.h"
+#include "selection.h"
+#include "table.h"
+#include "index.h"
+
+#define MAX_MAIN_BUCKETS 512
+#define MAIN_BUCKET_SIZE 4
+#define HASH_BUCKET_SIZE 20
+#define INFO_BUCKET 0
+#define MAIN_BUCKET 1
+#define HASH_BUCKET 2
+
+
+typedef struct{
+    int modulo;
+    int main_bucket_num;
+    int hash_bucket_num;
+}hash_info;
+
+typedef struct{
+    unsigned int value;
+    struct_add add;
+}bucket_elem;
+
+typedef struct {
+    bucket_elem element[MAIN_BUCKET_SIZE];
+} main_bucket;
+
+typedef struct {
+    int bucket_level;
+    bucket_elem element[HASH_BUCKET_SIZE];
+} hash_bucket;
+
 
 #endif

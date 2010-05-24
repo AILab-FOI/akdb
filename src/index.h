@@ -22,9 +22,8 @@
 #define	INDEX
 
 typedef struct {
-    int addTd;
     int addBlock;
-    int sizeTd;
+    int indexTd;
 } struct_add;
 
 typedef struct {

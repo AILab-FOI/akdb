@@ -69,11 +69,6 @@ int main()
 
 			/* component test area --- begin */
 
-
-			//btree_test();
-			//hash_test();
-			//bitmap_test();
-
 			//files_test();
 			//fileio_test();
 			//filesearch_test();
@@ -85,8 +80,12 @@ int main()
 			//intersect_test();
 			//rename_test();			
 			
-			table_test();
-			
+			//table_test();
+
+                        //btree_test();
+			hash_test();
+			//bitmap_test();
+
 			//aggregation_test();
 			//rel_eq_projection_test();
 			//rel_eq_selection_test();

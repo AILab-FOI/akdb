@@ -108,12 +108,11 @@ void DeleteAllelementsAd(list_ad *L)
         }
 }
 
-void InsertNewelementAd(int addTd , int addBlock, int sizeTd, char *attName, element_ad elementBefore)
+void InsertNewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore)
 {
         list_ad *newelement_op = (list_ad *) malloc( sizeof(list_ad) );
         newelement_op->add.addBlock = addBlock;
-        newelement_op->add.addTd = addTd;
-        newelement_op->add.sizeTd = sizeTd;
+        newelement_op->add.indexTd = indexTd;
         newelement_op->attName = attName;
         newelement_op->next = elementBefore->next;
         elementBefore->next = newelement_op;

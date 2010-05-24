@@ -609,8 +609,9 @@ list_ad* getAttribute(char *indexName, char *attribute)
                                 if(strcmp(temp_char,"1") == 0 )
                                 {
                                 //printf( "%-10s", temp_char );
-                               // printf("adresa bloka: %i  veličina podatka: %i adresa td-a: %i\n",addBlock,addSize,addTd);
-                                InsertNewelementAd(addTd,addBlock,addSize,attribute,add_root);
+                                //printf("adresa bloka: %i  veličina podatka: %i adresa td-a: %i\n",addBlock,addSize,addTd);
+                                    int indexTd=k;
+                                    InsertNewelementAd(addBlock,indexTd,attribute,add_root);
                                 }
                                 break;
                         }
@@ -661,7 +662,7 @@ void printAttTest(list_ad *list)
        element_ad ele = GetFirstelementAd(list);
         while(ele != 0)
         {
-            printf("Atribut : %s Blok: %i Adresa td: %i Size: %i\n",ele->attName,ele->add.addBlock,ele->add.addTd,ele->add.sizeTd);
+            //printf("Atribut : %s Blok: %i Adresa td: %i Size: %i\n",ele->attName,ele->add.addBlock,ele->add.addTd,ele->add.sizeTd);
             ele = GetNextelementAd(ele);
         }
 }
