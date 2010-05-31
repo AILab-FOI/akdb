@@ -91,7 +91,8 @@ int main()
 			//rel_eq_selection_test();
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
-			
+
+                         memoman_test();
 			/* component test area --- end */
 
                         if ( AK_flush_cache() == EXIT_SUCCESS ){

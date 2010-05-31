@@ -113,6 +113,8 @@ void filesort_test(){
 
 
 void sort_segment(char * table_name, char * atr_name){
+        //AK_flush_cache();
+        
 	table_addresses * adrese = get_table_addresses(table_name);
 	
 	int ORG_blokovi[MAX_NUM_OF_BLOCKS];

@@ -518,9 +518,8 @@ void AK_print_table( char *tblName ){
         printf("\n");
         puts(spacer);
     }
-
     time_t end = clock();
-    printf( "%d records found, duration: %d ms\n\n", numRows, difftime(end,start));
+    printf( "%d records found, duration: %d μs\n\n", numRows, end-start);
 
     free( rowWidth );
 }

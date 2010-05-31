@@ -202,7 +202,7 @@ int AK_cache_block( int num, AK_mem_block * mem_block )
 
 
 /**
- @author Tomislav Fotak, Matija Šestak(revised)
+ @author Tomislav Fotak, updated by Matija Šestak
 
  Reads a block from memory. If the block is cached returns the cached block. Else uses
  AK_cache_block to read the block to cache and then returns it.
@@ -277,8 +277,163 @@ AK_mem_block * AK_get_block( int num )
     db_cache->next_replace = min;
     return cached_block;
 }
+
 /**
- @author Nikola Bakoš
+ * @author Matija Šestak.
+ * @brief  Function re-read all the blocks from disk
+ * @result int-EXIT_SUCCESS
+ */
+int AK_refresh_cache(){
+    int i;
+    AK_mem_block *mem_block;
+    for( i = 0; i < MAX_CACHE_MEMORY; i++ ){
+        mem_block = db_cache->cache[i];
+        AK_block *temp_block;
+        temp_block = (AK_block*) AK_read_block( mem_block->block->address);
+        memcpy( mem_block->block, temp_block, sizeof( AK_block));
+    }
+    return EXIT_SUCCESS;
+}
+
+/** 	@author Matija Novak, updated by Matija Šestak(function now uses caching)
+	function for geting addresses of some table
+	@return structure table_addresses witch contains start and end adresses of table extents,
+	when form and to are 0 you are on the end of addresses
+	@param table - table name that you search for
+*/
+table_addresses * get_table_addresses ( char * table )
+{
+	AK_mem_block *mem_block;
+
+	mem_block = (AK_mem_block *) AK_get_block(0);
+
+	int i=0;
+	int data_adr=0;
+	int data_size=0;
+	int data_type=0;
+	char name_sys[MAX_ATT_NAME];
+	int address_sys;
+	int free2=0;//var to clear char variable
+
+	if(DEBUG)
+		printf("get_table_addresses: Serching for system_relation table \n");
+
+	for(i=0;i<DATA_BLOCK_SIZE;i++)
+	{//going throught headers
+
+		free2=0;
+		for(free2=0;free2<MAX_ATT_NAME;free2++)
+			name_sys[free2]='\0';
+
+		if(mem_block->block->tuple_dict[i].address == FREE_INT)
+			break;
+		data_adr=mem_block->block->tuple_dict[i].address;
+		data_size=mem_block->block->tuple_dict[i].size;
+		data_type=mem_block->block->tuple_dict[i].type;
+		memcpy(name_sys,mem_block->block->data+data_adr,data_size);
+
+		i++;
+		data_adr=mem_block->block->tuple_dict[i].address;
+		data_size=mem_block->block->tuple_dict[i].size;
+		data_type=mem_block->block->tuple_dict[i].type;
+		memcpy(&address_sys,mem_block->block->data+data_adr,data_size);
+
+		if(strcmp(name_sys,"AK_relation")==0)
+		{
+			if(DEBUG)
+				printf("get_table_addresses: Found the address of the system_relation table: %d \n",address_sys);
+			break;
+		}
+		i++;
+	}
+
+	mem_block= (AK_mem_block *) AK_get_block(address_sys);
+	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
+
+	free2=0;
+	for(free2=0;free2<MAX_EXTENTS_IN_SEGMENT;free2++)
+	{//intialize address structure
+		addresses->address_from[free2] = 0;
+		addresses->address_to[free2] = 0;
+	}
+
+	char name[MAX_VARCHAR_LENGHT];
+	int address_from;
+	int address_to;
+	int j=0;
+
+	for(i=0;i<DATA_BLOCK_SIZE;i++)
+	{
+            if( mem_block->block->tuple_dict[i].type == FREE_INT )
+                break;
+            i++;
+            memcpy( name, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size );
+            name[ mem_block->block->tuple_dict[i].size] = '\0';
+
+            i++;
+            memcpy( &address_from, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]),mem_block->block->tuple_dict[i].size);
+
+            i++;
+            memcpy( &address_to, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]),mem_block->block->tuple_dict[i].size);
+
+		if(strcmp(name,table)==0)
+		{//if found the table that addresses we need
+			addresses->address_from[j]= address_from;
+			addresses->address_to[j]= address_to;
+			j++;
+			if(DEBUG)
+				printf("get_table_addresses(%s): Found addresses of searching table: %d , %d \n", name, address_from, address_to);
+		}
+	}
+	return addresses;
+}
+
+/** 	@author Matija Novak, updated by Matija Šestak( function now uses caching)
+	function to find free space in some block betwen block addresses
+	function made for insert_row()
+	@param address - addresses of extents
+	@returns int - address of the block to write in
+*/
+int find_free_space ( table_addresses * addresses )
+{
+	AK_mem_block *mem_block;
+	int from=0,to=0,j=0,i=0;
+
+	if(DEBUG)
+		printf("find_free_space: Searching for block that has free space < 500 \n");
+
+	for (j=0;j<MAX_EXTENTS_IN_SEGMENT;j++)
+	{//searching extent
+		if(addresses->address_from != 0)
+		{
+			from=addresses->address_from[j];
+			to=addresses->address_to[j];
+
+			for(i=from;i<=to;i++)
+			{//searching block
+				mem_block = (AK_mem_block *) AK_get_block( i );
+				int free_space_on=mem_block->block->free_space;
+				if(DEBUG)
+					printf("find_free_space: FREE SPACE %d\n",mem_block->block->free_space);
+				if((free_space_on < MAX_FREE_SPACE_SIZE)&&
+					(mem_block->block->last_tuple_dict_id<MAX_LAST_TUPLE_DICT_SIZE_TO_USE))
+				{//found free block to write
+					return i;
+				}
+			}
+		}
+		else break;
+	}
+
+	//I cant call function from memoman must consider another solution to place these functions
+	int adr = -1;
+
+	//need to create new extent
+	return adr;
+}
+
+/**
+ @author Nikola Bakoš, updated by Matija Šestak (function now uses caching)
 
  Extends the segment
  @param table_name name of segment to extent
@@ -299,11 +454,11 @@ int AK_init_new_extent ( char *table_name , int extent_type){
         int block_written;
 
 	//promjentiti temp_block = mem_block->block
-	//AK_mem_block *mem_block = (AK_mem_block *) malloc(sizeof(AK_mem_block));
-	//mem_block = AK_get_block(adr_bloka); // bilo koji blok tablice, samo da se dobije header iz njega
+	AK_mem_block *mem_block = (AK_mem_block *) malloc(sizeof(AK_mem_block));
+	mem_block = AK_get_block(adr_bloka); // bilo koji blok tablice, samo da se dobije header iz njega
 
-			AK_block *temp_block = (AK_block *) malloc(sizeof(AK_block));
-			temp_block = (AK_block *) AK_read_block(adr_bloka);
+	//AK_block *temp_block = (AK_block *) malloc(sizeof(AK_block));
+	//		temp_block = (AK_block *) AK_read_block(adr_bloka);
 
 
 	int velicina=0;
@@ -318,7 +473,7 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 
 	old_size += 1;
 	int pocetna_adr = 0;
-	if ( (pocetna_adr = AK_new_extent(1, old_size, extent_type, temp_block->header)) == EXIT_ERROR){
+	if ( (pocetna_adr = AK_new_extent(1, old_size, extent_type, mem_block->block->header)) == EXIT_ERROR){
 		printf("AK_init_new_extent: Could not alocate new extent\n");
 		return EXIT_ERROR;
 	}
@@ -346,7 +501,7 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 		}
 
 		zavrsna_adr = pocetna_adr + ( old_size + old_size * RESIZE_FACTOR );
-		temp_block= (AK_block *) AK_read_block( 0 );
+		mem_block= (AK_mem_block *) AK_get_block( 0 );
 
 
 
@@ -364,15 +519,15 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 			name_sys[free]='\0';
 
 		memcpy(name_sys,
-			   temp_block->data + temp_block->tuple_dict[i].address,
-			   temp_block->tuple_dict[i].size );
+			   mem_block->block->data + mem_block->block->tuple_dict[i].address,
+			   mem_block->block->tuple_dict[i].size );
 
 		printf("\n adresa: %s",name_sys);
 		i++;
 
 		memcpy(&address_sys,
-			   temp_block->data + temp_block->tuple_dict[i].address,
-			   temp_block->tuple_dict[i].size);
+			   mem_block->block->data + mem_block->block->tuple_dict[i].address,
+			   mem_block->block->tuple_dict[i].size);
 
 		if(strcmp(name_sys,"AK_relation")==0)
 		{	if(DEBUG)
@@ -382,13 +537,14 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 		i++;
 
 	}
+        mem_block->dirty=BLOCK_DIRTY;
 
 	//adresa relacijske sistemske tablice je pronađena
 	// zapisati u sistemski katalog relacije
 
 		//mem_block = AK_get_block( address_sys );
 
-		temp_block=(AK_block *)AK_read_block(address_sys);						//tu zamjena
+		mem_block=(AK_mem_block *)AK_get_block(address_sys);						//tu zamjena
 
 	//trazi mjesto za slijedeci unos u sis katalogu
 	int id=0;
@@ -396,7 +552,7 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 	while ( nadjeno )
 	{
 		id++; //to je vrijednost gdje se pise
-		if( temp_block->tuple_dict[id].size == 0 )
+		if( mem_block->block->tuple_dict[id].size == 0 )
 		{if ( block_written != EXIT_SUCCESS ){
             printf("AK_read_block: ERROR! Cannot write block from cache to DB File.\n");
             exit ( EXIT_ERROR );
@@ -410,16 +566,16 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 		int obj_id=2;
 	if(DEBUG)
 		printf("unosim: %d , %s, %i, %i", obj_id, table_name, pocetna_adr, zavrsna_adr);
-	AK_insert_entry(temp_block, TYPE_INT, &obj_id, id );
-	AK_insert_entry(temp_block, TYPE_VARCHAR, table_name, id + 1 );
-	AK_insert_entry(temp_block, TYPE_INT, &pocetna_adr, id + 2 );
-	AK_insert_entry(temp_block, TYPE_INT, &zavrsna_adr, id + 3);
-
+	AK_insert_entry(mem_block->block, TYPE_INT, &obj_id, id );
+	AK_insert_entry(mem_block->block, TYPE_VARCHAR, table_name, id + 1 );
+	AK_insert_entry(mem_block->block, TYPE_INT, &pocetna_adr, id + 2 );
+	AK_insert_entry(mem_block->block, TYPE_INT, &zavrsna_adr, id + 3);
+        mem_block->dirty=BLOCK_DIRTY;
 	return pocetna_adr;
 }
 
 /**
- * @brief Flush memory blocks to disk file
+ * @brief flush memory blocks to disk file
  * @author Matija Šestak
  * @param void
  * @result int - EXIT_SUCCESS
@@ -440,4 +596,9 @@ int AK_flush_cache(){
         i++;
     }
     return EXIT_SUCCESS;
+}
+
+
+void memoman_test(){
+
 }

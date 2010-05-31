@@ -36,6 +36,7 @@
 */
 
 search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params) {
+    AK_flush_cache();
     int              iBlock;
     AK_mem_block    *mem_block = NULL, tmp;
     int              i, j, k;

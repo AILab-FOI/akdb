@@ -310,7 +310,7 @@ int insert_row_to_block(list *row_root, AK_block *temp_block)
 	return EXIT_SUCCESS;
 }
 
-/**	@author Matija Novak
+/**	@author Matija Novak, updated by Matija Šestak (function now uses caching)
 	inserts a one row into table
 	@param list of elements which contain data of one row
 	@result EXIT_SUCCESS if success elese EXIT_ERROR
@@ -342,18 +342,17 @@ int insert_row(list *row_root)
 	{
 		return EXIT_ERROR;
 	}
+        if(DEBUG)
+            printf("insert_row: Insert into block on adress: %d\n",adr_to_write);
 
-	printf("insert_row: Insert into block on adress: %d\n",adr_to_write);
+	AK_mem_block *mem_block;
 
-	AK_block *temp_block;
+	mem_block= (AK_mem_block *) AK_get_block(adr_to_write);
 
-	temp_block= (AK_block *) AK_read_block(adr_to_write);
+	int end= (int) insert_row_to_block(row_root, mem_block->block);
 
-	int end= (int) insert_row_to_block(row_root, temp_block);
-
-	AK_write_block(temp_block);
-
-	free( temp_block );
+	//AK_write_block(mem_block->block);
+        mem_block->dirty=BLOCK_DIRTY;
 	return end;
 }
 
@@ -626,7 +625,7 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int what
 	free(row_root_backup);
 }
 
-/**	@author Matija Novak
+/**	@author Matija Novak, updated by Matija Šestak (function now uses caching)
 	function update or delete the whole segmet of an table
 	@param row_root -  elements of one row
 	@param delete - 1 we make delete, 0 we make update
@@ -646,7 +645,7 @@ int delete_update_segment(list *row_root, int delete)
 	table_addresses * addresses;
 	addresses = (table_addresses * ) get_table_addresses(&table);
 
-	AK_block *temp_block;
+	AK_mem_block *mem_block;
 
 	int from=0,to=0,j=0,i=0;
 	for (j=0;j<MAX_EXTENTS_IN_SEGMENT;j++)
@@ -663,12 +662,10 @@ int delete_update_segment(list *row_root, int delete)
 				if(DEBUG)
 					printf("delete_update_segment: delete_update block: %d",i);
 
-				temp_block=(AK_block *)AK_read_block( i );
+				mem_block=(AK_mem_block *)AK_get_block( i );
 
-				update_delete_row_from_block(temp_block,row_root,delete);
-				AK_write_block(temp_block);
-				free(temp_block);
-
+				update_delete_row_from_block(mem_block->block,row_root,delete);
+                                mem_block->dirty=BLOCK_DIRTY;
 			}
 		}
 		else break;
