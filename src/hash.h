@@ -34,8 +34,8 @@
 #include "index.h"
 
 #define MAX_MAIN_BUCKETS 512
-#define MAIN_BUCKET_SIZE 4
-#define HASH_BUCKET_SIZE 20
+#define MAIN_BUCKET_SIZE 4 //only the power of 2 (ie: 2, 4, 8, 16, 32, 64, 128 etc.)
+#define HASH_BUCKET_SIZE 4
 #define INFO_BUCKET 0
 #define MAIN_BUCKET 1
 #define HASH_BUCKET 2
