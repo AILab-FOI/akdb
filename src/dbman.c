@@ -581,7 +581,7 @@ void AK_memset_int(void *block, int value, size_t num)
 }
 
 int AK_register_system_tables( int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-								  int trigger, int db, int db_obj, int user, int group, int constraint, int constraintNull, int right, int reference) {
+								  int trigger, int db, int db_obj, int user, int group, int right,int constraint, int constraintNull, int reference) {
     AK_block *relationTable = AK_read_block(relation);
     int i = 1, j = 0;
     int end;
@@ -953,7 +953,7 @@ int AK_init_system_catalog() {
 	if( DEBUG )
 		printf( "AK_init_system_catalog: Segments created!\n" );
 
-	if(EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull))
+	if(EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull, reference))
 	{
 		AK_register_system_tables(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull, reference);
 		printf( "AK_init_system_catalog: System catalog initialized!\n" );
