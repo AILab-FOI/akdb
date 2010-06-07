@@ -17,6 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+#ifndef BITMAP
+#define BITMAP
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -31,3 +34,5 @@
 #include "table.h"
 #include "selection.h"
 #include "index.h"
+
+#endif
