@@ -1,5 +1,5 @@
 /**
-@file bitmapindex.c Provides functions for bitmap indexes
+@file bitmap.c Provides functions for bitmap indexes
 */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -19,107 +19,6 @@
 
 #include "bitmap.h"
 
-void InitializelistAd(list_ad *L)
-{
-        L->next = 0;
-}
-
-element_ad GetFirstelementAd(list_ad *L)
-{
-        return (element_ad) L->next;
-}
-
-
-element_ad GetLastelementAd(list_ad *L)
-{
-        list_ad *Currentelement_op;
-        Currentelement_op = L;
-        while (Currentelement_op->next)
-                Currentelement_op = (element_ad) Currentelement_op->next;
-        if(Currentelement_op!=L)
-                return (element_ad) Currentelement_op;
-        else
-                return 0;
-}
-
-
-element_ad GetNextelementAd(element_ad Currentelement_op)
-{
-        if (Currentelement_op->next == 0) {
-                return 0;
-        } else {
-                list_op *Nextelement_op;
-                Nextelement_op = (element_ad) Currentelement_op->next;
-                return (element_ad) Nextelement_op;
-        }
-}
-
-
-element_ad GetPreviouselementAd(element_ad Currentelement_op, element_ad L)
-{
-        element_ad Previouselement_op;
-        Previouselement_op = L;
-        while ((Previouselement_op->next != 0) && ((element_ad) Previouselement_op->next != Currentelement_op))
-                Previouselement_op = (element_op) Previouselement_op->next;
-        if (Previouselement_op->next != 0 && Previouselement_op!=L) {
-                return (element_ad) Previouselement_op;
-        } else {
-                return 0;
-        }
-}
-
-
-int GetPositionOfelementAd(element_ad Searchedelement_op, list_ad *L)
-{
-        list_ad *Currentelement_op;
-        int i = 0;
-        Currentelement_op = L;
-        while (Currentelement_op->next != 0 && Currentelement_op != Searchedelement_op) {
-                Currentelement_op = (list_ad *) Currentelement_op->next;
-                i++;
-        }
-        return i;
-}
-
-
-void DeleteelementAd(element_ad Deletedelement_op, list_ad *L)
-{
-        element_ad Previouselement_op = (element_ad) GetPreviouselementOp(Deletedelement_op,L);
-                if(Previouselement_op!=0)
-                {
-                        Previouselement_op->next = Deletedelement_op->next;
-                }
-                else
-                {
-                        L->next=Deletedelement_op->next;
-                }
-        free(Deletedelement_op);
-}
-
-
-void DeleteAllelementsAd(list_ad *L)
-{
-        list_ad *Currentelement_op = L;
-        list_ad *Deletedelement_op= (list_ad *) L->next;
-        while (Currentelement_op->next != 0) {
-                Currentelement_op->next = Deletedelement_op->next;
-                free(Deletedelement_op);
-                Deletedelement_op = (list_ad *) Currentelement_op->next;
-        }
-}
-
-void InsertNewelementAd(int addTd , int addBlock, int sizeTd, char *attName, element_ad elementBefore)
-{
-        list_ad *newelement_op = (list_ad *) malloc( sizeof(list_ad) );
-        newelement_op->addBlock = addBlock;
-        newelement_op->addTd = addTd;
-        newelement_op->sizeTd = sizeTd;
-        newelement_op->attName = attName;
-        newelement_op->next = elementBefore->next;
-        elementBefore->next = newelement_op;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////
 
 int IfExistOp(list_op *L, char *ele)
 {
@@ -137,7 +36,7 @@ int IfExistOp(list_op *L, char *ele)
         return 0;
 }
 //potrebno pokrenuti ovu metodu jer kreira testnu tablicu (podatke)
-void createTableTest()
+void bitmap_test()
 {
     printf( "\n********** Function for creating table **********\n");
 
@@ -323,13 +222,13 @@ void createTableTest()
 	some_element = GetFirstelementOp(att_root);
 	InsertNewelementOp("student","year",some_element);
 
-    AK_createIndex( tblName, att_root );
+    AKcreateIndex( tblName, att_root );
 
 }
 
 
 
-void AK_createIndex(char *tblName, list_op *attributes)
+void AKcreateIndex(char *tblName, list_op *attributes)
 {
     int num_attr, num_rec;
         int i, j, k;
@@ -466,7 +365,7 @@ void AK_createIndex(char *tblName, list_op *attributes)
                              printf( "\nINDEX %s CREATED!\n", indexName );
 
                         //tu bi trebalo pozvati funkciju koja puni index podacima određenog atributa
-                        AK_createIndex_se(tblName,indexName,(temp_head+i)->att_name,i,num_attr,t_header);
+                        createIndex(tblName,indexName,(temp_head+i)->att_name,i,num_attr,t_header);
                         break;
 
                      case TYPE_INT:
@@ -502,7 +401,7 @@ void AK_createIndex(char *tblName, list_op *attributes)
                         startAddress = AK_initialize_new_segment( indexName, SEGMENT_TYPE_TABLE, t_headerr);
                            if( startAddress != EXIT_ERROR )
                              printf( "\nINDEX %s CREATED!\n", indexName );
-                        AK_createIndex_se(tblName,indexName,(temp_head+i)->att_name,i,num_attr,t_headerr);
+                        createIndex(tblName,indexName,(temp_head+i)->att_name,i,num_attr,t_headerr);
                          break;
                  }
 
@@ -527,7 +426,7 @@ void AK_createIndex(char *tblName, list_op *attributes)
 
 }
 
-void AK_printHeaderTest(char* tblName)
+void printHeaderTest(char* tblName)
 {
     AK_header *temp_head = AK_get_header( tblName );
     int i;
@@ -551,7 +450,7 @@ void AK_printHeaderTest(char* tblName)
  * @numAtributes - broj atributa u tablici
  * @headerIndex - header inicijalizirane inde tablice
 */
-void AK_createIndex_se(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex)
+void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex)
 {
     table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
     AK_block *temp = (AK_block*)AK_read_block( addresses->address_from[0]);
@@ -647,7 +546,7 @@ void AK_createIndex_se(char *tblName, char *tblNameIndex, char *attributeName, i
 }
 
 //sluzi za dohvacanje adresa odredjenog atributa u indexu
-list_ad* AK_getAttribute_se(char *indexName, char *attribute)
+list_ad* getAttribute(char *indexName, char *attribute)
 {
     int num_attr, num_rec;
         int i, j, k;
@@ -710,8 +609,9 @@ list_ad* AK_getAttribute_se(char *indexName, char *attribute)
                                 if(strcmp(temp_char,"1") == 0 )
                                 {
                                 //printf( "%-10s", temp_char );
-                               // printf("adresa bloka: %i  veličina podatka: %i adresa td-a: %i\n",addBlock,addSize,addTd);
-                                InsertNewelementAd(addTd,addBlock,addSize,attribute,add_root);
+                                //printf("adresa bloka: %i  veličina podatka: %i adresa td-a: %i\n",addBlock,addSize,addTd);
+                                    int indexTd=k;
+                                    InsertNewelementAd(addBlock,indexTd,attribute,add_root);
                                 }
                                 break;
                         }
@@ -729,7 +629,7 @@ list_ad* AK_getAttribute_se(char *indexName, char *attribute)
 
 
 
-void AK_createListAddressTest()
+void createListAddressTest()
 {
       list_ad *add_root =  (list_ad *) malloc( sizeof(list_ad) );
 	InitializelistAd(add_root);
@@ -755,20 +655,20 @@ void AK_createListAddressTest()
 }
 
 //sluzi za testiranje dohvacanja adresa atributa pomocu indexa
-void AK_printAttTest(list_ad *list)
+void printAttTest(list_ad *list)
 {
 
     //list_ad *list = getAttribute("studentfirstname","Matija");
        element_ad ele = GetFirstelementAd(list);
         while(ele != 0)
         {
-            printf("Atribut : %s Blok: %i Adresa td: %i Size: %i\n",ele->attName,ele->addBlock,ele->addTd,ele->sizeTd);
+            //printf("Atribut : %s Blok: %i Adresa td: %i Size: %i\n",ele->attName,ele->add.addBlock,ele->add.addTd,ele->add.sizeTd);
             ele = GetNextelementAd(ele);
         }
 }
 
 //ovo je glavna funkcija za dohvacanje, nju treba pokrenuti pri selekciji
-list_ad* AK_getAttribute(char *tableName, char *attributeName, char *attributeValue)
+list_ad* AKgetAttribute(char *tableName, char *attributeName, char *attributeValue)
 {
     list_ad *list =  (list_ad *) malloc( sizeof(list_ad) );
     InitializelistAd(list);
@@ -791,120 +691,19 @@ list_ad* AK_getAttribute(char *tableName, char *attributeName, char *attributeVa
     }
     else
     {
-       list = AK_getAttribute_se(indexName, attributeValue);
+       list = getAttribute(indexName, attributeValue);
     }
 
     return list;
 }
 
-
-void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue)
+/*
+void AKupdate(int addBlock, int addTd, char *att)
 {
-    char inde[50];
-    char *indexName;
-    int b,num_attr,k,j;
-    int i = 0;
-    int temp_adr_block;
-    int temp_adr_Td;
-    int pos;
-    int posNew = -1;
 
-    strcpy(inde,tableName);
-    indexName = strcat(inde,attributeName);
-    indexName = strcat(indexName,"_bmapIndex");
-
-   // printf("Naziv indexa: %s",indexName);
-    AK_header *temp_head = AK_get_header( indexName );
-    num_attr = AK_num_attr( indexName );
-
-    for( i = 0; i < num_attr; i++ )
-    {
-        if(strcmp((temp_head+i)->att_name,attributeValue) == 0)
-        {
-           // printf("XXXXXXXXXXXXXXXXXXX%i",i);
-            pos = i;
-        }
-    }
-    i = 0;
-    for( i = 0; i < num_attr; i++ )
-    {
-        if(strcmp((temp_head+i)->att_name,newAttributeValue) == 0)
-        {
-            posNew = i;
-        }
-    }
-
-    if(posNew == -1)
-    {
-        printf("Moguc update samo za postojece vrijednosti ! \n");
-        exit(1);
-    }
-
-    table_addresses *addresses = (table_addresses* ) get_table_addresses( indexName );
-    AK_block *temp = (AK_block*)AK_read_block( addresses->address_from[0]);
-    if(addresses->address_from[ 0 ] == 0)
-    {
-        printf("Ne postoji index za tablicu: %s nad atributom: %s", tableName, attributeName);
-    }
-    else
-    {        
-        for( b = 0; b < num_attr; b++ )
-        {
-            if(strcmp((temp_head+b)->att_name,attributeValue) == 0)
-            {
-                //printf("XXXXXXXXXXXXXXXXXXXXXXXXXX%i",b);
-                i=0;
-                 while( addresses->address_from[ i ] != 0 ){
-                        for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-                            AK_block *temp = (AK_block*) AK_read_block( j );
-                            for( k = 0; k < DATA_BLOCK_SIZE; k=k+num_attr ){
-                                if( temp->tuple_dict[ k ].size > 0 ){
-                                    memcpy( &temp_adr_block, &(temp->data[ temp->tuple_dict[ k ].address]),temp->tuple_dict[k].size);
-                                    memcpy( &temp_adr_Td, &(temp->data[ temp->tuple_dict[ k+1 ].address]),temp->tuple_dict[k+1].size);
-                                    //printf("xx:%i\n",temp_adr_block);
-                                    if((temp_adr_block == addBlock) && (temp_adr_Td == addTd))
-                                    {
-                                        //printf( "Adresa bloka je: %d, Adresat Td-a je: %d xxxx:%i ", temp_adr_block, temp_adr_Td, temp->address );
-                                        //temp->data[ temp->tuple_dict[ k+pos ].address] = NULL;                                       
-                                        memcpy( &(temp->data[ temp->tuple_dict[ k+pos ].address]),"n",1);
-                                        //temp->data[ temp->tuple_dict[ k+posNew ].address] = NULL;
-                                        memset(&(temp->data[ temp->tuple_dict[ k+posNew ].address]),0,4);
-                                        memcpy( &(temp->data[ temp->tuple_dict[ k+posNew ].address]),"1",1);
-                                        write_block(temp);
-                                    }
-                                }
-                            }
-
-                        }
-                    i++;
-                }
-            }
-        }
-    }
 }
-
-int write_block( AK_block * block )
-{
-	if( ( db = fopen( DB_FILE, "r+" ) ) == NULL ) {
-		printf( "AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE );
-		exit( EXIT_ERROR );
-	}
-	if( fseek( db, block->address * sizeof( AK_block ), SEEK_SET ) != 0 )
-	{
-		printf( "AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address );
-		exit( EXIT_ERROR );
-	}
-	if( fwrite( block, sizeof( *block ), 1, db ) != 1 )
-	{
-		printf( "AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address );
-		exit( EXIT_ERROR );
-	}
-	fclose( db );
-	if( DEBUG )
-		printf( "AK_write_block: Written block at address %d\n", block->address * sizeof( AK_block ) );
-	return ( EXIT_SUCCESS );
-}
-/**
+ * */
+/*
 za testiranje potrebno u main.c :
  * createTableTest();
  * printAttTest(AKgetAttribute("student","firstname","Oleg"));
