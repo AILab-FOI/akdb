@@ -461,7 +461,7 @@ void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int 
  @return nothing EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
 */
 int AK_init_system_tables_catalog( int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-								  int trigger, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull)
+								  int trigger, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull, int reference)
 {
 	if( DEBUG )
 	 printf("AK_init_system_tables_catalog: Initializing system tables catalog\n");
@@ -548,6 +548,9 @@ int AK_init_system_tables_catalog( int relation, int attribute, int index, int v
 
         AK_insert_entry(catalog_block, TYPE_INT, &constraintNull, 29 );
         
+	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_reference", 30);
+
+    AK_insert_entry(catalog_block, TYPE_INT, &reference, 31);
 
 	/// call function for writing the block on the first place in the file (ie. first block is on position zero)
 	if ( AK_write_block(catalog_block) == EXIT_SUCCESS )
@@ -577,7 +580,113 @@ void AK_memset_int(void *block, int value, size_t num)
 		*((int *)block + i) = value;
 }
 
+int AK_register_system_tables( int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
+								  int trigger, int db, int db_obj, int user, int group, int constraint, int constraintNull, int right, int reference) {
+    AK_block *relationTable = AK_read_block(relation);
+    int i = 1, j = 0;
+    int end;
 
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_relation", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &relation, j); j++;
+    end = relation+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_attribute", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &attribute, j); j++;
+    end = attribute+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_index", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &index, j); j++;
+    end = index+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_view", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &view, j); j++;
+    end = view+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_sequence", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &sequence, j); j++;
+    end = sequence+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_function", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &function, j); j++;
+    end = function+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_function_arguments", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &function_arguments, j); j++;
+    end = function_arguments+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_trigger", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &trigger, j); j++;
+    end = trigger+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_db", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &db, j); j++;
+    end = db+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_db_obj", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &db_obj, j); j++;
+    end = db_obj+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_user", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &user, j); j++;
+    end = user+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_group", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &group, j); j++;
+    end = group+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_right", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &right, j); j++;
+    end = right+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+	
+	AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_between", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &constraint, j); j++;
+    end = constraint+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+	
+	AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_not_null", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &constraintNull, j); j++;
+    end = constraintNull+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_reference", j); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &reference, j); j++;
+    end = reference+INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
+
+    relationTable->last_tuple_dict_id = j;    
+
+    AK_write_block(relationTable);
+    return EXIT_SUCCESS;
+}
 /**
  @author Miroslav Policki
 
@@ -587,7 +696,7 @@ void AK_memset_int(void *block, int value, size_t num)
 
 */
 int AK_init_system_catalog() {
-	int relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull;
+	int relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull, reference;
 	int i;
 
 	if( DEBUG )
@@ -715,6 +824,16 @@ int AK_init_system_catalog() {
 		{TYPE_INT, "right_type", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
 	};
+	
+	AK_header hReference[7] = {
+                {TYPE_VARCHAR, "table", 0, '\0', '\0',},
+		{TYPE_VARCHAR, "constraint", 0, '\0', '\0',},
+		{TYPE_VARCHAR, "attribute", 0, '\0', '\0',},
+		{TYPE_VARCHAR, "parent", 0, '\0', '\0',},
+                {TYPE_VARCHAR, "parent_attribute", 0, '\0', '\0',},
+		{TYPE_INT, "type", 0, '\0', '\0',},
+		{0, '\0', 0, '\0', '\0'}
+        };
 
         for( i = 0; i < 4; i++) {
 		AK_memset_int(hConstraintNotNull[i].integrity, FREE_INT, MAX_CONSTRAINTS);
@@ -806,6 +925,11 @@ int AK_init_system_catalog() {
 		memset(hRight[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
+	for( i = 0; i < 6; i++) {
+		AK_memset_int(hReference[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		memset(hReference[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
+		memset(hReference[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
+	}
 	if( DEBUG )
 		printf( "AK_init_system_catalog: Creating new segments...\n" );
 
@@ -824,12 +948,14 @@ int AK_init_system_catalog() {
 	right = AK_new_segment("AK_right", SEGMENT_TYPE_SYSTEM_TABLE, hRight);
         constraint = AK_new_segment("AK_constraints_between", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintBetween);
         constraintNull = AK_new_segment("AK_constraints_not_null", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintNotNull);
+	reference = AK_new_segment("AK_reference", SEGMENT_TYPE_SYSTEM_TABLE, hReference);
 
 	if( DEBUG )
 		printf( "AK_init_system_catalog: Segments created!\n" );
 
 	if(EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull))
 	{
+		AK_register_system_tables(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull, reference);
 		printf( "AK_init_system_catalog: System catalog initialized!\n" );
 		return EXIT_SUCCESS;
 	}

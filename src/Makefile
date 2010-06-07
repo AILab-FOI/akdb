@@ -8,18 +8,22 @@ DISKTARGETS = dbman.o
 MEMORYTARGETS = memoman.o
 FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bitmap.o table.o
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o
-OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o
+OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o 
+CONSTRAINTTARGETS = reference.o
 
 OUTDIR = ../bin
 
 all: kalashnikov-db 
 #doc
 
-kalashnikov-db: auxiliary.o $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
-	$(CC) main.o $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
+kalashnikov-db: auxiliary.o $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
+	$(CC) main.o $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
 
 main.o: main.c
 	$(CC) $(CFLAGS) main.c
+
+reference.o: reference.c
+	$(CC) $(CFLAGS) reference.c
 
 rel_eq_comut.o: rel_eq_comut.c
 	$(CC) $(CFLAGS) rel_eq_comut.c
@@ -92,6 +96,8 @@ dbman.o: dbman.c
 
 auxiliary.o: auxiliary.c
 	$(CC) $(CFLAGS) auxiliary.c
+
+
 
 clean:
 	rm -rf *~ *.o ../bin/kdb ../doc/* ../bin/kalashnikov.db

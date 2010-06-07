@@ -53,6 +53,9 @@
 #include "union.h"
 #include "aggregation.h"
 
+// Constraints
+#include "reference.h"
+
 /**
 Main program function
 
@@ -83,8 +86,10 @@ int main()
 			//table_test();
 
                         //btree_test();
-			hash_test();
+			//hash_test();
 			//bitmap_test();
+
+                        reference_test();
 
 			//aggregation_test();
 			//rel_eq_projection_test();
@@ -92,7 +97,7 @@ int main()
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
 
-                         memoman_test();
+                        // memoman_test();
 			/* component test area --- end */
 
                         if ( AK_flush_cache() == EXIT_SUCCESS ){
