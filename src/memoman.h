@@ -27,7 +27,7 @@
 #include "auxiliary.h"
 #include "dbman.h"
 #include "configuration.h"
-#include "dbman.h"
+
 /**
 \struct AK_mem_block
 \brief Defines a block of data in memory
@@ -128,10 +128,4 @@ AK_redo_log * redo_log;
 AK_query_mem * query_mem;
 
 
-///@author Matija Novak
-typedef struct{
-	///sturcture for extents start end stop adresses
-	int address_from[ MAX_EXTENTS_IN_SEGMENT ]; //start adress of the extent
-	int address_to[ MAX_EXTENTS_IN_SEGMENT ]; //end adress of the extent
-}table_addresses;
 #endif

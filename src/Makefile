@@ -9,7 +9,7 @@ MEMORYTARGETS = memoman.o
 FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bitmap.o table.o
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o 
-CONSTRAINTTARGETS = reference.o
+CONSTRAINTTARGETS = reference.o between.o nnull.o id.o
 
 OUTDIR = ../bin
 
@@ -24,6 +24,15 @@ main.o: main.c
 
 reference.o: reference.c
 	$(CC) $(CFLAGS) reference.c
+
+between.o: between.c
+	$(CC) $(CFLAGS) between.c
+
+nnull.o: nnull.c
+	$(CC) $(CFLAGS) nnull.c
+
+id.o: id.c
+	$(CC) $(CFLAGS) id.c
 
 rel_eq_comut.o: rel_eq_comut.c
 	$(CC) $(CFLAGS) rel_eq_comut.c

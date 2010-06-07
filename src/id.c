@@ -26,14 +26,14 @@ int AK_get_id()
     int j, i = 0;
     int freeSpaceFound = 0;
     int tupleDictID = -1;
-    KK_block *tempBlock;
+    AK_block *tempBlock;
     int itis = 1;
     int currValue;
     int nullID = 0;
 
     char* currentValue[50];
 
-    tempBlock = KK_read_block(0);
+    tempBlock = AK_read_block(0);
 
     while(itis)
     {
@@ -42,12 +42,12 @@ int AK_get_id()
 
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i+1].address, tempBlock->tuple_dict[i+1].size);
-        if(strcmp(systemTableName,"KK_sequence") == 0)
+        if(strcmp(systemTableName,"AK_sequence") == 0)
         {
             if(DEBUG)
                 printf("Sistemska tablica u koju se upisuje: %s, adresa: %i\n",systemTableName,systemTableAddress);
                 
-            tempBlock = KK_read_block(systemTableAddress);
+            tempBlock = AK_read_block(systemTableAddress);
 
             while (freeSpaceFound == 0)
             {
@@ -59,20 +59,20 @@ int AK_get_id()
             {
                 tupleDictID = 0;
                 currValue = 0;
-                KK_insert_entry(tempBlock, TYPE_INT, &nullID, tupleDictID);
-                KK_insert_entry(tempBlock, TYPE_VARCHAR, "objectID", tupleDictID + 1);
-                KK_insert_entry(tempBlock, TYPE_VARCHAR, "1", tupleDictID + 2);
-                KK_insert_entry(tempBlock, TYPE_VARCHAR, "1", tupleDictID + 3);
-                KK_insert_entry(tempBlock, TYPE_VARCHAR, "null", tupleDictID + 4);
-                KK_insert_entry(tempBlock, TYPE_VARCHAR, "null", tupleDictID + 5);
-                KK_insert_entry(tempBlock, TYPE_VARCHAR, "null" , tupleDictID + 6);
+                AK_insert_entry(tempBlock, TYPE_INT, &nullID, tupleDictID);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, "objectID", tupleDictID + 1);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, "1", tupleDictID + 2);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, "1", tupleDictID + 3);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, "null", tupleDictID + 4);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, "null", tupleDictID + 5);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, "null" , tupleDictID + 6);
 
-                KK_write_block(tempBlock);
+                AK_write_block(tempBlock);
             }
             else
             {
                 tupleDictID = 0;
-                tempBlock = KK_read_block(systemTableAddress);
+                tempBlock = AK_read_block(systemTableAddress);
                 for(j=0; j<50; j++)
                     currentValue[j]= FREE_CHAR;
                 memcpy(&currentValue, tempBlock->data + tempBlock->tuple_dict[2].address, tempBlock->tuple_dict[2].size);
@@ -80,8 +80,8 @@ int AK_get_id()
                 currValue = atoi(currentValue);
                 currValue++;
                 sprintf(currentValue,"%i",currValue);
-                KK_insert_entry(tempBlock, TYPE_VARCHAR, currentValue, tupleDictID + 2);
-                KK_write_block(tempBlock);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, currentValue, tupleDictID + 2);
+                AK_write_block(tempBlock);
 
                 //printf("Current value: %s\n",currentValue);
             }

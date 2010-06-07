@@ -22,5 +22,6 @@
 
 #include "memoman.h"
 #include "dbman.h"
+#include "id.h"
 
 #endif
