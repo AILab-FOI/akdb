@@ -1,5 +1,5 @@
 /**
-@file bitmap.h Provides data structures for bitmap index
+@file bitmapindex.h Provides data structures for bitmap index
 */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -30,4 +30,15 @@
 #include "projection.h"
 #include "table.h"
 #include "selection.h"
-#include "index.h"
+
+
+typedef struct {
+        char *attName;
+        int addTd;
+        int addBlock;
+        int sizeTd;
+	struct list_structure_ad *next;
+}list_structure_ad;
+
+typedef list_structure_ad *element_ad;
+typedef list_structure_ad list_ad;
