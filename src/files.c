@@ -19,7 +19,7 @@
 #include "files.h"
 
 /**
- * @author Tomislav Fotak, updated by Matija Šestak (function now uses caching)
+ * @author Tomislav Fotak
  *
  * Function initializes new segment and writes its start and finish address in
  * system catalog table
@@ -30,7 +30,6 @@
  *
  * @return
  */
-
 int AK_initialize_new_segment(char *name, int type, AK_header *header)
 {
 	int start_address = -1;
@@ -42,10 +41,10 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header)
 	int systemTableAddress;
 	int freeSpaceFound = 0; //find free space in system table for writing at it
 	int tupleDictID = -1;
-	int objectID = 79; //will be defined later
+	int id;
 
 	//AK_mem_block *tempBlock;
-	AK_mem_block *memBlock;
+	AK_block *tempBlock;
 
 	if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR)
 	{
@@ -66,17 +65,17 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header)
 				printf("AK_init_new_segment__NOTIFICATION: Searching....\n");
 
 			//tempBlock = AK_get_block(0);
-			memBlock = AK_get_block(0);
+			tempBlock = AK_read_block(0);
 
-			memcpy(systemTableName, memBlock->block->data + memBlock->block->tuple_dict[i].address, memBlock->block->tuple_dict[i].size);
+			memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
 			if (DEBUG)
 				printf("AK_init_new_segment__Getting: %s\n", systemTableName);
 
 			i += 1;
 
 			//get next tuple_dict where the start address might be
-			memcpy(&systemTableAddress, memBlock->block->data + memBlock->block->tuple_dict[i].address, memBlock->block->tuple_dict[i].size);
-
+			memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
+                        
 			switch(type)
 			{
 				case SEGMENT_TYPE_TABLE:
@@ -105,24 +104,26 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header)
 		if (search == 0)
 		{
 			//tempBlock = AK_get_block(systemTableAddress);
-			memBlock = AK_get_block(systemTableAddress);
+			tempBlock = AK_read_block(systemTableAddress);
 
 			while (freeSpaceFound == 0)
 			{
 				tupleDictID += 1;
-				if (memBlock->block->tuple_dict[tupleDictID].size == FREE_INT)
+				if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT)
 					freeSpaceFound = 1;
 			}
 			if (freeSpaceFound == 1)
 			{
-				AK_insert_entry(memBlock->block, TYPE_INT, &objectID, tupleDictID);
-				AK_insert_entry(memBlock->block, TYPE_VARCHAR, name, tupleDictID + 1);
-				AK_insert_entry(memBlock->block, TYPE_INT, &start_address, tupleDictID + 2);
-				AK_insert_entry(memBlock->block, TYPE_INT, &end_address, tupleDictID + 3);
+                                id = AK_get_id();
+				AK_insert_entry(tempBlock, TYPE_INT, &id, tupleDictID);
+				AK_insert_entry(tempBlock, TYPE_VARCHAR, name, tupleDictID + 1);
+				AK_insert_entry(tempBlock, TYPE_INT, &start_address, tupleDictID + 2);
+				AK_insert_entry(tempBlock, TYPE_INT, &end_address, tupleDictID + 3);
+                                
 				if( DEBUG )
 					printf("AK_init_new_segment__NOTIFICATION: Writing block at address %d\n", start_address );
-				//AK_write_block(memBlock->block);
-                                memBlock->dirty=BLOCK_DIRTY;
+				AK_write_block(tempBlock);
+				
 				AK_new_extent( start_address, 0, type, header );
 			}
 			else
@@ -131,13 +132,14 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header)
 					printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
 				return EXIT_ERROR;
 			}
-
+			
 		}
 		if (DEBUG)
 			printf("AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
 		return start_address;
 	}
 }
+
 
 void files_test()
 {
