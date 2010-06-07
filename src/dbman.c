@@ -196,7 +196,6 @@ int AK_write_block( AK_block * block )
 
  @return address (block number) of new extent if successful, EXIT_ERROR otherwise
 */
-
 int AK_new_extent( int start_address, int old_size, int extent_type, AK_header *header )
 {
 	int req_free_space; 				/// var - How much of space is required for extent
@@ -220,7 +219,7 @@ int AK_new_extent( int start_address, int old_size, int extent_type, AK_header *
 				RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
 				break;
 			case SEGMENT_TYPE_INDEX:
-				RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
+				RESIZE_FACTOR = EXTENT_GROWTH_INDEX;                                
 				break;
 			case SEGMENT_TYPE_TRANSACTION:
 				RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
@@ -337,8 +336,7 @@ int AK_new_segment(char * name, int type, AK_header *header)
 
 		if ( block->type == BLOCK_TYPE_FREE )
 		{
-			current_extent_start_addr = AK_new_extent( i, 0, type, header ); /// allocate new extent
-
+			current_extent_start_addr = AK_new_extent( i, 0, type, header ); /// allocate new extent                    
 			/// if extent is successfully allocated, increment number of allocated extents and move to
 			/// next block after allocated extent, else move for INITIAL_EXTENT_SIZE blocks, so in that way get
 			/// either first block of new extent or some block in this extent which will not be free
@@ -463,7 +461,7 @@ void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int 
  @return nothing EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
 */
 int AK_init_system_tables_catalog( int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-								  int trigger, int db, int db_obj, int user, int group, int right)
+								  int trigger, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull)
 {
 	if( DEBUG )
 	 printf("AK_init_system_tables_catalog: Initializing system tables catalog\n");
@@ -542,9 +540,18 @@ int AK_init_system_tables_catalog( int relation, int attribute, int index, int v
 	
 	AK_insert_entry(catalog_block, TYPE_INT, &right, 25 );
 
+        AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_constraints_between", 26 );
+
+        AK_insert_entry(catalog_block, TYPE_INT, &constraint, 27 );
+
+        AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_constraints_not_null", 28 );
+
+        AK_insert_entry(catalog_block, TYPE_INT, &constraintNull, 29 );
+        
+
 	/// call function for writing the block on the first place in the file (ie. first block is on position zero)
 	if ( AK_write_block(catalog_block) == EXIT_SUCCESS )
-	{
+	{            
 		return EXIT_SUCCESS;
 	}
 	else
@@ -580,11 +587,31 @@ void AK_memset_int(void *block, int value, size_t num)
 
 */
 int AK_init_system_catalog() {
-	int relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right;
+	int relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull;
 	int i;
 
 	if( DEBUG )
 		printf( "AK_init_system_catalog: System catalog initialization started...\n" );
+
+         AK_header hConstraintNotNull[5] = {
+                {TYPE_INT, "obj_id", 0, '\0', '\0'},
+		{TYPE_VARCHAR, "tableName", 0, '\0', '\0'},
+                {TYPE_VARCHAR, "constraintName", 0, '\0', '\0'},
+                {TYPE_VARCHAR, "attributeName", 0, '\0', '\0'},
+		{0, '\0', 0, '\0', '\0'}
+	};
+
+        
+        AK_header hConstraintBetween[7] = {
+                {TYPE_INT, "obj_id", 0, '\0', '\0'},
+		{TYPE_VARCHAR, "tableName", 0, '\0', '\0'},
+                {TYPE_VARCHAR, "constraintName", 0, '\0', '\0'},
+                {TYPE_VARCHAR, "attributeName", 0, '\0', '\0'},
+		{TYPE_VARCHAR, "start_value", 0, '\0', '\0'},
+		{TYPE_VARCHAR, "end_value", 0, '\0', '\0'},
+		{0, '\0', 0, '\0', '\0'}
+	};
+
 
 	AK_header hRelation[5] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0'},
@@ -689,6 +716,18 @@ int AK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
+        for( i = 0; i < 4; i++) {
+		AK_memset_int(hConstraintNotNull[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		memset(hConstraintNotNull[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
+		memset(hConstraintNotNull[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
+	}
+
+        for( i = 0; i < 6; i++) {
+		AK_memset_int(hConstraintBetween[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+		memset(hConstraintBetween[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
+		memset(hConstraintBetween[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
+	}
+
 	for( i = 0; i < 4; i++) {
 		AK_memset_int(hRelation[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hRelation[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
@@ -783,11 +822,13 @@ int AK_init_system_catalog() {
 	user = AK_new_segment("AK_user", SEGMENT_TYPE_SYSTEM_TABLE, hUser);
 	group = AK_new_segment("AK_group", SEGMENT_TYPE_SYSTEM_TABLE, hGroup);
 	right = AK_new_segment("AK_right", SEGMENT_TYPE_SYSTEM_TABLE, hRight);
+        constraint = AK_new_segment("AK_constraints_between", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintBetween);
+        constraintNull = AK_new_segment("AK_constraints_not_null", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintNotNull);
 
 	if( DEBUG )
 		printf( "AK_init_system_catalog: Segments created!\n" );
 
-	if(EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right))
+	if(EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, db, db_obj, user, group, right, constraint, constraintNull))
 	{
 		printf( "AK_init_system_catalog: System catalog initialized!\n" );
 		return EXIT_SUCCESS;
@@ -915,3 +956,144 @@ int AK_init_disk_manager()
 	return( EXIT_ERROR );
 }
 
+/** 	@author Matija Novak
+	function for geting addresses of some table
+	@return structure table_addresses witch contains start and end adresses of table extents,
+	when form and to are 0 you are on the end of addresses
+	@param table - table name that you search for
+*/
+table_addresses * get_table_addresses ( char * table )
+{
+	AK_block *temp_block;
+
+	temp_block = (AK_block *) AK_read_block(0);
+
+	int i=0;
+	int data_adr=0;
+	int data_size=0;
+	int data_type=0;
+	char name_sys[MAX_ATT_NAME];
+	int address_sys;
+	int free2=0;//var to clear char variable
+
+	if(DEBUG)
+		printf("get_table_addresses: Serching for system_relation table \n");
+
+	for(i=0;i<DATA_BLOCK_SIZE;i++)
+	{//going throught headers
+
+		free2=0;
+		for(free2=0;free2<MAX_ATT_NAME;free2++)
+			name_sys[free2]='\0';
+
+		if(temp_block->tuple_dict[i].address == FREE_INT)
+			break;
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(name_sys,temp_block->data+data_adr,data_size);
+
+		i++;
+		data_adr=temp_block->tuple_dict[i].address;
+		data_size=temp_block->tuple_dict[i].size;
+		data_type=temp_block->tuple_dict[i].type;
+		memcpy(&address_sys,temp_block->data+data_adr,data_size);
+
+		if(strcmp(name_sys,"AK_relation")==0)
+		{
+			if(DEBUG)
+				printf("get_table_addresses: Found the address of the system_relation table: %d \n",address_sys);
+			break;
+		}
+		i++;
+	}
+
+	i=0;
+	free(temp_block);
+	temp_block= (AK_block *) AK_read_block(address_sys);
+	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
+
+	free2=0;
+	for(free2=0;free2<MAX_EXTENTS_IN_SEGMENT;free2++)
+	{//intialize address structure
+		addresses->address_from[free2] = 0;
+		addresses->address_to[free2] = 0;
+	}
+
+	char name[MAX_VARCHAR_LENGHT];
+	int address_from;
+	int address_to;
+	int j=0;
+
+	for(i=0;i<DATA_BLOCK_SIZE;i++)
+	{
+            if( temp_block->tuple_dict[i].type == FREE_INT )
+                break;
+            i++;
+            memcpy( name, &(temp_block->data[temp_block->tuple_dict[i].address]), temp_block->tuple_dict[i].size );
+            name[ temp_block->tuple_dict[i].size] = '\0';
+
+            i++;
+            memcpy( &address_from, &(temp_block->data[temp_block->tuple_dict[i].address]),temp_block->tuple_dict[i].size);
+
+            i++;
+            memcpy( &address_to, &(temp_block->data[temp_block->tuple_dict[i].address]),temp_block->tuple_dict[i].size);
+
+		if(strcmp(name,table)==0)
+		{//if found the table that addresses we need
+			addresses->address_from[j]= address_from;
+			addresses->address_to[j]= address_to;
+			j++;
+			if(DEBUG)
+				printf("get_table_addresses(%s): Found addresses of searching table: %d , %d \n", name, address_from, address_to);
+		}
+	}
+
+	free(temp_block);
+	return addresses;
+}
+
+/** 	@author Matija Novak
+	function to find free space in some block betwen block addresses
+	function made for insert_row()
+	@param address - addresses of extents
+	@returns int - address of the block to write in
+*/
+int find_free_space ( table_addresses * addresses )
+{
+	AK_block *temp_block;
+	int from=0,to=0,j=0,i=0;
+
+	if(DEBUG)
+		printf("find_free_space: Searching for block that has free space < 500 \n");
+
+	for (j=0;j<MAX_EXTENTS_IN_SEGMENT;j++)
+	{//searching extent
+		if(addresses->address_from != 0)
+		{
+			from=addresses->address_from[j];
+			to=addresses->address_to[j];
+
+			for(i=from;i<=to;i++)
+			{//searching block
+				temp_block = (AK_block *) AK_read_block( i );
+				int free_space_on=temp_block->free_space;
+				if(DEBUG)
+					printf("find_free_space: FREE SPACE %d\n",temp_block->free_space);
+				if((free_space_on < MAX_FREE_SPACE_SIZE)&&
+					(temp_block->last_tuple_dict_id<MAX_LAST_TUPLE_DICT_SIZE_TO_USE))
+				{//found free block to write
+					return i;
+				}
+			}
+		}
+		else break;
+	}
+
+	//I cant call function from memoman must consider another solution to place these functions
+	int adr = -1;
+
+	free( temp_block );
+	//need to create new extent
+	return adr;
+}
