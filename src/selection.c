@@ -84,6 +84,24 @@ AK_list_elem PreviousL( AK_list_elem current, AK_list *L ){
 }
 
 /**
+ * @author Dejan Frankovic
+ * @brief Get n-th element of the list
+ * @param int - 0-based index of the element
+ * @param AK_list - root of the list
+ * @result AK_list_elem - n-th element, or NULL if it doesn't exist
+ */
+AK_list_elem GetNthL(int n, AK_list *L) {
+    AK_list *temp = L->next;
+    while (temp != NULL) {
+        if (n == 0)
+            return temp;
+        temp = NextL(temp,L);
+        n--;
+    }
+    return NULL;
+}
+
+/**
  * @author Matija Šestak.
  * @brief  Test whether the list is empty
  * @param AK_list* - root of the list

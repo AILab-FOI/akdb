@@ -318,6 +318,14 @@ int insert_row_to_block(list *row_root, AK_block *temp_block)
 */
 int insert_row(list *row_root)
 {
+    if (DEBUG) {
+        printf("insert_row: Start testing reference integrity.\n");
+    }
+
+    if (AK_reference_check_entry(row_root) == EXIT_ERROR) {
+        printf ("Could not insert row. Reference integrity violation.\n");
+        return EXIT_ERROR;
+    }
 	if(DEBUG){
 		printf("insert_row: Start inserting data\n");
 	}

@@ -27,6 +27,7 @@
 #include "string.h"
 #include "configuration.h"
 #include "auxiliary.h"
+#include "reference.h"
 
 
 ///@author Matija Novak

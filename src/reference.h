@@ -28,6 +28,7 @@
 #include "files.h"
 #include "memoman.h"
 #include "table.h"
+#include "fileio.h"
 
 #define REF_TYPE_NONE -1
 #define REF_TYPE_SET_NULL 1
@@ -36,14 +37,17 @@
 #define REF_TYPE_RESTRICT 4
 #define REF_TYPE_SET_DEFAULT 5 // reserved for future use
 
+#define MAX_REFERENCE_ATTRIBUTES 10
+
 typedef struct {
     char table[MAX_ATT_NAME];
-    char *attributes[MAX_ATT_NAME];
+    char attributes[MAX_REFERENCE_ATTRIBUTES][MAX_ATT_NAME];
     char parent[MAX_ATT_NAME];
-    char *parent_attributes[MAX_ATT_NAME];
+    char parent_attributes[MAX_REFERENCE_ATTRIBUTES][MAX_ATT_NAME];
     int attributes_number;
     char constraint[MAX_VARCHAR_LENGHT];
     int type;
 } AK_ref_item;
+
 
 #endif

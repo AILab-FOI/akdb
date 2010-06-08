@@ -100,32 +100,374 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
     return 1;
 }
 
-AK_ref_item AK_check_reference_integrity(char *tableName, char *constraintName) {
+AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
     int i = 0;
     AK_list *list;
+    AK_ref_item reference;
 
-    AK_ref_item a;
+    reference.attributes_number = 0;
 
-    return a;
+    while ((list = AK_get_row(i,"AK_reference")) != NULL ) {
+        if (strcmp(list->next->data,tableName) == 0 &&
+                strcmp(list->next->next->data,constraintName)==0) {
+            strcpy(reference.table, tableName);
+            strcpy(reference.constraint, constraintName);
+            strcpy(reference.attributes[reference.attributes_number], list->next->next->next->data);
+            strcpy(reference.parent, list->next->next->next->next->data);
+            strcpy(reference.parent_attributes[reference.attributes_number], list->next->next->next->next->next->data);
+            reference.attributes_number++;
+        }
+        i++;
+    }
+    return reference;
+}
+
+int AK_reference_check_attribute(char *tableName, char *attribute, char *value) {
+    int i;
+    int att_index;
+    AK_list *list_row, *list_col;
+    while ((list_row = AK_get_row(i,"AK_reference")) != NULL ) {
+        if (strcmp(list_row->next->data,tableName) == 0 &&
+                strcmp(list_row->next->next->next->data,attribute) == 0) {
+            att_index = AK_get_attr_index(list_row->next->next->next->next->data, list_row->next->next->next->next->next->data);
+            list_col = AK_get_column(att_index, list_row->next->next->next->next->data);
+            while (strcmp(list_col->data,value) != 0) {
+                list_col = list_col->next;
+                if (list_col == NULL)
+                    return EXIT_ERROR;
+            }
+        }
+        i++;
+    }
+    return EXIT_SUCCESS;
+}
+
+int AK_reference_check_if_update_needed(list *lista) {
+    element temp;
+    int i = 0,j,con_num=0;
+    AK_list *row;
+
+     while ((row = AK_get_row(i,"AK_reference")) != NULL ) {
+        if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
+            temp = GetFirstElement(lista);
+            while (temp != NULL) {
+                if (temp->constraint == 0 && strcmp(list->next->next->next->next->next->data, temp->attribute_name) == 0)
+                    return EXIT_SUCCESS;
+                temp = GetNextElement(temp);
+            }
+        }
+        i++;
+     }
+
+    return EXIT_ERROR;
+}
+
+int AK_get_type_size(int type, char data[]) {
+    switch (type) {
+        case TYPE_INT:
+            return sizeof(int);
+        case TYPE_FLOAT:
+            return sizeof(float);
+        case TYPE_NUMBER:
+            return sizeof(double);
+        case TYPE_VARCHAR:
+            return strlen(data);
+        case TYPE_DATE:
+            //?
+        case TYPE_DATETIME:
+            //?
+        case TYPE_TIME:
+            //?
+        case TYPE_BLOB:
+            //?
+        case TYPE_BOOL:
+            return sizeof(int);
+    }
+}
+
+int AK_reference_update(list *lista) {
+    int parent_i,i,j,ref_i;
+    AK_list *parent_row;
+    AK_list *ref_row;
+    element temp;
+    AK_list_elem tempcell;
+
+    AK_list expr;
+    InitL( &expr );
+
+    // selecting only affected rows in parent table..
+    i=0;
+    temp = GetFirstElement(lista);
+    while (temp != NULL) {
+        if (temp->constraint == 0) {
+            InsertAtEndL(TYPE_OPERAND, temp->attribute_name, strlen(temp->attribute_name), &expr);
+            InsertAtEndL(temp->type, temp->data, AK_get_type_size(temp->type, temp->data), &expr);
+            InsertAtEndL(TYPE_OPERATOR, "=", 1, &expr);
+            i++;
+        }
+        temp = GetNextElement(temp);
+    }
+    for (j=0;j<i-1;j++) {
+        InsertAtEndL(TYPE_OPERAND, "AND", 3, &expr);
+    }
+    AK_selection( lista->next->table, "ref_update_temp", &expr );
+    DeleteAllL(&expr);
+    
+    // browsing through affected rows..
+    while ((parent_row = AK_get_row(parent_i,"ref_update_temp")) != NULL) { // walkin' thgough the parent table
+        while ((ref_row = AK_get_row(ref_i,"AK_reference")) != NULL ) { // looking for the parent table in references...
+            if (strcmp(ref_row->next->next->next->next->data, lista->next->table) == 0) {
+                tempcell = GetNthL(AK_get_attr_index(lista->next->table, ref_row->next->next->next->next->next->data), parent_row); // from the row of parent table, take the value of attribute with name from parent_attribute
+
+                InsertAtEndL(TYPE_OPERAND, ref_row->next->next->next->next->next->data, ref_row->next->next->next->next->next->size, &expr);
+                InsertAtEndL(ref_row->next->next->next->next->next->type, tempcell, AK_get_type_size(ref_row->next->next->next->next->next->type, tempcell), &expr);
+                InsertAtEndL(TYPE_OPERATOR, "=", 1, &expr);
+                AK_selection(ref_row->next->data , "ref_update_temp_2", &expr );
+                DeleteAllL(&expr);
+
+                
+            }
+            ref_i++;
+        }
+        parent_i++;
+    }
+}
+
+int AK_reference_check_entry(list *lista) {
+    element temp = lista;
+    int i = 0,j,k,con_num=0,success;
+    char constraints[10][MAX_VARCHAR_LENGHT]; // this 10 should probably be a constant... how many foreign keys can one table have..
+    char attributes[MAX_REFERENCE_ATTRIBUTES][MAX_ATT_NAME];
+    AK_list *row;
+    AK_ref_item reference;
+
+    AK_list_elem temp1;
+
+     while ((row = AK_get_row(i,"AK_reference")) != NULL ) {
+        if (strcmp(row->next->data,lista->next->table) == 0) {
+            for (j=0;j<con_num;j++) {
+                if (strcmp(constraints[j],row->next->next->data) == 0) {
+                    break;
+                }
+            }
+            if (j==con_num) {
+                //constraints[con_num] = malloc(sizeof(char)*MAX_VARCHAR_LENGHT);
+                strcpy(constraints[con_num],row->next->next->data);
+                con_num++;
+            }
+        }
+        i++;
+     }
+
+    if (con_num == 0)
+        return EXIT_SUCCESS;
+
+    for (i = 0; i< con_num;i++) { // reference
+        reference = AK_get_reference(lista->next->table,constraints[i]);
+
+        // fetching relevant attributes from entry list...
+       // attributes = malloc(sizeof(char)*MAX_VARCHAR_LENGHT*reference.attributes_number);
+        for (j = 0;j < reference.attributes_number; j++) {
+            temp = lista->next;
+            while (temp != NULL) {
+                if (strcmp(temp->attribute_name,reference.attributes[j]) == 0) {
+                    strcpy(attributes[j],temp->data);
+                    break;
+                }
+                temp = GetNextElement(temp);
+            }
+        }
+
+        if (reference.attributes_number == 1) {
+            if (AK_reference_check_attribute(reference.table, reference.attributes[0], attributes[0]) == EXIT_ERROR) {
+                return EXIT_ERROR;
+            }
+            else continue;
+        }
+
+
+        j = 0;
+        while ((row = AK_get_row(j,reference.parent)) != NULL ) { // rows in parent table
+            success = 1;
+            for (k=0;k<reference.attributes_number;k++) { // attributes in reference
+                temp1 = GetNthL(AK_get_attr_index(reference.parent,reference.parent_attributes[k]),row);
+                if (strcmp(temp1->data,attributes[k]) != 0) {
+                    success = 0;
+                    break;
+                }
+            }
+            if (success == 1) {
+                //free(attributes);
+                return EXIT_SUCCESS;
+            }
+            j++;
+        }
+       // free(attributes);
+    }
+
+    return EXIT_ERROR;
+}
+
+void reference_test_table() {
+    int i;
+    //create header
+    AK_header t_header[ MAX_ATTRIBUTES ];
+    AK_header* temp;
+
+    temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header, temp, sizeof( AK_header ));
+
+    temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 1, temp, sizeof( AK_header ));
+
+    temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 2, temp, sizeof( AK_header ));
+
+    temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 3, temp, sizeof( AK_header ));
+
+    temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy( t_header + 4, temp, sizeof( AK_header ));
+
+    for( i = 5; i < MAX_ATTRIBUTES; i++ )
+    {
+	memcpy( t_header + i, "\0", sizeof( "\0" ));
+    }
+
+    //create table
+    char *tblName = "student";
+
+    printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
+
+    int startAddress = AK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
+
+    if( startAddress != EXIT_ERROR )
+        printf( "\nTABLE %s CREATED!\n", tblName );
+
+
+    printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
+
+    element row_root =  (element) malloc( sizeof(list) );
+    InitializeList(row_root);
+
+    int mbr = 100, year = 1999;
+    float weight = 80.00;
+
+    //insert rows in table student
+    mbr++; year++; weight += 0.75;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Matija", tblName, "firstname", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Sestak", tblName, "lastname", row_root );
+    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
+    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
+    insert_row( row_root );
+
+    mbr++; year++;weight += 0.75;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
+    InsertNewElement( TYPE_VARCHAR, "Mesaric", tblName, "lastname", row_root );
+    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
+    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
+    insert_row( row_root );
+
+    mbr++; year++;weight += 0.75;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Master", tblName, "firstname", row_root);
+    InsertNewElement( TYPE_VARCHAR, "Slunjski", tblName, "lastname", row_root );
+    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
+    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
+    insert_row( row_root );
+
+    mbr++; year++;weight += 0.75;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
+    InsertNewElement( TYPE_VARCHAR, "Alagic", tblName, "lastname", row_root );
+    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
+    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
+    insert_row( row_root );
+
+    mbr++; year++;weight += 0.75;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root );
+    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
+    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
+    insert_row( row_root );
+
+    mbr++; year++;weight += 0.75;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
+    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
+    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
+    insert_row( row_root );
+
+    mbr++; year++;weight += 0.75;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root );
+    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
+    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
+    insert_row( row_root );
+
+
+    AK_header t_header2[3] = {
+                {TYPE_INT, "FK", 0, '\0', '\0',},
+		{TYPE_VARCHAR, "Value", 0, '\0', '\0',},
+		{0, '\0', 0, '\0', '\0'}
+        };
+
+    int startAddress1 = AK_initialize_new_segment( "ref_test", SEGMENT_TYPE_TABLE, t_header2);
+
+    if( startAddress1 != EXIT_ERROR )
+        printf( "\nTABLE %s CREATED!\n", "ref_test" );
+
 }
 
 void reference_test() {
     printf("HELL YEAH!\n");
+    int a;
+    reference_test_table();
 
     char *att[2];
     att[0] = malloc(sizeof(char)*20);
-    strcpy(att[0],"att");
+    strcpy(att[0],"FK");
     att[1] = malloc(sizeof(char)*20);
-    strcpy(att[1],"att1");
+    strcpy(att[1],"Value");
+
 
     char *patt[2];
     patt[0] = malloc(sizeof(char)*20);
-    strcpy(patt[0],"patt");
+    strcpy(patt[0],"mbr");
     patt[1] = malloc(sizeof(char)*20);
-    strcpy(patt[1],"patt1");
+    strcpy(patt[1],"firstname");
 
     //AK_create_reference_table();
-    AK_add_reference("child",att,"parent",patt,2,"constraint",1);
+    AK_add_reference("ref_test",att,"student",patt,2,"constraint",1);
     AK_print_table("AK_reference");
+    AK_print_table("student");
+    //AK_print_table("AK_relation");
 
+    element row_root =  (element) malloc( sizeof(list) );
+    a = 102;
+    InitializeList(row_root);
+     DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &a , "ref_test", "FK", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Dude", "ref_test", "Value", row_root );
+    insert_row( row_root );
+    
+    a=101;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &a , "ref_test", "FK", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Matija", "ref_test", "Value", row_root );
+    insert_row( row_root );
+
+    AK_print_table("ref_test");
 }
