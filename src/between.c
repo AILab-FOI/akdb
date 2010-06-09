@@ -92,7 +92,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     int itis = 1;
     int freeSpaceFound = 0;
     int tupleDictID = -1;
-    int flag = 1;
+    int flag = EXIT_SUCCESS;
 
     tempBlock = AK_read_block(0);
 
@@ -187,7 +187,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
                             {
                            
                                     printf("Nad tablicom %s i atributom %s postoji ograničenje %s\n vrijednosti moraju biti izmedju %f i %f\n",tableName,attName,constraintName,startValue,endValue);
-                                flag = 0;
+                                flag = EXIT_ERROR;
                             }
                         }
                     }
@@ -207,7 +207,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
                                 {
                               
                                     printf("Nad tablicom %s i atributom %s postoji ograničenje %s\n vrijednosti moraju biti izmedju %s i %s\n",tableName,attName,constraintName,valueF,valueS);
-                                    flag = 0;
+                                    flag = EXIT_ERROR;
                                 }
                             }
                             else if(((int)newValue[0] >= 65) && ((int)newValue[0] <= 90))
@@ -220,7 +220,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
                                 {
                               
                                     printf("Nad tablicom %s i atributom %s postoji ograničenje %s\n vrijednosti moraju biti izmedju %s i %s\n",tableName,attName,constraintName,valueF,valueS);
-                                    flag = 0;
+                                    flag = EXIT_ERROR;
                                 }
                             }
                         }
