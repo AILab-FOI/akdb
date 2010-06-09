@@ -89,7 +89,7 @@ int AK_read_constraint_not_null(char* tableName, char* newValue, char* attNamePa
     int itis = 1;
     int freeSpaceFound = 0;
     int tupleDictID = -1;
-    int flag = 1;
+    int flag = EXIT_SUCCESS;
 
     tempBlock = AK_read_block(0);
 
@@ -142,7 +142,7 @@ int AK_read_constraint_not_null(char* tableName, char* newValue, char* attNamePa
                             printf("NIje broj\n");
                         if(strlen(newValue) == 0)
                         {
-                            flag = 0;
+                            flag = EXIT_ERROR;
                             printf("Postoji null ograničenje nad atributm %s u tablici %s\n",att,value);
                         }
                     }
@@ -153,14 +153,14 @@ int AK_read_constraint_not_null(char* tableName, char* newValue, char* attNamePa
                         nValue = atof(newValue);
                         if(nValue == 0)
                         {
-                          flag = 0;
+                          flag = EXIT_ERROR;
                           printf("Postoji null ograničenje nad atributm %s u tablici %s\n",att,value);
                         }
                     }
                 }
                 else
                    {
-                        flag = 1;
+                        flag = EXIT_SUCCESS;
                    }
                 }
             }
