@@ -61,7 +61,7 @@ int AK_get_id()
                 currValue = 0;
                 AK_insert_entry(tempBlock, TYPE_INT, &nullID, tupleDictID);
                 AK_insert_entry(tempBlock, TYPE_VARCHAR, "objectID", tupleDictID + 1);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, "1", tupleDictID + 2);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, "0", tupleDictID + 2);
                 AK_insert_entry(tempBlock, TYPE_VARCHAR, "1", tupleDictID + 3);
                 AK_insert_entry(tempBlock, TYPE_VARCHAR, "null", tupleDictID + 4);
                 AK_insert_entry(tempBlock, TYPE_VARCHAR, "null", tupleDictID + 5);
