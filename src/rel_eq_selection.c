@@ -73,16 +73,16 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 	
 	printf("RULE - is (%s) subset of set (%s) in rel_eq_selection\n", subset, set);
 		
-	for ((token_set = strtok_r(temp_set, ";", &save_token_set)); token_set; 
-		(token_set = strtok_r(NULL, ";", &save_token_set)), set_id++) {
+	for ((token_set = strtok_r(temp_set, ATTR_DELIMITER, &save_token_set)); token_set; 
+		(token_set = strtok_r(NULL, ATTR_DELIMITER, &save_token_set)), set_id++) {
 		if (set_id < MAX_TOKENS - 1) {
 			tokens_set[set_id] = token_set;	
 			len_set++;
 		}
 	}
 
-	for ((token_subset = strtok_r(temp_subset, ";", &save_token_subset)); token_subset; 
-		(token_subset = strtok_r(NULL, ";", &save_token_subset)), subset_id++) {
+	for ((token_subset = strtok_r(temp_subset, ATTR_DELIMITER, &save_token_subset)); token_subset; 
+		(token_subset = strtok_r(NULL, ATTR_DELIMITER, &save_token_subset)), subset_id++) {
 		if (subset_id < MAX_TOKENS - 1) {
 			tokens_subset[subset_id] = token_subset;
 			len_subset++;
@@ -112,8 +112,8 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 		return EXIT_FAILURE;
 	}
 	
-	//free(temp_set);
-	//free(temp_subset);
+	free(temp_set);
+	free(temp_subset);
 	
 	printf("RULE - succeed (%s) is subset of set (%s).\n", subset, set);
 	return EXIT_SUCCESS;
@@ -127,7 +127,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
  * <li>Get the table header for a given table</li>
  * <li>Initialize AK_list</li>
  * <li>For each attribute in table header, insert attribute in the array</li>
- * <li>Delimit each new attribute with ";"</li>
+ * <li>Delimit each new attribute with ";" (ATTR_DELIMITER)</li>
  * <li>return pointer to char array</li>
  * </ol>
  * @author Dino Laktašić.
@@ -157,7 +157,7 @@ char *AK_rel_eq_get_atrributes_char(char *tblName) {
 		next_address += len_attr;
 
 		if (next_attr < num_attr - 1) {
-			memcpy(attr + next_address, ";", 1);
+			memcpy(attr + next_address, ATTR_DELIMITER, 1);
 			next_address++;
 		} else {
 			memcpy(attr + next_address, "\0", 1);
@@ -194,13 +194,13 @@ char *AK_rel_eq_cond_attributes(char *cond) {
 	char *attr = (char *)malloc(sizeof(char));
 	
 	while (next_chr < strlen(cond)) {
-		if (temp_cond[next_chr] == '`') {
+		if (temp_cond[next_chr] == ATTR_ESCAPE) {
 			next_chr++;
 			if (++attr_end) {
 				attr_end = -1;
 			} else {
 				if (next_address > 0) {
-					memcpy(attr + next_address++, ";", 1);
+					memcpy(attr + next_address++, ATTR_DELIMITER, 1);
 					attr = (char *)realloc(attr, next_address + 1);
 				}
 			}
@@ -233,8 +233,8 @@ char *AK_rel_eq_cond_attributes(char *cond) {
  * <li>else remove unused pointers and return EXIT_FAILURE</li>
  * </ol>
  * @author Dino Laktašić.
- * @param char *set - first set of attributes delimited by ";"
- * @param char *subset - second set of attributes delimited by ";"
+ * @param char *set - first set of attributes delimited by ";" (ATTR_DELIMITER)
+ * @param char *subset - second set of attributes delimited by ";" (ATTR_DELIMITER)
  * @result char * - returns EXIT_SUCCESS if set and subset share at least one attribute, else returns EXIT_FAILURE 
  */
 int AK_rel_eq_share_attributes(char *set, char *subset) {
@@ -254,10 +254,10 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
 	memcpy(temp_set, set, strlen(set));
 	memcpy(temp_subset, subset, strlen(subset));
 	
-	for ((token_set = strtok_r(temp_set, ";", &save_token_set)); token_set; 
-		(token_set = strtok_r(NULL, ";", &save_token_set))) {
-		for ((token_subset = strtok_r(temp_subset, ";", &save_token_subset)); token_subset; 
-			(token_subset = strtok_r(NULL, ";", &save_token_subset))) {
+	for ((token_set = strtok_r(temp_set, ATTR_DELIMITER, &save_token_set)); token_set; 
+		(token_set = strtok_r(NULL, ATTR_DELIMITER, &save_token_set))) {
+		for ((token_subset = strtok_r(temp_subset, ATTR_DELIMITER, &save_token_subset)); token_subset; 
+			(token_subset = strtok_r(NULL, ATTR_DELIMITER, &save_token_subset))) {
 			if (memcmp(token_set, token_subset, strlen(token_set)) == 0) {
 				free(temp);
 				return EXIT_SUCCESS;
@@ -308,7 +308,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 	for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond; 
 		(token_cond = strtok_r(NULL, " ", &save_token_cond)), token_id++) {
 		if (token_id < MAX_TOKENS - 1) {
-			if (*token_cond == '`') {
+			if (*token_cond == ATTR_ESCAPE) {
 				char *tbl = AK_rel_eq_get_atrributes_char(tblName);
 				char *attr = AK_rel_eq_cond_attributes(token_cond);
 				
@@ -414,18 +414,17 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
 	char *token_cond, *save_token_cond;
 	
 	char *temp_attr = (char *)calloc(1, sizeof(char));
-	char *temp_cond = (char *)calloc(strlen(cond), sizeof(char));
+	//memset(temp_attr, '\0', MAX_VARCHAR_LENGHT);
 	
+	char *temp_cond = (char *)calloc(strlen(cond), sizeof(char));
 	memcpy(temp_cond, cond, strlen(cond));
 	
-	//printf("\nTEMP_COND (%s), %i\n", temp_cond, strlen(temp_cond));
 	for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond; 
 		(token_cond = strtok_r(NULL, " ", &save_token_cond)), token_id++) {
 		if (token_id < MAX_TOKENS - 1) {
 			len_token = strlen(token_cond);
 			
 			if (strcmp(token_cond, "AND") == 0) {
-				//printf("\t1.a. TOKEN INSERT: (%s), %i\n", temp_attr, attr_address);
 				InsertAtEndL(TYPE_CONDITION, temp_attr, strlen(temp_attr), list_attr);
 				
 				attr_address = 0;
@@ -434,21 +433,17 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
 			} else {
 				if (attr_address > 0) {
 					temp_attr = (char *)realloc(temp_attr, attr_address + len_token + 2);
-					//printf("\t2.a. TOKEN REALLOC: %s:%s, %i:%i\n", temp_attr, token_cond, attr_address, len_token);
 					//memcpy(temp_attr + attr_address, " ", 1);
 					strcpy(temp_attr + attr_address, " ");
 					//memcpy(temp_attr + ++attr_address, "\0", 1);
 					attr_address++;
-					//printf("\t2.b. TOKEN ADD " ": %s, %i\n", temp_attr, attr_address);
 				} else {
 					temp_attr = (char *)realloc(temp_attr, attr_address + len_token + 1);
-					//printf("TOKEN REALLOC: %s:%s, %i:%i\n", temp_attr, token_cond, attr_address, len_token);
 				}
 				
 				strcpy(temp_attr + attr_address, token_cond);
 				//memcpy(temp_attr + attr_address, token_cond, len_token);
 				attr_address += len_token;
-				//printf("\t2.c. TOKEN ADD COND: %s:%s, %i\n", temp_attr, token_cond, attr_address);
 			}
 		}
 	}

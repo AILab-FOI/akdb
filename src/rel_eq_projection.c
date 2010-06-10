@@ -83,8 +83,8 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 
 	printf("RULE - is (%s) subset of set (%s) in rel_eq_projection\n", list_elem_subset->data, list_elem_set->data);
 		
-	for ((token_set = strtok_r(temp_set, ";", &save_token_set)); token_set; 
-		(token_set = strtok_r(NULL, ";", &save_token_set)), token_id++) {
+	for ((token_set = strtok_r(temp_set, ATTR_DELIMITER, &save_token_set)); token_set; 
+		(token_set = strtok_r(NULL, ATTR_DELIMITER, &save_token_set)), token_id++) {
 		if (token_id < MAX_TOKENS - 1) {
 			tokens_set[token_id] = token_set;	
 			len_set++;
@@ -92,8 +92,8 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 	}
 	
 	token_id = 0;
-	for ((token_subset = strtok_r(temp_subset, ";", &save_token_subset)); token_subset; 
-		(token_subset = strtok_r(NULL, ";", &save_token_subset)), token_id++) {
+	for ((token_subset = strtok_r(temp_subset, ATTR_DELIMITER, &save_token_subset)); token_subset; 
+		(token_subset = strtok_r(NULL, ATTR_DELIMITER, &save_token_subset)), token_id++) {
 		if (token_id < MAX_TOKENS - 1) {
 			tokens_subset[token_id] = token_subset;
 			len_subset++;
@@ -159,19 +159,19 @@ int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem
 	
 	memcpy(temp_attr, list_elem_attribs->data, list_elem_attribs->size);
 	
-	for ((token_attr = strtok_r(temp_attr, ";", &save_token_attr)); token_attr; 
-		(token_attr = strtok_r(NULL, ";", &save_token_attr)), token_id++) {
+	for ((token_attr = strtok_r(temp_attr, ATTR_DELIMITER, &save_token_attr)); token_attr; 
+		(token_attr = strtok_r(NULL, ATTR_DELIMITER, &save_token_attr)), token_id++) {
 		if (token_id < MAX_TOKENS - 1) {
 			tokens[token_id] = token_attr;	
 		}
 	}
 			
 	for (next_chr = 0; next_chr < list_elem_conds->size; next_chr++) {
-		if (list_elem_conds->data[next_chr] == '`') {
+		if (list_elem_conds->data[next_chr] == ATTR_ESCAPE) {
 			//printf("Next attributes group at index: %i\n", next_chr);
 			
 			memcpy(temp, list_elem_conds->data + next_chr + 1, list_elem_conds->size - next_chr);
-			memmove(temp_cond, temp, strcspn(temp, "`"));
+			memmove(temp_cond, temp, strcspn(temp, "`")); //ATTR_ESCAPE 
 			//printf("\n-->temp_cond: %s, size: %i\n", temp_cond, next_chr);
 			next_chr += strlen(temp_cond) + 1;
 			
@@ -265,7 +265,7 @@ const char *AK_rel_eq_get_attributes(char *tblName) {
  * <li>return pointer to char array with stored attribute/s</li>
  * </ol>
  * @author Dino Laktašić.
- * @param char *attribs - projection attributes delimited by ";"
+ * @param char *attribs - projection attributes delimited by ";" (ATTR_DELIMITER)
  * @param char *tblName - name of the table
  * @result char * - returns filtered list of projection attributes as the AK_list
  */
@@ -285,14 +285,16 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
 	char *tokens_attribs[MAX_TOKENS] = {NULL};
 	
 	char *ret_attributes = (char *)calloc(MAX_VARCHAR_LENGHT, sizeof(char));
+	memset(ret_attributes, '\0', MAX_VARCHAR_LENGHT);
+	
 	char *temp_attribs = (char *)calloc(strlen(attribs), sizeof(char));
 	
 	strcpy(temp_attribs, attribs);
 		
 	printf("\nINPUT - attributes: (%s), tblName: (%s)\n", temp_attribs, tblName);
 	
-	for ((token_attr = strtok_r(temp_attribs, ";", &save_token_attribs)); token_attr; 
-		(token_attr = strtok_r(NULL, ";", &save_token_attribs)), token_id++) {
+	for ((token_attr = strtok_r(temp_attribs, ATTR_DELIMITER, &save_token_attribs)); token_attr; 
+		(token_attr = strtok_r(NULL, ATTR_DELIMITER, &save_token_attribs)), token_id++) {
 		if (token_id < MAX_TOKENS - 1) {
 			tokens_attribs[len_tokens] = token_attr;	
 			len_tokens++;
@@ -306,7 +308,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
 			if (strcmp(list_el->data, tokens_attribs[token_id]) == 0) {
 				//ret_attributes = (char *)realloc(ret_attributes, (strlen(list_el->data) + strlen(ret_attributes)));
 				if (strlen(ret_attributes) > 0) {
-					strcat(ret_attributes, ";");
+					strcat(ret_attributes, ATTR_DELIMITER);
 				}
 				strcat(ret_attributes, list_el->data);
 			}
@@ -336,16 +338,17 @@ char *AK_rel_eq_collect_cond_attributes(AK_list_elem list_elem) {
 	strcpy(temp_cond, list_elem->data);
 
 	char *attr = (char *)calloc(MAX_VARCHAR_LENGHT, sizeof(char));
+	//memset(attr, '\0', MAX_VARCHAR_LENGHT);
 	
 	while (next_chr < list_elem->size) {
-		if (temp_cond[next_chr] == '`') {
+		if (temp_cond[next_chr] == ATTR_ESCAPE) { //'`'
 			next_chr++;
 			if (++attr_end) {
 				attr_end = -1;
 			} else {
 				if (next_address > 0) {	
-					strcpy(attr + next_address++, ";");
-					//memcpy(attr + next_address++, ";", 1);	
+					strcpy(attr + next_address++, ATTR_DELIMITER);
+					//memcpy(attr + next_address++, ATTR_DELIMITER, 1);	
 					//attr = (char *)realloc(attr, next_address + 1);
 				}
 			}
@@ -380,13 +383,14 @@ char *AK_rel_eq_remove_duplicates(char *attribs) {
 	char *temp_attribs, *token_attr, *save_token_attribs;
 	char *tokens_attribs[MAX_TOKENS] = {NULL};
 	char *attr = (char *)calloc(MAX_VARCHAR_LENGHT, sizeof(char));
+	memset(attr, '\0', MAX_VARCHAR_LENGHT);
 	
 	temp_attribs = (char *)calloc(strlen(attribs) + 1, sizeof(char));
 	memcpy(temp_attribs, attribs, strlen(attribs));
 	memcpy(temp_attribs + strlen(attribs) + 1, "\0", 1);
 	
-	for ((token_attr = strtok_r(temp_attribs, ";", &save_token_attribs)); token_attr; 
-		(token_attr = strtok_r(NULL, ";", &save_token_attribs)), token_id++) {
+	for ((token_attr = strtok_r(temp_attribs, ATTR_DELIMITER, &save_token_attribs)); token_attr; 
+		(token_attr = strtok_r(NULL, ATTR_DELIMITER, &save_token_attribs)), token_id++) {
 		if (token_id < MAX_TOKENS - 1) {
 			tokens_attribs[token_id] = token_attr;	
 			exist_attr = 0;
@@ -399,7 +403,7 @@ char *AK_rel_eq_remove_duplicates(char *attribs) {
 
 			if (!exist_attr) {		
 				if (token_id > 0) {
-					strcat(attr, ";");
+					strcat(attr, ATTR_DELIMITER);
 				}
 				strcat(attr, token_attr);
 			}
@@ -575,7 +579,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 												printf("::operatori %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
 											} else {		
 												//3. Insert new projection
-												strcat(data1, ";");
+												strcat(data1, ATTR_DELIMITER);
 												strcat(data1, AK_rel_eq_projection_attributes(AK_rel_eq_collect_cond_attributes(list_elem_next), temp_elem_next->data));
 												data1 = AK_rel_eq_remove_duplicates(data1);
 
@@ -591,7 +595,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 											}
 											
 											if (has_attributes) {
-												strcat(data2, ";");
+												strcat(data2, ATTR_DELIMITER);
 												strcat(data2, AK_rel_eq_projection_attributes(AK_rel_eq_collect_cond_attributes(list_elem_next), (tmp->next)->data));
 												data2 = AK_rel_eq_remove_duplicates(data2);
 											}

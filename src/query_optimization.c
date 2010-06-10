@@ -347,7 +347,7 @@ void query_optimization_test(AK_list *list_query) {
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("n"), expr );
 	//*/
-	AK_print_optimized_query(AK_query_optimization(expr, "psa", 1));
+	AK_print_optimized_query(AK_query_optimization(expr, "pps", 1));
 	
 	if (DEBUG) {
 		printf("\n------------------> TEST_REL_EQ_FUNCTIONS <------------------\n\n");
