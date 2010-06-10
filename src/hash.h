@@ -28,8 +28,7 @@
 #include "memoman.h"
 #include "files.h"
 #include "fileio.h"
-#include "projection.h"
-#include "selection.h"
+#include "auxiliary.h"
 #include "table.h"
 #include "index.h"
 

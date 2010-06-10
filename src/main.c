@@ -89,10 +89,11 @@ int main()
 			//table_test();
 
 			//btree_test();
-			//hash_test();
+			hash_test();
 			//bitmap_test();
 
-			reference_test();
+                        //reference_test();
+
 
 			//aggregation_test();
 			//rel_eq_projection_test();
@@ -102,8 +103,8 @@ int main()
 			
 			//query_optimization_test();
 
-			//memoman_test();
-			
+                        //memoman_test();
+
 			/* component test area --- end */
 			
 			if ( AK_flush_cache() == EXIT_SUCCESS ){

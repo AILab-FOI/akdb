@@ -358,7 +358,7 @@ void create_test_table_for_hash(char *tblName) {
  @param row list of elements of row in table
  @return element of list of elements of row in table
  @author Mislav Čakarić
- */
+ *
 AK_list_elem AK_get_nth_in_row(int pos, AK_list *row) {
     int i = 0;
     AK_list_elem temp_elem;
@@ -372,6 +372,7 @@ AK_list_elem AK_get_nth_in_row(int pos, AK_list *row) {
     } while (temp_elem);
     return NULL;
 }
+*/
 
 /**
  Function for computing a hash value from varchar or integer
@@ -742,7 +743,8 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
                     memcpy(data, temp_hash_bucket, sizeof (hash_bucket));
                     update_bucket_in_block(hash_add, data);
                 } else
-                    printf("Record found in table block %d and TupleDict ID %d\n", addBlock, indexTd);
+                    if(DEBUG)
+                        printf("Record found in table block %d and TupleDict ID %d\n", addBlock, indexTd);
                 add->addBlock = addBlock;
                 add->indexTd = indexTd;
                 break;
@@ -866,7 +868,7 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
                         if (strcmp((table_header + l)->att_name, attribute->attribute_name) == 0)
                             break;
                     }
-                    temp_elem = AK_get_nth_in_row(l, row);
+                    temp_elem = GetNthL(l, row);
                     hashValue += AK_elem_hash_value(temp_elem);
 
                     attribute = GetNextelementOp(attribute);
@@ -905,6 +907,8 @@ void hash_test() {
     char *tblName = "Student";
     char *indexName = "student_hash_index";
     create_test_table_for_hash(tblName);
+    //AK_print_table("AK_relation");
+
     list_op *att_list = (list_op *) malloc(sizeof (list_op));
     InitializelistOp(att_list);
     InsertNewelementOp(tblName, "mbr", att_list);
@@ -923,9 +927,9 @@ void hash_test() {
     int i, num_rec = AK_get_num_records(tblName);
     for (i = 0; i < num_rec; i++) {
         row = AK_get_row( i, tblName );
-        AK_list_elem value=AK_get_nth_in_row(0, row);
+        AK_list_elem value=GetNthL(0, row);
         InsertAtEndL(value->type, value->data, value->size, values);
-        value=AK_get_nth_in_row(1, row);
+        value=GetNthL(1, row);
         InsertAtEndL(value->type, value->data, value->size, values);
         AK_find_in_hash_index(indexName, values);
         DeleteAllL(values);
