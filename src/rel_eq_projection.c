@@ -583,6 +583,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 												strcat(data1, AK_rel_eq_projection_attributes(AK_rel_eq_collect_cond_attributes(list_elem_next), temp_elem_next->data));
 												data1 = AK_rel_eq_remove_duplicates(data1);
 
+												//memset(data2 + strlen(data1), '\0', 1);
 												InsertAfterL(temp_elem->type, data1, strlen(data1) + 1, tmp, temp);
 												InsertAfterL(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
 												printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data1);
