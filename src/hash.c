@@ -372,7 +372,7 @@ AK_list_elem AK_get_nth_in_row(int pos, AK_list *row) {
     } while (temp_elem);
     return NULL;
 }
-*/
+ */
 
 /**
  Function for computing a hash value from varchar or integer
@@ -471,6 +471,9 @@ void update_bucket_in_block(struct_add *add, char *data) {
 void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int hash_bucket_num) {
     table_addresses *hash_addresses = (table_addresses*) get_table_addresses(indexName);
     int block_add = hash_addresses->address_from[ 0 ];
+    if(block_add==0){
+        printf("Hash index does not exist!\n");
+    }
     AK_block *block = (AK_block*) AK_read_block(block_add);
     hash_info *info = (hash_info*) malloc(sizeof (hash_info));
     info->modulo = modulo;
@@ -493,8 +496,13 @@ void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int h
 hash_info* AK_get_hash_info(char *indexName) {
     table_addresses *hash_addresses = (table_addresses*) get_table_addresses(indexName);
     int block_add = hash_addresses->address_from[ 0 ];
-    AK_block *block = (AK_block*) AK_read_block(block_add);
     hash_info *info = (hash_info*) malloc(sizeof (hash_info));
+    memset(info,0,sizeof(hash_info));
+    if(block_add==0){
+        printf("Hash index does not exist!\n");
+        return info;
+    }
+    AK_block *block = (AK_block*) AK_read_block(block_add);
     memcpy(info, block->data, sizeof (hash_info));
     return info;
 }
@@ -552,7 +560,7 @@ int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
 
     table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
     if (addresses->address_from[0] == NULL)
-        printf("Hash index not created yet!\n");
+        printf("Hash index does not exist!\n");
     else {
         char data[255];
         memset(data, 0, 255);
@@ -655,7 +663,7 @@ int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
             memcpy(data, temp_main_bucket, sizeof (main_bucket));
             update_bucket_in_block(main_add, data);
 
-            AK_change_hash_info(indexName,info->modulo,info->main_bucket_num,info->hash_bucket_num+1);
+            AK_change_hash_info(indexName, info->modulo, info->main_bucket_num, info->hash_bucket_num + 1);
             for (i = 0; i < HASH_BUCKET_SIZE; i++) {
                 int value = temp_hash_bucket->element[i].value;
                 memcpy(main_add, &temp_hash_bucket->element[i].add, sizeof (struct_add));
@@ -675,79 +683,86 @@ int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
  @author Mislav Čakarić
  */
 struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int delete) {
-    int hashValue = 0, address, size, i, j, k, found, match;
-    struct_add *add=(struct_add*) malloc(sizeof (struct_add));
-    AK_list_elem temp_elem;
-    temp_elem = FirstL(values);
-    while (temp_elem) {
-        hashValue += AK_elem_hash_value(temp_elem);
-        temp_elem = NextL(temp_elem);
-    }
-    struct_add *main_add = (struct_add*) malloc(sizeof (struct_add));
-    struct_add *hash_add = (struct_add*) malloc(sizeof (struct_add));
-    main_bucket *temp_main_bucket = (main_bucket*) malloc(sizeof (main_bucket));
-    hash_bucket *temp_hash_bucket = (hash_bucket*) malloc(sizeof (hash_bucket));
-    char data[255];
-    memset(data, 0, 255);
-    hash_info *info = (hash_info*) malloc(sizeof (hash_info));
-    info = AK_get_hash_info(indexName);
-    int hash_bucket_id = hashValue % info->modulo;
-    int main_bucket_id = (int) (hash_bucket_id / MAIN_BUCKET_SIZE);
+    struct_add *add = (struct_add*) malloc(sizeof (struct_add));
+    memset(add, 0, sizeof(struct_add));
+    table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
+    if (addresses->address_from[0] == NULL) {
+        printf("Hash index does not exist!\n");
+        return add;
+    } else {
+        int hashValue = 0, address, size, i, j, k, found, match;
+        AK_list_elem temp_elem;
+        temp_elem = FirstL(values);
+        while (temp_elem) {
+            hashValue += AK_elem_hash_value(temp_elem);
+            temp_elem = NextL(temp_elem);
+        }
+        struct_add *main_add = (struct_add*) malloc(sizeof (struct_add));
+        struct_add *hash_add = (struct_add*) malloc(sizeof (struct_add));
+        main_bucket *temp_main_bucket = (main_bucket*) malloc(sizeof (main_bucket));
+        hash_bucket *temp_hash_bucket = (hash_bucket*) malloc(sizeof (hash_bucket));
+        char data[255];
+        memset(data, 0, 255);
+        hash_info *info = (hash_info*) malloc(sizeof (hash_info));
+        info = AK_get_hash_info(indexName);
+        int hash_bucket_id = hashValue % info->modulo;
+        int main_bucket_id = (int) (hash_bucket_id / MAIN_BUCKET_SIZE);
 
-    main_add = get_nth_main_bucket_add(indexName, main_bucket_id);
-    AK_block *temp_block = (AK_block*) AK_read_block(main_add->addBlock);
-    address = temp_block->tuple_dict[main_add->indexTd].address;
-    size = temp_block->tuple_dict[main_add->indexTd].size;
-    memcpy(temp_main_bucket, &temp_block->data[address], size);
+        main_add = get_nth_main_bucket_add(indexName, main_bucket_id);
+        AK_block *temp_block = (AK_block*) AK_read_block(main_add->addBlock);
+        address = temp_block->tuple_dict[main_add->indexTd].address;
+        size = temp_block->tuple_dict[main_add->indexTd].size;
+        memcpy(temp_main_bucket, &temp_block->data[address], size);
 
-    memcpy(hash_add, &temp_main_bucket->element[hash_bucket_id % MAIN_BUCKET_SIZE].add, sizeof (struct_add));
+        memcpy(hash_add, &temp_main_bucket->element[hash_bucket_id % MAIN_BUCKET_SIZE].add, sizeof (struct_add));
 
-    temp_block = (AK_block*) AK_read_block(hash_add->addBlock);
-    address = temp_block->tuple_dict[hash_add->indexTd].address;
-    size = temp_block->tuple_dict[hash_add->indexTd].size;
-    memcpy(temp_hash_bucket, &temp_block->data[address], size);
-    for (i = 0; i < HASH_BUCKET_SIZE; i++) {
-        if (temp_hash_bucket->element[i].value == hashValue) {
-            AK_block *temp_table_block = (AK_block*) AK_read_block(temp_hash_bucket->element[i].add.addBlock);
-            j = 0;
-            while (strcmp(temp_block->header[j].att_name, "\0")) {
-                k = 0;
-                found = 0;
-                while (strcmp(temp_table_block->header[k].att_name, "\0")) {
-                    if (strcmp(temp_block->header[j].att_name, temp_table_block->header[k].att_name) == 0) {
-                        found = 1;
-                        match = 0;
-                        int indexTd = temp_hash_bucket->element[i].add.indexTd + k;
-                        int record_address = temp_table_block->tuple_dict[indexTd].address;
-                        int record_size = temp_table_block->tuple_dict[indexTd].size;
-                        int record_type = temp_table_block->tuple_dict[indexTd].type;
-                        memcpy(data, &temp_table_block->data[record_address], record_size);
-                        temp_elem = FirstL(values);
-                        while (temp_elem) {
-                            if (temp_elem->type == record_type && memcmp(data, &temp_elem->data, record_size) == 0)
-                                match = 1;
-                            temp_elem = NextL(temp_elem);
+        temp_block = (AK_block*) AK_read_block(hash_add->addBlock);
+        address = temp_block->tuple_dict[hash_add->indexTd].address;
+        size = temp_block->tuple_dict[hash_add->indexTd].size;
+        memcpy(temp_hash_bucket, &temp_block->data[address], size);
+        for (i = 0; i < HASH_BUCKET_SIZE; i++) {
+            if (temp_hash_bucket->element[i].value == hashValue) {
+                AK_block *temp_table_block = (AK_block*) AK_read_block(temp_hash_bucket->element[i].add.addBlock);
+                j = 0;
+                while (strcmp(temp_block->header[j].att_name, "\0")) {
+                    k = 0;
+                    found = 0;
+                    while (strcmp(temp_table_block->header[k].att_name, "\0")) {
+                        if (strcmp(temp_block->header[j].att_name, temp_table_block->header[k].att_name) == 0) {
+                            found = 1;
+                            match = 0;
+                            int indexTd = temp_hash_bucket->element[i].add.indexTd + k;
+                            int record_address = temp_table_block->tuple_dict[indexTd].address;
+                            int record_size = temp_table_block->tuple_dict[indexTd].size;
+                            int record_type = temp_table_block->tuple_dict[indexTd].type;
+                            memcpy(data, &temp_table_block->data[record_address], record_size);
+                            temp_elem = FirstL(values);
+                            while (temp_elem) {
+                                if (temp_elem->type == record_type && memcmp(data, &temp_elem->data, record_size) == 0)
+                                    match = 1;
+                                temp_elem = NextL(temp_elem);
+                            }
+                            break;
                         }
-                        break;
+                        k++;
                     }
-                    k++;
+                    if (found == 0 || match == 0) break;
+                    j++;
                 }
-                if (found == 0 || match == 0) break;
-                j++;
-            }
-            if (match) {
-                int addBlock = temp_hash_bucket->element[i].add.addBlock;
-                int indexTd = temp_hash_bucket->element[i].add.indexTd;
-                if (delete) {
-                    temp_hash_bucket->element[i].value = -1;
-                    memcpy(data, temp_hash_bucket, sizeof (hash_bucket));
-                    update_bucket_in_block(hash_add, data);
-                } else
-                    if(DEBUG)
+                if (match) {
+                    int addBlock = temp_hash_bucket->element[i].add.addBlock;
+                    int indexTd = temp_hash_bucket->element[i].add.indexTd;
+                    if (delete) {
+                        temp_hash_bucket->element[i].value = -1;
+                        memcpy(data, temp_hash_bucket, sizeof (hash_bucket));
+                        update_bucket_in_block(hash_add, data);
+                    } else
+                        if (DEBUG)
                         printf("Record found in table block %d and TupleDict ID %d\n", addBlock, indexTd);
-                add->addBlock = addBlock;
-                add->indexTd = indexTd;
-                break;
+                    add->addBlock = addBlock;
+                    add->indexTd = indexTd;
+                    break;
+                }
             }
         }
     }
@@ -800,7 +815,7 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
         exist = 0;
         for (i = 0; i < num_attr; i++) {
             if (strcmp((table_header + i)->att_name, attribute->attribute_name) == 0) {
-                if(DEBUG)
+                if (DEBUG)
                     printf("Attribute %s exist in table, found on position: %d\n", (table_header + i)->att_name, i);
                 exist = 1;
                 temp = (AK_header*) AK_create_header((table_header + i)->att_name, (table_header + i)->type, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -888,16 +903,10 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
     return EXIT_SUCCESS;
 }
 
-/*
 int AK_delete_hash_index(char *indexName) {
-    int i = 0;
-    table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
-    while (addresses->address_from[ i ] != 0) {
-        AK_delete_extent(addresses->address_from[i], addresses->address_to[i]);
-        i++;
-    }
+    AK_delete_segment(indexName, SEGMENT_TYPE_TABLE);
+    printf("INDEX %s DELETED!\n",indexName);
 }
- */
 
 /**
  Function for testing hash index
@@ -919,17 +928,21 @@ void hash_test() {
     AK_list *values = (AK_list*) malloc(sizeof (AK_list));
     AK_list *row = (AK_list*) malloc(sizeof (AK_list));
     InitL(values);
-    
+
+    //AK_delete_hash_index(indexName);
+
     hash_info *info = (hash_info*) malloc(sizeof (hash_info));
     info = AK_get_hash_info(indexName);
-    printf("Main buckets:%d, Hash buckets:%d, Modulo:%d\n",info->main_bucket_num,info->hash_bucket_num,info->modulo);
-    
+    printf("Main buckets:%d, Hash buckets:%d, Modulo:%d\n", info->main_bucket_num, info->hash_bucket_num, info->modulo);
+
+    //AK_delete_hash_index(indexName);
+
     int i, num_rec = AK_get_num_records(tblName);
     for (i = 0; i < num_rec; i++) {
-        row = AK_get_row( i, tblName );
-        AK_list_elem value=GetNthL(0, row);
+        row = AK_get_row(i, tblName);
+        AK_list_elem value = GetNthL(0, row);
         InsertAtEndL(value->type, value->data, value->size, values);
-        value=GetNthL(1, row);
+        value = GetNthL(1, row);
         InsertAtEndL(value->type, value->data, value->size, values);
         AK_find_in_hash_index(indexName, values);
         DeleteAllL(values);

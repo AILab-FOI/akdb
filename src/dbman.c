@@ -1069,6 +1069,43 @@ int AK_delete_extent(int begin, int end)
 }
 
 /**
+ @author Mislav Čakarić
+ @param name name of the segment
+ @param type type of the segment
+ @return success or error
+*/
+int AK_delete_segment(char * name, int type){
+    int i = 0;
+    table_addresses *addresses = (table_addresses*) get_table_addresses(name);
+    while (addresses->address_from[ i ] != 0) {
+        AK_delete_extent(addresses->address_from[i], addresses->address_to[i]);
+        i++;
+    }
+    AK_list *row_root =  (AK_list *) malloc( sizeof(AK_list) );
+    InitializeList(row_root);
+    char *system_table;
+    switch(type){
+        case SEGMENT_TYPE_TABLE:
+            system_table="AK_relation";
+            break;
+        case SEGMENT_TYPE_INDEX:
+            system_table="AK_index";
+            break;
+        case SEGMENT_TYPE_TRANSACTION:
+            //TO-DO
+        case SEGMENT_TYPE_TEMP:
+            //TO-DO
+        default:
+            return EXIT_ERROR;
+    }
+    DeleteAllElements(row_root);
+    InsertNewElementForUpdate(TYPE_VARCHAR, name, system_table, "name", row_root, 1);
+    delete_row(row_root);
+    free(row_root);
+    return EXIT_SUCCESS;
+}
+
+/**
  @author Markus Schatten
 
 */
