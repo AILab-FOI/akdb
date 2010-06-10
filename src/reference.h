@@ -37,7 +37,8 @@
 #define REF_TYPE_RESTRICT 4
 #define REF_TYPE_SET_DEFAULT 5 // reserved for future use
 
-#define MAX_REFERENCE_ATTRIBUTES 10
+#define MAX_REFERENCE_ATTRIBUTES 10 //how many attributes can be define in a single foreign key constraint
+#define MAX_CHILD_CONSTRAINTS 20 // how many references can be made on one parent table, this will be deprecated by the use of a list
 
 typedef struct {
     char table[MAX_ATT_NAME];

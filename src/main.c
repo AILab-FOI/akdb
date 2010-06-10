@@ -57,7 +57,7 @@
 #include "query_optimization.h"
 
 // Constraints
-//#include "reference.h"
+#include "reference.h"
 
 /**
 Main program function
@@ -92,7 +92,7 @@ int main()
 			//hash_test();
 			//bitmap_test();
 
-			//reference_test();
+			reference_test();
 
 			//aggregation_test();
 			//rel_eq_projection_test();
@@ -100,9 +100,9 @@ int main()
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
 			
-			query_optimization_test();
+			//query_optimization_test();
 
-			memoman_test();
+			//memoman_test();
 			
 			/* component test area --- end */
 			

@@ -290,6 +290,26 @@ int GetSizeL( AK_list_elem current, AK_list *L ){
     return (current == NULL ) ? 0:current->size;
 }
 
+/**
+ Function for fetching nth element in row
+ @param pos position of element in row
+ @param row list of elements of row in table
+ @return element of list of elements of row in table
+ @author Mislav Čakarić
+ */
+AK_list_elem GetNthL(int pos, AK_list *row) {
+    int i = 0;
+    AK_list_elem temp_elem;
+
+    temp_elem = FirstL(row);
+    do {
+        if (pos == i)
+            return temp_elem;
+        temp_elem = NextL(temp_elem, row);
+        i++;
+    } while (temp_elem);
+    return NULL;
+}
 
 /**
  * @author DinoLaktašić.

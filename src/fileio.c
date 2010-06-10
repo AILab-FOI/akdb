@@ -407,6 +407,10 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int what
 		next=1;
 		head=0;
 
+                // if end of block has been reached
+      //          if (temp_block->tuple_dict[i].address<0)
+        //            break;
+
 		while(next)
 		{//going throught headers
 			if(strcmp(temp_block->header[head].att_name,"")!=0)
@@ -688,8 +692,16 @@ int delete_update_segment(list *row_root, int delete)
 */
 int delete_row(list *row_root)
 {
-	delete_update_segment(row_root, 1);
-	return EXIT_SUCCESS;
+    if (AK_reference_check_restricion(row_root,1) == EXIT_ERROR) {
+        printf ("Could not delete row. Reference integrity violation (restricted).\n");
+        return EXIT_ERROR;
+    }
+    if (AK_reference_check_if_update_needed(row_root,1) == EXIT_SUCCESS) {
+        AK_reference_update(row_root,1);
+    }
+
+    delete_update_segment(row_root, 1);
+    return EXIT_SUCCESS;
 }
 
 /**	@author Matija Novak
@@ -699,8 +711,16 @@ int delete_row(list *row_root)
 */
 int update_row(list *row_root)
 {
-	delete_update_segment(row_root, 0);
-	return EXIT_SUCCESS;
+    if (AK_reference_check_restricion(row_root,0) == EXIT_ERROR) {
+        printf ("Could not update row. Reference integrity violation (restricted).\n");
+        return EXIT_ERROR;
+    }
+    if (AK_reference_check_if_update_needed(row_root,0) == EXIT_SUCCESS) {
+        AK_reference_update(row_root,0);
+    }
+
+    delete_update_segment(row_root, 0);
+    return EXIT_SUCCESS;
 }
 
 
@@ -708,7 +728,7 @@ void fileio_test()
 {
 /*OVO JE UBITI SVE VEĆ SPREMNO*/
 //CREATE table testna
-	AK_block * block = ( AK_block * ) malloc ( sizeof( AK_block ) );
+	/*AK_block * block = ( AK_block * ) malloc ( sizeof( AK_block ) );
 	AK_header * header_red_br;
 	header_red_br = (AK_header *) AK_create_header( "Redni_broj", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	AK_header * header_name;
@@ -733,10 +753,22 @@ void fileio_test()
 	AK_write_block( block );
 	block->address = 13;
 	AK_write_block( block );
+        */
+        AK_header t_header[4] = {
+                {TYPE_INT, "Redni_broj", 0, '\0', '\0',},
+		{TYPE_VARCHAR, "Ime", 0, '\0', '\0',},
+                {TYPE_VARCHAR, "Prezime", 0, '\0', '\0',},
+		{0, '\0', 0, '\0', '\0'}
+        };
+
+    int startAddress = AK_initialize_new_segment( "testna", SEGMENT_TYPE_TABLE, t_header);
+
+    if( startAddress != EXIT_ERROR )
+        printf( "\nTABLE %s CREATED!\n", "testna");
 
 //END CREATING TABLE TESTA
 //CREATE TABLE TESTNA_druga
-	header_red_br = (AK_header *) AK_create_header( "Adresa", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
+	/*header_red_br = (AK_header *) AK_create_header( "Adresa", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	header_name = (AK_header *) AK_create_header( "Ime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	header_surname = (AK_header *) AK_create_header( "Prezime", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 
@@ -758,11 +790,23 @@ void fileio_test()
 	block->address = 23;
 	AK_write_block( block );
 
-	free(block);
+	free(block);*/
+
+     AK_header t_header2[4] = {
+                {TYPE_VARCHAR, "Adresa", 0, '\0', '\0',},
+		{TYPE_VARCHAR, "Ime", 0, '\0', '\0',},
+                {TYPE_VARCHAR, "Prezime", 0, '\0', '\0',},
+		{0, '\0', 0, '\0', '\0'}
+        };
+
+    int startAddress1 = AK_initialize_new_segment( "testna_druga", SEGMENT_TYPE_TABLE, t_header2);
+
+    if( startAddress1 != EXIT_ERROR )
+        printf( "\nTABLE %s CREATED!\n", "testna_druga" );
 //END CREATING TABLE TESTNA_DRUGA
 
 //INSERT ENTRY TO SYSTEM_RELATION CATALOG
-	AK_block * block2;
+//	AK_block * block2;
 /*	header_red_br = (AK_header *) AK_create_header( "obj_id", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	header_name = (AK_header *) AK_create_header( "Name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
 	header_surname = (AK_header *) AK_create_header( "start_addres", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR ) ;
@@ -779,7 +823,7 @@ void fileio_test()
 	memcpy( & block2->header[2], header_surname, sizeof( * header_surname ) );
 	memcpy( & block2->header[3], header_surname2, sizeof( * header_surname ) ); */
 
-	block2 = (AK_block *) AK_read_block(1);
+	/*block2 = (AK_block *) AK_read_block(1);
 	int broj;
 	broj=1;
 	AK_insert_entry(block2, TYPE_INT, &broj, 0 );
@@ -803,14 +847,14 @@ void fileio_test()
 	free(header_red_br);
 	free(header_name);
 	free(header_surname);
-	free(block2);
+	free(block2);*/
 
 /*OVO JE UBITI SVE VEĆ SPREMNO*/
 //prepraing data and inserting data to list
 	list *row_root =  (list *) malloc( sizeof(list) );
 	InitializeList(row_root);
 	element some_element;
-
+        int broj;
 
 	broj=1;
 	DeleteAllElements(row_root);
@@ -836,7 +880,8 @@ void fileio_test()
 	insert_row(row_root);
 
 	int i;
-	for (i=5;i<50;i++)
+	//for (i=5;i<50;i++)
+        for (i=5;i<10;i++)
 	{
 		DeleteAllElements(row_root);
 		broj=i;
@@ -847,22 +892,30 @@ void fileio_test()
 		insert_row(row_root);
 	}
 
+        //AK_print_table("testna");
+
 	DeleteAllElements(row_root);
 	broj=1;
 	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
 	delete_row(row_root);
 
+       // AK_print_table("testna");
+
 	DeleteAllElements(row_root);
 	broj=1;
-	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,1);
-	InsertNewElementForUpdate(TYPE_VARCHAR,"Nikola","testna","Ime",row_root,0);
-	InsertNewElementForUpdate(TYPE_VARCHAR,"Bakoš","testna","Prezime",row_root,0);
+	InsertNewElementForUpdate(TYPE_INT,&broj,"testna","Redni_broj",row_root,0);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Nikola","testna","Ime",row_root,1);
+	InsertNewElementForUpdate(TYPE_VARCHAR,"Bakoš","testna","Prezime",row_root,1);
 	update_row(row_root);
+
+        AK_print_table("testna");
 
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Matija","testna","Ime",row_root,1);
-	InsertNewElementForUpdate(TYPE_VARCHAR,"Pajdo","testna","Prezime",row_root,0);
+	InsertNewElementForUpdate(TYPE_VARCHAR, "","testna","Prezime",row_root,0);
 	update_row(row_root);
+
+        AK_print_table("testna");
 
 	DeleteAllElements(row_root);
 	broj=3;
@@ -871,16 +924,22 @@ void fileio_test()
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Marko","testna","Prezime",row_root,0);
 	update_row(row_root);
 
+        //AK_print_table("testna");
+
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Slonic","testna","Ime",row_root,1);
 	delete_row(row_root);
+
+        //AK_print_table("testna");
 
 	DeleteAllElements(row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Maja","testna","Ime",row_root,1);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Mihi","testna","Ime",row_root,0);
 	update_row(row_root);
 
-	DeleteAllElements(row_root);
+        //AK_print_table("testna");
+
+	/*DeleteAllElements(row_root);
 	InsertNewElement(TYPE_VARCHAR,"Brace Radica 13","testna_druga","Adresa",row_root);
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Nikola","testna_durga","Ime",row_root,0);
 	InsertNewElement(TYPE_VARCHAR,"Bakoš","testna_druga","Prezime",row_root);
@@ -915,7 +974,7 @@ void fileio_test()
 	InsertNewElementForUpdate(TYPE_VARCHAR,"Matija","testna","Ime",row_root,0);
 	InsertNewElement(TYPE_VARCHAR,"Novak","testna","Prezime",row_root);
 	some_element=GetFirstElement(row_root);
-	insert_row(row_root);
+	insert_row(row_root);*/
 
 	DeleteAllElements(row_root);
 	free(row_root);
