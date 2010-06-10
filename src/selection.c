@@ -20,259 +20,6 @@
 #include "selection.h"
 
 /**
- * @author Matija Šestak.
- * @brief  Alocate empty list
- * @param AK_list* - root of the list
- * @result void
- */
-void InitL( AK_list *L ){
-    L->next = NULL;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Get the first element of the list
- * @param AK_list* - root of the list
- * @result AK_list_elem - first element of the list
- */
-AK_list_elem FirstL( AK_list *L ){
-    return L->next;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Get the last element of the list
- * @param AK_list* - root of the list
- * @result AK_list_elem - last element of the list
- */
-AK_list_elem EndL( AK_list *L ){
-    AK_list_elem current = FirstL( L );
-    if( current == NULL )
-        return NULL;
-    while( current->next != NULL )
-        current = current->next;
-    return current;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Get the next element of the list
- * @param AK_list_elem - current element in the list
- * @param AK_list* - root of the list
- * @result AK_list_elem - next element in the list
- */
-AK_list_elem NextL( AK_list_elem current, AK_list *L ){
-    if( current == NULL )
-        return NULL;
-    return current->next;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Get the previous element of the list
- * @param AK_list_elem - current element in the list
- * @param AK_list* - root of the list
- * @result AK_list_elem - previous element in the list
- */
-AK_list_elem PreviousL( AK_list_elem current, AK_list *L ){
-    if( current == NULL || current == L )
-        return NULL;
-    AK_list_elem previous = L;
-    while( previous->next != current )
-        previous = previous->next;
-    return previous;
-}
-
-/**
- * @author Dejan Frankovic
- * @brief Get n-th element of the list
- * @param int - 0-based index of the element
- * @param AK_list - root of the list
- * @result AK_list_elem - n-th element, or NULL if it doesn't exist
- */
-AK_list_elem GetNthL(int n, AK_list *L) {
-    AK_list *temp = L->next;
-    while (temp != NULL) {
-        if (n == 0)
-            return temp;
-        temp = NextL(temp,L);
-        n--;
-    }
-    return NULL;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Test whether the list is empty
- * @param AK_list* - root of the list
- * @result int - returns 1 if the list is empty, otherwise returns 0
- */
-int IsEmptyL( AK_list *L ){
-    return FirstL( L ) == NULL ? 1 : 0;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Inserts new element before the current element in the list
- * @param int - data type of the new element
- * @param char* - new data
- * @param int - data size of the new element in the list
- * @param AK_list_elem - current element in the list
- * @param AK_list* - root of the list
- * @result void
- */
-void InsertBeforeL( int type, char* data, int size, AK_list_elem current, AK_list *L ){
-    AK_list_elem new_elem = (AK_list_elem)malloc( sizeof( struct list_elem ));
-    new_elem->size = size;
-    new_elem->type = type;
-    memcpy( new_elem->data, data, new_elem->size );
-    if( current == NULL ){
-        L->next = new_elem;
-        new_elem->next = NULL;
-        return;
-    }
-    AK_list_elem previous = PreviousL( current, L );
-    previous->next = new_elem;
-    new_elem->next = current;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Inserts new element after the current element in the list
- * @param int - data type of the new element
- * @param char* - new data
- * @param int - data size of the new element in the list
- * @param AK_list_elem - current element in the list
- * @param AK_list* - root of the list
- * @result void
- */
-void InsertAfterL( int type, char* data, int size, AK_list_elem current, AK_list *L ){
-    AK_list_elem new_elem = (AK_list_elem)malloc( sizeof( struct list_elem ));
-    new_elem->size = size;
-    new_elem->type = type;
-    memcpy( new_elem->data, data, new_elem->size );
-    if( current == NULL ){
-        L->next = new_elem;
-        new_elem->next = NULL;
-        return;
-    }
-    AK_list_elem next = NextL( current, L );
-    new_elem->next = current->next;
-    current->next = new_elem;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Inserts new element at the begin of the list
- * @param int - data type of the new element
- * @param char* - new data
- * @param int - data size of the new element in the list
- * @param AK_list* - root of the list
- * @result void
- */
-void InsertAtBeginL( int type, char* data, int size, AK_list *L ){
-    InsertBeforeL( type, data, size, FirstL( L ), L );
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Inserts new element at the end of the list
- * @param int - data type of the new element
- * @param char* - new data
- * @param int - data size of the new element in the list
- * @param AK_list* - root of the list
- * @result void
- */
-void InsertAtEndL( int type, char* data, int size, AK_list *L ){
-    InsertAfterL( type, data, size, EndL( L ), L );
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Deletes the current element in the list
- * @param AK_list_elem - current element in the list
- * @param AK_list* - root of the list
- * @result void
- */
-void DeleteL( AK_list_elem current, AK_list *L){
-    if( current == NULL )
-        return;
-    AK_list_elem previous = PreviousL( current, L );
-    AK_list_elem next = NextL( current, L );
-
-    previous->next = next;
-    free( current );
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Makes list empty.
- * @param AK_list* - root of the list
- * @result void
- */
-void DeleteAllL( AK_list *L ){
-    AK_list_elem current;
-    while( current = FirstL(L)){
-        L->next = current->next;
-        free( current );
-    }
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Get a number of the elements in the list
- * @param AK_list* - root of the list
- * @result int - size of the list
- */
-int SizeL( AK_list *L ){
-    int size = 0;
-    AK_list_elem current = FirstL( L );
-    while( current ){
-        size++;
-        current = NextL( current, L );
-    }
-    return size;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Retrieves data from the current element in the list
- * @param AK_list_elem - current element in the list
- * @param AK_list* - root of the list
- * @result char* - data from the list element
- */
-char* RetrieveL( AK_list_elem current, AK_list *L ){
-    if( current == NULL )
-        return NULL;
-    char *data = (char*)malloc(current->size);
-    memcpy( data, current->data, current->size );
-    return data;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Get a type of the current list element
- * @param AK_list_elem - current list element
- * @param AK_list* - root of the list
- * @result int - data type  of the current list element
- */
-int GetTypeL( AK_list_elem current, AK_list *L ){
-    return (current == NULL ) ? 0:current->type;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Get a data size of the element
- * @param AK_list_elem - current list element
- * @param AK_list* - root of the list
- * @result int - data size of the current list element
- */
-int GetSizeL( AK_list_elem current, AK_list *L ){
-    return (current == NULL ) ? 0:current->size;
-}
-
-
-/**
  * @brief  Evaluate logical expression
  * @author Matija Šestak.
  * @param AK_mem_block* - memory block from cache
@@ -287,7 +34,7 @@ int AK_selection_check_expr( AK_mem_block *mem_block, AK_header *header, int num
     InitL( &temp );
     int true = 1, false = 0;
     
-    AK_list_elem el = FirstL( expr );
+    AK_list_elem el = (AK_list_elem)FirstL( expr );
     AK_list_elem a,b,c;
     
     int i;
@@ -315,8 +62,8 @@ int AK_selection_check_expr( AK_mem_block *mem_block, AK_header *header, int num
         else
             if( el->type == TYPE_OPERATOR ){
                 //operators implementation                    
-                a = EndL( &temp );
-                b = PreviousL( a, &temp );
+                a = (AK_list_elem)EndL( &temp );
+                b = (AK_list_elem)PreviousL( a, &temp );
 
                 if( strcmp( el->data, "=") == 0 ){
                     if( memcmp( a->data, b->data, a->size ) == 0 )
@@ -475,10 +222,10 @@ int AK_selection_check_expr( AK_mem_block *mem_block, AK_header *header, int num
             else{
                 InsertAtEndL( el->type, el->data, el->size, &temp );
             }
-        el = NextL( el, expr );
+        el = (AK_list_elem)NextL( el, expr );
     }
     int result;
-    memcpy( &result, FirstL( &temp )->data, sizeof(int));
+    memcpy( &result, ((AK_list_elem)FirstL( &temp ))->data, sizeof(int));
     DeleteAllL( &temp );
 
     return result;
@@ -493,7 +240,7 @@ int AK_selection_check_expr( AK_mem_block *mem_block, AK_header *header, int num
  * @result int - return EXIT_SUCCESS
  */
 int AK_selection( char *srcTable, char *dstTable, AK_list *expr ){
-    AK_header *t_header = AK_get_header( srcTable );
+    AK_header *t_header = (AK_header *)AK_get_header( srcTable );
     int num_attr = AK_num_attr( srcTable );
 
     int startAddress = AK_initialize_new_segment( dstTable, SEGMENT_TYPE_TABLE, t_header);

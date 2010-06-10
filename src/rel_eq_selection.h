@@ -20,6 +20,7 @@
 #ifndef REL_EQ_SELECTION
 #define REL_EQ_SELECTION
 
-
+#include "table.h"
+#include "auxiliary.h"
 
 #endif

@@ -352,7 +352,7 @@
 \def ATTR_ESCAPE
 \brief indicates attributes escape section
 */
-#define ATTR_ESCAPE "`";
+#define ATTR_ESCAPE '`';
 
 /**
 \def relational operators

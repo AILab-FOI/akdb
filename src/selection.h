@@ -29,23 +29,6 @@
 #include "dbman.h"
 #include "memoman.h"
 #include "table.h"
-/**
- * \struct list_elem
- * \brief defines a list element
- */
-struct list_elem{
-    ///data type
-    int type;
-    //data size in list element
-    int size;
-    ///loaded data
-    char data[ MAX_VARCHAR_LENGHT ];
-    ///point to next element
-    struct list_elem *next;
-};
-
-typedef struct list_elem AK_list;
-typedef struct list_elem* AK_list_elem;
-
+#include "auxiliary.h"
 
 #endif

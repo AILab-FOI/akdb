@@ -31,19 +31,22 @@
  * @param char* - table name
  * @result int - number of attributes in the table
  */
-int AK_num_attr( char * tblName ){
+int AK_num_attr( char * tblName ) {
     int num_attr = 0;
-    table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-    if( addresses->address_from[0] == 0 )
+	
+    table_addresses *addresses = (table_addresses*)get_table_addresses(tblName);
+    if (addresses->address_from[0] == 0)
         num_attr = -1;
-    else{
-        AK_block *temp = (AK_block *)AK_read_block( addresses->address_from[0] );
-        int i = 0;
-        while( strcmp( temp->header[i].att_name,"\0" ) != 0 ){
+    else {
+        AK_block *temp_block = (AK_block*)AK_read_block(addresses->address_from[0]);
+		
+        while (strcmp(temp_block->header[num_attr].att_name,"\0") != 0)  {
             num_attr++;
-            i++;
         }
+		free(temp_block);
     }
+	free(addresses);
+
     return num_attr;
 }
 
@@ -108,9 +111,10 @@ AK_header* AK_get_header( char *tblName ){
     AK_mem_block *temp = (AK_mem_block*) AK_get_block( addresses->address_from[0] );
 
     int num_attr = AK_num_attr( tblName );
-    AK_header *head = (AK_header*)malloc( num_attr * sizeof(AK_header));
+    AK_header *head = (AK_header*)calloc( num_attr, sizeof(AK_header));
     memcpy( head, temp->block->header, num_attr * sizeof(AK_header));
-    return head;
+    
+	return head;
 }
 
 /**
@@ -512,7 +516,7 @@ void AK_print_table( char *tblName ){
                     printf( pattern, temp_char );
                     break;
             }
-            e=NextL(e,L);
+            e = NextL(e,L);
             printf("|");
         }
         printf("\n");

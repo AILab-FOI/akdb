@@ -20,6 +20,7 @@
 #ifndef REL_EQ_ASSOC
 #define REL_EQ_ASSOC
 
-
+#include "table.h"
+#include "auxiliary.h"
 
 #endif

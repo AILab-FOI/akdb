@@ -8,7 +8,7 @@ DISKTARGETS = dbman.o
 MEMORYTARGETS = memoman.o
 FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bitmap.o table.o
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o
-OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o 
+OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o query_optimization.o
 CONSTRAINTTARGETS = reference.o between.o nnull.o id.o
 
 OUTDIR = ../bin
@@ -45,6 +45,9 @@ rel_eq_selection.o: rel_eq_selection.c
 
 rel_eq_projection.o: rel_eq_projection.c
 	$(CC) $(CFLAGS) rel_eq_projection.c
+	
+query_optimization.o: query_optimization.c
+	$(CC) $(CFLAGS) query_optimization.c
 
 aggregation.o: aggregation.c
 	$(CC) $(CFLAGS) aggregation.c

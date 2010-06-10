@@ -53,8 +53,11 @@
 #include "union.h"
 #include "aggregation.h"
 
+// Query processing
+#include "query_optimization.h"
+
 // Constraints
-#include "reference.h"
+//#include "reference.h"
 
 /**
 Main program function
@@ -78,32 +81,35 @@ int main()
 			//filesort_test();
 
 			//op_projekcija_test();
-                        //op_selection_test();
+			//op_selection_test();
 			//op_spoj_test();
 			//intersect_test();
 			//rename_test();			
 			
 			//table_test();
 
-                        //btree_test();
+			//btree_test();
 			//hash_test();
 			//bitmap_test();
 
-                        reference_test();
+			//reference_test();
 
 			//aggregation_test();
 			//rel_eq_projection_test();
 			//rel_eq_selection_test();
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
+			
+			query_optimization_test();
 
-                        // memoman_test();
+			memoman_test();
+			
 			/* component test area --- end */
-
-                        if ( AK_flush_cache() == EXIT_SUCCESS ){
-                            printf( "\nEverything was fine!\nBye =)\n" );
-                            return ( EXIT_SUCCESS );
-                        }
+			
+			if ( AK_flush_cache() == EXIT_SUCCESS ){
+				printf( "\nEverything was fine!\nBye =)\n" );
+				return ( EXIT_SUCCESS );
+			}
 		}
 		printf( "ERROR. Failed to initialize memory manager\n" );
 		return ( EXIT_ERROR );
