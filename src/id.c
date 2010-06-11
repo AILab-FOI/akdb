@@ -94,3 +94,12 @@ int AK_get_id()
 
     return atoi(currentValue);
 }
+
+void id_test()
+{
+    printf("ID: %i\n",AK_get_id());
+    printf("ID: %i\n",AK_get_id());
+    printf("ID: %i\n",AK_get_id());
+    printf("ID: %i\n",AK_get_id());
+    printf("ID: %i\n",AK_get_id());
+}
