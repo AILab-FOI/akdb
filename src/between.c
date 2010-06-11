@@ -233,3 +233,26 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     free(tempBlock);
     return flag;
 }
+
+constraint_between_test()
+{
+    char* tableName = "studenti";
+    char* attName = "ime";
+    char* constraintName = "imeBetween";
+    char* newValue = "Krunoslav";
+    char* startValue = "ivica";
+    char* endValue = "marica";
+
+    AK_set_constraint_between(tableName,constraintName,attName,startValue,endValue);
+    AK_read_constraint_between(tableName,newValue,attName);
+
+    tableName = "studenti";
+    attName = "godine";
+    constraintName = "godineBetween";
+    newValue = "5";
+    startValue = "18";
+    endValue = "27";
+
+    AK_set_constraint_between(tableName,constraintName,attName,startValue,endValue);
+    AK_read_constraint_between(tableName,newValue,attName);
+}
