@@ -80,7 +80,7 @@ int main()
 			//filesearch_test();
 			//filesort_test();
 
-			//op_projekcija_test();
+			op_projekcija_test();
 			//op_selection_test();
 			//op_spoj_test();
 			//intersect_test();
@@ -99,7 +99,7 @@ int main()
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
 			
-			query_optimization_test();
+			//query_optimization_test();
 
 			//memoman_test();
 

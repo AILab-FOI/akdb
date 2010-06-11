@@ -347,7 +347,10 @@ void query_optimization_test(AK_list *list_query) {
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("n"), expr );
 	//*/
-	AK_print_optimized_query(AK_query_optimization(expr, "aps", 1));
+	time_t start = clock();
+	AK_print_optimized_query(AK_query_optimization(expr, "aps", 0));
+	time_t end = clock();
+    printf( "\n\nLOGIC PLAN GENERATED IN: %d μs\n", end - start);
 	
 	if (DEBUG) {
 		printf("\n------------------> TEST_REL_EQ_FUNCTIONS <------------------\n\n");

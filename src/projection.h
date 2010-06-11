@@ -18,15 +18,9 @@
  */
 #ifndef PROJECTION
 #define PROJECTION
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "configuration.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
-#include "string.h"
-#include "configuration.h"
-#include "auxiliary.h"
 #include "fileio.h"
 
 

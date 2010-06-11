@@ -20,15 +20,9 @@
 #ifndef SELECTION
 #define SELECTION
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-#include "configuration.h"
-#include "projection.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
 #include "table.h"
-#include "auxiliary.h"
 
 #endif

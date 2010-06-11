@@ -26,7 +26,6 @@
 #include "configuration.h"
 #include "auxiliary.h"
 #include "dbman.h"
-#include "configuration.h"
 
 /**
 \struct AK_mem_block
