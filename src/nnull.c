@@ -80,7 +80,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
 }
 
 
-int AK_read_constraint_not_null(char* tableName, char* newValue, char* attNamePar)
+int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNamePar)
 {
     char systemTableName[50];
     int systemTableAddress;
@@ -136,6 +136,7 @@ int AK_read_constraint_not_null(char* tableName, char* newValue, char* attNamePa
                 memcpy(att, tempBlock->data + tempBlock->tuple_dict[tupleDictID+2].address, tempBlock->tuple_dict[tupleDictID+2].size);          
                 if(strcmp(att,attNamePar) == 0)
                 {
+/*
                     if(is_number(newValue) == 0)
                     {
                         if(DEBUG)
@@ -157,6 +158,13 @@ int AK_read_constraint_not_null(char* tableName, char* newValue, char* attNamePa
                           printf("Postoji null ograničenje nad atributm %s u tablici %s\n",att,value);
                         }
                     }
+*/
+                   if( strcmp(newValue,NULLL) == 0)
+                   {
+                       flag = EXIT_ERROR;
+                       printf("It is null!!!");
+                   }
+  
                 }
                 else
                    {
@@ -179,4 +187,16 @@ int is_number(char* s)
             return 0;
     }
     return 1;
+}
+
+void null_test()
+{
+    char* tableName = "studenti";
+    char* constraintName = "studentiNotNull";
+    char* attName = "ime";
+    char* newValue = NULLL;
+
+    AK_set_constraint_not_null(tableName,constraintName,attName);
+    AK_read_constraint_not_null(tableName,newValue,attName);
+
 }
