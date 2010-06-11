@@ -90,7 +90,8 @@ int main()
 
 			//btree_test();
 			//hash_test();
-			//bitmap_test();
+			bitmap_test();
+
 			//reference_test();
 
 			//aggregation_test();
@@ -102,6 +103,13 @@ int main()
 			//query_optimization_test();
 
 			//memoman_test();
+                    
+
+                    //constraint_between_test();
+                    //id_test();
+                    //null_test();
+
+
 
 			/* component test area --- end */
 			
