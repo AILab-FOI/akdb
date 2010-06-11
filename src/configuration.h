@@ -355,6 +355,12 @@
 #define ATTR_ESCAPE '`'
 
 /**
+\def NULLL
+\brief null value for tables
+*/
+#define NULLL "asdfgXYZ"
+
+/**
 \def relational operators
 */
 #define RO_SELECTION 's'
