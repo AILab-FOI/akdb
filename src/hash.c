@@ -353,28 +353,6 @@ void create_test_table_for_hash(char *tblName) {
 }
 
 /**
- Function for fetching nth element in row
- @param pos position of element in row
- @param row list of elements of row in table
- @return element of list of elements of row in table
- @author Mislav Čakarić
- *
-AK_list_elem AK_get_nth_in_row(int pos, AK_list *row) {
-    int i = 0;
-    AK_list_elem temp_elem;
-
-    temp_elem = FirstL(row);
-    do {
-        if (pos == i)
-            return temp_elem;
-        temp_elem = NextL(temp_elem, row);
-        i++;
-    } while (temp_elem);
-    return NULL;
-}
- */
-
-/**
  Function for computing a hash value from varchar or integer
  @param elem element of row for wich value is to be computed
  @return hash value
