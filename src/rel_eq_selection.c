@@ -534,8 +534,9 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 						if (temp_elem != NULL && temp_elem_prev != NULL && temp_elem->type == TYPE_CONDITION && 
 							temp_elem_prev->data[0] == RO_SELECTION && temp_elem_prev->type == TYPE_OPERATOR) {
 							temp_elem->size = temp_elem->size + list_elem_next->size + strlen(" AND ");
-							strcat(temp_elem->data, " AND ");
+							//strcat(temp_elem->data, " AND ");
 							strcat(temp_elem->data, list_elem_next->data);
+							strcat(temp_elem->data, " AND ");
 							memcpy(temp_elem->data, temp_elem->data, temp_elem->size);
 							printf("::selection cascade - condition changed to (%s) in temp list\n", temp_elem->data);
 						} else {

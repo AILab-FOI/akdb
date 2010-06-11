@@ -76,7 +76,7 @@ int AK_selection_check_rs(AK_list_elem el, const char *op, const void *a, const 
 
 /**
  * @brief  Evaluate logical expression
- * @author Matija Šestak.
+ * @author Matija Šestak, updated by Dino Laktašić
  * @param AK_mem_block* - memory block from cache
  * @param AK_header* - table header
  * @param int - number of the attributes
@@ -207,7 +207,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
     int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
 
     if (startAddress == EXIT_ERROR) {
-		return EXIT_FAILURE; 
+		return EXIT_ERROR; 
 	}
 	
 	printf( "\nTABLE %s CREATED!\n", dstTable );
@@ -220,13 +220,12 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
     int i, j, k, l;
     char data[MAX_VARCHAR_LENGHT];
     
-    i = 0;
-    while (src_addr->address_from[i] != 0){
+    for (i = 0; src_addr->address_from[i] != 0; i++) {
         for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
             AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
             if (temp->block->last_tuple_dict_id == 0)
                break;
-            for (k = 0; k < DATA_BLOCK_SIZE; k+=num_attr) {
+            for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
                 if (temp->block->tuple_dict[k].type == FREE_INT)
                     break;
                 if (AK_selection_check_expr(temp, t_header, num_attr, expr, k)) {
@@ -243,12 +242,11 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
                 }
             }
         }
-        i++;
     }
 	
 	free(src_addr);
 	free(t_header);
-    return (EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 }
 
 ///Function for selection testing
@@ -262,23 +260,16 @@ void op_selection_test(){
 
     temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header, temp, sizeof( AK_header ));
-
     temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 1, temp, sizeof( AK_header ));
-
     temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 2, temp, sizeof( AK_header ));
-
     temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 3, temp, sizeof( AK_header ));
-
     temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 4, temp, sizeof( AK_header ));
-
-    for( i = 5; i < MAX_ATTRIBUTES; i++ )
-    {
-    	memcpy( t_header + i, "\0", sizeof( "\0" ));
-    }
+	
+	memset( t_header + 5, '\0', MAX_ATTRIBUTES - 5);
     
     //create table
     char *tblName = "student";
@@ -289,7 +280,6 @@ void op_selection_test(){
     
     if( startAddress != EXIT_ERROR )
         printf( "\nTABLE %s CREATED!\n", tblName );
-    
     
     printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
     

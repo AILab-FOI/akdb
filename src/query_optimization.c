@@ -299,11 +299,11 @@ void query_optimization_test(AK_list *list_query) {
 	//*Cascade of Selection and Commutativity of Selection
 	InsertAtEndL( TYPE_OPERATOR, "i", sizeof("u"), expr ); //u, i, e
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`avg_grade` < 4.5", sizeof("`avg_grade` < 4.5"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`avg_grade` 4.5 <", sizeof("`avg_grade` 4.5 <"), expr );
 	//...
 	//*Commutativity of Selection and set operations (Union, Intersection, and Set difference)
     InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`id_stud` > 100 OR `id_prof` < 50", sizeof("`id_stud` > 100 OR `id_prof` < 50"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`id_stud` 100 > `id_prof` 50 < OR", sizeof("`id_stud` 100 > `id_prof` 50 < OR"), expr );
     InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
     InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("u"), expr ); //u, i, e
@@ -313,11 +313,11 @@ void query_optimization_test(AK_list *list_query) {
 	
 	//*Commutativity of Selection and Theta join (or Cartesian product)
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-    InsertAtEndL( TYPE_CONDITION, "`firstname` < 10 AND `category` = 'Algorithms'", sizeof("`lecturer` < 10 AND `category` = 'Algorithms'"), expr );
+    InsertAtEndL( TYPE_CONDITION, "`firstname` 10 < `category` 'Algorithms' AND", sizeof("`firstname` 10 < `category` 'Algorithms' AND"), expr );
 	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`category` = `id_prof`", sizeof("`category` = `id_prof`"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`category` `id_prof` =", sizeof("`category` `id_prof` ="), expr );
 	InsertAtEndL( TYPE_OPERATOR, "e", sizeof("e"), expr ); //u, i, e
 	//*/
 	
@@ -327,7 +327,7 @@ void query_optimization_test(AK_list *list_query) {
 	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
     InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`id_stud` > 10 AND `id_prof` < 5", sizeof("`id_stud` > 10 AND `id_prof` < 5"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`id_stud` 10 > `id_prof` 5 < AND", sizeof("`id_stud` 10 > `id_prof` 5 < AND"), expr );
 	//*/
 	
 	/*Associativity of natural joins
@@ -348,7 +348,7 @@ void query_optimization_test(AK_list *list_query) {
 	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("n"), expr );
 	//*/
 	time_t start = clock();
-	AK_print_optimized_query(AK_query_optimization(expr, "aps", 0));
+	AK_print_optimized_query(AK_query_optimization(expr, "aps", 1));
 	time_t end = clock();
     printf( "\n\nLOGIC PLAN GENERATED IN: %d μs\n", end - start);
 	
@@ -362,8 +362,8 @@ void query_optimization_test(AK_list *list_query) {
 
 		test_table = "profesor";
 		test_attribs = "id_prof;firstname";
-		test_cond1 = "`id_prof` < 10 AND `category` = '10'";
-		test_cond2 = "`id_stud` > 100 OR `id_prof` < 50";
+		test_cond1 = "`id_prof` 10 < `category` '10' = AND";
+		test_cond2 = "`id_stud` 100 > `id_prof` 50 < OR";
 		
 		cond_attr1 = AK_rel_eq_cond_attributes(test_cond1);
 		cond_attr2 = AK_rel_eq_cond_attributes(test_cond2);
@@ -373,8 +373,8 @@ void query_optimization_test(AK_list *list_query) {
 		//AK_list_elem list_elem_cond, list_elem_attr;
 		
 		printf("Test table: (%s) | Test attributes: (%s)\n", test_table, test_attribs);
-		printf("Test first condition  : (%s)\n", test_cond1);
-		printf("Test second condition : (%s)\n\n", test_cond2);
+		printf("Test first condition       : (%s)\n", test_cond1);
+		printf("Test second condition      : (%s)\n\n", test_cond2);
 		printf("First condition attributes : (%s)\n", cond_attr1);
 		printf("Second condition attributes: (%s)\n", cond_attr2);
 		printf("-------------------------------------------------------------\n\n");
