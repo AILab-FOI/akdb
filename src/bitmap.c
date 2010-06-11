@@ -223,7 +223,10 @@ void bitmap_test()
 	InsertNewelementOp("student","year",some_element);
 
     AKcreateIndex( tblName, att_root );
-
+    AK_print_table( "student" );
+    AK_print_table( "studentyear_bmapIndex" );
+    AK_print_table( "studentfirstname_bmapIndex" );
+    AK_update(321,58,"student","firstname","Matija","Dalibor");
 }
 
 
@@ -697,12 +700,113 @@ list_ad* AKgetAttribute(char *tableName, char *attributeName, char *attributeVal
     return list;
 }
 
-/*
-void AKupdate(int addBlock, int addTd, char *att)
+void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue)
 {
+    char inde[50];
+    char *indexName;
+    int b,num_attr,k,j;
+    int i = 0;
+    int temp_adr_block;
+    int temp_adr_Td;
+    int pos;
+    int posNew = -1;
 
+    strcpy(inde,tableName);
+    indexName = strcat(inde,attributeName);
+    indexName = strcat(indexName,"_bmapIndex");
+
+    //printf("Naziv indexa: %s\n",indexName);
+    AK_header *temp_head = AK_get_header( indexName );
+    num_attr = AK_num_attr( indexName );
+
+    for( i = 0; i < num_attr; i++ )
+    {
+        if(strcmp((temp_head+i)->att_name,attributeValue) == 0)
+        {
+           //printf("XXXXXXXXXXXXXXXXXXX%i\n",i);
+            pos = i;
+        }
+    }
+    i = 0;
+    for( i = 0; i < num_attr; i++ )
+    {
+        if(strcmp((temp_head+i)->att_name,newAttributeValue) == 0)
+        {
+            posNew = i;
+        }
+    }
+
+    if(posNew == -1)
+    {
+        printf("Moguc update samo za postojece vrijednosti ! \n");
+        exit(1);
+    }
+
+    table_addresses *addresses = (table_addresses* ) get_table_addresses( indexName );
+    AK_block *temp = (AK_block*)AK_read_block( addresses->address_from[0]);
+    if(addresses->address_from[ 0 ] == 0)
+    {
+        printf("Ne postoji index za tablicu: %s nad atributom: %s", tableName, attributeName);
+    }
+    else
+    {
+        for( b = 0; b < num_attr; b++ )
+        {
+            if(strcmp((temp_head+b)->att_name,attributeValue) == 0)
+            {
+                //printf("XXXXXXXXXXXXXXXXXXXXXXXXXX%i",b);
+                i=0;
+                 while( addresses->address_from[ i ] != 0 ){
+                        for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
+                            AK_block *temp = (AK_block*) AK_read_block( j );
+                            for( k = 0; k < DATA_BLOCK_SIZE; k=k+num_attr ){
+                                if( temp->tuple_dict[ k ].size > 0 ){
+                                    memcpy( &temp_adr_block, &(temp->data[ temp->tuple_dict[ k ].address]),temp->tuple_dict[k].size);
+                                    memcpy( &temp_adr_Td, &(temp->data[ temp->tuple_dict[ k+1 ].address]),temp->tuple_dict[k+1].size);
+                                    //printf("xx:%i\n",temp_adr_block);
+                                    if((temp_adr_block == addBlock) && (temp_adr_Td == addTd))
+                                    {
+                                       // printf( "Adresa bloka je: %d, Adresat Td-a je: %d xxxx:%i ", temp_adr_block, temp_adr_Td, temp->address );
+                                       // temp->data[ temp->tuple_dict[ k+pos ].address] = NULL;
+                                        memcpy( &(temp->data[ temp->tuple_dict[ k+pos ].address]),"n",1);
+                                        //temp->data[ temp->tuple_dict[ k+posNew ].address] = NULL;
+                                        memset(&(temp->data[ temp->tuple_dict[ k+posNew ].address]),0,4);
+                                        memcpy( &(temp->data[ temp->tuple_dict[ k+posNew ].address]),"1",1);
+                                        write_block(temp);
+                                    }
+                                }
+                            }
+
+                        }
+                    i++;
+                }
+            }
+        }
+    }
 }
- * */
+
+int write_block( AK_block * block )
+{
+	if( ( db = fopen( DB_FILE, "r+" ) ) == NULL ) {
+		printf( "AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE );
+		exit( EXIT_ERROR );
+	}
+	if( fseek( db, block->address * sizeof( AK_block ), SEEK_SET ) != 0 )
+	{
+		printf( "AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address );
+		exit( EXIT_ERROR );
+	}
+	if( fwrite( block, sizeof( *block ), 1, db ) != 1 )
+	{
+		printf( "AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address );
+		exit( EXIT_ERROR );
+	}
+	fclose( db );
+	if( DEBUG )
+		printf( "AK_write_block: Written block at address %d\n", block->address * sizeof( AK_block ) );
+	return ( EXIT_SUCCESS );
+}
+
 /*
 za testiranje potrebno u main.c :
  * createTableTest();
