@@ -310,7 +310,7 @@ int insert_row_to_block(list *row_root, AK_block *temp_block)
 	return EXIT_SUCCESS;
 }
 
-/**	@author Matija Novak, updated by Matija Šestak (function now uses caching)
+/**	@author Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference check)
 	inserts a one row into table
 	@param list of elements which contain data of one row
 	@result EXIT_SUCCESS if success elese EXIT_ERROR
@@ -334,7 +334,7 @@ int insert_row(list *row_root)
 
 	char table[MAX_ATT_NAME];
 	int free2=0;
-	for(free2;free2<100;free2++)
+	for(free2;free2<MAX_ATT_NAME;free2++)
 		table[free2]='\0';
 	
 	memcpy(&table,some_element->table,strlen(some_element->table));
@@ -685,7 +685,7 @@ int delete_update_segment(list *row_root, int delete)
 	return EXIT_SUCCESS;
 }
 
-/**	@author Matija Novak
+/**	@author Matija Novak, Dejan Frankovic (added referential integrity)
 	function delete rows
 	@param row_root -  elements of one row
 	@returs EXIT_SUCCESS if success
@@ -704,7 +704,7 @@ int delete_row(list *row_root)
     return EXIT_SUCCESS;
 }
 
-/**	@author Matija Novak
+/**	@author Matija Novak, Dejan Frankovic (added referential integrity)
 	function update rows of some table
 	@param row_root -  elements of one row
 	@returs EXIT_SUCCESS if success

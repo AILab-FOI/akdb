@@ -93,7 +93,6 @@ int main()
 			//bitmap_test();
 			//reference_test();
 
-
 			//aggregation_test();
 			//rel_eq_projection_test();
 			//rel_eq_selection_test();

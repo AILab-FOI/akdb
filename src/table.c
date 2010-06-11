@@ -215,7 +215,7 @@ AK_list * AK_get_row( int num, char * tblName )
 
   int i, j, k, l, counter;
   char data[ MAX_VARCHAR_LENGHT ];
-  
+
   i = 0;
   counter = -1;
   while( addresses->address_from[ i ] != 0 ){
@@ -445,7 +445,7 @@ void AK_print_header( char *tblName ){
 
 /**
  * @brief  Print table
- * @author Matija Šestak.
+ * @author Matija Šestak, minor update by Dejan Frankovic (added basic null support)
  * @param char* - table name
  * @result void
  */
@@ -498,7 +498,12 @@ void AK_print_table( char *tblName ){
             int size = GetSizeL( e, L );
             char * data = RetrieveL( e, L );
 
-            switch( temp->block->tuple_dict[j].type){
+            //switch( temp->block->tuple_dict[j].type){
+            switch( type){
+                case 0:
+                    strcat( pattern, "s");
+                    printf( pattern, "null" );
+                    break;
                 case TYPE_INT:
                     strcat( pattern, "d");
                     memcpy( &temp_int, data, size);

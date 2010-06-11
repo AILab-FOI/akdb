@@ -20,27 +20,19 @@
 #include "reference.h"
 
 
-/*
-    AK_header t_header[7] = {
-                {TYPE_VARCHAR, "table", 0, '\0', '\0',},
-		{TYPE_VARCHAR, "constraint", 0, '\0', '\0',},
-		{TYPE_VARCHAR, "attribute", 0, '\0', '\0',},
-		{TYPE_VARCHAR, "parent", 0, '\0', '\0',},
-                {TYPE_VARCHAR, "parent_attribute", 0, '\0', '\0',},
-		{TYPE_INT, "type", 0, '\0', '\0',},
-		{0, '\0', 0, '\0', '\0'}
-        };
-*/
-
+/**
+ * Adds a reference for a group of attributes over a given table to a group of attributes over another table with a given constraint name..
+ * @author Dejan Frankovic
+ * @param name of the child table
+ * @param array of child table attribute names (foreign key attributes)
+ * @param name of the parent table
+ * @param array of parent table attribute names (primary key attributes)
+ * @param number of attributes in foreign key
+ * @param name of the constraint
+ * @param type of the constraint, constants defined in 'reference.h'
+ * @result returns EXIT_SUCCESS
+ */
 int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable, char *parentAttNames[], int attNum, char *constraintName, int type) {
-    /*char systemTableName[MAX_ATT_NAME];
-    int systemTableAddress;
-    int j, i = 0;
-    int freeSpaceFound = 0;
-    int tupleDictID = -1;
-    //AK_block *tempBlock;
-    AK_mem_block *tempBlock;*/
-
     int i;
     if (type != REF_TYPE_CASCADE && type != REF_TYPE_NO_ACTION && type!=REF_TYPE_RESTRICT && type!=REF_TYPE_SET_DEFAULT && type != REF_TYPE_SET_NULL) return;
 
@@ -58,48 +50,17 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
         insert_row( row_root );
     }
 
-   /* tempBlock = AK_read_block(0);
-
-    do
-    {
-   //     for(j=0; j<50; j++)
-   //         systemTableName[j]= FREE_CHAR;
-
-        memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
-        systemTableName[tempBlock->tuple_dict[i].size+1] = FREE_CHAR;
-        memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i+1].address, tempBlock->tuple_dict[i+1].size);
-        if(strcmp(systemTableName,"AK_references") == 0)
-            break;
-        i+= 2;
-    } while(strcmp(systemTableName,"\0") != 0);
-
-    {
-        if(DEBUG)
-            printf("Sistemska tablica u koju se upisuje: %s,adresa: %i\n",systemTableName,systemTableAddress);
-
-        //tempBlock = AK_read_block(systemTableAddress);
-        tempBlock = AK_get_block(systemTableAddress);
-
-        while (freeSpaceFound == 0)
-        {
-                tupleDictID += 1;
-                if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT)
-                        freeSpaceFound = 1;
-        }*/
-
- /*   AK_insert_entry(tempBlock, TYPE_VARCHAR, tableName, tupleDictID);
-    AK_insert_entry(tempBlock, TYPE_VARCHAR, constraintName, tupleDictID + 1);
-    AK_insert_entry(tempBlock, TYPE_VARCHAR, attName, tupleDictID + 2);
-    AK_insert_entry(tempBlock, TYPE_VARCHAR, startValue, tupleDictID + 3);
-    AK_insert_entry(tempBlock, TYPE_VARCHAR, endValue, tupleDictID + 4);
-*/
-//                AK_write_block(tempBlock);
-
-    
-  //  free(tempBlock);
-    return 1;
+    free(row_root);
+    return EXIT_SUCCESS;
 }
 
+/**
+ * Reads a reference entry from system table.
+ * @author Dejan Frankovic
+ * @param name of the table with reference (with foreign key)
+ * @param name of the reference constraint
+ * @result AK_ref_item object with all neccessary information about the reference
+ */
 AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
     int i = 0;
     AK_list *list;
@@ -123,6 +84,14 @@ AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
     return reference;
 }
 
+/**
+ * Check referential integrity for one attribute
+ * @author Dejan Frankovic
+ * @param child table name
+ * @param attribute name (foreign key attribute)
+ * @param value of the attribute we're checking
+ * @result EXIT ERROR if check failed, EXIT_SUCCESS if referential integrity is ok
+ */
 int AK_reference_check_attribute(char *tableName, char *attribute, char *value) {
     int i;
     int att_index;
@@ -143,6 +112,13 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
     return EXIT_SUCCESS;
 }
 
+/**
+ * A quick check if there are any referential constraints that should be applied on a given list of changes.
+ * @author Dejan Frankovic
+ * @param list of elements for update
+ * @param is it update(0) or delete(1) action?
+ * @result EXIT_SUCCESS if update is needed, EXIT_ERROR if not
+ */
 int AK_reference_check_if_update_needed(list *lista, int delete) {
     element temp;
     int i = 0,j,con_num=0;
@@ -165,6 +141,12 @@ int AK_reference_check_if_update_needed(list *lista, int delete) {
     return EXIT_ERROR;
 }
 
+/**
+ * Checks for REF_TYPE_RESTRICT references appliable to the operation of updating or deleting a row in a table.
+ * @param list of elements for update
+ * @param is it update(0) or delete(1) action?
+ * @result EXIT_SUCCESS if there is no restriction on this action, EXIT_ERROR if there is
+ */
 int AK_reference_check_restricion(list *lista, int delete) {
     element temp;
     int i = 0,j,con_num=0;
@@ -174,9 +156,9 @@ int AK_reference_check_restricion(list *lista, int delete) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
             temp = GetFirstElement(lista);
             while (temp != NULL) {
-                if (delete == 0 && temp->constraint == 0 && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0 && (int)*row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
+                if (delete == 0 && temp->constraint == 0 && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int)*row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
                     return EXIT_ERROR;
-                else if (delete == 1 && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0 && (int)*row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
+                else if (delete == 1 && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int)*row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
                     return EXIT_ERROR;
                 temp = GetNextElement(temp);
             }
@@ -187,29 +169,12 @@ int AK_reference_check_restricion(list *lista, int delete) {
     return EXIT_SUCCESS;
 }
 
-int AK_get_type_size(int type, char data[]) {
-    switch (type) {
-        case TYPE_INT:
-            return sizeof(int);
-        case TYPE_FLOAT:
-            return sizeof(float);
-        case TYPE_NUMBER:
-            return sizeof(double);
-        case TYPE_VARCHAR:
-            return strlen(data);
-        case TYPE_DATE:
-            //?
-        case TYPE_DATETIME:
-            //?
-        case TYPE_TIME:
-            //?
-        case TYPE_BLOB:
-            //?
-        case TYPE_BOOL:
-            return sizeof(int);
-    }
-}
-
+/**
+ * Updates child table entries according to ongoing update of parent table entries.
+ * @param list of elements for update
+ * @param is it update(0) or delete(1) action?
+ * @result EXIT_SUCCESS
+ */
 int AK_reference_update(list *lista, int delete) {
     int parent_i,i,j,ref_i,con_num =0;
     AK_list *parent_row;
@@ -219,6 +184,8 @@ int AK_reference_update(list *lista, int delete) {
     AK_ref_item reference;
     char constraints[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGHT];
     char child_tables[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGHT];
+
+    char tempData[MAX_VARCHAR_LENGHT];
 
     element row_root =  (element) malloc( sizeof(list) );
     InitializeList(row_root);
@@ -246,9 +213,9 @@ int AK_reference_update(list *lista, int delete) {
     i=0;
     temp = GetFirstElement(lista);
     while (temp != NULL) {
-        if (delete == 1 || temp->constraint == 0) {
+        if (delete == 1 || temp->constraint == 1) {
             InsertAtEndL(TYPE_OPERAND, temp->attribute_name, strlen(temp->attribute_name), &expr);
-            InsertAtEndL(temp->type, temp->data, AK_get_type_size(temp->type, temp->data), &expr);
+            InsertAtEndL(temp->type, temp->data, AK_type_size(temp->type, temp->data), &expr);
             InsertAtEndL(TYPE_OPERATOR, "=", 1, &expr);
             i++;
         }
@@ -263,19 +230,21 @@ int AK_reference_update(list *lista, int delete) {
     AK_selection( lista->next->table, tempTable, &expr );
     DeleteAllL(&expr);
    
-    
+    AK_print_table(tempTable);
+
     // browsing through affected rows..
-    //while ((parent_row = AK_get_row(parent_i,"ref_update_temp")) != NULL) { // walkin' thgough the parent table
     while ((parent_row = AK_get_row(parent_i,tempTable)) != NULL) {
-       // while ((ref_row = AK_get_row(ref_i,"AK_reference")) != NULL ) { // looking for the parent table in references...
-         //   if (strcmp(ref_row->next->next->next->next->data, lista->next->table) == 0) {
         for (i = 0;i < con_num;i++) {
             reference = AK_get_reference(child_tables[i],constraints[i]);
-            DeleteAllL(&expr);
+            DeleteAllElements(row_root);
 
             for (j = 0;j<reference.attributes_number;j++) {
                 tempcell = GetNthL(AK_get_attr_index(reference.parent, reference.parent_attributes[j]), parent_row); // from the row of parent table, take the value of attribute with name from parent_attribute
-                InsertNewElementForUpdate(tempcell->type, tempcell->data , reference.table, reference.attributes[j], row_root,1);
+
+                memcpy(tempData, tempcell->data, tempcell->size);
+                tempData[tempcell->size] == '\0';
+
+                InsertNewElementForUpdate(tempcell->type, tempData , reference.table, reference.attributes[j], row_root,1);
 
                 switch (reference.type) {
                     case REF_TYPE_CASCADE:
@@ -283,7 +252,9 @@ int AK_reference_update(list *lista, int delete) {
                             temp = GetFirstElement(lista);
                             while (temp != NULL) {
                                 if (strcmp(temp->attribute_name,reference.parent_attributes[j]) == 0 && temp->constraint == 0) {
-                                    InsertNewElementForUpdate(tempcell->type, temp->data, reference.table, reference.attributes[j], row_root,0);
+                                    memcpy(tempData, tempcell->data, tempcell->size);
+                                    tempData[tempcell->size] == '\0';
+                                    InsertNewElementForUpdate(tempcell->type, tempData, reference.table, reference.attributes[j], row_root,0);
                                     break;
                                 }
                                 temp = GetNextElement(temp);
@@ -318,45 +289,23 @@ int AK_reference_update(list *lista, int delete) {
                 update_row(row_root);
             else
                 delete_row(row_root);
-            
 
-              /*  InsertAtEndL(TYPE_OPERAND, ref_row->next->next->next->next->next->data, ref_row->next->next->next->next->next->size, &expr);
-                InsertAtEndL(ref_row->next->next->next->next->next->type, tempcell, AK_get_type_size(ref_row->next->next->next->next->next->type, tempcell), &expr);
-                InsertAtEndL(TYPE_OPERATOR, "=", 1, &expr);
-                AK_selection(ref_row->next->data , "ref_update_temp_2", &expr );
-                DeleteAllL(&expr);
-
-                child_head = AK_get_header("ref_update_temp_2");
-                child_att_num = AK_num_attr("ref_update_temp_2");
-
-                while ((child_row = AK_get_row(child_i,"ref_update_temp_2")) != NULL) {
-                    while (child_head.)
-
-                    tempcell2 = FirstL(child_row);
-                    DeleteAllElements(row_root);
-                    while (tempcell2 != NULL) {
-
-                        InsertNewElementForUpdate(tempcell2->type, tempcell2->data ,"ref_update_temp_2", , row_root,1);
-                        update_row(row_root);
-
-                        tempcell2 = NextL(tempcell2, child_row);
-                    }
-                }
-
-                AK_delete_table("ref_update_temp_2");*/
         }
-       //     }
-      //      ref_i++;
-     //   }
-        
+
         parent_i++;
     }
 
     //AK_delete_table("ref_update_temp");
     //AK_delete_table(tempTable);
+    AK_delete_segment(tempTable, SEGMENT_TYPE_TABLE);
     return EXIT_SUCCESS;
 }
 
+/**
+ * Checks new entry for referential integrity.
+ * @param list of elements for insert row
+ * @result EXIT_SUCCESS if referential integrity is ok, EXIT_ERROR if it is compromised
+ */
 int AK_reference_check_entry(list *lista) {
     element temp;
     int i = 0,j,k,con_num=0,success;
@@ -445,6 +394,9 @@ int AK_reference_check_entry(list *lista) {
     return EXIT_ERROR;
 }
 
+/**
+ * Test function.
+ */
 void reference_test_table() {
     int i;
     //create header
@@ -569,6 +521,9 @@ void reference_test_table() {
 
 }
 
+/**
+ * Test function.
+ */
 void reference_test() {
     printf("HELL YEAH!\n");
     int a;
@@ -588,7 +543,7 @@ void reference_test() {
     strcpy(patt[1],"firstname");
 
     //AK_create_reference_table();
-    AK_add_reference("ref_test",att,"student",patt,2,"constraint", REF_TYPE_RESTRICT);
+    AK_add_reference("ref_test",att,"student",patt,2,"constraint", REF_TYPE_SET_NULL);
     AK_print_table("AK_reference");
     AK_print_table("student");
 
@@ -602,21 +557,29 @@ void reference_test() {
     InsertNewElement( TYPE_VARCHAR, "TheRippah", "ref_test", "Rnd", row_root );
     insert_row( row_root );
     
-    a=101;
+    a=102;
     DeleteAllElements(row_root);
     InsertNewElement( TYPE_INT, &a , "ref_test", "FK", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Matija", "ref_test", "Value", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Igor", "ref_test", "Value", row_root );
+    InsertNewElement( TYPE_VARCHAR, "TheMutilator", "ref_test", "Rnd", row_root );
+    insert_row( row_root );
+
+    a=105;
+    DeleteAllElements(row_root);
+    InsertNewElement( TYPE_INT, &a , "ref_test", "FK", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Igor", "ref_test", "Value", row_root );
     InsertNewElement( TYPE_VARCHAR, "TheMutilator", "ref_test", "Rnd", row_root );
     insert_row( row_root );
 
     AK_print_table("ref_test");
 
-    a=101;
+    a=105;
     DeleteAllElements(row_root);
-    InsertNewElementForUpdate(TYPE_INT, &a, "student", "mbr", row_root, 1);
+    //InsertNewElementForUpdate(TYPE_INT, &a, "student", "mbr", row_root, 1);
+    InsertNewElementForUpdate(TYPE_VARCHAR, "Igor", "student", "firstname", row_root, 1);
     delete_row(row_root);
 
-   /* DeleteAllElements(row_root);
+    /*DeleteAllElements(row_root);
     a = 101;
     InsertNewElementForUpdate(TYPE_INT, &a, "ref_test", "FK", row_root, 1);
     a = 102;
@@ -625,6 +588,13 @@ void reference_test() {
     InsertNewElementForUpdate(TYPE_VARCHAR, "Igor", "ref_test", "Value", row_root, 0);
     update_row(row_root);*/
 
-//    AK_print_table("student");
+/*    a = 101;
+    DeleteAllElements(row_root);
+    InsertNewElementForUpdate(TYPE_INT, &a, "student", "mbr", row_root, 1);
+    a = 5;
+    InsertNewElementForUpdate(TYPE_INT, &a, "student", "mbr", row_root, 0);
+    update_row(row_root);*/
+
+    AK_print_table("student");
     AK_print_table("ref_test");
 }
