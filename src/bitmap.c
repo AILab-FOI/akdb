@@ -336,7 +336,7 @@ void AKcreateIndex(char *tblName, list_op *attributes)
                  switch((temp_head + i)->type)
                  {
                      case TYPE_VARCHAR:
-                         brr = 3;
+                         brr = 2;//3
                          e = (element_op) GetFirstelementOp(headerAtributes);
                         while (e != 0) {
                             //printf("%s : %s \n", (temp_head + i)->att_name, e->attribute_name);
@@ -348,10 +348,10 @@ void AKcreateIndex(char *tblName, list_op *attributes)
                         //dodaje se jos jedan atribut za pokazivac(adresu)
                         tempHeader = (AK_header*)AK_create_header( "addBlock", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                         memcpy( t_header , tempHeader, sizeof( AK_header ));
-                        tempHeader = (AK_header*)AK_create_header( "addTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                        tempHeader = (AK_header*)AK_create_header( "indexTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                         memcpy( t_header + 1 , tempHeader, sizeof( AK_header ));
-                        tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                        memcpy( t_header + 2 , tempHeader, sizeof( AK_header ));
+                        //tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                        //memcpy( t_header + 2 , tempHeader, sizeof( AK_header ));
 
                         for(z = brr; z < MAX_ATTRIBUTES; z++ )
                         {
@@ -372,14 +372,14 @@ void AKcreateIndex(char *tblName, list_op *attributes)
                         break;
 
                      case TYPE_INT:
-                            brr = 3;
+                            brr = 2;//3
 
                             tempHeader = (AK_header*)AK_create_header( "addBlock", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                             memcpy( t_headerr , tempHeader, sizeof( AK_header ));
-                            tempHeader = (AK_header*)AK_create_header( "addTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                            tempHeader = (AK_header*)AK_create_header( "indexTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                             memcpy( t_headerr + 1 , tempHeader, sizeof( AK_header ));
-                            tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                            memcpy( t_headerr + 2 , tempHeader, sizeof( AK_header ));
+                            //tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                            //memcpy( t_headerr + 2 , tempHeader, sizeof( AK_header ));
 
                             e = (element_op) GetFirstelementOp(headerAtributes);
                             while (e != 0) {
@@ -463,6 +463,7 @@ void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int pos
 
     int i,j,k;
     int temp_int;
+    int temp_indexTd;
     char temp_char[ MAX_VARCHAR_LENGHT ];
     float temp_float;
     int brojac,br;
@@ -482,10 +483,10 @@ void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int pos
                             temp_int = sprintf(temp_char,"%d",temp_int);
                             row_root =  (element) malloc( sizeof(list) );
                             InitializeList(row_root);
-                            InsertNewElement( TYPE_INT, &(temp->tuple_dict[ k ].address), tblNameIndex, "addTd", row_root );
+                            temp_indexTd=k-positionTbl;
                             InsertNewElement( TYPE_INT, &(temp->address), tblNameIndex, "addBlock", row_root );
-                            InsertNewElement( TYPE_INT, &(temp->tuple_dict[ k ].size), tblNameIndex, "sizeTd", row_root );
-                     //       for( br = 3; br < num_attrIndex; br++ )
+                            InsertNewElement( TYPE_INT, &temp_indexTd, tblNameIndex, "indexTd", row_root );
+                     //       for( br = 2; br < num_attrIndex; br++ )
                      //       {
                      //           if(strcmp((headerIndex + br)->att_name,temp_char) == 0)
                      //           {
@@ -517,10 +518,10 @@ void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int pos
                             //prolazi kroz header i dodaje nule na sve pozicije osim na onu na kojoj se nalazi unutar headera ovaj atribut
                             row_root =  (element) malloc( sizeof(list) );
                             InitializeList(row_root);
-                            InsertNewElement( TYPE_INT, &(temp->tuple_dict[ k ].address), tblNameIndex, "addTd", row_root );
+                            temp_indexTd=k-positionTbl;
                             InsertNewElement( TYPE_INT, &(temp->address), tblNameIndex, "addBlock", row_root );
-                            InsertNewElement( TYPE_INT, &(temp->tuple_dict[ k ].size), tblNameIndex, "sizeTd", row_root );
-                     //       for( br = 3; br < num_attrIndex; br++ )
+                            InsertNewElement( TYPE_INT, &temp_indexTd, tblNameIndex, "indexTd", row_root );
+                     //       for( br = 2; br < num_attrIndex; br++ )
                      //       {
                      //           if(strcmp((headerIndex + br)->att_name,temp_char) == 0)
                      //           {
@@ -565,7 +566,7 @@ list_ad* getAttribute(char *indexName, char *attribute)
         char temp_char[ MAX_VARCHAR_LENGHT ];
         float temp_float;
         int b,br = 0;
-        int addBlock,addTd,addSize;
+        int addBlock,indexTd;
 
         list_ad *add_root =  (list_ad *) malloc( sizeof(list_ad) );
         InitializelistAd(add_root);
@@ -604,16 +605,13 @@ list_ad* getAttribute(char *indexName, char *attribute)
                                         temp->tuple_dict[k].size);
                                 memcpy( &addBlock, &(temp->data[ temp->tuple_dict[ k - br ].address]),
                                         temp->tuple_dict[0].size);
-                                memcpy( &addTd, &(temp->data[ temp->tuple_dict[ k - (br - 1) ].address]),
+                                memcpy( &indexTd, &(temp->data[ temp->tuple_dict[ k - (br - 1) ].address]),
                                         temp->tuple_dict[1].size);
-                                memcpy( &addSize, &(temp->data[ temp->tuple_dict[ k - (br - 2) ].address]),
-                                        temp->tuple_dict[2].size);
                                 temp_char[ temp->tuple_dict[k].size ] = '\0';
                                 if(strcmp(temp_char,"1") == 0 )
                                 {
                                 //printf( "%-10s", temp_char );
                                 //printf("adresa bloka: %i  veličina podatka: %i adresa td-a: %i\n",addBlock,addSize,addTd);
-                                    int indexTd=k;
                                     InsertNewelementAd(addBlock,indexTd,attribute,add_root);
                                 }
                                 break;
@@ -636,15 +634,13 @@ void createListAddressTest()
 {
       list_ad *add_root =  (list_ad *) malloc( sizeof(list_ad) );
 	InitializelistAd(add_root);
-	InsertNewelementAd(1,1,1,"prvi",add_root);
+	InsertNewelementAd(1,1,"prvi",add_root);
 	element_ad some_element;
 	some_element = GetFirstelementAd(add_root);
-	InsertNewelementAd(2,2,2,"drugi",some_element);
+	InsertNewelementAd(2,2,"drugi",some_element);
         element_ad some_elementt = GetLastelementAd(add_root);
-        InsertNewelementAd(3,3,3,"treci",some_elementt);
+        InsertNewelementAd(3,3,"treci",some_elementt);
      
-
-
         element_ad ele = GetFirstelementAd(add_root);
 
         while(ele != 0)
