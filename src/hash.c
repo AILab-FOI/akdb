@@ -917,6 +917,7 @@ void hash_test() {
     //AK_print_table("AK_relation");
     //AK_print_table("AK_index");
 
+    printf("Hash index search test:\n");
     int i, num_rec = AK_get_num_records(tblName);
     for (i = 0; i < num_rec; i++) {
         row = AK_get_row(i, tblName);
@@ -924,8 +925,9 @@ void hash_test() {
         InsertAtEndL(value->type, value->data, value->size, values);
         value = GetNthL(1, row);
         InsertAtEndL(value->type, value->data, value->size, values);
-        AK_find_in_hash_index(indexName, values);
+        struct_add *add=AK_find_in_hash_index(indexName, values);
         DeleteAllL(values);
+        printf("Record found in table block %d and TupleDict ID %d\n", add->addBlock, add->indexTd);
     }
     printf("hash_test: Present!\n");
 }
