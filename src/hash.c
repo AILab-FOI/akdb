@@ -814,8 +814,6 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
     memset(i_header + n, 0, MAX_ATTRIBUTES - n);
 
     int startAddress = AK_initialize_new_segment(indexName, SEGMENT_TYPE_INDEX, i_header);
-    AK_print_table("AK_relation");
-    AK_print_table("AK_index");
     if (startAddress != EXIT_ERROR)
         printf("\nINDEX %s CREATED!\n", indexName);
 
@@ -916,6 +914,8 @@ void hash_test() {
     printf("Main buckets:%d, Hash buckets:%d, Modulo:%d\n", info->main_bucket_num, info->hash_bucket_num, info->modulo);
 
     //AK_delete_hash_index(indexName);
+    //AK_print_table("AK_relation");
+    //AK_print_table("AK_index");
 
     int i, num_rec = AK_get_num_records(tblName);
     for (i = 0; i < num_rec; i++) {
