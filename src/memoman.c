@@ -295,13 +295,13 @@ int AK_refresh_cache(){
     return EXIT_SUCCESS;
 }
 
-/** 	@author Matija Novak, updated by Matija Šestak(function now uses caching)
+/** 	@author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić
 	function for geting addresses of some table
 	@return structure table_addresses witch contains start and end adresses of table extents,
 	when form and to are 0 you are on the end of addresses
 	@param table - table name that you search for
 */
-table_addresses * get_table_addresses ( char * table )
+table_addresses * get_segment_addresses ( char * segmentName, int segmentType )
 {
 	AK_mem_block *mem_block;
 
@@ -312,11 +312,23 @@ table_addresses * get_table_addresses ( char * table )
 	int data_size=0;
 	int data_type=0;
 	char name_sys[MAX_ATT_NAME];
+        char *sys_table;
 	int address_sys;
 	int free2=0;//var to clear char variable
 
-	if(DEBUG)
-		printf("get_table_addresses: Serching for system_relation table \n");
+        switch(segmentType){
+            case SEGMENT_TYPE_TABLE:
+                sys_table="AK_relation";
+                if(DEBUG)
+                    printf("get_segment_addresses: Serching for AK_relation table \n");
+                break;
+            case SEGMENT_TYPE_INDEX:
+                sys_table="AK_index";
+                if(DEBUG)
+                    printf("get_segment_addresses: Serching for AK_index table \n");
+                break;
+        }
+
 
 	for(i=0;i<DATA_BLOCK_SIZE;i++)
 	{//going throught headers
@@ -338,10 +350,10 @@ table_addresses * get_table_addresses ( char * table )
 		data_type=mem_block->block->tuple_dict[i].type;
 		memcpy(&address_sys,mem_block->block->data+data_adr,data_size);
 
-		if(strcmp(name_sys,"AK_relation")==0)
+		if(strcmp(name_sys,sys_table)==0)
 		{
 			if(DEBUG)
-				printf("get_table_addresses: Found the address of the system_relation table: %d \n",address_sys);
+				printf("get_segment_addresses: Found the address of the %s table: %d \n",sys_table,address_sys);
 			break;
 		}
 		i++;
@@ -376,16 +388,38 @@ table_addresses * get_table_addresses ( char * table )
             i++;
             memcpy( &address_to, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]),mem_block->block->tuple_dict[i].size);
 
-		if(strcmp(name,table)==0)
+		if(strcmp(name,segmentName)==0)
 		{//if found the table that addresses we need
 			addresses->address_from[j]= address_from;
 			addresses->address_to[j]= address_to;
 			j++;
 			if(DEBUG)
-				printf("get_table_addresses(%s): Found addresses of searching table: %d , %d \n", name, address_from, address_to);
+				printf("get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
 		}
+            if(segmentType==SEGMENT_TYPE_INDEX)
+                i+=2;
 	}
 	return addresses;
+}
+
+/** 	@author Mislav Čakarić
+	function for geting addresses of some table
+	@return structure table_addresses witch contains start and end adresses of table extents,
+	when form and to are 0 you are on the end of addresses
+	@param table - table name that you search for
+*/
+table_addresses * get_table_addresses ( char *table){
+    return get_segment_addresses ( table, SEGMENT_TYPE_TABLE );
+}
+
+/** 	@author Mislav Čakarić
+	function for geting addresses of some index
+	@return structure table_addresses witch contains start and end adresses of table extents,
+	when form and to are 0 you are on the end of addresses
+	@param index - index name that you search for
+*/
+table_addresses * get_index_addresses ( char * index){
+    return get_segment_addresses ( index, SEGMENT_TYPE_INDEX );
 }
 
 /** 	@author Matija Novak, updated by Matija Šestak( function now uses caching)
@@ -448,10 +482,11 @@ int find_free_space ( table_addresses * addresses )
 */
 int AK_init_new_extent ( char *table_name , int extent_type){
 	table_addresses *adrese;
-	adrese = (table_addresses *) get_table_addresses(table_name);
+	adrese = (table_addresses *) get_segment_addresses(table_name, SEGMENT_TYPE_TABLE);
 	int adr_bloka = adrese->address_from[1];
 	int old_size=0;
         int block_written;
+        char *sys_table;
 
 	//promjentiti temp_block = mem_block->block
 	AK_mem_block *mem_block = (AK_mem_block *) malloc(sizeof(AK_mem_block));
@@ -488,15 +523,19 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 		{
 			case SEGMENT_TYPE_TABLE:
 				RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
+                                sys_table="AK_relation";
 				break;
 			case SEGMENT_TYPE_INDEX:
 				RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
+                                sys_table="AK_index";
 				break;
 			case SEGMENT_TYPE_TRANSACTION:
 				RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
+                                sys_table="AK_relation";//TO-DO
 				break;
 			case SEGMENT_TYPE_TEMP:
 				RESIZE_FACTOR = EXTENT_GROWTH_TEMP;
+                                sys_table="AK_relation";//TO-DO
 				break;
 		}
 
@@ -529,7 +568,7 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 			   mem_block->block->data + mem_block->block->tuple_dict[i].address,
 			   mem_block->block->tuple_dict[i].size);
 
-		if(strcmp(name_sys,"AK_relation")==0)
+		if(strcmp(name_sys, sys_table)==0)
 		{	if(DEBUG)
 				printf("\nAK_init_new_extent: Pronasao adresu relacijeske sys tablice: %d \n",address_sys);
 			break;

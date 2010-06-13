@@ -1076,7 +1076,7 @@ int AK_delete_extent(int begin, int end)
 */
 int AK_delete_segment(char * name, int type){
     int i = 0;
-    table_addresses *addresses = (table_addresses*) get_table_addresses(name);
+    table_addresses *addresses = (table_addresses*) get_segment_addresses(name,type);
     while (addresses->address_from[ i ] != 0) {
         AK_delete_extent(addresses->address_from[i], addresses->address_to[i]);
         i++;
