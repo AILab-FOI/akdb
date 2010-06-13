@@ -67,7 +67,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header)
 
 			//tempBlock = AK_get_block(0);
 			memBlock = AK_get_block(0);
-
+                        memset(systemTableName,0,sizeof(systemTableName));
 			memcpy(systemTableName, memBlock->block->data + memBlock->block->tuple_dict[i].address, memBlock->block->tuple_dict[i].size);
 			if (DEBUG)
 				printf("AK_init_new_segment__Getting: %s\n", systemTableName);
