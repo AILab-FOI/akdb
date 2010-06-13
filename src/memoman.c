@@ -303,7 +303,7 @@ int AK_refresh_cache(){
 */
 table_addresses * get_segment_addresses ( char * segmentName, int segmentType )
 {
-	AK_mem_block *mem_block;
+        AK_mem_block *mem_block;
 
 	mem_block = (AK_mem_block *) AK_get_block(0);
 
@@ -319,16 +319,14 @@ table_addresses * get_segment_addresses ( char * segmentName, int segmentType )
         switch(segmentType){
             case SEGMENT_TYPE_TABLE:
                 sys_table="AK_relation";
-                if(DEBUG)
-                    printf("get_segment_addresses: Serching for AK_relation table \n");
                 break;
             case SEGMENT_TYPE_INDEX:
                 sys_table="AK_index";
-                if(DEBUG)
-                    printf("get_segment_addresses: Serching for AK_index table \n");
                 break;
         }
 
+        if(DEBUG)
+            printf("get_segment_addresses: Serching for %s table \n",sys_table);
 
 	for(i=0;i<DATA_BLOCK_SIZE;i++)
 	{//going throught headers
@@ -356,8 +354,8 @@ table_addresses * get_segment_addresses ( char * segmentName, int segmentType )
 				printf("get_segment_addresses: Found the address of the %s table: %d \n",sys_table,address_sys);
 			break;
 		}
-		i++;
 	}
+
 
 	mem_block= (AK_mem_block *) AK_get_block(address_sys);
 	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
@@ -388,14 +386,14 @@ table_addresses * get_segment_addresses ( char * segmentName, int segmentType )
             i++;
             memcpy( &address_to, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]),mem_block->block->tuple_dict[i].size);
 
-		if(strcmp(name,segmentName)==0)
-		{//if found the table that addresses we need
-			addresses->address_from[j]= address_from;
-			addresses->address_to[j]= address_to;
-			j++;
-			if(DEBUG)
-				printf("get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
-		}
+            if(strcmp(name,segmentName)==0)
+            {//if found the table that addresses we need
+                    addresses->address_from[j]= address_from;
+                    addresses->address_to[j]= address_to;
+                    j++;
+                    if(DEBUG)
+                            printf("get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
+            }
             if(segmentType==SEGMENT_TYPE_INDEX)
                 i+=2;
 	}
@@ -519,97 +517,39 @@ int AK_init_new_extent ( char *table_name , int extent_type){
 
 	float RESIZE_FACTOR = 0;
 
-		switch(extent_type)
-		{
-			case SEGMENT_TYPE_TABLE:
-				RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
-                                sys_table="AK_relation";
-				break;
-			case SEGMENT_TYPE_INDEX:
-				RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
-                                sys_table="AK_index";
-				break;
-			case SEGMENT_TYPE_TRANSACTION:
-				RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
-                                sys_table="AK_relation";//TO-DO
-				break;
-			case SEGMENT_TYPE_TEMP:
-				RESIZE_FACTOR = EXTENT_GROWTH_TEMP;
-                                sys_table="AK_relation";//TO-DO
-				break;
-		}
+        switch(extent_type)
+        {
+                case SEGMENT_TYPE_TABLE:
+                        RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
+                        sys_table="AK_relation";
+                        break;
+                case SEGMENT_TYPE_INDEX:
+                        RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
+                        sys_table="AK_index";
+                        break;
+                case SEGMENT_TYPE_TRANSACTION:
+                        RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
+                        printf("Not implemented yet!\n");
+                        break;
+                case SEGMENT_TYPE_TEMP:
+                        RESIZE_FACTOR = EXTENT_GROWTH_TEMP;
+                        printf("Not implemented yet!\n");
+                        break;
+        }
 
-		zavrsna_adr = pocetna_adr + ( old_size + old_size * RESIZE_FACTOR );
-		mem_block= (AK_mem_block *) AK_get_block( 0 );
+        zavrsna_adr = pocetna_adr + ( old_size + old_size * RESIZE_FACTOR );
+        mem_block= (AK_mem_block *) AK_get_block( 0 );
 
+        element row_root = (element) malloc(sizeof (list));
+        InitializeList(row_root);
+        //DeleteAllElements(row_root);
+        int obj_id=0;
+        InsertNewElement(TYPE_INT, &obj_id, sys_table,"obj_id",row_root);
+        InsertNewElement(TYPE_VARCHAR, table_name, sys_table, "name", row_root);
+        InsertNewElement(TYPE_INT, &pocetna_adr, sys_table, "start_address", row_root);
+        InsertNewElement(TYPE_INT, &zavrsna_adr, sys_table, "end_address", row_root);
+        insert_row(row_root);
 
-
-	char name_sys[13];
-	int address_sys;
-	int free=0;
-	if(DEBUG)
-		printf("\nAK_init_new_extent: Searching for system table of relations \n");
-
-	for(i=0;i<DATA_BLOCK_SIZE;)
-	{
-
-		free=0;
-		for(free=0;free<100;free++)
-			name_sys[free]='\0';
-
-		memcpy(name_sys,
-			   mem_block->block->data + mem_block->block->tuple_dict[i].address,
-			   mem_block->block->tuple_dict[i].size );
-
-		printf("\n adresa: %s",name_sys);
-		i++;
-
-		memcpy(&address_sys,
-			   mem_block->block->data + mem_block->block->tuple_dict[i].address,
-			   mem_block->block->tuple_dict[i].size);
-
-		if(strcmp(name_sys, sys_table)==0)
-		{	if(DEBUG)
-				printf("\nAK_init_new_extent: Pronasao adresu relacijeske sys tablice: %d \n",address_sys);
-			break;
-		}
-		i++;
-
-	}
-        mem_block->dirty=BLOCK_DIRTY;
-
-	//adresa relacijske sistemske tablice je pronađena
-	// zapisati u sistemski katalog relacije
-
-		//mem_block = AK_get_block( address_sys );
-
-		mem_block=(AK_mem_block *)AK_get_block(address_sys);						//tu zamjena
-
-	//trazi mjesto za slijedeci unos u sis katalogu
-	int id=0;
-	int nadjeno=1;
-	while ( nadjeno )
-	{
-		id++; //to je vrijednost gdje se pise
-		if( mem_block->block->tuple_dict[id].size == 0 )
-		{if ( block_written != EXIT_SUCCESS ){
-            printf("AK_read_block: ERROR! Cannot write block from cache to DB File.\n");
-            exit ( EXIT_ERROR );
-    }
-			nadjeno=0;
-		}
-	}
-
-
-	//to je kaj unesem nutra
-		int obj_id=2;
-	if(DEBUG)
-		printf("unosim: %d , %s, %i, %i", obj_id, table_name, pocetna_adr, zavrsna_adr);
-	AK_insert_entry(mem_block->block, TYPE_INT, &obj_id, id );
-	AK_insert_entry(mem_block->block, TYPE_VARCHAR, table_name, id + 1 );
-	AK_insert_entry(mem_block->block, TYPE_INT, &pocetna_adr, id + 2 );
-	AK_insert_entry(mem_block->block, TYPE_INT, &zavrsna_adr, id + 3);
-        mem_block->dirty=BLOCK_DIRTY;
 	return pocetna_adr;
 }
 

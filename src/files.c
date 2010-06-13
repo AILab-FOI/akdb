@@ -35,17 +35,8 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header)
 {
 	int start_address = -1;
 	int end_address = INITIAL_EXTENT_SIZE;
-	int i = 0;
-	int search = 1; //search if 1, zero (0) otherwise
-	int j = 0;
-	char systemTableName[20];
-	int systemTableAddress;
-	int freeSpaceFound = 0; //find free space in system table for writing at it
-	int tupleDictID = -1;
-	int objectID = 79; //will be defined later
-
-	//AK_mem_block *tempBlock;
-	AK_mem_block *memBlock;
+	int objectID = AK_get_id();
+        char *sys_table;
 
 	if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR)
 	{
@@ -56,83 +47,25 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header)
 	else
 	{
 		end_address += start_address;
-		/// find system catalog
-		while ((i < DATA_BLOCK_SIZE) && (search == 1))
-		{
-			for(j; j<20; j++)
-				systemTableName[j]= FREE_CHAR;
+                switch (type) {
+                    case SEGMENT_TYPE_TABLE:
+                        sys_table = "AK_relation";
+                        break;
+                    case SEGMENT_TYPE_INDEX:
+                        sys_table = "AK_index";
+                        break;
+                    default:
+                        break;
+                }
+                element row_root = (element) malloc(sizeof (list));
+                InitializeList(row_root);
+                //DeleteAllElements(row_root);
+                InsertNewElement(TYPE_INT, &objectID, sys_table,"obj_id",row_root);
+                InsertNewElement(TYPE_VARCHAR, name, sys_table, "name", row_root);
+                InsertNewElement(TYPE_INT, &start_address, sys_table, "start_address", row_root);
+                InsertNewElement(TYPE_INT, &end_address, sys_table, "end_address", row_root);
+                insert_row(row_root);
 
-			if(DEBUG)
-				printf("AK_init_new_segment__NOTIFICATION: Searching....\n");
-
-			//tempBlock = AK_get_block(0);
-			memBlock = AK_get_block(0);
-                        memset(systemTableName,0,sizeof(systemTableName));
-			memcpy(systemTableName, memBlock->block->data + memBlock->block->tuple_dict[i].address, memBlock->block->tuple_dict[i].size);
-			if (DEBUG)
-				printf("AK_init_new_segment__Getting: %s\n", systemTableName);
-
-			i += 1;
-
-			//get next tuple_dict where the start address might be
-			memcpy(&systemTableAddress, memBlock->block->data + memBlock->block->tuple_dict[i].address, memBlock->block->tuple_dict[i].size);
-
-			switch(type)
-			{
-				case SEGMENT_TYPE_TABLE:
-					if(strcmp(systemTableName,"AK_relation") == 0)
-					{
-						if(DEBUG)
-							printf("AK_init_new_segment__NOTIFICATION: AK_relation found at %d \n", systemTableAddress);
-						search = 0;
-					}
-					break;
-				case SEGMENT_TYPE_INDEX:
-					if(strcmp(systemTableName,"AK_index") == 0)
-					{
-						if(DEBUG)
-							printf("AK_init_new_segment__NOTIFICATION: AK_index found at %d \n", systemTableAddress);
-						search = 0;
-					}
-					break;
-				default:
-					break;
-			}
-
-			i += 1;
-		}
-
-		if (search == 0)
-		{
-			//tempBlock = AK_get_block(systemTableAddress);
-			memBlock = AK_get_block(systemTableAddress);
-
-			while (freeSpaceFound == 0)
-			{
-				tupleDictID += 1;
-				if (memBlock->block->tuple_dict[tupleDictID].size == FREE_INT)
-					freeSpaceFound = 1;
-			}
-			if (freeSpaceFound == 1)
-			{
-				AK_insert_entry(memBlock->block, TYPE_INT, &objectID, tupleDictID);
-				AK_insert_entry(memBlock->block, TYPE_VARCHAR, name, tupleDictID + 1);
-				AK_insert_entry(memBlock->block, TYPE_INT, &start_address, tupleDictID + 2);
-				AK_insert_entry(memBlock->block, TYPE_INT, &end_address, tupleDictID + 3);
-				if( DEBUG )
-					printf("AK_init_new_segment__NOTIFICATION: Writing block at address %d\n", start_address );
-				//AK_write_block(memBlock->block);
-                                memBlock->dirty=BLOCK_DIRTY;
-				AK_new_extent( start_address, 0, type, header );
-			}
-			else
-			{
-				if (DEBUG)
-					printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
-				return EXIT_ERROR;
-			}
-
-		}
 		if (DEBUG)
 			printf("AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
 		return start_address;

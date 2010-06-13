@@ -390,9 +390,9 @@ struct_add* insert_bucket_to_block(char *indexName, char *data, int type) {
     add->addBlock = 0;
     add->indexTd = 0;
 
-    int adr_to_write = (int) find_free_space(get_table_addresses(indexName));
+    int adr_to_write = (int) find_free_space(get_index_addresses(indexName));
     if (adr_to_write == -1)
-        adr_to_write = (int) AK_init_new_extent(indexName, SEGMENT_TYPE_TABLE);
+        adr_to_write = (int) AK_init_new_extent(indexName, SEGMENT_TYPE_INDEX);
     if (adr_to_write == 0)
         return add;
 
@@ -447,7 +447,7 @@ void update_bucket_in_block(struct_add *add, char *data) {
  @author Mislav Čakarić
  */
 void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int hash_bucket_num) {
-    table_addresses *hash_addresses = (table_addresses*) get_table_addresses(indexName);
+    table_addresses *hash_addresses = (table_addresses*) get_index_addresses(indexName);
     int block_add = hash_addresses->address_from[ 0 ];
     if(block_add==0){
         printf("Hash index does not exist!\n");
@@ -472,7 +472,7 @@ void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int h
  @author Mislav Čakarić
  */
 hash_info* AK_get_hash_info(char *indexName) {
-    table_addresses *hash_addresses = (table_addresses*) get_table_addresses(indexName);
+    table_addresses *hash_addresses = (table_addresses*) get_index_addresses(indexName);
     int block_add = hash_addresses->address_from[ 0 ];
     hash_info *info = (hash_info*) malloc(sizeof (hash_info));
     memset(info,0,sizeof(hash_info));
@@ -497,7 +497,7 @@ struct_add* get_nth_main_bucket_add(char *indexName, int n) {
     struct_add *add = (struct_add*) malloc(sizeof (struct_add));
     add->addBlock = 301;
     add->indexTd = 2;
-    table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
+    table_addresses *addresses = (table_addresses*) get_index_addresses(indexName);
     while (addresses->address_from[i]) {
         for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
             AK_block *temp = (AK_block*) AK_read_block(j);
@@ -536,7 +536,7 @@ int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
     main_bucket *temp_main_bucket = (main_bucket*) malloc(sizeof (main_bucket));
     hash_bucket *temp_hash_bucket = (hash_bucket*) malloc(sizeof (hash_bucket));
 
-    table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
+    table_addresses *addresses = (table_addresses*) get_index_addresses(indexName);
     if (addresses->address_from[0] == NULL)
         printf("Hash index does not exist!\n");
     else {
@@ -663,7 +663,7 @@ int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
 struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int delete) {
     struct_add *add = (struct_add*) malloc(sizeof (struct_add));
     memset(add, 0, sizeof(struct_add));
-    table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
+    table_addresses *addresses = (table_addresses*) get_index_addresses(indexName);
     if (addresses->address_from[0] == NULL) {
         printf("Hash index does not exist!\n");
         return add;
@@ -813,7 +813,9 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
     }
     memset(i_header + n, 0, MAX_ATTRIBUTES - n);
 
-    int startAddress = AK_initialize_new_segment(indexName, SEGMENT_TYPE_TABLE, i_header);
+    int startAddress = AK_initialize_new_segment(indexName, SEGMENT_TYPE_INDEX, i_header);
+    AK_print_table("AK_relation");
+    AK_print_table("AK_index");
     if (startAddress != EXIT_ERROR)
         printf("\nINDEX %s CREATED!\n", indexName);
 
@@ -882,7 +884,7 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
 }
 
 int AK_delete_hash_index(char *indexName) {
-    AK_delete_segment(indexName, SEGMENT_TYPE_TABLE);
+    AK_delete_segment(indexName, SEGMENT_TYPE_INDEX);
     printf("INDEX %s DELETED!\n",indexName);
 }
 

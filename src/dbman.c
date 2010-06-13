@@ -464,7 +464,7 @@ int AK_init_system_tables_catalog( int relation, int attribute, int index, int v
 								  int trigger, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull, int reference)
 {
 	if( DEBUG )
-	 printf("AK_init_system_tables_catalog: Initializing system tables catalog\n");
+            printf("AK_init_system_tables_catalog: Initializing system tables catalog\n");
 	AK_block * catalog_block = ( AK_block * ) malloc ( sizeof( AK_block ) );
 	/// first header attribute of catalog_block
 	AK_header * catalog_header_name  =  ( AK_header * ) malloc ( sizeof( AK_header ) );
@@ -550,7 +550,7 @@ int AK_init_system_tables_catalog( int relation, int attribute, int index, int v
         
 	AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_reference", 30);
 
-    AK_insert_entry(catalog_block, TYPE_INT, &reference, 31);
+        AK_insert_entry(catalog_block, TYPE_INT, &reference, 31);
 
 	/// call function for writing the block on the first place in the file (ie. first block is on position zero)
 	if ( AK_write_block(catalog_block) == EXIT_SUCCESS )
@@ -677,14 +677,14 @@ int AK_register_system_tables( int relation, int attribute, int index, int view,
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
     i++;
 	
-	AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_between", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &constraint, j); j++;
     end = constraint+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
     i++;
 	
-	AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
+    AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_not_null", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &constraintNull, j); j++;
     end = constraintNull+INITIAL_EXTENT_SIZE;
@@ -1093,8 +1093,10 @@ int AK_delete_segment(char * name, int type){
             break;
         case SEGMENT_TYPE_TRANSACTION:
             //TO-DO
+            printf("Not implemented yet!\n");
         case SEGMENT_TYPE_TEMP:
             //TO-DO
+            printf("Not implemented yet!\n");
         default:
             return EXIT_ERROR;
     }
