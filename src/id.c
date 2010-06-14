@@ -19,87 +19,54 @@
 
 #include "id.h"
 
-int AK_get_id()
-{
-    char systemTableName[50];
-    int systemTableAddress;
-    int j, i = 0;
-    int freeSpaceFound = 0;
-    int tupleDictID = -1;
-    AK_block *tempBlock;
-    int itis = 1;
-    int currValue;
-    int nullID = 0;
-
-    char* currentValue[50];
-
-    tempBlock = AK_read_block(0);
-
-    while(itis)
-    {
-        for(j=0; j<50; j++)
-            systemTableName[j]= FREE_CHAR;
-
-        memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
-        memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i+1].address, tempBlock->tuple_dict[i+1].size);
-        if(strcmp(systemTableName,"AK_sequence") == 0)
-        {
-            if(DEBUG)
-                printf("Sistemska tablica u koju se upisuje: %s, adresa: %i\n",systemTableName,systemTableAddress);
-                
-            tempBlock = AK_read_block(systemTableAddress);
-
-            while (freeSpaceFound == 0)
-            {
-                    tupleDictID += 1;
-                    if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT)
-                            freeSpaceFound = 1;
-            }
-            if(tupleDictID < 1)
-            {
-                tupleDictID = 0;
-                currValue = 0;
-                AK_insert_entry(tempBlock, TYPE_INT, &nullID, tupleDictID);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, "objectID", tupleDictID + 1);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, "0", tupleDictID + 2);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, "1", tupleDictID + 3);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, "null", tupleDictID + 4);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, "null", tupleDictID + 5);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, "null" , tupleDictID + 6);
-
-                AK_write_block(tempBlock);
-            }
-            else
-            {
-                tupleDictID = 0;
-                tempBlock = AK_read_block(systemTableAddress);
-                for(j=0; j<50; j++)
-                    currentValue[j]= FREE_CHAR;
-                memcpy(&currentValue, tempBlock->data + tempBlock->tuple_dict[2].address, tempBlock->tuple_dict[2].size);
-                
-                currValue = atoi(currentValue);
-                currValue++;
-                sprintf(currentValue,"%i",currValue);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, currentValue, tupleDictID + 2);
-                AK_write_block(tempBlock);
-
-                //printf("Current value: %s\n",currentValue);
-            }
-            itis = 0;
+int AK_get_id(){
+    char temp_data[MAX_VARCHAR_LENGHT];
+    element row_root = (element) malloc(sizeof (list));
+    InitializeList(row_root);
+    AK_list *row = (AK_list*) malloc(sizeof (AK_list));
+    int i, num_rec = AK_get_num_records("AK_sequence");
+    int exists=0;
+    int current_value=ID_START_VALUE;
+    for (i = 0; i < num_rec; i++) {
+        row = AK_get_row(i, "AK_sequence");
+        AK_list_elem value = GetNthL(1, row);
+        memcpy(temp_data,&value->data,value->size);
+        if(strcmp(temp_data,"objectID")){
+            exists=1;
+            value = GetNthL(2, row);
+            memcpy(&current_value,&value->data,value->size);
+            break;
         }
-    i++;
     }
-
-    free(tempBlock);
-
-    return atoi(currentValue);
+    if(exists){
+        DeleteAllElements(row_root);
+        InsertNewElementForUpdate(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root, 1);
+        delete_row(row_root);
+        current_value++;
+    }
+    DeleteAllElements(row_root);
+    int value=0;
+    InsertNewElement(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);
+    InsertNewElement(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
+    InsertNewElement(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
+    InsertNewElement(TYPE_INT, &value, "AK_sequence", "max", row_root);
+    InsertNewElement(TYPE_INT, &value, "AK_sequence", "min", row_root);
+    InsertNewElement(TYPE_BOOL, &value, "AK_sequence", "tezina", row_root);
+    value=1;
+    InsertNewElement(TYPE_INT, &value, "AK_sequence", "increment", row_root);
+    insert_row(row_root);
+    return current_value;
 }
 
 void id_test()
 {
     printf("ID: %i\n",AK_get_id());
+        AK_print_table("AK_sequence");
     printf("ID: %i\n",AK_get_id());
+        AK_print_table("AK_sequence");
     printf("ID: %i\n",AK_get_id());
+        AK_print_table("AK_sequence");
     printf("ID: %i\n",AK_get_id());
+        AK_print_table("AK_sequence");
     printf("ID: %i\n",AK_get_id());
 }

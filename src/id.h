@@ -17,12 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+#ifndef ID
+#define ID
+
+#define ID_START_VALUE 100
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include<ctype.h>
 
-#include "dbman.h"
-#include "memoman.h"
-#include "files.h"
+//#include "dbman.h"
+//#include "memoman.h"
+//#include "files.h"
 #include "fileio.h"
+
+#endif
