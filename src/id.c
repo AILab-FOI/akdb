@@ -19,6 +19,12 @@
 
 #include "id.h"
 
+
+/**
+ * @author Mislav Čakarić.
+ * @brief  Get unique ID for any object, stored in sequence
+ * @return objectID
+ */
 int AK_get_id(){
     char temp_data[MAX_VARCHAR_LENGHT];
     element row_root = (element) malloc(sizeof (list));
@@ -58,15 +64,20 @@ int AK_get_id(){
     return current_value;
 }
 
+/**
+ * @author Mislav Čakarić.
+ * @brief  function for testing getting ID's
+ */
 void id_test()
 {
     printf("ID: %i\n",AK_get_id());
-        AK_print_table("AK_sequence");
+    AK_print_table("AK_sequence");
     printf("ID: %i\n",AK_get_id());
-        AK_print_table("AK_sequence");
+    AK_print_table("AK_sequence");
     printf("ID: %i\n",AK_get_id());
-        AK_print_table("AK_sequence");
+    AK_print_table("AK_sequence");
     printf("ID: %i\n",AK_get_id());
-        AK_print_table("AK_sequence");
+    AK_print_table("AK_sequence");
     printf("ID: %i\n",AK_get_id());
+    AK_print_table("AK_sequence");
 }
