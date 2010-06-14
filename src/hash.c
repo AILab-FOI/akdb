@@ -914,8 +914,8 @@ void hash_test() {
     printf("Main buckets:%d, Hash buckets:%d, Modulo:%d\n", info->main_bucket_num, info->hash_bucket_num, info->modulo);
 
     //AK_delete_hash_index(indexName);
-    //AK_print_table("AK_relation");
-    //AK_print_table("AK_index");
+    AK_print_table("AK_relation");
+    AK_print_table("AK_index");
 
     printf("Hash index search test:\n");
     int i, num_rec = AK_get_num_records(tblName);
@@ -927,7 +927,8 @@ void hash_test() {
         InsertAtEndL(value->type, value->data, value->size, values);
         struct_add *add=AK_find_in_hash_index(indexName, values);
         DeleteAllL(values);
-        printf("Record found in table block %d and TupleDict ID %d\n", add->addBlock, add->indexTd);
+        if(add->addBlock && add->indexTd)
+            printf("Record found in table block %d and TupleDict ID %d\n", add->addBlock, add->indexTd);
     }
     printf("hash_test: Present!\n");
 }
