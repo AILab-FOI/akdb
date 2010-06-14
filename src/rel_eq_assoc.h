@@ -20,7 +20,20 @@
 #ifndef REL_EQ_ASSOC
 #define REL_EQ_ASSOC
 
-#include "table.h"
 #include "auxiliary.h"
+#include "table.h"
+
+/**
+ * @brief Stucture for cost estimation on relations
+ * @author Dino Laktašić
+ * int value - number of rows in table
+ * char data[MAX_VARCHAR_LENGHT] - used to store table name
+ */
+struct cost_eval_t {
+	int value;
+	char data[MAX_VARCHAR_LENGHT];
+};
+
+typedef struct cost_eval_t cost_eval;
 
 #endif

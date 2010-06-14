@@ -330,27 +330,39 @@ void query_optimization_test(AK_list *list_query) {
 	InsertAtEndL( TYPE_CONDITION, "`id_stud` 10 > `id_prof` 5 < AND", sizeof("`id_stud` 10 > `id_prof` 5 < AND"), expr );
 	//*/
 	
-	/*Associativity of natural joins
+	//*Associativity of natural joins
 	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
 	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
     InsertAtEndL( TYPE_OPERATOR, "n", sizeof("n"), expr );
-	InsertAtEndL( TYPE_OPERAND, "id_stud;id_prof", sizeof("id_stud;id_prof"), expr );
+	InsertAtEndL( TYPE_ATTRIBS, "id_stud;id_prof", sizeof("id_stud;id_prof"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "n", sizeof("n"), expr );
-	InsertAtEndL( TYPE_CONDITION, "id_course", sizeof("id_course"), expr );
+	InsertAtEndL( TYPE_ATTRIBS, "id_course", sizeof("id_course"), expr );
 	//*/
 	
-	/*Associativity of union and intersection
-	/*InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
+	//*Associativity of union and intersection
+	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
 	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
-    InsertAtEndL( TYPE_OPERATOR, "u", sizeof("n"), expr );
+    InsertAtEndL( TYPE_OPERATOR, "u", sizeof("u"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
-	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("n"), expr );
+	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("u"), expr );
 	//*/
+	
+	//*Associativity of theta-joins
+	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
+	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
+    InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
+	InsertAtEndL( TYPE_OPERAND, "`id_stud` 5 > `id_prof` 10 <", sizeof("`id_stud` 5 > `id_prof` 10 <"), expr );
+    InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
+	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`id_course` 7 < `id_stud` 10 >", sizeof("`id_course` 7 < `id_stud` 10 >"), expr );
+	//*/
+	
+	
 	time_t start = clock();
 	AK_print_optimized_query(AK_query_optimization(expr, "aps", 1));
 	time_t end = clock();
-    printf( "\n\nLOGIC PLAN GENERATED IN: %d μs\n", end - start);
+    printf( "\n\nLOGIC PLAN GENERATED IN: %d μs, %d s\n", end - start, (end - start) / 1000000);
 	
 	if (DEBUG) {
 		printf("\n------------------> TEST_REL_EQ_FUNCTIONS <------------------\n\n");

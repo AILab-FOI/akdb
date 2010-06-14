@@ -80,6 +80,12 @@ int main()
 			//filesearch_test();
 			//filesort_test();
 
+			//rel_eq_projection_test();
+			//rel_eq_selection_test();
+			//rel_eq_assoc_test();
+			//rel_eq_comut_test();
+			query_optimization_test();
+
 			//op_projekcija_test();
 			//op_selection_test();
 			//op_spoj_test();
@@ -89,18 +95,12 @@ int main()
 			//table_test();
 
 			//btree_test();
-			hash_test();
+			//hash_test();
 			//bitmap_test();
 
 			//reference_test();
 
 			//aggregation_test();
-			//rel_eq_projection_test();
-			//rel_eq_selection_test();
-			//rel_eq_assoc_test();
-			//rel_eq_comut_test();
-			
-			//query_optimization_test();
 
 			//memoman_test();
 
