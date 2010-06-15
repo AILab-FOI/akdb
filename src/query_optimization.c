@@ -20,7 +20,6 @@
 #include "query_optimization.h"
 
 #define MAX_PERMUTATION 24
-#define MAX_TABLE_BOX_OFFSET 4
 
 void AK_print_row_spacer(int col_len[], int length, int offset) {
 	int i, j, col, temp;
@@ -357,7 +356,7 @@ void query_optimization_test(AK_list *list_query) {
 	InsertAtEndL( TYPE_OPERAND, "`id_stud` 5 > `id_prof` 10 <", sizeof("`id_stud` 5 > `id_prof` 10 <"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`id_course` 7 < `id_stud` 10 >", sizeof("`id_course` 7 < `id_stud` 10 >"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`id_course` 7 < `id_stud` 10 > AND", sizeof("`id_course` 7 < `id_stud` 10 > AND"), expr );
 	//*/
 	
 	

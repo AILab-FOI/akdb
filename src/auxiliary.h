@@ -43,5 +43,8 @@ struct list_elem{
 typedef struct list_elem AK_list;
 typedef struct list_elem* AK_list_elem;
 
+
+#define MAX_TABLE_BOX_OFFSET 2 //greater than 1
+
 #endif
 

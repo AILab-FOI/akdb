@@ -252,45 +252,44 @@ AK_list * AK_get_row( int num, char * tblName )
  * @param char* - table name
  * @result AK_list* - value in the list
  */
-AK_list * AK_get_tuple( int row, int column, char *tblName )
-{
-  int num_rows = AK_get_num_records( tblName );
-  int num_attr = AK_num_attr( tblName );
+AK_list_elem AK_get_tuple( int row, int column, char *tblName ) {
+	int num_rows = AK_get_num_records( tblName );
+	int num_attr = AK_num_attr( tblName );
 
-  if( row >= num_rows || column >= num_attr )
-      return NULL;
+	if( row >= num_rows || column >= num_attr )
+		return NULL;
 
-  table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
+	table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
 
-  AK_list *row_root =  (AK_list*) malloc( sizeof(AK_list) );
-  InitL(row_root);
+	AK_list *row_root =  (AK_list*) malloc( sizeof(AK_list) );
+	InitL(row_root);
 
-  int i, j, k, counter;
-  char data[ MAX_VARCHAR_LENGHT ];
+	int i, j, k, counter;
+	char data[ MAX_VARCHAR_LENGHT ];
 
-  i = 0;
-  counter = -1;
-  while( addresses->address_from[ i ] != 0 ){
-      for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-	  AK_mem_block *temp = (AK_mem_block*) AK_get_block( j );
-          if( temp->block->last_tuple_dict_id == 0) break;
-	  for( k = 0; k < DATA_BLOCK_SIZE; k+=num_attr ){
-	      if( temp->block->tuple_dict[k].size > 0 )
-		 counter++;
-	      if( counter == row) {
-                int type = temp->block->tuple_dict[ k+column ].type;
-                int size = temp->block->tuple_dict[ k+column ].size;
-                int address = temp->block->tuple_dict[ k + column ].address;
-                memcpy( data, &(temp->block->data[address]), size );
-                data[ size ] = '\0';
-                InsertAtEndL( type, &data, size, row_root );
-                return FirstL(row_root);
-	      }
-	  }
-      }
-      i++;
-  }
-  return NULL;
+	i = 0;
+	counter = -1;
+	while( addresses->address_from[ i ] != 0 ){
+		for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
+			AK_mem_block *temp = (AK_mem_block*) AK_get_block( j );
+			if( temp->block->last_tuple_dict_id == 0) break;
+			for( k = 0; k < DATA_BLOCK_SIZE; k+=num_attr ){
+				if( temp->block->tuple_dict[k].size > 0 )
+					counter++;
+				if( counter == row) {
+					int type = temp->block->tuple_dict[ k+column ].type;
+					int size = temp->block->tuple_dict[ k+column ].size;
+					int address = temp->block->tuple_dict[ k + column ].address;
+					memcpy( data, &(temp->block->data[address]), size );
+					data[ size ] = '\0';
+					InsertAtEndL( type, &data, size, row_root );
+					return (AK_list_elem)FirstL(row_root);
+				}
+			}
+		}
+		i++;
+	}
+	return NULL;
 }
 
 /**
@@ -443,12 +442,12 @@ void AK_print_header( char *tblName ){
     free( rowWidth );
 }
 
-/**
+/*
  * @brief  Print table
  * @author Matija Šestak, minor update by Dejan Frankovic (added basic null support)
  * @param char* - table name
  * @result void
- */
+ *//*
 void AK_print_table( char *tblName ){
     int temp_int;
     float temp_float;
@@ -532,6 +531,92 @@ void AK_print_table( char *tblName ){
 
     free( rowWidth );
 }
+*/
+
+/**
+ * @brief  Print table
+ * @author Dino Laktašić i Mislav Čakarić (replaced old print table function)
+ * @param char* - table name
+ * @return void
+ */
+void AK_print_table(char *tblName) {
+	table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    AK_mem_block *temp = (AK_mem_block*)AK_get_block( addresses->address_from[0]);
+	AK_header *head = AK_get_header(tblName);
+    
+	int i, j, offset = MAX_TABLE_BOX_OFFSET;
+	int num_attr = AK_num_attr(tblName);
+	int num_rows = AK_get_num_records( tblName );
+	
+	int len[num_attr];  
+	
+	for ( i = 0; i < num_attr; i++ ) {
+		len[i] = strlen((head + i)->att_name) + offset;
+	}
+
+	for (i = 0; i < num_attr; i++ ) {
+		for (j = 0; j < num_rows; j++) {
+			AK_list_elem el = AK_get_tuple(j, i, tblName);
+			if (len[i] < el->size) {
+				if (el->type == TYPE_INT || el->type == TYPE_FLOAT) {
+					len[i] = AK_chars_num_from_number(el->size, 10);
+				} else {
+					len[i] = el->size;
+				}
+			}
+		}
+    }
+	//4 is number of char | in printf
+	//set offset to change the box size
+	int length = 0;
+	for (i = 0; i < num_attr; i++) {
+		length += len[i]; 	
+	}; 
+	length += num_attr * offset + num_attr + 1;
+	
+	time_t start = clock();
+	printf( "Table: %s\n", tblName );
+	AK_print_row_spacer(len, length, offset);
+	printf("\n|");
+	for (i = 0; i < num_attr; i++) {
+		printf("%-*s|", len[i] + offset, (head + i)->att_name);	
+	}
+	printf ("\n");
+	AK_print_row_spacer(len, length, offset);
+	
+	void  *data = (void *)calloc(MAX_VARCHAR_LENGHT, sizeof(void));
+	for (i = 0; i < num_rows; i++) {
+		printf("\n|");
+		for (j = 0; j < num_attr; j++ ) {
+			AK_list_elem el = AK_get_tuple(i, j, tblName);
+			memset(data, 0, MAX_VARCHAR_LENGHT);
+			switch (el->type) {
+				case FREE_CHAR:
+				//case FREE_INT:
+					printf("%-*s|", len[j] + offset, "null");
+					break;
+				case TYPE_INT:
+					memcpy(data, el->data, sizeof(int));
+					printf("%-*i|", len[j] + offset, *((int *)data));	
+					break;
+				case TYPE_FLOAT:
+					memcpy(data, el->data, sizeof(float));
+					printf("%-*.3f|", len[j] + offset, *((float *)data));	
+					break;
+				case TYPE_VARCHAR:
+				default:
+					memcpy(data, el->data,el->size);
+					printf("%-*s|", len[j] + offset, (const char *)data);	
+			}
+		}
+		printf("\n");
+		AK_print_row_spacer(len, length, offset);
+    }
+	printf("\n");
+	time_t end = clock();
+    printf( "%d records found, duration: %d μs\n\n", num_rows, end - start);
+}
+
 
 /**
  * @author Matija Šestak.

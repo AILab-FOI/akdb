@@ -95,7 +95,7 @@ int main()
 			//table_test();
 
 			//btree_test();
-			//hash_test();
+			hash_test();
 			//bitmap_test();
 
 			//reference_test();
