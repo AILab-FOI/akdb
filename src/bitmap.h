@@ -26,13 +26,8 @@
 
 #include "dbman.h"
 #include "memoman.h"
-#include "files.h"
 #include "fileio.h"
-
-#include "btree.h"
-#include "projection.h"
-#include "table.h"
-#include "selection.h"
+#include "auxiliary.h"
 #include "index.h"
 
 #endif
