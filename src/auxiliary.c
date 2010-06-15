@@ -312,7 +312,7 @@ AK_list_elem GetNthL(int pos, AK_list *row) {
 }
 
 /**
- * @author DinoLaktašić.
+ * @author Dino Laktašić.
  * @brief  Get all permutations without repetition (currently not used, but it can be helpful)
  * @param char *arr - array of chars to permute
  * @result char* - pointer to array of pointers to permuted char arrays

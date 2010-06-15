@@ -25,4 +25,6 @@
 #include "rel_eq_projection.h"
 #include "rel_eq_selection.h"
 
+#define MAX_PERMUTATION 24
+
 #endif

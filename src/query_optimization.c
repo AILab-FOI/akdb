@@ -19,8 +19,6 @@
 
 #include "query_optimization.h"
 
-#define MAX_PERMUTATION 24
-
 /**
  * @brief Print row spacer
  * @author Dino Laktašić.

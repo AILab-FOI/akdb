@@ -374,7 +374,7 @@ AK_print_row(int col_len[], AK_list *row) {
 
 /**
  * @brief  Print table
- * @author Dino Laktašić i Mislav Čakarić (replaced old print table function by new one)
+ * @author Dino Laktašić and Mislav Čakarić (replaced old print table function by new one)
  * @param char* - table name
  * @return void
  */
@@ -472,7 +472,7 @@ int AK_table_empty( char *tblName ){
  * @param void
  * @result void
  */
-void create_test_table(){
+void create_test_table() {
     int i;
     //create header
     AK_header t_header[ MAX_ATTRIBUTES ];
@@ -480,23 +480,15 @@ void create_test_table(){
 
     temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header, temp, sizeof( AK_header ));
-
     temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 1, temp, sizeof( AK_header ));
-
     temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 2, temp, sizeof( AK_header ));
-
     temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 3, temp, sizeof( AK_header ));
-
     temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy( t_header + 4, temp, sizeof( AK_header ));
-
-    for( i = 5; i < MAX_ATTRIBUTES; i++ )
-    {
-    	memcpy( t_header + i, "\0", sizeof( "\0" ));
-    }
+	memset( t_header + 5, '\0', MAX_ATTRIBUTES - 5);
 
     //create table
     char *tblName = "student";
@@ -507,7 +499,6 @@ void create_test_table(){
 
     if( startAddress != EXIT_ERROR )
         printf( "\nTABLE %s CREATED!\n", tblName );
-
 
     printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
 
@@ -573,8 +564,7 @@ void create_test_table(){
     insert_row( row_root );
 }
 
-void table_test() 
-{
+void table_test() {
   printf("table.c: Present!\n");
 
   create_test_table();
