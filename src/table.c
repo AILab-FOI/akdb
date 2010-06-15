@@ -381,11 +381,10 @@ void AK_print_list( AK_list * L, int how)
  * @brief  Print table row
  * @author Dino Laktašić
  * @param int col_len[] - array of max lengths for each attribute
- * @param int offset - offset for table cell
  * @param AK_list *row - list with row elements
  * @return void
  */
-AK_print_row(int col_len[], int offset, AK_list *row) {
+AK_print_row(int col_len[], AK_list *row) {
 	AK_list_elem el = (AK_list_elem)FirstL(row);
 	
 	int i = 0;	
@@ -397,20 +396,20 @@ AK_print_row(int col_len[], int offset, AK_list *row) {
 		switch (el->type) {
 			case FREE_CHAR:
 			//case FREE_INT:
-				printf("%-*s|", col_len[i] + offset, "null");
+				printf("%-*s|", col_len[i] + MAX_TABLE_BOX_OFFSET, "null");
 				break;
 			case TYPE_INT:
 				memcpy(data, el->data, sizeof(int));
-				printf("%-*i|", col_len[i] + offset, *((int *)data));	
+				printf("%-*i|", col_len[i] + MAX_TABLE_BOX_OFFSET, *((int *)data));	
 				break;
 			case TYPE_FLOAT:
 				memcpy(data, el->data, sizeof(float));
-				printf("%-*.3f|", col_len[i] + offset, *((float *)data));	
+				printf("%-*.3f|", col_len[i] + MAX_TABLE_BOX_OFFSET, *((float *)data));	
 				break;
 			case TYPE_VARCHAR:
 			default:
 				memcpy(data, el->data,el->size);
-				printf("%-*s|", col_len[i] + offset, (const char *)data);	
+				printf("%-*s|", col_len[i] + MAX_TABLE_BOX_OFFSET, (const char *)data);	
 		}
 		el = el->next;
 		i++;
@@ -427,7 +426,7 @@ AK_print_row(int col_len[], int offset, AK_list *row) {
 void AK_print_table(char *tblName) {
 	AK_header *head = AK_get_header(tblName);
     
-	int i, j, offset = MAX_TABLE_BOX_OFFSET;
+	int i, j;
 	int num_attr = AK_num_attr(tblName);
 	int num_rows = AK_get_num_records(tblName);
 	int len[num_attr];  //max length for each attribute in row
@@ -435,7 +434,7 @@ void AK_print_table(char *tblName) {
 	
 	//store lengths of header attributes
 	for (i = 0; i < num_attr; i++) {
-		len[i] = strlen((head + i)->att_name) + offset;
+		len[i] = strlen((head + i)->att_name);
 	}
 	
 	//for each header attribute iterate through all table rows and check if 
@@ -443,41 +442,54 @@ void AK_print_table(char *tblName) {
 	for (i = 0; i < num_attr; i++) {
 		for (j = 0; j < num_rows; j++) {
 			AK_list_elem el = AK_get_tuple(j, i, tblName);
-			if (len[i] < el->size) {
-				if (el->type == TYPE_INT || el->type == TYPE_FLOAT) {
-					len[i] = AK_chars_num_from_number(el->size, 10);
-				} else {
-					len[i] = el->size;
-				}
+			switch (el->type) {
+				case TYPE_INT:
+					length = AK_chars_num_from_number(*((int *)(el)->data), 10);
+					if (len[i] < length) {
+						len[i] = length;
+					}
+				break;
+				case TYPE_FLOAT:
+					length = AK_chars_num_from_number(*((float *)(el)->data), 10);
+					if (len[i] < length) {
+						len[i] = length;
+					}
+				break;
+				case TYPE_VARCHAR:
+				default:
+					if (len[i] < el->size) {
+						len[i] = el->size;
+					}
 			}
 		}
     }
 	//num_attr is number of char | in printf
 	//set offset to change the box size
+	length = 0;
 	for (i = 0; i < num_attr; length += len[i++]);
-	length += num_attr * offset + num_attr + 1;
+	length += num_attr * MAX_TABLE_BOX_OFFSET + num_attr + 1;
 	
 	//start measuring time
 	time_t start = clock();
 	printf( "Table: %s\n", tblName );
 	
-	if (num_attr < 0 && num_rows < 0) {
+	if (num_attr < 0 || num_rows < 0) {
 		printf("Table is empty.\n");
 	} else {
 		//print table header
-		AK_print_row_spacer(len, length, offset);
+		AK_print_row_spacer(len, length, MAX_TABLE_BOX_OFFSET);
 		printf("\n|");
 		for (i = 0; i < num_attr; i++) {
-			printf("%-*s|", len[i] + offset, (head + i)->att_name);	
+			printf("%-*s|", len[i] + MAX_TABLE_BOX_OFFSET, (head + i)->att_name);	
 		}
 		printf ("\n");
-		AK_print_row_spacer(len, length, offset);
+		AK_print_row_spacer(len, length, MAX_TABLE_BOX_OFFSET);
 		
 		//print table rows
 		for (i = 0; i < num_rows; i++) {
 			AK_list *row = AK_get_row(i, tblName);
-			AK_print_row(len, offset, row);
-			AK_print_row_spacer(len, length, offset);
+			AK_print_row(len, row);
+			AK_print_row_spacer(len, length, MAX_TABLE_BOX_OFFSET);
 			DeleteAllL(row);
 		}
 		printf("\n");

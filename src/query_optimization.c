@@ -21,14 +21,21 @@
 
 #define MAX_PERMUTATION 24
 
-void AK_print_row_spacer(int col_len[], int length, int offset) {
+/**
+ * @brief Print row spacer
+ * @author Dino Laktašić.
+ * @param int col_len[] - max lengths for each attribute cell 
+ * @param int length -  total table width 
+ * @result printed row spacer
+ */
+void AK_print_row_spacer(int col_len[], int length) {
 	int i, j, col, temp;
 	
 	j = col = temp = 0;
 	
 	for(i = 0; i < length; i++) {
 		if (!i || i == temp + j) {
-			j += offset;
+			j += MAX_TABLE_BOX_OFFSET;
 			temp += col_len[col++] + 1; 
 			printf("+");
 		} else {
@@ -37,6 +44,13 @@ void AK_print_row_spacer(int col_len[], int length, int offset) {
 	}
 }
 
+/**
+ * @brief Get number of chars for given number
+ * @author Dino Laktašić.
+ * @param int number - number to evaluate 
+ * @param int base - mathematic base (e.g. 2, 10 etc.)  
+ * @result characters number for given number
+ */
 int AK_chars_num_from_number(int number, int base) {
 	int len = 0;
 	
@@ -47,20 +61,28 @@ int AK_chars_num_from_number(int number, int base) {
 	return len;
 }
 
+/**
+ * @brief Print optimization table for testing purposes
+ * @author Dino Laktašić.
+ * @param AK_list *list_query - optimized RA expresion list 
+ * @result list output
+ */
 void AK_print_optimized_query(AK_list *list_query) {
 	AK_list_elem list_elem = (AK_list_elem)FirstL(list_query);
 	
-	int offset = MAX_TABLE_BOX_OFFSET;
+	int length;
 	int len[] = {strlen("Type"), strlen("Size"), strlen("Data")};   
 	list_elem = (AK_list_elem)FirstL(list_query);
 		
 	while (list_elem != NULL) {
-		if (len[0] < AK_chars_num_from_number(list_elem->type, 10)) {
-			len[0] = AK_chars_num_from_number(list_elem->type, 10);		
+		length = AK_chars_num_from_number(list_elem->type, 10);
+		if (len[0] < length) {
+			len[0] = length;		
 		}
-
-		if (len[1] < AK_chars_num_from_number(list_elem->size, 10)) {
-			len[1] = AK_chars_num_from_number(list_elem->size, 10);		
+		
+		length = AK_chars_num_from_number(list_elem->size, 10);
+		if (len[1] < length) {
+			len[1] = length;		
 		}
 
 		if (len[2] < strlen(list_elem->data)) {
@@ -71,28 +93,35 @@ void AK_print_optimized_query(AK_list *list_query) {
 	
 	//4 is number of char | in printf
 	//set offset to change the box size
-	int length = len[0] + len[1] + len[2] + 3 * offset + 4;
+	length = len[0] + len[1] + len[2] + 3 * MAX_TABLE_BOX_OFFSET + 4;
 
 	printf("\n%-*sREL_EQ OPTIMIZED QUERY TABLE", (length / 2) - (strlen("REL_EQ OPTIMIZED QUERY TABLE") / 2), " ");
-	printf("\n|%-*s|%-*s|%-*s|\n", len[0] + offset, "Type", 
-			len[1] + offset, "Size", len[2] + offset, "Data");		
-	AK_print_row_spacer(len, length, offset);
+	printf("\n|%-*s|%-*s|%-*s|\n", len[0] + MAX_TABLE_BOX_OFFSET, "Type", 
+			len[1] + MAX_TABLE_BOX_OFFSET, "Size", len[2] + MAX_TABLE_BOX_OFFSET, "Data");		
+	AK_print_row_spacer(len, length);
 
 	list_elem = (AK_list_elem)FirstL(list_query);
 		
 	while (list_elem != NULL) {
-		printf("\n|%-*i|%-*i|%-*s|\n", len[0] + offset, list_elem->type, 
-				len[1] + offset,  list_elem->size, len[2] + offset, list_elem->data);
-		AK_print_row_spacer(len, length, offset);
+		printf("\n|%-*i|%-*i|%-*s|\n", len[0] + MAX_TABLE_BOX_OFFSET, list_elem->type, 
+				len[1] + MAX_TABLE_BOX_OFFSET,  list_elem->size, len[2] + MAX_TABLE_BOX_OFFSET, list_elem->data);
+		AK_print_row_spacer(len, length);
 		list_elem = list_elem->next;
 	}
 }
-
-/* RELATION EQUIVALENCE RULES FLAGS
+ 
+ /**
+ * @brief Call and execute relation equivalence
+ * /* RELATION EQUIVALENCE RULES FLAGS
  * c - commutation
  * a - associativity
  * p - projection
  * s - selection	
+ * @author Dino Laktašić.
+ * @param AK_list *list_query - RA expresion list where we need to apply relational equivalences rules
+ * @param const char rel_eq - rel_eq to execute 
+ * @param const char *FLAGS - flags for relation equivalences (execute rel_eq for given flags) 
+ * @result returns AK_list (RA expresion list) optimized by given relational equivalence rule 
  */
 AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *FLAGS) {	
 	if (DEBUG) {
@@ -130,6 +159,21 @@ AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *F
 	}
 }
 
+ /**
+ * @brief Execute all relational equivalences provided by FLAGS (one or more), 
+ * if DIFF_PLANS turned on execute permutations without repetition on given RA list from SQL parser output
+ * @author Dino Laktašić.
+ * @param AK_list *list_query - RA expresion list where we need to apply relational equivalences rules
+ * @param const char *FLAGS - flags for relation equivalences (execute rel_eq for given flags) 
+ * @result returns AK_list (RA expresion list) optimized by all relational equivalence rules provided by FLAGS 
+ * (commented code can be edited so AK_list can return the list of lists (lists of different optimization plans),
+ * with permutation switched on (DIFF_PLANS = 1) time for execution will be significantly increased
+ * Current implementation without uncommenting code doesn't produce list of list, 
+ * it rather apply all permutations on the same list
+ * 
+ * For futher development consider to implement cost estimation for given plan based on 
+ * returned heuristicly optimized list
+ */
 AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int DIFF_PLANS) {
 	int div, num_perms = 1;
 	int next_perm, next_flag;
