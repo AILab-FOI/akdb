@@ -603,11 +603,6 @@ void table_test()
 
   printf( "\n********** TABLE ABSTRACTION TEST by Matija Šestak **********\n");
 
-  printf("\n");
-  printf( "Table \"student\":AK_print_header\n");
-  AK_print_header( "student" );
-  printf("\n");
-
   printf( "Table \"student\":AK_print_table\n");
   AK_print_table( "student" );
   printf("\n");
@@ -631,10 +626,6 @@ void table_test()
   AK_list * row = AK_get_row( 0, "student" );
   //AK_print_row( row );
   printf("\n");
-  
-  printf("Table \"student\": AK_get_column: Second column: \n");
-  AK_list * column = AK_get_column( 1, "student" );
-  AK_print_column( column );
 
   printf("Table \"student\": AK_get_attr_name for index 3: ");
   printf( "%s\n", AK_get_attr_name( "student", 3 ));
