@@ -340,7 +340,7 @@
 \def MAX_TOKENS
 \brief maximum number of attributes to handle in relation equivalence function
 */
-#define MAX_TOKENS 128
+#define MAX_TOKENS 255
 
 /**
 \def ATTR_DELIMITER

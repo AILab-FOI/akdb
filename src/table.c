@@ -195,51 +195,58 @@ AK_list * AK_get_column( int num, char *tblName ){
 }
 
 /**
- * @author Markus Schatten, Matija Šestak.
+ * @author Markus Schatten, Matija Šestak, updated by Dino Laktašić.
  * @brief  Get all values in some row and put on the list
  * @param int - zero-based row index
  * @param char* - table name
  * @result AK_list* - row values list
  */
-AK_list * AK_get_row( int num, char * tblName ) {
-  int num_rows = AK_get_num_records( tblName );
-  
-  table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-  AK_header *t_header = AK_get_header( tblName );
-  int num_attr = AK_num_attr( tblName );
-  
-  AK_list *row_root =  (AK_list*) malloc( sizeof(AK_list) );
-  InitL(row_root);
-
-  int i, j, k, l, counter;
-  char data[ MAX_VARCHAR_LENGHT ];
-
-  i = 0;
-  counter = -1;
-  while( addresses->address_from[ i ] != 0 ){
-      for( j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++ ){
-	  AK_mem_block *temp = (AK_mem_block*) AK_get_block( j );
-          if( temp->block->last_tuple_dict_id == 0) break;
-	  for( k = 0; k < DATA_BLOCK_SIZE; k+=num_attr ){
-	      if( temp->block->tuple_dict[k].size > 0 )
-		 counter++;
-	      if( counter == num )
-	      {
-		for( l = 0; l < num_attr; l++ ){
-		    int type = temp->block->tuple_dict[ k+l ].type;
-		    int size = temp->block->tuple_dict[ k+l ].size;
-		    int address = temp->block->tuple_dict[ k + l ].address;
-		    memcpy( data, &(temp->block->data[address]), size );
-		    data[ size ] = '\0';
-		    InsertAtEndL( type, &data, size, row_root );
-		}
-               return row_root;
-	      }
-	  }
+AK_list * AK_get_row(int num, char * tblName) {
+	table_addresses *addresses = (table_addresses* ) get_table_addresses(tblName);
+	AK_header *t_header = AK_get_header(tblName);
+   
+	AK_list *row_root = (AK_list*)malloc(sizeof(AK_list));
+	InitL(row_root);
+	
+	int num_rows = AK_get_num_records( tblName );
+	int num_attr = AK_num_attr( tblName );
+	int row_id = num * num_attr; 
+	//row_id - id of tuple_dict in the block from which to start read row elements (direct access to tuple_dict)
+	//(faster then iteration through all tuple_dicts in block)
+	
+	int i, j, k, l, overflow; //, counter;
+	overflow = i = 0;
+	
+	char data[MAX_VARCHAR_LENGHT];
+	//counter = -1;
+	while (addresses->address_from[i] != 0){
+		for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
+			AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
+			if (temp->block->last_tuple_dict_id == 0) 
+				break;
+			//for (k = 0; k < DATA_BLOCK_SIZE; k+=num_attr) {
+				row_id -= overflow;
+				if (row_id < DATA_BLOCK_SIZE) {
+				//if (temp->block->tuple_dict[k].size > 0)
+				//	counter++;
+				//if (counter == num) {
+					for (l = 0; l < num_attr; l++) {
+						int type = temp->block->tuple_dict[row_id + l].type;
+						int size = temp->block->tuple_dict[row_id + l].size;
+						int address = temp->block->tuple_dict[row_id + l].address;
+						memcpy(data, &(temp->block->data[address]), size);
+						data[size] = '\0';
+						InsertAtEndL(type, &data, size, row_root);
+					}
+					return row_root;
+				} else {
+					overflow += temp->block->last_tuple_dict_id;
+				}
+			//}
 		}
 		i++;
 	}
-  return NULL;
+	return NULL;
 }
 
 /**
@@ -325,59 +332,6 @@ char * AK_tuple_to_string( AK_list *tuple ){
 }
 
 /**
- * @author Matija Šestak.
- * @brief  Print values in the AK_list
- * @param AK_list* - list of the values
- * @param int - 0-horizontal, 1 - vertical
- * @result void
- */
-void AK_print_list( AK_list * L, int how)
-{
-  int temp_int;
-  float temp_float;
-  char temp_char[ MAX_VARCHAR_LENGHT ];
-  AK_list_elem e = FirstL( L );
-  while( e )
-  {
-    int type = GetTypeL( e, L );
-    int size = GetSizeL( e, L );
-    char * data = RetrieveL( e, L );
-    
-    switch( type )
-    {
-      case TYPE_INT:
-	  memcpy( &temp_int, data, size);
-	  printf( "%d", temp_int );
-          if( how )
-              printf("\n");
-          else
-              printf( ", ");
-	  break;
-      case TYPE_FLOAT:
-	  memcpy( &temp_float, data, size);
-	  printf( "%f", temp_float );
-          if( how )
-              printf("\n");
-          else
-              printf( ", ");
-	  break;
-      case TYPE_VARCHAR:
-	  memcpy( temp_char, data, size);
-	  temp_char[ size ] = '\0';
-	  printf( "%s", temp_char );
-          if( how )
-              printf("\n");
-          else
-              printf( ", ");
-	  break;
-    }
-    e = NextL( e, L );
-  }
-  printf( "\n" );
-  
-}
-
-/**
  * @brief  Print table row
  * @author Dino Laktašić
  * @param int col_len[] - array of max lengths for each attribute
@@ -415,11 +369,12 @@ AK_print_row(int col_len[], AK_list *row) {
 		i++;
 	}
 	printf("\n");
+	free(data);
 }
 
 /**
  * @brief  Print table
- * @author Dino Laktašić i Mislav Čakarić (replaced old print table function)
+ * @author Dino Laktašić i Mislav Čakarić (replaced old print table function by new one)
  * @param char* - table name
  * @return void
  */
