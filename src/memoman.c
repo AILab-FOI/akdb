@@ -465,7 +465,7 @@ int find_free_space ( table_addresses * addresses )
 }
 
 /**
- @author Nikola Bakoš, updated by Matija Šestak (function now uses caching)
+ @author Nikola Bakoš, updated by Matija Šestak (function now uses caching), updated by Mislav Čakarić
 
  Extends the segment
  @param table_name name of segment to extent
