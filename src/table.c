@@ -453,24 +453,27 @@ void AK_print_table(char *tblName) {
 	time_t start = clock();
 	printf( "Table: %s\n", tblName );
 	
-	//print table header
-	AK_print_row_spacer(len, length, offset);
-	printf("\n|");
-	for (i = 0; i < num_attr; i++) {
-		printf("%-*s|", len[i] + offset, (head + i)->att_name);	
-	}
-	printf ("\n");
-	AK_print_row_spacer(len, length, offset);
-	
-	//print table rows
-	for (i = 0; i < num_rows; i++) {
-		AK_list *row = AK_get_row(i, tblName);
-		AK_print_row(len, length, offset, row);
+	if (num_attr < 0 && num_rows < 0) {
+		printf("Table is empty.\n");
+	} else {
+		//print table header
 		AK_print_row_spacer(len, length, offset);
-		DeleteAllL(row);
-    }
-	printf("\n");
-	
+		printf("\n|");
+		for (i = 0; i < num_attr; i++) {
+			printf("%-*s|", len[i] + offset, (head + i)->att_name);	
+		}
+		printf ("\n");
+		AK_print_row_spacer(len, length, offset);
+		
+		//print table rows
+		for (i = 0; i < num_rows; i++) {
+			AK_list *row = AK_get_row(i, tblName);
+			AK_print_row(len, length, offset, row);
+			AK_print_row_spacer(len, length, offset);
+			DeleteAllL(row);
+		}
+		printf("\n");
+	}
 	//print table rows number and time spent to generate table
 	time_t end = clock();
     printf( "%d records found, duration: %d μs\n\n", num_rows, end - start);
