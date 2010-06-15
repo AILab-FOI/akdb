@@ -1078,7 +1078,8 @@ int AK_delete_segment(char * name, int type){
     int i = 0;
     table_addresses *addresses = (table_addresses*) get_segment_addresses(name,type);
     while (addresses->address_from[ i ] != 0) {
-        AK_delete_extent(addresses->address_from[i], addresses->address_to[i]);
+        if(AK_delete_extent(addresses->address_from[i], addresses->address_to[i])==EXIT_ERROR)
+            return EXIT_ERROR;
         i++;
     }
     AK_list *row_root =  (AK_list *) malloc( sizeof(AK_list) );
