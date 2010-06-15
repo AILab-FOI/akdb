@@ -37,7 +37,8 @@ int AK_get_id(){
         row = AK_get_row(i, "AK_sequence");
         AK_list_elem value = GetNthL(1, row);
         memcpy(temp_data,&value->data,value->size);
-        if(strcmp(temp_data,"objectID")){
+        temp_data[value->size]=0; //terminate string
+        if(strcmp(temp_data,"objectID")==0){
             exists=1;
             value = GetNthL(2, row);
             memcpy(&current_value,&value->data,value->size);
