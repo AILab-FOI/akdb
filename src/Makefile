@@ -13,8 +13,7 @@ CONSTRAINTTARGETS = reference.o between.o nnull.o id.o
 
 OUTDIR = ../bin
 
-all: kalashnikov-db 
-#doc
+all: kalashnikov-db doc
 
 kalashnikov-db: auxiliary.o $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
 	$(CC) main.o $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
