@@ -201,8 +201,7 @@ AK_list * AK_get_column( int num, char *tblName ){
  * @param char* - table name
  * @result AK_list* - row values list
  */
-AK_list * AK_get_row( int num, char * tblName )
-{
+AK_list * AK_get_row( int num, char * tblName ) {
   int num_rows = AK_get_num_records( tblName );
   
   table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
@@ -211,7 +210,6 @@ AK_list * AK_get_row( int num, char * tblName )
   
   AK_list *row_root =  (AK_list*) malloc( sizeof(AK_list) );
   InitL(row_root);
-  
 
   int i, j, k, l, counter;
   char data[ MAX_VARCHAR_LENGHT ];
@@ -238,9 +236,9 @@ AK_list * AK_get_row( int num, char * tblName )
                return row_root;
 	      }
 	  }
-      }
-      i++;
-  }
+		}
+		i++;
+	}
   return NULL;
 }
 
@@ -379,168 +377,14 @@ void AK_print_list( AK_list * L, int how)
   
 }
 
-/**
- * @author Matija Šestak.
- * @brief  Print values in the row
- * @param AK_list* - list of the values
- * @result void
- */
-/*void AK_print_row( AK_list *row ){
-    AK_print_list( row, 0 );
-}*/
-
-/**
- * @author Matija Šestak.
- * @brief  Print values in the column
- * @param AK_list* - list of the values
- * @result void
- */
-void AK_print_column( AK_list *row ){
-    AK_print_list( row, 1 );
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Print table header
- * @param char* - table name
- * @result void
- */
-void AK_print_header( char *tblName ){
-    int num_attr = AK_num_attr( tblName );
-    AK_header *head = AK_get_header( tblName );
-
-    int *rowWidth = (int*)malloc( num_attr*sizeof(int));
-    int i;
-    for( i = 0; i < num_attr; i++ ){
-        rowWidth[i] = strlen((head+i)->att_name)+6;
-    }
-    char spacer[255];
-    spacer[0]='+';
-    spacer[1]='\0';
-    for( i = 0; i < num_attr; i++ ){
-        int j;
-        for( j = 0; j < rowWidth[i]; j++ )
-            strcat( spacer, "-");
-        strcat( spacer, "+");
-    }
-
-    puts(spacer);
-    printf( "|");
-    for( i = 0; i < num_attr; i++ ){
-        char pattern[ 20 ];
-        char buff[20];
-        pattern[ 0 ] = '%';
-        pattern[ 1 ] = '-';
-        pattern[ 2 ] = '\0';
-        sprintf( buff, "%ds",rowWidth[i]);
-        strcat( pattern, buff);
-        printf( pattern, (head+i)->att_name);
-        printf("|");
-    }
-    printf("\n");
-    puts( spacer );
-    free( rowWidth );
-}
-
-/*
- * @brief  Print table
- * @author Matija Šestak, minor update by Dejan Frankovic (added basic null support)
- * @param char* - table name
- * @result void
- *//*
-void AK_print_table( char *tblName ){
-    int temp_int;
-    float temp_float;
-    char temp_char[ MAX_VARCHAR_LENGHT ];
-
-    table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-    AK_mem_block *temp = (AK_mem_block*)AK_get_block( addresses->address_from[0]);
-
-    int num_attr = AK_num_attr( tblName );
-    AK_header *head = AK_get_header( tblName );
-
-    int *rowWidth = (int*)malloc( num_attr*sizeof(int));
-    int i;
-    for( i = 0; i < num_attr; i++ ){
-        rowWidth[i] = strlen((head+i)->att_name)+6;
-    }
-    char spacer[255];
-    spacer[0]='+';
-    spacer[1]='\0';
-    for( i = 0; i < num_attr; i++ ){
-        int j;
-        for( j = 0; j < rowWidth[i]; j++ )
-            strcat( spacer, "-");
-        strcat( spacer, "+");
-    }
-
-    time_t start = clock();
-
-    printf( "Table: %s\n", tblName );
-    AK_print_header(tblName);
-    int numRows = AK_get_num_records( tblName );
-    for( i = 0; i < numRows; i++ ){
-        int j;
-        printf("|");
-        AK_list * L = AK_get_row( i, tblName );
-        AK_list_elem e = FirstL( L );
-        for( j =0; j < num_attr; j++ ){
-            char pattern[ 20 ];
-            char buff[20];
-            pattern[ 0 ] = '%';
-            pattern[ 1 ] = '-';
-            pattern[ 2 ] = '\0';
-            sprintf( buff, "%d",rowWidth[j]);
-            strcat( pattern, buff);
-
-            int type = GetTypeL( e, L );
-            int size = GetSizeL( e, L );
-            char * data = RetrieveL( e, L );
-
-            //switch( temp->block->tuple_dict[j].type){
-            switch( type){
-                case 0:
-                    strcat( pattern, "s");
-                    printf( pattern, "null" );
-                    break;
-                case TYPE_INT:
-                    strcat( pattern, "d");
-                    memcpy( &temp_int, data, size);
-                    printf( pattern, temp_int );
-                    break;
-                case TYPE_FLOAT:
-                    strcat( pattern, ".3f");
-                    memcpy( &temp_float, data, size);
-                    printf( pattern, temp_float );
-                    break;
-                case TYPE_VARCHAR:
-                    strcat( pattern, "s");
-                    memcpy( temp_char, data, size);
-                    temp_char[size]='\0';
-                    printf( pattern, temp_char );
-                    break;
-            }
-            e = NextL(e,L);
-            printf("|");
-        }
-        printf("\n");
-        puts(spacer);
-    }
-    time_t end = clock();
-    printf( "%d records found, duration: %d μs\n\n", numRows, end-start);
-
-    free( rowWidth );
-}
-*/
-
 AK_print_row(int col_len[], int length, int offset, AK_list *row) {
 	AK_list_elem el = (AK_list_elem)FirstL(row);
 	
 	int i = 0;	
 	void  *data = (void *)calloc(MAX_VARCHAR_LENGHT, sizeof(void));
-		
-	while (el != NULL) {
-		//AK_list_elem el = AK_get_tuple(i, j, tblName);			
+	
+	printf("\n|");
+	while (el != NULL) {			
 		memset(data, 0, MAX_VARCHAR_LENGHT);
 		switch (el->type) {
 			case FREE_CHAR:
@@ -563,6 +407,7 @@ AK_print_row(int col_len[], int length, int offset, AK_list *row) {
 		el = el->next;
 		i++;
 	}
+	printf("\n");
 }
 
 /**
@@ -572,21 +417,22 @@ AK_print_row(int col_len[], int length, int offset, AK_list *row) {
  * @return void
  */
 void AK_print_table(char *tblName) {
-	table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
-    AK_mem_block *temp = (AK_mem_block*)AK_get_block( addresses->address_from[0]);
 	AK_header *head = AK_get_header(tblName);
     
 	int i, j, offset = MAX_TABLE_BOX_OFFSET;
 	int num_attr = AK_num_attr(tblName);
-	int num_rows = AK_get_num_records( tblName );
+	int num_rows = AK_get_num_records(tblName);
+	int len[num_attr];  //max length for each attribute in row
+	int length = 0;		//length of spacer
 	
-	int len[num_attr];  
-	
-	for ( i = 0; i < num_attr; i++ ) {
+	//store lengths of header attributes
+	for (i = 0; i < num_attr; i++) {
 		len[i] = strlen((head + i)->att_name) + offset;
 	}
-
-	for (i = 0; i < num_attr; i++ ) {
+	
+	//for each header attribute iterate through all table rows and check if 
+	//there is longer element than previously longest and store it in array
+	for (i = 0; i < num_attr; i++) {
 		for (j = 0; j < num_rows; j++) {
 			AK_list_elem el = AK_get_tuple(j, i, tblName);
 			if (len[i] < el->size) {
@@ -598,14 +444,16 @@ void AK_print_table(char *tblName) {
 			}
 		}
     }
-	//4 is number of char | in printf
+	//num_attr is number of char | in printf
 	//set offset to change the box size
-	int length = 0;
 	for (i = 0; i < num_attr; length += len[i++]);
 	length += num_attr * offset + num_attr + 1;
 	
+	//start measuring time
 	time_t start = clock();
 	printf( "Table: %s\n", tblName );
+	
+	//print table header
 	AK_print_row_spacer(len, length, offset);
 	printf("\n|");
 	for (i = 0; i < num_attr; i++) {
@@ -614,14 +462,16 @@ void AK_print_table(char *tblName) {
 	printf ("\n");
 	AK_print_row_spacer(len, length, offset);
 	
+	//print table rows
 	for (i = 0; i < num_rows; i++) {
-		printf("\n|");
 		AK_list *row = AK_get_row(i, tblName);
 		AK_print_row(len, length, offset, row);
-		printf("\n");
 		AK_print_row_spacer(len, length, offset);
+		DeleteAllL(row);
     }
 	printf("\n");
+	
+	//print table rows number and time spent to generate table
 	time_t end = clock();
     printf( "%d records found, duration: %d μs\n\n", num_rows, end - start);
 }
