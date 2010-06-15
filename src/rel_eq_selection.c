@@ -338,7 +338,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 		return ret_attributes;
 	} else {
 		if (DEBUG) printf("RULE - commute selection with theta-join failed!\n");
-		//free(ret_attributes);
+		free(ret_attributes);
 		return NULL;
 	}
 }

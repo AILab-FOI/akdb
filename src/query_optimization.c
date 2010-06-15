@@ -315,7 +315,7 @@ void query_optimization_test(AK_list *list_query) {
 	
 	//*Commutativity of Selection and Theta join (or Cartesian product)
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-    InsertAtEndL( TYPE_CONDITION, "`category` 'teacher' = `firstname` 'Dino' < AND `lastname` 'Laktasic' = OR", sizeof("`category` 'teacher' = `firstname` 'Dino' < AND `lastname` 'Laktasic' = OR"), expr );
+    InsertAtEndL( TYPE_CONDITION, "`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR", sizeof("`category` 'teacher' = `firstname` 'Dino' < AND `lastname` 'Laktasic' = OR"), expr );
 	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
