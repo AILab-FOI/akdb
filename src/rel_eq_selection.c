@@ -276,12 +276,10 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
  * <ol>
  * <li>For each token (delimited by " ") in selection condition first check if token represents attribute/s and is subset in the given table</li>
  * <li>If token is a subset set variable id to 1</li>
- * <li>else check if token differs from "OR", and if so, set id to 0, else make no changes to variable id</li>
- * <li>if token equals to "AND" and id equals to 1 append collected conds to result condition</li>
- * <li>else if token equals to "AND" and id equals to 0 discarge collected conds</li>
- * <li>else append token to collected data</li>
- * <li>When exits from loop if id greater then 0, append the last collected data to result</li>
- * <li>return pointer to char array that contains new condition for a given table
+ * <li>else set id to 0, else make no changes to variable id</li>
+ * <li>if token differs from "AND" and "OR" and id equals to 1 append current token to result condition</li>
+ * <li>else if token equals to "AND" or "OR" and id equals to 1 and there are two added tokens add "AND" or "OR" to condition string</li>
+ * <li>When exits from loop, return pointer to char array that contains new condition for a given table
  * </ol>
  * @author Dino Laktašić.
  * @param char *cond - condition array that contains condition data 
@@ -344,7 +342,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 }
 
 /**
- * @brief Check if selection can commute with theta-join or product (if working with conditions in infix format use this function insteed)
+ * @brief Check if selection can commute with theta-join or product (if working with conditions in infix format use this function insteed - also remember to change code at the other places)
  * <ol>
  * <li>For each token (delimited by " ") in selection condition first check if token represents attribute/s and is subset in the given table</li>
  * <li>If token is a subset set variable id to 1</li>
@@ -404,28 +402,21 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 				memcpy(ret_attributes + ret_address, temp_attr, attr_address);
 				ret_address += attr_address;
 				memset(ret_attributes + ret_address, '\0', 1);
-				//printf("\t1.a. APPEND (%s) => (%s),%i\n", temp_attr, ret_attributes, ret_address);
-				
 				free(temp_attr);
 				temp_attr = (char *)calloc(len_token + 1, sizeof(char));
 				attr_address  = 1;
 				memcpy(temp_attr, " ", 1);
 				memcpy(temp_attr + attr_address, token_cond, len_token);
 				attr_address += len_token;
-				//printf("\t1.b. ADD TO TEMP_VAR: %s:%s, %i:%i\n", temp_attr, token_cond, attr_address, len_token);
-				
 			} else if (strcmp(token_cond, "AND") == 0 && id == 0) {
 				if (ret_address > 0) {
 					free(temp_attr);
 					temp_attr = (char *)calloc(len_token + 1, sizeof(char));
-					//printf("\t2.a. REALLOC TEMP_VAR: %s:%s, %i:%i\n", temp_attr, token_cond, attr_address, len_token);
 					attr_address  = 1;
 					memcpy(temp_attr, " ", 1);
 					memcpy(temp_attr + attr_address, token_cond, len_token);
 					attr_address += len_token;
-					//printf("\t2.b. ADD TO TEMP_VAR: %s:%s, %i:%i\n", temp_attr, token_cond, attr_address, len_token);
 				} else {
-					//printf("\t2.c. RESET\n");
 					free(temp_attr);
 					temp_attr = (char *)calloc(1, sizeof(char));
 					attr_address = 0;
@@ -433,28 +424,23 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 			} else {
 				if (attr_address > 0) {
 					temp_attr = (char *)realloc(temp_attr, attr_address + len_token + 1);
-					//printf("\t3.a. TOKEN REALLOC: %s:%s, %i:%i\n", temp_attr, token_cond, attr_address, len_token);
 					memcpy(temp_attr + attr_address++, " ", 1);
-					//printf("\t3.b. TOKEN ADD " ": %s, %i\n", temp_attr, attr_address);
 				} else {
 					temp_attr = (char *)realloc(temp_attr, attr_address + len_token);
-					//printf("TOKEN REALLOC: %s:%s, %i:%i\n", temp_attr, token_cond, attr_address, len_token);
 				}
 				
 				memcpy(temp_attr + attr_address, token_cond, len_token);
 				attr_address += len_token;
-				//printf("\t3.c. TOKEN ADD COND: %s:%s, %i, len_token: %i\n", temp_attr, token_cond, attr_address, len_token);
 			}
 		}
 	}
-	//printf("\t1. TOKEN: '%s','%i'\n", temp_attr, attr_address);
+
 	if (id > 0) {				
 		memcpy(ret_attributes + ret_address, temp_attr, attr_address);
 		ret_address += attr_address;
 		memcpy(ret_attributes + ret_address, "\0", 1);
 	}
 	
-	//printf("\t1. TOKEN FINAL: '%s','%i'\n", ret_attributes, ret_address);
 	free(temp_attr);
 
 	if (ret_attributes > 0) {
