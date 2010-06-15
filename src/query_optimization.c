@@ -96,33 +96,35 @@ void AK_print_optimized_query(AK_list *list_query) {
  * s - selection	
  */
 AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *FLAGS) {	
-	printf("\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
-	printf("=================================================\n");
+	if (DEBUG) {
+		printf("\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
+		printf("=================================================\n");
+	}
 	
 	if (strchr(FLAGS, rel_eq) != NULL) {
 		switch (rel_eq) {
 			case 'c':
-				printf("\napply rel_eq_commute.\n");
+				if (DEBUG) printf("\napply rel_eq_commute.\n");
 				//return (AK_list *)AK_rel_eq_comut(list_query);
 				break;
 						
 			case 'a':
-				printf("\napply rel_eq_assoc.\n");
+				if (DEBUG) printf("\napply rel_eq_assoc.\n");
 				return (AK_list *)AK_rel_eq_assoc(list_query);
 				break;
 
 			case 's':
-				printf("\napply rel_eq_selection.\n");
+				if (DEBUG) printf("\napply rel_eq_selection.\n");
 				return (AK_list *)AK_rel_eq_selection(list_query);
 				break;
 				
 			case 'p':
-				printf("\napply rel_eq_projection.\n");
+				if (DEBUG) printf("\napply rel_eq_projection.\n");
 				return (AK_list *)AK_rel_eq_projection(list_query);	
 				break;
 				
 			default: 
-				printf("Invalid relational equivalence flag: %c", rel_eq);
+				if (DEBUG) printf("Invalid relational equivalence flag: %c", rel_eq);
 				return list_query;
 				break;
 		}
@@ -145,7 +147,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
 	//AK_list *temps[num_perms];
 	
 	if (num_perms > MAX_PERMUTATION) {
-		printf("ERROR: max four flags are allowed!\n");
+		if (DEBUG) printf("ERROR: max four flags are allowed!\n");
 		return temp;
 	}
 	
@@ -153,7 +155,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
 		char *perm = (char *)calloc(len_flags, sizeof(char));
 		memcpy(perm, FLAGS, len_flags);
 		
-		printf("\n\t==============================\n\t\t%i. LOGIC PLAN\n\t==============================\n", next_perm + 1);
+		if (DEBUG) printf("\n\t==============================\n\t\t%i. LOGIC PLAN\n\t==============================\n", next_perm + 1);
 		for (next_flag = len_flags, div = num_perms; next_flag > 0; next_flag--) {
 			div /= next_flag;
 			int index = (next_perm / div) % next_flag;
@@ -179,7 +181,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
 	}
 	
 	if (DIFF_PLANS) {
-		printf("\nTOTAL REL_EQ OPTIMIZED PLANS: %i\n", num_perms);
+		if (DEBUG) printf("\nTOTAL REL_EQ OPTIMIZED PLANS: %i\n", num_perms);
 		//temp = (AK_list *)realloc(temp, num_perms * sizeof(temps));
 		//memcpy(temp, temps, sizeof(temps) * num_perms);
 	}
@@ -313,11 +315,11 @@ void query_optimization_test(AK_list *list_query) {
 	
 	//*Commutativity of Selection and Theta join (or Cartesian product)
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-    InsertAtEndL( TYPE_CONDITION, "`firstname` 10 < `category` 'Algorithms' AND", sizeof("`firstname` 10 < `category` 'Algorithms' AND"), expr );
+    InsertAtEndL( TYPE_CONDITION, "`category` 'teacher' = `firstname` 'Dino' < AND `lastname` 'Laktasic' = OR", sizeof("`category` 'teacher' = `firstname` 'Dino' < AND `lastname` 'Laktasic' = OR"), expr );
 	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`category` `id_prof` =", sizeof("`category` `id_prof` ="), expr );
+	InsertAtEndL( TYPE_CONDITION, "`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR", sizeof("`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "e", sizeof("e"), expr ); //u, i, e
 	//*/
 	
@@ -377,8 +379,8 @@ void query_optimization_test(AK_list *list_query) {
 		test_cond1 = "`id_prof` 10 < `category` '10' = AND";
 		test_cond2 = "`id_stud` 100 > `id_prof` 50 < OR";
 		
-		cond_attr1 = AK_rel_eq_cond_attributes(test_cond1);
-		cond_attr2 = AK_rel_eq_cond_attributes(test_cond2);
+		cond_attr1 = (char *)AK_rel_eq_cond_attributes(test_cond1);
+		cond_attr2 = (char *)AK_rel_eq_cond_attributes(test_cond2);
 		
 		//Initialize list elements...
 		//AK_list_elem list_elem_set, list_elem_subset;

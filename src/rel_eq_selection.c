@@ -71,7 +71,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 	memcpy(temp_set, set, strlen(set));
 	memcpy(temp_subset, subset, strlen(subset));
 	
-	printf("RULE - is (%s) subset of set (%s) in rel_eq_selection\n", subset, set);
+	if (DEBUG) printf("RULE - is (%s) subset of set (%s) in rel_eq_selection\n", subset, set);
 		
 	for ((token_set = strtok_r(temp_set, ATTR_DELIMITER, &save_token_set)); token_set; 
 		(token_set = strtok_r(NULL, ATTR_DELIMITER, &save_token_set)), set_id++) {
@@ -90,7 +90,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 	}
 	
 	if (len_set < len_subset) {
-		printf("RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
+		if (DEBUG) printf("RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
 		return EXIT_FAILURE;
 	}
 	
@@ -108,14 +108,14 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 	}
 	
 	if (len_set != len_subset) {
-		printf("RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
+		if (DEBUG) printf("RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
 		return EXIT_FAILURE;
 	}
 	
 	free(temp_set);
 	free(temp_subset);
 	
-	printf("RULE - succeed (%s) is subset of set (%s).\n", subset, set);
+	if (DEBUG) printf("RULE - succeed (%s) is subset of set (%s).\n", subset, set);
 	return EXIT_SUCCESS;
 }
 
@@ -291,19 +291,16 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
 char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 	int id = 0;
 	int token_id = 0;
-	int attr_address = 0;
-	int ret_address = 0;
-	int len_token;
+	int next_cond = 0;
 	
 	char *token_cond, *save_token_cond;
-	char *temp_attr = (char *)calloc(1, sizeof(char));
 	char *ret_attributes = (char *)calloc(MAX_VARCHAR_LENGHT, sizeof(char));
 	char *temp_cond = (char *)calloc(strlen(cond) + 1, sizeof(char));
 	
 	memcpy(temp_cond, cond, strlen(cond));
 	memcpy(temp_cond + strlen(cond) + 1, "\0", 1);
 	
-	printf("RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
+	if (DEBUG) printf("RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
 	
 	for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond; 
 		(token_cond = strtok_r(NULL, " ", &save_token_cond)), token_id++) {
@@ -316,9 +313,85 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 					if (!AK_rel_eq_is_attr_subset(tbl, attr)) { //if is subset set id to 1
 						id = 1;
 					} else {
-						if (strcmp(token_cond, "OR") != 0) {
+						id = 0;
+					}
+				}
+				free(tbl);
+				free(attr);
+			}
+			//`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR
+			if ((strcmp(token_cond, "AND") != 0 && strcmp(token_cond, "OR") != 0) && id > 0) {
+				if (strlen(ret_attributes)) {
+					strcat(ret_attributes, " ");
+				}
+				strcat(ret_attributes, token_cond);
+				next_cond++;
+			} else if ((strcmp(token_cond, "AND") == 0 || strcmp(token_cond, "OR") == 0) && next_cond % 2 == 0 && id > 0) {
+				strcat(ret_attributes, " ");
+				strcat(ret_attributes, token_cond);
+			}
+		}
+	}
+
+	if (ret_attributes > 0) {
+		if (DEBUG) printf("RULE - commute selection with theta-join succeed.\n");
+		return ret_attributes;
+	} else {
+		if (DEBUG) printf("RULE - commute selection with theta-join failed!\n");
+		//free(ret_attributes);
+		return NULL;
+	}
+}
+
+/**
+ * @brief Check if selection can commute with theta-join or product (if working with conditions in infix format use this function insteed)
+ * <ol>
+ * <li>For each token (delimited by " ") in selection condition first check if token represents attribute/s and is subset in the given table</li>
+ * <li>If token is a subset set variable id to 1</li>
+ * <li>else check if token differs from "OR", and if so, set id to 0, else make no changes to variable id</li>
+ * <li>if token equals to "AND" and id equals to 1 append collected conds to result condition</li>
+ * <li>else if token equals to "AND" and id equals to 0 discarge collected conds</li>
+ * <li>else append token to collected data</li>
+ * <li>When exits from loop if id greater then 0, append the last collected data to result</li>
+ * <li>return pointer to char array that contains new condition for a given table
+ * </ol>
+ * @author Dino Laktašić.
+ * @param char *cond - condition array that contains condition data 
+ * @param char *tblName - name of the table
+ * @result char * - returns pointer to char array that contains new condition for a given table
+ */
+ /*
+char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
+	int id = 0;
+	int token_id = 0;
+	int attr_address = 0;
+	int ret_address = 0;
+	int len_token;
+	
+	char *token_cond, *save_token_cond;
+	char *temp_attr = (char *)calloc(1, sizeof(char));
+	char *ret_attributes = (char *)calloc(MAX_VARCHAR_LENGHT, sizeof(char));
+	char *temp_cond = (char *)calloc(strlen(cond) + 1, sizeof(char));
+	
+	memcpy(temp_cond, cond, strlen(cond));
+	memcpy(temp_cond + strlen(cond) + 1, "\0", 1);
+	
+	if (DEBUG) printf("RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
+	
+	for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond; 
+		(token_cond = strtok_r(NULL, " ", &save_token_cond)), token_id++) {
+		if (token_id < MAX_TOKENS - 1) {
+			if (*token_cond == ATTR_ESCAPE) {
+				char *tbl = AK_rel_eq_get_atrributes_char(tblName);
+				char *attr = AK_rel_eq_cond_attributes(token_cond);
+				
+				if (attr != NULL && tbl != NULL) {
+					if (!AK_rel_eq_is_attr_subset(tbl, attr)) { //if is subset set id to 1
+						id = 1;
+					} else {
+						//if (strcmp(token_cond, "OR") != 0) {
 							id = 0;
-						}
+						//}
 					}
 				}
 				free(tbl);
@@ -385,17 +458,18 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 	free(temp_attr);
 
 	if (ret_attributes > 0) {
-		printf("RULE - commute selection with theta-join succeed.\n");
+		if (DEBUG) printf("RULE - commute selection with theta-join succeed.\n");
 		return ret_attributes;
 	} else {
-		printf("RULE - commute selection with theta-join failed!\n");
+		if (DEBUG) printf("RULE - commute selection with theta-join failed!\n");
 		//free(ret_attributes);
 		return NULL;
 	}
-}
+}*/
 
 /**
- * @brief Break conjunctive conditions to individual conditions   
+ * @brief Break conjunctive conditions to individual conditions 
+ * (currently not used - commented in main AK_rel_eq_selection function), it can be usefull in some optimization cases
  * <ol>
  * <li>For each delimited item (' AND ') insert item to the AK_list</li>
  * <li>Remove unused pointers and return the conditions list</li>
@@ -413,7 +487,8 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
 	int len_token;
 	char *token_cond, *save_token_cond;
 	
-	char *temp_attr = (char *)calloc(1, sizeof(char));
+	//it's much safe to allocate MAX_VARCHAR_LENGHT, and remove all realloc from function
+	char *temp_attr = (char *)calloc(1, sizeof(char));  
 	//memset(temp_attr, '\0', MAX_VARCHAR_LENGHT);
 	
 	char *temp_cond = (char *)calloc(strlen(cond), sizeof(char));
@@ -480,8 +555,8 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 		switch (list_elem->type) {
 
 			case TYPE_OPERATOR:
-				printf("\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
-				printf("----------------------\n");
+				if (DEBUG) printf("\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
+				if (DEBUG) printf("----------------------\n");
 				temp_elem = (AK_list_elem) EndL(temp);
 				temp_elem_prev = (AK_list_elem) PreviousL(temp_elem, temp);
 				list_elem_next = (AK_list_elem) NextL(list_elem, list_rel_eq);
@@ -501,14 +576,14 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 											(temp_elem_prev->data[0] == RO_SELECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
 											InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 											InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-											printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+											if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
 											step++;
 											break;
 										} else if ((AK_rel_eq_can_commute(list_elem_next, temp_elem) == EXIT_SUCCESS) && 
 											(temp_elem_prev->data[0] == RO_SELECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
 											InsertBeforeL(list_elem->type, list_elem->data, list_elem->size, temp_elem_prev, temp);
 											InsertBeforeL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp_elem_prev, temp);
-											printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+											if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
 											step++;
 											break;
 										}
@@ -521,7 +596,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 						if (temp_elem == NULL || step != 0) {
 							InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 							InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-							printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);						
+							if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);						
 						}
 					
 						list_elem = list_elem->next;
@@ -533,16 +608,17 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 						//Join cascade selection conditions to one
 						if (temp_elem != NULL && temp_elem_prev != NULL && temp_elem->type == TYPE_CONDITION && 
 							temp_elem_prev->data[0] == RO_SELECTION && temp_elem_prev->type == TYPE_OPERATOR) {
-							temp_elem->size = temp_elem->size + list_elem_next->size + strlen(" AND ");
-							//strcat(temp_elem->data, " AND ");
+							temp_elem->size = temp_elem->size + list_elem_next->size + strlen(" AND") + 1; //edit to (" AND ")
+							//strcat(temp_elem->data, " AND "); //uncomment for infix use
+							strcat(temp_elem->data, " "); //remove for infix
 							strcat(temp_elem->data, list_elem_next->data);
-							strcat(temp_elem->data, " AND ");
+							strcat(temp_elem->data, " AND"); //comment if using infix format
 							memcpy(temp_elem->data, temp_elem->data, temp_elem->size);
-							printf("::selection cascade - condition changed to (%s) in temp list\n", temp_elem->data);
+							if (DEBUG) printf("::selection cascade - condition changed to (%s) in temp list\n", temp_elem->data);
 						} else {
 							InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 							InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-							printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+							if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
 						}
 						
 						/*//Divide selection condition (slower than upper solution but can be useful in certain cases)
@@ -601,7 +677,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 										}
 										InsertAfterL(temp_elem->type, temp_elem->data, temp_elem->size, tmp, temp);
 										InsertAfterL(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
-										printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
+										if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
 									}
 									break;
 								}
@@ -611,13 +687,13 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 							temp_elem = (AK_list_elem)PreviousL(temp_elem, temp);
 						}
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-						printf("::operator %s inserted in temp list\n", list_elem->data);
+						if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
 						break;
 					
 					case RO_NAT_JOIN:
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 						InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-						printf("::operator %s inserted in temp list\n", list_elem->data);
+						if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
 						list_elem = list_elem->next;
 						break;
 						
@@ -656,7 +732,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 												temp_elem->size = strlen(data1) + 1;
 												memcpy(temp_elem->data, data1, temp_elem->size);
 												memset(temp_elem->data + temp_elem->size, '\0', MAX_VARCHAR_LENGHT - temp_elem->size);
-												printf("::operatori %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
+												if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
 											} else {
 												AK_list_elem temp_elem_prevprev = (AK_list_elem)PreviousL(temp_elem_prev, temp);
 												temp_elem_prevprev->next = temp_elem;
@@ -678,7 +754,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 												memset(data2 + strlen(data2), '\0', 1);
 												InsertAfterL(temp_elem->type, data2, strlen(data2) + 1, tmp, temp);
 												InsertAfterL(TYPE_OPERATOR, op_selected, 2, tmp, temp);
-												printf("::operatorj %s inserted with attributes (%s) in temp list\n", op_selected, data2);
+												if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", op_selected, data2);
 											}
 										}
 										
@@ -697,17 +773,17 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 						
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 						InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-						printf("::operatork %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+						if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
 						list_elem = list_elem->next;
 						break;
 					
 					case RO_RENAME:
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-						printf("::operator %s inserted in temp list\n", list_elem->data);
+						if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
 						break;
 					
 					default: 
-						printf("Invalid operator: %s", list_elem->data); 
+						if (DEBUG) printf("Invalid operator: %s", list_elem->data); 
 						break;
 				}
 				break;
@@ -723,12 +799,12 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 				break;
 				
 			case TYPE_OPERAND:
-				printf("::table_name (%s) inserted in the temp list\n", list_elem->data);
+				if (DEBUG) printf("::table_name (%s) inserted in the temp list\n", list_elem->data);
 				InsertAtEndL(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
 				break;
 				
 			default: 
-				printf("Invalid type: %s", list_elem->data); 
+				if (DEBUG) printf("Invalid type: %s", list_elem->data); 
 				break;
 		}
 		
@@ -834,7 +910,7 @@ void rel_eq_selection_test() {
 
 	//Commutativity of Selection and Projection
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`L1` > 100", sizeof("`L1` > 100"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`L1` 100 >", sizeof("`L1` 100 >"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "p", sizeof("p"), expr );
     InsertAtEndL( TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof("L1;L2;L3;L4"), expr ); //projection attribute
 	InsertAtEndL( TYPE_OPERATOR, "p", sizeof("p"), expr );
@@ -842,22 +918,22 @@ void rel_eq_selection_test() {
 	
 	//Cascade of Selection and Commutativity of Selection
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`L1` > 100", sizeof("`L1` > 100"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`L1` 100 >", sizeof("`L1` 100 >"), expr );
 	//
 	//Commutativity of Selection and set operations (Union, Intersection, and Set difference)
     InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`L2` > 100 OR `L3` < 50", sizeof("`L2` > 100 OR `L3` < 50"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`L2` 100 > `L3` 50 < OR", sizeof("`L2` 100 > `L3` 50 < OR"), expr );
     InsertAtEndL( TYPE_OPERAND, "R", sizeof("R"), expr );
     InsertAtEndL( TYPE_OPERAND, "S", sizeof("S"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("u"), expr ); //u, i, e
 	
 	//Commutativity of Selection and Theta join (or Cartesian product)
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-    InsertAtEndL( TYPE_CONDITION, "`firstname` > 100 AND `mbr` < 50", sizeof("`firstname` > 100 AND `mbr` < 50"), expr );
+    InsertAtEndL( TYPE_CONDITION, "`job` 'teacher' = `mbr` 50 < AND", sizeof("`job` 'teacher' = `mbr` 50 < AND"), expr );
 	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
     InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-    InsertAtEndL( TYPE_CONDITION, "`mbr`=`firstname`", sizeof("`mbr`=`firstname`"), expr ); //theta join attribute
+    InsertAtEndL( TYPE_CONDITION, "`mbr` 50 = `job` 'teacher' = AND", sizeof("`mbr` 50 = `job` 'teacher' = AND"), expr ); //theta join attribute
 	
 	//printf("\nRA expr. before rel_eq optimization:\n");
 	//AK_print_rel_eq_projection(expr);
@@ -871,8 +947,8 @@ void rel_eq_selection_test() {
 		char *cond_attr1, *cond_attr2;
 		
 		test_table = "profesor";
-		test_cond1 = "`mbr` > 100 AND `firstname` < 50 OR `id` > 'A'";
-		test_cond2 = "`id` > 100 AND `firstname` < 50 AND `job` = 'teacher'";
+		test_cond1 = "`mbr` 100 > `firstname` 50 < AND `id` 'A' > OR";
+		test_cond2 = "`id` 100 > `firstname` 50 < AND `job` 'teacher' = AND";
 		
 		cond_attr1 = AK_rel_eq_cond_attributes(test_cond1);
 		cond_attr2 = AK_rel_eq_cond_attributes(test_cond2);

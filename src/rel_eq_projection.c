@@ -81,7 +81,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 	memcpy(temp_set, list_elem_set->data, list_elem_set->size);
 	memcpy(temp_subset, list_elem_subset->data, list_elem_subset->size);
 
-	printf("RULE - is (%s) subset of set (%s) in rel_eq_projection\n", list_elem_subset->data, list_elem_set->data);
+	if (DEBUG) printf("RULE - is (%s) subset of set (%s) in rel_eq_projection\n", list_elem_subset->data, list_elem_set->data);
 		
 	for ((token_set = strtok_r(temp_set, ATTR_DELIMITER, &save_token_set)); token_set; 
 		(token_set = strtok_r(NULL, ATTR_DELIMITER, &save_token_set)), token_id++) {
@@ -101,7 +101,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 	}
 	
 	if (len_set < len_subset) {
-		printf("RULE - failed (%s) isn't subset of set (%s)!\n", list_elem_subset->data, list_elem_set->data);
+		if (DEBUG) printf("RULE - failed (%s) isn't subset of set (%s)!\n", list_elem_subset->data, list_elem_set->data);
 		return EXIT_FAILURE;
 	}
 	
@@ -119,7 +119,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 	}
 	
 	if (token_id != len_subset) {
-		printf("RULE - failed (%s) isn't subset of set (%s)!\n", list_elem_set->data, list_elem_subset->data);
+		if (DEBUG) printf("RULE - failed (%s) isn't subset of set (%s)!\n", list_elem_set->data, list_elem_subset->data);
 		return EXIT_FAILURE;
 	}
 	
@@ -127,7 +127,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 	free(temp_set);		
 	free(temp_subset);		
 
-	printf("RULE - succeed (%s) is subset of set (%s).\n", list_elem_subset->data, list_elem_set->data);
+	if (DEBUG) printf("RULE - succeed (%s) is subset of set (%s).\n", list_elem_subset->data, list_elem_set->data);
 	return EXIT_SUCCESS;
 }
 
@@ -151,7 +151,7 @@ int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem
 	char *token_attr, *save_token_attr, *temp_attr, *temp_cond, *temp;
 	char *tokens[MAX_TOKENS] = {NULL};
 	
-	printf("RULE - commute condition (%s) with projection (%s)\n", list_elem_conds->data, list_elem_attribs->data);
+	if (DEBUG) printf("RULE - commute condition (%s) with projection (%s)\n", list_elem_conds->data, list_elem_attribs->data);
 	
 	temp = (char *)calloc(list_elem_conds->size, sizeof(char));
 	temp_cond = (char *)calloc(list_elem_conds->size, sizeof(char));
@@ -188,14 +188,14 @@ int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem
 			}
 				
 			if (valid_cond_attribs == 0) {
-				printf("RULE - commute condition with projection failed!\n");
+				if (DEBUG) printf("RULE - commute condition with projection failed!\n");
 				return EXIT_FAILURE;
 			}
 		}
 	}
 	
 	free(temp);
-	printf("RULE - commute condition with projection succeed.\n");
+	if (DEBUG) printf("RULE - commute condition with projection succeed.\n");
 	return EXIT_SUCCESS;
 }
 
@@ -291,7 +291,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
 	
 	strcpy(temp_attribs, attribs);
 		
-	printf("\nINPUT - attributes: (%s), tblName: (%s)\n", temp_attribs, tblName);
+	if (DEBUG) printf("\nINPUT - attributes: (%s), tblName: (%s)\n", temp_attribs, tblName);
 	
 	for ((token_attr = strtok_r(temp_attribs, ATTR_DELIMITER, &save_token_attribs)); token_attr; 
 		(token_attr = strtok_r(NULL, ATTR_DELIMITER, &save_token_attribs)), token_id++) {
@@ -319,7 +319,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
 	DeleteAllL(list_attr);
 	free(temp_attribs);
 
-	printf("RETURN - attributes for new projection (%s)\n", ret_attributes);
+	if (DEBUG) printf("RETURN - attributes for new projection (%s)\n", ret_attributes);
 	return ret_attributes;
 }
 
@@ -436,8 +436,8 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 		switch (list_elem->type) {
 
 			case TYPE_OPERATOR:
-				printf("\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
-				printf("----------------------\n");
+				if (DEBUG) printf("\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
+				if (DEBUG) printf("----------------------\n");
 				temp_elem = (AK_list_elem) EndL(temp);
 				temp_elem_prev = (AK_list_elem) PreviousL(temp_elem, temp);
 				list_elem_next = (AK_list_elem) NextL(list_elem, list_rel_eq);
@@ -450,13 +450,13 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 							if (AK_rel_eq_is_subset(list_elem_next, temp_elem) == EXIT_FAILURE) {
 								InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 								InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-								printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+								if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
 							}
 
 						} else {
 							InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 							InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-							printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+							if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
 						}
 						
 						list_elem = list_elem->next;
@@ -477,7 +477,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 											(temp_elem_prev->data[0] == RO_PROJECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
 											InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 											InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-											printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+											if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
 											break;
 										}
 									}
@@ -486,14 +486,14 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 										//if (step == 0) {
 											InsertBeforeL(list_elem->type, list_elem->data, list_elem->size, temp_elem_prev, temp);
 											InsertBeforeL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp_elem_prev, temp);
-											printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+											if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
 											break;
 										//}
 									}
 								} else {
 									InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 									InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-									printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+									if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
 									break;
 								}
 								temp_elem = (AK_list_elem)PreviousL(temp_elem, temp);
@@ -502,7 +502,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 						} else {
 							InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 							InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-							printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+							if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
 						}
 						list_elem = list_elem->next;
 						break;
@@ -525,7 +525,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 										}
 										InsertAfterL(temp_elem->type, temp_elem->data, temp_elem->size, tmp, temp);
 										InsertAfterL(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
-										printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
+										if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
 									}
 									break;
 								}
@@ -535,14 +535,14 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 							temp_elem = (AK_list_elem)PreviousL(temp_elem, temp);
 						}
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-						printf("::operator %s inserted in temp list\n", list_elem->data);
+						if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
 						break;
 					
 					//Commuting Projection with Join and Cartesian Product
 					case RO_NAT_JOIN:
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 						InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-						printf("::operator %s inserted in temp list\n", list_elem->data);
+						if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
 						list_elem = list_elem->next;
 						break;
 						
@@ -576,7 +576,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 												temp_elem->size = strlen(data1) + 1;
 												memcpy(temp_elem->data, data1, temp_elem->size);
 												memset(temp_elem->data + temp_elem->size, '\0', MAX_VARCHAR_LENGHT - temp_elem->size);
-												printf("::operatori %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
+												if (DEBUG) printf("::operatori %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
 											} else {		
 												//3. Insert new projection
 												strcat(data1, ATTR_DELIMITER);
@@ -586,7 +586,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 												//memset(data2 + strlen(data1), '\0', 1);
 												InsertAfterL(temp_elem->type, data1, strlen(data1) + 1, tmp, temp);
 												InsertAfterL(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
-												printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data1);
+												if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data1);
 											}
 											
 											free(data1);
@@ -603,7 +603,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 											memset(data2 + strlen(data2), '\0', 1);
 											InsertAfterL(temp_elem->type, data2, strlen(data2) + 1, tmp, temp);
 											InsertAfterL(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
-											printf("::operatori %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data2);
+											if (DEBUG) printf("::operatori %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data2);
 										}
 										
 										free(data2);
@@ -618,22 +618,22 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 						
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
 						InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-						printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+						if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
 						list_elem = list_elem->next;
 						break;
 					
 					case RO_EXCEPT:
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-						printf("::operator %s inserted in temp list\n", list_elem->data);
+						if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
 						break;
 					
 					case RO_RENAME:
 						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-						printf("::operator %s inserted in temp list\n", list_elem->data);
+						if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
 						break;
 					
 					default: 
-						printf("Invalid operator: %s", list_elem->data); 
+						if (DEBUG) printf("Invalid operator: %s", list_elem->data); 
 						break;
 				}
 				break;
@@ -649,12 +649,12 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 				break;
 				
 			case TYPE_OPERAND:
-				printf("::table_name (%s) inserted in the temp list\n", list_elem->data);
+				if (DEBUG) printf("::table_name (%s) inserted in the temp list\n", list_elem->data);
 				InsertAtEndL(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
 				break;
 				
 			default: 
-				printf("Invalid type: %s", list_elem->data); 
+				if (DEBUG) printf("Invalid type: %s", list_elem->data); 
 				break;
 		}
 		
@@ -752,7 +752,7 @@ void rel_eq_projection_test() {
 	 * In the clause, the comparison operations could be one of the following: ≤, ≥, ≠, =, >, < . 
 	 * Clauses are connected by Boolean operators : and, or , not 
 	 */
-	InsertAtEndL( TYPE_CONDITION, "`L1` > 100 OR `L2` < 50", sizeof("`L1` > 100 OR `L2` < 50"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`L1` 100 > `L2` 50 < OR", sizeof("`L1` 100 > `L2` 50 < OR"), expr );
     InsertAtEndL( TYPE_OPERAND, "R", sizeof("R"), expr );
     InsertAtEndL( TYPE_OPERAND, "S", sizeof("S"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("u"), expr );
@@ -762,7 +762,7 @@ void rel_eq_projection_test() {
 	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
     InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-    InsertAtEndL( TYPE_CONDITION, "`mbr` = `job`", sizeof("`mbr` = `job`"), expr ); //theta join attribute
+    InsertAtEndL( TYPE_CONDITION, "`mbr` `job` =", sizeof("`mbr` `job` ="), expr ); //theta join attribute
 	
 	/*
     InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), &expr );
@@ -787,8 +787,8 @@ void rel_eq_projection_test() {
 		char *test_attribs;
 		
 		test_table = "profesor";
-		test_cond1 = "`mbr` > 100 AND `firstname` < 50 OR `id` > 1000";
-		test_cond2 = "`id` > 100 AND `firstname` < 50 AND `job` = 'teacher'";
+		test_cond1 = "`mbr` 100 > `firstname` 'Dino' = AND `id` 1000 > OR";
+		test_cond2 = "`id` 100 > `firstname` 50 < AND `job` 'teacher' = AND";
 		test_attribs = "id;mbr";
 		
 		//printf("IS_SET_SUBSET_OF_LARGER_SET_TEST  : (%i)\n\n", AK_rel_eq_is_subset(list_elem_set, list_elem_subset));
