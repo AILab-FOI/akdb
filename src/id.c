@@ -21,7 +21,7 @@
 
 
 /**
- * @author Mislav Čakarić.
+ * @author Saša Vukšić, updated by Mislav Čakarić.
  * @brief  Get unique ID for any object, stored in sequence
  * @return objectID
  */
