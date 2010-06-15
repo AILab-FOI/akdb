@@ -385,9 +385,9 @@ void AK_print_list( AK_list * L, int how)
  * @param AK_list* - list of the values
  * @result void
  */
-void AK_print_row( AK_list *row ){
+/*void AK_print_row( AK_list *row ){
     AK_print_list( row, 0 );
-}
+}*/
 
 /**
  * @author Matija Šestak.
@@ -533,6 +533,38 @@ void AK_print_table( char *tblName ){
 }
 */
 
+AK_print_row(int col_len[], int length, int offset, AK_list *row) {
+	AK_list_elem el = (AK_list_elem)FirstL(row);
+	
+	int i = 0;	
+	void  *data = (void *)calloc(MAX_VARCHAR_LENGHT, sizeof(void));
+		
+	while (el != NULL) {
+		//AK_list_elem el = AK_get_tuple(i, j, tblName);			
+		memset(data, 0, MAX_VARCHAR_LENGHT);
+		switch (el->type) {
+			case FREE_CHAR:
+			//case FREE_INT:
+				printf("%-*s|", col_len[i] + offset, "null");
+				break;
+			case TYPE_INT:
+				memcpy(data, el->data, sizeof(int));
+				printf("%-*i|", col_len[i] + offset, *((int *)data));	
+				break;
+			case TYPE_FLOAT:
+				memcpy(data, el->data, sizeof(float));
+				printf("%-*.3f|", col_len[i] + offset, *((float *)data));	
+				break;
+			case TYPE_VARCHAR:
+			default:
+				memcpy(data, el->data,el->size);
+				printf("%-*s|", col_len[i] + offset, (const char *)data);	
+		}
+		el = el->next;
+		i++;
+	}
+}
+
 /**
  * @brief  Print table
  * @author Dino Laktašić i Mislav Čakarić (replaced old print table function)
@@ -569,9 +601,7 @@ void AK_print_table(char *tblName) {
 	//4 is number of char | in printf
 	//set offset to change the box size
 	int length = 0;
-	for (i = 0; i < num_attr; i++) {
-		length += len[i]; 	
-	}; 
+	for (i = 0; i < num_attr; length += len[i++]);
 	length += num_attr * offset + num_attr + 1;
 	
 	time_t start = clock();
@@ -584,31 +614,10 @@ void AK_print_table(char *tblName) {
 	printf ("\n");
 	AK_print_row_spacer(len, length, offset);
 	
-	void  *data = (void *)calloc(MAX_VARCHAR_LENGHT, sizeof(void));
 	for (i = 0; i < num_rows; i++) {
 		printf("\n|");
-		for (j = 0; j < num_attr; j++ ) {
-			AK_list_elem el = AK_get_tuple(i, j, tblName);
-			memset(data, 0, MAX_VARCHAR_LENGHT);
-			switch (el->type) {
-				case FREE_CHAR:
-				//case FREE_INT:
-					printf("%-*s|", len[j] + offset, "null");
-					break;
-				case TYPE_INT:
-					memcpy(data, el->data, sizeof(int));
-					printf("%-*i|", len[j] + offset, *((int *)data));	
-					break;
-				case TYPE_FLOAT:
-					memcpy(data, el->data, sizeof(float));
-					printf("%-*.3f|", len[j] + offset, *((float *)data));	
-					break;
-				case TYPE_VARCHAR:
-				default:
-					memcpy(data, el->data,el->size);
-					printf("%-*s|", len[j] + offset, (const char *)data);	
-			}
-		}
+		AK_list *row = AK_get_row(i, tblName);
+		AK_print_row(len, length, offset, row);
 		printf("\n");
 		AK_print_row_spacer(len, length, offset);
     }
@@ -616,7 +625,6 @@ void AK_print_table(char *tblName) {
 	time_t end = clock();
     printf( "%d records found, duration: %d μs\n\n", num_rows, end - start);
 }
-
 
 /**
  * @author Matija Šestak.
@@ -771,7 +779,7 @@ void table_test()
 
   printf( "Table \"student\":AK_get_row: First row: \n");
   AK_list * row = AK_get_row( 0, "student" );
-  AK_print_row( row );
+  //AK_print_row( row );
   printf("\n");
   
   printf("Table \"student\": AK_get_column: Second column: \n");
