@@ -377,7 +377,15 @@ void AK_print_list( AK_list * L, int how)
   
 }
 
-AK_print_row(int col_len[], int length, int offset, AK_list *row) {
+/**
+ * @brief  Print table row
+ * @author Dino Laktašić
+ * @param int col_len[] - array of max lengths for each attribute
+ * @param int offset - offset for table cell
+ * @param AK_list *row - list with row elements
+ * @return void
+ */
+AK_print_row(int col_len[], int offset, AK_list *row) {
 	AK_list_elem el = (AK_list_elem)FirstL(row);
 	
 	int i = 0;	
@@ -468,7 +476,7 @@ void AK_print_table(char *tblName) {
 		//print table rows
 		for (i = 0; i < num_rows; i++) {
 			AK_list *row = AK_get_row(i, tblName);
-			AK_print_row(len, length, offset, row);
+			AK_print_row(len, offset, row);
 			AK_print_row_spacer(len, length, offset);
 			DeleteAllL(row);
 		}
