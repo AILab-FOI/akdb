@@ -56,9 +56,6 @@ int AK_get_id(){
     InsertNewElement(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);
     InsertNewElement(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
     InsertNewElement(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
-    InsertNewElement(TYPE_INT, &value, "AK_sequence", "max", row_root);
-    InsertNewElement(TYPE_INT, &value, "AK_sequence", "min", row_root);
-    InsertNewElement(TYPE_BOOL, &value, "AK_sequence", "cycle", row_root);
     value=1;
     InsertNewElement(TYPE_INT, &value, "AK_sequence", "increment", row_root);
     insert_row(row_root);
