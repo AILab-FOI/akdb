@@ -103,7 +103,7 @@ int main()
 
 			//reference_test();
 
-                        trigger_test();
+                        //trigger_test();
 
 			//aggregation_test();
 
