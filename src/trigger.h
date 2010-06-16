@@ -28,6 +28,7 @@
 #include "dbman.h"
 #include "fileio.h"
 #include "table.h"
+#include "auxiliary.h"
 
 
 #endif

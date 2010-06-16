@@ -101,9 +101,9 @@ int main()
 			//hash_test();
 			//bitmap_test();
 
-			reference_test();
+			//reference_test();
 
-                        //trigger_test();
+                        trigger_test();
 
 			//aggregation_test();
 

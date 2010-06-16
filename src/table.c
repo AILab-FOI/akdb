@@ -556,6 +556,29 @@ void create_test_table() {
     insert_row( row_root );
 }
 
+/**
+ * @brief  Gets obj_id of named table from AK_relation system table
+ * @author Dejan Frankovic
+ * @param char* - table name
+ * @return obj_id of the table or EXIT_ERROR if there is no table with that name
+ */
+int AK_get_table_obj_id(char *table) {
+    int i = 0, table_id=-1;
+    AK_list *row;
+
+    i = 0;
+    while ((row = AK_get_row(i,"AK_relation")) != NULL ) {
+        if (strcmp(row->next->next->data, table) == 0) {
+            memcpy(&table_id, row->next->data, sizeof(int));
+            break;
+        }
+        i++;
+    }
+    if (table_id == -1)
+        return EXIT_ERROR;
+    return table_id;
+}
+
 void table_test() {
   printf("table.c: Present!\n");
 

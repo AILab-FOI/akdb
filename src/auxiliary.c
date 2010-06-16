@@ -311,6 +311,7 @@ AK_list_elem GetNthL(int pos, AK_list *row) {
     return NULL;
 }
 
+
 /**
  * @author Dino Laktašić.
  * @brief  Get all permutations without repetition (currently not used, but it can be helpful)
