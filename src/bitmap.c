@@ -36,6 +36,10 @@ int IfExistOp(list_op *L, char *ele)
         return 0;
 }
 //potrebno pokrenuti ovu metodu jer kreira testnu tablicu (podatke)
+/**
+ * @author Saša Vukšić
+ * @brief creates test table and makes index on test table, print indexes
+ * */
 void bitmap_test()
 {
     printf( "\n********** Function for creating table **********\n");
@@ -230,7 +234,12 @@ void bitmap_test()
 }
 
 
-
+/**
+ * @author Saša Vukšić
+ * @brief reads teable on which we create index and call functions for creating index (the function should be revised so it can initialize SEGMENT_TYPE_INDEX insted of SEGMENT_TYPE_TABLE :) )
+ * @param char* tblName - name of table
+ * @param list_op *attributes - list of attributes on which we will create indexes
+ * */
 void AKcreateIndex(char *tblName, list_op *attributes)
 {
     int num_attr, num_rec;
@@ -266,7 +275,7 @@ void AKcreateIndex(char *tblName, list_op *attributes)
             //printf("atribut u listi: %s, atribut u zaglavlju: %s \n",some_element->attribute_name, (temp_head+i)->att_name);
             if(strcmp((temp_head+i)->att_name,some_element->attribute_name)==0)
             {
-                printf("Atribut %s postoji u tablici, nalazi se na poziciji: %d\n",(temp_head+i)->att_name,i);
+                //printf("Atribut %s postoji u tablici, nalazi se na poziciji: %d\n",(temp_head+i)->att_name,i);
                 InitializelistOp(headerAtributes);
                  br = 0;
                  while( addresses->address_from[ br ] != 0 ){
@@ -428,7 +437,11 @@ void AKcreateIndex(char *tblName, list_op *attributes)
         free( temp_head );
 
 }
-
+/**
+ * @author Saša Vukšić
+ * @brief test function for printing header of table
+ * @param char* tblName - name of table who's header we are printing
+ **/
 void printHeaderTest(char* tblName)
 {
     AK_header *temp_head = AK_get_header( tblName );
@@ -445,13 +458,14 @@ void printHeaderTest(char* tblName)
 
 /*
 /*
- * Kreira index
- * @tblName - tablica iz koje vadimo podatke
- * @tblNameIndex - tablica koja je inicijalizirana za index
- * @attributeName - atribut nad kojim radimo index
- * @positionTbl - pozicija atributa u zaglavlju tablice
- * @numAtributes - broj atributa u tablici
- * @headerIndex - header inicijalizirane inde tablice
+ * @author Saša Vukšić
+ * @brief loads index table with value of particulary atribute
+ * @param tblName - source table
+ * @param tblNameIndex - new name of index table
+ * @param attributeName - attribute on which we make index
+ * @param positionTbl - position of attribute in header of table
+ * @param numAtributes - number of attributes in table
+ * @param headerIndex - header of index table
 */
 void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex)
 {
@@ -513,7 +527,7 @@ void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int pos
                             memcpy( temp_char, &(temp->data[ temp->tuple_dict[ k ].address]),
                                     temp->tuple_dict[k].size);
                             temp_char[ temp->tuple_dict[k].size ] = '\0';
-                            printf( "%s: %i \n", temp_char,temp->tuple_dict[ k ].address );
+                            //printf( "%s: %i \n", temp_char,temp->tuple_dict[ k ].address );
                             //printf("Pozicija u headeru: %i \n",posOfAttr(tblNameIndex,temp_char));
                             //prolazi kroz header i dodaje nule na sve pozicije osim na onu na kojoj se nalazi unutar headera ovaj atribut
                             row_root =  (element) malloc( sizeof(list) );
@@ -549,7 +563,13 @@ void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int pos
    // free(t_header);
 }
 
-//sluzi za dohvacanje adresa odredjenog atributa u indexu
+/**
+ * @author Saša Vukšić
+ * @brief gets adresses of the particuliary attribute from bitmap index
+ * @param char *indexName - name of index
+ * @param char *attribute - name of attribute
+ * @return list of adresses
+**/
 list_ad* getAttribute(char *indexName, char *attribute)
 {
     int num_attr, num_rec;
@@ -629,7 +649,10 @@ list_ad* getAttribute(char *indexName, char *attribute)
 
 
 
-
+/**
+ * @author Saša Vukšić
+ * @brief test function for creating test list
+ **/
 void createListAddressTest()
 {
       list_ad *add_root =  (list_ad *) malloc( sizeof(list_ad) );
@@ -653,7 +676,11 @@ void createListAddressTest()
 
 }
 
-//sluzi za testiranje dohvacanja adresa atributa pomocu indexa
+/**
+ * @author Saša Vukšić
+ * @brief this function is printing list of adresses
+ * @param list_ad *list - list of adresses
+ **/
 void printAttTest(list_ad *list)
 {
 
@@ -666,7 +693,14 @@ void printAttTest(list_ad *list)
         }
 }
 
-//ovo je glavna funkcija za dohvacanje, nju treba pokrenuti pri selekciji
+
+/**
+ * @author Saša Vukšić
+ * @brief function for getting values from the bitmap index, it should be started when we are making selection on the table with bitmap index
+ * @param char *tableName - name of table
+ * @param char *attributeValue - value of attribute
+ * @return list of adresses
+**/
 list_ad* AKgetAttribute(char *tableName, char *attributeName, char *attributeValue)
 {
     list_ad *list =  (list_ad *) malloc( sizeof(list_ad) );
@@ -695,7 +729,16 @@ list_ad* AKgetAttribute(char *tableName, char *attributeName, char *attributeVal
 
     return list;
 }
-
+/**
+ * @author Saša Vukšić
+ * @brief function for updating the index, only on values that alredy exist
+ * @param int addBlock - adress of block
+ * @param int addTD - adress of tuble dict
+ * @param char* tavleName - name of table
+ * @param char* *attributeName -name of attribute
+ * @param char *attributeValue - value of atribute
+ * @param char *newAttributeValue - new value of updated attribute
+**/
 void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue)
 {
     char inde[50];
@@ -780,7 +823,10 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
         }
     }
 }
-
+/**
+ * @author Saša Vukšić
+ * @brief when index is updated this function is writing new value in block
+**/
 int write_block( AK_block * block )
 {
 	if( ( db = fopen( DB_FILE, "r+" ) ) == NULL ) {
@@ -803,18 +849,4 @@ int write_block( AK_block * block )
 	return ( EXIT_SUCCESS );
 }
 
-/*
-za testiranje potrebno u main.c :
- * createTableTest();
- * printAttTest(AKgetAttribute("student","firstname","Oleg"));
- *
- * moguce koristiti i neke od slijedecih funkcija:
- *
- * printHeaderTest("studentfirstname_bmapIndex");
- *      printHeaderTest("studentyear_bmapIndex");
- *      AK_print_table( "student" );
- *      AK_print_table( "studentfirstname_bmapIndex" );
- *      AK_print_table( "studentyear_bmapIndex" );
- *      createListAddressTest();
- *
- * */
+

@@ -18,7 +18,14 @@
  */
 
 #include "nnull.h"
-
+//
+/**
+ * @author Saša Vukšić
+ * @brief set null constraint on attribute
+ * @param char* tableName - name of table
+ * @param char* constraintName - name of constraint
+ * @param char* attName - name of attribute
+**/
 void AK_set_constraint_not_null(char* tableName, char* constraintName, char* attName)
 {
     char systemTableName[50];
@@ -79,6 +86,15 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
     free(tempBlock);
 }
 
+//
+/**
+ * @author Saša Vukšić
+ * @brief check if value is not null 
+ * @param char* tableName - name of table
+ * @param char* newValue - new value
+ * @param char* attNamePar - name of attribute
+ * @return EXIT_ERROR or EXIT_SUCCESS
+**/
 
 int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNamePar)
 {

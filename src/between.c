@@ -19,6 +19,15 @@
 
 #include "between.h"
 //string ograničenja moraju biti malim slovima
+/**
+ * @author Saša Vukšić
+ * @brief Set between constraints on particulary attribute, string constraint should be writen in lowercase
+ * @param char* tableName - table name
+ * @param char* constraintName - name of constraint
+ * @param char* attName - name of attribute
+ * @param char* startValue - initial constraint
+ * @param char* endValue - final constraint
+**/
 void AK_set_constraint_between(char* tableName, char* constraintName, char* attName, char* startValue, char* endValue)
 {    
     char systemTableName[50];
@@ -83,6 +92,14 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
 
 
 //ako je flag 0 onda nije dobro, ako je 1 onda je dobro
+/**
+ * @author Saša Vukšić
+ * @brief check if is this value between constraints
+ * @param char* tableName - name of table
+ * @param char* newValue - new value
+ * @param char* attNamePar - name of attribute
+ * @return EXIT_ERROR or EXIT_SUCCESS
+**/
 int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar)
 {
     char systemTableName[50];
