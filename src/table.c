@@ -195,7 +195,7 @@ AK_list * AK_get_column( int num, char *tblName ){
 }
 
 /**
- * @author Markus Schatten, Matija Šestak, updated by Dino Laktašić.
+ * @author Markus Schatten, Matija Šestak.
  * @brief  Get all values in some row and put on the list
  * @param int - zero-based row index
  * @param char* - table name
@@ -210,39 +210,31 @@ AK_list * AK_get_row(int num, char * tblName) {
 	
 	int num_rows = AK_get_num_records( tblName );
 	int num_attr = AK_num_attr( tblName );
-	int row_id = num * num_attr; 
-	//row_id - id of tuple_dict in the block from which to start read row elements (direct access to tuple_dict)
-	//(faster then iteration through all tuple_dicts in block)
-	
-	int i, j, k, l, overflow; //, counter;
-	overflow = i = 0;
+	int i, j, k, l, counter;
+	i = 0;
 	
 	char data[MAX_VARCHAR_LENGHT];
-	//counter = -1;
+	counter = -1;
 	while (addresses->address_from[i] != 0){
 		for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
 			AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
 			if (temp->block->last_tuple_dict_id == 0) 
 				break;
-			//for (k = 0; k < DATA_BLOCK_SIZE; k+=num_attr) {
-				row_id -= overflow;
-				if (row_id < DATA_BLOCK_SIZE) {
-				//if (temp->block->tuple_dict[k].size > 0)
-				//	counter++;
-				//if (counter == num) {
+			for (k = 0; k < DATA_BLOCK_SIZE; k+=num_attr) {
+				if (temp->block->tuple_dict[k].size > 0)
+					counter++;
+				if (counter == num) {
 					for (l = 0; l < num_attr; l++) {
-						int type = temp->block->tuple_dict[row_id + l].type;
-						int size = temp->block->tuple_dict[row_id + l].size;
-						int address = temp->block->tuple_dict[row_id + l].address;
+						int type = temp->block->tuple_dict[k + l].type;
+						int size = temp->block->tuple_dict[k + l].size;
+						int address = temp->block->tuple_dict[k + l].address;
 						memcpy(data, &(temp->block->data[address]), size);
 						data[size] = '\0';
 						InsertAtEndL(type, &data, size, row_root);
 					}
 					return row_root;
-				} else {
-					overflow += temp->block->last_tuple_dict_id;
 				}
-			//}
+			}
 		}
 		i++;
 	}
