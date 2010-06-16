@@ -242,7 +242,7 @@ int AK_reference_update(list *lista, int delete) {
                 tempcell = GetNthL(AK_get_attr_index(reference.parent, reference.parent_attributes[j]), parent_row); // from the row of parent table, take the value of attribute with name from parent_attribute
 
                 memcpy(tempData, tempcell->data, tempcell->size);
-                tempData[tempcell->size] == '\0';
+                tempData[tempcell->size] = '\0';
 
                 InsertNewElementForUpdate(tempcell->type, tempData , reference.table, reference.attributes[j], row_root,1);
 

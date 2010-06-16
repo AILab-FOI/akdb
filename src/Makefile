@@ -10,16 +10,20 @@ FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bi
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o query_optimization.o
 CONSTRAINTTARGETS = reference.o between.o nnull.o id.o
+OTHERTARGETS = trigger.c
 
 OUTDIR = ../bin
 
 all: kalashnikov-db doc
 
-kalashnikov-db: auxiliary.o $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
-	$(CC) main.o $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
+kalashnikov-db: auxiliary.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
+	$(CC) main.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
 
 main.o: main.c
 	$(CC) $(CFLAGS) main.c
+
+trigger.o: trigger.c
+	$(CC) $(CFLAGS) trigger.c
 
 reference.o: reference.c
 	$(CC) $(CFLAGS) reference.c

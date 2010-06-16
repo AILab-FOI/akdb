@@ -586,117 +586,118 @@ int AK_register_system_tables( int relation, int attribute, int index, int view,
     int i = 1, j = 0;
     int end;
 
+    i = AK_get_id();
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_relation", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &relation, j); j++;
     end = relation+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_attribute", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &attribute, j); j++;
     end = attribute+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_index", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &index, j); j++;
     end = index+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_view", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &view, j); j++;
     end = view+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_sequence", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &sequence, j); j++;
     end = sequence+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_function", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &function, j); j++;
     end = function+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_function_arguments", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &function_arguments, j); j++;
     end = function_arguments+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_trigger", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &trigger, j); j++;
     end = trigger+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_db", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &db, j); j++;
     end = db+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_db_obj", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &db_obj, j); j++;
     end = db_obj+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_user", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &user, j); j++;
     end = user+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_group", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &group, j); j++;
     end = group+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_right", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &right, j); j++;
     end = right+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 	
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_between", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &constraint, j); j++;
     end = constraint+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 	
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_not_null", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &constraintNull, j); j++;
     end = constraintNull+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    i = AK_get_id();
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j ); j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_reference", j); j++;
     AK_insert_entry(relationTable, TYPE_INT, &reference, j); j++;
     end = reference+INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j); j++;
-    i++;
+    //i = AK_get_id();
 
     relationTable->last_tuple_dict_id = j;    
 
@@ -797,12 +798,13 @@ int AK_init_system_catalog() {
 		{0, '\0', 0, '\0', '\0'}
 	};
 
-	AK_header hTrigger[6] = {
+	AK_header hTrigger[7] = {
 		{TYPE_INT, "obj_id", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "name", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "event", 0, '\0', '\0',},
 		{TYPE_VARCHAR, "condition", 0, '\0', '\0',},
 		{TYPE_INT, "action", 0, '\0', '\0',},
+                {TYPE_INT, "on", 0, '\0', '\0',},
 		{0, '\0', 0, '\0', '\0'}
 	};
 
@@ -905,7 +907,7 @@ int AK_init_system_catalog() {
 		memset(hFunction_arguments[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
 	}
 
-	for( i = 0; i < 5; i++) {
+	for( i = 0; i < 6; i++) {
 		AK_memset_int(hTrigger[i].integrity, FREE_INT, MAX_CONSTRAINTS);
 		memset(hTrigger[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
 		memset(hTrigger[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
