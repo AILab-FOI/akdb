@@ -20,29 +20,6 @@
 #include "query_optimization.h"
 
 /**
- * @brief Print row spacer
- * @author Dino Laktašić.
- * @param int col_len[] - max lengths for each attribute cell 
- * @param int length -  total table width 
- * @result printed row spacer
- */
-void AK_print_row_spacer(int col_len[], int length) {
-	int i, j, col, temp;
-	
-	j = col = temp = 0;
-	
-	for(i = 0; i < length; i++) {
-		if (!i || i == temp + j) {
-			j += MAX_TABLE_BOX_OFFSET;
-			temp += col_len[col++] + 1; 
-			printf("+");
-		} else {
-			printf("-");
-		}
-	}
-}
-
-/**
  * @brief Get number of chars for given number
  * @author Dino Laktašić.
  * @param int number - number to evaluate 
@@ -89,20 +66,20 @@ void AK_print_optimized_query(AK_list *list_query) {
 		list_elem = list_elem->next;
 	}
 	
-	//4 is number of char | in printf
+	//7 is number of char | + space in printf
 	//set offset to change the box size
-	length = len[0] + len[1] + len[2] + 3 * MAX_TABLE_BOX_OFFSET + 4;
+	length = len[0] + len[1] + len[2] + 3 * TBL_BOX_OFFSET + 7;
 
 	printf("\n%-*sREL_EQ OPTIMIZED QUERY TABLE", (length / 2) - (strlen("REL_EQ OPTIMIZED QUERY TABLE") / 2), " ");
-	printf("\n|%-*s|%-*s|%-*s|\n", len[0] + MAX_TABLE_BOX_OFFSET, "Type", 
-			len[1] + MAX_TABLE_BOX_OFFSET, "Size", len[2] + MAX_TABLE_BOX_OFFSET, "Data");		
+	printf("\n| %-*s| %-*s| %-*s|\n", len[0] + TBL_BOX_OFFSET, "Type", 
+			len[1] + TBL_BOX_OFFSET, "Size", len[2] + TBL_BOX_OFFSET, "Data");		
 	AK_print_row_spacer(len, length);
 
 	list_elem = (AK_list_elem)FirstL(list_query);
 		
 	while (list_elem != NULL) {
-		printf("\n|%-*i|%-*i|%-*s|\n", len[0] + MAX_TABLE_BOX_OFFSET, list_elem->type, 
-				len[1] + MAX_TABLE_BOX_OFFSET,  list_elem->size, len[2] + MAX_TABLE_BOX_OFFSET, list_elem->data);
+		printf("\n| %-*i| %-*i| %-*s|\n", len[0] + TBL_BOX_OFFSET, list_elem->type, 
+				len[1] + TBL_BOX_OFFSET,  list_elem->size, len[2] + TBL_BOX_OFFSET, list_elem->data);
 		AK_print_row_spacer(len, length);
 		list_elem = list_elem->next;
 	}

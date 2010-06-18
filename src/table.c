@@ -324,6 +324,29 @@ char * AK_tuple_to_string( AK_list *tuple ){
 }
 
 /**
+ * @brief Print row spacer
+ * @author Dino Laktašić.
+ * @param int col_len[] - max lengths for each attribute cell 
+ * @param int length -  total table width 
+ * @result printed row spacer
+ */
+void AK_print_row_spacer(int col_len[], int length) {
+	int i, j, col, temp;
+	
+	j = col = temp = 0;
+	
+	for(i = 0; i < length; i++) {
+		if (!i || i == temp + j) {
+			j += TBL_BOX_OFFSET + 1;
+			temp += col_len[col++] + 1; 
+			printf("+");
+		} else {
+			printf("-");
+		}
+	}
+}
+
+/**
  * @brief  Print table row
  * @author Dino Laktašić
  * @param int col_len[] - array of max lengths for each attribute
@@ -342,20 +365,20 @@ AK_print_row(int col_len[], AK_list *row) {
 		switch (el->type) {
 			case FREE_CHAR:
 			//case FREE_INT:
-				printf("%-*s|", col_len[i] + MAX_TABLE_BOX_OFFSET, "null");
+				printf(" %-*s|", col_len[i] + TBL_BOX_OFFSET, "null");
 				break;
 			case TYPE_INT:
 				memcpy(data, el->data, sizeof(int));
-				printf("%-*i|", col_len[i] + MAX_TABLE_BOX_OFFSET, *((int *)data));	
+				printf("%*i |", col_len[i] + TBL_BOX_OFFSET, *((int *)data));	
 				break;
 			case TYPE_FLOAT:
 				memcpy(data, el->data, sizeof(float));
-				printf("%-*.3f|", col_len[i] + MAX_TABLE_BOX_OFFSET, *((float *)data));	
+				printf("%*.3f |", col_len[i] + TBL_BOX_OFFSET, *((float *)data));	
 				break;
 			case TYPE_VARCHAR:
 			default:
 				memcpy(data, el->data,el->size);
-				printf("%-*s|", col_len[i] + MAX_TABLE_BOX_OFFSET, (const char *)data);	
+				printf(" %-*s|", col_len[i] + TBL_BOX_OFFSET, (const char *)data);	
 		}
 		el = el->next;
 		i++;
@@ -373,7 +396,7 @@ AK_print_row(int col_len[], AK_list *row) {
 void AK_print_table(char *tblName) {
 	AK_header *head = AK_get_header(tblName);
     
-	int i, j;
+	int i, j, k;
 	int num_attr = AK_num_attr(tblName);
 	int num_rows = AK_get_num_records(tblName);
 	int len[num_attr];  //max length for each attribute in row
@@ -410,11 +433,11 @@ void AK_print_table(char *tblName) {
 			}
 		}
     }
-	//num_attr is number of char | in printf
+	//num_attr is number of char | + space in printf
 	//set offset to change the box size
 	length = 0;
 	for (i = 0; i < num_attr; length += len[i++]);
-	length += num_attr * MAX_TABLE_BOX_OFFSET + num_attr + 1;
+	length += num_attr * TBL_BOX_OFFSET + 2 * num_attr + 1;
 	
 	//start measuring time
 	time_t start = clock();
@@ -424,19 +447,31 @@ void AK_print_table(char *tblName) {
 		printf("Table is empty.\n");
 	} else {
 		//print table header
-		AK_print_row_spacer(len, length, MAX_TABLE_BOX_OFFSET);
+		AK_print_row_spacer(len, length);
 		printf("\n|");
+
 		for (i = 0; i < num_attr; i++) {
-			printf("%-*s|", len[i] + MAX_TABLE_BOX_OFFSET, (head + i)->att_name);	
+			//print attributes center aligned inside box
+			k = (len[i] - strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
+			if (k % 2 == 0) {
+				k /= 2;
+				printf("%-*s%-*s|", k, " ", k + strlen((head + i)->att_name), (head + i)->att_name);	
+			} else {
+				k /= 2;
+				printf("%-*s%-*s|", k, " ", k + strlen((head + i)->att_name) + 1, (head + i)->att_name);					
+			}
+			
+			//print attributes left aligned inside box
+			//printf(" %-*s|", len[i] + MAX_TABLE_BOX_OFFSET, (head + i)->att_name);	
 		}
 		printf ("\n");
-		AK_print_row_spacer(len, length, MAX_TABLE_BOX_OFFSET);
+		AK_print_row_spacer(len, length);
 		
 		//print table rows
 		for (i = 0; i < num_rows; i++) {
 			AK_list *row = AK_get_row(i, tblName);
 			AK_print_row(len, row);
-			AK_print_row_spacer(len, length, MAX_TABLE_BOX_OFFSET);
+			AK_print_row_spacer(len, length);
 			DeleteAllL(row);
 		}
 		printf("\n");

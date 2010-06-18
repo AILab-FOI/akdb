@@ -44,7 +44,15 @@ typedef struct list_elem AK_list;
 typedef struct list_elem* AK_list_elem;
 
 
-#define MAX_TABLE_BOX_OFFSET 1
+#define TBL_BOX_OFFSET 1
+//#define TBL_COL_DELIMITER '|'
+//#define TBL_ROW_DELIMITER '-'
+
+/*
+enum tbl_valalign {
+	ALIGN_LEFT  0,
+	ALIGN_RIGHT 1; 
+};*/
 
 #endif
 
