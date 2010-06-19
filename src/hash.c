@@ -890,7 +890,7 @@ int AK_delete_hash_index(char *indexName) {
  @author Mislav Čakarić
  */
 void hash_test() {
-    char *tblName = "Student";
+    char *tblName = "student_hash_test";
     char *indexName = "student_hash_index";
     create_test_table_for_hash(tblName);
     //AK_print_table("AK_relation");
