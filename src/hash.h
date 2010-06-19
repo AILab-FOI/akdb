@@ -20,14 +20,8 @@
 #ifndef HASH
 #define HASH
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<stdint.h>
 #include "dbman.h"
 #include "memoman.h"
-#include "files.h"
-#include "fileio.h"
 #include "auxiliary.h"
 #include "table.h"
 #include "index.h"

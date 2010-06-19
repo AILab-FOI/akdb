@@ -897,8 +897,8 @@ void hash_test() {
 
     AK_list *att_list = (AK_list *) malloc(sizeof (AK_list));
     InitL(att_list);
-    InsertAtEndL(TYPE_ATTRIBS, "mbr\0", sizeof("mbr"), att_list);
-    InsertAtEndL(TYPE_ATTRIBS, "firstname\0", sizeof("firstname"), att_list);
+    InsertAtEndL(TYPE_ATTRIBS, "mbr\0", 4, att_list);
+    InsertAtEndL(TYPE_ATTRIBS, "firstname\0", 10, att_list);
 
     AK_create_hash_index(tblName, att_list, indexName);
 
