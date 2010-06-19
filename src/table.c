@@ -375,6 +375,14 @@ AK_print_row(int col_len[], AK_list *row) {
 				memcpy(data, el->data, sizeof(float));
 				printf("%*.3f |", col_len[i] + TBL_BOX_OFFSET, *((float *)data));	
 				break;
+			//Currently this header types are handled like TYPE_VARCHAR (print as string left aligned)
+			//case TYPE_INTERNAL:
+			//case TYPE_NUMBER:
+			//case TYPE_DATE:
+			//case TYPE_DATETIME:
+			//case TYPE_TIME:
+			//case TYPE_BLOB:
+			//case TYPE_BOOL:
 			case TYPE_VARCHAR:
 			default:
 				memcpy(data, el->data,el->size);
@@ -467,35 +475,35 @@ void AK_print_table(char *tblName) {
 		printf ("\n");
 		AK_print_row_spacer(len, length);
 
-                table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
-                AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
-                InitL(row_root);
+		table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+		AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
+		InitL(row_root);
+		
+		i=0;
+		while (addresses->address_from[i] != 0) {
+			for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
+				AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
+				if (temp->block->last_tuple_dict_id == 0)
+					break;
+				for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+					if( temp->block->tuple_dict[k].size > 0 ){
+						for (l = 0; l < num_attr; l++) {
+							int type = temp->block->tuple_dict[k + l].type;
+							int size = temp->block->tuple_dict[k + l].size;
+							int address = temp->block->tuple_dict[k + l].address;
+							InsertAtEndL(type, &(temp->block->data[address]), size, row_root);
+						}
+						AK_print_row(len, row_root);
+						AK_print_row_spacer(len, length);
+						DeleteAllL(row_root);
+					}
+				}
+			}
+			i++;
+		}
+		printf("\n");
                 
-                i=0;
-                while (addresses->address_from[i] != 0) {
-                    for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
-                        AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
-                        if (temp->block->last_tuple_dict_id == 0)
-                            break;
-                        for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
-			    if( temp->block->tuple_dict[k].size > 0 ){
-                                for (l = 0; l < num_attr; l++) {
-                                    int type = temp->block->tuple_dict[k + l].type;
-                                    int size = temp->block->tuple_dict[k + l].size;
-                                    int address = temp->block->tuple_dict[k + l].address;
-                                    InsertAtEndL(type, &(temp->block->data[address]), size, row_root);
-                                }
-                                AK_print_row(len, row_root);
-                                AK_print_row_spacer(len, length);
-                                DeleteAllL(row_root);
-                            }
-                        }
-                    }
-                    i++;
-                }
-                printf("\n");
-                
-                /*
+		/*
 		//print table rows
 		for (i = 0; i < num_rows; i++) {
 			AK_list *row = AK_get_row(i, tblName);
@@ -507,7 +515,7 @@ void AK_print_table(char *tblName) {
 	}
 	//print table rows number and time spent to generate table
 	time_t end = clock();
-    printf( "%d records found, duration: %d μs\n\n", num_rows, end - start);
+    printf( "%i records found, duration: %d μs\n\n", num_rows, end - start);
 }
 
 /**

@@ -48,7 +48,8 @@ void AK_print_optimized_query(AK_list *list_query) {
 	int length;
 	int len[] = {strlen("Type"), strlen("Size"), strlen("Data")};   
 	list_elem = (AK_list_elem)FirstL(list_query);
-		
+	
+	printf("==>");
 	while (list_elem != NULL) {
 		length = AK_chars_num_from_number(list_elem->type, 10);
 		if (len[0] < length) {
@@ -62,6 +63,12 @@ void AK_print_optimized_query(AK_list *list_query) {
 
 		if (len[2] < strlen(list_elem->data)) {
 			len[2] = strlen(list_elem->data);			
+		}
+		
+		if (list_elem->type == TYPE_ATTRIBS || list_elem->type == TYPE_CONDITION) {
+			printf("(%s)", list_elem->data);
+		} else {
+			printf(" %s", list_elem->data);
 		}
 		list_elem = list_elem->next;
 	}
