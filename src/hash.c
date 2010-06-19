@@ -776,9 +776,8 @@ void AK_delete_in_hash_index(char *indexName, AK_list *values) {
  @return success or error
  @author Mislav Čakarić
  */
-int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
+int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
     int i, j, k, l, n, exist, hashValue;
-    element_op attribute;
 
     table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
     int num_attr = AK_num_attr(tblName);
@@ -787,12 +786,12 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
     AK_header i_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
 
-    attribute = GetFirstelementOp(attributes);
+    AK_list_elem  attribute = (AK_list_elem) FirstL(attributes);
     n = 0;
     while (attribute != 0) {
         exist = 0;
         for (i = 0; i < num_attr; i++) {
-            if (strcmp((table_header + i)->att_name, attribute->attribute_name) == 0) {
+            if (strcmp((table_header + i)->att_name, attribute->data) == 0) {
                 if (DEBUG)
                     printf("Attribute %s exist in table, found on position: %d\n", (table_header + i)->att_name, i);
                 exist = 1;
@@ -806,10 +805,10 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
             }
         }
         if (!exist) {
-            printf("Atribut %s ne postoji u tablici", attribute->attribute_name);
+            printf("Atribut %s ne postoji u tablici", attribute->data);
             return EXIT_ERROR;
         }
-        attribute = GetNextelementOp(attribute);
+        attribute = attribute->next;
     }
     memset(i_header + n, 0, MAX_ATTRIBUTES - n);
 
@@ -854,17 +853,17 @@ int AK_create_hash_index(char *tblName, list_op *attributes, char *indexName) {
                 }
                 /* *************** */
                 hashValue = 0;
-                attribute = GetFirstelementOp(attributes);
+                attribute = (AK_list_elem) FirstL(attributes);
                 while (attribute) {
 
                     for (l = 0; l < num_attr; l++) {
-                        if (strcmp((table_header + l)->att_name, attribute->attribute_name) == 0)
+                        if (strcmp((table_header + l)->att_name, attribute->data) == 0)
                             break;
                     }
                     temp_elem = GetNthL(l, row);
                     hashValue += AK_elem_hash_value(temp_elem);
 
-                    attribute = GetNextelementOp(attribute);
+                    attribute = attribute->next;
                 }
                 if (DEBUG)
                     printf("Insert in hash index %d. record\n", n);
@@ -896,10 +895,10 @@ void hash_test() {
     create_test_table_for_hash(tblName);
     //AK_print_table("AK_relation");
 
-    list_op *att_list = (list_op *) malloc(sizeof (list_op));
-    InitializelistOp(att_list);
-    InsertNewelementOp(tblName, "mbr", att_list);
-    InsertNewelementOp(tblName, "firstname", att_list);
+    AK_list *att_list = (AK_list *) malloc(sizeof (AK_list));
+    InitL(att_list);
+    InsertAtEndL(TYPE_ATTRIBS, "mbr\0", sizeof("mbr"), att_list);
+    InsertAtEndL(TYPE_ATTRIBS, "firstname\0", sizeof("firstname"), att_list);
 
     AK_create_hash_index(tblName, att_list, indexName);
 
