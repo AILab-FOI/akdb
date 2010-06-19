@@ -427,22 +427,22 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
       i++;
     }
 
-    list_op *projection_att =  (list_op *) malloc( sizeof(list_op) );
-    InitializelistOp(projection_att);
+    AK_list *projection_att = (AK_list *)malloc(sizeof(AK_list));
+    InitL(projection_att);
 
     for (i=0;i<header_size;i++) {
         if (agg_head[i].att_name[0] != '_') {
-            InsertNewelementOp(new_table,agg_head[i].att_name,projection_att);
+            InsertAtEndL(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
         }
     }
 
-    AK_projekcija(projection_att, agg_table);
+    AK_projection(agg_table, new_table, projection_att);
     addresses = (table_addresses* ) get_table_addresses( new_table );
     while( addresses->address_from[ i ] != 0 ){
         AK_delete_extent(addresses->address_from[i],addresses->address_to[i]);
     }
 
-    DeleteAllelementsOp(projection_att);
+    DeleteAllL(projection_att);
     free( projection_att );
     
     return EXIT_SUCCESS;

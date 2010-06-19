@@ -103,7 +103,7 @@ void crate_join_block_header(int one,int two,char * new_table,list_op * att_root
 		}
 	}
 	
-	temp_crate_table(new_table, header, SEGMENT_TYPE_TABLE);
+	AK_temp_create_table(new_table, header, SEGMENT_TYPE_TABLE);
 	free( temp_block );	
 }
 

@@ -176,290 +176,234 @@
 
 ///END SPECIAL FUNCTIONS 
 
-/** 	@author Matija Novak
-	temporaly function to create table, and insert entry to the system_relation catalog
-	@param table - table name
-	@param header - AK_header of the new table
-	@param type_segment - type of the new segment
-	@result void
+/** 
+ * @brief  Temporaly function to create table, and insert entry to the system_relation catalog
+ * @author Matija Novak, updated by Dino Laktašić
+ * @param table - table name
+ * @param header - AK_header of the new table
+ * @param type_segment - type of the new segment
+ * @return void
 */
-void temp_crate_table(char * table, AK_header * header, int type_segment)
-{
-	AK_block * sys_block = ( AK_block * ) malloc ( sizeof( AK_block ) );
-	sys_block= (AK_block *) AK_read_block(1);
+void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
+	AK_block *sys_block = (AK_block *)malloc(sizeof(AK_block));
+	sys_block = (AK_block *)AK_read_block(1);
+
+	int startAddress = AK_initialize_new_segment(table, type_segment, header);
+	/*
+	if (startAddress == EXIT_ERROR) {
+		return EXIT_ERROR; 
+	}
+	*/
 	
-	int first_block;
-	//create new segment
-	first_block= (int) AK_new_segment(table, type_segment, header);
-	if(DEBUG)	
-		printf("temp_create_table: First block adress of new segmet: %d",first_block);	
+	if (DEBUG)	
+		printf("temp_create_table: First block address of the new segmet: %d", startAddress);	
 	
-	int broj=8;
+	//AK_create_header(table, type_segment, header->type, header->integrity, header->constr_name, header->constr_code);
+	int broj = 8;
 	//insert object_id
 	AK_insert_entry(sys_block, TYPE_INT, &broj, 8 );
 	//insert table name	
 	AK_insert_entry(sys_block, TYPE_VARCHAR, table, 9 );
-	//insett start address	
-	broj=first_block;	
+	//insert start address	
+	broj = startAddress;	
 	AK_insert_entry(sys_block, TYPE_INT, &broj, 10 );	
 	//insert end address
-	broj=first_block+19;
+	broj = startAddress + 19;
 	AK_insert_entry(sys_block, TYPE_INT, &broj, 11 );
 		
-	AK_write_block( sys_block );
-	free(sys_block);	
+	AK_write_block(sys_block);
+	free(sys_block);
 }
 
-
-/** 	@author Matija Novak
-	function create a new heder for the projection table
-	@param old_block_add - address of the block from which we copy headers we need
-	@param new_table - name of the new table
-	@param att_root - list of the attributes which should the projeciton table contain
-	@result void
+/** 
+ * @brief  Function to create a new header for the projection table
+ * @author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list 
+ * @param old_block_add - address of the block from which we copy headers we need
+ * @param dstTable - name of the new table
+ * @param att - list of the attributes which should the projeciton table contain
+ * @return void
 */
-void crate_block_header(int old_block_add,char * new_table,list_op * att_root)
-{
-	AK_block * temp_block = ( AK_block * ) malloc ( sizeof( AK_block ) );
+void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
+	AK_block *temp_block = (AK_block *)malloc(sizeof(AK_block));
+	temp_block = (AK_block *) AK_read_block(old_block);
 	
+	AK_list_elem list_elem;
 	AK_header header[MAX_ATTRIBUTES];
-	element_op some_element;
-	temp_block= (AK_block *) AK_read_block(old_block_add);
-	int next_header=1; //boolean var to new if there is more headers
-	int search_elem; //boolean var to new if we have more elements in list
-	int head=0; //counter of the headers
-	int new_head=0; //counter of the new headers created for the projection table
+	
+	int head = 0; 		//counter of the headers
+	int new_head = 0; 	//counter of the new headers created for the projection table
 
-	while(next_header)
-	{//goes through headers
-		if(strcmp(temp_block->header[head].att_name,"")!=0)
-		{//if we read all headers
-
-			search_elem=1;
-			some_element=GetFirstelementOp(att_root);
-
-			while(search_elem)
-			{//goes through list elements
-				if(strcmp(some_element->attribute_name,temp_block->header[head].att_name)==0)
-				{//if we found the header we need to copy 
-					
-					//make a copy of the header we need for projection
-					memcpy( & header[new_head], & temp_block->header[head], 
-						sizeof( temp_block->header[head] ) );
-
-					if(DEBUG)
-						printf("Copy attribute headrer: %s",header[new_head].att_name);
-					new_head++;	
-				}
-				some_element= (element_op) GetNextelementOp(some_element);
-				if(some_element==0)
-				{//if there are more elements in list
-					search_elem=0;
-				}
+	while (strcmp(temp_block->header[head].att_name, "") != 0) {
+		list_elem = (AK_list_elem)FirstL(att);
+		
+		while (list_elem != NULL) {
+			//if header is found than copy header 
+			if (strcmp(list_elem->data, temp_block->header[head].att_name) == 0) {
+				//make a copy of the header needed for projection
+				memcpy(&header[new_head], &temp_block->header[head], sizeof(temp_block->header[head]));
+				
+				if (DEBUG) 
+					printf("Copy attribute header: %s\n", header[new_head].att_name);
+				
+				new_head++;	
 			}
-			//go to next header
-			head++;	
+			list_elem = list_elem->next;
 		}
-		else
-		{
-			//there are no more headers
-			next_header=0;
-		}
-	}	
-
-	temp_crate_table(new_table, header, SEGMENT_TYPE_TABLE);
-	free( temp_block );
+		head++;	
+	}
+	
+	memset(header + new_head, '\0', MAX_ATTRIBUTES - new_head);
+	//AK_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
+	
+	free(temp_block);
+	//return AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
+	AK_temp_create_table(dstTable, header, SEGMENT_TYPE_TABLE);
 }
 
-/** 	@author Matija Novak
-	function copies the data from old table block to the new projection table
+/** @brief  Function for copying the data from old table block to the new projection table
+	@author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list
 	@param old_block - block from which we copy data
-	@param new_table - name of the new table
-	@param att_root - list of the attributes which should the projeciton table contain
+	@param dstTable - name of the new table
+	@param att - list of the attributes which should the projeciton table contain
 	@result void
 */
-void copy_block_projekcija(AK_block * old_block, list_op * att_root,char * new_table)
-{
-	if(DEBUG)	
-		printf("\n COPYING PROJECTION DATA FORM BLOCK...");
+void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable) {
+	//if(DEBUG) 
+	//	printf("\nCOPYING PROJECTION DATA FROM BLOCK...\n");
 
-	list *row_root =  (list *) malloc( sizeof(list) );
+	element row_root = (element)malloc(sizeof(list));
 	InitializeList(row_root);
 
-	element_op some_element;
-	int next;//boolea var to indicate there are no more headers
-	int head;//counter of the head we are on
-	int search_elem;  //booolean var to indicate end of the list elements in row_root list
-	char entry_data[MAX_VARCHAR_LENGHT]; //data to copy
-	int something_to_copy=0; //boolean varijable to indicate if there is data to copy in these set of tuple_dicts
-	int i; //counter of the tuple_dicts
-	int free2; //varijable to free used string varajable
-	int size; //site of the data read from tuple_dict
+	AK_list_elem list_elem;
+	
+	int i; 						//tuple_dict counter
+	int head;					//head counter
+	int something_to_copy;		//boolean variable to indicate if there is data to copy in these set of tuple_dicts
+	int size; 					//current tuple_dict data size
+	
+	char data[MAX_VARCHAR_LENGHT]; //data to copy
+	
+	//iterate through all tuple_dicts in block
+	for (i = 0; i < DATA_BLOCK_SIZE;) {
+		head = something_to_copy = 0;
+		
+		//if (old_block->tuple_dict[i].type == FREE_INT)
+		//	break;
+			
+		while (strcmp(old_block->header[head].att_name, "") != 0) {
+			list_elem = (AK_list_elem)FirstL(att);
 
-	for (i=0;i<DATA_BLOCK_SIZE; ) 
-	{//going through tuple_dicts
-		next=1;
-		head=0;
-		something_to_copy=0;
+			while (list_elem != NULL) {
+				size = old_block->tuple_dict[i].size;
+				//used to check if the data is correct
+				int overflow = old_block->tuple_dict[i].size + old_block->tuple_dict[i].address;
 
-		while(next)
-		{//going thtorught headers
-			if(strcmp(old_block->header[head].att_name,"")!=0)
-			{//if there are more headers
-				search_elem=1;
-				some_element=GetFirstelementOp(att_root);
-
-				while(search_elem)
-				{//going throught row_root list elements
-
-					size=old_block->tuple_dict[i].size;
-					//used to check if the data is correct
-					int overflov=old_block->tuple_dict[i].size+old_block->tuple_dict[i].address;
-
-					if((strcmp(some_element->attribute_name,old_block->header[head].att_name)==0)&&(size!=0)
-&&(overflov<old_block->free_space+1)&&(overflov>-1))
-					{//if the data is what we need, if the size is not null, and data is correct	
+				//if the data is what we need, if the size is not null, and data is correct	
+				if ((strcmp(list_elem->data, old_block->header[head].att_name) == 0) && (size != 0)
+					&& (overflow < old_block->free_space + 1) && (overflow > -1)) {
 					
-						free2=0;
-						for(free2;free2<MAX_VARCHAR_LENGHT;free2++)
-							entry_data[free2]='\0';
-				
-						//copy data
-						memcpy(entry_data,
-							old_block->data+old_block->tuple_dict[i].address,
-								old_block->tuple_dict[i].size);
-						
-						//insert element to list to be inserted into new table
-						InsertNewElementForUpdate(old_block->tuple_dict[i].type,entry_data,
-							new_table,some_element->attribute_name, row_root,0);
-						
-						something_to_copy=1;
-					}
+					memset(data, 0, MAX_VARCHAR_LENGHT);
+					memcpy(data, old_block->data + old_block->tuple_dict[i].address, old_block->tuple_dict[i].size);
 					
-					some_element= (element_op) GetNextelementOp(some_element);
-					if(some_element==0)
-					{//if there are more list elements
-						search_elem=0;
-					}
-					
-					
+					//insert element to list to be inserted into new table
+					InsertNewElement(old_block->tuple_dict[i].type, data, dstTable, list_elem->data, row_root); //ForUpdate 0
+					something_to_copy = 1;
 				}
-				head++; //go to next header	
-				i++; //go to next tuple dict
-			} 
-			else
-			{//there are no more headers
-				next=0;
-			} 
+				list_elem = list_elem->next;
+			}
+			head++;
+			i++;
 		}
-		if(something_to_copy)
-		{//write one row of elements to the porjection table
-			if(DEBUG)
-				printf("Insert one row to projection table");
+		
+		//write row to the porojection table
+		if (something_to_copy) {
+			if(DEBUG) 
+				printf("\nInsert row to projection table.\n");
+				
 			insert_row(row_root);
 			DeleteAllElements(row_root);
 		}
 	}
+	
 	free(row_root);
-	//free(att_root); not here 
-	//free(old_block); not here
 }
 
 /**
-Function makes a projection of some table
-@param att_root - list of atributes on which we make projection
-@param new_table - table name for projection table
-@raturn EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
-@author Matija Novak
+*@brief  Function makes a projection of some table
+*@author Matija Novak, rewrited and optimized by Dino Laktašić, now support cacheing
+*@param att - list of atributes on which we make projection
+*@param dstTable - table name for projection table
+*@return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
 */
-int AK_projekcija(list_op * att_root, char * new_table)
-{
-	element_op some_element;
-	table_addresses * addresses;
-	
-	some_element= (element_op) GetFirstelementOp(att_root);
-
-	///name of the table from which we read
-	char table[MAX_ATT_NAME];
-	memcpy(&table,some_element->table,strlen(some_element->table));	
-	table[strlen(some_element->table)]='\0';
-
-	if (DEBUG)
-		printf("\n Create table: %s, from: ",new_table,table);
-	
-	///geting the table addresses from table on which we make projection
-	addresses= (table_addresses *) get_table_addresses(table);
+int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
+	//geting the table addresses from table on which we make projection
+	table_addresses *src_addr = (table_addresses *) get_table_addresses(srcTable);
 			
-	if(addresses->address_from[0]!=0)
-	{
-		///create new segmenet for the projection table
-		crate_block_header(addresses->address_from[0],new_table,att_root);
+	if (src_addr->address_from[0] != 0) {
+		//create new segmenet for the projection table
+		AK_create_block_header(src_addr->address_from[0], dstTable, att);
 
-		if(DEBUG)
-			printf("\n AK_Porojekcija: start copying data");	
+		if (DEBUG) {
+			printf("\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
+			printf("\nAK_projection: start copying data\n");	
+		}
+		
+		int startAddress = 0, i = 0, j;
 
-			//AK_mem_block *mem_block;
-			AK_block *temp_block;
+		//for each extent that contains blocks needed for projection
+		for (i = 0; src_addr->address_from[i] != 0; i++) {  //MAX_EXTENTS_IN_SEGMENT
+			startAddress = src_addr->address_from[i];
 	
-			int from=0,to=0,j=0,i=0;
-			///Going through blocks and make the projection
-			for (j=0;j<MAX_EXTENTS_IN_SEGMENT;j++)
-			{
-				from=addresses->address_from[j];
-				if(from!=0)
-				{
-					if(DEBUG)
-						printf("\n Projekcija: copy ekstent: %d", j);
-			
-					to=addresses->address_to[j];
-					for(i=from;i<=to;i++)
-					{
-						if(DEBUG)
-							printf("\n Projekcija: copy block: %d",i);
-						
-						//mem_block = AK_get_block( i );
-						//temp_block= &mem_block->block;
-						temp_block = (AK_block *) AK_read_block( i );
-						///making the projection from one block of the table  
-						copy_block_projekcija(temp_block,att_root,new_table);
-						free(temp_block);
-					}
+			if (startAddress != 0) {
+				if (DEBUG) {
+					printf("\nAK_projection: copy extent: %d\n", i);
 				}
-				else break;
-			}
-	
-			free(addresses);
-			if(DEBUG)
-				printf("\n PROJECTION_TEST_SUCCESS \n");
-
-			return EXIT_SUCCESS;	
 			
+				//for each block in extent
+				for (j = startAddress; j <= src_addr->address_to[i]; j++) {
+					AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
+					//AK_block *temp = (AK_block *) AK_read_block(j);
+								
+					if (temp->block->last_tuple_dict_id == 0) {
+						free(temp);
+						break;
+					}
+					
+					if (DEBUG) 
+						printf("\nAK_projection: copy block: %d\n", j);
+					
+					//get projection tuples from block
+					AK_copy_block_projection(temp->block, att, dstTable);
+					//
+				}
+			}
+			else break;
+		}
+		free(src_addr);
+		
+		if (DEBUG) 
+			printf("PROJECTION_TEST_SUCCESS\n");
+		return EXIT_SUCCESS;	
+	} else {	
+		if (DEBUG) 
+			printf("\n AK_projection: Table doesn't exist!");
+		return EXIT_ERROR;
 	}
-	else
-	{	
-		if(DEBUG)
-			printf("\n AK_projekcija: Table from which I must read dose not exist");
-		return 0;
-	}
-	
-
 }
 
 //test function for projection must exist table testna whith ime and prezime as atibutes
-void op_projekcija_test()
-{
-	printf("\n PROJECTION_TEST \n");	
-
-	list_op *att_root =  (list_op *) malloc( sizeof(list_op) );
-	InitializelistOp(att_root);
-
-	InsertNewelementOp("testna","Ime",att_root);
-	element_op some_element;
-	some_element = GetFirstelementOp(att_root);
-	InsertNewelementOp("testna","Prezime",some_element);
-
-	AK_projekcija(att_root,"testna_projekcija ");
+void op_projekcija_test() {
+	printf( "\n********** PROJECTION TEST **********\n\n");	
 	
-	DeleteAllelementsOp(att_root);
-	free( att_root );
+	AK_list *att = (AK_list *)malloc(sizeof(AK_list));
+	InitL(att);
+
+	InsertAtEndL(TYPE_ATTRIBS, "firstname", sizeof("firstname"), att);
+	InsertAtEndL(TYPE_ATTRIBS, "lastname", sizeof("lastname"), att);
+
+	AK_projection("student", "projection_test", att);
+	AK_print_table("projection_test");
+	
+	DeleteAllL(att);
+	free(att);
 }

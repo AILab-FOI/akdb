@@ -512,10 +512,10 @@ void AK_print_table(char *tblName) {
 			DeleteAllL(row);
 		}
 		printf("\n");*/
+		//print table rows number and time spent to generate table
+		time_t end = clock();
+		printf( "%i records found, duration: %d μs\n\n", num_rows, end - start);
 	}
-	//print table rows number and time spent to generate table
-	time_t end = clock();
-    printf( "%i records found, duration: %d μs\n\n", num_rows, end - start);
 }
 
 /**

@@ -22,6 +22,7 @@
 #include "dbman.h"
 #include "memoman.h"
 #include "fileio.h"
+#include "table.h"
 
 
 ///@author Matija Novak

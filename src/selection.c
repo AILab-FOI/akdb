@@ -195,8 +195,8 @@ int AK_selection_check_expr(AK_mem_block *mem_block, AK_header *header, int num_
 /**
  * @brief  Implementation of selection
  * @author Matija Šestak.
- * @param char* - source table name
- * @param char* - destination table name
+ * @param char* srcTable - source table name
+ * @param char* dstTable - destination table name
  * @param AK_list* - list with posfix notation of the logical expression
  * @result int - return EXIT_SUCCESS
  */
