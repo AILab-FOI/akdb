@@ -284,6 +284,7 @@ int AK_refresh_cache() {
 */
 table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
 	int i = 0;
+	int freeVar = 0;
 	int data_adr = 0;
 	int data_size = 0;
 	int data_type = 0;
@@ -334,8 +335,13 @@ table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
 	mem_block = (AK_mem_block *) AK_get_block(address_sys);
 	table_addresses * addresses = (table_addresses *) malloc(sizeof(table_addresses));
 	
-	memset(addresses->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
-	memset(addresses->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
+	//memset(addresses->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
+	//memset(addresses->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
+	
+	for (freeVar = 0; freeVar < MAX_EXTENTS_IN_SEGMENT; freeVar++) {
+		addresses->address_from[freeVar] = 0;
+		addresses->address_to[freeVar] = 0;
+	}
 
 	char name[MAX_VARCHAR_LENGHT];
 	int address_from;

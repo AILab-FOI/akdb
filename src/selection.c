@@ -111,8 +111,9 @@ int AK_selection_check_expr(AK_mem_block *mem_block, AK_header *header, int num_
 				int address = mem_block->block->tuple_dict[current_tuple + i].address;
 				int size = mem_block->block->tuple_dict[current_tuple + i].size;
                 int type = mem_block->block->tuple_dict[current_tuple + i].type;
-                memcpy( data, &(mem_block->block->data[address]), size );
-                InsertAtEndL( type, data, size, temp );
+				memset(data, 0, MAX_VARCHAR_LENGHT);
+                memcpy(data, &(mem_block->block->data[address]), size);
+                InsertAtEndL(type, data, size, temp);
             }
         } else if (el->type == TYPE_OPERATOR) {
 			//operators implementation                    
@@ -222,14 +223,14 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
     
     for (i = 0; src_addr->address_from[i] != 0; i++) {
         for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
-            AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
+            AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
             if (temp->block->last_tuple_dict_id == 0)
                break;
             for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
                 if (temp->block->tuple_dict[k].type == FREE_INT)
                     break;
                 if (AK_selection_check_expr(temp, t_header, num_attr, expr, k)) {
-                    for (l = 0; l < num_attr; l++) {
+					for (l = 0; l < num_attr; l++) {
                         int type = temp->block->tuple_dict[k + l].type;
                         int size = temp->block->tuple_dict[k + l].size;
                         int address = temp->block->tuple_dict[k + l].address;
