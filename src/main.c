@@ -91,14 +91,14 @@ int main()
 
 			op_selection_test();
 			op_projekcija_test();
-			//op_spoj_test();
+			//op_join_test();
 			//intersect_test();
 			//rename_test();			
 			
 			//table_test();
 
 			//btree_test();
-			//hash_test();
+			hash_test();
 			//bitmap_test();
 
 			//reference_test();

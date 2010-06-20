@@ -312,6 +312,157 @@ AK_list_elem GetNthL(int pos, AK_list *row) {
 }
 
 
+//Another linked list (obsolete, it will be removed!!!)
+
+///START GLOBAL FUNCTIONS for work with list for relational operators
+
+/**	
+ * @brief  Allocate empty list
+ * @author Matija Novak     
+ * @param list_op - root of the list_op
+ * @return void
+ */
+void InitializelistOp(list_op *L) {
+	L->next = 0;
+}
+	 
+/** 
+ * @brief 	Get the first list element
+ * @author Matija Novak
+ * @param list_op - root of the list_op
+ * @return element_op first element of the list
+*/	
+element_op GetFirstelementOp(list_op *L) {
+	return (element_op) L->next;
+}
+
+/**
+ * @brief  Get the last list element
+ * @author Matija Novak
+ * @param list_op - root of the list_op
+ * @return element_op last element of the list
+*/		
+element_op GetLastelementOp(list_op *L) {
+	list_op *Currentelement_op;
+	Currentelement_op = L;
+	while (Currentelement_op->next) 
+		Currentelement_op = (element_op) Currentelement_op->next;
+	if(Currentelement_op!=L)
+		return (element_op) Currentelement_op;
+	else 
+		return 0;
+}
+
+/**
+ * @brief  Gets the next list element of an given element
+ * @author Matija Novak
+ * @param Currenetelelemnt_op - some element of the list (list_op) form which we want the next element
+ * @return element_op - next element of given element_op
+ */		
+element_op GetNextelementOp(element_op Currentelement_op) {
+	if (Currentelement_op->next == 0) {
+		return 0;
+	} else {
+		list_op *Nextelement_op;
+		Nextelement_op = (element_op) Currentelement_op->next;
+		return (element_op) Nextelement_op;
+	}
+}
+
+/** 
+ * @brief  Get the previous element of some element in the list
+ * @author Matija Novak
+ * @param Currentelelemnt_op - element of which we want the previous element
+ * @param L - root of the list 
+ * @return element_op - previous element of the element that we give as first parameter
+*/	
+element_op GetPreviouselementOp(element_op Currentelement_op, element_op L) {
+	element_op Previouselement_op;
+	Previouselement_op = L;
+	while ((Previouselement_op->next != 0) && ((element_op) Previouselement_op->next != Currentelement_op))
+		Previouselement_op = (element_op) Previouselement_op->next;
+	if (Previouselement_op->next != 0 && Previouselement_op!=L) {
+		return (element_op) Previouselement_op;
+	} else {
+		return 0;
+	}
+}
+
+/** 
+ * 	@brief Get the posititn of given elelment
+ * @author Matija Novak
+ * @param Searchelement_op - element which posititon we search for
+ * @param L - root of the list
+ * @return returns the posititon number of some elelemnt
+ */	
+int GetPositionOfelementOp(element_op Searchedelement_op, list_op *L) {
+	element_op Currentelement_op = L->next;
+	int i = 0;
+	do {
+		if(Currentelement_op == Searchedelement_op) break;
+		Currentelement_op = Currentelement_op->next;
+		i++;
+	} while (Currentelement_op);
+	return i;
+}
+	
+/** 	
+ * @brief Delete given elelment from the list
+ * @author Matija Novak
+ * @param Deletedelement_op - element which we delete
+ * @param L - root of the list
+ * @return void
+ */	
+void DeleteelementOp(element_op Deletedelement_op, list_op *L) {
+	element_op Previouselement_op = (element_op) GetPreviouselementOp(Deletedelement_op,L);
+	if(Previouselement_op!=0) {	
+		Previouselement_op->next = Deletedelement_op->next;
+	} else {
+		L->next=Deletedelement_op->next;
+	}
+	free(Deletedelement_op);
+}
+
+/**
+ * @brief  Delete all elelments from the list
+ * @author Matija Novak
+ * @param L - root of the list
+ * @return void
+ */
+void DeleteAllelementsOp(list_op *L) {
+	list_op *Currentelement_op = L;
+	list_op *Deletedelement_op= (list_op *) L->next;	
+	while (Currentelement_op->next != 0) {
+		Currentelement_op->next = Deletedelement_op->next;
+		free(Deletedelement_op);
+		Deletedelement_op = (list_op *) Currentelement_op->next;
+	}	
+}
+
+///END GLOBAL FUNCTIONS
+
+///START SPECIAL FUNCTIONS FOR WORK WITH row_element_op_structure
+	
+/** 
+ * @brief Inserts new element_op after some element_op, to insert on first place give list_op as before element_op
+ * @author Matija Novak
+ * @param table - table name
+ * @param attribute_name - attribute name
+ * @param element_op - element after we which insert the new element 
+ * @return void
+ */	
+void InsertNewelementOp(char * table, char * attribute_name, element_op elementBefore) {
+	list_op *newelement_op = (list_op *) malloc( sizeof(list_op) );
+	memcpy(newelement_op->table, table, strlen(table));
+	newelement_op->table[strlen(table)]='\0';
+	memcpy(newelement_op->attribute_name, attribute_name, strlen(attribute_name));
+	newelement_op->attribute_name[strlen(attribute_name)]='\0';
+	newelement_op->next = elementBefore->next;
+	elementBefore->next = newelement_op;
+}
+
+///END SPECIAL FUNCTIONS 
+
 /**
  * @author Dino Laktašić.
  * @brief  Get all permutations without repetition (currently not used, but it can be helpful)

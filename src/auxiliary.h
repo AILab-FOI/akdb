@@ -20,6 +20,7 @@
 #ifndef AUXILIARY
 #define AUXILIARY
 
+#include "time.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
@@ -29,7 +30,7 @@
  * \struct list_elem
  * \brief defines a list element
  */
-struct list_elem{
+struct list_elem {
     ///data type
     int type;
     //data size in list element
@@ -43,6 +44,25 @@ struct list_elem{
 typedef struct list_elem AK_list;
 typedef struct list_elem* AK_list_elem;
 
+/**
+ * @author Matija Novak 
+ * @struct list_structure_op
+ * @brief defines a list (obsolete)
+ */
+typedef struct {
+	///START row_element_op
+	///structure that reperesents one attribute which is used for projection or to nat_join ect.
+	
+	///table name
+	char table[ MAX_ATT_NAME ];
+	///needed atribute in the table
+	char attribute_name[ MAX_ATT_NAME ];
+	///next element in list
+	struct list_structure_op *next;
+}list_structure_op;
+
+typedef list_structure_op *element_op;
+typedef list_structure_op list_op;
 
 #define TBL_BOX_OFFSET 1
 //#define TBL_COL_DELIMITER '|'
