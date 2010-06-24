@@ -20,12 +20,6 @@
 
 #include "rename.h"
 
-void rename_test()
-{
-	printf( "rename_test: Present!\n" );
-	AK_rename("testna","Prezime","preim_test","novoPrezime");
-}
-
 int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr){
 	table_addresses *adrese = get_table_addresses(old_table_name);
 	int tab_adrese[MAX_NUM_OF_BLOCKS];
@@ -47,12 +41,12 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 	
 	for(i = 0; i < MAX_ATTRIBUTES; i++){
 		if(!strcmp(iHeader[i].att_name , old_attr)){
-			printf("imena atributa su ista!\n");
+			printf("AK_rename: the attribute names are the same!\n");
 			memcpy(iHeader[i].att_name, new_attr, strlen(new_attr));
 			break;
 		}
 		else if(!strcmp(iHeader[i].att_name , "/0")){		//if there is no more attributes
-			printf("AK_op_preimenovanje: ERROR: in this table does not exist atribute: %s", old_attr);
+			printf("AK_rename: ERROR: in this table does not exist atribute: %s", old_attr);
 			return (EXIT_ERROR);
 		}
 	}
@@ -91,6 +85,12 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 	free(block2);
 	
 	return EXIT_SUCCESS;
+}
+
+void rename_test() {
+	//printf( "rename_test: Present!\n" );
+	printf( "\n********** RENAME TEST **********\n\n");
 	
-	
+	AK_rename("nat_join_test", "lastname","nat_join_test","new_lastname");
+	AK_print_table("nat_join_test");
 }

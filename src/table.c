@@ -514,7 +514,7 @@ void AK_print_table(char *tblName) {
 		printf("\n");*/
 		//print table rows number and time spent to generate table
 		time_t end = clock();
-		printf( "%i records found, duration: %d μs\n\n", num_rows, end - start);
+		printf( "%i rows found, duration: %d μs\n\n", num_rows, end - start);
 	}
 }
 
@@ -528,104 +528,6 @@ int AK_table_empty( char *tblName ){
      table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
      AK_mem_block *temp = (AK_mem_block*) AK_get_block( addresses->address_from[0] );
      return (temp->block->last_tuple_dict_id==0)?1:0;
-}
-
-/**
- * @author Matija Šestak.
- * @brief  Create test table
- * @param void
- * @result void
- */
-void create_test_table() {
-    int i;
-    //create header
-    AK_header t_header[ MAX_ATTRIBUTES ];
-    AK_header* temp;
-
-    temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header, temp, sizeof( AK_header ));
-    temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 1, temp, sizeof( AK_header ));
-    temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 2, temp, sizeof( AK_header ));
-    temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 3, temp, sizeof( AK_header ));
-    temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 4, temp, sizeof( AK_header ));
-	memset( t_header + 5, '\0', MAX_ATTRIBUTES - 5);
-
-    //create table
-    char *tblName = "student";
-
-    printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
-
-    int startAddress = AK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
-
-    if( startAddress != EXIT_ERROR )
-        printf( "\nTABLE %s CREATED!\n", tblName );
-
-    printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
-
-    element row_root =  (element) malloc( sizeof(list) );
-    InitializeList(row_root);
-
-    int mbr = 35890, year = 1999;
-    float weight = 80.00;
-
-    //insert rows in table student
-    mbr++; year++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Matija", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Sestak", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Mesaric", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Dalibor", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Slunjski", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Alagic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Zver", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
 }
 
 /**
@@ -654,9 +556,7 @@ int AK_get_table_obj_id(char *table) {
 void table_test() {
   printf("table.c: Present!\n");
 
-  create_test_table();
-
-  printf( "\n********** TABLE ABSTRACTION TEST by Matija Šestak **********\n");
+  printf( "\n********** TABLE ABSTRACTION TEST by Matija Šestak **********\n\n");
 
   printf( "Table \"student\":AK_print_table\n");
   AK_print_table( "student" );
@@ -669,15 +569,15 @@ void table_test() {
       printf( "false\n");
   printf("\n");
 
-  printf( "Table \"student\":AK_num_attr: ");
+  printf( "Table \"student\": AK_num_attr: ");
   printf( "%d\n", AK_num_attr("student"));
   printf( "\n");
 
-  printf( "Table \"student\":AK_get_num_records: ");
+  printf( "Table \"student\": AK_get_num_records: ");
   printf( "%d\n", AK_get_num_records("student"));
   printf( "\n");
 
-  printf( "Table \"student\":AK_get_row: First row: \n");
+  printf( "Table \"student\": AK_get_row: First row: \n");
   AK_list * row = AK_get_row( 0, "student" );
   //AK_print_row( row );
   printf("\n");

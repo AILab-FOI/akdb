@@ -19,16 +19,10 @@
 #ifndef INTERSECT
 #define INTERSECT
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-
+#include "auxiliary.h"
 #include "memoman.h"
 #include "dbman.h"
-#include "configuration.h"
-#include "fileio.h"
-#include "files.h"
+#include "table.h"
 
 typedef struct { 
 	/// type of attribute

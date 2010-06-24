@@ -1,5 +1,5 @@
 /**
-@file op_projekcija.h Provides data structures for relational natural join operation
+@file nat_join.h Provides data structures for relational natural join operation
 */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -19,15 +19,9 @@
 #ifndef NATJOIN
 #define NATJOIN
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "configuration.h"
-#include "projection.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
-#include "string.h"
-#include "auxiliary.h"
-#include "fileio.h"
+#include "table.h"
 
 #endif

@@ -19,215 +19,151 @@
 
 #include "nat_join.h"
 
-/** 	@author Matija Novak
-	function makes header for the new table and call the function to create the segment
-	@param one - address of the block of the first table
-	@param two - address of the block of the second table
-	@param new_table - name of the join table
-	@param att_root - attributes on which we make nat_join
-	@result void
+/**
+ * @brief  Function to make header for the new table and call the function to create the segment
+ * @author Matija Novak, optimized, and updated to work with AK_list by Dino Laktašić
+ * @param table_address1 - address of the block of the first table
+ * @param table_address2 - address of the block of the second table
+ * @param new_table - name of the join table
+ * @param att_root - attributes on which we make nat_join
+ * @return void
 */
-void crate_join_block_header(int one,int two,char * new_table,list_op * att_root)
-{
-	AK_block * temp_block;
+void create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att) {
+	AK_block *temp_block = (AK_block *) AK_read_block(table_address1);
 	AK_header header[MAX_ATTRIBUTES];
-	element_op some_element;
-	temp_block= (AK_block *) AK_read_block(one);
-
-	int next_header=1; //boolean var to indicate there are more headers
-	int search_elem;
-	int head=0;//counter of the heads 
-	int new_head=0; //counter of heads to write
-	int s_copy;//indicate if we copy these header or not
-
-	while(next_header)
-	{//going throug headers
-		s_copy=1;
-		if(strcmp(temp_block->header[head].att_name,"")!=0)
-		{//if there are more headers
-
-			search_elem=1;
-			some_element= (element_op) GetFirstelementOp(att_root);
-
-			while(search_elem)
-			{//searches elements in list
-				if(strcmp(some_element->attribute_name,temp_block->header[head].att_name)==0)
-				{//if is element on wich we make join skip it
-					s_copy=0;
-				}
+	AK_list_elem list_elem;
 	
-				some_element= (element_op) GetNextelementOp(some_element);
-				if(some_element==0)
-				{//more elements in list
-					search_elem=0;
-				}
+	int head = 0;		//counter of the heads 
+	int new_head = 0; 	//counter of heads to write
+	int s_copy;			//indicate if we copy these header or not
+
+	while (strcmp(temp_block->header[head].att_name,"") != 0) {
+		s_copy = 1;
+		list_elem = (AK_list_elem) FirstL(att);
+
+		while (list_elem != NULL) {
+			//if is element on wich we make join skip it
+			if (strcmp(list_elem->data, temp_block->header[head].att_name) == 0) {
+				s_copy = 0;
+				break;
 			}
-			if(s_copy)
-			{//if is header to copy
-				memcpy( & header[new_head], & temp_block->header[head], 
-						sizeof( temp_block->header[head] ) );
-				if(DEBUG)
-					printf(" NAT join: Copy attribute headrer: %s",header[new_head].att_name);
-				new_head++;//counter of new headers
-			}
-			head++;	//go to next header
-		}
-		else
-		{//no more headers in table 1
-			next_header=0;
+			list_elem = list_elem->next;
 		}
 		
-	}	
+		//Copy table1 header 
+		if (s_copy) {
+			memcpy(&header[new_head], &temp_block->header[head], sizeof(temp_block->header[head]));
+			
+			if (DEBUG)
+				printf("Natural join: Copy attribute header: %s", header[new_head].att_name);
+			new_head++;
+		}
+		head++;
+	}
 
 	free(temp_block);
-	temp_block= (AK_block *) AK_read_block(two);
-	next_header=1;
-	head=0;
+	temp_block = (AK_block *) AK_read_block(table_address2);
+	head = 0;
 
-	while(next_header)
-	{//going throught headers of table 2
-		if(strcmp(temp_block->header[head].att_name,"")!=0)
-		{//copy all headers if some exist
+	//add table2 headers
+	while (strcmp(temp_block->header[head].att_name,"") != 0) {
+		//copy all headers if some exist
+		memcpy(&header[new_head], &temp_block->header[head], sizeof(temp_block->header[head]));
 			
-			memcpy( & header[new_head], & temp_block->header[head], 
-				sizeof( temp_block->header[head] ) );
-			if(DEBUG)
-				printf("NAT join: Copy attribute headrer2: %s",header[new_head].att_name);
-			//next old and new header
-			new_head++;	
-			head++;	
-		}
-		else
-		{//no more headers in table 2
-			next_header=0;
-		}
+		if (DEBUG)
+			printf("Natural join: Copy attribute header2: %s", header[new_head].att_name);
+		new_head++;	
+		head++;
 	}
 	
 	AK_temp_create_table(new_table, header, SEGMENT_TYPE_TABLE);
-	free( temp_block );	
+	free(temp_block);	
 }
 
-/** 	@author Matija Novak
-	function searches the second block and when found matches with the first one makes a join and write row to join table
-	@param row_root - list of values from first table to be marged with table 2
-	@param row_root_insert - list of values from first table to be inserted into nat_join table
-	@param temp_block - block from second tabl to be merged
-	@param att_root - attributes on which we make nat_join
-	@param new_table - name of the naj_join table
-	@result void
+/**
+ * @brief  Function searches the second block and when found matches with the first one makes a join and write row to join table
+ * @author Matija Novak, updated by Dino Laktašić
+ * @param row_root - list of values from the first table to be marged with table2
+ * @param row_root_insert - list of values from the first table to be inserted into nat_join table
+ * @param temp_block - block from the second table to be merged
+ * @param new_table - name of the nat_join table
+ * @return void
 */
-void merge_block_join(list * row_root,list * row_root_insert, AK_block * temp_block,list_op * att_root, char * new_table)
-{
+void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_block, char *new_table) {
 	if(DEBUG)
 		printf("\n MERGE NAT JOIN...");
+	
 	element some_element;
-	list * row_root_insert2 =  (list *) malloc( sizeof(list) );
+	list * row_root_insert2 = (list *)malloc(sizeof(list));
 	InitializeList(row_root_insert2);
-
-	int next; //boolean var if there are more headers
-	int head; //counter of the headers
-	int search_elem; //boolean var if there is more elements in list
-	char entry_data[MAX_VARCHAR_LENGHT];
-	int something_to_copy=1; //if there is something to copy
-	int i; //counter of tuple_dicts
-	int free2;//clearing varchar varijable
+	
+	int i; 						//counter of tuple_dicts
+	int head; 					//counter of the headers
+	int something_to_copy = 1; 	//boolean variable to indicate if there is data to copy in these set of tuple_dicts
 	int size;
-	int not_in_list=1;
-	int overflov;
+	int overflow;
+	int not_in_list = 1;
+	int freeVar;
+	
+	char data[MAX_VARCHAR_LENGHT];
+	
+	//going through tuple_dicts of the second table	
+	for (i = 0; i < DATA_BLOCK_SIZE;) {
+		head = 0;
+		something_to_copy = 1;
 
-	for (i=0;i<DATA_BLOCK_SIZE; ) 
-	{//going through tuple_dict of the secnond table	
-		next=1;
-		head=0;
-		something_to_copy=1;
-		search_elem=1;
-
-		some_element= (element) GetFirstElement(row_root_insert);
-
-		while(search_elem)
-		{//make a copy of insert row list of the first table
-			InsertNewElementForUpdate(some_element->type,some_element->data,
-							new_table,some_element->attribute_name, row_root_insert2,0);		
-			some_element=(element)GetNextElement(some_element);
-
-			if(some_element==0)
-			{//if there is more elements in list
-				search_elem=0;
-			}
+		//make a copy of insert row list of the first table
+		some_element = (element) GetFirstElement(row_root_insert);
+		
+		while (some_element != NULL) {
+			InsertNewElementForUpdate(some_element->type,some_element->data, new_table, some_element->attribute_name, row_root_insert2, 0);		
+			some_element = some_element->next;
 		}
 		
-		while(next)
-		{//going throught headers of the secnod table
-			if(strcmp(temp_block->header[head].att_name,"")!=0)
-			{//there are more headers
-				search_elem=1;
-				some_element=(element)GetFirstElement(row_root);
-
-				while(search_elem)
-				{//going throug list of elements to compare
-					size=temp_block->tuple_dict[i].size;
-					overflov=temp_block->tuple_dict[i].size+temp_block->tuple_dict[i].address;
-					
-					if((strcmp(some_element->attribute_name,temp_block->header[head].att_name)==0)&&(size!=0)
-&&(overflov<(temp_block->free_space+1))&&(overflov>-1))
-					{//if ist an element in list, ad if its ok data, and size not null			
-						free2=0;
-						for(free2;free2<MAX_VARCHAR_LENGHT;free2++)
-							entry_data[free2]='\0';
-					
-						memcpy(entry_data,
-						temp_block->data+temp_block->tuple_dict[i].address,
-							temp_block->tuple_dict[i].size);
-					
-						if(strcmp(some_element->data,entry_data)!=0)
-						{//if merge data is not equal
-							something_to_copy=0; //dont copy these set of tuple_dicts
-						}
-						not_in_list=0;
-					}
-					else if((size==0)||(overflov>(temp_block->free_space+1))||(overflov<-1))
-					{	
-						something_to_copy=0;	
-					}
-
-					some_element= (element) GetNextElement(some_element);
-					if(some_element==0)
-					{//if there are more elements to compare for merge
-						search_elem=0;
-					}
-					
-					
-				}
-				
-				size=temp_block->tuple_dict[i].size;
-				overflov=temp_block->tuple_dict[i].size+temp_block->tuple_dict[i].address;
-				
-				if((not_in_list==1)&&(size!=0)&&(overflov<temp_block->free_space+1)&&(overflov>-1))
-				{//if its not header which is in compare list then I can copy these tuple dicts becouse it not exist in the insert_row_list2
-					free2=0;
-					for(free2;free2<MAX_VARCHAR_LENGHT;free2++)
-						entry_data[free2]='\0';
+		//going through headers of the second table
+		while (strcmp(temp_block->header[head].att_name, "") != 0) {
+			//going through list of elements to compare
+			some_element = (element)GetFirstElement(row_root);
 			
-					memcpy(entry_data,
-						temp_block->data+temp_block->tuple_dict[i].address,
-							temp_block->tuple_dict[i].size);
-					
-					//insert data from second table to insert_list
-					InsertNewElementForUpdate(temp_block->tuple_dict[i].type,entry_data,
-						new_table,temp_block->header[head].att_name, row_root_insert2,0);
-				}				
-				not_in_list=1;
-				head++;	//next header
-				i++;//next tuple dict
-			} 
-			else
-			{//no more headers
-				next=0;
-			} 
+			while (some_element != NULL) {
+				size = temp_block->tuple_dict[i].size;
+				overflow = size + temp_block->tuple_dict[i].address;
+				
+				//if isn't element in the list, and if data is correct, and size is not null	
+				if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (size != 0)
+				&& (overflow < (temp_block->free_space + 1)) && (overflow > -1)) { 
+					memset(data, '\0', MAX_VARCHAR_LENGHT);
+					//data[MAX_VARCHAR_LENGHT] = '\0';
+					memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
+				
+					//if merge data is not equal
+					if (strcmp(some_element->data, data) != 0) {
+						//dont copy these set of tuple_dicts
+						something_to_copy = 0;
+					}
+					not_in_list = 0;
+				} else if ((size == 0) || (overflow > (temp_block->free_space + 1)) || (overflow < -1)) {	
+					something_to_copy = 0;	
+				}
+				//if there are more elements to compare for merge
+				some_element = some_element->next;
+			}
+			
+			//if it isn't header which is in compare list then I can copy these tuple dicts becouse it not exist in the insert_row_list2
+			if ((not_in_list == 1) && (size != 0) && (overflow < temp_block->free_space + 1) && (overflow > -1)) {
+				memset(data, '\0', MAX_VARCHAR_LENGHT);
+				//data[MAX_VARCHAR_LENGHT] = '\0';
+				memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
+				//insert data from second table to insert_list
+				InsertNewElementForUpdate(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, row_root_insert2, 0);
+			}			
+			not_in_list = 1;
+			head++;			//next header
+			i++; 			//next tuple dict
 		}
 		
-		if(something_to_copy)
-		{//if these set is one that is passes merge then insert the list of data to join table
+		//if these set is one that is passes merge then insert the list of data to join table
+		if (something_to_copy) {
 			insert_row(row_root_insert2);	
 		}
 		DeleteAllElements(row_root_insert2);
@@ -235,116 +171,81 @@ void merge_block_join(list * row_root,list * row_root_insert, AK_block * temp_bl
 	free(row_root_insert2);
 }
 
-/** 	@author Matija Novak
-	function gous through block of the first table and copies data tah it need to join then calls a merge function to
-	merge with secnond table
-	@param temp_block - block of the first zable
-	@param temp_block - block of the second join table
-	@param att_root - attributes on which we make nat_join
-	@param new_table - name of the naj_join table
-	@result void
+/**
+ * @brief Function iterates through block of the first table and copies data that needs for join, then it calls a merge function to
+	merge with the second table
+ * @author Matija Novak, optimized, and updated to work with AK_list by Dino Laktašić
+ * @param tbl1_temp_block - block of the first table
+ * @param tbl2_temp_block - block of the second join table
+ * @param att - attributes on which we make nat_join
+ * @param new_table - name of the nat_join table
+ * @return void
 */
-void copy_blocks_join(AK_block * temp_block,AK_block * temp_block2,list_op * att_root,char * new_table)
-{
+void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
 	if(DEBUG)
 		printf("\n COPYING NAT JOIN");
 
-	list *row_root =  (list *) malloc( sizeof(list) );
-	list *row_root_insert =  (list *) malloc( sizeof(list) );
+	list *row_root =  (list *) malloc(sizeof(list));
+	list *row_root_insert =  (list *) malloc(sizeof(list));
 	InitializeList(row_root);
 	InitializeList(row_root_insert);
-	element_op some_element;
+	AK_list_elem list_elem;
 	
-	//same use as in merge function only for the first table
-	int next;
-	int head;
-	int search_elem;
-	char entry_data[MAX_VARCHAR_LENGHT];
-	int something_to_copy=0;
 	int i;
-	int free2;
+	int head;
+	int something_to_copy = 0;
 	int size;
-	int not_in_list=1;
-	int overflov;
-
-	for (i=0;i<DATA_BLOCK_SIZE; ) 
-	{//going through tuple_dict of the first table block	
-		next=1;
-		head=0;
-		something_to_copy=0;
-
-		while(next)
-		{//going throug headers
-			if(strcmp(temp_block->header[head].att_name,"")!=0)
-			{//there are more headers?
-				search_elem=1;
-				some_element=(element_op)GetFirstelementOp(att_root);
-
-				while(search_elem)
-				{//going throug list of elements on which we merge
-					size=temp_block->tuple_dict[i].size;
-					overflov=temp_block->tuple_dict[i].size+temp_block->tuple_dict[i].address;
-					
-					if((strcmp(some_element->attribute_name,temp_block->header[head].att_name)==0)&&(size!=0)
-&&(overflov<(temp_block->free_space+1))&&(overflov>-1))
-					{//if we found an element tahat we need, and its ok we copy it			
-						free2=0;
-						for(free2;free2<MAX_VARCHAR_LENGHT;free2++)
-							entry_data[free2]='\0';
-						
-						memcpy(entry_data,
-							temp_block->data+temp_block->tuple_dict[i].address,
-								temp_block->tuple_dict[i].size);
-						//insert element into list on which we compare
-						InsertNewElementForUpdate(temp_block->tuple_dict[i].type,entry_data,
-							new_table,some_element->attribute_name, row_root,0);
-						//insert element into list which we insert into join_table toether with second table data 
-						InsertNewElementForUpdate(temp_block->tuple_dict[i].type,entry_data,
-							new_table,some_element->attribute_name, row_root_insert,0);
-						
-						something_to_copy=1;
-						not_in_list=0;
-					}
-
-					some_element= (element_op) GetNextelementOp(some_element);
-					if(some_element==0)
-					{//more elements?
-						search_elem=0;
-					}
-					
-					
-				}
-
-				size=temp_block->tuple_dict[i].size;
-				overflov=temp_block->tuple_dict[i].size+temp_block->tuple_dict[i].address;
-				
-				if((not_in_list==1)&&(size!=0)&&(overflov<temp_block->free_space+1)&&(overflov>-1))
-				{//copy element which is not for merge only for insert
-					
-					free2=0;
-					for(free2;free2<MAX_VARCHAR_LENGHT;free2++)
-						entry_data[free2]='\0';
-
-					memcpy(entry_data,
-						temp_block->data+temp_block->tuple_dict[i].address,
-							temp_block->tuple_dict[i].size);
+	int overflow;
+	int not_in_list = 1;
+	int freeVar;
+	char data[MAX_VARCHAR_LENGHT];
 	
-					InsertNewElementForUpdate(temp_block->tuple_dict[i].type,entry_data,
-						new_table,temp_block->header[head].att_name, row_root_insert,0);
-				}				
-				not_in_list=1;
-				head++;	//next header
-				i++;//next tuple dict
-			} 
-			else
-			{//no more eheaders
-				next=0;
-			} 
+	//going through tuple_dict of the table block
+	for (i = 0; i < DATA_BLOCK_SIZE; ) {	
+		head = something_to_copy = 0;
+
+		while (strcmp(tbl1_temp_block->header[head].att_name, "") != 0) {
+			list_elem = (AK_list_elem) FirstL(att);
+			
+			//going through list of elements on which we merge
+			while (list_elem != NULL) {
+				size = tbl1_temp_block->tuple_dict[i].size;
+				overflow = size + tbl1_temp_block->tuple_dict[i].address;
+	
+				//if there is an element that we need, and it's correct we copy it			
+				if ((strcmp(list_elem->data, tbl1_temp_block->header[head].att_name) == 0) && (size != 0)
+				&& (overflow < (tbl1_temp_block->free_space + 1)) && (overflow > -1)) {
+					memset(data, '\0', MAX_VARCHAR_LENGHT);
+					//data[MAX_VARCHAR_LENGHT] = '\0';
+					memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
+					//insert element into list on which we compare
+					InsertNewElementForUpdate(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root, 0);
+					//insert element into list which we insert into join_table together with second table data 
+					InsertNewElementForUpdate(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root_insert, 0);
+					
+					something_to_copy = 1;
+					not_in_list = 0;
+					//break; //check for break here, to speed up execution
+				}
+				list_elem = list_elem->next;					
+			}
+			
+			//copy element which is not for merge only for insert
+			if((not_in_list == 1) && (size != 0) && (overflow < tbl1_temp_block->free_space + 1) && (overflow > -1)) {
+				memset(data, '\0', MAX_VARCHAR_LENGHT);
+				//data[MAX_VARCHAR_LENGHT] = '\0';
+				memcpy(data, tbl1_temp_block->data+tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
+				InsertNewElementForUpdate(tbl1_temp_block->tuple_dict[i].type, data, new_table, tbl1_temp_block->header[head].att_name, row_root_insert, 0);
+			}				
+			not_in_list = 1;	//reset not_in_list
+			head++;				//next header
+			i++;				//next tuple dict
 		}
-		if(something_to_copy)
-		{//if there is data to copy
-			//merege data with second table
-			merge_block_join(row_root,row_root_insert,temp_block2,att_root,new_table);
+		
+		//if there is a data to copy
+		if (something_to_copy) {
+			//merge data with second table
+			merge_block_join(row_root, row_root_insert, tbl2_temp_block, new_table);
 			DeleteAllElements(row_root);
 			DeleteAllElements(row_root_insert);
 		}
@@ -353,111 +254,101 @@ void copy_blocks_join(AK_block * temp_block,AK_block * temp_block2,list_op * att
 	free(row_root_insert);
 }
 
-/** 	@author Matija Novak
-	function to make nat_join betwen two tables on some attributes
-	@param old_table_one - name of the frst table to join
-	@param old_table_two - name of the second table to join
-	@param att_root - attributes on which we make nat_join
-	@param new_table - name of the naj_join table
-	@result if succes returns EXIT_SUCCESS
+/**
+ * @brief Function to make nat_join betwen two tables on some attributes
+ * @author Matija Novak, updated to work with AK_list and support cacheing by Dino Laktašić
+ * @param srcTable1 - name of the first table to join
+ * @param srcTable2 - name of the second table to join
+ * @param att - attributes on which we make nat_join
+ * @param dstTable - name of the nat_join table
+ * @return if success returns EXIT_SUCCESS
 */
-int AK_join(list_op * att_root,char * old_table_one, char * old_table_two, char * new_table)
-{
-	table_addresses * addresses_one;
-	table_addresses * addresses_two;
-	
-	if (DEBUG)
-		printf("NAT JOIN: Create table: %s, from: %s, %s",new_table,old_table_one,old_table_two);
-	
-	addresses_one=(table_addresses *)get_table_addresses(old_table_one);
-	addresses_two=(table_addresses *)get_table_addresses(old_table_two);
+int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {		
+	table_addresses *src_addr1 = (table_addresses *)get_table_addresses(srcTable1);
+	table_addresses *src_addr2 = (table_addresses *)get_table_addresses(srcTable2);
 			
-	if((addresses_one->address_from[0]!=0)&&(addresses_two->address_from[0]!=0))
-	{//if there is some table one and two
-		//make a nat_join table
-		crate_join_block_header(addresses_one->address_from[0],addresses_two->address_from[0],new_table,att_root);
+	int startAddress1 = src_addr1->address_from[0];
+	int startAddress2 = src_addr2->address_from[0];
+		
+	if ((startAddress1 != 0) && (startAddress2 != 0)) {		
+		create_join_block_header(startAddress1, startAddress2, dstTable, att);
 
-		AK_block *temp_block;
-		AK_block *temp_block2;
+		if (DEBUG) {
+			printf("\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
+			printf("\nAK_join: start copying data\n");	
+		}
+		
+		AK_mem_block *tbl1_temp_block, *tbl2_temp_block;
 	
-		int from=0,to=0,j=0,i=0;
-		int from2=0,to2=0,j2=0,i2=0;
-		for (j=0;j<MAX_EXTENTS_IN_SEGMENT;j++)
-		{//going through extests of the first table
-			from=addresses_one->address_from[j];
-			if(from!=0)
-			{	
-				if(DEBUG)
-					printf("\n Nat Join: copy ekstent1: %d", j);
+		int i, j, k, l;
+		i = j = k = l = 0;
 		
-				to=addresses_one->address_to[j];
-				for(i=from;i<=to;i++)
-				{//going through bloks of the first table
+		//for each extent in table1 that contains blocks needed for join
+		for (i = 0; i < src_addr1->address_from[i] != 0; i++) {
+			startAddress1 = src_addr1->address_from[i];
+			
+			if(startAddress1 != 0) {	
+				if (DEBUG)
+					printf("\n Natural join: copy extent1: %d\n", i);
+				
+				//for each block in table1 extent
+				for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
 					if(DEBUG)
-						printf("\n NAt join: copy block1: %d",i);
+						printf("Natural join: copy block1: %d\n", j);
 					
-					temp_block=(AK_block *) AK_read_block( i );
+					tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 					
-					if(temp_block->free_space!=0)
-					{//if its some data in block
-						for (j2=0;j2<MAX_EXTENTS_IN_SEGMENT;j2++)
-						{//going through extests of the second table
-							from2=addresses_two->address_from[j2];
-							if(from2!=0)
-							{
-								if(DEBUG)
-									printf("\n Nat join: copy ekstent2: %d", j2);
-		
-								to2=addresses_two->address_to[j2];
-								for(i2=from2;i2<=to2;i2++)
-								{//going through bloks of the second table
-									if(DEBUG)	
-										printf("\n Nat join: copy block2: %d",i2);
+					//if there is data in the block
+					if (tbl1_temp_block->block->free_space != 0) {
+						//for each extent in table2 that contains blocks needed for join
+						for (k = 0; k < src_addr2->address_from[k] != 0; k++) {
+							startAddress2 = src_addr2->address_from[k];
+							
+							if (startAddress2 != 0) {
+								if (DEBUG)
+									printf("Natural join: copy extent2: %d\n", k);
+								
+								//for each block in table2 extent
+								for (l = startAddress2; l < src_addr2->address_to[k]; l++) {
+									if (DEBUG)
+										printf("Natural join: copy block2: %d\n", l);
 									
-									temp_block2= (AK_block *) AK_read_block( i2 );
+									tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 									
-								  if(temp_block2->free_space!=0){
-								   copy_blocks_join(temp_block,temp_block2,att_root,new_table);}
+									//if there is data in the block
+									if (tbl2_temp_block->block->free_space != 0) {
+										copy_blocks_join(tbl1_temp_block->block, tbl2_temp_block->block, att, dstTable);
+									}
 								}
-							}
-							else break;
+							} else break;
 						}
 					}
 				}
-			}
-			else break;
-		}	
-		free(addresses_one);
-		free(addresses_two);
-		free(temp_block);
-		free(temp_block2);
+			} else break;
+		}
+		free(src_addr1);
+		free(src_addr2);
 		return EXIT_SUCCESS;	
-			
+	} else {	
+		if (DEBUG) 
+			printf("\n AK_join: Table/s doesn't exist!");
+		free(src_addr1);
+		free(src_addr2);
+		return EXIT_ERROR;
 	}
-	else
-	{	
-		printf("AK_join: Table from which I must read not exist");
-		free(addresses_one);
-		free(addresses_two);
-		return 0;
-	}
-	
 }
 
-//test function of nat join must have table testa with atributes Ime and Prezime and table testna_druga also with the same attributes
-void op_join_test()
-{
-	printf("\n STRATING NAT JOIN \n");
+void op_join_test() {
+	printf( "\n********** NAT JOIN TEST **********\n\n");	
 
-	list_op *att_root =  (list_op *) malloc( sizeof(list_op) );
-	InitializelistOp(att_root);
-
-	InsertNewelementOp("testna","Ime",att_root);
-	element_op some_element;
-	some_element = (element_op) GetFirstelementOp(att_root);
-
-	InsertNewelementOp("testna","Prezime",some_element);
-	AK_join(att_root,"testna","testna_druga","testna_join");
+	AK_list *att = (AK_list *)malloc(sizeof(AK_list) );
+	InitL(att);
 	
-	free( att_root );
+	InsertAtEndL(TYPE_ATTRIBS, "id_department", sizeof("id_department"), att);
+	//InsertAtEndL(TYPE_ATTRIBS, "lastname", sizeof("lastname"), att);
+	
+	AK_join("employee", "department", "nat_join_test", att);
+	AK_print_table("nat_join_test");
+	
+	DeleteAllL(att);
 }

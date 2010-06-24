@@ -41,7 +41,6 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
 	if (DEBUG)	
 		printf("temp_create_table: First block address of the new segmet: %d", startAddress);	
 	
-	//AK_create_header(table, type_segment, header->type, header->integrity, header->constr_name, header->constr_code);
 	int broj = 8;
 	//insert object_id
 	AK_insert_entry(sys_block, TYPE_INT, &broj, 8 );
@@ -232,8 +231,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
 	}
 }
 
-//test function for projection must exist table testna whith ime and prezime as atibutes
-void op_projekcija_test() {
+void op_projection_test() {
 	printf( "\n********** PROJECTION TEST **********\n\n");	
 	
 	AK_list *att = (AK_list *)malloc(sizeof(AK_list));
@@ -241,10 +239,9 @@ void op_projekcija_test() {
 
 	InsertAtEndL(TYPE_ATTRIBS, "firstname", sizeof("firstname"), att);
 	InsertAtEndL(TYPE_ATTRIBS, "lastname", sizeof("lastname"), att);
-
-	AK_projection("student", "projection_test", att);
+	
+	AK_projection("selection_test", "projection_test", att);
 	AK_print_table("projection_test");
 	
 	DeleteAllL(att);
-	free(att);
 }

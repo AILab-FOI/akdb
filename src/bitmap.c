@@ -35,204 +35,6 @@ int IfExistOp(list_op *L, char *ele)
         }
         return 0;
 }
-//potrebno pokrenuti ovu metodu jer kreira testnu tablicu (podatke)
-/**
- * @author Saša Vukšić
- * @brief creates test table and makes index on test table, print indexes
- * */
-void bitmap_test()
-{
-    printf( "\n********** Function for creating table **********\n");
-
-    int i;
-    //create header
-    AK_header t_header[ MAX_ATTRIBUTES ];
-    AK_header* temp;
-
-    temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 1, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 2, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 3, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 4, temp, sizeof( AK_header ));
-
-    for( i = 5; i < MAX_ATTRIBUTES; i++ )
-    {
-	memcpy( t_header + i, "\0", sizeof( "\0" ));
-    }
-
-    //create table
-    char *tblName = "student";
-
-    printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
-
-    int startAddress = AK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
-
-    if( startAddress != EXIT_ERROR )
-        printf( "\nTABLE %s CREATED!\n", tblName );
-
-
-    printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
-
-    element row_root =  (element) malloc( sizeof(list) );
-    InitializeList(row_root);
-
-    int mbr = 35890, year = 1999;
-    float weight = 80.00;
-
-    //insert rows in table student
-    mbr++; year++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Matija", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Sestak", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Oleg", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Matija", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Sestak", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Mesaric", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Dalibor", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Slunjski", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Matija", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Sestak", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Alagic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Zver", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; weight += 0.75;year++;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; weight += 0.75;year++;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; weight += 0.75;year++;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    year++;mbr++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    year++;mbr++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-
-    printf("op_selection_test: After data insertion: %d\n", AK_num_attr( tblName ) );
-
-    list_op *att_root =  (list_op *) malloc( sizeof(list_op) );
-	InitializelistOp(att_root);
-	InsertNewelementOp("student","firstname",att_root);
-	element_op some_element;
-	some_element = GetFirstelementOp(att_root);
-	InsertNewelementOp("student","year",some_element);
-
-    AKcreateIndex( tblName, att_root );
-    AK_print_table( "student" );
-    AK_print_table( "studentyear_bmapIndex" );
-    AK_print_table( "studentfirstname_bmapIndex" );
-    AK_update(321,58,"student","firstname","Matija","Dalibor");
-}
-
 
 /**
  * @author Saša Vukšić
@@ -849,4 +651,28 @@ int write_block( AK_block * block )
 	return ( EXIT_SUCCESS );
 }
 
-
+/**
+ * @author Saša Vukšić
+ * @brief creates test table and makes index on test table, print indexes
+ * */
+void bitmap_test() {
+	printf( "\n********** BITMAP INDEX TEST **********\n\n");	
+		
+	char *tblName = "professor";
+		
+	list_op *att_root = (list_op *) malloc( sizeof(list_op) );
+	InitializelistOp(att_root);
+	
+	InsertNewelementOp(tblName, "firstname", att_root);
+	element_op some_element;
+	some_element = (element_op)GetFirstelementOp(att_root);
+	InsertNewelementOp(tblName, "tel", some_element);
+	
+    AKcreateIndex( tblName, att_root );
+    
+	AK_print_table( tblName );
+    AK_print_table( "professorfirstname_bmapIndex" );
+	AK_print_table( "professortel_bmapIndex" );
+		
+	AK_update(321, 58, tblName, "firstname", "Alen", "Markus");
+}

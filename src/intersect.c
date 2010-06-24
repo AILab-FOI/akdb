@@ -1,5 +1,5 @@
 /**
-@file rename.c Provides functions for header atributes renaming
+@file intersect.c Provides functions for header atributes renaming
 */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -20,214 +20,166 @@
 
 #include "intersect.h"
 
+/**
+ * @brief  Function to make intersect of the two tables
+ * @author Dino Laktašić
+ * @param srcTable1 - name of the first table to join
+ * @param srcTable2 - name of the second table to join
+ * @param dstTable - name of the new table
+ * @return if success returns EXIT_SUCCESS
+*/
+int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable){	
+	table_addresses *src_addr1 = (table_addresses*) get_table_addresses(srcTable1);
+	table_addresses *src_addr2 = (table_addresses*) get_table_addresses(srcTable2);
+	
+	int startAddress1 =  src_addr1->address_from[0];
+	int startAddress2 =  src_addr2->address_from[0];
+	
+	if ((startAddress1 != 0) && (startAddress2 != 0)) {
+		register int i, j, k, l;
+		i = j = k = l = 0;
+		
+		int num_att1 = 0;
+		int num_att2 = 0;
+		
+		AK_mem_block *tbl1_temp_block = (AK_mem_block *) AK_get_block(startAddress1);
+		AK_mem_block *tbl2_temp_block = (AK_mem_block *) AK_get_block(startAddress2);
+		
+		for (i = 0; i < MAX_ATTRIBUTES; i++) {
+			if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
+				num_att1++;
+			} else {
+				break;
+			}
+			
+			if (strcmp(tbl2_temp_block->block->header[i].att_name, "\0") != 0) {
+				num_att2++;
+			} else {
+				break;
+			}
+			
+			if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
+				printf("Intersect ERROR: Relation shemas are not the same! \n");
+				break;
+			}
+	
+			if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
+				printf("Intersect ERROR: Attributes are not of the same type!");
+				break;
+			}
+		}
+		
+		if (num_att1 != num_att2) {
+			printf("Intersect ERROR: Not same number of the attributes! \n");
+		}
+		
+		int something_to_copy = 0, m, n, o;
+		int overflow = 1;
+		
+		char data1[MAX_VARCHAR_LENGHT];
+		char data2[MAX_VARCHAR_LENGHT];
+		
+		//initialize new segment
+		AK_header *header = (AK_header *) malloc(num_att1 * sizeof(AK_header));
+		memcpy(header, tbl1_temp_block->block->header, num_att1 * sizeof(AK_header));
+		AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE , header);
+		free(header);
+				
+		list *row_root = (list *) malloc(sizeof(list));
 
-void intersect_test()
-{
-	printf( "\nintersect_test: Present!\n\n\n" );
-	AK_intersect("testna","testna","INTERSECT_table");
+		//TABLE1: for each extent in table1
+		for (i = 0; src_addr1->address_from[i] != 0; i++) {
+			startAddress1 = src_addr1->address_from[i];
+			
+			if (startAddress1 != 0) {
+
+				//BLOCK: for each block in table1 extent
+				for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
+					tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
+
+					//if there is data in the block
+					if (tbl1_temp_block->block->free_space != 0) {
+						
+						//TABLE2: for each extent in table2
+						for (k = 0; k < src_addr2->address_from[k] != 0; k++) {
+							startAddress2 = src_addr2->address_from[k];
+							
+							if (startAddress2 != 0) {
+					
+								//BLOCK: for each block in table2 extent
+								for (l = startAddress2; l < src_addr2->address_to[k]; l++) {
+									tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
+									
+									//if there is data in the block
+									if (tbl2_temp_block->block->free_space != 0) {
+										o = 0;
+										//TUPLE_DICTS: for each tuple_dict in the block
+										for (m = 0; m < DATA_BLOCK_SIZE; m += num_att1) {
+											
+											if (tbl1_temp_block->block->tuple_dict[m + 1].type == FREE_INT)
+												break;
+													
+											for (o = 0; o < DATA_BLOCK_SIZE; o += num_att1) {
+												if (tbl2_temp_block->block->tuple_dict[o + 1].type == FREE_INT)
+													break;
+													
+												something_to_copy = 0;
+												for (n = 0; n < num_att1; n++) {
+													int type1 = tbl1_temp_block->block->tuple_dict[m + n].type;
+													int size1 = tbl1_temp_block->block->tuple_dict[m + n].size;
+													int address1 = tbl1_temp_block->block->tuple_dict[m + n].address;
+													memcpy(data1, &(tbl1_temp_block->block->data[address1]), size1);
+													data1[size1] = '\0';
+													
+													int type2 = tbl2_temp_block->block->tuple_dict[o + n].type;
+													int size2 = tbl2_temp_block->block->tuple_dict[o + n].size;
+													int address2 = tbl2_temp_block->block->tuple_dict[o + n].address;
+													memcpy(data2, &(tbl2_temp_block->block->data[address2]), size2);
+													data2[size2] = '\0';
+													
+													//printf("%s == %s\n", data1, data2);
+													if (strcmp(data1, data2) == 0) {
+														something_to_copy++;
+													}
+												}
+												
+												if (something_to_copy == num_att1) {
+													for (n = 0; n < num_att1; n++) {
+														int type = tbl1_temp_block->block->tuple_dict[m + n].type;
+														int size = tbl1_temp_block->block->tuple_dict[m + n].size;
+														int address = tbl1_temp_block->block->tuple_dict[m + n].address;
+														memcpy(data1, &(tbl1_temp_block->block->data[address]), size);
+														data1[size] = '\0';
+														InsertNewElementForUpdate(type, data1, dstTable, tbl1_temp_block->block->header[n].att_name, row_root, 0);
+													}
+													insert_row(row_root);
+													DeleteAllElements(row_root);
+												}
+											}
+										}
+									}
+								}
+							} else break;
+						}
+					}
+				}
+			} else break;
+		}
+		
+		free(src_addr1);
+		free(src_addr2);
+		return EXIT_SUCCESS;
+	} else {
+		if (DEBUG) 
+			printf("\n AK_intersect: Table/s doesn't exist!");
+		free(src_addr1);
+		free(src_addr2);
+	}
 }
 
-
-int AK_intersect(char *table1, char *table2, char *new_table){
-	register int i,j,k;
-	int brojac1=0, brojac2=0, brojac3=0, sum_attr1=0, sum_attr2 = 0;
-	int adr1[MAX_EXTENTS_IN_SEGMENT];
-	int adr2[MAX_EXTENTS_IN_SEGMENT];
-	table_addresses *address1 = (table_addresses*) get_table_addresses(table1);
-	table_addresses *address2 = (table_addresses*) get_table_addresses(table2);
+void intersect_test() {
+	printf( "\n********** INTERSECT TEST **********\n\n");	
 	
-//	intersect_attr atributes[MAX_ATTRIBUTES];
-	
-	for(i=0; i<MAX_ATTRIBUTES; i++){
-//		atributes[i].type = FREE_INT;
-//		atributes[i].att_name = FREE_CHAR;
-	}
-	
-	
-	for (i=0; ;i++){
-		if(address1->address_from[i] == 0) break;
-		for(j = address1->address_from[i]; j <= address1->address_to[i]; j++){
-			adr1[brojac1] = j;
-			brojac1++;
-
-		}
-	}
-	
-	for (i=0; ;i++){
-		if(address2->address_from[i] == 0) break;
-		for(j = address2->address_from[i]; j <= address2->address_to[i]; j++){
-			adr2[brojac2] = j;
-			brojac2++;
-		}
-	}
-
-	
-	//uzeti header iz prve tablice i to je lista atributa po kojima se radi presjek
-	AK_block * iBlock = (AK_block*) AK_read_block(adr1[0]);
-
-	
-	for(i = 0; i < MAX_ATTRIBUTES; i++){
-		if(strcmp((char *)iBlock->header[i].att_name,"\0") == 0) //if there is no more attributes
-			break;
-		else{
-			sum_attr1++;
-	//		atributes[i].type = iBlock->header[i].type;
-	//		atributes[i].att_name= iBlock->header[i].att_name;
-		}
-	}
-	//free(iBlock);
-	
-	AK_block * iBlock2 = (AK_block*) AK_read_block(adr2[0]);
-	
-	for(i = 0; i < MAX_ATTRIBUTES; i++){
-		if(strcmp((char *)iBlock2->header[i].att_name,"\0") == 0) //if there is no more attributes
-			break;
-		else{
-			sum_attr2++;
-		}
-	}
-	//free(iBlock2);
-	
-	if(sum_attr1 != sum_attr2){
-		printf("INTERSECT ERROR: Not same number of attributes! \n");
-		return EXIT_ERROR;
-	}
-	
-	for(i=0;i<MAX_ATTRIBUTES;i++){
-		if(strcmp((char *)iBlock->header[i].type, (char *)iBlock2->header[i].type)!=0){
-			printf("INTERSECT ERROR: Attributes are not of the same type!");
-			return EXIT_ERROR;
-		}
-	}
-	
-	for(i = 0; i < MAX_ATTRIBUTES; i++)
-	{
-		if(strcmp((char *)iBlock->header[i].att_name, (char *)iBlock2->header[i].att_name) != 0)
-		{
-			printf("INTERSECT ERROR: Relation shemas are not same! \n");
-			return EXIT_ERROR;
-		}
-	}
-	
-	//initialize new segment
-	AK_header *iHeader = (AK_header *) malloc(sizeof(AK_header));
-	memcpy(iHeader, iBlock->header, sizeof(AK_header));
-	AK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE ,iHeader);
-	free(iHeader);
-	
-	
-	char podatak1[MAX_VARCHAR_LENGHT];
-	char podatak2[MAX_VARCHAR_LENGHT];
-	int pozicija_block1=0, pozicija_block2=0;
-	
-	//INTERSECT
-	int free=0;
-	int zapisano =0;
-	int poklapanje=0;
-	int broj_jednakih=0;
-	i = 0;
-	list * row_root = (list *) malloc( sizeof(list) );
-	
-	while(i < brojac1){ //through the blocks of table 1
-		iBlock = (AK_block*) AK_read_block(adr1[i]);
-printf("\ntu sam: %i\n",adr1[i]);
-
-		i++;
-		int jos_u_data=0;
-
-
-
-		while(iBlock->free_space > jos_u_data){ //if it is not the end of block
-			j=0;
-			while(j < brojac2){ //through the blocks of table 2
-				iBlock2 = (AK_block*) AK_read_block(adr2[j]);
-printf("\ntu sam2: %i\n",adr2[j]);
-
-				int jos_u_data2=0;
-				poklapanje =0;
-				while(iBlock2->free_space > jos_u_data2){ //if it is not the end of block
-					for(k = 0; k < sum_attr1; k++){//through the header
-						
-						for(free=0;free<MAX_VARCHAR_LENGHT;free++){
-							podatak1[free]=FREE_CHAR;
-							podatak2[free]=FREE_CHAR;
-						}
-						
-						memcpy(podatak1,
-							   iBlock->data + iBlock->tuple_dict[pozicija_block1 * sum_attr1 +k].address,
-							   iBlock->tuple_dict[pozicija_block1 * sum_attr1 +k].size);
-						if(INTERSECT_DEBUG)						
-							printf("\npodatak 1 : %s     na poziciji: %i\n",podatak1, iBlock->tuple_dict[pozicija_block1 * sum_attr1 +k].address);
-
-						memcpy(podatak2,
-							   iBlock2->data + iBlock2->tuple_dict[pozicija_block2 * sum_attr1 + k ].address,
-							   iBlock2->tuple_dict[pozicija_block2 * sum_attr1 + k ].size);
-						
-						if(INTERSECT_DEBUG)						
-							printf("\npodatak 2 : %s     na poziciji: %i\n",podatak2, iBlock2->tuple_dict[pozicija_block2 * sum_attr2 +k].address);
-
-
-						jos_u_data2 = iBlock2->tuple_dict[pozicija_block2 * sum_attr1 + k ].address + iBlock2->tuple_dict[pozicija_block2 * sum_attr1 + k ].size;
-						
-						if(strcmp(podatak1,podatak2)==0){ //jednaki su
-							poklapanje++;
-						}
-						else{
-							poklapanje=0;
-							break;
-						}
-					
-						
-
-					}//end: through the header
-					pozicija_block2++;
-
-					if(INTERSECT_DEBUG)
-						printf("\npoklapanje : %i      sum_atr1: %i\n",poklapanje, sum_attr1);
-
-					if(poklapanje == sum_attr1){ //ako se po svim atributima poklapalo
-					//zapisati red u novu tablicu jer se poklapaju
-						broj_jednakih++;
-						DeleteAllElements(row_root);
-						//InsertNewElement(TYPE_INT,&broj_jednakih,"testna","Redni_broj",row_root);
-						
-						for(k = 0; k < sum_attr1; k++){//through the header
-						
-							for(free=0;free<MAX_VARCHAR_LENGHT;free++){
-								podatak1[free]=FREE_CHAR;
-							}
-							
-							memcpy(podatak1,
-								   iBlock->data + iBlock->tuple_dict[pozicija_block1 * sum_attr1 +k].address,
-								   iBlock->tuple_dict[pozicija_block1 * sum_attr1 +k].size);
-							
-							jos_u_data = iBlock->tuple_dict[pozicija_block1 * sum_attr1 + k ].address + iBlock->tuple_dict[pozicija_block1 * sum_attr1 + k ].size;
-							
-							InsertNewElementForUpdate(iBlock->tuple_dict[pozicija_block1 * sum_attr1 + k ].type, &podatak1, new_table, iBlock->header[ k ].att_name, row_root, 0);
-							
-						}//end: through the header
-						
-						insert_row(row_root);
-						zapisano=1;
-						break;
-					}
-					
-				
-				}
-				
-				if(zapisano)
-					break;
-				
-				
-			}//end: through the blocks of table 2
-			
-			pozicija_block1++;
-		}
-	}//end: through the blocks of table 1
-	
-	
-	
-	
-	
-
+	AK_intersect("professor", "assistant", "intersect_test");
+	AK_print_table("intersect_test");
 }

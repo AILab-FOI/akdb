@@ -10,7 +10,7 @@ FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bi
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o query_optimization.o
 CONSTRAINTTARGETS = reference.o between.o nnull.o id.o
-OTHERTARGETS = trigger.o
+OTHERTARGETS = trigger.o test.o
 
 OUTDIR = ../bin
 
@@ -21,7 +21,10 @@ kalashnikov-db: auxiliary.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) 
 
 main.o: main.c
 	$(CC) $(CFLAGS) main.c
-
+	
+test.o: test.c
+	$(CC) $(CFLAGS) test.c
+	
 trigger.o: trigger.c
 	$(CC) $(CFLAGS) trigger.c
 

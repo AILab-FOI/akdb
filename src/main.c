@@ -77,7 +77,8 @@ int main()
 		{
 
 			/* component test area --- begin */
-
+			create_test_tables();
+			
 			//files_test();
 			//fileio_test();
 			//filesearch_test();
@@ -90,16 +91,16 @@ int main()
 			//query_optimization_test();
 
 			op_selection_test();
-			op_projekcija_test();
-			//op_join_test();
-			//intersect_test();
+			op_projection_test();
+			op_join_test();
+			intersect_test();
 			//rename_test();			
 			
 			//table_test();
 
 			//btree_test();
 			hash_test();
-			//bitmap_test();
+			//bitmap_test(); 	//needs complete rewrite, currently doesn't work correct
 
 			//reference_test();
 

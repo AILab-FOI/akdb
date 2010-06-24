@@ -26,13 +26,13 @@
  * @param const char *op - comparison operator
  * @param const void *a - left operand
  * @param const void *b - right operand
- * @result int - 0 if false, 1 if true
+ * @return int - 0 if false, 1 if true
  */
 int AK_selection_check_rs(AK_list_elem el, const char *op, const void *a, const void *b) {
 	switch ( el->type ) {
 		case TYPE_INT:
 			//printf("a:%i , b:%i\n", *((int *)a), *((int *)b));
-			if ((int)a < (int)b && strcmp(op, "<") == 0)
+			if (*(int *)a < *(int *)b && strcmp(op, "<") == 0)
 				return 1;
 			else if (*((int *)a) > *((int *)b) && strcmp(op, ">") == 0)
 				return 1;
@@ -211,7 +211,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 		return EXIT_ERROR; 
 	}
 	
-	printf( "\nTABLE %s CREATED!\n", dstTable );
+	//printf( "\nTABLE %s CREATED!\n", dstTable );
 
     table_addresses *src_addr = (table_addresses*) get_table_addresses(srcTable);
 
@@ -251,141 +251,32 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 }
 
 ///Function for selection testing
-void op_selection_test(){
-    printf( "\n********** SELECTION TEST by Matija Šestak **********\n");
-
-    int i;
-    //create header
-    AK_header t_header[ MAX_ATTRIBUTES ];
-    AK_header* temp;
-
-    temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header, temp, sizeof( AK_header ));
-    temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 1, temp, sizeof( AK_header ));
-    temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 2, temp, sizeof( AK_header ));
-    temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 3, temp, sizeof( AK_header ));
-    temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 4, temp, sizeof( AK_header ));
+void op_selection_test() {
+    printf( "\n********** SELECTION TEST **********\n");
 	
-	memset( t_header + 5, '\0', MAX_ATTRIBUTES - 5);
-    
-    //create table
-    char *tblName = "student";
-    
-    printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
-    
-    int startAddress = AK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
-    
-    if( startAddress != EXIT_ERROR )
-        printf( "\nTABLE %s CREATED!\n", tblName );
-    
-    printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
-    
-    element row_root =  (element) malloc( sizeof(list) );
-    InitializeList(row_root);
-    
-    int mbr = 35890, year = 1999;
-    float weight = 80.00;
-
-    //insert rows in table student
-    mbr++; year++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Matija", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Sestak", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Mesaric", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Dalibor", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Slunjski", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Alagic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Zver", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-    
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Netko", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    printf("op_selection_test: After data insertion: %d\n", AK_num_attr( tblName ) );
-    
-    //print table "student"
-    AK_print_table( tblName );
-    
-    
-    printf("op_selection_test: After print: %d\n", AK_num_attr( tblName ) );
-
     AK_list *expr = (AK_list *)malloc(sizeof(AK_list));
-    InitL( expr );
-    int num = 2002;
-	//float tezina = 83.750;
-	//InsertAtEndL( TYPE_ATTRIBS, "tezina", 6, expr );
-	//InsertAtEndL( TYPE_FLOAT, &tezina, sizeof(float), expr );
-	//InsertAtEndL( TYPE_OPERATOR, "<", 2, expr );
-    InsertAtEndL( TYPE_ATTRIBS, "year", 4, expr );
+    InitL(expr);
+	
+    int num = 2010;
+	//float weight = 83.750;
+	//InsertAtEndL( TYPE_ATTRIBS, "weight", sizeof("weight"), expr );
+	//InsertAtEndL( TYPE_FLOAT, &weight, sizeof(float), expr );
+	//InsertAtEndL( TYPE_OPERATOR, "<", sizeof("<"), expr );
+    InsertAtEndL( TYPE_ATTRIBS, "year", sizeof("year"), expr );
     InsertAtEndL( TYPE_INT, &num, sizeof(int), expr );
-    InsertAtEndL( TYPE_OPERATOR, ">", 2, expr );
-    InsertAtEndL( TYPE_ATTRIBS, "firstname", 9, expr );
-    InsertAtEndL( TYPE_VARCHAR, "Matija", 6, expr );
-    InsertAtEndL( TYPE_OPERATOR, "=", 2, expr );
-    InsertAtEndL( TYPE_OPERATOR, "OR", 2, expr );
-	//InsertAtEndL( TYPE_OPERATOR, "AND", 3, expr );
+    InsertAtEndL( TYPE_OPERATOR, "<", sizeof("<"), expr );
+    InsertAtEndL( TYPE_ATTRIBS, "firstname", sizeof("firstname"), expr );
+    InsertAtEndL( TYPE_VARCHAR, "Dino", sizeof("Dino"), expr );
+    InsertAtEndL( TYPE_OPERATOR, "=", sizeof("="), expr );
+    InsertAtEndL( TYPE_OPERATOR, "OR", sizeof("OR"), expr );
+	//InsertAtEndL( TYPE_OPERATOR, "AND", sizeof("AND"), expr );
 
-    printf( "QUERY:\nSELECT * FROM student WHERE year > 2002 OR firstname = 'Matija';\n");
-    AK_selection( tblName, "selection_test", expr );
-    AK_print_table( "selection_test" );
+    printf("\nQUERY: SELECT * FROM student WHERE year < 2010 OR firstname = 'Dino';\n\n");
+    
+	char *tblName = "student";
+	
+	AK_selection(tblName, "selection_test", expr);
+    AK_print_table("selection_test");
 
-    DeleteAllL( expr );
-    
-    
-    printf("op_selection_test: After selection: %d\n", AK_num_attr( tblName ) );
-    
-    //dealocate variables ;)
+    DeleteAllL(expr);
 }
