@@ -318,6 +318,8 @@ AK_list *AK_trigger_get_conditions(int trigger) {
 
 
 void trigger_test() {
+	printf("trigger.c: Present!\n");
+		
     element row_root =  (element) malloc( sizeof(list) );
     InitializeList(row_root);
 

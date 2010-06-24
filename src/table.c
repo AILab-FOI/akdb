@@ -451,7 +451,7 @@ void AK_print_table(char *tblName) {
 	time_t start = clock();
 	printf( "Table: %s\n", tblName );
 	
-	if (num_attr < 0 || num_rows < 0) {
+	if (num_attr <= 0 || num_rows <= 0) {
 		printf("Table is empty.\n");
 	} else {
 		//print table header

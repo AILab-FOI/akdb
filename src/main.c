@@ -100,15 +100,15 @@ int main()
 
 			//btree_test();
 			hash_test();
-			//bitmap_test(); 	//needs complete rewrite, currently doesn't work correct
+			//bitmap_test(); 	//needs complete rewrite, currently doesn't work correctly
 
-			//reference_test();
+			reference_test();
 
-			//trigger_test();
+			trigger_test();
 
-			//aggregation_test();
+			aggregation_test();
 
-			//memoman_test();
+			memoman_test();
 
 			//constraint_between_test();
 			//id_test();

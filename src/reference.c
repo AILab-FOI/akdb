@@ -397,138 +397,24 @@ int AK_reference_check_entry(list *lista) {
 /**
  * Test function.
  */
-void reference_test_table() {
-    int i;
-    //create header
-    AK_header t_header[ MAX_ATTRIBUTES ];
-    AK_header* temp;
+void reference_test() {
+	printf("reference.c: Present!\n");
+	
+	AK_header t_header[4] = 
+	{
+		{TYPE_INT, "FK", 0, '\0', '\0',},
+		{TYPE_VARCHAR, "Value", 0, '\0', '\0',},
+		{TYPE_VARCHAR, "Rnd", 0, '\0', '\0',},
+		{0, '\0', 0, '\0', '\0'}
+	};
 
-    temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 1, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 2, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 3, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 4, temp, sizeof( AK_header ));
-
-    for( i = 5; i < MAX_ATTRIBUTES; i++ )
-    {
-	memcpy( t_header + i, "\0", sizeof( "\0" ));
-    }
-
-    //create table
-    char *tblName = "student";
-
-    printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
-
-    int startAddress = AK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
+    int startAddress = AK_initialize_new_segment( "ref_test", SEGMENT_TYPE_TABLE, t_header);
 
     if( startAddress != EXIT_ERROR )
-        printf( "\nTABLE %s CREATED!\n", tblName );
-
-
-    printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
-
-    element row_root =  (element) malloc( sizeof(list) );
-    InitializeList(row_root);
-
-    int mbr = 100, year = 1999;
-    float weight = 80.00;
-
-    //insert rows in table student
-    mbr++; year++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Matija", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Sestak", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Mesaric", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Master", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Slunjski", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Alagic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-
-    AK_header t_header2[4] = {
-                {TYPE_INT, "FK", 0, '\0', '\0',},
-		{TYPE_VARCHAR, "Value", 0, '\0', '\0',},
-                {TYPE_VARCHAR, "Rnd", 0, '\0', '\0',},
-		{0, '\0', 0, '\0', '\0'}
-        };
-
-    int startAddress1 = AK_initialize_new_segment( "ref_test", SEGMENT_TYPE_TABLE, t_header2);
-
-    if( startAddress1 != EXIT_ERROR )
         printf( "\nTABLE %s CREATED!\n", "ref_test" );
 
-}
-
-/**
- * Test function.
- */
-void reference_test() {
-    printf("HELL YEAH!\n");
-    int a;
-    reference_test_table();
-
+	int a;
+		
     char *att[2];
     att[0] = malloc(sizeof(char)*20);
     strcpy(att[0],"FK");
@@ -549,7 +435,7 @@ void reference_test() {
 
 
     element row_root =  (element) malloc( sizeof(list) );
-    a = 102;
+    a = 35891;
     InitializeList(row_root);
      DeleteAllElements(row_root);
     InsertNewElement( TYPE_INT, &a , "ref_test", "FK", row_root );
@@ -557,26 +443,26 @@ void reference_test() {
     InsertNewElement( TYPE_VARCHAR, "TheRippah", "ref_test", "Rnd", row_root );
     insert_row( row_root );
     
-    a=102;
+    a = 35891;
     DeleteAllElements(row_root);
     InsertNewElement( TYPE_INT, &a , "ref_test", "FK", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", "ref_test", "Value", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Mislav", "ref_test", "Value", row_root );
     InsertNewElement( TYPE_VARCHAR, "TheMutilator", "ref_test", "Rnd", row_root );
     insert_row( row_root );
 
-    a=105;
+    a = 35893;
     DeleteAllElements(row_root);
     InsertNewElement( TYPE_INT, &a , "ref_test", "FK", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", "ref_test", "Value", row_root );
+    InsertNewElement( TYPE_VARCHAR, "Mislav", "ref_test", "Value", row_root );
     InsertNewElement( TYPE_VARCHAR, "TheMutilator", "ref_test", "Rnd", row_root );
     insert_row( row_root );
 
     AK_print_table("ref_test");
 
-    a=105;
+    a = 35893;
     DeleteAllElements(row_root);
     //InsertNewElementForUpdate(TYPE_INT, &a, "student", "mbr", row_root, 1);
-    InsertNewElementForUpdate(TYPE_VARCHAR, "Igor", "student", "firstname", row_root, 1);
+    InsertNewElementForUpdate(TYPE_VARCHAR, "Mislav", "student", "firstname", row_root, 1);
     delete_row(row_root);
 
     /*DeleteAllElements(row_root);

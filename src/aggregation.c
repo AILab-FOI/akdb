@@ -448,122 +448,15 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     return EXIT_SUCCESS;
 }
 
-void aggregation_test() 
-{
-  printf("aggregation.c: Present!\n");
+void aggregation_test() {
+	printf("aggregation.c: Present!\n");
 
-  int i;
-    //create header
-    AK_header t_header[ MAX_ATTRIBUTES ];
-    AK_header* temp;
-
-    temp = (AK_header*)AK_create_header( "mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 1, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 2, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 3, temp, sizeof( AK_header ));
-
-    temp = (AK_header*)AK_create_header( "tezina", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy( t_header + 4, temp, sizeof( AK_header ));
-
-    for( i = 5; i < MAX_ATTRIBUTES; i++ )
-    {
-	memcpy( t_header + i, "\0", sizeof( "\0" ));
-    }
-
-    //create table
-    char *tblName = "student";
-
-    printf("op_selection_test: Before segment initialization: %d\n", AK_num_attr( tblName ) );
-
-    int startAddress = AK_initialize_new_segment( tblName, SEGMENT_TYPE_TABLE, t_header);
-
-    if( startAddress != EXIT_ERROR )
-        printf( "\nTABLE %s CREATED!\n", tblName );
-
-
-    printf("op_selection_test: After segment initialization: %d\n", AK_num_attr( tblName ) );
-
-    element row_root =  (element) malloc( sizeof(list) );
-    InitializeList(row_root);
-
-    int mbr = 35890, year = 1999;
-    float weight = 80.00;
-
-    //insert rows in table student
-    mbr++; year++; weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Matija", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Sestak", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Mesaric", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Master", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Slunjski", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
-    InsertNewElement( TYPE_VARCHAR, "Alagic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Josip", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Vincek", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    mbr++; year++;weight += 0.75;
-    DeleteAllElements(row_root);
-    InsertNewElement( TYPE_INT, &mbr, tblName, "mbr", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Igor", tblName, "firstname", row_root );
-    InsertNewElement( TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root );
-    InsertNewElement( TYPE_INT, &year, tblName, "year", row_root );
-    InsertNewElement( TYPE_FLOAT, &weight, tblName, "tezina", row_root );
-    insert_row( row_root );
-
-    printf("op_selection_test: After data insertion: %d\n", AK_num_attr( tblName ) );
-
-    //print table "student"
-    AK_print_table( tblName );
+	char *tblName = "student";
+	
+	//AK_header t_header[ MAX_ATTRIBUTES ];
+    AK_header *t_header = (AK_header *)AK_get_header(tblName);
+	//memcpy(t_header, temp, 4 * sizeof(AK_header));
+	//memcpy( t_header + 5, "\0", MAX_ATTRIBUTES - 5);
 
     AK_agg_input aggregation;
     AK_agg_input_init(&aggregation);
@@ -573,11 +466,10 @@ void aggregation_test()
     AK_agg_input_add(t_header[4],AGG_TASK_SUM,&aggregation);
     AK_agg_input_add(t_header[4],AGG_TASK_MAX,&aggregation);
     AK_agg_input_add(t_header[4],AGG_TASK_MIN,&aggregation);
-    
-
-   // AK_aggregation(t_header, tasks, tblName, "student_agg");
+	free(t_header);
+   
+	//AK_aggregation(t_header, tasks, tblName, "student_agg");
     //AK_aggregation(agg_header,tasks,tblName, "agg");
     AK_aggregation(&aggregation, tblName, "agg");
-
     AK_print_table("agg");
 }
