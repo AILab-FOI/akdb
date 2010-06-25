@@ -402,119 +402,123 @@ AK_print_row(int col_len[], AK_list *row) {
  * @return void
  */
 void AK_print_table(char *tblName) {
-    AK_header *head = AK_get_header(tblName);
-
-    int i, j, k, l;
-    int num_attr = AK_num_attr(tblName);
-    int num_rows = AK_get_num_records(tblName);
-    int len[num_attr]; //max length for each attribute in row
-    int length = 0; //length of spacer
-
-    //store lengths of header attributes
-    for (i = 0; i < num_attr; i++) {
-        len[i] = strlen((head + i)->att_name);
-    }
-
-    //for each header attribute iterate through all table rows and check if
-    //there is longer element than previously longest and store it in array
-    for (i = 0; i < num_attr; i++) {
-        for (j = 0; j < num_rows; j++) {
-            AK_list_elem el = AK_get_tuple(j, i, tblName);
-            switch (el->type) {
-                case TYPE_INT:
-                    length = AK_chars_num_from_number(*((int *) (el)->data), 10);
-                    if (len[i] < length) {
-                        len[i] = length;
-                    }
-                    break;
-                case TYPE_FLOAT:
-                    length = AK_chars_num_from_number(*((float *) (el)->data), 10);
-                    if (len[i] < length) {
-                        len[i] = length;
-                    }
-                    break;
-                case TYPE_VARCHAR:
-                default:
-                    if (len[i] < el->size) {
-                        len[i] = el->size;
-                    }
-            }
-        }
-    }
-    //num_attr is number of char | + space in printf
-    //set offset to change the box size
-    length = 0;
-    for (i = 0; i < num_attr; length += len[i++]);
-    length += num_attr * TBL_BOX_OFFSET + 2 * num_attr + 1;
-
-    //start measuring time
-    time_t start = clock();
-    printf("Table: %s\n", tblName);
-
-    if (num_attr <= 0 || num_rows <= 0) {
-        printf("Table is empty.\n");
+    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    if (addresses->address_from[0] == 0) {
+        printf("Table %s does not exist!\n");
     } else {
-        //print table header
-        AK_print_row_spacer(len, length);
-        printf("\n|");
+        AK_header *head = AK_get_header(tblName);
 
+        int i, j, k, l;
+        int num_attr = AK_num_attr(tblName);
+        int num_rows = AK_get_num_records(tblName);
+        int len[num_attr]; //max length for each attribute in row
+        int length = 0; //length of spacer
+
+        //store lengths of header attributes
         for (i = 0; i < num_attr; i++) {
-            //print attributes center aligned inside box
-            k = (len[i] - strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
-            if (k % 2 == 0) {
-                k /= 2;
-                printf("%-*s%-*s|", k, " ", k + strlen((head + i)->att_name), (head + i)->att_name);
-            } else {
-                k /= 2;
-                printf("%-*s%-*s|", k, " ", k + strlen((head + i)->att_name) + 1, (head + i)->att_name);
-            }
-
-            //print attributes left aligned inside box
-            //printf(" %-*s|", len[i] + MAX_TABLE_BOX_OFFSET, (head + i)->att_name);
+            len[i] = strlen((head + i)->att_name);
         }
-        printf("\n");
-        AK_print_row_spacer(len, length);
 
-        table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
-        AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
-        InitL(row_root);
-
-        i = 0;
-        while (addresses->address_from[i] != 0) {
-            for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
-                AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
-                if (temp->block->last_tuple_dict_id == 0)
-                    break;
-                for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
-                    if (temp->block->tuple_dict[k].size > 0) {
-                        for (l = 0; l < num_attr; l++) {
-                            int type = temp->block->tuple_dict[k + l].type;
-                            int size = temp->block->tuple_dict[k + l].size;
-                            int address = temp->block->tuple_dict[k + l].address;
-                            InsertAtEndL(type, &(temp->block->data[address]), size, row_root);
+        //for each header attribute iterate through all table rows and check if
+        //there is longer element than previously longest and store it in array
+        for (i = 0; i < num_attr; i++) {
+            for (j = 0; j < num_rows; j++) {
+                AK_list_elem el = AK_get_tuple(j, i, tblName);
+                switch (el->type) {
+                    case TYPE_INT:
+                        length = AK_chars_num_from_number(*((int *) (el)->data), 10);
+                        if (len[i] < length) {
+                            len[i] = length;
                         }
-                        AK_print_row(len, row_root);
-                        AK_print_row_spacer(len, length);
-                        DeleteAllL(row_root);
-                    }
+                        break;
+                    case TYPE_FLOAT:
+                        length = AK_chars_num_from_number(*((float *) (el)->data), 10);
+                        if (len[i] < length) {
+                            len[i] = length;
+                        }
+                        break;
+                    case TYPE_VARCHAR:
+                    default:
+                        if (len[i] < el->size) {
+                            len[i] = el->size;
+                        }
                 }
             }
-            i++;
         }
-        printf("\n");
+        //num_attr is number of char | + space in printf
+        //set offset to change the box size
+        length = 0;
+        for (i = 0; i < num_attr; length += len[i++]);
+        length += num_attr * TBL_BOX_OFFSET + 2 * num_attr + 1;
 
-        /*
-        //print table rows
-        for (i = 0; i < num_rows; i++) {
-                AK_list *row = AK_get_row(i, tblName);
-                AK_print_row(len, row);
-                AK_print_row_spacer(len, length);
-                DeleteAllL(row);
+        //start measuring time
+        time_t start = clock();
+        printf("Table: %s\n", tblName);
+
+        if (num_attr <= 0 || num_rows <= 0) {
+            printf("Table is empty.\n");
+        } else {
+            //print table header
+            AK_print_row_spacer(len, length);
+            printf("\n|");
+
+            for (i = 0; i < num_attr; i++) {
+                //print attributes center aligned inside box
+                k = (len[i] - strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
+                if (k % 2 == 0) {
+                    k /= 2;
+                    printf("%-*s%-*s|", k, " ", k + strlen((head + i)->att_name), (head + i)->att_name);
+                } else {
+                    k /= 2;
+                    printf("%-*s%-*s|", k, " ", k + strlen((head + i)->att_name) + 1, (head + i)->att_name);
+                }
+
+                //print attributes left aligned inside box
+                //printf(" %-*s|", len[i] + MAX_TABLE_BOX_OFFSET, (head + i)->att_name);
+            }
+            printf("\n");
+            AK_print_row_spacer(len, length);
+
+            AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
+            InitL(row_root);
+
+            i = 0;
+            while (addresses->address_from[i] != 0) {
+                for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
+                    AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
+                    if (temp->block->last_tuple_dict_id == 0)
+                        break;
+                    for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+                        if (temp->block->tuple_dict[k].size > 0) {
+                            for (l = 0; l < num_attr; l++) {
+                                int type = temp->block->tuple_dict[k + l].type;
+                                int size = temp->block->tuple_dict[k + l].size;
+                                int address = temp->block->tuple_dict[k + l].address;
+                                InsertAtEndL(type, &(temp->block->data[address]), size, row_root);
+                            }
+                            AK_print_row(len, row_root);
+                            AK_print_row_spacer(len, length);
+                            DeleteAllL(row_root);
+                        }
+                    }
+                }
+                i++;
+            }
+            printf("\n");
+
+            /*
+            //print table rows
+            for (i = 0; i < num_rows; i++) {
+                    AK_list *row = AK_get_row(i, tblName);
+                    AK_print_row(len, row);
+                    AK_print_row_spacer(len, length);
+                    DeleteAllL(row);
+            }
+            printf("\n");*/
+            //print table rows number and time spent to generate table
+            time_t end = clock();
+            printf("%i rows found, duration: %d μs\n\n", num_rows, end - start);
         }
-        printf("\n");*/
-        //print table rows number and time spent to generate table
-        time_t end = clock();
-        printf("%i rows found, duration: %d μs\n\n", num_rows, end - start);
     }
 }
 
