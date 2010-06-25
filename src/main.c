@@ -92,11 +92,11 @@ int main()
 
 			//table_test();
 			
-			op_selection_test();
-			op_projection_test();
-			op_join_test();
-			intersect_test();
-			//rename_test();  //needs complete rewrite, currently doesn't work correctly		
+			//op_selection_test();
+			//op_projection_test();
+			//op_join_test();
+			//intersect_test();
+			//rename_test();  //needs complete rewrite, currently doesn't work correctly
 
 			//btree_test();
 			//hash_test();
