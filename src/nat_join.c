@@ -31,6 +31,7 @@
 void create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att) {
     AK_block *temp_block = (AK_block *) AK_read_block(table_address1);
     AK_header header[MAX_ATTRIBUTES];
+    memset(header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
     AK_list_elem list_elem;
 
     int head = 0; //counter of the heads
@@ -53,7 +54,6 @@ void create_join_block_header(int table_address1, int table_address2, char *new_
         //Copy table1 header
         if (s_copy) {
             memcpy(&header[new_head], &temp_block->header[head], sizeof (temp_block->header[head]));
-
             if (DEBUG)
                 printf("Natural join: Copy attribute header: %s", header[new_head].att_name);
             new_head++;
