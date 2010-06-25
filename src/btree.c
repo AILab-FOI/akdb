@@ -1,6 +1,6 @@
 /**
 @file btree.c Provides functions for BTree indices
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 
 #include "btree.h"
 
-void btree_test()
-{
-	printf( "btree_test: Present!\n" );
+void btree_test() {
+    printf("btree_test: Present!\n");
 }

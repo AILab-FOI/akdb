@@ -1,6 +1,6 @@
 /**
 @file query_optimization.h Provides functions for general query optimization
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

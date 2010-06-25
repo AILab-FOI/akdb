@@ -1,6 +1,6 @@
 /**
 @file hash.h Provides data structures for Hash indices
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,17 +33,16 @@
 #define MAIN_BUCKET 1
 #define HASH_BUCKET 2
 
-
-typedef struct{
+typedef struct {
     int modulo;
     int main_bucket_num;
     int hash_bucket_num;
-}hash_info;
+} hash_info;
 
-typedef struct{
+typedef struct {
     unsigned int value;
     struct_add add;
-}bucket_elem;
+} bucket_elem;
 
 typedef struct {
     bucket_elem element[MAIN_BUCKET_SIZE];

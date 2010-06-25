@@ -1,6 +1,6 @@
 /**
 @file rel_eq_assoc.h Provides data structures for relational equivalences regarding associativity
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@
  * char data[MAX_VARCHAR_LENGHT] - used to store table name
  */
 struct cost_eval_t {
-	int value;
-	char data[MAX_VARCHAR_LENGHT];
+    int value;
+    char data[MAX_VARCHAR_LENGHT];
 };
 
 typedef struct cost_eval_t cost_eval;

@@ -117,7 +117,7 @@ void update_bucket_in_block(struct_add *add, char *data) {
 void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int hash_bucket_num) {
     table_addresses *hash_addresses = (table_addresses*) get_index_addresses(indexName);
     int block_add = hash_addresses->address_from[ 0 ];
-    if(block_add==0){
+    if (block_add == 0) {
         printf("Hash index does not exist!\n");
     }
     AK_block *block = (AK_block*) AK_read_block(block_add);
@@ -143,8 +143,8 @@ hash_info* AK_get_hash_info(char *indexName) {
     table_addresses *hash_addresses = (table_addresses*) get_index_addresses(indexName);
     int block_add = hash_addresses->address_from[ 0 ];
     hash_info *info = (hash_info*) malloc(sizeof (hash_info));
-    memset(info,0,sizeof(hash_info));
-    if(block_add==0){
+    memset(info, 0, sizeof (hash_info));
+    if (block_add == 0) {
         printf("Hash index does not exist!\n");
         return info;
     }
@@ -330,7 +330,7 @@ int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
  */
 struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int delete) {
     struct_add *add = (struct_add*) malloc(sizeof (struct_add));
-    memset(add, 0, sizeof(struct_add));
+    memset(add, 0, sizeof (struct_add));
     table_addresses *addresses = (table_addresses*) get_index_addresses(indexName);
     if (addresses->address_from[0] == NULL) {
         printf("Hash index does not exist!\n");
@@ -454,7 +454,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
     AK_header i_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
 
-    AK_list_elem  attribute = (AK_list_elem) FirstL(attributes);
+    AK_list_elem attribute = (AK_list_elem) FirstL(attributes);
     n = 0;
     while (attribute != 0) {
         exist = 0;
@@ -550,7 +550,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
 
 int AK_delete_hash_index(char *indexName) {
     AK_delete_segment(indexName, SEGMENT_TYPE_INDEX);
-    printf("INDEX %s DELETED!\n",indexName);
+    printf("INDEX %s DELETED!\n", indexName);
 }
 
 /**
@@ -591,9 +591,9 @@ void hash_test() {
         InsertAtEndL(value->type, value->data, value->size, values);
         value = GetNthL(1, row);
         InsertAtEndL(value->type, value->data, value->size, values);
-        struct_add *add=AK_find_in_hash_index(indexName, values);
+        struct_add *add = AK_find_in_hash_index(indexName, values);
         DeleteAllL(values);
-        if(add->addBlock && add->indexTd)
+        if (add->addBlock && add->indexTd)
             printf("Record found in table block %d and TupleDict ID %d\n", add->addBlock, add->indexTd);
     }
     printf("hash_test: Present!\n");

@@ -1,6 +1,6 @@
 /**
 @file auxiliary.h Provides data structures for the auxiliary functions
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
- 
+
 #ifndef AUXILIARY
 #define AUXILIARY
 
@@ -50,16 +50,16 @@ typedef struct list_elem* AK_list_elem;
  * @brief defines a list (obsolete)
  */
 typedef struct {
-	///START row_element_op
-	///structure that reperesents one attribute which is used for projection or to nat_join ect.
-	
-	///table name
-	char table[ MAX_ATT_NAME ];
-	///needed atribute in the table
-	char attribute_name[ MAX_ATT_NAME ];
-	///next element in list
-	struct list_structure_op *next;
-}list_structure_op;
+    ///START row_element_op
+    ///structure that reperesents one attribute which is used for projection or to nat_join ect.
+
+    ///table name
+    char table[ MAX_ATT_NAME ];
+    ///needed atribute in the table
+    char attribute_name[ MAX_ATT_NAME ];
+    ///next element in list
+    struct list_structure_op *next;
+} list_structure_op;
 
 typedef list_structure_op *element_op;
 typedef list_structure_op list_op;
@@ -70,8 +70,8 @@ typedef list_structure_op list_op;
 
 /*
 enum tbl_valalign {
-	ALIGN_LEFT  0,
-	ALIGN_RIGHT 1; 
+        ALIGN_LEFT  0,
+        ALIGN_RIGHT 1;
 };*/
 
 #endif

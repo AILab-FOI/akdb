@@ -1,6 +1,6 @@
 /**
 @file rename.c Provides functions for header atributes renaming
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,77 +20,76 @@
 
 #include "rename.h"
 
-int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr){
-	table_addresses *adrese = get_table_addresses(old_table_name);
-	int tab_adrese[MAX_NUM_OF_BLOCKS];
-	int num_extents=0, brojac = 0;
-	register int i,j;
-	//SEARCH FOR ALL BLOCKS IN SEGMENT
-	for (i=0; ;i++){
-		if(adrese->address_from[i] == 0) break;
-		for(j = adrese->address_from[i]; j <= adrese->address_to[i]; j++){
-			tab_adrese[brojac] = j;
-			brojac++;
-		}
-		num_extents++;
-	}
-	
-	AK_header iHeader[MAX_ATTRIBUTES];
-	AK_block * iBlock = AK_read_block(tab_adrese[0]);
-	memcpy(&iHeader, iBlock->header, sizeof(iBlock->header));
-	
-	for(i = 0; i < MAX_ATTRIBUTES; i++){
-		if(!strcmp(iHeader[i].att_name , old_attr)){
-			printf("AK_rename: the attribute names are the same!\n");
-			memcpy(iHeader[i].att_name, new_attr, strlen(new_attr));
-			break;
-		}
-		else if(!strcmp(iHeader[i].att_name , "/0")){		//if there is no more attributes
-			printf("AK_rename: ERROR: in this table does not exist atribute: %s", old_attr);
-			return (EXIT_ERROR);
-		}
-	}
-	
-	AK_initialize_new_segment(new_table_name,1,&iHeader);
-	for (i=1; i<num_extents; i++){
-		AK_init_new_extent(new_table_name, 1);		//init new table extent 
-	}
-	table_addresses *adrese_new = get_table_addresses(new_table_name);
-	int new_tab_adrese[MAX_NUM_OF_BLOCKS];
-	brojac = 0;
-	//SEARCH FOR ALL BLOCKS IN NEW INITIALIZED SEGMENT
-	for (i=0; ;i++){
-		if(adrese->address_from[i] == 0) break;
-		for(j = adrese->address_from[i]; j <= adrese->address_to[i]; j++){
-			new_tab_adrese[brojac] = j;
-			brojac++;
-		}
-	}
-	
-	//PREIMENOVANJE
-	AK_block * block1;
-	AK_block * block2;
-	
-	for(i=0; i< brojac; i++){
-		block1 = AK_read_block(tab_adrese[i]);
-		block2 = AK_read_block(new_tab_adrese[i]);
-		
-		memcpy(block2,block1,sizeof(block1));				//kopiram cijeli stari blok u novi
-		block2->address = new_tab_adrese[i];
-		memcpy(block2->header, iHeader, sizeof(*iHeader)); 	// u novom mijenjam samo header
-		AK_write_block(block2);								//zapisem novi block
-		
-	}
-	free(block1);
-	free(block2);
-	
-	return EXIT_SUCCESS;
+int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr) {
+    table_addresses *adrese = get_table_addresses(old_table_name);
+    int tab_adrese[MAX_NUM_OF_BLOCKS];
+    int num_extents = 0, brojac = 0;
+    register int i, j;
+    //SEARCH FOR ALL BLOCKS IN SEGMENT
+    for (i = 0;; i++) {
+        if (adrese->address_from[i] == 0) break;
+        for (j = adrese->address_from[i]; j <= adrese->address_to[i]; j++) {
+            tab_adrese[brojac] = j;
+            brojac++;
+        }
+        num_extents++;
+    }
+
+    AK_header iHeader[MAX_ATTRIBUTES];
+    AK_block * iBlock = AK_read_block(tab_adrese[0]);
+    memcpy(&iHeader, iBlock->header, sizeof (iBlock->header));
+
+    for (i = 0; i < MAX_ATTRIBUTES; i++) {
+        if (!strcmp(iHeader[i].att_name, old_attr)) {
+            printf("AK_rename: the attribute names are the same!\n");
+            memcpy(iHeader[i].att_name, new_attr, strlen(new_attr));
+            break;
+        } else if (!strcmp(iHeader[i].att_name, "/0")) { //if there is no more attributes
+            printf("AK_rename: ERROR: in this table does not exist atribute: %s", old_attr);
+            return (EXIT_ERROR);
+        }
+    }
+
+    AK_initialize_new_segment(new_table_name, 1, &iHeader);
+    for (i = 1; i < num_extents; i++) {
+        AK_init_new_extent(new_table_name, 1); //init new table extent
+    }
+    table_addresses *adrese_new = get_table_addresses(new_table_name);
+    int new_tab_adrese[MAX_NUM_OF_BLOCKS];
+    brojac = 0;
+    //SEARCH FOR ALL BLOCKS IN NEW INITIALIZED SEGMENT
+    for (i = 0;; i++) {
+        if (adrese->address_from[i] == 0) break;
+        for (j = adrese->address_from[i]; j <= adrese->address_to[i]; j++) {
+            new_tab_adrese[brojac] = j;
+            brojac++;
+        }
+    }
+
+    //PREIMENOVANJE
+    AK_block * block1;
+    AK_block * block2;
+
+    for (i = 0; i < brojac; i++) {
+        block1 = AK_read_block(tab_adrese[i]);
+        block2 = AK_read_block(new_tab_adrese[i]);
+
+        memcpy(block2, block1, sizeof (block1)); //kopiram cijeli stari blok u novi
+        block2->address = new_tab_adrese[i];
+        memcpy(block2->header, iHeader, sizeof (*iHeader)); // u novom mijenjam samo header
+        AK_write_block(block2); //zapisem novi block
+
+    }
+    free(block1);
+    free(block2);
+
+    return EXIT_SUCCESS;
 }
 
 void rename_test() {
-	//printf( "rename_test: Present!\n" );
-	printf( "\n********** RENAME TEST **********\n\n");
-	
-	AK_rename("nat_join_test", "lastname","nat_join_test","new_lastname");
-	AK_print_table("nat_join_test");
+    //printf( "rename_test: Present!\n" );
+    printf("\n********** RENAME TEST **********\n\n");
+
+    AK_rename("nat_join_test", "lastname", "nat_join_test", "new_lastname");
+    AK_print_table("nat_join_test");
 }

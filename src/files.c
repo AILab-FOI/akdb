@@ -1,6 +1,6 @@
 /**
 @file files.c Provides functions for file management
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,68 +31,62 @@
  * @return
  */
 
-int AK_initialize_new_segment(char *name, int type, AK_header *header)
-{
-	int start_address = -1;
-	int end_address = INITIAL_EXTENT_SIZE;
-	int objectID = AK_get_id();
-        char *sys_table;
+int AK_initialize_new_segment(char *name, int type, AK_header *header) {
+    int start_address = -1;
+    int end_address = INITIAL_EXTENT_SIZE;
+    int objectID = AK_get_id();
+    char *sys_table;
 
-	if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR)
-	{
-		if (DEBUG)
-			printf("AK_init_new_segment__ERROR: Cannot initialize segment!\n");
-		return EXIT_ERROR;
-	}
-	else
-	{
-		end_address += start_address;
-                switch (type) {
-                    case SEGMENT_TYPE_TABLE:
-                        sys_table = "AK_relation";
-                        break;
-                    case SEGMENT_TYPE_INDEX:
-                        sys_table = "AK_index";
-                        break;
-                    default:
-                        break;
-                }
-                element row_root = (element) malloc(sizeof (list));
-                InitializeList(row_root);
-                //DeleteAllElements(row_root);
-                InsertNewElement(TYPE_INT, &objectID, sys_table,"obj_id",row_root);
-                InsertNewElement(TYPE_VARCHAR, name, sys_table, "name", row_root);
-                InsertNewElement(TYPE_INT, &start_address, sys_table, "start_address", row_root);
-                InsertNewElement(TYPE_INT, &end_address, sys_table, "end_address", row_root);
-                insert_row(row_root);
+    if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
+        if (DEBUG)
+            printf("AK_init_new_segment__ERROR: Cannot initialize segment!\n");
+        return EXIT_ERROR;
+    } else {
+        end_address += start_address;
+        switch (type) {
+            case SEGMENT_TYPE_TABLE:
+                sys_table = "AK_relation";
+                break;
+            case SEGMENT_TYPE_INDEX:
+                sys_table = "AK_index";
+                break;
+            default:
+                break;
+        }
+        element row_root = (element) malloc(sizeof (list));
+        InitializeList(row_root);
+        //DeleteAllElements(row_root);
+        InsertNewElement(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
+        InsertNewElement(TYPE_VARCHAR, name, sys_table, "name", row_root);
+        InsertNewElement(TYPE_INT, &start_address, sys_table, "start_address", row_root);
+        InsertNewElement(TYPE_INT, &end_address, sys_table, "end_address", row_root);
+        insert_row(row_root);
 
-		if (DEBUG)
-			printf("AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
-		return start_address;
-	}
+        if (DEBUG)
+            printf("AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
+        return start_address;
+    }
 }
 
+void files_test() {
+    AK_header header[MAX_ATTRIBUTES], header1[MAX_ATTRIBUTES];
+    memset(header, '\0', MAX_ATTRIBUTES);
+    memset(header1, '\0', MAX_ATTRIBUTES);
 
-void files_test()
-{
-	AK_header header[MAX_ATTRIBUTES], header1[MAX_ATTRIBUTES];
-	memset(header, '\0', MAX_ATTRIBUTES);
-	memset(header1, '\0', MAX_ATTRIBUTES);
-	
-	int i, i1;
-	char *ime = "Tomo";
-	char *ime1 = "Tomo1";		
-	
-	header[0].integrity[0] = 21;
-	header[0].type = 1;
-	
-	header1[0].integrity[0] = 21;
-	header1[0].type = 1;
+    int i, i1;
+    char *ime = "Tomo";
+    char *ime1 = "Tomo1";
 
-	i = AK_initialize_new_segment(ime, SEGMENT_TYPE_TABLE, header);
-	if (i != EXIT_ERROR)
-		printf("AK_init_new_segment: Test succeded!\n");
-	i1 = AK_initialize_new_segment(ime1, SEGMENT_TYPE_TABLE, header1);
-	if (i1 != EXIT_ERROR)
-		printf("AK_init_new_segment: Test1 succeded!\n");
+    header[0].integrity[0] = 21;
+    header[0].type = 1;
+
+    header1[0].integrity[0] = 21;
+    header1[0].type = 1;
+
+    i = AK_initialize_new_segment(ime, SEGMENT_TYPE_TABLE, header);
+    if (i != EXIT_ERROR)
+        printf("AK_init_new_segment: Test succeded!\n");
+    i1 = AK_initialize_new_segment(ime1, SEGMENT_TYPE_TABLE, header1);
+    if (i1 != EXIT_ERROR)
+        printf("AK_init_new_segment: Test1 succeded!\n");
 }

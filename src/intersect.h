@@ -1,6 +1,6 @@
 /**
 @file intersect.h Provides data structures for header atributes renaming
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,11 +24,11 @@
 #include "dbman.h"
 #include "table.h"
 
-typedef struct { 
-	/// type of attribute
-	int type;
-	/// attribute name
-	char att_name[ MAX_ATT_NAME ];
+typedef struct {
+    /// type of attribute
+    int type;
+    /// attribute name
+    char att_name[ MAX_ATT_NAME ];
 } intersect_attr;
 
 #endif

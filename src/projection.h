@@ -1,6 +1,6 @@
 /**
 @file projection.h Provides data structures for relational projection operation
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

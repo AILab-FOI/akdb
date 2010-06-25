@@ -1,6 +1,6 @@
 /**
 @file filesearch.h Provides data structures for file searching
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 /**
 \struct search_params
 \brief Attribute name, lower and upper data value, special(NULL or *) - input for AK_equisearch_unsorted and AK_rangesearch_unsorted
-*/
+ */
 typedef struct {
     /// name of attribute
     char *szAttribute;
@@ -53,7 +53,7 @@ typedef struct {
 /**
 \struct search_result
 \brief Search result of AK_equisearch_unsorted and AK_rangesearch_unsorted
-*/
+ */
 typedef struct {
     /// array of tuple addresses
     int *aiTuple_addresses;

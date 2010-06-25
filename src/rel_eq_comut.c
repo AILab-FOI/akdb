@@ -1,6 +1,6 @@
 /**
 @file rel_eq_comut.c Provides functions for for relational equivalences regarding commutativity
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 
 #include "rel_eq_comut.h"
 
-void rel_eq_comut_test() 
-{
-  printf("rel_eq_comut.c: Present!\n");
+void rel_eq_comut_test() {
+    printf("rel_eq_comut.c: Present!\n");
 }

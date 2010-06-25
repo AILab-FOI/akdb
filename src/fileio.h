@@ -1,6 +1,6 @@
 /**
 @file fileio.h Provides data structures for file input/output
-*/
+ */
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,17 +31,18 @@
 
 
 ///@author Matija Novak
+
 typedef struct list_structure_ {
-	///START row_element
-	///structure that reperesents one row of table that is inserted, updated, or deleted
-	int type; //type of data
-	unsigned char data[MAX_VARCHAR_LENGHT]; //data
-	char table[ MAX_ATT_NAME ]; //table name
-	char attribute_name[ MAX_ATT_NAME ]; //attribute name
-	int constraint; //if ist 0 then its new data to be inserted in, when is it 1 then its a constraint on which update and delete searches the data
-	///END row_element
-	struct list_structure_ *next;//next element in the list
-}list_structure;
+    ///START row_element
+    ///structure that reperesents one row of table that is inserted, updated, or deleted
+    int type; //type of data
+    unsigned char data[MAX_VARCHAR_LENGHT]; //data
+    char table[ MAX_ATT_NAME ]; //table name
+    char attribute_name[ MAX_ATT_NAME ]; //attribute name
+    int constraint; //if ist 0 then its new data to be inserted in, when is it 1 then its a constraint on which update and delete searches the data
+    ///END row_element
+    struct list_structure_ *next; //next element in the list
+} list_structure;
 
 typedef list_structure *element;
 typedef list_structure list;
