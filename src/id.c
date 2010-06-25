@@ -26,7 +26,7 @@
  */
 int AK_get_id() {
     char temp_data[MAX_VARCHAR_LENGHT];
-    element row_root = (element) malloc(sizeof (list));
+    list * row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
     AK_list *row = (AK_list*) malloc(sizeof (AK_list));
     int i, num_rec = AK_get_num_records("AK_sequence");
