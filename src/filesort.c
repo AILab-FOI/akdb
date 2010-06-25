@@ -18,53 +18,44 @@
  */
 #include "filesort.h"
 
-
-
-//funkcije upravljanja
-
 /**
-total number of headers in block
-@return returns num - number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
+ * @brief total number of headers in the block
+ * @return returns num - number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
 */
 int get_total_headers(AK_block *iBlock){
 	register int i;
 	for(i = 0; i < MAX_ATTRIBUTES; i++){
-		if(strcmp((char *)iBlock->header[i].att_name,"")==0) //if there is no more attributes
+		if (strcmp((char *)iBlock->header[i].att_name,"")==0) //if there is no more attributes
 			return i;
 	}
 	return i;
-
 }
 
-
 /**
-number of header in block witch to sort
-@return returns num - number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
+ * @brief number of header in the block which to sort
+ * @return returns num - number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
 */
-int get_header_number(AK_block *iBlock, char *attribute_name){
+int get_header_number(AK_block *iBlock, char *attribute_name) {
 	register int i;
-	if(DEBUG_SORT)
-		printf("\natribut: %s\n", attribute_name);
-	for(i = 0; i < MAX_ATTRIBUTES; i++){
-		if(!strcmp((char *)iBlock->header[i].att_name , attribute_name)){
+	
+	for (i = 0; i < MAX_ATTRIBUTES; i++) {
+		if(!strcmp((char *)iBlock->header[i].att_name , attribute_name)) {
 			return i;
-		}
-		else if(!strcmp((char *)iBlock->header[i].att_name , "/0")){		//if there is no more attributes
+		} else if (!strcmp((char *)iBlock->header[i].att_name , "/0")) {
 			printf("get_header_number: ERROR: in this table does not exist atribute: %s", attribute_name);
-			return (EXIT_ERROR);
+			return EXIT_ERROR;
 		}
 	}
 	printf("get_header_number: ERROR: in this table does not exist atribute: %s", attribute_name);
-	return (EXIT_ERROR);
+	return EXIT_ERROR;
 }
 
 /**
-vrati broj zapisa u bloku
-
+ * @brief get tuples number in block
+ * @return int
 */
 int get_num_of_tuples(AK_block *iBlock){
-
-	int i=0;
+	int i = 0;
 	int kraj = 1;
 	while( kraj ) {
 		i ++;
@@ -80,47 +71,22 @@ int get_num_of_tuples(AK_block *iBlock){
 	return (i / max_header_num);
 }
 
-/**
-ucita slijedeci block s obzirom da funkcija za to još ne radi. Ova služi kao pomoćna a kasnije i za lakšu zamjenu
-*/
-
-AK_mem_block * get_next_block(int num){
-
-	AK_mem_block * iCache = (AK_mem_block * )malloc(sizeof(AK_mem_block));
-	//iCache=AK_get_block(num);
-
-	AK_block * iBlock = AK_read_block(num); // tu poslije komentirati
-
-	memcpy(iCache->block, iBlock , sizeof (AK_block));  // i ovo zakomentirati
-
-	return iCache;
-
+AK_mem_block *get_next_block(int num) {
+	AK_mem_block *mem_block = (AK_mem_block * )malloc(sizeof(AK_mem_block));
+	mem_block = (AK_mem_block *)AK_get_block(num);
+	
+	//AK_block *temp_block = AK_read_block(num); // tu poslije komentirati
+	//memcpy(mem_block->block, temp_block, sizeof(AK_block));
+	return mem_block;
 }
 
-
-
-
-
-
-
-extern int address_of_tempBlock = 0;
-void filesort_test(){
-	printf( "filesort_test: Present!\n" );
+void sort_segment(char *table_name, char *atr_name) {
+	table_addresses *addresses = (table_addresses *)get_table_addresses(table_name);
 	
-	
-	sort_segment("testna", "Prezime");
-}
-
-
-void sort_segment(char * table_name, char * atr_name){
-        //AK_flush_cache();
-        
-	table_addresses * adrese = get_table_addresses(table_name);
-	
+	register int i,j,n,q,k, num_extents;
 	int ORG_blokovi[MAX_NUM_OF_BLOCKS];
 	int TEMP_blokovi[MAX_NUM_OF_BLOCKS];
 	int POMOCNI_blokovi[MAX_NUM_OF_BLOCKS];
-	register int i,j,n,q,k, num_extents;
 	int ORG_brojac=0;
 	int TEMP_brojac=0;
 	int POMOCNI_brojac=0;
@@ -128,48 +94,52 @@ void sort_segment(char * table_name, char * atr_name){
 	int TEMP_tuples=0;
 	num_extents=0;
 
-	//SEARCH FOR ALL BLOCKS IN SEGMENT
-	for (i=0; ;i++){
-		if(adrese->address_from[i] == 0) break;
-		for(j = adrese->address_from[i]; j <= adrese->address_to[i]; j++){
+	//Get number of extents and number of blocks for given table
+	for (i = 0; ;i++) {
+		if(addresses->address_from[i] == 0) 
+			break;
+			
+		for (j = addresses->address_from[i]; j <= addresses->address_to[i]; j++) {
 			ORG_blokovi[ORG_brojac] = j;
 			ORG_brojac++;
 		}
 		num_extents++;
 	}
+	
 	if(DEBUG_SORT)
-		printf("Ukupno ima: %i blokova u segmentu %s     1. blok=%i\n",ORG_brojac,table_name,ORG_blokovi[0]);
+		printf("There are: %i blocks in segment %s, 1. block = %i\n", ORG_brojac, table_name, ORG_blokovi[0]);
 	
-	
-	//CREATE NEW TEMP SEGMENT WITCH SIZE IS EQUAL TO SIZE OF ORGINAL SEGMENT
-	char *temp_segment;
+	//create the new temp segment which size is equal to the size of the original segment
+	char *temp_segment = (char*)malloc(MAX_VARCHAR_LENGHT * sizeof(char));
 	strcat(temp_segment,"SORT_TEMP_HELP_");
 	strcat(temp_segment,table_name);		//npr: SORT_TEMP_PESONS this is the name of temp segment
 	
-	AK_block * Hblock = AK_read_block(ORG_blokovi[0]);
+	AK_block * Hblock = (AK_block *)AK_read_block(ORG_blokovi[0]);
 	AK_header *head = (AK_header*) malloc (sizeof(AK_header));
 	memcpy(&head,Hblock->header,sizeof(AK_header));
 	
-	AK_initialize_new_segment(temp_segment,1,head);
+	AK_initialize_new_segment(temp_segment, SEGMENT_TYPE_TABLE, head);
 	
-	for (i=1; i<num_extents; i++){
-		AK_init_new_extent(temp_segment, 1);		//init new table extent 
-		
+	//init new table extent
+	for (i = 1; i < num_extents; i++) {
+		AK_init_new_extent(temp_segment, SEGMENT_TYPE_TABLE); 
 	}
 	
-	//SEARCH FOR ALL BLOCKS IN SEGMENT
-	adrese = get_table_addresses(temp_segment);
+	//search for all blocks in segment
+	addresses = (table_addresses *)get_table_addresses(temp_segment);
 	TEMP_brojac=0;
-	for (i=0; ;i++){
-		if(adrese->address_from[i] == 0) break;
-		for(j = adrese->address_from[i]; j <= adrese->address_to[i]; j++){
+	
+	for (i = 0; ;i++) {
+		if (addresses->address_from[i] == 0) 
+			break;
+		for(j = addresses->address_from[i]; j <= addresses->address_to[i]; j++){
 			TEMP_blokovi[TEMP_brojac] = j;
 			TEMP_brojac++;
 		}
 	}
-	if(DEBUG_SORT)
-		printf("Ukupno ima: %i blokova u segmentu %s     1. blok=%i\n",TEMP_brojac,temp_segment,TEMP_blokovi[0]);
 	
+	if(DEBUG_SORT)
+		printf("There are: %i blocks in segment %s, 1. block = %i\n", TEMP_brojac, temp_segment, TEMP_blokovi[0]);
 	
 	//SORTING ...
 	
@@ -179,29 +149,23 @@ void sort_segment(char * table_name, char * atr_name){
 
 	int r1, r2, free;
 	
-	
 	AK_mem_block * iCache1 = (AK_mem_block*) malloc (sizeof(AK_mem_block));
 	
-
 	int BR_org1 = 0;
 	int iCache1_position = 0;
 	iCache1 = get_next_block(ORG_blokovi[BR_org1]);
 	
-	
 	int num_tuples_iCache1 = get_num_of_tuples( iCache1->block ); 
 
-	
-			//posto se headeri isti kod bilo kojeg bloka onda je svejedno u kojem se uzmu ti podaci
-	int sort_header_num = get_header_number(iCache1->block, atr_name);    //broj headera po kojem se sortira
-	
-	int max_header_num = get_total_headers( iCache1->block );				//ukupni broj headera za jedan zapis
+	//posto se headeri isti kod bilo kojeg bloka onda je svejedno u kojem se uzmu ti podaci
+	int sort_header_num = get_header_number(iCache1->block, atr_name);  //broj headera po kojem se sortira
+	int max_header_num = get_total_headers( iCache1->block );			//ukupni broj headera za jedan zapis
 	
 	AK_mem_block * iCache2 = (AK_mem_block*) malloc (sizeof(AK_mem_block));
 	int BR_org2 = 0;
 	int iCache2_position=0;  
 	//iCache2 = get_next_block(ORG_blokovi[BR_org2]);
 	int num_tuples_iCache2 = 0;
-	
 	
 	return(0);	
 	//u taj tek zapisujemo
@@ -216,8 +180,6 @@ void sort_segment(char * table_name, char * atr_name){
 	int glavni = 1;
 	
 	for(n=1; n < ORG_brojac; n = n * 2 ){
-		
-		
 		for(q = 0; q < ORG_brojac / 2 ; q += n ){
 			BR_org1=q;		//pokazivac na block u prvom dijelu
 			BR_org2=q+n;		//pokazivac na block u drugom dijelu
@@ -497,76 +459,59 @@ void sort_segment(char * table_name, char * atr_name){
 						
 						iCacheTemp_position_td++;
 						
-					} 
-						//end: for (i = 0; i < max_header_num; i++)
+					} //end: for (i = 0; i < max_header_num; i++)
 					
 					iCache1_position++;
 					
-					if(iCache1_position > num_tuples_iCache1 ){			// ako se je pročitao zadnji podatak iz iCache1->block
+					//ako se je pročitao zadnji podatak iz iCache1->block
+					if (iCache1_position > num_tuples_iCache1 ) {
 						BR_org1++;  //pokazivač na slijedeći blok za čitanje
 						
-						if( BR_org1 < r1 ){		// ako to nije bio zadnji blok u prolazu
+						//ako to nije bio zadnji blok u prolazu
+						if ( BR_org1 < r1 ) {
 							iCache1 = get_next_block(ORG_blokovi[BR_org1]);  // učitaj slijedeći blok
 							num_tuples_iCache1 = get_num_of_tuples( iCache1->block );  //koliko ima zapisa?
 							iCache1_position = 0; 	//postavi se na početak učitanog bloka
-						} 
-						//end: if( BR_org1 < r1 )	
-						
-					}
-						// end: if(iCache1_position > num_tuples_iCache1 )
-					
-				} 
-				//end: while(BR_org1 < r1)
-				
-			} 
-			//end: else
-			
-		}	
-		
-		//end: for(q = 0; q < ORG_brojac / 2 ; q = 1 + n )
+						} //end: if( BR_org1 < r1 )	
+					} // end: if(iCache1_position > num_tuples_iCache1 )
+				} //end: while(BR_org1 < r1)
+			} //end: else
+		} //end: for(q = 0; q < ORG_brojac / 2 ; q = 1 + n )
 		
 		//zamjena polja sa blokovima
 		
-		if(glavni){ // podaci su u adrese_blokova_ORG
+		// podaci su u adrese_blokova_ORG
+		if (glavni) {
 			glavni = 0;
 			printf("\n\n\n glavni je segment\n\n\n");
+			
 			for (i=0; i< ORG_brojac; i++) {
 				POMOCNI_blokovi[i] = ORG_blokovi[i];
 				ORG_blokovi[i] = TEMP_blokovi[i];
 				TEMP_blokovi[i] = POMOCNI_blokovi[i];
-				
 			}
+			
 			POMOCNI_brojac = ORG_brojac;
 			ORG_brojac = TEMP_brojac;
 			TEMP_brojac = POMOCNI_brojac;
-		}
-		else{
-				printf("\n\n\n glavni je temp\n\n\n");
-				glavni = 1 ;
-			for(i=0; i< ORG_brojac; i++){
+		} else {
+			printf("\n\n\n glavni je temp\n\n\n");
+			glavni = 1 ;
+			
+			for (i=0; i< ORG_brojac; i++) {
 				POMOCNI_blokovi[i] = TEMP_blokovi[i];
 				TEMP_blokovi[i] = ORG_blokovi[i];
 				ORG_blokovi[i] = POMOCNI_blokovi[i];
-				
 			}
+			
 			POMOCNI_brojac = TEMP_brojac;
 			TEMP_brojac = ORG_brojac;
 			ORG_brojac = POMOCNI_brojac;
 		}
-		
-		
-	
-
 	} // end : for(n=1; n < ORG_brojac; n = n * 2 )
-	
-
 }
 
-
-
-
-int reset_block( AK_block * iBlock )
-{
+int reset_block(AK_block * iBlock) {
 	register int i, j, k;
 	
 	AK_header prazni_head[ MAX_ATTRIBUTES ];
@@ -614,42 +559,34 @@ int reset_block( AK_block * iBlock )
 	
 }
 
-
-
-
-
 /**
 @author Bakoš Nikola
 @version v1.0
 Sorts the given block
 @param iBlock - block
 */
-
-
 void block_sort(AK_block * iBlock, char * atr_name){
-	register int t, n, j, k, q, i;
+	register int i, j, k, n, t, q;
 	
 	char x[DATA_ROW_SIZE]; //bas podatak koji nas zanima
 	char y[DATA_ROW_SIZE]; //bas podatak s kojim se uspoređuje
 	int tip=0;
 	AK_block * cTemp1 = (AK_block*) malloc (sizeof(AK_block));
-	cTemp1 = AK_read_block(15);
+	cTemp1 = (AK_block *)AK_read_block(15);
 	int free;
 	int broj_td;
 	
-	AK_block * cTemp2 = (AK_block*) malloc (sizeof(AK_block));
-	cTemp2 = AK_read_block(16);
+	AK_block *cTemp2 = (AK_block*) malloc (sizeof(AK_block));
+	cTemp2 = (AK_block *)AK_read_block(16);
 	
-	AK_header * block_header = (AK_header * ) malloc (sizeof(AK_header));
+	AK_header *block_header = (AK_header * ) malloc (sizeof(AK_header));
 	memcpy(block_header,  iBlock->header,  sizeof(AK_header));
 	
-	int sort_header_num = get_header_number(iBlock, atr_name);    //broj headera po kojem se sortira
+	int sort_header_num = get_header_number(iBlock, atr_name);  //broj headera po kojem se sortira
+	//tu provjeriti još funkciju	
+	int max_header_num = get_total_headers( iBlock );			//ukupni broj headera za jedan zapis
+	int num_tuples = get_num_of_tuples( iBlock );
 	
-//tu provjeriti još funkciju	
-	int max_header_num = get_total_headers( iBlock );				//ukupni broj headera za jedan zapis
-	
-	
-	int num_tuples = get_num_of_tuples( iBlock ); 
 	if(DEBUG_SORT)
 		printf ("\n tu sam: %i, %i", sort_header_num, num_tuples);
 	
@@ -659,11 +596,9 @@ void block_sort(AK_block * iBlock, char * atr_name){
 	int ubr2= num_tuples - ubr1;
 	
 	for( n = 1; n < num_tuples; n = n * 2 ){
-		
-		
-		reset_block(cTemp1);						//RESET BLOKOVA
+		reset_block(cTemp1);
 		reset_block(cTemp2);
-	//n=1;
+		//n=1;
 		
 		broj_td=0;
 		//upis polovice u prvi temp blok
@@ -699,7 +634,6 @@ void block_sort(AK_block * iBlock, char * atr_name){
 				printf (" %s ", podatak);
 		}
 		printf("\n\n");
-		
 		
 		//upis druge polovice u drugi temp blok
 		broj_td=0;
@@ -737,27 +671,20 @@ void block_sort(AK_block * iBlock, char * atr_name){
 		}
 		printf("\n\n");
 		
-		
 		//TU POCNE SORTIRANJE
-		
-		
-		reset_block(iBlock);			//RESET BLOKA
+		reset_block(iBlock);
 
 		if(DEBUG_SORT)
 			printf("                      , velicina: %i\n", iBlock->free_space);
 		
 		memcpy(iBlock->header,  block_header,  sizeof(AK_header));
 		
-		
 		broj_td=0;
 		j=k=0;
 		int br1=0;  int br2=0;
 		
 		for (q = 0; q < ubr1; q += n ){
-			
 			printf("\nfor (q = 0; q < num_tuples/2; q += n ) q=%i , j=%i   ,  k=%i  , br1=%i  , br2=%i\n", q,j,k,br1,br2);
-			
-				
 			
 			for(j=k=0; ; ){
 				
@@ -786,10 +713,11 @@ void block_sort(AK_block * iBlock, char * atr_name){
 						printf("manji je: %s\n",x);
 					
 					//unosi podatke
-					for (i = 0; i < max_header_num; i++){
+					for (i = 0; i < max_header_num; i++) {
 						free=0;
-							for(free;free<2000;free++)
-								podatak[free]='\0';
+						for(free;free<2000;free++)
+							podatak[free]='\0';
+						
 						memcpy(podatak,
 							   cTemp1->data + cTemp1->tuple_dict[ i + (br1 * max_header_num) ].address,
 							   cTemp1->tuple_dict[ i + (br1 * max_header_num) ].size);
@@ -801,33 +729,30 @@ void block_sort(AK_block * iBlock, char * atr_name){
 					br1++;
 					j++;
 					
-					if(j<n && br1<ubr1){    //još ima podataka u cTemp1
+					if (j < n && br1 < ubr1) {    //još ima podataka u cTemp1
 						printf("\nif(j<n){    //još ima podataka u cTemp1  j=%i , n=%i\n",j,n);
 						
 						free=0;
-							for(free;free<DATA_ROW_SIZE;free++)
-								x[free]='\0';
+						for(free;free < DATA_ROW_SIZE; free++)
+							x[free]='\0';
+						
 						memcpy(x,
 					   			cTemp1->data + cTemp1->tuple_dict[ br1 * max_header_num + sort_header_num ].address,
 					   			cTemp1->tuple_dict[br1 * max_header_num + sort_header_num].size);
 						//x[cTemp1->tuple_dict[br1 * max_header_num + sort_header_num].size]="\0";
-						
-					}
-					else{
+					} else {
 						printf("\n\nbreak j<n\n\n");
 						break;
 					}
-					
-				}
-				else{
+				} else {
 					if(DEBUG)
 						printf("manji je: %s\n",y);
 					
 					//unosi podatke
-					for (i = 0; i < max_header_num; i++){
+					for (i = 0; i < max_header_num; i++) {
 						free=0;
-							for(free;free<2000;free++)
-								podatak[free]='\0';
+						for(free;free<2000;free++)
+							podatak[free]='\0';
 						
 						memcpy(podatak,
 							   cTemp2->data + cTemp2->tuple_dict[ i + (br2 * max_header_num) ].address,
@@ -839,142 +764,131 @@ void block_sort(AK_block * iBlock, char * atr_name){
 					br2++;
 					k++;
 					
-					if(k<n && br2<ubr2){    //još ima podataka u cTemp2
+					if(k < n && br2 < ubr2) {    //još ima podataka u cTemp2
 						printf("\nif(k<n){    //još ima podataka u cTemp1  k=%i , n=%i\n",k,n);
 						free=0;
-							for(free;free<DATA_ROW_SIZE;free++)
-								y[free]='\0';
+						for(free;free<DATA_ROW_SIZE;free++)
+							y[free]='\0';
+						
 						memcpy(y,
 					   			cTemp2->data + cTemp2->tuple_dict[ br2 * max_header_num + sort_header_num ].address,
 					   			cTemp2->tuple_dict[ br2 * max_header_num + sort_header_num].size);
 						//y[cTemp1->tuple_dict[br2 * max_header_num + sort_header_num].size]="\0";
 						
-					}
-					else{
+					} else {
 						printf("\n\nbreak k<n\n\n");
 						break;
 					}
-					
-				
 				}
-				
 			}
+			
 			printf("\n\njoš podataka if(j<n) j=%i , n=%i, br1=%i, ubr1=%i\n\n",k,n,br1,ubr1);
-				if(j<n && br1<ubr1){    //još ima podataka u cTemp1
-						if(!(br1<ubr1)) break;
-						//unosi podatke
-					for (i = 0; i < max_header_num; i++){
-						free=0;
-							for(free;free<2000;free++)
-								podatak[free]='\0';
-						memcpy(podatak,
-							   cTemp1->data + cTemp1->tuple_dict[ i + (br1 * max_header_num) ].address,
-							   cTemp1->tuple_dict[ i + (br1 * max_header_num) ].size);
-						tip = cTemp1->tuple_dict[ i + (br1 * max_header_num) ].type;
-						AK_insert_entry(iBlock, tip, podatak, broj_td );
-						broj_td+=1;						
-					}
-					br1++;
-					j++;
-						
+			if(j<n && br1<ubr1){    //još ima podataka u cTemp1
+					if(!(br1<ubr1)) break;
+					//unosi podatke
+				for (i = 0; i < max_header_num; i++){
+					free=0;
+						for(free;free<2000;free++)
+							podatak[free]='\0';
+					memcpy(podatak,
+						   cTemp1->data + cTemp1->tuple_dict[ i + (br1 * max_header_num) ].address,
+						   cTemp1->tuple_dict[ i + (br1 * max_header_num) ].size);
+					tip = cTemp1->tuple_dict[ i + (br1 * max_header_num) ].type;
+					AK_insert_entry(iBlock, tip, podatak, broj_td );
+					broj_td+=1;						
 				}
-				printf("\n\njoš podataka if(k<n) k=%i , n=%i, br2=%i, ubr2=%i\n\n",k,n,br2,ubr2);
-				if(k<n && br2<ubr2){    //još ima podataka u cTemp2
-						if (!(br2<ubr2)) break;
-						//unosi podatke
-					for (i = 0; i < max_header_num; i++){
-						free=0;
-							for(free;free<2000;free++)
-								podatak[free]='\0';
-						memcpy(podatak,
-							   cTemp2->data + cTemp2->tuple_dict[ i + (br2 * max_header_num) ].address,
-							   cTemp2->tuple_dict[ i + (br2 * max_header_num) ].size);
-						tip = cTemp2->tuple_dict[ i + (br2 * max_header_num) ].type;
-						AK_insert_entry(iBlock, tip, podatak, broj_td );
-						broj_td+=1;						
-					}
-					br2++;
-					k++;
-						
+				br1++;
+				j++;
+					
+			}
+			
+			printf("\n\njoš podataka if(k<n) k=%i , n=%i, br2=%i, ubr2=%i\n\n",k,n,br2,ubr2);
+			if (k < n && br2 < ubr2) {    //još ima podataka u cTemp2
+				if (!(br2<ubr2)) break;
+					//unosi podatke
+				for (i = 0; i < max_header_num; i++) {
+					free=0;
+					for(free;free<2000;free++)
+						podatak[free]='\0';
+					
+					memcpy(podatak,
+						   cTemp2->data + cTemp2->tuple_dict[ i + (br2 * max_header_num) ].address,
+						   cTemp2->tuple_dict[ i + (br2 * max_header_num) ].size);
+					tip = cTemp2->tuple_dict[ i + (br2 * max_header_num) ].type;
+					AK_insert_entry(iBlock, tip, podatak, broj_td );
+					broj_td+=1;						
 				}
-			
-			
+				br2++;
+				k++;
+			}
 			
 			//ako je jedna od datoteka prazna
-			for(; j<n; j++){
-				if (!(br1<ubr1)) break;
+			for (; j < n; j++) {
+				if (!(br1 < ubr1)) 
+					break;
 				//unosi podatke
 				printf("\n\n for(; j<n; j++)  br1=%i    //unosi podatke  brtd=%i\n\n",br1,broj_td);
-					for (i = 0; i < max_header_num; i++){
-						free=0;
-							for(free;free<2000;free++)
-								podatak[free]='\0';
-						memcpy(podatak,
-							   cTemp1->data + cTemp1->tuple_dict[ i + (br1 * max_header_num) ].address,
-							   cTemp1->tuple_dict[ i + (br1 * max_header_num) ].size);
-						tip = cTemp1->tuple_dict[ i + (br1 * max_header_num) ].type;
-						AK_insert_entry(iBlock, tip, podatak, broj_td );
-						broj_td+=1;						
-				
-					}
+				for (i = 0; i < max_header_num; i++) {
+					free=0;
+					for(free;free<2000;free++)
+						podatak[free]='\0';
+						
+					memcpy(podatak,
+						   cTemp1->data + cTemp1->tuple_dict[ i + (br1 * max_header_num) ].address,
+						   cTemp1->tuple_dict[ i + (br1 * max_header_num) ].size);
+					tip = cTemp1->tuple_dict[ i + (br1 * max_header_num) ].type;
+					AK_insert_entry(iBlock, tip, podatak, broj_td );
+					broj_td+=1;						
+				}
 				br1++;
-			
 			}
 			
-			for(; k<n; k++){
-				if (!(br2<ubr2)) break;
+			for (; k < n; k++) {
+				if (!(br2 < ubr2)) 
+					break;
 				//unosi podatke
 				printf("\n\n for(; k<n; k++)  br2=%i   //unosi podatke  brtd=%i\n\n",br2,broj_td);
-					for (i = 0; i < max_header_num; i++){
-						free=0;
-							for(free;free<2000;free++)
-								podatak[free]='\0';
-						memcpy(podatak,
-							   cTemp2->data + cTemp2->tuple_dict[ i + (br2 * max_header_num) ].address,
-							   cTemp2->tuple_dict[ i + (br2 * max_header_num) ].size);
-						tip = cTemp2->tuple_dict[ i + (br2 * max_header_num) ].type;
-						AK_insert_entry(iBlock, tip, podatak, broj_td );
-						broj_td+=1;						
-				
-					}
+				for (i = 0; i < max_header_num; i++) {
+					free=0;
+					for(free;free<2000;free++)
+						podatak[free]='\0';
+					
+					memcpy(podatak,
+						   cTemp2->data + cTemp2->tuple_dict[ i + (br2 * max_header_num) ].address,
+						   cTemp2->tuple_dict[ i + (br2 * max_header_num) ].size);
+					tip = cTemp2->tuple_dict[ i + (br2 * max_header_num) ].type;
+					AK_insert_entry(iBlock, tip, podatak, broj_td );
+					broj_td += 1;						
+				}
 				br2++;
 			}
-		
-		
 		}
 
-	printf("\n\n KORAK ZAVRSIO \n\n");
-	AK_write_block(iBlock);					//tu treba nekaj drugo
-		
+		printf("\n\n KORAK ZAVRSIO \n\n");
+		AK_write_block(iBlock);					//tu treba nekaj drugo
 		printf ("   \n\n               u iBlock        podatak, brtd: %i\n",broj_td);
+		
 		for(i=0;i<broj_td; i++){
 			free=0;
-							for(free;free<2000;free++)
-								podatak[free]='\0';
-			memcpy(podatak,
-					   iBlock->data + iBlock->tuple_dict[ i ].address,
-					   iBlock->tuple_dict[ i ].size);
-				printf (" %s ", podatak);
+			for(free;free<2000;free++)
+				podatak[free]='\0';
+			memcpy(podatak, iBlock->data + iBlock->tuple_dict[i].address, iBlock->tuple_dict[i].size);
+			printf(" %s ", podatak);
 		}
 		printf("\n\n");
 	}
-	
-	//brisanje svega
-	
 	reset_block(cTemp1);
-	reset_block(cTemp2);				//tu treba sad još spremiti 
+	reset_block(cTemp2);	//tu treba sad još spremiti 
 	
-	AK_write_block(cTemp1);					// ali mislim da samo ide dirty bit
+	AK_write_block(cTemp1);	//ali mislim da samo ide dirty bit
 	AK_write_block(cTemp2);
 	
 }
 
-
-
-
-
-
-
-
-
-
+extern int address_of_tempBlock = 0;
+void filesort_test(){
+	printf( "filesort_test: Present!\n" );
+	
+	
+	sort_segment("testna", "Prezime");
+}

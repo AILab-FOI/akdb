@@ -69,7 +69,7 @@ int AK_num_attr( char * tblName ) {
 int AK_get_num_records( char *tblName ){
     int num_rec = 0;
     table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-    if( addresses->address_from[0] == NULL )
+    if (addresses->address_from[0] == 0 )
         return -1;
     int i = 0, j, k;
      AK_mem_block *temp = (AK_mem_block*)AK_get_block( addresses->address_from[0]);
@@ -104,9 +104,9 @@ int AK_get_num_records( char *tblName ){
  * @param char* - table name
  * @result AK_header* - array of table header
  */
-AK_header* AK_get_header( char *tblName ){
+AK_header *AK_get_header( char *tblName ){
     table_addresses *addresses = (table_addresses* ) get_table_addresses( tblName );
-    if( addresses->address_from[0] == NULL )
+    if( addresses->address_from[0] == 0 )
         return 0;
     AK_mem_block *temp = (AK_mem_block*) AK_get_block( addresses->address_from[0] );
 
@@ -124,7 +124,7 @@ AK_header* AK_get_header( char *tblName ){
  * @param int - zero-based index
  * @result char* - attribute name
  */
-char* AK_get_attr_name( char *tblName, int index ){
+char *AK_get_attr_name( char *tblName, int index ){
     int num_attr = AK_num_attr( tblName );
     if( index >= num_attr )
         return NULL;
@@ -162,7 +162,7 @@ int AK_get_attr_index( char *tblName, char *attrName ){
  * @param char* - table name
  * @result AK_list* - column values list
  */
-AK_list * AK_get_column( int num, char *tblName ){
+AK_list *AK_get_column( int num, char *tblName ){
     int num_attr = AK_num_attr( tblName );
     if( num >= num_attr || num < 0 )
         return NULL;

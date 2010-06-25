@@ -55,7 +55,7 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
     taAddresses = get_table_addresses(szRelation);
 
     /// iterate through all the blocks
-    for(k = 0; k < 200 && taAddresses->address_from[k] > 0; k++) { // 200 == Novak's magic number :)
+    for(k = 0; k < MAX_EXTENTS_IN_SEGMENT && taAddresses->address_from[k] > 0; k++) { // 200 == Novak's magic number :)
         for(iBlock = taAddresses->address_from[k]; iBlock <= taAddresses->address_to[k]; iBlock++) {
             //mem_block = AK_get_block(iBlock);
             mem_block = &tmp;
@@ -210,11 +210,11 @@ void filesearch_test()
     list          *row_root;
 
     // create table and fill it for testing purposes
-	hTmp = AK_create_header("Number int", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+	hTmp = (AK_header *)AK_create_header("Number int", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
 	hBroj_int[0] = *hTmp;
-	hTmp = AK_create_header("Number float", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
+	hTmp = (AK_header *)AK_create_header("Number float", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
 	hBroj_int[1] = *hTmp;
-	hTmp = AK_create_header("Varchar column", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+	hTmp = (AK_header *)AK_create_header("Varchar column", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
 	hBroj_int[2] = *hTmp;
 	memset(&hBroj_int[3], 0, sizeof(AK_header));
 
@@ -265,12 +265,12 @@ void filesearch_test()
 
     if(DEBUG)
         puts("Calling AK_search_unsorted");
-	sr = AK_search_unsorted("filesearch test table", &sp, 3);
+	sr = AK_search_unsorted("filesearch test table", sp, 3);
 
     for(i = 0; i < sr.iNum_tuple_addresses; i++) {
         //mem_block = AK_get_block (sr.aiBlocks[i]); // caching should be used when available
         mem_block = &tmp;
-        mem_block->block = AK_read_block(sr.aiBlocks[i]);
+        mem_block->block = (AK_block *)AK_read_block(sr.aiBlocks[i]);
 
         printf("Found:%d\n", *((int *) (mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 0].address)));
         printf("Found:%f\n", *((double *) (mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 1].address)));

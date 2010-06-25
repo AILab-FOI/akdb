@@ -28,6 +28,7 @@ void create_test_tables() {
 	int mbr, year, id_prof, id_department;
 	float weight;
 	
+	//---------------------------------------> CREATE TABLE 'STUDENT' <---------------------------------------
     //create header
     AK_header t_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
@@ -346,7 +347,10 @@ void create_test_tables() {
     insert_row(row_root);
 	
 	AK_print_table(tblName);
+	//-------------------------------------------------------------------------------------------------------
 	
+	
+	//--------------------------------------> CREATE TABLE 'PROFESSOR' <-------------------------------------
 	//create header
     AK_header t_header2[ MAX_ATTRIBUTES ];
 	
@@ -456,7 +460,10 @@ void create_test_tables() {
     insert_row(row_root);
 	
 	AK_print_table(tblName);
+	//-------------------------------------------------------------------------------------------------------
+		
 	
+	//--------------------------------------> CREATE TABLE 'ASSISTANT' <-------------------------------------
 	//create table, same header as professor for intersect test
     AK_header t_header3[ MAX_ATTRIBUTES ];
 	
@@ -513,8 +520,11 @@ void create_test_tables() {
 	InsertNewElement(TYPE_VARCHAR, "www.foi.hr/nastavnici/schatten.markus/", tblName, "web_page", row_root);
     insert_row(row_root);
 	
-	AK_print_table(tblName);
+	AK_print_table(tblName);	
+	//-------------------------------------------------------------------------------------------------------
 	
+	
+	//--------------------------------------> CREATE TABLE 'EMPLOYEE' <--------------------------------------	
 	//create header
     AK_header t_header4[ MAX_ATTRIBUTES ];
 	
@@ -593,7 +603,10 @@ void create_test_tables() {
 	insert_row(row_root);
 	
 	AK_print_table(tblName);
+	//-------------------------------------------------------------------------------------------------------
 	
+	
+	//-------------------------------------> CREATE TABLE 'DEPARTMENT' <-------------------------------------
 	//create header
     AK_header t_header5[ MAX_ATTRIBUTES ];
 	
@@ -667,5 +680,31 @@ void create_test_tables() {
 	insert_row(row_root);*/
 	
 	AK_print_table(tblName);
+	//-------------------------------------------------------------------------------------------------------
+	
+		
+	//---------------------------------------> CREATE TABLE 'COURSE' <---------------------------------------
+	//create header
+    AK_header t_header6[MAX_ATTRIBUTES];
+
+    temp = (AK_header*) AK_create_header("id_course", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy(t_header6, temp, sizeof(AK_header));
+    temp = (AK_header*) AK_create_header("name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy(t_header6 + 1, temp, sizeof(AK_header));
+    temp = (AK_header*) AK_create_header("category", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy(t_header6 + 2, temp, sizeof(AK_header));
+	temp = (AK_header*) AK_create_header("lecturer", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy(t_header6 + 3, temp, sizeof(AK_header));
+    temp = (AK_header*) AK_create_header("active", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+    memcpy(t_header6 + 4, temp, sizeof(AK_header));
+	memset(t_header6 + 5, '\0', MAX_ATTRIBUTES - 5);
+    
+	//create table
+	tblName = "course";
+    startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header6);
+
+    if (startAddress != EXIT_ERROR)
+        printf("\nTABLE %s CREATED!\n", tblName);
+	//------------------------------------------------------------------------------------------------------
 	
 }

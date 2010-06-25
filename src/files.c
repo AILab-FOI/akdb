@@ -75,20 +75,24 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header)
 
 void files_test()
 {
-	AK_header header;
-	int i;
-	header.integrity[0] = 21;
-	header.type = 1;
+	AK_header header[MAX_ATTRIBUTES], header1[MAX_ATTRIBUTES];
+	memset(header, '\0', MAX_ATTRIBUTES);
+	memset(header1, '\0', MAX_ATTRIBUTES);
+	
+	int i, i1;
 	char *ime = "Tomo";
-	AK_header header1;
-	int i1;
-	header1.integrity[0] = 21;
-	header1.type = 1;
-	char *ime1 = "Tomo1";
-	i = AK_initialize_new_segment(ime, SEGMENT_TYPE_TABLE, &header);
+	char *ime1 = "Tomo1";		
+	
+	header[0].integrity[0] = 21;
+	header[0].type = 1;
+	
+	header1[0].integrity[0] = 21;
+	header1[0].type = 1;
+
+	i = AK_initialize_new_segment(ime, SEGMENT_TYPE_TABLE, header);
 	if (i != EXIT_ERROR)
 		printf("AK_init_new_segment: Test succeded!\n");
-	i1 = AK_initialize_new_segment(ime1, SEGMENT_TYPE_TABLE, &header1);
+	i1 = AK_initialize_new_segment(ime1, SEGMENT_TYPE_TABLE, header1);
 	if (i1 != EXIT_ERROR)
 		printf("AK_init_new_segment: Test1 succeded!\n");
 }

@@ -220,91 +220,6 @@ void query_optimization_test(AK_list *list_query) {
 	printf("query_optimization.c: Present!\n");
 	printf( "\n********** QUERY OPTIMIZATION TEST by Dino Laktašić **********\n");
 	
-	int t_id = 0;
-    char *tblName[3];
-	AK_header *temp[3];
-	
-	//---------------------------------------> CREATE TABLE 'PROFESOR' <---------------------------------------
-    //create header
-    AK_header t_header[MAX_ATTRIBUTES];
-  
-    temp[t_id] = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header + 1, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header + 2, temp[t_id], sizeof(AK_header));
-	temp[t_id] = (AK_header*) AK_create_header("profession", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header + 3, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("years", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header + 4, temp[t_id], sizeof(AK_header));
-	temp[t_id] = (AK_header*) AK_create_header("email", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header + 5, temp[t_id], sizeof(AK_header));
-	memset(t_header + 6, '\0', MAX_ATTRIBUTES - 6);
-	
-	//create table
-	tblName[t_id] = "profesor";
-    
-	int startAddress = AK_initialize_new_segment(tblName[t_id], SEGMENT_TYPE_TABLE, t_header);
-    
-    if (startAddress != EXIT_ERROR)
-        printf("\nTABLE %s CREATED!\n", tblName[t_id]);
-    
-    printf("rel_eq_selection_test: After segment initialization: %d\n", AK_num_attr(tblName[t_id++]));
-	
-	//---------------------------------------> CREATE TABLE 'STUDENT' <---------------------------------------
-	//create header
-    AK_header t_header2[MAX_ATTRIBUTES];
-
-    temp[t_id] = (AK_header*) AK_create_header("id_stud", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header2, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header2 + 1, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header2 + 2, temp[t_id], sizeof(AK_header));
-	temp[t_id] = (AK_header*) AK_create_header("status", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header2 + 3, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("avg_grade", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header2 + 4, temp[t_id], sizeof(AK_header));
-	memset(t_header2 + 5, '\0', MAX_ATTRIBUTES - 5);
-    
-	//create table
-	tblName[t_id] = "student";
-    
-    int startAddress2 = AK_initialize_new_segment(tblName[t_id], SEGMENT_TYPE_TABLE, t_header2);
-    
-    if (startAddress2 != EXIT_ERROR)
-        printf("\nTABLE %s CREATED!\n", tblName[t_id]);
-    
-    printf("rel_eq_selection_test: After segment initialization: %d\n", AK_num_attr(tblName[t_id++]));
-	
-	//---------------------------------------> CREATE TABLE 'COURSE' <---------------------------------------
-	//create header
-    AK_header t_header3[MAX_ATTRIBUTES];
-
-    temp[t_id] = (AK_header*) AK_create_header("id_course", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header3, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header3 + 1, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("category", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header3 + 2, temp[t_id], sizeof(AK_header));
-	temp[t_id] = (AK_header*) AK_create_header("lecturer", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header3 + 3, temp[t_id], sizeof(AK_header));
-    temp[t_id] = (AK_header*) AK_create_header("active", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-    memcpy(t_header3 + 4, temp[t_id], sizeof(AK_header));
-	memset(t_header3 + 5, '\0', MAX_ATTRIBUTES - 5);
-    
-	//create table
-	tblName[t_id] = "course";
-    
-    int startAddress3 = AK_initialize_new_segment(tblName[t_id], SEGMENT_TYPE_TABLE, t_header3);
-    
-    if (startAddress3 != EXIT_ERROR)
-        printf("\nTABLE %s CREATED!\n", tblName[t_id]);
-    
-    printf("rel_eq_selection_test: After segment initialization: %d\n", AK_num_attr(tblName[t_id++]));
-	//------------------------------------------------------------------------------------------------------
-	
 	//Init list and insert elements (Query parser output)
 	AK_list *expr = (AK_list *)malloc(sizeof(AK_list));
     InitL(expr);
@@ -318,7 +233,7 @@ void query_optimization_test(AK_list *list_query) {
 	InsertAtEndL( TYPE_OPERATOR, "p", sizeof("p"), expr );
     InsertAtEndL( TYPE_ATTRIBS, "firstname;lastname", sizeof("firstname;lastname"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "p", sizeof("p"), expr );
-    InsertAtEndL( TYPE_ATTRIBS, "firstname;lastname;avg_grade", sizeof("firstname;lastname;avg_grade"), expr );
+    InsertAtEndL( TYPE_ATTRIBS, "firstname;lastname;year", sizeof("firstname;lastname;year"), expr );
 	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
 	//---------------------------------------------------------------------------------------------------------
 	//*/
@@ -326,12 +241,12 @@ void query_optimization_test(AK_list *list_query) {
 	//*Cascade of Selection and Commutativity of Selection
 	InsertAtEndL( TYPE_OPERATOR, "i", sizeof("u"), expr ); //u, i, e
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`avg_grade` 4.5 <", sizeof("`avg_grade` 4.5 <"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`year` 2008 <", sizeof("`year` 2008 <"), expr );
 	//...
 	//*Commutativity of Selection and set operations (Union, Intersection, and Set difference)
     InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`id_stud` 100 > `id_prof` 50 < OR", sizeof("`id_stud` 100 > `id_prof` 50 < OR"), expr );
-    InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`mbr` 35895 < `id_prof` 35897 < OR", sizeof("`mbr` 35895 < `id_prof` 35897 < OR"), expr );
+    InsertAtEndL( TYPE_OPERAND, "professor", sizeof("professor"), expr );
     InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "u", sizeof("u"), expr ); //u, i, e
 	InsertAtEndL( TYPE_OPERATOR, "i", sizeof("i"), expr ); //u, i, e
@@ -340,35 +255,35 @@ void query_optimization_test(AK_list *list_query) {
 	
 	//*Commutativity of Selection and Theta join (or Cartesian product)
 	InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), expr );
-    InsertAtEndL( TYPE_CONDITION, "`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR", sizeof("`category` 'teacher' = `firstname` 'Dino' < AND `lastname` 'Laktasic' = OR"), expr );
-	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
+    InsertAtEndL( TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"), expr );
+	InsertAtEndL( TYPE_OPERAND, "professor", sizeof("professor"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR", sizeof("`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "e", sizeof("e"), expr ); //u, i, e
 	//*/
 	
 	//*Commutativity of Projection and Theta join (or Cartesian product)
 	InsertAtEndL( TYPE_OPERATOR, "p", sizeof("p"), expr );
-    InsertAtEndL( TYPE_ATTRIBS, "id_stud;id_prof", sizeof("id_stud;id_prof"), expr );
-	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
+    InsertAtEndL( TYPE_ATTRIBS, "mbr;id_prof", sizeof("mbr;id_prof"), expr );
+	InsertAtEndL( TYPE_OPERAND, "professor", sizeof("professor"), expr );
     InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`id_stud` 10 > `id_prof` 5 < AND", sizeof("`id_stud` 10 > `id_prof` 5 < AND"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`mbr` 35891 > `id_prof` 35897 < AND", sizeof("`mbr` 35891 > `id_prof` 35897 < AND"), expr );
 	//*/
 	
 	//*Associativity of natural joins
-	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
+	InsertAtEndL( TYPE_OPERAND, "professor", sizeof("professor"), expr );
 	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
     InsertAtEndL( TYPE_OPERATOR, "n", sizeof("n"), expr );
-	InsertAtEndL( TYPE_ATTRIBS, "id_stud;id_prof", sizeof("id_stud;id_prof"), expr );
+	InsertAtEndL( TYPE_ATTRIBS, "mbr;id_prof", sizeof("mbr;id_prof"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "n", sizeof("n"), expr );
 	InsertAtEndL( TYPE_ATTRIBS, "id_course", sizeof("id_course"), expr );
 	//*/
 	
 	//*Associativity of union and intersection
-	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
+	InsertAtEndL( TYPE_OPERAND, "professor", sizeof("professor"), expr );
 	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
     InsertAtEndL( TYPE_OPERATOR, "u", sizeof("u"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
@@ -376,15 +291,14 @@ void query_optimization_test(AK_list *list_query) {
 	//*/
 	
 	//*Associativity of theta-joins
-	InsertAtEndL( TYPE_OPERAND, "profesor", sizeof("profesor"), expr );
+	InsertAtEndL( TYPE_OPERAND, "professor", sizeof("professor"), expr );
 	InsertAtEndL( TYPE_OPERAND, "student", sizeof("student"), expr );
     InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-	InsertAtEndL( TYPE_OPERAND, "`id_stud` 5 > `id_prof` 10 <", sizeof("`id_stud` 5 > `id_prof` 10 <"), expr );
+	InsertAtEndL( TYPE_OPERAND, "`mbr` 35891 > `id_prof` 35897 <", sizeof("`mbr` 35891 > `id_prof` 35897 <"), expr );
     InsertAtEndL( TYPE_OPERAND, "course", sizeof("course"), expr );
 	InsertAtEndL( TYPE_OPERATOR, "t", sizeof("t"), expr );
-	InsertAtEndL( TYPE_CONDITION, "`id_course` 7 < `id_stud` 10 > AND", sizeof("`id_course` 7 < `id_stud` 10 > AND"), expr );
+	InsertAtEndL( TYPE_CONDITION, "`id_course` 7 < `mbr` 35891 > AND", sizeof("`id_course` 7 < `mbr` 35891 > AND"), expr );
 	//*/
-	
 	
 	time_t start = clock();
 	AK_print_optimized_query(AK_query_optimization(expr, "aps", 1));
@@ -399,10 +313,10 @@ void query_optimization_test(AK_list *list_query) {
 		char *test_table;
 		char *cond_attr1, *cond_attr2;
 
-		test_table = "profesor";
+		test_table = "professor";
 		test_attribs = "id_prof;firstname";
-		test_cond1 = "`id_prof` 10 < `category` '10' = AND";
-		test_cond2 = "`id_stud` 100 > `id_prof` 50 < OR";
+		test_cond1 = "`id_prof` 35897 < `category` '10' = AND";
+		test_cond2 = "`mbr` 35891 > `id_prof` 35895 < OR";
 		
 		cond_attr1 = (char *)AK_rel_eq_cond_attributes(test_cond1);
 		cond_attr2 = (char *)AK_rel_eq_cond_attributes(test_cond2);
@@ -426,9 +340,9 @@ void query_optimization_test(AK_list *list_query) {
 		//printf("REMOVE_DUPLICATE_ATTRIBUTES_TEST  : (%s)\n", AK_rel_eq_remove_duplicates(test_attribs));
 		
 		printf("IS_SET_SUBSET_OF_LARGER_SET_TEST: (%i)\n\n", AK_rel_eq_is_attr_subset(cond_attr1, cond_attr2));
-		printf("GET_ALL_TABLE_ATTRIBUTES_TEST   : (%s)\n\n", AK_rel_eq_get_atrributes_char(test_table));
-		printf("GET_CONDITION_ATTRIBUTES_TEST   : (%s)\n\n", AK_rel_eq_cond_attributes(test_cond1));
-		printf("COMMUTE_WITH_THETA_JOIN_TEST    : (%s)\n\n", AK_rel_eq_commute_with_theta_join(test_cond1, test_table));
+		printf("GET_ALL_TABLE_ATTRIBUTES_TEST   : (%s)\n\n", (char *)AK_rel_eq_get_atrributes_char(test_table));
+		printf("GET_CONDITION_ATTRIBUTES_TEST   : (%s)\n\n", (char *)AK_rel_eq_cond_attributes(test_cond1));
+		printf("COMMUTE_WITH_THETA_JOIN_TEST    : (%s)\n\n", (char *)AK_rel_eq_commute_with_theta_join(test_cond1, test_table));
 		printf("CONDITION_SHARE_ATTRIBUTES_TEST : (%i)\n", AK_rel_eq_share_attributes(cond_attr1, cond_attr2));
 		/**/
 	} else {

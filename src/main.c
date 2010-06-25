@@ -90,25 +90,25 @@ int main()
 			//rel_eq_comut_test();
 			//query_optimization_test();
 
+			//table_test();
+			
 			op_selection_test();
 			op_projection_test();
 			op_join_test();
 			intersect_test();
-			//rename_test();			
-			
-			//table_test();
+			//rename_test();  //needs complete rewrite, currently doesn't work correctly		
 
 			//btree_test();
-			hash_test();
+			//hash_test();
 			//bitmap_test(); 	//needs complete rewrite, currently doesn't work correctly
 
-			reference_test();
+			//reference_test();
 
-			trigger_test();
+			//trigger_test();
 
-			aggregation_test();
+			//aggregation_test();
 
-			memoman_test();
+			//memoman_test();
 
 			//constraint_between_test();
 			//id_test();
