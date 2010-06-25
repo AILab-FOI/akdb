@@ -334,6 +334,7 @@ int AK_new_segment(char * name, int type, AK_header *header) {
  */
 AK_header * AK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code) {
     AK_header * catalog_header = (AK_header *) malloc(sizeof ( AK_header));
+    memset(catalog_header, 0, sizeof (AK_header));
     if (DEBUG)
         printf("AK_create_header: Header: %s, %d\n", name, strlen(name));
     catalog_header->type = type;
