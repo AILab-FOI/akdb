@@ -73,10 +73,13 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     }
 
     if(strcmp(old_table_name, new_table_name)){//new name is different than old, and old needs to be replaced
-        list *row_root;
+        element row_root = (element) malloc(sizeof (list));
+		InitializeList(row_root);
+	
         InsertNewElementForUpdate(TYPE_VARCHAR, old_table_name, "AK_relation", "name", row_root, 1);
         InsertNewElementForUpdate(TYPE_VARCHAR, new_table_name, "AK_relation", "name", row_root, 0);
         update_row(row_root);
+		free(row_root);
     }
 
     return EXIT_SUCCESS;
