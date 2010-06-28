@@ -20,11 +20,9 @@
 #ifndef FILESORT
 #define FILESORT
 
-#include <string.h>
-#include "configuration.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
-#include "auxiliary.h"
 #include "files.h"
 #include "fileio.h"
 

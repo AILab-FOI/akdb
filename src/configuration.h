@@ -26,7 +26,7 @@
 \brief constant for debugging
  */
 #define DEBUG 0
-#define DEBUG_SORT 0
+#define DEBUG_SORT 1
 #define INTERSECT_DEBUG 0
 #define DEBUG_TABLE 1
 

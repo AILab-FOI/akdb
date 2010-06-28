@@ -19,12 +19,8 @@
 #ifndef RENAME
 #define RENAME
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "auxiliary.h"
 #include "dbman.h"
-#include "configuration.h"
 #include "memoman.h"
 
 #endif

@@ -30,7 +30,7 @@
  @author Mislav Čakarić
  */
 int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr) {
-    table_addresses *adresses = get_table_addresses(old_table_name);
+    table_addresses *adresses = (table_addresses *)get_table_addresses(old_table_name);
     int tab_addresses[MAX_NUM_OF_BLOCKS];
     int num_extents = 0, num_blocks = 0;
     register int i, j;
@@ -48,26 +48,24 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     }
 
     AK_header newHeader[MAX_ATTRIBUTES];
-    mem_block = AK_get_block(tab_addresses[0]);
+    mem_block = (AK_mem_block *)AK_get_block(tab_addresses[0]);
     memcpy(&newHeader, mem_block->block->header, sizeof (mem_block->block->header));
 
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
         if (strcmp(newHeader[i].att_name, old_attr)==0) {
-            if(DEBUG)
-                printf("AK_rename: the attribute names are the same at position %d!\n", i);
+            messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
             memset(&newHeader[i].att_name, 0, MAX_ATT_NAME);
             memcpy(&newHeader[i].att_name, new_attr, strlen(new_attr));
             break;
         } else if (strcmp(newHeader[i].att_name, "\0")==0) { //if there is no more attributes
-            if(DEBUG)
-                printf("AK_rename: ERROR: in this table does not exist atribute: %s\n", old_attr);
+            messg(MIDDLE, REL_OP, "AK_rename: ERROR: in this table does not exist atribute: %s\n", old_attr);
             return (EXIT_ERROR);
         }
     }
 
     //replacing old headers with new ones
     for (i = 0; i < num_blocks; i++) {
-        mem_block = AK_get_block(tab_addresses[i]);
+        mem_block = (AK_mem_block *)AK_get_block(tab_addresses[i]);
         memcpy(&mem_block->block->header, newHeader, sizeof (AK_header) * MAX_ATTRIBUTES);
         mem_block->dirty=BLOCK_DIRTY;
     }
@@ -75,7 +73,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     if(strcmp(old_table_name, new_table_name)){//new name is different than old, and old needs to be replaced
         element row_root = (element) malloc(sizeof (list));
 		InitializeList(row_root);
-	
+
         InsertNewElementForUpdate(TYPE_VARCHAR, old_table_name, "AK_relation", "name", row_root, 1);
         InsertNewElementForUpdate(TYPE_VARCHAR, new_table_name, "AK_relation", "name", row_root, 0);
         update_row(row_root);
@@ -94,9 +92,9 @@ void rename_test() {
     //printf( "rename_test: Present!\n" );
     printf("\n********** RENAME TEST **********\n\n");
 
-    AK_rename("student", "firstname", "student2", "ime");
+    AK_rename("student", "weight", "student", "total_weight");
     AK_print_table("student");
-    AK_print_table("student2");
+    //AK_print_table("student2");
 
     AK_print_table("AK_relation");
 }

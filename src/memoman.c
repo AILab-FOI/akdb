@@ -101,7 +101,8 @@ int AK_redo_log_malloc() {
  @return EXIT_SUCCESS if the query memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_query_mem_malloc() {
-    if (DEBUG)
+	
+	if (DEBUG)
         printf("AK_query_mem_malloc: Start query_mem_malloc\n");
     /// allocate memory for global variable query_mem
     if ((query_mem = (AK_query_mem *) malloc(sizeof ( AK_query_mem))) == NULL) {
