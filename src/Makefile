@@ -10,7 +10,7 @@ FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bi
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o query_optimization.o
 CONSTRAINTTARGETS = reference.o between.o nnull.o id.o
-OTHERTARGETS = trigger.o test.o
+OTHERTARGETS = trigger.o test.o debug.o
 
 OUTDIR = ../bin
 
@@ -27,6 +27,9 @@ test.o: test.c
 	
 trigger.o: trigger.c
 	$(CC) $(CFLAGS) trigger.c
+	
+debug.o: debug.c
+	$(CC) $(CFLAGS) debug.c
 
 reference.o: reference.c
 	$(CC) $(CFLAGS) reference.c
