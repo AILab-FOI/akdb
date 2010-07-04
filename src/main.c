@@ -88,9 +88,9 @@ int main()
 			//rel_eq_selection_test();
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
-			//query_optimization_test();
+			query_optimization_test();
 
-			//table_test();
+			table_test();
 			
 			op_selection_test();
 			op_projection_test();
@@ -103,17 +103,17 @@ int main()
 			hash_test();
 			//bitmap_test(); 	//needs complete rewrite, currently doesn't work correctly
 
-			//reference_test();
+			reference_test();
 
-			//trigger_test();
+			trigger_test();
 
-			//aggregation_test();
+			aggregation_test();
 
-			//memoman_test();
+			memoman_test();
 
-			//constraint_between_test();
-			//id_test();
-			//null_test();
+			constraint_between_test();
+			id_test();
+			null_test();
 
 			/* component test area --- end */
 			

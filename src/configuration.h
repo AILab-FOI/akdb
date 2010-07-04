@@ -138,7 +138,7 @@
 \def DB_FILE_SIZE
 \brief size of DB file in MB
  */
-#define DB_FILE_SIZE 16 //before 40
+#define DB_FILE_SIZE 20 //before 40
 
 /**
 \def INITIAL_EXTENT_SIZE
