@@ -21,10 +21,10 @@
 #ifndef CONFIGURATION
 #define CONFIGURATION
 
-//maximal number of blocks in a segment
+//maximum number of blocks in a segment
 #define MAX_NUM_OF_BLOCKS 200
 
-//Maximum varchars that can be entered
+//maximum varchars that can be entered
 #define MAX_VARCHAR_LENGTH 200
 #define MAX_EXTENTS_IN_SEGMENT 200
 
@@ -132,19 +132,19 @@
 \def DATA_ENTRY_SIZE
 \brief lenght of data entry in sizeof( int )
  */
-#define DATA_ENTRY_SIZE 10
+#define DATA_ENTRY_SIZE 4 //before 10
 
 /**
 \def DB_FILE_SIZE
 \brief size of DB file in MB
  */
-#define DB_FILE_SIZE 40
+#define DB_FILE_SIZE 16 //before 40
 
 /**
 \def INITIAL_EXTENT_SIZE
 \brief initial extent size in blocks
  */
-#define INITIAL_EXTENT_SIZE 20
+#define INITIAL_EXTENT_SIZE 15 //before 20
 
 /**
 \def EXTENT_GROWTH_TABLE

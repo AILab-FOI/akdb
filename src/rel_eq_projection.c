@@ -38,19 +38,6 @@
 #include "rel_eq_projection.h"
 
 /**
- * @brief Qsort string comparison function
- * @author Dino Laktašić
- * @param const void *a - value to compare
- * @param const void *b - value to compare
- * @result int - returns result of comparison
- */
-int AK_rel_eq_cstring_cmp(const void *a, const void *b) {
-    const char **ia = (const char **) a;
-    const char **ib = (const char **) b;
-    return strcmp(*ia, *ib);
-}
-
-/**
  * @brief Check if some set of attributes is subset of larger set, used in cascading of the projections
  * <ol>
  * <li>Tokenize set and subset of projection attributes and store each of them to it's own array</li>
@@ -105,8 +92,8 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
         return EXIT_FAILURE;
     }
 
-    qsort(tokens_set, len_set, sizeof (char *), AK_rel_eq_cstring_cmp);
-    qsort(tokens_subset, len_subset, sizeof (char *), AK_rel_eq_cstring_cmp);
+    qsort(tokens_set, len_set, sizeof (char *), AK_strcmp);
+    qsort(tokens_subset, len_subset, sizeof (char *), AK_strcmp);
 
     token_id = 0;
 

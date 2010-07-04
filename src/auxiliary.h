@@ -76,5 +76,7 @@ enum tbl_valalign {
         ALIGN_RIGHT 1;
 };*/
 
+int AK_strcmp(const void *a, const void *b);
+
 #endif
 

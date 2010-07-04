@@ -30,8 +30,10 @@
  * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
  */
 int AK_init_db_file(int size) {
+	dbg_messg(HIGH, DB_MAN, "AK_block: %i, AK_header: %i, AK_tuple_dict: %i , char: %i, int: %i\n", 
+	sizeof(AK_block), sizeof(AK_header), sizeof(AK_tuple_dict), sizeof(char), sizeof(int));
     register int i = 0, j, k;
-
+	
     AK_block * block = NULL;
 
     db_file_size = size;
@@ -41,7 +43,6 @@ int AK_init_db_file(int size) {
         exit(EXIT_ERROR);
     }
 
-
     printf("AK_init_db_file: Initializing DB file..."
             "\nPlease be patient, this can take several minutes depending "
             "on disk performance.\n");
@@ -50,7 +51,6 @@ int AK_init_db_file(int size) {
         printf("AK_init_db_file: ERROR. Cannot allocate block %d\n", i);
         exit(EXIT_ERROR);
     }
-
 
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
         block->header[ i ].type = FREE_INT;
@@ -196,7 +196,7 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
         req_free_space = old_size + old_size * RESIZE_FACTOR;
     }
 
-    for (i = start_address; i < db_file_size; i++) {
+    for (i = start_address; i < (db_file_size - req_free_space); i++) {
         if (((int) (req_free_space - 1) > (db_file_size - i))) {
             printf("AK_new_extent: ERROR. Not enought space for new extent. Requested space was: %d\n", req_free_space);
             return (EXIT_ERROR);

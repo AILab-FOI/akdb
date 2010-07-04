@@ -57,6 +57,19 @@ size_t AK_type_size(int iDB_type, char *szVarchar) {
 }
 
 /**
+ * @brief String comparison function
+ * @author Dino Laktašić
+ * @param const void *a - value to compare
+ * @param const void *b - value to compare
+ * @return int - returns result of comparison
+ */
+int AK_strcmp(const void *a, const void *b) {
+    const char **ia = (const char **) a;
+    const char **ib = (const char **) b;
+    return strcmp(*ia, *ib);
+}
+
+/**
  * @author Matija Šestak.
  * @brief  Alocate empty list
  * @param AK_list* - root of the list
