@@ -24,8 +24,8 @@
  * Union is implemented for working with multiple sets of data, i.e. duplicate 
  * tuples can be written in same table (union)
  * @author Dino Laktašić
- * @param srcTable1 - name of the first table to join
- * @param srcTable2 - name of the second table to join
+ * @param srcTable1 - name of the first table
+ * @param srcTable2 - name of the second table
  * @param dstTable - name of the new table
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */

@@ -20,12 +20,7 @@
 #ifndef UNION
 #define UNION
 
-
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "configuration.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
 #include "fileio.h"
