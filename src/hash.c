@@ -28,7 +28,7 @@
  */
 int AK_elem_hash_value(AK_list_elem elem) {
     int type = elem->type, value = 0, i = 0;
-    char temp_char[MAX_VARCHAR_LENGHT];
+    char temp_char[MAX_VARCHAR_LENGTH];
     switch (type) {
         case TYPE_INT:
             memcpy(&value, elem->data, elem->size);
@@ -66,8 +66,7 @@ struct_add* insert_bucket_to_block(char *indexName, char *data, int type) {
 
     AK_block *block = (AK_block*) AK_read_block(adr_to_write);
 
-    if (DEBUG)
-        printf("insert_bucket_to_block: Position to write (tuple_dict_index) %d\n", id);
+    dbg_messg(HIGH, INDICES, "insert_bucket_to_block: Position to write (tuple_dict_index) %d\n", id);
 
     switch (type) {
         case MAIN_BUCKET:
@@ -382,11 +381,11 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
                             int record_size = temp_table_block->tuple_dict[indexTd].size;
                             int record_type = temp_table_block->tuple_dict[indexTd].type;
                             memcpy(data, &temp_table_block->data[record_address], record_size);
-                            temp_elem = FirstL(values);
+                            temp_elem = (AK_list_elem)FirstL(values);
                             while (temp_elem) {
                                 if (temp_elem->type == record_type && memcmp(data, &temp_elem->data, record_size) == 0)
                                     match = 1;
-                                temp_elem = NextL(temp_elem);
+                                temp_elem = temp_elem->next;
                             }
                             break;
                         }
@@ -403,8 +402,7 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
                         memcpy(data, temp_hash_bucket, sizeof (hash_bucket));
                         update_bucket_in_block(hash_add, data);
                     } else
-                        if (DEBUG)
-                        printf("Record found in table block %d and TupleDict ID %d\n", addBlock, indexTd);
+                        dbg_messg(HIGH, INDICES, "Record found in table block %d and TupleDict ID %d\n", addBlock, indexTd);
                     add->addBlock = addBlock;
                     add->indexTd = indexTd;
                     break;
@@ -449,7 +447,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
 
     table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
     int num_attr = AK_num_attr(tblName);
-    AK_header *table_header = AK_get_header(tblName);
+    AK_header *table_header = (AK_header *)AK_get_header(tblName);
 
     AK_header i_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
@@ -460,8 +458,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
         exist = 0;
         for (i = 0; i < num_attr; i++) {
             if (strcmp((table_header + i)->att_name, attribute->data) == 0) {
-                if (DEBUG)
-                    printf("Attribute %s exist in table, found on position: %d\n", (table_header + i)->att_name, i);
+				dbg_messg(HIGH, INDICES, "Attribute %s exist in table, found on position: %d\n", (table_header + i)->att_name, i);
                 exist = 1;
                 temp = (AK_header*) AK_create_header((table_header + i)->att_name, (table_header + i)->type, FREE_INT, FREE_CHAR, FREE_CHAR);
                 memcpy(i_header + n, temp, sizeof ( AK_header));
@@ -499,7 +496,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
 
     AK_list_elem temp_elem;
 
-    char data[ MAX_VARCHAR_LENGHT ];
+    char data[ MAX_VARCHAR_LENGTH ];
     AK_list *row = (AK_list*) malloc(sizeof (AK_list));
     InitL(row);
     i = 0;
@@ -533,8 +530,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
 
                     attribute = attribute->next;
                 }
-                if (DEBUG)
-                    printf("Insert in hash index %d. record\n", n);
+                dbg_messg(HIGH, INDICES, "Insert in hash index %d. record\n", n);
                 struct_add *add = (struct_add*) malloc(sizeof (struct_add));
                 add->addBlock = j;
                 add->indexTd = k;

@@ -48,9 +48,9 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
     num_rec = AK_get_num_records(tblName);
 
     AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
-    AK_header *temp_head = AK_get_header(tblName);
+    AK_header *temp_head = (AK_header *)AK_get_header(tblName);
     int temp_int;
-    char temp_char[ MAX_VARCHAR_LENGHT ];
+    char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
 
     element_op some_element;
@@ -260,7 +260,7 @@ void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int pos
     int i, j, k;
     int temp_int;
     int temp_indexTd;
-    char temp_char[ MAX_VARCHAR_LENGHT ];
+    char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
     int brojac, br;
     i = 0;
@@ -362,9 +362,9 @@ list_ad* getAttribute(char *indexName, char *attribute) {
     num_rec = AK_get_num_records(indexName);
 
     AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
-    AK_header *temp_head = AK_get_header(indexName);
+    AK_header *temp_head = (AK_header *)AK_get_header(indexName);
     int temp_int;
-    char temp_char[ MAX_VARCHAR_LENGHT ];
+    char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
     int b, br = 0;
     int addBlock, indexTd;
@@ -598,8 +598,7 @@ int write_block(AK_block * block) {
         exit(EXIT_ERROR);
     }
     fclose(db);
-    if (DEBUG)
-        printf("AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
+	dbg_messg(MIDDLE, INDICES, "AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
     return ( EXIT_SUCCESS);
 }
 

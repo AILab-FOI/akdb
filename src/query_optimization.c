@@ -106,35 +106,33 @@ void AK_print_optimized_query(AK_list *list_query) {
  * @result returns AK_list (RA expresion list) optimized by given relational equivalence rule 
  */
 AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *FLAGS) {
-    if (DEBUG) {
-        printf("\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
-        printf("=================================================\n");
-    }
+    dbg_messg(LOW, REL_EQ, "\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
+    dbg_messg(LOW, REL_EQ, "=================================================\n");
 
     if (strchr(FLAGS, rel_eq) != NULL) {
         switch (rel_eq) {
             case 'c':
-                if (DEBUG) printf("\napply rel_eq_commute.\n");
+                dbg_messg(LOW, REL_EQ, "\napply rel_eq_commute.\n");
                 //return (AK_list *)AK_rel_eq_comut(list_query);
                 break;
 
             case 'a':
-                if (DEBUG) printf("\napply rel_eq_assoc.\n");
+                dbg_messg(LOW, REL_EQ, "\napply rel_eq_assoc.\n");
                 return (AK_list *) AK_rel_eq_assoc(list_query);
                 break;
 
             case 's':
-                if (DEBUG) printf("\napply rel_eq_selection.\n");
+                dbg_messg(LOW, REL_EQ, "\napply rel_eq_selection.\n");
                 return (AK_list *) AK_rel_eq_selection(list_query);
                 break;
 
             case 'p':
-                if (DEBUG) printf("\napply rel_eq_projection.\n");
+                dbg_messg(LOW, REL_EQ, "\napply rel_eq_projection.\n");
                 return (AK_list *) AK_rel_eq_projection(list_query);
                 break;
 
             default:
-                if (DEBUG) printf("Invalid relational equivalence flag: %c", rel_eq);
+                dbg_messg(LOW, REL_EQ, "Invalid relational equivalence flag: %c", rel_eq);
                 return list_query;
                 break;
         }
@@ -172,7 +170,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
     //AK_list *temps[num_perms];
 
     if (num_perms > MAX_PERMUTATION) {
-        if (DEBUG) printf("ERROR: max four flags are allowed!\n");
+        dbg_messg(LOW, REL_EQ, "ERROR: max four flags are allowed!\n");
         return temp;
     }
 
@@ -180,7 +178,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
         char *perm = (char *) calloc(len_flags, sizeof (char));
         memcpy(perm, FLAGS, len_flags);
 
-        if (DEBUG) printf("\n\t==============================\n\t\t%i. LOGIC PLAN\n\t==============================\n", next_perm + 1);
+        dbg_messg(LOW, REL_EQ, "\n\t==============================\n\t\t%i. LOGIC PLAN\n\t==============================\n", next_perm + 1);
         for (next_flag = len_flags, div = num_perms; next_flag > 0; next_flag--) {
             div /= next_flag;
             int index = (next_perm / div) % next_flag;
@@ -206,7 +204,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
     }
 
     if (DIFF_PLANS) {
-        if (DEBUG) printf("\nTOTAL REL_EQ OPTIMIZED PLANS: %i\n", num_perms);
+        dbg_messg(LOW, REL_EQ, "\nTOTAL REL_EQ OPTIMIZED PLANS: %i\n", num_perms);
         //temp = (AK_list *)realloc(temp, num_perms * sizeof(temps));
         //memcpy(temp, temps, sizeof(temps) * num_perms);
     }
@@ -305,7 +303,7 @@ void query_optimization_test(AK_list *list_query) {
     time_t end = clock();
     printf("\n\nLOGIC PLAN GENERATED IN: %d μs, %d s\n", end - start, (end - start) / 1000000);
 
-    if (DEBUG) {
+    if (DEBUG_ALL) {
         printf("\n------------------> TEST_REL_EQ_FUNCTIONS <------------------\n\n");
 
         char *test_attribs;

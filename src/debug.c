@@ -17,10 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
  
- #include "debug.h"
- 
-int messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...) {
-	if (level == 0 || type == 0 || format == NULL) {
+#include "debug.h"
+
+/**
+ * @brief Print debug message. Provide debug level, debug type and message with corresponding variables for the output.
+ * @author Dino Laktašić
+ * @param DEBUG_LEVEL level - level of debug information for a given DB module
+ * @param DEBUG_TYPE type - the name of DB module for which to print debug information
+ * const char *format - format for the output message
+ * ... - variable number of (different) type args used in printf
+ * @return int - if debug message is printed return 1, else return 0
+ */
+int dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...) {
+	/*if (DEBUG_NONE) {
+		return 0;
+	}*/
+	
+	if ((level == 0 || type == 0 || format == NULL) && !DEBUG_ALL) {
 		return 0;
 	}
 	
@@ -28,4 +41,5 @@ int messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...) {
 	va_start(args, format);
 	vprintf(format, args);
 	va_end(args);
+	return 1;
 }

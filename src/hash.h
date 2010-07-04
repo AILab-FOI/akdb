@@ -20,11 +20,11 @@
 #ifndef HASH
 #define HASH
 
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
-#include "auxiliary.h"
-#include "table.h"
 #include "index.h"
+#include "table.h"
 
 #define MAX_MAIN_BUCKETS 512
 #define MAIN_BUCKET_SIZE 4 //only the power of 2 (ie: 2, 4, 8, 16, 32, 64, 128 etc.)
@@ -52,6 +52,5 @@ typedef struct {
     int bucket_level;
     bucket_elem element[HASH_BUCKET_SIZE];
 } hash_bucket;
-
 
 #endif

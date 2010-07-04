@@ -27,8 +27,8 @@
  */
 int AK_trigger_save_conditions(int trigger, AK_list* condition) {
     int i = 0;
-    char tempData[MAX_VARCHAR_LENGHT];
-    AK_list_elem temp = FirstL(condition);
+    char tempData[MAX_VARCHAR_LENGTH];
+    AK_list_elem temp = (AK_list_elem)FirstL(condition);
     element row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
 
@@ -48,7 +48,7 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
             free(row_root);
             return EXIT_ERROR;
         }
-        temp = NextL(temp, condition);
+        temp = (AK_list_elem)NextL(temp, condition);
         i++;
     }
 
@@ -72,16 +72,14 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
     table_id = AK_get_table_obj_id(table);
 
     if (table_id == EXIT_ERROR) {
-        if (DEBUG)
-            printf("AK_trigger_add: No such table upon which to create a trigger.\n");
+        dbg_messg(HIGH, TRIGGERS, "AK_trigger_add: No such table upon which to create a trigger.\n");
         return EXIT_ERROR;
     }
 
     funk_id = AK_get_function_obj_id(function);
 
     if (funk_id == EXIT_ERROR) {
-        if (DEBUG)
-            printf("AK_trigger_add: No such function to execute upon activation of trigger.\n");
+        dbg_messg(HIGH, TRIGGERS, "AK_trigger_add: No such function to execute upon activation of trigger.\n");
         return EXIT_ERROR;
     }
 
@@ -122,7 +120,7 @@ int AK_trigger_get_id(char *name, char *table) {
     if (table_id == EXIT_ERROR)
         return EXIT_ERROR;
 
-    while ((row = AK_get_row(i, "AK_trigger")) != NULL) {
+    while ((row = (AK_list *)AK_get_row(i, "AK_trigger")) != NULL) {
         if (strcmp(row->next->next->data, name) == 0 && table_id == (int) * row->next->next->next->next->next->next->data) {
             i = (int) * row->next->data;
             free(row);
@@ -152,8 +150,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
     int result = delete_row(row_root);
 
     if (result == EXIT_ERROR) {
-        if (DEBUG)
-            printf("AK_trigger_remove_by_name: Could not delete trigger.\n");
+        dbg_messg(HIGH, TRIGGERS, "AK_trigger_remove_by_name: Could not delete trigger.\n");
         return EXIT_ERROR;
     }
 
@@ -177,8 +174,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
     int result = delete_row(row_root);
 
     if (result == EXIT_ERROR) {
-        if (DEBUG)
-            printf("AK_trigger_remove_by_name: Could not delete trigger.\n");
+        dbg_messg(HIGH, TRIGGERS, "AK_trigger_remove_by_name: Could not delete trigger.\n");
         return EXIT_ERROR;
     }
 
@@ -197,7 +193,7 @@ int AK_get_function_obj_id(char* function) {
     int i = 0;
     int id = -1;
     AK_list *row;
-    while ((row = AK_get_row(i, "AK_function")) != NULL) {
+    while ((row = (AK_list *)AK_get_row(i, "AK_function")) != NULL) {
         if (strcmp(row->next->next->data, function) == 0) {
             memcpy(&id, row->next->data, sizeof (int));
             break;
@@ -227,8 +223,7 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
     int id, i;
 
     if (obj_id == NULL && (name == NULL || table == NULL)) {
-        if (DEBUG)
-            printf("AK_trigger_edit: Not enough data to identify the trigger.\n");
+        dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Not enough data to identify the trigger.\n");
         return EXIT_ERROR;
     }
 
@@ -248,8 +243,7 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
     if (table != NULL && strcmp(table, "") != 0) {
         id = AK_get_table_obj_id(table);
         if (id == EXIT_ERROR) {
-            if (DEBUG)
-                printf("AK_trigger_edit: Could not update trigger. Table does not exist.\n");
+            dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Could not update trigger. Table does not exist.\n");
             return EXIT_ERROR;
         }
         InsertNewElementForUpdate(TYPE_INT, &id, "AK_trigger", "on", row_root, 1);
@@ -257,8 +251,7 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
     if (function != NULL && strcmp(function, "") != 0) {
         id = AK_get_function_obj_id(function);
         if (id == EXIT_ERROR) {
-            if (DEBUG)
-                printf("AK_trigger_edit: Could not update trigger. Function does not exist.\n");
+            dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Could not update trigger. Function does not exist.\n");
             return EXIT_ERROR;
         }
         InsertNewElementForUpdate(TYPE_INT, &id, "AK_trigger", "action", row_root, 0);
@@ -297,7 +290,7 @@ AK_list *AK_trigger_get_conditions(int trigger) {
     AK_list *row;
     int a, b;
     AK_list_elem temp;
-    while ((row = AK_get_row(i, "AK_trigger_conditions_temp")) != NULL) {
+    while ((row = (AK_list *)AK_get_row(i, "AK_trigger_conditions_temp")) != NULL) {
         temp = GetNthL(3, row);
         memcpy(&a, temp->data, sizeof (int));
         temp = GetNthL(1, row);

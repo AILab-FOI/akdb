@@ -94,7 +94,7 @@ int AK_selection_check_expr(AK_mem_block *mem_block, AK_header *header, int num_
     AK_list_elem el = (AK_list_elem) FirstL(expr);
     AK_list_elem a, b, c;
 
-    char data[MAX_VARCHAR_LENGHT];
+    char data[MAX_VARCHAR_LENGTH];
 
     while (el) {
         if (el->type == TYPE_ATTRIBS) {
@@ -111,7 +111,7 @@ int AK_selection_check_expr(AK_mem_block *mem_block, AK_header *header, int num_
                 int address = mem_block->block->tuple_dict[current_tuple + i].address;
                 int size = mem_block->block->tuple_dict[current_tuple + i].size;
                 int type = mem_block->block->tuple_dict[current_tuple + i].type;
-                memset(data, 0, MAX_VARCHAR_LENGHT);
+                memset(data, 0, MAX_VARCHAR_LENGTH);
                 memcpy(data, &(mem_block->block->data[address]), size);
                 InsertAtEndL(type, data, size, temp);
             }
@@ -211,15 +211,15 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
         return EXIT_ERROR;
     }
 
-    //printf( "\nTABLE %s CREATED!\n", dstTable );
+    dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
 
     table_addresses *src_addr = (table_addresses*) get_table_addresses(srcTable);
 
     element row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
 
-    int i, j, k, l;
-    char data[MAX_VARCHAR_LENGHT];
+    int i, j, k, l, type, size, address;
+    char data[MAX_VARCHAR_LENGTH];
 
     for (i = 0; src_addr->address_from[i] != 0; i++) {
         for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
@@ -231,9 +231,9 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
                     break;
                 if (AK_selection_check_expr(temp, t_header, num_attr, expr, k)) {
                     for (l = 0; l < num_attr; l++) {
-                        int type = temp->block->tuple_dict[k + l].type;
-                        int size = temp->block->tuple_dict[k + l].size;
-                        int address = temp->block->tuple_dict[k + l].address;
+						type = temp->block->tuple_dict[k + l].type;
+                        size = temp->block->tuple_dict[k + l].size;
+                        address = temp->block->tuple_dict[k + l].address;
                         memcpy(data, &(temp->block->data[address]), size);
                         data[size] = '\0';
                         InsertNewElement(type, data, dstTable, t_header[l].att_name, row_root);
@@ -247,6 +247,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 
     free(src_addr);
     free(t_header);
+	dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n");
     return EXIT_SUCCESS;
 }
 

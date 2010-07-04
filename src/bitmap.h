@@ -20,14 +20,10 @@
 #ifndef BITMAP
 #define BITMAP
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
 #include "fileio.h"
-#include "auxiliary.h"
 #include "index.h"
 
 #endif

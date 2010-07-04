@@ -20,12 +20,7 @@
 #ifndef FILESEARCH
 #define FILESEARCH
 
-
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "configuration.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
 #include "fileio.h"

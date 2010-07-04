@@ -23,10 +23,8 @@
 #include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
-#include "files.h"
-#include "fileio.h"
 
-//velicina podatke koji se usporedjuje
+//velicina podatka koji se usporedjuje
 #define DATA_ROW_SIZE 200
 
 //velicina podatka koji se mora kopirati

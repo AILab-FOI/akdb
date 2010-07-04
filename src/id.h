@@ -20,15 +20,9 @@
 #ifndef ID
 #define ID
 
-#define ID_START_VALUE 100
-
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-
-//#include "dbman.h"
-//#include "memoman.h"
-//#include "files.h"
+#include "auxiliary.h"
 #include "fileio.h"
+
+#define ID_START_VALUE 100
 
 #endif

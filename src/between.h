@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#ifndef BETWEEN
+#define BETWEEN
 
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
-#include "files.h"
-#include "fileio.h"
 #include "id.h"
+
+#endif

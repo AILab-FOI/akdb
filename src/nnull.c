@@ -37,7 +37,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
     int itis = 1;
     int id;
 
-    tempBlock = AK_read_block(0);
+    tempBlock = (AK_block *)AK_read_block(0);
 
     while (itis) {
         for (j = 0; j < 50; j++)
@@ -46,10 +46,9 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
         if (strcmp(systemTableName, "AK_constraints_not_null") == 0) {
-            if (DEBUG)
-                printf("Sistemska tablica u koju se upisuje: %s,adresa: %i\n", systemTableName, systemTableAddress);
+            dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
 
-            tempBlock = AK_read_block(systemTableAddress);
+            tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
             while (freeSpaceFound == 0) {
                 tupleDictID += 1;
@@ -69,9 +68,9 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
                 AK_write_block(tempBlock);
 
             } else {
-                if (DEBUG)
+                //if (DEBUG)
                     //printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
-                    return EXIT_ERROR;
+                    exit (EXIT_ERROR);
             }
             itis = 0;
         }
@@ -101,7 +100,7 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
     int tupleDictID = -1;
     int flag = EXIT_SUCCESS;
 
-    tempBlock = AK_read_block(0);
+    tempBlock = (AK_block *)AK_read_block(0);
 
     while (itis) {
         for (j = 0; j < 50; j++)
@@ -110,13 +109,12 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
         if (strcmp(systemTableName, "AK_constraints_not_null") == 0) {
-            if (DEBUG)
-                printf("Sistemska tablica iz koje se čita: %s,adresa: %i\n", systemTableName, systemTableAddress);
+            dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
             itis = 0;
         }
         i++;
     }
-    tempBlock = AK_read_block(systemTableAddress);
+    tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
 
     char value[50];

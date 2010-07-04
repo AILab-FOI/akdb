@@ -19,24 +19,19 @@
 #ifndef FILEIO
 #define FILEIO
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
-#include "string.h"
-#include "configuration.h"
-#include "auxiliary.h"
 #include "reference.h"
 
-
-///@author Matija Novak
-
+/**
+ * @author Matija Novak
+ */
 typedef struct list_structure_ {
     ///START row_element
     ///structure that reperesents one row of table that is inserted, updated, or deleted
     int type; //type of data
-    unsigned char data[MAX_VARCHAR_LENGHT]; //data
+    unsigned char data[MAX_VARCHAR_LENGTH]; //data
     char table[ MAX_ATT_NAME ]; //table name
     char attribute_name[ MAX_ATT_NAME ]; //attribute name
     int constraint; //if ist 0 then its new data to be inserted in, when is it 1 then its a constraint on which update and delete searches the data

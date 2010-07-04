@@ -207,7 +207,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 
     table_addresses *addresses = (table_addresses*) get_table_addresses(source_table);
-    AK_header *t_header = AK_get_header(source_table);
+    AK_header *t_header = (AK_header *)AK_get_header(source_table);
     int num_attr = AK_num_attr(source_table);
 
 
@@ -215,7 +215,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 
     int k, l, m, n, o, counter;
-    char data[ MAX_VARCHAR_LENGHT ];
+    char data[ MAX_VARCHAR_LENGTH ];
 
     element row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
@@ -278,7 +278,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
                 } else {
                     //AK_mem_block *mem_block = AK_get_block(sresult.aiBlocks[0]);
                     AK_mem_block *mem_block = malloc(sizeof (AK_mem_block)); // ovo isto treba maknuti jednog dana....
-                    mem_block->block = AK_read_block(sresult.aiBlocks[0]); // kad budu svi koristili AK_get_block umjesto AK_read_block..
+                    mem_block->block = (AK_block *)AK_read_block(sresult.aiBlocks[0]); // kad budu svi koristili AK_get_block umjesto AK_read_block..
 
 
                     for (l = 0; l < num_attr; l++) {

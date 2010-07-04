@@ -265,8 +265,7 @@ void filesearch_test() {
         dTmp = 2;
         sp[2].pData_lower = &dTmp;
 
-        if (DEBUG)
-            puts("Calling AK_search_unsorted");
+        dbg_messg(LOW, FILE_MAN, "Calling AK_search_unsorted");
         sr = AK_search_unsorted("filesearch test table", sp, 3);
 
         for (i = 0; i < sr.iNum_tuple_addresses; i++) {

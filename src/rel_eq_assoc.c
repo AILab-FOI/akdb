@@ -54,8 +54,8 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
         switch (list_elem->type) {
 
             case TYPE_OPERATOR:
-                if (DEBUG) printf("\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
-                if (DEBUG) printf("----------------------\n");
+                dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
+				dbg_messg(LOW, REL_EQ, "----------------------\n");
                 temp_elem = (AK_list_elem) EndL(temp);
                 temp_elem_prev = (AK_list_elem) PreviousL(temp_elem, temp);
                 list_elem_next = (AK_list_elem) NextL(list_elem, list_rel_eq);
@@ -88,33 +88,33 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                                 //printf("ROW_COUNT: (%s) %i rows\n", cost[2].data, cost[2].value);
 
                                 //Change inserted relation to largest table
-                                if (DEBUG) printf("::table_name (%s) in temp list changed to %s\n", temp_elem_prev->data, cost[2].data);
+								dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem_prev->data, cost[2].data); 
                                 temp_elem_prev->size = strlen(cost[2].data) + 1;
-                                memset(temp_elem_prev->data, '\0', MAX_VARCHAR_LENGHT);
+                                memset(temp_elem_prev->data, '\0', MAX_VARCHAR_LENGTH);
                                 strcpy(temp_elem_prev->data, cost[2].data);
 
                                 //Change last inserted relation
-                                if (DEBUG) printf("::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[1].data);
+                                dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[1].data);
                                 temp_elem->size = strlen(cost[1].data) + 1;
-                                memset(temp_elem->data, '\0', MAX_VARCHAR_LENGHT);
+                                memset(temp_elem->data, '\0', MAX_VARCHAR_LENGTH);
                                 strcpy(temp_elem->data, cost[1].data);
 
                                 //Insert smallest table at the end of temp list
                                 InsertAtEndL(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
-                                if (DEBUG) printf("::table_name (%s) inserted in temp list\n", cost[0].data);
-
+								dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
+								
                                 //Insert operator
                                 InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                                if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
-
+								dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+								
                                 list_elem = list_elem->next;
                             } else {
                                 InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                                if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
+								dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                             }
                         } else {
                             InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                            if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
+                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         }
                         break;
 
@@ -169,16 +169,16 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                                     while (next_cost < 3) {
                                         if (temp_elem->type == TYPE_OPERAND) {
                                             temp_elem->size = strlen(cost[next_cost].data) + 1;
-                                            memset(temp_elem->data, '\0', MAX_VARCHAR_LENGHT);
+                                            memset(temp_elem->data, '\0', MAX_VARCHAR_LENGTH);
                                             strcpy(temp_elem->data, cost[next_cost].data);
-                                            if (DEBUG) printf("::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
+                                            dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
                                             next_cost++;
                                         }
                                         temp_elem = (AK_list_elem) PreviousL(temp_elem, temp);
                                     }
                                     //insert final relation
                                     InsertAtEndL(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
-                                    if (DEBUG) printf("::table_name (%s) inserted in temp list\n", cost[0].data);
+                                    dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
 
                                     next_cost = 1;
                                 } else {
@@ -189,13 +189,13 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                         //insert operator
                         InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
                         InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                        if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
 
                         if (next_cost) {
-                            if (DEBUG) printf("TMP: (%s), TMP_NEXT: (%s)\n", tmp->data, (tmp->next)->data);
+                            //dbg_messg(MIDDLE, REL_EQ, "TMP: (%s), TMP_NEXT: (%s)\n", tmp->data, (tmp->next)->data);
                             InsertAtEndL(tmp->type, tmp->data, tmp->size, temp);
                             InsertAtEndL((tmp->next)->type, (tmp->next)->data, (tmp->next)->size, temp);
-                            if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", tmp->data, (tmp->next)->data);
+                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", tmp->data, (tmp->next)->data);
                             list_elem = tmp->next;
                         } else {
                             list_elem = list_elem_next;
@@ -299,16 +299,16 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                                     while (next_cost < 3) {
                                         if (temp_elem->type == TYPE_OPERAND) {
                                             temp_elem->size = strlen(cost[next_cost].data) + 1;
-                                            memset(temp_elem->data, '\0', MAX_VARCHAR_LENGHT);
+                                            memset(temp_elem->data, '\0', MAX_VARCHAR_LENGTH);
                                             strcpy(temp_elem->data, cost[next_cost].data);
-                                            if (DEBUG) printf("::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
+                                            dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
                                             next_cost++;
                                         }
                                         temp_elem = (AK_list_elem) PreviousL(temp_elem, temp);
                                     }
 
                                     InsertAtEndL(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
-                                    if (DEBUG) printf("::table_name (%s) inserted in temp list\n", cost[0].data);
+                                    dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
                                     next_cost = 1;
                                 } else {
                                     next_cost = -1;
@@ -322,11 +322,11 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                         if (next_cost > 0) {
                             InsertAtEndL((tmp->next)->type, (tmp->next)->data, (tmp->next)->size, temp);
                             InsertAtEndL((tmp->next->next)->type, (tmp->next->next)->data, (tmp->next->next)->size, temp);
-                            if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
-                            if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", (tmp->next)->data, (tmp->next->next)->data);
+                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", (tmp->next)->data, (tmp->next->next)->data);
                             list_elem = tmp->next;
                         } else {
-                            if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                             list_elem = list_elem->next;
                         }
                         break;
@@ -334,22 +334,22 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                     case RO_SELECTION:
                         InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
                         InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                        if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         list_elem = list_elem->next;
                         break;
 
                     case RO_EXCEPT:
                         InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                        if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
+                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     case RO_RENAME:
                         InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                        if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
+                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     default:
-                        if (DEBUG) printf("Invalid operator: %s", list_elem->data);
+                        dbg_messg(LOW, REL_EQ, "Invalid operator: %s", list_elem->data);
                         break;
                 }
                 break;
@@ -365,12 +365,12 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                 break;
 
             case TYPE_OPERAND:
-                if (DEBUG) printf("::table_name (%s) inserted in the temp list\n", list_elem->data);
+                dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in the temp list\n", list_elem->data);
                 InsertAtEndL(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
                 break;
 
             default:
-                if (DEBUG) printf("Invalid type: %s", list_elem->data);
+                dbg_messg(LOW, REL_EQ, "Invalid type: %s", list_elem->data);
                 break;
         }
 

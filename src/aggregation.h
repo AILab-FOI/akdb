@@ -20,11 +20,7 @@
 #ifndef AGGREGATION
 #define AGGREGATION
 
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-
-#include "configuration.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "selection.h"
 #include "projection.h"
@@ -42,7 +38,7 @@
 
 typedef struct {
     char att_name[MAX_ATT_NAME];
-    char data[ MAX_VARCHAR_LENGHT ];
+    char data[ MAX_VARCHAR_LENGTH ];
     int agg_task;
 } AK_agg_value;
 

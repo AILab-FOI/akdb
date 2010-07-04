@@ -1,5 +1,5 @@
 /**
-@file between.h Provides data structures for not null constaint
+@file nnull.h Provides data structures for not null constaint
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -17,15 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<ctype.h>
+#ifndef NNULL
+#define NNULL
 
-
-
+#include "auxiliary.h"
 #include "dbman.h"
 #include "memoman.h"
 #include "files.h"
 #include "fileio.h"
 #include "id.h"
+
+#endif

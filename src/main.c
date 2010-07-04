@@ -92,14 +92,15 @@ int main()
 
 			//table_test();
 			
-			//op_selection_test();
-			//op_projection_test();
-			//op_join_test();
-			//intersect_test();
-			rename_test();
+			op_selection_test();
+			op_projection_test();
+			op_join_test();
+			op_intersect_test();
+			op_union_test();
+			op_rename_test();
 
 			//btree_test();
-			//hash_test();
+			hash_test();
 			//bitmap_test(); 	//needs complete rewrite, currently doesn't work correctly
 
 			//reference_test();

@@ -102,8 +102,8 @@ int AK_redo_log_malloc() {
  */
 int AK_query_mem_malloc() {
 	
-	if (DEBUG)
-        printf("AK_query_mem_malloc: Start query_mem_malloc\n");
+	dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_malloc: Start query_mem_malloc\n");
+
     /// allocate memory for global variable query_mem
     if ((query_mem = (AK_query_mem *) malloc(sizeof ( AK_query_mem))) == NULL) {
         printf("AK_query_mem_malloc: ERROR. Cannot allocate query memory \n");
@@ -149,8 +149,8 @@ int AK_query_mem_malloc() {
             memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));
             memcpy(query_mem->result,query_mem_result,sizeof(* query_mem_result));*/
 
-    if (DEBUG)
-        printf("AK_query_mem_malloc: Success!\n");
+	dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_malloc: Success!\n");
+	
     return EXIT_SUCCESS;
 }
 
@@ -302,9 +302,7 @@ table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
             break;
     }
 
-    if (DEBUG)
-        printf("get_segment_addresses: Serching for %s table \n", sys_table);
-
+	dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
     AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(0);
 
     //going throught headers
@@ -327,8 +325,7 @@ table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
         memcpy(&address_sys, mem_block->block->data + data_adr, data_size);
 
         if (strcmp(name_sys, sys_table) == 0) {
-            if (DEBUG)
-                printf("get_segment_addresses: Found the address of the %s table: %d \n", sys_table, address_sys);
+			dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses: Found the address of the %s table: %d \n", sys_table, address_sys);
             break;
         }
     }
@@ -344,7 +341,7 @@ table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
         addresses->address_to[freeVar] = 0;
     }
 
-    char name[MAX_VARCHAR_LENGHT];
+    char name[MAX_VARCHAR_LENGTH];
     int address_from;
     int address_to;
     int j = 0;
@@ -365,8 +362,7 @@ table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
             addresses->address_from[j] = address_from;
             addresses->address_to[j] = address_to;
             j++;
-            if (DEBUG)
-                printf("get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
+			dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
         }
         if (segmentType == SEGMENT_TYPE_INDEX) {
             i += 2;
@@ -405,8 +401,7 @@ int find_free_space(table_addresses * addresses) {
     AK_mem_block *mem_block;
     int from = 0, to = 0, j = 0, i = 0;
 
-    if (DEBUG)
-        printf("find_free_space: Searching for block that has free space < 500 \n");
+	dbg_messg(HIGH, MEMO_MAN, "find_free_space: Searching for block that has free space < 500 \n");
 
     for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++) {
         if (addresses->address_from != 0) {
@@ -417,9 +412,8 @@ int find_free_space(table_addresses * addresses) {
             for (i = from; i <= to; i++) {
                 mem_block = (AK_mem_block *) AK_get_block(i);
                 int free_space_on = mem_block->block->free_space;
-
-                if (DEBUG)
-                    printf("find_free_space: FREE SPACE %d\n", mem_block->block->free_space);
+				
+				dbg_messg(HIGH, MEMO_MAN, "find_free_space: FREE SPACE %d\n", mem_block->block->free_space);
 
                 if ((free_space_on < MAX_FREE_SPACE_SIZE) &&
                         (mem_block->block->last_tuple_dict_id < MAX_LAST_TUPLE_DICT_SIZE_TO_USE)) {//found free block to write
@@ -482,8 +476,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
         printf("AK_init_new_extent: Could not alocate new extent\n");
         return EXIT_ERROR;
     }
-    if (DEBUG)
-        printf("AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", pocetna_adr, old_size, extent_type);
+	dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", pocetna_adr, old_size, extent_type);
 
     int zavrsna_adr = pocetna_adr;
 
@@ -528,7 +521,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
  * @brief flush memory blocks to disk file
  * @author Matija Šestak
  * @param void
- * @result int - EXIT_SUCCESS
+ * @return int - EXIT_SUCCESS
  */
 int AK_flush_cache() {
     int i = 0;

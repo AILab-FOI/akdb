@@ -123,5 +123,4 @@ AK_redo_log * redo_log;
  */
 AK_query_mem * query_mem;
 
-
 #endif

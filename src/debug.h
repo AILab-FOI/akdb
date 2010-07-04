@@ -17,16 +17,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+#ifndef DEBUG
+//#define DEBUG
+
 #include "stdarg.h"
 #include "stdio.h"
 #include "stdlib.h"
 
+/**
+ * @brief Set constant to 1 for complete project debug, else set constant to 0
+ * @author Dino Laktašić
+ */
+#define DEBUG_ALL 0
+//#define DEBUG_NONE 0
+
+
+/**
+ * @brief Set debug level. Divide debug information according to their importance. 
+ * More levels can be defined in the enum if needed. 
+ * Each debug level can be easly excluded from output by setting corresponding enum element to 0.
+ * @author Dino Laktašić
+ */
 typedef enum debug_level {
-	LOW = 0,
-	MIDDLE = 0,
-	HIGH
+	LOW = 0,	//BASIC		low level of details in output
+	MIDDLE = 0,	//NORMAL	normal level of details in output
+	HIGH = 0	//ADVANCED (EXHAUSTIVE)	high level of details in output (details in additional functions, per loop or per condition debugging)
 } DEBUG_LEVEL;
 
+/**
+ * @brief Set debug type. Divide debug information according to their type (e.g. DB modules). 
+ * More modules can be aditional added to the enum
+ * Each debug type can be easly excluded from output by setting corresponding enum element to 0
+ * @author Dino Laktašić
+ */
 typedef enum debug_type {
 	GLOBAL = 0,
 	DB_MAN = 0,
@@ -34,7 +57,10 @@ typedef enum debug_type {
 	MEMO_MAN = 0,
 	INDICES = 0,
 	TABLES = 0,
-	REL_OP,
-	REL_EQ = 0,
-	CONSTRAINTS = 0
+	REL_OP = 0,
+	REL_EQ = 1,
+	CONSTRAINTS = 0,
+	TRIGGERS = 0
 } DEBUG_TYPE;
+
+#endif

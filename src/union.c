@@ -18,155 +18,160 @@
  */
 
 #include "union.h"
-
+ 
 /**
+ * @brief  Function to make union of the two tables
  * Union is implemented for working with multiple sets of data, i.e. duplicate 
  * tuples can be written in same table (union)
+ * @author Dino Laktašić
+ * @param srcTable1 - name of the first table to join
+ * @param srcTable2 - name of the second table to join
+ * @param dstTable - name of the new table
+ * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
-int AK_union(char *table1, char *table2, char *new_table) {
-    register int i, j, k;
-    int num_attr_t1 = 0, num_attr_t2 = 0; //number of attributes in table
-    int adr1[MAX_EXTENTS_IN_SEGMENT], adr2[MAX_EXTENTS_IN_SEGMENT];
-    int brojac1 = 0, brojac2 = 0;
-    int free;
+int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
+	table_addresses *src_addr1 = (table_addresses*) get_table_addresses(srcTable1);
+    table_addresses *src_addr2 = (table_addresses*) get_table_addresses(srcTable2);
 
-    //get table addresses
-    table_addresses *address1 = (table_addresses*) get_table_addresses(table1);
-    table_addresses *address2 = (table_addresses*) get_table_addresses(table2);
+    int startAddress1 = src_addr1->address_from[0];
+    int startAddress2 = src_addr2->address_from[0];
+	
+    if ((startAddress1 != 0) && (startAddress2 != 0)) {
+        register int i, j, k;
+        i = j = k = 0;
 
-    //get all table addresses
-    for (i = 0;; i++) {
-        if (address1->address_from[i] == 0) break;
-        for (j = address1->address_from[i]; j <= address1->address_to[i]; j++) {
-            adr1[brojac1] = j;
-            brojac1++;
+        int num_att1 = 0;
+        int num_att2 = 0;
 
-        }
-    }
+        AK_mem_block *tbl1_temp_block = (AK_mem_block *) AK_get_block(startAddress1);
+        AK_mem_block *tbl2_temp_block = (AK_mem_block *) AK_get_block(startAddress2);
 
-    for (i = 0;; i++) {
-        if (address2->address_from[i] == 0) break;
-        for (j = address2->address_from[i]; j <= address2->address_to[i]; j++) {
-            adr2[brojac2] = j;
-            brojac2++;
-        }
-    }
-
-    //attribute list for union
-    AK_block * iBlock = (AK_block*) AK_read_block(adr1[0]);
-    AK_block * iBlock2 = (AK_block*) AK_read_block(adr2[0]);
-
-    //check for relation shemas
-    for (i = 0; i < MAX_ATTRIBUTES; i++) {
-        if (strcmp((char *) iBlock->header[i].att_name, "\0") == 0) //if there is no more attributes
-            break;
-        else
-            num_attr_t1++;
-    }
-
-
-    for (i = 0; i < MAX_ATTRIBUTES; i++) {
-        if (strcmp((char *) iBlock2->header[i].att_name, "\0") == 0) //if there is no more attributes
-            break;
-        else
-            num_attr_t2++;
-    }
-
-    if (num_attr_t1 != num_attr_t2) {
-        printf("UNION ERROR: Not same number of attributes! \n");
-        return EXIT_ERROR;
-    }
-
-    for (i = 0; i < MAX_ATTRIBUTES; i++) {
-        if (strcmp((char *) iBlock->header[i].type, (char *) iBlock2->header[i].type) != 0) {
-            printf("UNION ERROR: Attributes are not of the same type!");
-            return EXIT_ERROR;
-        }
-    }
-
-    for (i = 0; i < MAX_ATTRIBUTES; i++) {
-        if (strcmp((char *) iBlock->header[i].att_name, (char *) iBlock2->header[i].att_name) != 0) {
-            printf("UNION ERROR: Relation shemas are not same! \n");
-            return EXIT_ERROR;
-        }
-    }
-
-    //initialize new segment
-    AK_header *iHeader = (AK_header *) malloc(sizeof (AK_header));
-    memcpy(iHeader, iBlock->header, sizeof (AK_header));
-    AK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE, iHeader);
-
-    char podatak1[MAX_VARCHAR_LENGHT];
-    char podatak2[MAX_VARCHAR_LENGHT];
-    int pozicija_block1 = 0, pozicija_block2 = 0;
-
-    list * row_root = (list *) malloc(sizeof (list));
-
-    //writing first block or table to new segment
-    while (i < brojac1) {
-        iBlock = (AK_block*) AK_read_block(adr1[i]); //read block from first table
-
-        i++;
-        int imaJosElemenata = 0; //indicates if there are more elements in block
-
-        memcpy(podatak1,
-                iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k].address,
-                iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k].size);
-
-        if (row_root != NULL)
-            DeleteAllElements(row_root); //remove row from further action
-
-        for (k = 0; k < num_attr_t1; k++) {//through the header
-            for (free = 0; free < MAX_VARCHAR_LENGHT; free++) {
-                podatak1[free] = FREE_CHAR;
+        for (i = 0; i < MAX_ATTRIBUTES; i++) {
+            if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
+                num_att1++;
+            } else {
+                break;
             }
 
-            //copy tuple_dict to new block
-            memcpy(podatak1,
-                    iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k].address,
-                    iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k].size);
-
-            imaJosElemenata = iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].address + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].size;
-
-            InsertNewElementForUpdate(iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].type, &podatak1, new_table, iBlock->header[ k ].att_name, row_root, 0);
-
-        }
-
-        insert_row(row_root);
-    }
-
-
-    //writing second block or table to new segment
-    while (i < brojac2) {
-        iBlock = (AK_block*) AK_read_block(adr2[i]); //read block from first table
-
-        i++;
-        int imaJosElemenata = 0; //indicates if there are more elements in block
-
-        memcpy(podatak1,
-                iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k].address,
-                iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k].size);
-
-        if (row_root != NULL)
-            DeleteAllElements(row_root); //remove row from further action
-
-        for (k = 0; k < num_attr_t1; k++) {//through the header
-            for (free = 0; free < MAX_VARCHAR_LENGHT; free++) {
-                podatak1[free] = FREE_CHAR;
+            if (strcmp(tbl2_temp_block->block->header[i].att_name, "\0") != 0) {
+                num_att2++;
+            } else {
+                break;
             }
 
-            //copy tuple_dict to new block
-            memcpy(podatak1,
-                    iBlock->data + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k].address,
-                    iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k].size);
+            if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
+                printf("Union ERROR: Relation shemas are not the same! \n");
+                return EXIT_ERROR;
+            }
 
-            imaJosElemenata = iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].address + iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].size;
-
-            InsertNewElementForUpdate(iBlock->tuple_dict[pozicija_block1 * num_attr_t1 + k ].type, &podatak1, new_table, iBlock->header[ k ].att_name, row_root, 0);
-
+            if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
+                printf("Union ERROR: Attributes are not of the same type!");
+                return EXIT_ERROR;
+            }
         }
 
-        insert_row(row_root);
-    }
-    return EXIT_SUCCESS;
+        if (num_att1 != num_att2) {
+            printf("Union ERROR: Not same number of the attributes! \n");
+			return EXIT_ERROR;
+        }
+
+		int address, type, size;
+        char data[MAX_VARCHAR_LENGTH];
+
+		//initialize new segment
+        AK_header *header = (AK_header *) malloc(num_att1 * sizeof (AK_header));
+        memcpy(header, tbl1_temp_block->block->header, num_att1 * sizeof (AK_header));
+        AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
+        free(header);
+
+        list *row_root = (list *) malloc(sizeof (list));
+		
+		//writing first block or table to new segment
+		for (i = 0; src_addr1->address_from[i] != 0; i++) {
+            startAddress1 = src_addr1->address_from[i];
+
+            if (startAddress1 != 0) {
+
+                //BLOCK: for each block in table1 extent
+                for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
+                    tbl1_temp_block = (AK_mem_block *) AK_get_block(j); //read block from first table
+
+                    //if there is data in the block
+                    if (tbl1_temp_block->block->free_space != 0) {
+
+						for (k = 0; k < DATA_BLOCK_SIZE; k++) {
+							if (tbl1_temp_block->block->tuple_dict[k].type == FREE_INT)
+								break;
+								
+							address = tbl1_temp_block->block->tuple_dict[k].address;
+							size = tbl1_temp_block->block->tuple_dict[k].size;
+							type = tbl1_temp_block->block->tuple_dict[k].type;
+
+							memset(data, '\0', MAX_VARCHAR_LENGTH);
+							memcpy(data, tbl1_temp_block->block->data + address, size);
+						
+							InsertNewElementForUpdate(type, data, dstTable, tbl1_temp_block->block->header[k % num_att1].att_name, row_root, 0);
+							
+							if ((k + 1) % num_att1 == 0 && k != 0) {
+								insert_row(row_root);
+								DeleteAllElements(row_root);
+							}
+						}
+					}
+				}
+			} else break;
+		}
+		
+		//writing first block or table to new segment
+		for (i = 0; src_addr2->address_from[i] != 0; i++) {
+            startAddress2 = src_addr2->address_from[i];
+
+            if (startAddress2 != 0) {
+
+                //BLOCK: for each block in table2 extent
+                for (j = startAddress2; j < src_addr2->address_to[i]; j++) {
+                    tbl2_temp_block = (AK_mem_block *) AK_get_block(j); //read block from second table
+
+                    //if there is data in the block
+                    if (tbl2_temp_block->block->free_space != 0) {
+				
+						for (k = 0; k < DATA_BLOCK_SIZE; k++) {
+							if (tbl2_temp_block->block->tuple_dict[k].type == FREE_INT)
+								break;
+						
+							address = tbl2_temp_block->block->tuple_dict[k].address;
+							size = tbl2_temp_block->block->tuple_dict[k].size;
+							type = tbl2_temp_block->block->tuple_dict[k].type;
+							
+							memset(data, '\0', MAX_VARCHAR_LENGTH);
+							memcpy(data, tbl2_temp_block->block->data + address, size);
+
+							InsertNewElementForUpdate(type, data, dstTable, tbl2_temp_block->block->header[k % num_att2].att_name, row_root, 0);
+							
+							if ((k + 1) % num_att2 == 0 && k != 0) {
+								insert_row(row_root);
+								DeleteAllElements(row_root);
+							}
+						}
+					}
+				}
+			} else break;
+		}
+		
+		free(src_addr1);
+        free(src_addr2);
+		return EXIT_SUCCESS;
+	} else {
+		dbg_messg(LOW, REL_OP, "\nAK_union: Table/s doesn't exist!");
+        free(src_addr1);
+        free(src_addr2);
+		return EXIT_ERROR;
+	}
+}
+
+void op_union_test() {
+    printf("\n********** UNION TEST **********\n\n");
+
+    AK_union("professor", "assistant", "union_test");
+    AK_print_table("union_test");
 }

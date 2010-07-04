@@ -24,6 +24,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
+#include "ctype.h"
 #include "debug.h"
 #include "configuration.h"
 
@@ -37,13 +38,13 @@ struct list_elem {
     //data size in list element
     int size;
     ///loaded data
-    char data[ MAX_VARCHAR_LENGHT ];
+    char data[ MAX_VARCHAR_LENGTH ];
     ///point to next element
     struct list_elem *next;
 };
 
 typedef struct list_elem AK_list;
-typedef struct list_elem* AK_list_elem;
+typedef struct list_elem *AK_list_elem;
 
 /**
  * @author Matija Novak 
@@ -52,7 +53,7 @@ typedef struct list_elem* AK_list_elem;
  */
 typedef struct {
     ///START row_element_op
-    ///structure that reperesents one attribute which is used for projection or to nat_join ect.
+    ///structure that reperesents one attribute which is used for projection or nat_join ect.
 
     ///table name
     char table[ MAX_ATT_NAME ];

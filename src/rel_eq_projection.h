@@ -20,7 +20,7 @@
 #ifndef REL_EQ_PROJECTION
 #define REL_EQ_PROJECTION
 
-#include "table.h"
 #include "auxiliary.h"
+#include "table.h"
 
 #endif

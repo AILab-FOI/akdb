@@ -396,11 +396,11 @@ element_op GetPreviouselementOp(element_op Currentelement_op, element_op L) {
  * @return returns the posititon number of some elelemnt
  */
 int GetPositionOfelementOp(element_op Searchedelement_op, list_op *L) {
-    element_op Currentelement_op = L->next;
+    element_op Currentelement_op = (element_op)L->next;
     int i = 0;
     do {
         if (Currentelement_op == Searchedelement_op) break;
-        Currentelement_op = Currentelement_op->next;
+        Currentelement_op = (element_op)Currentelement_op->next;
         i++;
     } while (Currentelement_op);
     return i;

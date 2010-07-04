@@ -39,7 +39,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
     int itis = 1;
     int id;
 
-    tempBlock = AK_read_block(0);
+    tempBlock = (AK_block *)AK_read_block(0);
 
     while (itis) {
         for (j = 0; j < 50; j++)
@@ -48,10 +48,9 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
         if (strcmp(systemTableName, "AK_constraints_between") == 0) {
-            if (DEBUG)
-                printf("Sistemska tablica u koju se upisuje: %s,adresa: %i\n", systemTableName, systemTableAddress);
+            dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
 
-            tempBlock = AK_read_block(systemTableAddress);
+            tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
             while (freeSpaceFound == 0) {
                 tupleDictID += 1;
@@ -73,9 +72,9 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
                 AK_write_block(tempBlock);
 
             } else {
-                if (DEBUG)
+                //if (DEBUG)
                     //printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
-                    return EXIT_ERROR;
+                    exit (EXIT_ERROR);
             }
             itis = 0;
         }
@@ -105,7 +104,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     int tupleDictID = -1;
     int flag = EXIT_SUCCESS;
 
-    tempBlock = AK_read_block(0);
+    tempBlock = (AK_block *)AK_read_block(0);
 
     while (itis) {
         for (j = 0; j < 50; j++)
@@ -114,13 +113,12 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
         if (strcmp(systemTableName, "AK_constraints_between") == 0) {
-            if (DEBUG)
-                printf("Sistemska tablica iz koje se čita: %s,adresa: %i\n", systemTableName, systemTableAddress);
+            dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
             itis = 0;
         }
         i++;
     }
-    tempBlock = AK_read_block(systemTableAddress);
+    tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
 
     char attName[50];
@@ -150,41 +148,31 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
             memcpy(value, tempBlock->data + tempBlock->tuple_dict[tupleDictID].address, tempBlock->tuple_dict[tupleDictID].size);
             if (strcmp(value, tableName) == 0) {
 
-                if (DEBUG)
-                    printf("--------------------------------\n");
-                if (DEBUG)
-                    printf("Naziv tablice: %s\n", tableName);
+                dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
+                dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
                 memcpy(attName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
-                if (DEBUG)
-                    printf("Naziv atributa: %s\n", attName);
+                dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
                 for (j = 0; j < 50; j++)
                     value[j] = FREE_CHAR;
                 memcpy(constraintName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 1].address, tempBlock->tuple_dict[tupleDictID + 1].size);
-                if (DEBUG)
-                    printf("Naziv ograničenja: %s\n", constraintName);
+                dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
                 memcpy(valueF, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 3].address, tempBlock->tuple_dict[tupleDictID + 3].size);
                 startValue = atof(valueF);
                 for (j = 0; j < 50; j++)
                     value[j] = FREE_CHAR;
-                if (DEBUG)
-                    printf("Donja granica: %f\n", startValue);
+                dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %f\n", startValue);
                 memcpy(valueS, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 4].address, tempBlock->tuple_dict[tupleDictID + 4].size);
                 endValue = atof(valueS);
-                if (DEBUG)
-                    printf("Gornja granica: %f\n", endValue);
-                if (DEBUG)
-                    printf("--------------------------------\n");
-
+				dbg_messg(HIGH, CONSTRAINTS, "High boundary: %f\n", endValue);
+                dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
 
                 if (strcmp(attName, attNamePar) == 0) {
                     if ((startValue != 0) && (endValue != 0)) {
                         if (atof(newValue) != 0) {
                             if ((atof(newValue) >= startValue) && (atof(newValue) <= endValue)) {
-
-                                printf("Ograničenje zadovoljeno!!!\n");
+                                printf("Constraint successed!!!\n");
                             } else {
-
-                                printf("Nad tablicom %s i atributom %s postoji ograničenje %s\n vrijednosti moraju biti izmedju %f i %f\n", tableName, attName, constraintName, startValue, endValue);
+                                printf("On table %s and attribute %s exists constraint %s\n <values have to be in range between %f and %f>\n", tableName, attName, constraintName, startValue, endValue);
                                 flag = EXIT_ERROR;
                             }
                         }
@@ -193,19 +181,17 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
                             //printf("ASCI:%i",valueF[0]);
                             if (((int) newValue[0] >= 97) && ((int) newValue[0] <= 122)) {
                                 if (((int) newValue[0] >= (int) valueF[0]) && ((int) newValue[0] <= (int) valueS[0])) {
-
-                                    printf("Ograničenje zadovoljeno: %s\n", newValue);
+                                    printf("Constraint successed: %s\n", newValue);
                                 } else {
-
-                                    printf("Nad tablicom %s i atributom %s postoji ograničenje %s\n vrijednosti moraju biti izmedju %s i %s\n", tableName, attName, constraintName, valueF, valueS);
+                                    printf("On table %s and attribute %s exists constraint %s\n <values have to be in range between %s and %s>\n", tableName, attName, constraintName, valueF, valueS);
                                     flag = EXIT_ERROR;
                                 }
                             } else if (((int) newValue[0] >= 65) && ((int) newValue[0] <= 90)) {
                                 if (((int) newValue[0] >= (int) valueF[0] - 32) && ((int) newValue[0] <= (int) valueS[0] - 32)) {
-                                    printf("Ograničenje zadovoljeno: %s\n", newValue);
+                                    printf("Constraint successed: %s\n", newValue);
                                 } else {
 
-                                    printf("Nad tablicom %s i atributom %s postoji ograničenje %s\n vrijednosti moraju biti izmedju %s i %s\n", tableName, attName, constraintName, valueF, valueS);
+                                    printf("On table %s and attribute %s exists constraint %s\n <values have to be in range between %s and %s>\n", tableName, attName, constraintName, valueF, valueS);
                                     flag = EXIT_ERROR;
                                 }
                             }

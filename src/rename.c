@@ -53,12 +53,12 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
         if (strcmp(newHeader[i].att_name, old_attr)==0) {
-            messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
+            dbg_messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
             memset(&newHeader[i].att_name, 0, MAX_ATT_NAME);
             memcpy(&newHeader[i].att_name, new_attr, strlen(new_attr));
             break;
         } else if (strcmp(newHeader[i].att_name, "\0")==0) { //if there is no more attributes
-            messg(MIDDLE, REL_OP, "AK_rename: ERROR: in this table does not exist atribute: %s\n", old_attr);
+            dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: in this table does not exist atribute: %s\n", old_attr);
             return (EXIT_ERROR);
         }
     }
@@ -88,7 +88,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
  Test function for renaming
  @author Mislav Čakarić
  */
-void rename_test() {
+void op_rename_test() {
     //printf( "rename_test: Present!\n" );
     printf("\n********** RENAME TEST **********\n\n");
 

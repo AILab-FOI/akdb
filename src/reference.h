@@ -16,19 +16,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+ 
 #ifndef REFERENCE
 #define REFERENCE
 
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-
-#include "configuration.h"
+#include "auxiliary.h"
 #include "dbman.h"
-#include "files.h"
 #include "memoman.h"
-#include "table.h"
 #include "fileio.h"
+#include "files.h"
+#include "table.h"
 
 #define REF_TYPE_NONE -1
 #define REF_TYPE_SET_NULL 1
@@ -46,9 +43,8 @@ typedef struct {
     char parent[MAX_ATT_NAME];
     char parent_attributes[MAX_REFERENCE_ATTRIBUTES][MAX_ATT_NAME];
     int attributes_number;
-    char constraint[MAX_VARCHAR_LENGHT];
+    char constraint[MAX_VARCHAR_LENGTH];
     int type;
 } AK_ref_item;
-
 
 #endif

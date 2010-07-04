@@ -54,8 +54,7 @@ void create_join_block_header(int table_address1, int table_address2, char *new_
         //Copy table1 header
         if (s_copy) {
             memcpy(&header[new_head], &temp_block->header[head], sizeof (temp_block->header[head]));
-            if (DEBUG)
-                printf("Natural join: Copy attribute header: %s", header[new_head].att_name);
+            dbg_messg(HIGH, REL_OP, "Natural join: Copy attribute header: %s", header[new_head].att_name);
             new_head++;
         }
         head++;
@@ -70,8 +69,7 @@ void create_join_block_header(int table_address1, int table_address2, char *new_
         //copy all headers if some exist
         memcpy(&header[new_head], &temp_block->header[head], sizeof (temp_block->header[head]));
 
-        if (DEBUG)
-            printf("Natural join: Copy attribute header2: %s", header[new_head].att_name);
+        dbg_messg(HIGH, REL_OP, "Natural join: Copy attribute header2: %s", header[new_head].att_name);
         new_head++;
         head++;
     }
@@ -90,8 +88,7 @@ void create_join_block_header(int table_address1, int table_address2, char *new_
  * @return void
  */
 void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_block, char *new_table) {
-    if (DEBUG)
-        printf("\n MERGE NAT JOIN...");
+    dbg_messg(HIGH, REL_OP, "\n MERGE NAT JOIN...");
 
     element some_element;
     list * row_root_insert2 = (list *) malloc(sizeof (list));
@@ -105,7 +102,7 @@ void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_bloc
     int not_in_list = 1;
     int freeVar;
 
-    char data[MAX_VARCHAR_LENGHT];
+    char data[MAX_VARCHAR_LENGTH];
 
     //going through tuple_dicts of the second table
     for (i = 0; i < DATA_BLOCK_SIZE;) {
@@ -132,7 +129,7 @@ void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_bloc
                 //if isn't element in the list, and if data is correct, and size is not null
                 if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (size != 0)
                         && (overflow < (temp_block->free_space + 1)) && (overflow > -1)) {
-                    memset(data, '\0', MAX_VARCHAR_LENGHT);
+                    memset(data, '\0', MAX_VARCHAR_LENGTH);
                     //data[MAX_VARCHAR_LENGHT] = '\0';
                     memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
 
@@ -151,7 +148,7 @@ void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_bloc
 
             //if it isn't header which is in compare list then I can copy these tuple dicts becouse it not exist in the insert_row_list2
             if ((not_in_list == 1) && (size != 0) && (overflow < temp_block->free_space + 1) && (overflow > -1)) {
-                memset(data, '\0', MAX_VARCHAR_LENGHT);
+                memset(data, '\0', MAX_VARCHAR_LENGTH);
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
                 //insert data from second table to insert_list
@@ -182,8 +179,7 @@ void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_bloc
  * @return void
  */
 void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
-    if (DEBUG)
-        printf("\n COPYING NAT JOIN");
+    dbg_messg(HIGH, REL_OP, "\n COPYING NAT JOIN");
 
     list *row_root = (list *) malloc(sizeof (list));
     list *row_root_insert = (list *) malloc(sizeof (list));
@@ -198,7 +194,7 @@ void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_l
     int overflow;
     int not_in_list = 1;
     int freeVar;
-    char data[MAX_VARCHAR_LENGHT];
+    char data[MAX_VARCHAR_LENGTH];
 
     //going through tuple_dict of the table block
     for (i = 0; i < DATA_BLOCK_SIZE;) {
@@ -215,7 +211,7 @@ void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_l
                 //if there is an element that we need, and it's correct we copy it
                 if ((strcmp(list_elem->data, tbl1_temp_block->header[head].att_name) == 0) && (size != 0)
                         && (overflow < (tbl1_temp_block->free_space + 1)) && (overflow > -1)) {
-                    memset(data, '\0', MAX_VARCHAR_LENGHT);
+                    memset(data, '\0', MAX_VARCHAR_LENGTH);
                     //data[MAX_VARCHAR_LENGHT] = '\0';
                     memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
                     //insert element into list on which we compare
@@ -232,7 +228,7 @@ void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_l
 
             //copy element which is not for merge only for insert
             if ((not_in_list == 1) && (size != 0) && (overflow < tbl1_temp_block->free_space + 1) && (overflow > -1)) {
-                memset(data, '\0', MAX_VARCHAR_LENGHT);
+                memset(data, '\0', MAX_VARCHAR_LENGTH);
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
                 InsertNewElementForUpdate(tbl1_temp_block->tuple_dict[i].type, data, new_table, tbl1_temp_block->header[head].att_name, row_root_insert, 0);
@@ -273,10 +269,8 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
     if ((startAddress1 != 0) && (startAddress2 != 0)) {
         create_join_block_header(startAddress1, startAddress2, dstTable, att);
 
-        if (DEBUG) {
-            printf("\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
-            printf("\nAK_join: start copying data\n");
-        }
+        dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
+		dbg_messg(LOW, REL_OP, "\nAK_join: start copying data\n");
 
         AK_mem_block *tbl1_temp_block, *tbl2_temp_block;
 
@@ -288,13 +282,11 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
             startAddress1 = src_addr1->address_from[i];
 
             if (startAddress1 != 0) {
-                if (DEBUG)
-                    printf("\n Natural join: copy extent1: %d\n", i);
+                dbg_messg(MIDDLE, REL_OP, "\n Natural join: copy extent1: %d\n", i);
 
                 //for each block in table1 extent
                 for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
-                    if (DEBUG)
-                        printf("Natural join: copy block1: %d\n", j);
+                    dbg_messg(MIDDLE, REL_OP, "Natural join: copy block1: %d\n", j);
 
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
@@ -305,13 +297,11 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
                             startAddress2 = src_addr2->address_from[k];
 
                             if (startAddress2 != 0) {
-                                if (DEBUG)
-                                    printf("Natural join: copy extent2: %d\n", k);
+                                dbg_messg(MIDDLE, REL_OP, "Natural join: copy extent2: %d\n", k);
 
                                 //for each block in table2 extent
                                 for (l = startAddress2; l < src_addr2->address_to[k]; l++) {
-                                    if (DEBUG)
-                                        printf("Natural join: copy block2: %d\n", l);
+                                    dbg_messg(MIDDLE, REL_OP, "Natural join: copy block2: %d\n", l);
 
                                     tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 
@@ -328,10 +318,10 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
         }
         free(src_addr1);
         free(src_addr2);
+		dbg_messg(LOW, REL_OP, "NAT_JOIN_TEST_SUCCESS\n");
         return EXIT_SUCCESS;
     } else {
-        if (DEBUG)
-            printf("\n AK_join: Table/s doesn't exist!");
+        dbg_messg(LOW, REL_OP, "\n AK_join: Table/s doesn't exist!");
         free(src_addr1);
         free(src_addr2);
         return EXIT_ERROR;

@@ -92,8 +92,8 @@ int AK_difference(char *table1, char *table2, char *new_table) {
     AK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE, iHeader);
     free(iHeader);
 
-    char podatak1[MAX_VARCHAR_LENGHT];
-    char podatak2[MAX_VARCHAR_LENGHT];
+    char podatak1[MAX_VARCHAR_LENGTH];
+    char podatak2[MAX_VARCHAR_LENGTH];
     int pozicija_block1 = 0, pozicija_block2 = 0;
 
     int free = 0;
@@ -119,7 +119,7 @@ int AK_difference(char *table1, char *table2, char *new_table) {
                 while (iBlock2->free_space > imaJosElemenata2) {
                     //through the header
                     for (k = 0; k < num_attr_t1; k++) {
-                        for (free = 0; free < MAX_VARCHAR_LENGHT; free++) {
+                        for (free = 0; free < MAX_VARCHAR_LENGTH; free++) {
                             podatak1[free] = FREE_CHAR;
                             podatak2[free] = FREE_CHAR;
                         }
@@ -149,7 +149,7 @@ int AK_difference(char *table1, char *table2, char *new_table) {
 
                         for (k = 0; k < num_attr_t1; k++) {//through the header
 
-                            for (free = 0; free < MAX_VARCHAR_LENGHT; free++) {
+                            for (free = 0; free < MAX_VARCHAR_LENGTH; free++) {
                                 podatak1[free] = FREE_CHAR;
                             }
 

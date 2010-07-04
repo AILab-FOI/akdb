@@ -171,7 +171,7 @@ AK_list *AK_get_column(int num, char *tblName) {
 
     table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
     int i, j, k;
-    char data[ MAX_VARCHAR_LENGHT ];
+    char data[ MAX_VARCHAR_LENGTH ];
 
     i = 0;
     while (addresses->address_from[i] != 0) {
@@ -213,7 +213,7 @@ AK_list * AK_get_row(int num, char * tblName) {
     int i, j, k, l, counter;
     i = 0;
 
-    char data[MAX_VARCHAR_LENGHT];
+    char data[MAX_VARCHAR_LENGTH];
     counter = -1;
     while (addresses->address_from[i] != 0) {
         for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
@@ -262,7 +262,7 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
     InitL(row_root);
 
     int i, j, k, counter;
-    char data[ MAX_VARCHAR_LENGHT ];
+    char data[ MAX_VARCHAR_LENGTH ];
 
     i = 0;
     counter = -1;
@@ -298,9 +298,9 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
 char * AK_tuple_to_string(AK_list *tuple) {
     int temp_int;
     float temp_float;
-    char temp_char[ MAX_VARCHAR_LENGHT ];
+    char temp_char[ MAX_VARCHAR_LENGTH ];
 
-    char *buff = (char*) malloc(MAX_VARCHAR_LENGHT);
+    char *buff = (char*) malloc(MAX_VARCHAR_LENGTH);
 
     switch (tuple->type) {
         case TYPE_INT:
@@ -357,11 +357,11 @@ AK_print_row(int col_len[], AK_list *row) {
     AK_list_elem el = (AK_list_elem) FirstL(row);
 
     int i = 0;
-    void *data = (void *) calloc(MAX_VARCHAR_LENGHT, sizeof (void));
+    void *data = (void *) calloc(MAX_VARCHAR_LENGTH, sizeof (void));
 
     printf("\n|");
     while (el != NULL) {
-        memset(data, 0, MAX_VARCHAR_LENGHT);
+        memset(data, 0, MAX_VARCHAR_LENGTH);
         switch (el->type) {
             case FREE_CHAR:
                 //case FREE_INT:
@@ -404,7 +404,7 @@ AK_print_row(int col_len[], AK_list *row) {
 void AK_print_table(char *tblName) {
     table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
     if (addresses->address_from[0] == 0) {
-        printf("Table %s does not exist!\n");
+        printf("Table %s does not exist!\n", tblName);
     } else {
         AK_header *head = AK_get_header(tblName);
 
@@ -483,6 +483,8 @@ void AK_print_table(char *tblName) {
             InitL(row_root);
 
             i = 0;
+			int type, size, address;
+			
             while (addresses->address_from[i] != 0) {
                 for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
                     AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
@@ -491,9 +493,9 @@ void AK_print_table(char *tblName) {
                     for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
                         if (temp->block->tuple_dict[k].size > 0) {
                             for (l = 0; l < num_attr; l++) {
-                                int type = temp->block->tuple_dict[k + l].type;
-                                int size = temp->block->tuple_dict[k + l].size;
-                                int address = temp->block->tuple_dict[k + l].address;
+								type = temp->block->tuple_dict[k + l].type;
+                                size = temp->block->tuple_dict[k + l].size;
+                                address = temp->block->tuple_dict[k + l].address;
                                 InsertAtEndL(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row(len, row_root);
@@ -517,7 +519,7 @@ void AK_print_table(char *tblName) {
             printf("\n");*/
             //print table rows number and time spent to generate table
             time_t end = clock();
-            printf("%i rows found, duration: %d μs\n\n", num_rows, end - start);
+            printf("%i rows found, duration: %f μs\n\n", num_rows, (double)(end - start));
         }
     }
 }

@@ -181,10 +181,10 @@ int AK_reference_update(list *lista, int delete) {
     element temp;
     AK_list_elem tempcell;
     AK_ref_item reference;
-    char constraints[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGHT];
-    char child_tables[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGHT];
+    char constraints[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGTH];
+    char child_tables[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGTH];
 
-    char tempData[MAX_VARCHAR_LENGHT];
+    char tempData[MAX_VARCHAR_LENGTH];
 
     element row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
@@ -307,7 +307,7 @@ int AK_reference_update(list *lista, int delete) {
 int AK_reference_check_entry(list *lista) {
     element temp;
     int i = 0, j, k, con_num = 0, success;
-    char constraints[10][MAX_VARCHAR_LENGHT]; // this 10 should probably be a constant... how many foreign keys can one table have..
+    char constraints[10][MAX_VARCHAR_LENGTH]; // this 10 should probably be a constant... how many foreign keys can one table have..
     char attributes[MAX_REFERENCE_ATTRIBUTES][MAX_ATT_NAME];
     int is_att_null[MAX_REFERENCE_ATTRIBUTES]; //this is a workaround... when proper null value implementation is in place, this should be solved differently
     AK_list *row;

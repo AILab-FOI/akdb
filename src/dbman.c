@@ -24,14 +24,10 @@
 #include "dbman.h"
 
 /**
- @author Markus Schatten
-
- Initializes a new database file named DB_FILE
-
- @param size size of new file in in blocks
-
- @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
-
+ * @brief  Initializes a new database file named DB_FILE
+ * @author Markus Schatten
+ * @param size size of new file in in blocks
+ * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
  */
 int AK_init_db_file(int size) {
     register int i = 0, j, k;
@@ -103,12 +99,10 @@ int AK_init_db_file(int size) {
 }
 
 /**
- @author Markus Schatten
-
- Reads a block at a given address (block number less than db_file_size)
-
- @param address block number (address)
- @return pointer to block allocated in memory
+ * @brief  Reads a block at a given address (block number less than db_file_size)
+ * @author Markus Schatten
+ * @param address - block number (address)
+ * @return pointer to block allocated in memory
  */
 AK_block * AK_read_block(int address) {
     AK_block * block = (AK_block *) malloc(sizeof ( AK_block));
@@ -134,12 +128,10 @@ AK_block * AK_read_block(int address) {
 }
 
 /**
- @author Markus Schatten
-
- Writes a block to DB file
-
- @param block poiner to block allocated in memory to write
- @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
+ * @brief  Writes a block to DB file
+ * @author Markus Schatten
+ * @param block - poiner to block allocated in memory to write
+ * @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
  */
 int AK_write_block(AK_block * block) {
     if ((db = fopen(DB_FILE, "r+")) == NULL) {
@@ -155,27 +147,23 @@ int AK_write_block(AK_block * block) {
         exit(EXIT_ERROR);
     }
     fclose(db);
-    if (DEBUG)
-        printf("AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
+    dbg_messg(HIGH, DB_MAN, "AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
     return ( EXIT_SUCCESS);
 }
 
 /**
- @author Nikola Bakoš
-
- Function to alocate new extent of blocks
-
- @param start_address address (block number) to start searching for sufficient space
- @param old_size size of previous extent in same segment (in blocks)
- @param extent_type type of extent (can be one of:
+ * @brief  Function to alocate new extent of blocks
+ * @author Nikola Bakoš
+ * @param start_address address (block number) to start searching for sufficient space
+ * @param old_size size of previous extent in same segment (in blocks)
+ * @param extent_type type of extent (can be one of:
         SEGMENT_TYPE_SYSTEM_TABLE,
         SEGMENT_TYPE_TABLE,
         SEGMENT_TYPE_INDEX,
         SEGMENT_TYPE_TRANSACTION,
         SEGMENT_TYPE_TEMP
- @param header pointer to header that should be written to the new extent (all blocks)
-
- @return address (block number) of new extent if successful, EXIT_ERROR otherwise
+ * @param header pointer to header that should be written to the new extent (all blocks)
+ * @return address (block number) of new extent if successful, EXIT_ERROR otherwise
  */
 int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *header) {
     int req_free_space; /// var - How much of space is required for extent
@@ -257,8 +245,7 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
 
         free(block); /// free the block
     }
-    if (DEBUG)
-        printf("AK_new_extent: first_addr_of_extent= %i , nAlocated_blocks= %i , zavrsna_adresa= %i, success= %i\n", first_addr_of_extent, nAlocated_blocks, j, success);
+    dbg_messg(HIGH, DB_MAN, "AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, success= %i\n", first_addr_of_extent, nAlocated_blocks, j, success);
 
     if (success != nAlocated_blocks) /// if some blocks are not succesfully alocated, whitch means the extend alocation has FAILED
     {
@@ -270,21 +257,18 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
 }
 
 /**
- @author Tomislav Fotak
-
- Function to allocate new segment of extents. In this phase of implementation, only extents
+ * @brief  Function to allocate new segment of extents. In this phase of implementation, only extents
  containing INITIAL_EXTENT_SIZE blocks can be allocated
-
- @param name (character pointer) name of segment
- @param type segment type (possible values:
+ * @author Tomislav Fotak
+ * @param name (character pointer) name of segment
+ * @param type segment type (possible values:
         SEGMENT_TYPE_SYSTEM_TABLE,
         SEGMENT_TYPE_TABLE,
         SEGMENT_TYPE_INDEX,
         SEGMENT_TYPE_TRANSACTION,
-        SEGMENT_TYPE_TEMP
-                                                           )
- @param header (header pointer) pointer to header that should be written to the new extent (all blocks)
- @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
+        SEGMENT_TYPE_TEMP)
+ * @param header (header pointer) pointer to header that should be written to the new extent (all blocks)
+ * @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
  */
 int AK_new_segment(char * name, int type, AK_header *header) {
     int segment_start_addr = 1; /// start adress for segment because we can not allocate segment in block 0
@@ -294,8 +278,7 @@ int AK_new_segment(char * name, int type, AK_header *header) {
     int first_allocated_block = -1;
 
     for (i = segment_start_addr; i <= db_file_size; i++) {
-        if (DEBUG)
-            printf("AK_new_segment: Reading block %d, %s.\n", i, name);
+		dbg_messg(HIGH, DB_MAN, "AK_new_segment: Reading block %d, %s.\n", i, name);
         /// check if the block is free
         block = AK_read_block(i);
 
@@ -321,22 +304,20 @@ int AK_new_segment(char * name, int type, AK_header *header) {
 }
 
 /**
- @author Matija Novak
-
- Function for creating header and initalize with default values
-
- @param name (char) - name of the atribute
- @param type (int) - type of the atribute
- @param integrity (int) - standard integrity costraint
- @param constr_name (char) - extra integrity constraint name
- @param contr_code - extra integrity costraint code
- @return AK_header
+ * @brief  Function for creating header and initalize with default values
+ * @author Matija Novak
+ * @param name (char) - name of the atribute
+ * @param type (int) - type of the atribute
+ * @param integrity (int) - standard integrity costraint
+ * @param constr_name (char) - extra integrity constraint name
+ * @param contr_code - extra integrity costraint code
+ * @return AK_header
  */
 AK_header * AK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code) {
     AK_header * catalog_header = (AK_header *) malloc(sizeof ( AK_header));
     memset(catalog_header, 0, sizeof (AK_header));
-    if (DEBUG)
-        printf("AK_create_header: Header: %s, %d\n", name, strlen(name));
+    
+	dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", name, strlen(name));
     catalog_header->type = type;
     memcpy(catalog_header->att_name, name, strlen(name));
     int i = 0;
@@ -357,37 +338,28 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
 }
 
 /**
- @author Matija Novak
-
- Function for inserting entry in tuple_dict and data of a block
-
- @param block_adress (AK_block) - adress of a block in which we want insert data
- @param type (int) - type of entry_data
- @param entry_data (char) - data which is inserted, can be int but must first be converted to char
- @param i (int) -adress in tuple_dict array (example block_address->tuple_dict[i])
-
- @return nothing because it gets the address of an block like a function parameter
+ * @brief  Function for inserting entry in tuple_dict and data of a block
+ * @author Matija Novak
+ * @param block_adress (AK_block) - adress of a block in which we want insert data
+ * @param type (int) - type of entry_data
+ * @param entry_data (char) - data which is inserted, can be int but must first be converted to char
+ * @param i (int) -adress in tuple_dict array (example block_address->tuple_dict[i])
+ * @return nothing because it gets the address of an block like a function parameter
  and works directly with the orginal block
  */
-
 void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int i) {
     AK_tuple_dict * catalog_tuple_dict = (AK_tuple_dict *) malloc(sizeof ( AK_tuple_dict));
 
-    if (DEBUG)
-        printf("AK_insert_entry: Insert data: %d  Size of data:\n", *((int *) entry_data));
+    dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %d  Size of data:\n", *((int *) entry_data));
 
     /// using strlen becuse sizeof(entry_data) is always 4
     /// copy data into bloc->data on start position bloc->free_space
     if (type == TYPE_INT) {
         memcpy(block_address->data + block_address->free_space, entry_data, AK_type_size(type, entry_data));
-        if (DEBUG) {
-            printf("AK_insert_entry: Insert data: %d  Size of data:\n", (int) entry_data);
-        }
+        dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %d  Size of data:\n", (int) entry_data);
     } else {
         memcpy(block_address->data + block_address->free_space, entry_data, AK_type_size(type, entry_data));
-        if (DEBUG) {
-            printf("AK_insert_entry: Insert data: %s  Size of data:\n", (char *) entry_data);
-        }
+        dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %s  Size of data:\n", (char *) entry_data);
     }
     /// address of entry data in block->data
     catalog_tuple_dict->address = block_address->free_space;
@@ -407,18 +379,16 @@ void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int 
 }
 
 /**
- @author Matija Novak
-
- Function initialises the sytem table catalog and writes the result in first (0) block in db_file
-
- @param adresses of system table blocks in db_file
- @return nothing EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
+ * @brief  Function initialises the sytem table catalog and writes the result in first (0) block in db_file
+ * @author Matija Novak
+ * @param adresses of system table blocks in db_file
+ * @return nothing EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
  */
 int AK_init_system_tables_catalog(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
         int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull, int reference) {
-    if (DEBUG)
-        printf("AK_init_system_tables_catalog: Initializing system tables catalog\n");
-    AK_block * catalog_block = (AK_block *) malloc(sizeof ( AK_block));
+    dbg_messg(HIGH, DB_MAN, "AK_init_system_tables_catalog: Initializing system tables catalog\n");
+    
+	AK_block * catalog_block = (AK_block *) malloc(sizeof ( AK_block));
     /// first header attribute of catalog_block
     AK_header * catalog_header_name = (AK_header *) malloc(sizeof ( AK_header));
     catalog_header_name = AK_create_header("Name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -520,13 +490,11 @@ int AK_init_system_tables_catalog(int relation, int attribute, int index, int vi
 }
 
 /**
- @author Miroslav Policki
-
- Sets the first num ints of a block of memory to the specified value
-
- @param block pointer to the block of memory to fill
- @param value int value to be set
- @param num number of ints in the block of memory to be set
+ * @brief  Sets the first num ints of a block of memory to the specified value
+ * @author Miroslav Policki
+ * @param block pointer to the block of memory to fill
+ * @param value int value to be set
+ * @param num number of ints in the block of memory to be set
  */
 void AK_memset_int(void *block, int value, size_t num) {
     size_t i;
@@ -735,19 +703,15 @@ int AK_register_system_tables(int relation, int attribute, int index, int view, 
 }
 
 /**
- @author Miroslav Policki
-
- Initializes the system catalog
-
- @return EXIT_SUCCESS if the system catalog has been initialized, EXIT_ERROR otherwise
-
+ * @brief  Initializes the system catalog
+ * @author Miroslav Policki
+ * @return EXIT_SUCCESS if the system catalog has been initialized, EXIT_ERROR otherwise
  */
 int AK_init_system_catalog() {
     int relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, right, constraint, constraintNull, reference;
     int i;
 
-    if (DEBUG)
-        printf("AK_init_system_catalog: System catalog initialization started...\n");
+    dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: System catalog initialization started...\n");
 
     AK_header hConstraintNotNull[5] = {
         {TYPE_INT, "obj_id", 0, '\0', '\0'},
@@ -993,8 +957,7 @@ int AK_init_system_catalog() {
         memset(hReference[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
         memset(hReference[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
     }
-    if (DEBUG)
-        printf("AK_init_system_catalog: Creating new segments...\n");
+	dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: Creating new segments...\n");
 
     relation = AK_new_segment("AK_relation", SEGMENT_TYPE_SYSTEM_TABLE, hRelation);
     attribute = AK_new_segment("AK_attribute", SEGMENT_TYPE_SYSTEM_TABLE, hAttribute);
@@ -1014,8 +977,7 @@ int AK_init_system_catalog() {
     constraintNull = AK_new_segment("AK_constraints_not_null", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintNotNull);
     reference = AK_new_segment("AK_reference", SEGMENT_TYPE_SYSTEM_TABLE, hReference);
 
-    if (DEBUG)
-        printf("AK_init_system_catalog: Segments created!\n");
+    dbg_messg(LOW, DB_MAN, "AK_init_system_catalog: Segments created!\n");
 
     if (EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, right, constraint, constraintNull, reference)) {
         AK_register_system_tables(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, right, constraint, constraintNull, reference);
@@ -1028,13 +990,10 @@ int AK_init_system_catalog() {
 }
 
 /**
- @author Markus Schatten
-
- Deletes a block by a given block address (resets the header and data)
-
- @param address - address of the block to be deleted
-
- @return returns EXIT_SUCCESS if deletion successful, else EXIT_ERROR
+ * @brief  Deletes a block by a given block address (resets the header and data)
+ * @author Markus Schatten
+ * @param address - address of the block to be deleted
+ * @return returns EXIT_SUCCESS if deletion successful, else EXIT_ERROR
  */
 int AK_delete_block(int address) {
     register int i, j, k;
@@ -1083,14 +1042,11 @@ int AK_delete_block(int address) {
 }
 
 /**
- @author Dejan Sambolić
-
- Deletes an extent between begin and end blocks
-
- @param begin - address of extent's first block
- @param end - adress of extent's last block
-
- @return returns EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
+ * @brief  Deletes an extent between begin and end blocks
+ * @author Dejan Sambolić
+ * @param begin - address of extent's first block
+ * @param end - adress of extent's last block
+ * @return returns EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
  */
 int AK_delete_extent(int begin, int end) {
     int address;
@@ -1103,10 +1059,10 @@ int AK_delete_extent(int begin, int end) {
 }
 
 /**
- @author Mislav Čakarić
- @param name name of the segment
- @param type type of the segment
- @return success or error
+ * @author Mislav Čakarić
+ * @param name - name of the segment
+ * @param type - type of the segment
+ * @return success or error
  */
 int AK_delete_segment(char * name, int type) {
     int i = 0;
@@ -1143,18 +1099,15 @@ int AK_delete_segment(char * name, int type) {
 }
 
 /**
- @author Markus Schatten
-
+ * @author Markus Schatten
  */
 int AK_init_disk_manager() {
     int size_in_mb = DB_FILE_SIZE;
     float size = 1024 * 1024 * size_in_mb / sizeof ( AK_block);
 
     printf("AK_init_disk_manager: Initializing disk manager...\n\n");
-    if (DEBUG) {
-        printf("AK_init_disk_manager: Block size is: %d\n", sizeof ( AK_block));
-        printf("AK_init_disk_manager: We need %d blocks for %d MiB\n", (int) size, size_in_mb);
-    }
+    dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: Block size is: %d\n", sizeof (AK_block));
+    dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: We need %d blocks for %d MiB\n", (int) size, size_in_mb);
 
     if (AK_init_db_file((int) size) == EXIT_SUCCESS) {
         if (AK_init_system_catalog() == EXIT_SUCCESS) {

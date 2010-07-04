@@ -20,15 +20,9 @@
 #ifndef TRIGGER
 #define TRIGGER
 
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-
-#include "configuration.h"
+#include "auxiliary.h"
 #include "dbman.h"
 #include "fileio.h"
 #include "table.h"
-#include "auxiliary.h"
-
 
 #endif

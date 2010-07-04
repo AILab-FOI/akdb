@@ -25,7 +25,7 @@
  * @return objectID
  */
 int AK_get_id() {
-    char temp_data[MAX_VARCHAR_LENGHT];
+    char temp_data[MAX_VARCHAR_LENGTH];
     list * row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
     AK_list *row = (AK_list*) malloc(sizeof (AK_list));
@@ -33,7 +33,7 @@ int AK_get_id() {
     int exists = 0;
     int current_value = ID_START_VALUE;
     for (i = 0; i < num_rec; i++) {
-        row = AK_get_row(i, "AK_sequence");
+        row = (AK_list *)AK_get_row(i, "AK_sequence");
         AK_list_elem value = GetNthL(1, row);
         memcpy(temp_data, &value->data, value->size);
         temp_data[value->size] = 0; //terminate string

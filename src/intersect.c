@@ -22,11 +22,13 @@
 
 /**
  * @brief  Function to make intersect of the two tables
+ * Intersect is implemented for working with multiple sets of data, i.e. duplicate 
+ * tuples can be written in same table (intersect)
  * @author Dino Laktašić
  * @param srcTable1 - name of the first table to join
  * @param srcTable2 - name of the second table to join
  * @param dstTable - name of the new table
- * @return if success returns EXIT_SUCCESS
+ * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
     table_addresses *src_addr1 = (table_addresses*) get_table_addresses(srcTable1);
@@ -60,24 +62,26 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 
             if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
                 printf("Intersect ERROR: Relation shemas are not the same! \n");
-                break;
+                return EXIT_ERROR;
+				//break;
             }
 
             if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
                 printf("Intersect ERROR: Attributes are not of the same type!");
-                break;
+                return EXIT_ERROR;
+				//break;
             }
         }
 
         if (num_att1 != num_att2) {
             printf("Intersect ERROR: Not same number of the attributes! \n");
+			return EXIT_ERROR;
         }
 
         int something_to_copy = 0, m, n, o;
-        int overflow = 1;
 
-        char data1[MAX_VARCHAR_LENGHT];
-        char data2[MAX_VARCHAR_LENGHT];
+        char data1[MAX_VARCHAR_LENGTH];
+        char data2[MAX_VARCHAR_LENGTH];
 
         //initialize new segment
         AK_header *header = (AK_header *) malloc(num_att1 * sizeof (AK_header));
@@ -115,7 +119,6 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                         o = 0;
                                         //TUPLE_DICTS: for each tuple_dict in the block
                                         for (m = 0; m < DATA_BLOCK_SIZE; m += num_att1) {
-
                                             if (tbl1_temp_block->block->tuple_dict[m + 1].type == FREE_INT)
                                                 break;
 
@@ -170,14 +173,14 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         free(src_addr2);
         return EXIT_SUCCESS;
     } else {
-        if (DEBUG)
-            printf("\n AK_intersect: Table/s doesn't exist!");
+        dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
         free(src_addr1);
         free(src_addr2);
+		return EXIT_ERROR;
     }
 }
 
-void intersect_test() {
+void op_intersect_test() {
     printf("\n********** INTERSECT TEST **********\n\n");
 
     AK_intersect("professor", "assistant", "intersect_test");

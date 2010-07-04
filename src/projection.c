@@ -38,8 +38,7 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
     }
      */
 
-    if (DEBUG)
-        printf("temp_create_table: First block address of the new segmet: %d", startAddress);
+    dbg_messg(LOW, REL_OP, "temp_create_table: First block address of the new segmet: %d", startAddress);
 
     int broj = 8;
     //insert object_id
@@ -84,8 +83,7 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
                 //make a copy of the header needed for projection
                 memcpy(&header[new_head], &temp_block->header[head], sizeof (temp_block->header[head]));
 
-                if (DEBUG)
-                    printf("Copy attribute header: %s\n", header[new_head].att_name);
+                dbg_messg(HIGH, REL_OP, "Copy attribute header: %s\n", header[new_head].att_name);
 
                 new_head++;
             }
@@ -122,7 +120,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
     int something_to_copy; //boolean variable to indicate if there is data to copy in these set of tuple_dicts
     int size; //current tuple_dict data size
 
-    char data[MAX_VARCHAR_LENGHT]; //data to copy
+    char data[MAX_VARCHAR_LENGTH]; //data to copy
 
     //iterate through all tuple_dicts in block
     for (i = 0; i < DATA_BLOCK_SIZE;) {
@@ -143,7 +141,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
                 if ((strcmp(list_elem->data, old_block->header[head].att_name) == 0) && (size != 0)
                         && (overflow < old_block->free_space + 1) && (overflow > -1)) {
 
-                    memset(data, 0, MAX_VARCHAR_LENGHT);
+                    memset(data, 0, MAX_VARCHAR_LENGTH);
                     memcpy(data, old_block->data + old_block->tuple_dict[i].address, old_block->tuple_dict[i].size);
 
                     //insert element to list to be inserted into new table
@@ -158,8 +156,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
 
         //write row to the porojection table
         if (something_to_copy) {
-            if (DEBUG)
-                printf("\nInsert row to projection table.\n");
+            dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
 
             insert_row(row_root);
             DeleteAllElements(row_root);
@@ -184,10 +181,8 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
         //create new segmenet for the projection table
         AK_create_block_header(src_addr->address_from[0], dstTable, att);
 
-        if (DEBUG) {
-            printf("\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
-            printf("\nAK_projection: start copying data\n");
-        }
+        dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
+        dbg_messg(LOW, REL_OP, "\nAK_projection: start copying data\n");
 
         int startAddress = 0, i = 0, j;
 
@@ -196,9 +191,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
             startAddress = src_addr->address_from[i];
 
             if (startAddress != 0) {
-                if (DEBUG) {
-                    printf("\nAK_projection: copy extent: %d\n", i);
-                }
+                dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy extent: %d\n", i);
 
                 //for each block in extent
                 for (j = startAddress; j <= src_addr->address_to[i]; j++) {
@@ -209,8 +202,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
                         break;
                     }
 
-                    if (DEBUG)
-                        printf("\nAK_projection: copy block: %d\n", j);
+                    dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy block: %d\n", j);
 
                     //get projection tuples from block
                     AK_copy_block_projection(temp->block, att, dstTable);
@@ -220,12 +212,10 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
         }
         free(src_addr);
 
-        if (DEBUG)
-            printf("PROJECTION_TEST_SUCCESS\n");
+        dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n");
         return EXIT_SUCCESS;
     } else {
-        if (DEBUG)
-            printf("\n AK_projection: Table doesn't exist!");
+        dbg_messg(LOW, REL_OP, "\n AK_projection: Table doesn't exist!");
         return EXIT_ERROR;
     }
 }

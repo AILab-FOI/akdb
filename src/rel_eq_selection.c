@@ -71,7 +71,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     memcpy(temp_set, set, strlen(set));
     memcpy(temp_subset, subset, strlen(subset));
 
-    if (DEBUG) printf("RULE - is (%s) subset of set (%s) in rel_eq_selection\n", subset, set);
+    dbg_messg(HIGH, REL_EQ, "RULE - is (%s) subset of set (%s) in rel_eq_selection\n", subset, set);
 
     for ((token_set = strtok_r(temp_set, ATTR_DELIMITER, &save_token_set)); token_set;
             (token_set = strtok_r(NULL, ATTR_DELIMITER, &save_token_set)), set_id++) {
@@ -90,7 +90,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     }
 
     if (len_set < len_subset) {
-        if (DEBUG) printf("RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
+        dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
         return EXIT_FAILURE;
     }
 
@@ -108,14 +108,14 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     }
 
     if (len_set != len_subset) {
-        if (DEBUG) printf("RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
+        dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
         return EXIT_FAILURE;
     }
 
     free(temp_set);
     free(temp_subset);
 
-    if (DEBUG) printf("RULE - succeed (%s) is subset of set (%s).\n", subset, set);
+    dbg_messg(HIGH, REL_EQ, "RULE - succeed (%s) is subset of set (%s).\n", subset, set);
     return EXIT_SUCCESS;
 }
 
@@ -292,13 +292,13 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
     int next_cond = 0;
 
     char *token_cond, *save_token_cond;
-    char *ret_attributes = (char *) calloc(MAX_VARCHAR_LENGHT, sizeof (char));
+    char *ret_attributes = (char *) calloc(MAX_VARCHAR_LENGTH, sizeof (char));
     char *temp_cond = (char *) calloc(strlen(cond) + 1, sizeof (char));
 
     memcpy(temp_cond, cond, strlen(cond));
     memcpy(temp_cond + strlen(cond) + 1, "\0", 1);
 
-    if (DEBUG) printf("RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
+    dbg_messg(HIGH, REL_EQ, "RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
 
     for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond;
             (token_cond = strtok_r(NULL, " ", &save_token_cond)), token_id++) {
@@ -332,10 +332,10 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
     }
 
     if (ret_attributes > 0) {
-        if (DEBUG) printf("RULE - commute selection with theta-join succeed.\n");
+        dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join succeed.\n");
         return ret_attributes;
     } else {
-        if (DEBUG) printf("RULE - commute selection with theta-join failed!\n");
+        dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
         free(ret_attributes);
         return NULL;
     }
@@ -374,7 +374,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
        memcpy(temp_cond, cond, strlen(cond));
        memcpy(temp_cond + strlen(cond) + 1, "\0", 1);
 	
-       if (DEBUG) printf("RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
+       dbg_messg(HIGH, REL_EQ, "RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
 	
        for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond;
                (token_cond = strtok_r(NULL, " ", &save_token_cond)), token_id++) {
@@ -444,10 +444,10 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
        free(temp_attr);
 
        if (ret_attributes > 0) {
-               if (DEBUG) printf("RULE - commute selection with theta-join succeed.\n");
+               dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join succeed.\n");
                return ret_attributes;
        } else {
-               if (DEBUG) printf("RULE - commute selection with theta-join failed!\n");
+               dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
                //free(ret_attributes);
                return NULL;
        }
@@ -541,8 +541,8 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
         switch (list_elem->type) {
 
             case TYPE_OPERATOR:
-                if (DEBUG) printf("\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
-                if (DEBUG) printf("----------------------\n");
+                dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
+                dbg_messg(LOW, REL_EQ, "----------------------\n");
                 temp_elem = (AK_list_elem) EndL(temp);
                 temp_elem_prev = (AK_list_elem) PreviousL(temp_elem, temp);
                 list_elem_next = (AK_list_elem) NextL(list_elem, list_rel_eq);
@@ -562,14 +562,14 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                                                 (temp_elem_prev->data[0] == RO_SELECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
                                             InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
                                             InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                                            if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                                             step++;
                                             break;
                                         } else if ((AK_rel_eq_can_commute(list_elem_next, temp_elem) == EXIT_SUCCESS) &&
                                                 (temp_elem_prev->data[0] == RO_SELECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
                                             InsertBeforeL(list_elem->type, list_elem->data, list_elem->size, temp_elem_prev, temp);
                                             InsertBeforeL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp_elem_prev, temp);
-                                            if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                                             step++;
                                             break;
                                         }
@@ -582,7 +582,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                         if (temp_elem == NULL || step != 0) {
                             InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
                             InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                            if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         }
 
                         list_elem = list_elem->next;
@@ -600,11 +600,11 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                             strcat(temp_elem->data, list_elem_next->data);
                             strcat(temp_elem->data, " AND"); //comment if using infix format
                             memcpy(temp_elem->data, temp_elem->data, temp_elem->size);
-                            if (DEBUG) printf("::selection cascade - condition changed to (%s) in temp list\n", temp_elem->data);
+                            dbg_messg(MIDDLE, REL_EQ, "::selection cascade - condition changed to (%s) in temp list\n", temp_elem->data);
                         } else {
                             InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
                             InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                            if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         }
 
                         /*//Divide selection condition (slower than upper solution but can be useful in certain cases)
@@ -663,7 +663,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                                         }
                                         InsertAfterL(temp_elem->type, temp_elem->data, temp_elem->size, tmp, temp);
                                         InsertAfterL(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
-                                        if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
+                                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
                                     }
                                     break;
                                 }
@@ -673,13 +673,13 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                             temp_elem = (AK_list_elem) PreviousL(temp_elem, temp);
                         }
                         InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                        if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
+                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     case RO_NAT_JOIN:
                         InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
                         InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                        if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
+                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         list_elem = list_elem->next;
                         break;
 
@@ -717,8 +717,8 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                                                 //memset(temp_elem->data, '\0', MAX_VARCHAR_LENGHT);
                                                 temp_elem->size = strlen(data1) + 1;
                                                 memcpy(temp_elem->data, data1, temp_elem->size);
-                                                memset(temp_elem->data + temp_elem->size, '\0', MAX_VARCHAR_LENGHT - temp_elem->size);
-                                                if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
+                                                memset(temp_elem->data + temp_elem->size, '\0', MAX_VARCHAR_LENGTH - temp_elem->size);
+                                                dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
                                             } else {
                                                 AK_list_elem temp_elem_prevprev = (AK_list_elem) PreviousL(temp_elem_prev, temp);
                                                 temp_elem_prevprev->next = temp_elem;
@@ -740,7 +740,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                                                 memset(data2 + strlen(data2), '\0', 1);
                                                 InsertAfterL(temp_elem->type, data2, strlen(data2) + 1, tmp, temp);
                                                 InsertAfterL(TYPE_OPERATOR, op_selected, 2, tmp, temp);
-                                                if (DEBUG) printf("::operator %s inserted with attributes (%s) in temp list\n", op_selected, data2);
+                                                dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", op_selected, data2);
                                             }
                                         }
 
@@ -759,17 +759,17 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 
                         InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
                         InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                        if (DEBUG) printf("::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         list_elem = list_elem->next;
                         break;
 
                     case RO_RENAME:
                         InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                        if (DEBUG) printf("::operator %s inserted in temp list\n", list_elem->data);
+                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     default:
-                        if (DEBUG) printf("Invalid operator: %s", list_elem->data);
+                        dbg_messg(LOW, REL_EQ, "Invalid operator: %s", list_elem->data);
                         break;
                 }
                 break;
@@ -785,12 +785,12 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                 break;
 
             case TYPE_OPERAND:
-                if (DEBUG) printf("::table_name (%s) inserted in the temp list\n", list_elem->data);
+                dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in the temp list\n", list_elem->data);
                 InsertAtEndL(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
                 break;
 
             default:
-                if (DEBUG) printf("Invalid type: %s", list_elem->data);
+                dbg_messg(LOW, REL_EQ, "Invalid type: %s", list_elem->data);
                 break;
         }
 
@@ -925,7 +925,7 @@ void rel_eq_selection_test() {
     //AK_print_rel_eq_projection(expr);
     AK_print_rel_eq_selection(AK_rel_eq_selection(expr));
 
-    if (DEBUG) {
+    if (DEBUG_ALL) {
         printf("\n------------------> TEST_SELECTION_FUNCTIONS <------------------\n\n");
 
         char *test_cond1, *test_cond2;

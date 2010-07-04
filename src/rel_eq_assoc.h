@@ -31,7 +31,7 @@
  */
 struct cost_eval_t {
     int value;
-    char data[MAX_VARCHAR_LENGHT];
+    char data[MAX_VARCHAR_LENGTH];
 };
 
 typedef struct cost_eval_t cost_eval;

@@ -21,20 +21,11 @@
 #ifndef CONFIGURATION
 #define CONFIGURATION
 
-/**
-\def DEBUG
-\brief constant for debugging
- */
-#define DEBUG 0
-#define DEBUG_SORT 1
-#define INTERSECT_DEBUG 0
-#define DEBUG_TABLE 1
-
 //maximal number of blocks in a segment
 #define MAX_NUM_OF_BLOCKS 200
 
 //Maximum varchars that can be entered
-#define MAX_VARCHAR_LENGHT 200
+#define MAX_VARCHAR_LENGTH 200
 #define MAX_EXTENTS_IN_SEGMENT 200
 
 //MAX to use block, space
@@ -133,7 +124,7 @@
 
 /**
 \def DATA_BLOCK_SIZE
-\brief length of data block size (used in in AK_block->data)
+\brief length of data block size (used in AK_block->data)
  */
 #define DATA_BLOCK_SIZE 500
 
@@ -145,7 +136,7 @@
 
 /**
 \def DB_FILE_SIZE
-\brief size of DB file in MiB
+\brief size of DB file in MB
  */
 #define DB_FILE_SIZE 40
 
