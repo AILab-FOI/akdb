@@ -302,6 +302,8 @@ char * AK_tuple_to_string(AK_list *tuple) {
 
     char *buff = (char*) malloc(MAX_VARCHAR_LENGTH);
 
+	//assert(tuple->type);
+	
     switch (tuple->type) {
         case TYPE_INT:
             memcpy(&temp_int, tuple->data, tuple->size);

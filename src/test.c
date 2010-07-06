@@ -519,6 +519,16 @@ void create_test_tables() {
     InsertNewElement(TYPE_VARCHAR, "markus.schatten@foi.hr", tblName, "email", row_root);
     InsertNewElement(TYPE_VARCHAR, "www.foi.hr/nastavnici/schatten.markus/", tblName, "web_page", row_root);
     insert_row(row_root);
+	
+	id_prof = 35899;
+    DeleteAllElements(row_root);
+    InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+    InsertNewElement(TYPE_VARCHAR, "Miran", tblName, "firstname", row_root);
+    InsertNewElement(TYPE_VARCHAR, "Zlatovic", tblName, "lastname", row_root);
+    InsertNewElement(TYPE_INT, "042390858", tblName, "tel", row_root);
+    InsertNewElement(TYPE_VARCHAR, "miran.zlatovic@foi.hr", tblName, "email", row_root);
+    InsertNewElement(TYPE_VARCHAR, "www.foi.hr/nastavnici/zlatovic.miran/index.html", tblName, "web_page", row_root);
+    insert_row(row_root);
 
     AK_print_table(tblName);
     //-------------------------------------------------------------------------------------------------------

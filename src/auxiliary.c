@@ -340,7 +340,7 @@ void InitializelistOp(list_op *L) {
 }
 
 /** 
- * @brief 	Get the first list element
+ * @brief  Get the first list element
  * @author Matija Novak
  * @param list_op - root of the list_op
  * @return element_op first element of the list

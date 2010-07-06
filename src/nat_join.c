@@ -270,7 +270,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
         create_join_block_header(startAddress1, startAddress2, dstTable, att);
 
         dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
-		dbg_messg(LOW, REL_OP, "\nAK_join: start copying data\n");
+		dbg_messg(MIDDLE, REL_OP, "\nAK_join: start copying data\n");
 
         AK_mem_block *tbl1_temp_block, *tbl2_temp_block;
 
@@ -282,7 +282,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
             startAddress1 = src_addr1->address_from[i];
 
             if (startAddress1 != 0) {
-                dbg_messg(MIDDLE, REL_OP, "\n Natural join: copy extent1: %d\n", i);
+                dbg_messg(MIDDLE, REL_OP, "\nNatural join: copy extent1: %d\n", i);
 
                 //for each block in table1 extent
                 for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
@@ -318,7 +318,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
         }
         free(src_addr1);
         free(src_addr2);
-		dbg_messg(LOW, REL_OP, "NAT_JOIN_TEST_SUCCESS\n");
+		dbg_messg(LOW, REL_OP, "NAT_JOIN_TEST_SUCCESS\n\n");
         return EXIT_SUCCESS;
     } else {
         dbg_messg(LOW, REL_OP, "\n AK_join: Table/s doesn't exist!");

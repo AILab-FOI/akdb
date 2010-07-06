@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-
 #ifndef CONFIGURATION
 #define CONFIGURATION
 
@@ -90,7 +89,7 @@
 \def MAX_EXTENTS
 \brief maximum number of extents for a given segment
  */
-#define MAX_EXTENTS 20
+//#define MAX_EXTENTS 20
 
 /**
 \def MAX_ATTRIBUTES
@@ -132,7 +131,7 @@
 \def DATA_ENTRY_SIZE
 \brief lenght of data entry in sizeof( int )
  */
-#define DATA_ENTRY_SIZE 4 //before 10
+#define DATA_ENTRY_SIZE 10
 
 /**
 \def DB_FILE_SIZE

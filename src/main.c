@@ -75,7 +75,6 @@ int main()
 	{
 		if( AK_memoman_init() == EXIT_SUCCESS )
 		{
-
 			/* component test area --- begin */
 			create_test_tables();
 			
@@ -88,7 +87,7 @@ int main()
 			//rel_eq_selection_test();
 			//rel_eq_assoc_test();
 			//rel_eq_comut_test();
-			query_optimization_test();
+			//query_optimization_test();
 
 			table_test();
 			
@@ -97,7 +96,9 @@ int main()
 			op_join_test();
 			op_intersect_test();
 			op_union_test();
+			op_difference_test();
 			op_rename_test();
+			op_product_test();
 
 			//btree_test();
 			hash_test();

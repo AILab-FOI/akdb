@@ -148,7 +148,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 
 							InsertNewElementForUpdate(type, data, dstTable, tbl2_temp_block->block->header[k % num_att2].att_name, row_root, 0);
 							
-							if ((k + 1) % num_att2 == 0 && k != 0) {
+							if ((k + 1) % num_att2 == 0) {
 								insert_row(row_root);
 								DeleteAllElements(row_root);
 							}
@@ -160,6 +160,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 		
 		free(src_addr1);
         free(src_addr2);
+		dbg_messg(LOW, REL_OP, "UNION_TEST_SUCCESS\n\n");
 		return EXIT_SUCCESS;
 	} else {
 		dbg_messg(LOW, REL_OP, "\nAK_union: Table/s doesn't exist!");
@@ -169,6 +170,10 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 	}
 }
 
+/**
+ * @brief  Function for union operator testing
+ * @author Dino Laktašić
+ */
 void op_union_test() {
     printf("\n********** UNION TEST **********\n\n");
 

@@ -72,7 +72,7 @@ int GetPositionOfelementAd(element_ad Searchedelement_op, list_ad *L) {
 }
 
 void DeleteelementAd(element_ad Deletedelement_op, list_ad *L) {
-    element_ad Previouselement_op = (element_ad) GetPreviouselementOp(Deletedelement_op, L);
+    element_ad Previouselement_op = (element_ad) GetPreviouselementAd(Deletedelement_op, L);
     if (Previouselement_op != 0) {
         Previouselement_op->next = Deletedelement_op->next;
     } else {

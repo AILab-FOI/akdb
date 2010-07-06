@@ -1,5 +1,5 @@
 /**
-@file intersect.c Provides functions for header atributes renaming
+@file intersect.c Provides functions for relational intersect operation
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -79,7 +79,8 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         }
 
         int something_to_copy = 0, m, n, o;
-
+		int address, type, size;
+		
         char data1[MAX_VARCHAR_LENGTH];
         char data2[MAX_VARCHAR_LENGTH];
 
@@ -116,7 +117,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 
                                     //if there is data in the block
                                     if (tbl2_temp_block->block->free_space != 0) {
-                                        o = 0;
+										
                                         //TUPLE_DICTS: for each tuple_dict in the block
                                         for (m = 0; m < DATA_BLOCK_SIZE; m += num_att1) {
                                             if (tbl1_temp_block->block->tuple_dict[m + 1].type == FREE_INT)
@@ -128,17 +129,19 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 
                                                 something_to_copy = 0;
                                                 for (n = 0; n < num_att1; n++) {
-                                                    int type1 = tbl1_temp_block->block->tuple_dict[m + n].type;
-                                                    int size1 = tbl1_temp_block->block->tuple_dict[m + n].size;
-                                                    int address1 = tbl1_temp_block->block->tuple_dict[m + n].address;
-                                                    memcpy(data1, &(tbl1_temp_block->block->data[address1]), size1);
-                                                    data1[size1] = '\0';
+                                                    type = tbl1_temp_block->block->tuple_dict[m + n].type;
+                                                    size = tbl1_temp_block->block->tuple_dict[m + n].size;
+                                                    address = tbl1_temp_block->block->tuple_dict[m + n].address;
+													
+                                                    memcpy(data1, &(tbl1_temp_block->block->data[address]), size);
+                                                    data1[size] = '\0';
 
-                                                    int type2 = tbl2_temp_block->block->tuple_dict[o + n].type;
-                                                    int size2 = tbl2_temp_block->block->tuple_dict[o + n].size;
-                                                    int address2 = tbl2_temp_block->block->tuple_dict[o + n].address;
-                                                    memcpy(data2, &(tbl2_temp_block->block->data[address2]), size2);
-                                                    data2[size2] = '\0';
+                                                    type = tbl2_temp_block->block->tuple_dict[o + n].type;
+                                                    size = tbl2_temp_block->block->tuple_dict[o + n].size;
+                                                    address = tbl2_temp_block->block->tuple_dict[o + n].address;
+													
+                                                    memcpy(data2, &(tbl2_temp_block->block->data[address]), size);
+                                                    data2[size] = '\0';
 
                                                     //printf("%s == %s\n", data1, data2);
                                                     if (strcmp(data1, data2) == 0) {
@@ -148,11 +151,13 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 
                                                 if (something_to_copy == num_att1) {
                                                     for (n = 0; n < num_att1; n++) {
-                                                        int type = tbl1_temp_block->block->tuple_dict[m + n].type;
-                                                        int size = tbl1_temp_block->block->tuple_dict[m + n].size;
-                                                        int address = tbl1_temp_block->block->tuple_dict[m + n].address;
+                                                        type = tbl1_temp_block->block->tuple_dict[m + n].type;
+                                                        size = tbl1_temp_block->block->tuple_dict[m + n].size;
+                                                        address = tbl1_temp_block->block->tuple_dict[m + n].address;
+														
                                                         memcpy(data1, &(tbl1_temp_block->block->data[address]), size);
                                                         data1[size] = '\0';
+														
                                                         InsertNewElementForUpdate(type, data1, dstTable, tbl1_temp_block->block->header[n].att_name, row_root, 0);
                                                     }
                                                     insert_row(row_root);
@@ -171,6 +176,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 
         free(src_addr1);
         free(src_addr2);
+		dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
         return EXIT_SUCCESS;
     } else {
         dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
@@ -180,6 +186,10 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
     }
 }
 
+/**
+ * @brief  Function for intersect operator testing
+ * @author Dino Laktašić
+ */
 void op_intersect_test() {
     printf("\n********** INTERSECT TEST **********\n\n");
 

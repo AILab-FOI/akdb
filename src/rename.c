@@ -83,9 +83,8 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     return EXIT_SUCCESS;
 }
 
-
 /**
- Test function for renaming
+ Function for rename operator testing
  @author Mislav Čakarić
  */
 void op_rename_test() {
@@ -96,5 +95,5 @@ void op_rename_test() {
     AK_print_table("student");
     //AK_print_table("student2");
 
-    AK_print_table("AK_relation");
+    //AK_print_table("AK_relation");
 }

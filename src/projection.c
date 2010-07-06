@@ -38,7 +38,7 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
     }
      */
 
-    dbg_messg(LOW, REL_OP, "temp_create_table: First block address of the new segmet: %d", startAddress);
+    //dbg_messg(LOW, REL_OP, "temp_create_table: First block address of the new segmet: %d", startAddress);
 
     int broj = 8;
     //insert object_id
@@ -181,8 +181,8 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
         //create new segmenet for the projection table
         AK_create_block_header(src_addr->address_from[0], dstTable, att);
 
-        dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
-        dbg_messg(LOW, REL_OP, "\nAK_projection: start copying data\n");
+        dbg_messg(LOW, REL_OP, "TABLE %s CREATED from %s!\n", dstTable, srcTable);
+        dbg_messg(MIDDLE, REL_OP, "\nAK_projection: start copying data\n");
 
         int startAddress = 0, i = 0, j;
 
@@ -210,16 +210,21 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
                 }
             } else break;
         }
+		
         free(src_addr);
-
-        dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n");
+        dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n\n");
         return EXIT_SUCCESS;
     } else {
+		free(src_addr);
         dbg_messg(LOW, REL_OP, "\n AK_projection: Table doesn't exist!");
         return EXIT_ERROR;
     }
 }
 
+/**
+ * @brief  Function for projection operator testing
+ * @author Dino Laktašić
+ */
 void op_projection_test() {
     printf("\n********** PROJECTION TEST **********\n\n");
 

@@ -196,10 +196,10 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
         req_free_space = old_size + old_size * RESIZE_FACTOR;
     }
 
-    for (i = start_address; i < (db_file_size - req_free_space); i++) {
-        if (((int) (req_free_space - 1) > (db_file_size - i))) {
-            printf("AK_new_extent: ERROR. Not enought space for new extent. Requested space was: %d\n", req_free_space);
-            return (EXIT_ERROR);
+    for (i = start_address; i <= (db_file_size - req_free_space); i++) {
+        if (((int) (req_free_space) > (db_file_size - i - 1))) {
+            printf("AK_new_extent: ERROR. Not enought space for the new extent. Requested space was: %d\n", req_free_space);
+            return ( EXIT_ERROR);
         }
 
         /// check the block is free
@@ -320,9 +320,10 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
 	dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", name, strlen(name));
     catalog_header->type = type;
     memcpy(catalog_header->att_name, name, strlen(name));
-    int i = 0;
-    int j = 0;
-    int k = 0;
+    
+	register int i, j, k;
+    i, j, k = 0;
+	
     /// initialize catalog_header->integrity and catalog_header->constr_name[][] and catalog_header->constr_code[][] with data given as functions parameters
     for (i = 0; i < MAX_CONSTRAINTS; i++) {
         catalog_header->integrity[ i ] = integrity;

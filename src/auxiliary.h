@@ -20,6 +20,7 @@
 #ifndef AUXILIARY
 #define AUXILIARY
 
+#include "assert.h"
 #include "time.h"
 #include "stdio.h"
 #include "stdlib.h"

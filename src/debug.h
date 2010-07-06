@@ -39,7 +39,7 @@
  * @author Dino Laktašić
  */
 typedef enum debug_level {
-	LOW = 0,	//BASIC		low level of details in output
+	LOW = 1,	//BASIC		low level of details in output
 	MIDDLE = 0,	//NORMAL	normal level of details in output
 	HIGH = 0	//ADVANCED (EXHAUSTIVE)	high level of details in output (details in additional functions, per loop or per condition debugging)
 } DEBUG_LEVEL;
@@ -52,7 +52,7 @@ typedef enum debug_level {
  */
 typedef enum debug_type {
 	GLOBAL = 0,
-	DB_MAN = 0,
+	DB_MAN = 1,
 	FILE_MAN = 0,
 	MEMO_MAN = 0,
 	INDICES = 0,

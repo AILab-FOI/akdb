@@ -247,12 +247,15 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 
     free(src_addr);
     free(t_header);
-	dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n");
+	dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
     return EXIT_SUCCESS;
 }
 
-///Function for selection testing
 
+/**
+ * @brief  Function for selection operator testing
+ * @author Matija Šestak, updated by Dino Laktašić
+ */
 void op_selection_test() {
     printf("\n********** SELECTION TEST **********\n");
 
