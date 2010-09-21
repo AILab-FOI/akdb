@@ -52,8 +52,8 @@ typedef enum debug_level {
  */
 typedef enum debug_type {
 	GLOBAL = 0,
-	DB_MAN = 1,
-	FILE_MAN = 0,
+	DB_MAN = 0,
+	FILE_MAN = 1,
 	MEMO_MAN = 0,
 	INDICES = 0,
 	TABLES = 0,

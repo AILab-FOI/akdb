@@ -140,6 +140,12 @@
 #define DB_FILE_SIZE 20 //before 40
 
 /**
+\def MAX_DB_FILE_BLOCKS
+\brief total blocks in DB file (for the given DB_FILE size)
+ */
+#define DB_FILE_BLOCKS_NUM (1024 * 1024 * DB_FILE_SIZE / sizeof(AK_block))
+
+/**
 \def INITIAL_EXTENT_SIZE
 \brief initial extent size in blocks
  */

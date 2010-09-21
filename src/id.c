@@ -26,30 +26,37 @@
  */
 int AK_get_id() {
     char temp_data[MAX_VARCHAR_LENGTH];
-    list * row_root = (element) malloc(sizeof (list));
+    
+	list * row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
-    AK_list *row = (AK_list*) malloc(sizeof (AK_list));
-    int i, num_rec = AK_get_num_records("AK_sequence");
+    
+	AK_list *row = (AK_list*) malloc(sizeof (AK_list));
+    
+	int i, num_rec = AK_get_num_records("AK_sequence");
     int exists = 0;
     int current_value = ID_START_VALUE;
-    for (i = 0; i < num_rec; i++) {
+    
+	for (i = 0; i < num_rec; i++) {
         row = (AK_list *)AK_get_row(i, "AK_sequence");
         AK_list_elem value = GetNthL(1, row);
         memcpy(temp_data, &value->data, value->size);
         temp_data[value->size] = 0; //terminate string
-        if (strcmp(temp_data, "objectID") == 0) {
+        
+		if (strcmp(temp_data, "objectID") == 0) {
             exists = 1;
             value = GetNthL(2, row);
             memcpy(&current_value, &value->data, value->size);
             break;
         }
     }
-    if (exists) {
+    
+	if (exists) {
         DeleteAllElements(row_root);
         InsertNewElementForUpdate(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root, 1);
         delete_row(row_root);
         current_value++;
     }
+	
     DeleteAllElements(row_root);
     int value = 0;
     InsertNewElement(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);

@@ -30,14 +30,20 @@
  */
 void create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att) {
     AK_block *temp_block = (AK_block *) AK_read_block(table_address1);
-    AK_header header[MAX_ATTRIBUTES];
+    
+	//Currently it works with headers no longer than MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
+	//This is wrong and need to be corrected.
+	//If header doesn't fit in the first block than system must write the remain attributes from header to the new block.
+	//Correction must be handled in all functions that write, read or count header attributes.
+	AK_header header[MAX_ATTRIBUTES];
     memset(header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
+
+    int head = 0; 		//counter of the heads
+    int new_head = 0; 	//counter of heads to write
+    int s_copy; 		//indicate if we copy these header or not
+
     AK_list_elem list_elem;
-
-    int head = 0; //counter of the heads
-    int new_head = 0; //counter of heads to write
-    int s_copy; //indicate if we copy these header or not
-
+	
     while (strcmp(temp_block->header[head].att_name, "") != 0) {
         s_copy = 1;
         list_elem = (AK_list_elem) FirstL(att);

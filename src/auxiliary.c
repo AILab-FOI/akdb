@@ -512,6 +512,7 @@ char *AK_get_array_perms(char *arr) {
         //printf("%s\n", perms[next_perm]);
 
         free(perm);
+		//perm = NULL;
     }
 
     res_perm = (char *) calloc(num_perms, sizeof (char*));

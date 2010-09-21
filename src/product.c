@@ -42,9 +42,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
         register int i, j, k, l, m, n, o;
         i = j = k = l = 0;
 
-		int address, type, size, temp_int = 0;
-		
-		float temp_float = 0;
+		int address, type, size;
 		
         char data1[MAX_VARCHAR_LENGTH];
 		char data2[MAX_VARCHAR_LENGTH];
@@ -52,13 +50,18 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 		AK_mem_block *tbl1_temp_block = (AK_mem_block *) AK_get_block(startAddress1);
         AK_mem_block *tbl2_temp_block = (AK_mem_block *) AK_get_block(startAddress2);
 		
+		//Currently it works with headers no longer than MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
+		//This is wrong and need to be corrected.
+		//If header doesn't fit in the first block than system must write the remain attributes from header to the new block.
+		//Correction must be handled in all functions that write, read or count header attributes.
 		int head = 0;
-		AK_header header[MAX_ATTRIBUTES];// = (AK_header *) malloc((num_att1 + num_att2) * sizeof (AK_header));
+		AK_header header[MAX_ATTRIBUTES];
 		
 		while (strcmp(tbl1_temp_block->block->header[head].att_name, "") != 0) {
             memcpy(&header[head], &tbl1_temp_block->block->header[head], sizeof (tbl1_temp_block->block->header[head]));
             head++;
         }
+		
 		head = 0;
 		while (strcmp(tbl2_temp_block->block->header[head].att_name, "") != 0) {
             memcpy(&header[head + num_att1], &tbl2_temp_block->block->header[head], sizeof (tbl2_temp_block->block->header[head]));
@@ -66,7 +69,6 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
         }
 		
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
-        //free(header);
 
         dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
 		dbg_messg(MIDDLE, REL_OP, "\nAK_product: start copying data\n");

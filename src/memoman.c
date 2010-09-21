@@ -48,7 +48,7 @@ int AK_cache_block(int num, AK_mem_block *mem_block) {
 
     free(block_cache);
 
-    return (EXIT_SUCCESS); /// if all is succesfull
+    return EXIT_SUCCESS;
 }
 
 /**
@@ -305,7 +305,6 @@ table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
 	dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
     AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(0);
 
-    //going throught headers
     for (i = 0; i < DATA_BLOCK_SIZE; i++) {
         memset(name_sys, 0, MAX_ATT_NAME);
 
@@ -431,9 +430,8 @@ int find_free_space(table_addresses * addresses) {
 }
 
 /**
- @author Nikola Bakoš, updated by Matija Šestak (function now uses caching), updated by Mislav Čakarić
-
- Extends the segment
+ * Extends the segment
+ @author Nikola Bakoš, updated by Matija Šestak (function now uses caching), updated by Mislav Čakarić, updated by Dino Laktašić
  @param table_name name of segment to extent
  @param extent_type type of extent (can be one of:
         SEGMENT_TYPE_SYSTEM_TABLE,
@@ -445,40 +443,38 @@ int find_free_space(table_addresses * addresses) {
 
  */
 int AK_init_new_extent(char *table_name, int extent_type) {
-    table_addresses *adrese;
-    adrese = (table_addresses *) get_segment_addresses(table_name, SEGMENT_TYPE_TABLE);
-    int adr_bloka = adrese->address_from[1];
-    int old_size = 0;
+	char *sys_table;
+	
+	int old_size = 0;
+	int new_size = 0;
+
+	table_addresses *addresses = (table_addresses *) get_segment_addresses(table_name, SEGMENT_TYPE_TABLE);
+    int block_address = addresses->address_from[0]; //before 1
     int block_written;
-    char *sys_table;
+	
+    AK_mem_block *mem_block = (AK_mem_block *)AK_get_block(block_address);
 
-    //promjentiti temp_block = mem_block->block
-    AK_mem_block *mem_block = (AK_mem_block *) malloc(sizeof (AK_mem_block));
-    mem_block = AK_get_block(adr_bloka); // bilo koji blok tablice, samo da se dobije header iz njega
-
-    //AK_block *temp_block = (AK_block *) malloc(sizeof(AK_block));
-    //		temp_block = (AK_block *) AK_read_block(adr_bloka);
-
-
-    int velicina = 0;
-    register int i = 0;
+	//!!! to correct header BUG iterate through header from 0 to N-th block while there is
+	//header attributes. Than create header and pass it to function for extent creation below.
+	//Current implementation works only with tables with max MAX_ATTRIBUTES.
+	register int i = 0;
+		
     for (i = 0; i < MAX_EXTENTS_IN_SEGMENT; i++) {
-        if (adrese->address_from[i] == 0) //ako smo prošli cijelo polje
+        if (addresses->address_from[i] == 0)
             break;
-        velicina = adrese->address_to[i] - adrese->address_from[i];
-        if (velicina > old_size) //trazim najveći extent
-            old_size = velicina;
+        new_size = addresses->address_to[i] - addresses->address_from[i];
+        if (new_size > old_size) //find largest extent
+            old_size = new_size;
     }
 
-    old_size += 1;
-    int pocetna_adr = 0;
-    if ((pocetna_adr = AK_new_extent(1, old_size, extent_type, mem_block->block->header)) == EXIT_ERROR) {
-        printf("AK_init_new_extent: Could not alocate new extent\n");
+    old_size++;
+    int start_address = 0;
+	
+    if ((start_address = AK_new_extent(1, old_size, extent_type, mem_block->block->header)) == EXIT_ERROR) {
+        printf("AK_init_new_extent: Could not allocate the new extent\n");
         return EXIT_ERROR;
     }
-	dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", pocetna_adr, old_size, extent_type);
-
-    int zavrsna_adr = pocetna_adr;
+	dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", start_address, old_size, extent_type);
 
     float RESIZE_FACTOR = 0;
 
@@ -501,7 +497,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
             break;
     }
 
-    zavrsna_adr = pocetna_adr + (old_size + old_size * RESIZE_FACTOR);
+    int end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
     mem_block = (AK_mem_block *) AK_get_block(0);
 
     element row_root = (element) malloc(sizeof (list));
@@ -510,11 +506,11 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     int obj_id = 0;
     InsertNewElement(TYPE_INT, &obj_id, sys_table, "obj_id", row_root);
     InsertNewElement(TYPE_VARCHAR, table_name, sys_table, "name", row_root);
-    InsertNewElement(TYPE_INT, &pocetna_adr, sys_table, "start_address", row_root);
-    InsertNewElement(TYPE_INT, &zavrsna_adr, sys_table, "end_address", row_root);
+    InsertNewElement(TYPE_INT, &start_address, sys_table, "start_address", row_root);
+    InsertNewElement(TYPE_INT, &end_address, sys_table, "end_address", row_root);
     insert_row(row_root);
 
-    return pocetna_adr;
+    return start_address;
 }
 
 /**
@@ -525,9 +521,10 @@ int AK_init_new_extent(char *table_name, int extent_type) {
  */
 int AK_flush_cache() {
     int i = 0;
+	int block_written;
     AK_block *data_block;
-    int block_written;
-    while (i < MAX_CACHE_MEMORY) {
+    
+	while (i < MAX_CACHE_MEMORY) {
         if (db_cache->cache[i]->dirty == BLOCK_DIRTY) {
             data_block = (AK_block *) db_cache->cache[i]->block;
             block_written = AK_write_block(data_block);

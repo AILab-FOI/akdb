@@ -89,7 +89,7 @@ int main()
 			//rel_eq_comut_test();
 			//query_optimization_test();
 
-			table_test();
+			//table_test();
 			
 			op_selection_test();
 			op_projection_test();
@@ -110,11 +110,11 @@ int main()
 
 			aggregation_test();
 
-			memoman_test();
+			//memoman_test();
 
-			constraint_between_test();
+			//constraint_between_test();
 			id_test();
-			null_test();
+			//null_test();
 
 			/* component test area --- end */
 			

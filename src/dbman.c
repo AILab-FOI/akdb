@@ -73,6 +73,7 @@ int AK_init_db_file(int size) {
         block->tuple_dict[ i ].address = FREE_INT;
         block->tuple_dict[ i ].size = FREE_INT;
     }
+	
     for (i = 0; i < DATA_BLOCK_SIZE * DATA_ENTRY_SIZE; i++) {
         block->data[ i ] = FREE_CHAR;
     }
@@ -153,7 +154,7 @@ int AK_write_block(AK_block * block) {
 
 /**
  * @brief  Function to alocate new extent of blocks
- * @author Nikola Bakoš
+ * @author Nikola Bakoš, updated by Dino Laktašić (fixed header BUG)
  * @param start_address address (block number) to start searching for sufficient space
  * @param old_size size of previous extent in same segment (in blocks)
  * @param extent_type type of extent (can be one of:
@@ -199,7 +200,7 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
     for (i = start_address; i <= (db_file_size - req_free_space); i++) {
         if (((int) (req_free_space) > (db_file_size - i - 1))) {
             printf("AK_new_extent: ERROR. Not enought space for the new extent. Requested space was: %d\n", req_free_space);
-            return ( EXIT_ERROR);
+            return (EXIT_ERROR);
         }
 
         /// check the block is free
@@ -222,38 +223,49 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
             }
         }
     }
-    int success = 0; /// var to check the number of written blocks
-
-
+	
+    int num_blocks = 0; /// var to check the number of written blocks
+	int header_att_id = 0;
+	int h_id = 0; /// calculate header attribute ID for N-th block
+	
     for (j = first_addr_of_extent; j < (first_addr_of_extent + nAlocated_blocks); j++) {
-        block = AK_read_block(j); /// read block
-        int x = 0;
-        for (x = 0; x < MAX_ATTRIBUTES; x++) {
-            if (header[ x ].type == 0) {
-                break;
-            } else {
-                memcpy(& block->header[ x ], & header[ x ], sizeof ( *header)); /// copy header information
-            }
-        }
-        block->type = BLOCK_TYPE_NORMAL; /// set the block type
+        block = AK_read_block(j);
+		
+		for (header_att_id = 0; header_att_id < MAX_ATTRIBUTES; header_att_id++) {
+			if (header[header_att_id].type == 0) {
+				break;
+			}
+			memcpy(&block->header[ header_att_id], &header[ header_att_id ], sizeof( *header));
+		}
+
+        /*while(((h_id = header_att_id - num_blocks * MAX_ATTRIBUTES) < MAX_ATTRIBUTES) && (header[ header_att_id ].type != 0)) {
+			if (h_id >= 0) {
+				memcpy(&block->header[ h_id ], &header[ header_att_id++ ], sizeof(*header));
+				//printf("Block count: %d, Header ID: %d, %s\n", num_blocks, header_att_id - 1, block->header[ h_id ].att_name);
+			}
+        }*/
+		
+        block->type = BLOCK_TYPE_NORMAL; 
         block->free_space = 0;
         block->last_tuple_dict_id = 0;
-        if (AK_write_block(block) == EXIT_SUCCESS) /// if write of block succeded increase var success, else nothing
-        {
-            success++;
-        }
+		
+        /// if write of block succeded increase var num_blocks, else nothing
+		if (AK_write_block(block) == EXIT_SUCCESS) {
+            num_blocks++;
+		}
 
-        free(block); /// free the block
+        free(block);
     }
-    dbg_messg(HIGH, DB_MAN, "AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, success= %i\n", first_addr_of_extent, nAlocated_blocks, j, success);
-
-    if (success != nAlocated_blocks) /// if some blocks are not succesfully alocated, whitch means the extend alocation has FAILED
-    {
-        printf("AK_new_extent: ERROR. Cannot allocate extent %d\n", first_addr_of_extent);
-        return ( EXIT_ERROR);
+	
+    dbg_messg(HIGH, DB_MAN, "AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, num_blocks= %i\n", first_addr_of_extent, nAlocated_blocks, j, num_blocks);
+	
+	/// if some blocks are not succesfully allocated, which means that the extend allocation has FAILED
+    if (num_blocks != nAlocated_blocks) {
+        dbg_messg(LOW, DB_MAN ,"AK_new_extent: ERROR. Cannot allocate extent %d\n", first_addr_of_extent);
+        return (EXIT_ERROR);
     }
-    return ( first_addr_of_extent);
-
+	
+    return (first_addr_of_extent);
 }
 
 /**
@@ -271,11 +283,12 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
  * @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
  */
 int AK_new_segment(char * name, int type, AK_header *header) {
-    int segment_start_addr = 1; /// start adress for segment because we can not allocate segment in block 0
-    int i; /// counter
-    AK_block *block;
+	int i; /// counter
+    int segment_start_addr = 1; /// start address for segment because we can not allocate segment in block 0
     int current_extent_start_addr;
     int first_allocated_block = -1;
+
+	AK_block *block;
 
     for (i = segment_start_addr; i <= db_file_size; i++) {
 		dbg_messg(HIGH, DB_MAN, "AK_new_segment: Reading block %d, %s.\n", i, name);
@@ -322,7 +335,6 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
     memcpy(catalog_header->att_name, name, strlen(name));
     
 	register int i, j, k;
-    i, j, k = 0;
 	
     /// initialize catalog_header->integrity and catalog_header->constr_name[][] and catalog_header->constr_code[][] with data given as functions parameters
     for (i = 0; i < MAX_CONSTRAINTS; i++) {
@@ -1103,12 +1115,12 @@ int AK_delete_segment(char * name, int type) {
  * @author Markus Schatten
  */
 int AK_init_disk_manager() {
-    int size_in_mb = DB_FILE_SIZE;
-    float size = 1024 * 1024 * size_in_mb / sizeof ( AK_block);
+    //int size_in_mb = DB_FILE_SIZE;
+    float size = DB_FILE_BLOCKS_NUM; //1024 * 1024 * size_in_mb / sizeof ( AK_block);
 
     printf("AK_init_disk_manager: Initializing disk manager...\n\n");
     dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: Block size is: %d\n", sizeof (AK_block));
-    dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: We need %d blocks for %d MiB\n", (int) size, size_in_mb);
+    dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: We need %d blocks for %d MiB\n", (int) size, DB_FILE_SIZE);
 
     if (AK_init_db_file((int) size) == EXIT_SUCCESS) {
         if (AK_init_system_catalog() == EXIT_SUCCESS) {
@@ -1116,9 +1128,9 @@ int AK_init_disk_manager() {
             return EXIT_SUCCESS;
         }
         printf("AK_init_disk_manager: ERROR. System catalog initialization failed!\n");
-        return ( EXIT_ERROR);
+        return EXIT_ERROR;
     }
     printf("AK_init_disk_manager: ERROR. DB file initialization failed!");
-    return ( EXIT_ERROR);
+    return EXIT_ERROR;
 }
 

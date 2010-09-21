@@ -38,10 +38,11 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     char *sys_table;
 
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
-        dbg_messg(HIGH, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
+        dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
         return EXIT_ERROR;
     } else {
         end_address += start_address;
+		
         switch (type) {
             case SEGMENT_TYPE_TABLE:
                 sys_table = "AK_relation";
@@ -52,6 +53,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
             default:
                 break;
         }
+		
         element row_root = (element) malloc(sizeof (list));
         InitializeList(row_root);
         //DeleteAllElements(row_root);
@@ -61,7 +63,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
         InsertNewElement(TYPE_INT, &end_address, sys_table, "end_address", row_root);
         insert_row(row_root);
 
-        dbg_messg(HIGH, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
+        dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
         return start_address;
     }
 }
