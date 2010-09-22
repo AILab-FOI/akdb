@@ -300,7 +300,6 @@ int insert_row(list *row_root) {
         @result void
  */
 void update_delete_row_from_block(AK_block *temp_block, list *row_root, int operation) {
-    int next = 1; //moving through headers
     int head = 0; //counting headers
     int del = 1; //if can delete gorup of tuple dicts which are in the same row of table
     int exists_equal_attrib = 0; //if we found at least one header in the list
@@ -320,7 +319,6 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
 	int i, overflow, address, type, size;
 	
     for (i = 0; i < DATA_BLOCK_SIZE; i++) { //freeze point, if there is no i++
-        next = 1;
         head = 0;
 
 		address = temp_block->tuple_dict[i].address;
@@ -376,10 +374,10 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
 				
                 for (j = i - head; j < i; j++) {//delete one row
                     k = temp_block->tuple_dict[j].address;
-                    l = k + temp_block->tuple_dict[j].size;
+                    l = temp_block->tuple_dict[j].size;
 					
-					memset(temp_block->data + k, '\0', l - k);
-					dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l);
+					memset(temp_block->data + k, '\0', l);
+					dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);
 					
                     //clean tuple dict
                     temp_block->tuple_dict[j].size = 0;
@@ -388,16 +386,13 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                 }
             }
         } else {//update
-
             //is there an varchar to which has changed the size
             //when yes delete all insert new, else update data
             if ((exists_equal_attrib == 1) && (del == 1)) {
-                int j = 0;
-                int up_type;
+                int j;
                 char up_entry[MAX_VARCHAR_LENGTH];
 				
                 for (j = i - head; j < i; j++) {//go through row
-					//delete old data
 					int k = temp_block->tuple_dict[j].address;
 					int l = temp_block->tuple_dict[j].size;
                     
@@ -420,12 +415,10 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                             some_element = (element) GetFirstElement(row_root);
 
                             InsertNewElementForUpdate(temp_block->tuple_dict[j].type, up_entry,
-								some_element->table, temp_block->header[j % head].att_name,
-								some_element, 0);
+								some_element->table, temp_block->header[j % head].att_name, some_element, 0);
                         }
 						
-						l += k;
-						memset(temp_block->data + k, '\0', l - k);
+						memset(temp_block->data + k, '\0', l);
                         temp_block->tuple_dict[j].size = 0;
                         temp_block->tuple_dict[j].type = 0;
                         temp_block->tuple_dict[j].address = 0;
