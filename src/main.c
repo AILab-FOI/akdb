@@ -113,7 +113,7 @@ int main()
 			//memoman_test();
 
 			//constraint_between_test();
-			id_test();
+			//id_test();
 			//null_test();
 
 			/* component test area --- end */

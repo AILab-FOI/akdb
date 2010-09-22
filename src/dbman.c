@@ -231,19 +231,19 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
     for (j = first_addr_of_extent; j < (first_addr_of_extent + nAlocated_blocks); j++) {
         block = AK_read_block(j);
 		
-		for (header_att_id = 0; header_att_id < MAX_ATTRIBUTES; header_att_id++) {
+		/*for (header_att_id = 0; header_att_id < MAX_ATTRIBUTES; header_att_id++) {
 			if (header[header_att_id].type == 0) {
 				break;
 			}
 			memcpy(&block->header[ header_att_id], &header[ header_att_id ], sizeof( *header));
-		}
+		}*/
 
-        /*while(((h_id = header_att_id - num_blocks * MAX_ATTRIBUTES) < MAX_ATTRIBUTES) && (header[ header_att_id ].type != 0)) {
+        while(((h_id = header_att_id - num_blocks * MAX_ATTRIBUTES) < MAX_ATTRIBUTES) && (header[ header_att_id ].type != 0)) {
 			if (h_id >= 0) {
 				memcpy(&block->header[ h_id ], &header[ header_att_id++ ], sizeof(*header));
 				//printf("Block count: %d, Header ID: %d, %s\n", num_blocks, header_att_id - 1, block->header[ h_id ].att_name);
 			}
-        }*/
+        }
 		
         block->type = BLOCK_TYPE_NORMAL; 
         block->free_space = 0;

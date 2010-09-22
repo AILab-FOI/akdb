@@ -204,7 +204,7 @@ int insert_row_to_block(list *row_root, AK_block *temp_block) {
     unsigned char entry_data[MAX_VARCHAR_LENGTH];
 	
     while (strcmp(temp_block->header[head].att_name, "\0") != 0) {//inserting values of the list one by one
-        while (temp_block->tuple_dict[id].size != FREE_INT) {//searches for free tuple dict
+        while (temp_block->tuple_dict[id].size != FREE_INT) {//searches for free tuple dict, maybe it can be last_tuple_dict_id
             id++;
         }
 		dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
@@ -223,7 +223,7 @@ int insert_row_to_block(list *row_root, AK_block *temp_block) {
 				search_elem = 0;
 			} else {
 				some_element = (element) GetNextElement(some_element);
-				if (some_element == 0) {//no data exist for this header write null
+				if (some_element == 0) { //no data exist for this header write null
 					memcpy(entry_data, "null", strlen("null"));
 					type = TYPE_VARCHAR;
 					search_elem = 0;
@@ -317,31 +317,33 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
         some_element = (element) GetNextElement(some_element);
     }
 
-	int i;
+	int i, overflow, address, type, size;
 	
-    for (i = 0; i < DATA_BLOCK_SIZE;) {
+    for (i = 0; i < DATA_BLOCK_SIZE; i++) { //freeze point, if there is no i++
         next = 1;
         head = 0;
 
-        while (strcmp(temp_block->header[head].att_name, "\0") != 0) {//going through headers
+		address = temp_block->tuple_dict[i].address;
+		type = temp_block->tuple_dict[i].type;
+		size = temp_block->tuple_dict[i].size;
+        overflow = address + size;
+		
+        while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers
                 some_element = (element) GetFirstElement(row_root);
 
                 while (some_element) {
-                    if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0)
-						&& (some_element->constraint == 1)) {//if we found header that is constraint in list
+					//if we found header that is constraint in list
+                    if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) 
+						&& (some_element->constraint == 1)) {
                         
-						//before there was for loop to clear (check if memset works correct)
-						memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                         exists_equal_attrib = 1;
-
-                        int overflow = temp_block->tuple_dict[i].size + temp_block->tuple_dict[i].address;
 						
                         if ((overflow < (temp_block->free_space + 1)) && (overflow > -1)) {
-                            memcpy(entry_data,
-								temp_block->data + temp_block->tuple_dict[i].address,
-								temp_block->tuple_dict[i].size);
-
-                            if (strcmp(entry_data, some_element->data) != 0) {//is the data equal on which we delete
+							//before there was for loop to clear (check if memset works correct)
+							memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
+                            memcpy(entry_data, temp_block->data + address, size);
+							
+                            if (strcmp(entry_data, some_element->data) != 0) { //is the data equal on which we delete
                                 del = 0; //if one constraint doesn't metch we dont delete or update
                             }
                         } else {
@@ -349,30 +351,33 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                         }
                     }
 
-                    int type = temp_block->tuple_dict[i].type;
-
+					//update if there is varchar which we must change (when yes we delete old data and insert new one else only update data)
                     if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && 
 						(some_element->constraint == 0) && (operation == 0) && 
-						(diff_varchar_exist == 0) && (type == TYPE_VARCHAR)) {//update if there is varchar which we must change (when yes we delete old data and insert new one else only update data)
+						(diff_varchar_exist == 0) && (type == TYPE_VARCHAR)) {
 
 						memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
-                        memcpy(entry_data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
-
-                        if (strlen(entry_data) != strlen(some_element->data)) {//if data is not the same must make new insert and old delete
+                        memcpy(entry_data, temp_block->data + address, size);
+						
+						//if data is not the same must make new insert and old delete
+                        if (strlen(entry_data) != strlen(some_element->data)) {
                             diff_varchar_exist = 1;
                         }
                     }
                     some_element = (element) GetNextElement(some_element);
                 }
                 head++; //next header
-                i++; //next tuple dict
+                //i++; //next tuple dict
         }
+		
         if (operation == 1) {//delete
             if ((exists_equal_attrib == 1) && (del == 1)) {
-                int j = 0;
+                int j, k, l;
+				
                 for (j = i - head; j < i; j++) {//delete one row
-                    int k = temp_block->tuple_dict[j].address;
-                    int l = k + temp_block->tuple_dict[j].size;
+                    k = temp_block->tuple_dict[j].address;
+                    l = k + temp_block->tuple_dict[j].size;
+					
 					memset(temp_block->data + k, '\0', l - k);
 					dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l);
 					
@@ -392,7 +397,11 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                 char up_entry[MAX_VARCHAR_LENGTH];
 				
                 for (j = i - head; j < i; j++) {//go through row
-                    if (diff_varchar_exist == 1) {//delete and insert row
+					//delete old data
+					int k = temp_block->tuple_dict[j].address;
+					int l = temp_block->tuple_dict[j].size;
+                    
+					if (diff_varchar_exist == 1) {//delete and insert row
 						int exist_new_data = 0;
                         some_element = (element) GetFirstElement(row_root);
 
@@ -406,7 +415,7 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
 
                         if (exist_new_data == 0) {//exist data which we must copy while we dont have the new one
 							memset(up_entry, '\0', MAX_VARCHAR_LENGTH);
-                            memcpy(up_entry, temp_block->data + temp_block->tuple_dict[j].address, temp_block->tuple_dict[j].size);
+                            memcpy(up_entry, temp_block->data + k, l);
 
                             some_element = (element) GetFirstElement(row_root);
 
@@ -414,18 +423,15 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
 								some_element->table, temp_block->header[j % head].att_name,
 								some_element, 0);
                         }
-
-                        //delete old data
-                        int k = temp_block->tuple_dict[j].address;
-                        int l = k + temp_block->tuple_dict[j].size;
+						
+						l += k;
 						memset(temp_block->data + k, '\0', l - k);
-
                         temp_block->tuple_dict[j].size = 0;
                         temp_block->tuple_dict[j].type = 0;
                         temp_block->tuple_dict[j].address = 0;
                     } else {//update row
 						memset(up_entry, '\0', MAX_VARCHAR_LENGTH);
-                        memcpy(up_entry, temp_block->data + temp_block->tuple_dict[j].address, temp_block->tuple_dict[j].size);
+                        memcpy(up_entry, temp_block->data + k, l);
 
                         some_element = (element) GetFirstElement(row_root);
 
@@ -433,8 +439,7 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                             if ((strcmp(some_element->attribute_name, temp_block->header[j % head].att_name) == 0)
 								&& (some_element->constraint == 0)) {//update element
                                 if (strcmp(up_entry, some_element->data) != 0) {
-                                    memcpy(temp_block->data + temp_block->tuple_dict[j].address,
-									some_element->data, temp_block->tuple_dict[j].size);
+                                    memcpy(temp_block->data + k, some_element->data, l);
                                 }
                             }
                             some_element = (element) GetNextElement(some_element);
@@ -449,12 +454,8 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                     some_element = (element) GetFirstElement(row_root_backup);
 					
                     while (some_element) {//make a copy of list
-                        InsertNewElementForUpdate(some_element->type,
-                                some_element->data,
-                                some_element->table,
-                                some_element->attribute_name, row_root,
-                                some_element->constraint);
-
+                        InsertNewElementForUpdate(some_element->type, some_element->data, some_element->table, 
+						some_element->attribute_name, row_root, some_element->constraint);
                         some_element = (element) GetNextElement(some_element);
                     }
                 }
@@ -470,38 +471,37 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
 /**	@author Matija Novak, updated by Matija Šestak (function now uses caching)
         function update or delete the whole segment of an table
         @param row_root -  elements of one row
-        @param delete - 1 we make delete, 0 we make update
+        @param del - 1 we make delete, 0 we make update
         @returs EXIT_SUCCESS if success
  */
-int delete_update_segment(list *row_root, int delete) {
+int delete_update_segment(list *row_root, int del) {
+	char table[MAX_ATT_NAME];
     element some_element = (element) GetFirstElement(row_root);
-    char table[MAX_ATT_NAME];
 
+	//memset(table, '\0', MAX_ATT_NAME);
     strcpy(table, some_element->table);
     table[strlen(some_element->table)] = '\0';
     dbg_messg(HIGH, FILE_MAN, "delete_update_segment: table to delete_update from: %s, source %s\n", table, some_element->table);
 
-    table_addresses * addresses;
-    addresses = (table_addresses *) get_table_addresses(&table);
+    table_addresses * addresses = (table_addresses *) get_table_addresses(&table);
 
     AK_mem_block *mem_block;
-
-    int from = 0, to = 0, j = 0, i = 0;
-    for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++) {//going through extent
-        from = addresses->address_from[j];
-        if (from != 0) {
+    int startAddress, j, i;
+	
+    for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++) { //going through extent
+        startAddress = addresses->address_from[j];
+        if (startAddress != 0) {
             dbg_messg(HIGH, FILE_MAN, "delete_update_segment: delete_update extent: %d\n", j);
 
-            to = addresses->address_to[j];
-            for (i = from; i <= to; i++) {//going through blocks
+            for (i = startAddress; i <= addresses->address_to[j]; i++) { //going through blocks
                 dbg_messg(HIGH, FILE_MAN, "delete_update_segment: delete_update block: %d\n", i);
 
                 mem_block = (AK_mem_block *) AK_get_block(i);
-
-                update_delete_row_from_block(mem_block->block, row_root, delete);
+                update_delete_row_from_block(mem_block->block, row_root, del);
                 mem_block->dirty = BLOCK_DIRTY;
             }
-        } else break;
+        } else 
+			break;
     }
     return EXIT_SUCCESS;
 }
