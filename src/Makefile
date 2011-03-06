@@ -129,3 +129,4 @@ clean:
 doc:
 	doxygen doxygen.config
 	cd ../doc/latex && make
+	cp ../doc/latex/refman.pdf ../doc/
