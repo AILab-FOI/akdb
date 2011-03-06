@@ -17,7 +17,7 @@ OUTDIR = ../bin
 all: kalashnikov-db doc
 
 kalashnikov-db: auxiliary.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
-	$(CC) main.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/kdb
+	$(CC) main.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/akdb
 
 main.o: main.c
 	$(CC) $(CFLAGS) main.c
@@ -124,7 +124,7 @@ auxiliary.o: auxiliary.c
 
 
 clean:
-	rm -rf *~ *.o ../bin/kdb ../doc/* ../bin/kalashnikov.db
+	rm -rf *~ *.o ../bin/akdb ../doc/* ../bin/kalashnikov.db
 
 doc:
 	doxygen doxygen.config
