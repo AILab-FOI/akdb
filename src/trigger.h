@@ -20,9 +20,6 @@
 #ifndef TRIGGER
 #define TRIGGER
 
-#include "auxiliary.h"
-#include "dbman.h"
-#include "fileio.h"
 #include "table.h"
 
 #endif

@@ -20,11 +20,6 @@
 #ifndef NNULL
 #define NNULL
 
-#include "auxiliary.h"
-#include "dbman.h"
 #include "memoman.h"
-#include "files.h"
-#include "fileio.h"
-#include "id.h"
 
 #endif

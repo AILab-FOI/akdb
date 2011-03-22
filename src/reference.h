@@ -20,12 +20,7 @@
 #ifndef REFERENCE
 #define REFERENCE
 
-#include "auxiliary.h"
 #include "dbman.h"
-#include "memoman.h"
-#include "fileio.h"
-#include "files.h"
-#include "table.h"
 
 #define REF_TYPE_NONE -1
 #define REF_TYPE_SET_NULL 1

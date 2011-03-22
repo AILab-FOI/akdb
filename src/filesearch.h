@@ -20,10 +20,7 @@
 #ifndef FILESEARCH
 #define FILESEARCH
 
-#include "auxiliary.h"
-#include "dbman.h"
 #include "memoman.h"
-#include "fileio.h"
 
 #define SEARCH_NULL       0
 #define SEARCH_ALL        1

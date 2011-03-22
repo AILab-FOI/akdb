@@ -20,9 +20,6 @@
 #ifndef PROJECTION
 #define PROJECTION
 
-#include "auxiliary.h"
-#include "dbman.h"
-#include "memoman.h"
 #include "table.h"
 
 #endif

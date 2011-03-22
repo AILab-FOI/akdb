@@ -19,9 +19,6 @@
 #ifndef INTERSECT
 #define INTERSECT
 
-#include "auxiliary.h"
-#include "memoman.h"
-#include "dbman.h"
 #include "table.h"
 
 typedef struct {

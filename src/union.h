@@ -20,9 +20,6 @@
 #ifndef UNION
 #define UNION
 
-#include "auxiliary.h"
-#include "dbman.h"
-#include "memoman.h"
-#include "fileio.h"
+#include "table.h"
 
 #endif

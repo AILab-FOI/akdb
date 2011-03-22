@@ -20,9 +20,6 @@
 #ifndef TEST
 #define TEST
 
-#include "auxiliary.h"
-#include "dbman.h"
-#include "memoman.h"
 #include "files.h"
 
 #endif

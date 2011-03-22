@@ -20,9 +20,6 @@
 #ifndef TABLE
 #define TABLE
 
-#include "auxiliary.h"
-#include "projection.h"
-#include "dbman.h"
 #include "memoman.h"
 
 #endif

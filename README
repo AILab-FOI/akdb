@@ -12,5 +12,5 @@ src/# make clean
 src/# make
 
 If everything works out then you should have a runnable binary file kdb in 
-/bin and some documentation in /doc. The system requires doxygen and latex
+/bin and some documentation in /doc. The system requires doxygen, graphviz and latex
 for documentation.

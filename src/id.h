@@ -20,7 +20,6 @@
 #ifndef ID
 #define ID
 
-#include "auxiliary.h"
 #include "fileio.h"
 
 #define ID_START_VALUE 100

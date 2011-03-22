@@ -20,9 +20,6 @@
 #ifndef HASH
 #define HASH
 
-#include "auxiliary.h"
-#include "dbman.h"
-#include "memoman.h"
 #include "index.h"
 #include "table.h"
 

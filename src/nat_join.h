@@ -19,9 +19,6 @@
 #ifndef NATJOIN
 #define NATJOIN
 
-#include "auxiliary.h"
-#include "dbman.h"
-#include "memoman.h"
 #include "table.h"
 
 #endif

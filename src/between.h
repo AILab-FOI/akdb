@@ -20,9 +20,6 @@
 #ifndef BETWEEN
 #define BETWEEN
 
-#include "auxiliary.h"
-#include "dbman.h"
 #include "memoman.h"
-#include "id.h"
 
 #endif

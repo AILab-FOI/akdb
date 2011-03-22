@@ -20,12 +20,9 @@
 #ifndef AGGREGATION
 #define AGGREGATION
 
-#include "auxiliary.h"
-#include "dbman.h"
 #include "selection.h"
 #include "projection.h"
 #include "filesearch.h"
-#include "fileio.h"
 
 #define AGG_TASK_GROUP 1
 #define AGG_TASK_COUNT 2

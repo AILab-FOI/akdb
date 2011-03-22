@@ -20,8 +20,6 @@
 #ifndef FILESORT
 #define FILESORT
 
-#include "auxiliary.h"
-#include "dbman.h"
 #include "memoman.h"
 
 //velicina podatka koji se usporedjuje

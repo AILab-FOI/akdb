@@ -20,9 +20,6 @@
 #ifndef PRODUCT
 #define PRODUCT
 
-#include "auxiliary.h"
-#include "dbman.h"
-#include "memoman.h"
 #include "table.h"
 
 #endif
