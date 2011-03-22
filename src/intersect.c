@@ -41,42 +41,10 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         register int i, j, k, l;
         i = j = k = l = 0;
 
-        int num_att1 = 0;
-        int num_att2 = 0;
-
         AK_mem_block *tbl1_temp_block = (AK_mem_block *) AK_get_block(startAddress1);
         AK_mem_block *tbl2_temp_block = (AK_mem_block *) AK_get_block(startAddress2);
-
-        for (i = 0; i < MAX_ATTRIBUTES; i++) {
-            if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
-                num_att1++;
-            } else {
-                break;
-            }
-
-            if (strcmp(tbl2_temp_block->block->header[i].att_name, "\0") != 0) {
-                num_att2++;
-            } else {
-                break;
-            }
-
-            if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
-                printf("Intersect ERROR: Relation shemas are not the same! \n");
-                return EXIT_ERROR;
-				//break;
-            }
-
-            if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
-                printf("Intersect ERROR: Attributes are not of the same type!");
-                return EXIT_ERROR;
-				//break;
-            }
-        }
-
-        if (num_att1 != num_att2) {
-            printf("Intersect ERROR: Not same number of the attributes! \n");
-			return EXIT_ERROR;
-        }
+        
+        int num_att = AK_check_tables_scheme(tbl1_temp_block, tbl2_temp_block, "Intersect");
 
         int something_to_copy = 0, m, n, o;
 		int address, type, size;
@@ -85,8 +53,8 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         char data2[MAX_VARCHAR_LENGTH];
 
         //initialize new segment
-        AK_header *header = (AK_header *) malloc(num_att1 * sizeof (AK_header));
-        memcpy(header, tbl1_temp_block->block->header, num_att1 * sizeof (AK_header));
+        AK_header *header = (AK_header *) malloc(num_att * sizeof (AK_header));
+        memcpy(header, tbl1_temp_block->block->header, num_att * sizeof (AK_header));
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
         free(header);
 
@@ -119,16 +87,16 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                     if (tbl2_temp_block->block->free_space != 0) {
 										
                                         //TUPLE_DICTS: for each tuple_dict in the block
-                                        for (m = 0; m < DATA_BLOCK_SIZE; m += num_att1) {
+                                        for (m = 0; m < DATA_BLOCK_SIZE; m += num_att) {
                                             if (tbl1_temp_block->block->tuple_dict[m + 1].type == FREE_INT)
                                                 break;
 
-                                            for (o = 0; o < DATA_BLOCK_SIZE; o += num_att1) {
+                                            for (o = 0; o < DATA_BLOCK_SIZE; o += num_att) {
                                                 if (tbl2_temp_block->block->tuple_dict[o + 1].type == FREE_INT)
                                                     break;
 
                                                 something_to_copy = 0;
-                                                for (n = 0; n < num_att1; n++) {
+                                                for (n = 0; n < num_att; n++) {
                                                     type = tbl1_temp_block->block->tuple_dict[m + n].type;
                                                     size = tbl1_temp_block->block->tuple_dict[m + n].size;
                                                     address = tbl1_temp_block->block->tuple_dict[m + n].address;
@@ -149,8 +117,8 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                     }
                                                 }
 
-                                                if (something_to_copy == num_att1) {
-                                                    for (n = 0; n < num_att1; n++) {
+                                                if (something_to_copy == num_att) {
+                                                    for (n = 0; n < num_att; n++) {
                                                         type = tbl1_temp_block->block->tuple_dict[m + n].type;
                                                         size = tbl1_temp_block->block->tuple_dict[m + n].size;
                                                         address = tbl1_temp_block->block->tuple_dict[m + n].address;

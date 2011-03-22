@@ -40,47 +40,17 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
         register int i, j, k;
         i = j = k = 0;
 
-        int num_att1 = 0;
-        int num_att2 = 0;
-
         AK_mem_block *tbl1_temp_block = (AK_mem_block *) AK_get_block(startAddress1);
         AK_mem_block *tbl2_temp_block = (AK_mem_block *) AK_get_block(startAddress2);
-
-        for (i = 0; i < MAX_ATTRIBUTES; i++) {
-            if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
-                num_att1++;
-            } else {
-                break;
-            }
-
-            if (strcmp(tbl2_temp_block->block->header[i].att_name, "\0") != 0) {
-                num_att2++;
-            } else {
-                break;
-            }
-
-            if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
-                printf("Union ERROR: Relation shemas are not the same! \n");
-                return EXIT_ERROR;
-            }
-
-            if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
-                printf("Union ERROR: Attributes are not of the same type!");
-                return EXIT_ERROR;
-            }
-        }
-
-        if (num_att1 != num_att2) {
-            printf("Union ERROR: Not same number of the attributes! \n");
-			return EXIT_ERROR;
-        }
+        
+        int num_att = AK_check_tables_scheme(tbl1_temp_block, tbl2_temp_block, "Union");
 
 		int address, type, size;
         char data[MAX_VARCHAR_LENGTH];
 
 		//initialize new segment
-        AK_header *header = (AK_header *) malloc(num_att1 * sizeof (AK_header));
-        memcpy(header, tbl1_temp_block->block->header, num_att1 * sizeof (AK_header));
+        AK_header *header = (AK_header *) malloc(num_att * sizeof (AK_header));
+        memcpy(header, tbl1_temp_block->block->header, num_att * sizeof (AK_header));
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
         free(header);
 
@@ -110,9 +80,9 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 							memset(data, '\0', MAX_VARCHAR_LENGTH);
 							memcpy(data, tbl1_temp_block->block->data + address, size);
 						
-							InsertNewElementForUpdate(type, data, dstTable, tbl1_temp_block->block->header[k % num_att1].att_name, row_root, 0);
+							InsertNewElementForUpdate(type, data, dstTable, tbl1_temp_block->block->header[k % num_att].att_name, row_root, 0);
 							
-							if ((k + 1) % num_att1 == 0 && k != 0) {
+							if ((k + 1) % num_att == 0 && k != 0) {
 								insert_row(row_root);
 								DeleteAllElements(row_root);
 							}
@@ -146,9 +116,9 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 							memset(data, '\0', MAX_VARCHAR_LENGTH);
 							memcpy(data, tbl2_temp_block->block->data + address, size);
 
-							InsertNewElementForUpdate(type, data, dstTable, tbl2_temp_block->block->header[k % num_att2].att_name, row_root, 0);
+							InsertNewElementForUpdate(type, data, dstTable, tbl2_temp_block->block->header[k % num_att].att_name, row_root, 0);
 							
-							if ((k + 1) % num_att2 == 0) {
+							if ((k + 1) % num_att == 0) {
 								insert_row(row_root);
 								DeleteAllElements(row_root);
 							}

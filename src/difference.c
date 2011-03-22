@@ -19,51 +19,6 @@
 #include "difference.h"
 
 /**
- * @brief  Function to check if tables have same relation schema
- * @author Dino Laktašić
- * @param tbl1_temp_block - first cache block of the first table 
- * @param tbl2_temp_block - first cache block of the second table
- * @param operator_name - the name of operator, used for displaying error message
- * @return if success returns num of attributes in schema, else returns EXIT_ERROR
- */
-int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_temp_block, char *operator_name) {
-	int i;
-	int num_att1 = 0;
-	int num_att2 = 0;
-	
-	for (i = 0; i < MAX_ATTRIBUTES; i++) {
-            if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
-                num_att1++;
-            } else {
-                break;
-            }
-
-            if (strcmp(tbl2_temp_block->block->header[i].att_name, "\0") != 0) {
-                num_att2++;
-            } else {
-                break;
-            }
-
-            if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
-                printf("%s ERROR: Relation shemas are not the same! \n", operator_name);
-                return EXIT_ERROR;
-            }
-
-            if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
-                printf("%s ERROR: Attributes are not of the same type!", operator_name);
-                return EXIT_ERROR;
-            }
-        }
-
-        if (num_att1 != num_att2) {
-            printf("%s ERROR: Not same number of the attributes! \n", operator_name);
-			return EXIT_ERROR;
-        }
-		
-		return num_att1;
-}
-
-/**
  * @brief  Function to make difference of the two tables
  * @author Dino Laktašić
  * @param srcTable1 - name of the first table
@@ -86,7 +41,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_mem_block *tbl2_temp_block = (AK_mem_block *) AK_get_block(startAddress2);
 		
 		int num_att = AK_check_tables_scheme(tbl1_temp_block, tbl2_temp_block, "Difference");
-		
+		 
 		if (num_att == EXIT_ERROR) {
 			return EXIT_ERROR;
 		}

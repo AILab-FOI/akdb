@@ -561,6 +561,51 @@ int AK_get_table_obj_id(char *table) {
     return table_id;
 }
 
+/**
+ * @brief  Function to check if tables have the same relation schema
+ * @author Dino Laktašić, abstracted from difference.c for use in difference.c, intersect.c and union.c by Tomislav Mikulček
+ * @param tbl1_temp_block - first cache block of the first table 
+ * @param tbl2_temp_block - first cache block of the second table
+ * @param operator_name - the name of operator, used for displaying error message
+ * @return if success returns num of attributes in schema, else returns EXIT_ERROR
+ */
+int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_temp_block, char *operator_name) {
+	int i;
+	int num_att1 = 0;
+	int num_att2 = 0;
+	
+	for (i = 0; i < MAX_ATTRIBUTES; i++) {
+            if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
+                num_att1++;
+            } else {
+                break;
+            }
+
+            if (strcmp(tbl2_temp_block->block->header[i].att_name, "\0") != 0) {
+                num_att2++;
+            } else {
+                break;
+            }
+
+            if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
+                printf("%s ERROR: Relation shemas are not the same! \n", operator_name);
+                return EXIT_ERROR;
+            }
+
+            if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
+                printf("%s ERROR: Attributes are not of the same type!", operator_name);
+                return EXIT_ERROR;
+            }
+        }
+
+        if (num_att1 != num_att2) {
+            printf("%s ERROR: Not same number of the attributes! \n", operator_name);
+			return EXIT_ERROR;
+        }
+		
+		return num_att1;
+}
+
 void table_test() {
     printf("table.c: Present!\n");
 
