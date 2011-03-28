@@ -21,7 +21,7 @@
 
 /**
  * @brief  Value comparison according to data type
- * @author Dino Laktašić
+ * @author Dino Laktašić, updated by Tomislav Mikulček
  * @param AK_list_elem el - list element
  * @param const char *op - comparison operator
  * @param const void *a - left operand
@@ -57,16 +57,30 @@ int AK_selection_check_rs(AK_list_elem el, const char *op, const void *a, const 
             else
                 return 0;
             break;
+        
+        case TYPE_NUMBER:
+            //printf("a:%f , b:%f\n", *((float *)a), *((float *)b));
+            if (*((double *) a) < *((double *) b) && strcmp(op, "<") == 0)
+                return 1;
+            else if (*((double *) a) > *((double *) b) && strcmp(op, ">") == 0)
+                return 1;
+            else if (*((double *) a) <= *((double *) b) && strcmp(op, "<=") == 0)
+                return 1;
+            else if (*((double *) a) >= *((double *) b) && strcmp(op, ">=") == 0)
+                return 1;
+            else
+                return 0;
+            break;
 
         case TYPE_VARCHAR:
             //printf("a:%s , b:%s\n", (const char *)a, (const char *)b);
             if (strcmp((const char *) a, (const char *) b) < 0 && strcmp(op, "<") == 0)
                 return 1;
-            if (strcmp((const char *) a, (const char *) b) > 0 && strcmp(op, ">") == 0)
+            else if (strcmp((const char *) a, (const char *) b) > 0 && strcmp(op, ">") == 0)
                 return 1;
-            if (strcmp((const char *) a, (const char *) b) <= 0 && strcmp(op, "<=") == 0)
+            else if (strcmp((const char *) a, (const char *) b) <= 0 && strcmp(op, "<=") == 0)
                 return 1;
-            if (strcmp((const char *) a, (const char *) b) >= 0 && strcmp(op, ">=") == 0)
+            else if (strcmp((const char *) a, (const char *) b) >= 0 && strcmp(op, ">=") == 0)
                 return 1;
             else
                 return 0;
@@ -76,7 +90,7 @@ int AK_selection_check_rs(AK_list_elem el, const char *op, const void *a, const 
 
 /**
  * @brief  Evaluate logical expression
- * @author Matija Šestak, updated by Dino Laktašić
+ * @author Matija Šestak, updated by Dino Laktašić, updated by Tomislav Mikulček
  * @param AK_mem_block* - memory block from cache
  * @param AK_header* - table header
  * @param int - number of the attributes
@@ -162,16 +176,8 @@ int AK_selection_check_expr(AK_mem_block *mem_block, AK_header *header, int num_
                 memcpy(va + b->size, "\0", 1);
                 memcpy(vb + a->size, "\0", 1);
 
-                if (strcmp(el->data, "<") == 0) {
-                    rs = AK_selection_check_rs(b, "<", va, vb);
-                } else if (strcmp(el->data, ">") == 0) {
-                    rs = AK_selection_check_rs(b, ">", va, vb);
-                } else if (strcmp(el->data, "<=") == 0) {
-                    rs = AK_selection_check_rs(b, "<=", va, vb);
-                } else if (strcmp(el->data, ">=") == 0) {
-                    rs = AK_selection_check_rs(b, ">=", va, vb);
-                }
-
+                rs = AK_selection_check_rs(b, el->data, va, vb);
+                
                 free(va);
                 free(vb);
 
@@ -271,12 +277,12 @@ void op_selection_test() {
     InsertAtEndL(TYPE_INT, &num, sizeof (int), expr);
     InsertAtEndL(TYPE_OPERATOR, "<", sizeof ("<"), expr);
     InsertAtEndL(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    InsertAtEndL(TYPE_VARCHAR, "Dino", sizeof ("Dino"), expr);
+    InsertAtEndL(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
     InsertAtEndL(TYPE_OPERATOR, "=", sizeof ("="), expr);
     InsertAtEndL(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
     //InsertAtEndL( TYPE_OPERATOR, "AND", sizeof("AND"), expr );
 
-    printf("\nQUERY: SELECT * FROM student WHERE year < 2010 OR firstname = 'Dino';\n\n");
+    printf("\nQUERY: SELECT * FROM student WHERE year < 2010 OR firstname = 'Robert';\n\n");
 
     char *tblName = "student";
 
