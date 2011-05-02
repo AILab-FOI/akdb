@@ -153,7 +153,7 @@ void create_test_tables() {
     weight += 0.75;
     DeleteAllElements(row_root);
     InsertNewElement(TYPE_INT, &mbr, tblName, "mbr", row_root);
-    InsertNewElement(TYPE_VARCHAR, "Ana", tblName, "firstname", row_root);
+    InsertNewElement(TYPE_VARCHAR, "Ivan", tblName, "firstname", row_root);
     InsertNewElement(TYPE_VARCHAR, "Ankovic", tblName, "lastname", row_root);
     InsertNewElement(TYPE_INT, &year, tblName, "year", row_root);
     InsertNewElement(TYPE_FLOAT, &weight, tblName, "weight", row_root);
@@ -375,7 +375,7 @@ void create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    row_root = (element) malloc(sizeof (list));
+    //row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
 
     id_prof = 35890;
@@ -487,7 +487,7 @@ void create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    row_root = (element) malloc(sizeof (list));
+    //row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
 
     id_prof = 35892;
@@ -551,7 +551,7 @@ void create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    row_root = (element) malloc(sizeof (list));
+    //row_root = (element) malloc(sizeof (list));
     InitializeList(row_root);
 
     id_prof = 35890;
@@ -715,6 +715,9 @@ void create_test_tables() {
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
+
+    DeleteAllElements(row_root);
+    free(row_root);
     //------------------------------------------------------------------------------------------------------
 
 }
