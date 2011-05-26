@@ -47,6 +47,7 @@
 #include "difference.h"
 #include "intersect.h"
 #include "nat_join.h"
+#include "theta_join.h"
 #include "projection.h"
 #include "rename.h"
 #include "selection.h"
@@ -91,24 +92,25 @@ int main()
 
 			//table_test();
 			
-			op_selection_test();
-			op_projection_test();
-			op_join_test();
-			op_intersect_test();
-			op_union_test();
-			op_difference_test();
-			op_rename_test();
-			op_product_test();
+//			op_selection_test();
+//			op_projection_test();
+//			op_join_test();
+			op_theta_join_test();
+//			op_intersect_test();
+//			op_union_test();
+//			op_difference_test();
+//			op_rename_test();
+//			op_product_test();
 
 			//btree_test();
-			hash_test();
+//			hash_test();
 			//bitmap_test(); 	//needs complete rewrite, currently doesn't work correctly
 
-			reference_test();
-
-			trigger_test();
-
-			aggregation_test();
+//			reference_test();
+//
+//			trigger_test();
+//
+//			aggregation_test();
 
 			//memoman_test();
 

@@ -7,7 +7,7 @@ CFLAGS = $(DEBUG) -c -Wall
 DISKTARGETS = dbman.o 
 MEMORYTARGETS = memoman.o
 FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bitmap.o table.o
-RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o product.o
+RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o product.o theta_join.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o query_optimization.o
 CONSTRAINTTARGETS = reference.o between.o nnull.o id.o
 OTHERTARGETS = trigger.o test.o debug.o
@@ -75,6 +75,9 @@ rename.o: rename.c
 
 nat_join.o: nat_join.c
 	$(CC) $(CFLAGS) nat_join.c
+	
+theta_join.o: theta_join.c
+	$(CC) $(CFLAGS) theta_join.c
 	
 product.o: product.c
 	$(CC) $(CFLAGS) product.c

@@ -459,7 +459,118 @@ void create_test_tables() {
     InsertNewElement(TYPE_VARCHAR, "www.foi.hr/nastavnici/schatten.markus/", tblName, "web_page", row_root);
     insert_row(row_root);
 
+    id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Neven", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Vrcek", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042390892", tblName, "tel", row_root);
+	InsertNewElement(TYPE_VARCHAR, "neven.vrcek@foi.hr", tblName, "email", row_root);
+	InsertNewElement(TYPE_VARCHAR, "www.foi.hr/nastavnici/vrcek.neven/", tblName, "web_page", row_root);
+	insert_row(row_root);
+
     AK_print_table(tblName);
+    //-------------------------------------------------------------------------------------------------------
+
+
+	//--------------------------------------> CREATE TABLE 'PROFESSOR2' <-------------------------------------
+	//create header
+	AK_header t_header7[ MAX_ATTRIBUTES ];
+
+	temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+	memcpy(t_header2, temp, sizeof ( AK_header));
+	temp = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+	memcpy(t_header2 + 1, temp, sizeof ( AK_header));
+	temp = (AK_header*) AK_create_header("lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+	memcpy(t_header2 + 2, temp, sizeof ( AK_header));
+	temp = (AK_header*) AK_create_header("tel", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+	memcpy(t_header2 + 3, temp, sizeof ( AK_header));
+	memset(t_header2 + 4, 0, MAX_ATTRIBUTES - 4);
+
+	//create table
+	tblName = "professor2";
+	startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header2);
+
+	if (startAddress != EXIT_ERROR)
+		printf("\nTABLE %s CREATED!\n", tblName);
+
+	//row_root = (element) malloc(sizeof (list));
+	InitializeList(row_root);
+
+	id_prof = 35890;
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Baca", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042390873", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Balaban", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "000000000", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Antun", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Brumnic", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042213777", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Mirko", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Cubrilo", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042213777", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Dragutin", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Kermek", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042213777", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Tonimir", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Kisasondi", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042213777", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Alen", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Lovrencic", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042390866", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Markus", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Schatten", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042390892", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	id_prof++;
+	DeleteAllElements(row_root);
+	InsertNewElement(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Neven", tblName, "firstname", row_root);
+	InsertNewElement(TYPE_VARCHAR, "Vrcek", tblName, "lastname", row_root);
+	InsertNewElement(TYPE_INT, "042390892", tblName, "tel", row_root);
+	insert_row(row_root);
+
+	AK_print_table(tblName);
     //-------------------------------------------------------------------------------------------------------
 
 

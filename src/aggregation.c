@@ -237,11 +237,13 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 						for (m = 0; m < header_size; m++) {
 							if (strcmp(needed_values[m].att_name, temp->header[l].att_name) == 0) {
 								switch (needed_values[m].agg_task) {
-									case AGG_TASK_COUNT:		//no break is intentional
+									case AGG_TASK_COUNT:
+										//no break is intentional
 									case AGG_TASK_AVG_COUNT:
 										memcpy(needed_values[m].data, &counter, sizeof(int));
 										needed_values[m].data[sizeof(int)] = '\0';
 										break;
+
 									case AGG_TASK_MAX:
 										switch (agg_head[m].type) {
 											case TYPE_INT:
@@ -249,11 +251,13 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 												if (*((int*)needed_values[m].data) < inttemp || counter == 1)
 													memcpy(needed_values[m].data, &inttemp, sizeof (int));
 												break;
+
 											case TYPE_FLOAT:
 												memcpy(&floattemp, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
 												if (*((float *)needed_values[m].data) < floattemp || counter == 1)
 													memcpy(needed_values[m].data, &floattemp, sizeof(float));
 												break;
+
 											case TYPE_NUMBER:
 												memcpy(&doubletemp, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
 												if (*((double *)needed_values[m].data) < doubletemp || counter == 1)
@@ -262,6 +266,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 										}
 										needed_values[m].data[temp->tuple_dict[k + l].size] = '\0';
 										break;
+
 									case AGG_TASK_MIN:
 										switch (agg_head[m].type) {
 											case TYPE_INT:
@@ -269,11 +274,13 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 												if (*((int*)needed_values[m].data) > inttemp || counter == 1)
 													memcpy(needed_values[m].data, &inttemp, sizeof (int));
 												break;
+
 											case TYPE_FLOAT:
 												memcpy(&floattemp, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
 												if (*((float *)needed_values[m].data) > floattemp || counter == 1)
 													memcpy(needed_values[m].data, &floattemp, sizeof(float));
 												break;
+
 											case TYPE_NUMBER:
 												memcpy(&doubletemp, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
 												if (*((double *)needed_values[m].data) > doubletemp || counter == 1)
@@ -282,7 +289,9 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 										}
 										needed_values[m].data[temp->tuple_dict[k + l].size] = '\0';
 										break;
-									case AGG_TASK_SUM:		//no break is intentional
+
+									case AGG_TASK_SUM:
+										//no break is intentional
 									case AGG_TASK_AVG_SUM:
 										switch (agg_head[m].type) {
 											case TYPE_INT:
@@ -290,11 +299,13 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 												inttemp += *((int*) needed_values[m].data);
 												memcpy(needed_values[m].data, &inttemp, sizeof (int));
 												break;
+
 											case TYPE_FLOAT:
 												memcpy(&floattemp, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
 												floattemp += *((float *)needed_values[m].data);
 												memcpy(needed_values[m].data, &floattemp, sizeof (float));
 												break;
+
 											case TYPE_NUMBER:
 												memcpy(&doubletemp, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
 												doubletemp += *((double*) needed_values[m].data);
@@ -312,8 +323,10 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 					for (l = 0; l < num_attr; l++) {
 						for (m = 0; m < header_size; m++) {
 							if (strcmp(needed_values[m].att_name, temp->header[l].att_name) == 0) {
+
 								memcpy(needed_values[m].data, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
 								needed_values[m].data[temp->tuple_dict[k + l].size] = '\0';
+
 								if (needed_values[m].agg_task == AGG_TASK_GROUP) {
 									search_parameters[n].iSearchType = SEARCH_PARTICULAR;
 									search_parameters[n].pData_lower = malloc(temp->tuple_dict[k + l].size);
@@ -329,24 +342,32 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 					if (sresult.iNum_tuple_addresses == 0) {
 						DeleteAllElements(row_root);
+
 						for (l = 0; l < header_size; l++) {
 							switch (needed_values[l].agg_task) {
-								case AGG_TASK_COUNT:		//no break is intentional
+								case AGG_TASK_COUNT:
+									//no break is intentional
 								case AGG_TASK_AVG_COUNT:
 									inttemp = 1;
 									memcpy(needed_values[l].data, &inttemp, sizeof (int));
 									needed_values[l].data[sizeof (int) ] = '\0';
 									InsertNewElement(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
 									break;
-								case AGG_TASK_AVG:			//no break is intentional
-								case AGG_TASK_MAX:			//no break is intentional
-								case AGG_TASK_MIN:			//no break is intentional
-								case AGG_TASK_SUM:			//no break is intentional
-								case AGG_TASK_GROUP:		//no break is intentional
-								case AGG_TASK_AVG_SUM:		//no break is intentional
+
+								case AGG_TASK_AVG:
+									//no break is intentional
+								case AGG_TASK_MAX:
+									//no break is intentional
+								case AGG_TASK_MIN:
+									//no break is intentional
+								case AGG_TASK_SUM:
+									//no break is intentional
+								case AGG_TASK_GROUP:
+									//no break is intentional
+								case AGG_TASK_AVG_SUM:
+									//no break is intentional
 								default:
 									InsertNewElement(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
-									break;
 							}
 
 						}
@@ -358,28 +379,34 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 							for (m = 0; m < header_size; m++) {
 								if (strcmp(needed_values[m].att_name, temp->header[l].att_name) == 0) {
 									switch (needed_values[m].agg_task) {
-										case AGG_TASK_COUNT:		//no break is intentional
+										case AGG_TASK_COUNT:
+											//no break is intentional
 										case AGG_TASK_AVG_COUNT:
 											inttemp = *((int *) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address)) + 1;
 											memcpy(&mem_block->block->data[mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address], &inttemp, sizeof (int));
 											break;
-										case AGG_TASK_SUM:			//no break is intentional
+
+										case AGG_TASK_SUM:
+											//no break is intentional
 										case AGG_TASK_AVG_SUM:
 											switch (agg_head[m].type) {
 												case TYPE_INT:
 													inttemp = *((int*) needed_values[m].data) + *((int *) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address));
 													memcpy(mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address, &inttemp, sizeof (int));
 													break;
+
 												case TYPE_FLOAT:
 													floattemp = *((float*) needed_values[m].data) + *((float *) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address));
 													memcpy(mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address, &floattemp, sizeof (float));
 													break;
+
 												case TYPE_NUMBER:
 													doubletemp = *((double*) needed_values[m].data) + *((double *) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address));
 													memcpy(mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address, &doubletemp, sizeof (double));
 													break;
 											}
 											break;
+
 										case AGG_TASK_MAX:
 											switch (agg_head[m].type) {
 												case TYPE_INT:
@@ -389,6 +416,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 														memcpy(mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address, &inttemp, sizeof (int));
 													}
 													break;
+
 												case TYPE_FLOAT:
 													floattemp = *((float *) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address));
 													if (*((float*) needed_values[m].data) > floattemp) {
@@ -396,6 +424,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 														memcpy(mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address, &floattemp, sizeof (float));
 													}
 													break;
+
 												case TYPE_NUMBER:
 													doubletemp = *((double *) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address));
 													if (*((double*) needed_values[m].data) > doubletemp) {
@@ -405,6 +434,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 													break;
 											}
 											break;
+
 										case AGG_TASK_MIN:
 											switch (agg_head[m].type) {
 												case TYPE_INT:
@@ -414,6 +444,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 														memcpy(mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address, &inttemp, sizeof (int));
 													}
 													break;
+
 												case TYPE_FLOAT:
 													floattemp = *((float *) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address));
 													if (*((float*) needed_values[m].data) < floattemp) {
@@ -421,6 +452,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 														memcpy(mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address, &floattemp, sizeof (float));
 													}
 													break;
+
 												case TYPE_NUMBER:
 													doubletemp = *((double *) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address));
 													if (*((double*) needed_values[m].data) < doubletemp) {
@@ -430,23 +462,28 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 													break;
 											}
 											break;
+
 										case AGG_TASK_AVG:
 											inttemp = floattemp = -1;
 											for (o = 0; o < header_size; o++) {
 												sprintf(agg_h_name, "_cAvg(%s)", needed_values[m].att_name);
+
 												if (strcmp(agg_h_name, mem_block->block->header[o].att_name) == 0) {
 													inttemp = *((int*) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + o].address));
 												}
 												sprintf(agg_h_name, "_sAvg(%s)", needed_values[m].att_name);
+
 												if (strcmp(agg_h_name, mem_block->block->header[o].att_name) == 0) {
 													floattemp = *((float*) (mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + o].address));
 												}
+
 												if (inttemp != -1 && doubletemp != -1)
 													break;
 											}
 											floattemp = floattemp / (float) inttemp;
 											memcpy(mem_block->block->data + mem_block->block->tuple_dict[sresult.aiTuple_addresses[i] + m].address, &floattemp, sizeof (float));
 											break;
+
 										case AGG_TASK_GROUP:
 											break;
 									}
@@ -506,19 +543,19 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 					inttemp = *((int *)needed_values[l].data);
 					break;
 
-				case AGG_TASK_AVG:			//no break is intentional
+				case AGG_TASK_AVG:
 					floattemp = floattemp/inttemp;
 					memcpy(needed_values[l].data, &floattemp, sizeof(float));
 					needed_values[l].data[sizeof(float)] = '\0';
-
-				case AGG_TASK_COUNT:		//no break is intentional
-
-				case AGG_TASK_MAX:			//no break is intentional
-
-				case AGG_TASK_MIN:			//no break is intentional
-
-				case AGG_TASK_SUM:			//no break is intentional
-
+					//no break is intentional
+				case AGG_TASK_COUNT:
+					//no break is intentional
+				case AGG_TASK_MAX:
+					//no break is intentional
+				case AGG_TASK_MIN:
+					//no break is intentional
+				case AGG_TASK_SUM:
+					//no break is intentional
 				default:
 					InsertNewElement(agg_head[l].type, needed_values[l].data, agg_table, agg_head[l].att_name, row_root);
 					break;

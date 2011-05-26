@@ -22,10 +22,10 @@
 /**
  * @brief  Value comparison according to data type
  * @author Dino Laktašić, updated by Tomislav Mikulček
- * @param AK_list_elem el - list element
- * @param const char *op - comparison operator
- * @param const void *a - left operand
- * @param const void *b - right operand
+ * @param el - list element
+ * @param *op - comparison operator
+ * @param *a - left operand
+ * @param *b - right operand
  * @return int - 0 if false, 1 if true
  */
 int AK_selection_check_rs(AK_list_elem el, const char *op, const void *a, const void *b) {
@@ -91,11 +91,11 @@ int AK_selection_check_rs(AK_list_elem el, const char *op, const void *a, const 
 /**
  * @brief  Evaluate logical expression
  * @author Matija Šestak, updated by Dino Laktašić, updated by Tomislav Mikulček
- * @param AK_mem_block* - memory block from cache
- * @param AK_header* - table header
- * @param int - number of the attributes
- * @param AK_list* - list with posfix notation of the logical expression
- * @param int - current tuple (first in row)
+ * @param *mem_block - memory block from cache
+ * @param *header - table header
+ * @param num_attr - number of the attributes
+ * @param *expr - list with posfix notation of the logical expression
+ * @param current_tuple - current tuple (first in row)
  * @result int - 0 if false, 1 if true
  */
 int AK_selection_check_expr(AK_mem_block *mem_block, AK_header *header, int num_attr, AK_list *expr, int current_tuple) {
@@ -202,9 +202,9 @@ int AK_selection_check_expr(AK_mem_block *mem_block, AK_header *header, int num_
 /**
  * @brief  Implementation of selection
  * @author Matija Šestak.
- * @param char* srcTable - source table name
- * @param char* dstTable - destination table name
- * @param AK_list* - list with posfix notation of the logical expression
+ * @param *srcTable - source table name
+ * @param *dstTable - destination table name
+ * @param *expr - list with posfix notation of the logical expression
  * @result int - return EXIT_SUCCESS
  */
 int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {

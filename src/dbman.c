@@ -238,6 +238,7 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
 			memcpy(&block->header[ header_att_id], &header[ header_att_id ], sizeof( *header));
 		}*/
 
+        //@TODO the check fails second time around if the table has MAX_ATTRIBUTES
         while(((h_id = header_att_id - num_blocks * MAX_ATTRIBUTES) < MAX_ATTRIBUTES) && (header[ header_att_id ].type != 0)) {
 			if (h_id >= 0) {
 				memcpy(&block->header[ h_id ], &header[ header_att_id++ ], sizeof(*header));
