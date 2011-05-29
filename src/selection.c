@@ -19,185 +19,7 @@
 
 #include "selection.h"
 
-/**
- * @brief  Value comparison according to data type
- * @author Dino Laktašić, updated by Tomislav Mikulček
- * @param el - list element
- * @param *op - comparison operator
- * @param *a - left operand
- * @param *b - right operand
- * @return int - 0 if false, 1 if true
- */
-int AK_selection_check_rs(AK_list_elem el, const char *op, const void *a, const void *b) {
-    switch (el->type) {
-        case TYPE_INT:
-            //printf("a:%i , b:%i\n", *((int *)a), *((int *)b));
-            if (*(int *) a < *(int *) b && strcmp(op, "<") == 0)
-                return 1;
-            else if (*((int *) a) > *((int *) b) && strcmp(op, ">") == 0)
-                return 1;
-            else if (*((int *) a) <= *((int *) b) && strcmp(op, "<=") == 0)
-                return 1;
-            else if (*((int *) a) >= *((int *) b) && strcmp(op, ">=") == 0)
-                return 1;
-            else
-                return 0;
-            break;
 
-        case TYPE_FLOAT:
-            //printf("a:%f , b:%f\n", *((float *)a), *((float *)b));
-            if (*((float *) a) < *((float *) b) && strcmp(op, "<") == 0)
-                return 1;
-            else if (*((float *) a) > *((float *) b) && strcmp(op, ">") == 0)
-                return 1;
-            else if (*((float *) a) <= *((float *) b) && strcmp(op, "<=") == 0)
-                return 1;
-            else if (*((float *) a) >= *((float *) b) && strcmp(op, ">=") == 0)
-                return 1;
-            else
-                return 0;
-            break;
-        
-        case TYPE_NUMBER:
-            //printf("a:%f , b:%f\n", *((float *)a), *((float *)b));
-            if (*((double *) a) < *((double *) b) && strcmp(op, "<") == 0)
-                return 1;
-            else if (*((double *) a) > *((double *) b) && strcmp(op, ">") == 0)
-                return 1;
-            else if (*((double *) a) <= *((double *) b) && strcmp(op, "<=") == 0)
-                return 1;
-            else if (*((double *) a) >= *((double *) b) && strcmp(op, ">=") == 0)
-                return 1;
-            else
-                return 0;
-            break;
-
-        case TYPE_VARCHAR:
-            //printf("a:%s , b:%s\n", (const char *)a, (const char *)b);
-            if (strcmp((const char *) a, (const char *) b) < 0 && strcmp(op, "<") == 0)
-                return 1;
-            else if (strcmp((const char *) a, (const char *) b) > 0 && strcmp(op, ">") == 0)
-                return 1;
-            else if (strcmp((const char *) a, (const char *) b) <= 0 && strcmp(op, "<=") == 0)
-                return 1;
-            else if (strcmp((const char *) a, (const char *) b) >= 0 && strcmp(op, ">=") == 0)
-                return 1;
-            else
-                return 0;
-            break;
-    }
-}
-
-/**
- * @brief  Evaluate logical expression
- * @author Matija Šestak, updated by Dino Laktašić, updated by Tomislav Mikulček
- * @param *mem_block - memory block from cache
- * @param *header - table header
- * @param num_attr - number of the attributes
- * @param *expr - list with posfix notation of the logical expression
- * @param current_tuple - current tuple (first in row)
- * @result int - 0 if false, 1 if true
- */
-int AK_selection_check_expr(AK_mem_block *mem_block, AK_header *header, int num_attr, AK_list *expr, int current_tuple) {
-    int true = 1, false = 0;
-    int i, found, result;
-
-    AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
-    InitL(temp);
-
-    AK_list_elem el = (AK_list_elem) FirstL(expr);
-    AK_list_elem a, b, c;
-
-    char data[MAX_VARCHAR_LENGTH];
-
-    while (el) {
-        if (el->type == TYPE_ATTRIBS) {
-            found = 0;
-            for (i = 0; i < num_attr; i++) {
-                if (strcmp(el->data, header[i].att_name) == 0) {
-                    found = 1;
-                    break;
-                }
-            }
-            if (!found) {
-                return 0;
-            } else {
-                int address = mem_block->block->tuple_dict[current_tuple + i].address;
-                int size = mem_block->block->tuple_dict[current_tuple + i].size;
-                int type = mem_block->block->tuple_dict[current_tuple + i].type;
-                memset(data, 0, MAX_VARCHAR_LENGTH);
-                memcpy(data, &(mem_block->block->data[address]), size);
-                InsertAtEndL(type, data, size, temp);
-            }
-        } else if (el->type == TYPE_OPERATOR) {
-            //operators implementation
-            a = (AK_list_elem) EndL(temp);
-            b = (AK_list_elem) PreviousL(a, temp);
-
-            if (strcmp(el->data, "=") == 0) {
-                if (memcmp(a->data, b->data, a->size) == 0)
-                    InsertAtEndL(TYPE_INT, &true, sizeof (int), temp);
-                else
-                    InsertAtEndL(TYPE_INT, &false, sizeof (int), temp);
-
-            } else if (strcmp(el->data, "<>") == 0) {
-                if (memcmp(a->data, b->data, a->size) != 0)
-                    InsertAtEndL(TYPE_INT, &true, sizeof (int), temp);
-                else
-                    InsertAtEndL(TYPE_INT, &false, sizeof (int), temp);
-
-            } else if (strcmp(el->data, "OR") == 0) {
-                int val_a, val_b;
-                memcpy(&val_a, a->data, sizeof (int));
-                memcpy(&val_b, b->data, sizeof (int));
-
-                if (val_a || val_b)
-                    InsertAtEndL(TYPE_INT, &true, sizeof (int), temp);
-                else
-                    InsertAtEndL(TYPE_INT, &false, sizeof (int), temp);
-
-            } else if (strcmp(el->data, "AND") == 0) {
-                int val_a, val_b;
-                memcpy(&val_a, a->data, sizeof (int));
-                memcpy(&val_b, b->data, sizeof (int));
-
-                if (val_a && val_b)
-                    InsertAtEndL(TYPE_INT, &true, sizeof (int), temp);
-                else
-                    InsertAtEndL(TYPE_INT, &false, sizeof (int), temp);
-
-            } else {
-                int rs;
-
-                void *va = (void *) malloc(b->size);
-                void *vb = (void *) malloc(a->size);
-                memcpy(va, b->data, b->size);
-                memcpy(vb, a->data, a->size);
-                memcpy(va + b->size, "\0", 1);
-                memcpy(vb + a->size, "\0", 1);
-
-                rs = AK_selection_check_rs(b, el->data, va, vb);
-                
-                free(va);
-                free(vb);
-
-                InsertAtEndL(TYPE_INT, &rs, sizeof (int), temp);
-            }
-
-            DeleteL(a, temp);
-            DeleteL(b, temp);
-
-        } else {
-            InsertAtEndL(el->type, el->data, el->size, temp);
-        }
-        el = el->next;
-    }
-
-    memcpy(&result, ((AK_list_elem) FirstL(temp))->data, sizeof (int));
-    DeleteAllL(temp);
-
-    return result;
-}
 
 /**
  * @brief  Implementation of selection
@@ -228,31 +50,39 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
     char data[MAX_VARCHAR_LENGTH];
 
     for (i = 0; src_addr->address_from[i] != 0; i++) {
+
         for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
+
             AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
+
             if (temp->block->last_tuple_dict_id == 0)
                 break;
             for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+
                 if (temp->block->tuple_dict[k].type == FREE_INT)
                     break;
-                if (AK_selection_check_expr(temp, t_header, num_attr, expr, k)) {
-                    for (l = 0; l < num_attr; l++) {
-						type = temp->block->tuple_dict[k + l].type;
-                        size = temp->block->tuple_dict[k + l].size;
-                        address = temp->block->tuple_dict[k + l].address;
-                        memcpy(data, &(temp->block->data[address]), size);
-                        data[size] = '\0';
-                        InsertNewElement(type, data, dstTable, t_header[l].att_name, row_root);
-                    }
+
+				for (l = 0; l < num_attr; l++) {
+					type = temp->block->tuple_dict[k + l].type;
+					size = temp->block->tuple_dict[k + l].size;
+					address = temp->block->tuple_dict[k + l].address;
+					memcpy(data, &(temp->block->data[address]), size);
+					data[size] = '\0';
+					InsertNewElement(type, data, dstTable, t_header[l].att_name, row_root);
+				}
+
+				if (AK_check_expr(row_root, expr))
                     insert_row(row_root);
-                    DeleteAllElements(row_root);
-                }
+
+				DeleteAllElements(row_root);
             }
         }
     }
 
     free(src_addr);
     free(t_header);
+    free(row_root);
+
 	dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
     return EXIT_SUCCESS;
 }
@@ -290,4 +120,5 @@ void op_selection_test() {
     AK_print_table("selection_test");
 
     DeleteAllL(expr);
+    free(expr);
 }

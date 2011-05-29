@@ -9,7 +9,7 @@ MEMORYTARGETS = memoman.o
 FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bitmap.o table.o
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o product.o theta_join.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o query_optimization.o
-CONSTRAINTTARGETS = reference.o between.o nnull.o id.o
+CONSTRAINTTARGETS = reference.o between.o nnull.o id.o expression_check.o
 OTHERTARGETS = trigger.o test.o debug.o
 
 OUTDIR = ../bin
@@ -123,7 +123,9 @@ dbman.o: dbman.c
 
 auxiliary.o: auxiliary.c
 	$(CC) $(CFLAGS) auxiliary.c
-
+	
+expression_check.o: expression_check.c
+	$(CC) $(CFLAGS) expression_check.c
 
 
 clean:

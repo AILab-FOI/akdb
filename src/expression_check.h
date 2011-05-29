@@ -1,8 +1,8 @@
 /**
-@file theta_join.h Provides data structures for theta-join
+@file expression_check.h Provides data structures for expression ckecking
  */
 /*
- * This program is free software; you can redistribute it and/or modify
+ * This program is free software; you can redistribute it and/or modifys
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
@@ -17,10 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+#ifndef EXPRESSION_CHECK
+#define EXPRESSION_CHECK
 
-#ifndef THETA_JOIN
-#define THETA_JOIN
+#include "table.h"
 
-#include "expression_check.h"
-
-#endif /* THETA_JOIN */
+#endif /* CONSTRAINT_CHECKER_H_ */

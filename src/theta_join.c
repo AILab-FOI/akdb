@@ -53,8 +53,6 @@ int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table)
     int length_tbl2 = strlen(srcTable2);
     char *renamed_att;
 
-    AK_list_elem list_elem;
-
     //first we copy all of the column names from the first table
     while (strcmp(temp_block_tbl1->header[head1].att_name, "") != 0) {
 
@@ -129,74 +127,6 @@ int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table)
 }
 
 /**
- * @brief  Value comparison according to data type
- * @author Tomislav Mikulček
- * @param el - list element
- * @param *op - comparison operator
- * @param *a - left operand
- * @param *b - right operand
- * @return int - 0 if false, 1 if true
- */
-int inequality_check(AK_list_elem el, const char *op, const void *a, const void *b) {
-    switch (el->type) {
-        case TYPE_INT:
-            //printf("a:%i , b:%i\n", *((int *)a), *((int *)b));
-            if ((strcmp(op, "<") && *(int *) a < *(int *) b) == 0)
-                return 1;
-            else if ((strcmp(op, ">") && *((int *) a) > *((int *) b)) == 0)
-                return 1;
-            else if ((strcmp(op, "<=") && *((int *) a) <= *((int *) b)) == 0)
-                return 1;
-            else if ((strcmp(op, ">=") && *((int *) a) >= *((int *) b)) == 0)
-                return 1;
-            else
-                return 0;
-            break;
-
-        case TYPE_FLOAT:
-            //printf("a:%f , b:%f\n", *((float *)a), *((float *)b));
-            if ((strcmp(op, "<") && *((float *) a) < *((float *) b)) == 0)
-                return 1;
-            else if ((strcmp(op, ">") && *((float *) a) > *((float *) b)) == 0)
-                return 1;
-            else if ((strcmp(op, "<=") && *((float *) a) <= *((float *) b)) == 0)
-                return 1;
-            else if ((strcmp(op, ">=") && *((float *) a) >= *((float *) b)) == 0)
-                return 1;
-            else
-                return 0;
-            break;
-
-        case TYPE_NUMBER:
-            //printf("a:%f , b:%f\n", *((float *)a), *((float *)b));
-            if ((strcmp(op, "<") && *((double *) a) < *((double *) b)) == 0)
-                return 1;
-            else if ((strcmp(op, ">") && *((double *) a) > *((double *) b)) == 0)
-                return 1;
-            else if ((strcmp(op, "<=") && *((double *) a) <= *((double *) b)) == 0)
-                return 1;
-            else if ((strcmp(op, ">=") && *((double *) a) >= *((double *) b)) == 0)
-                return 1;
-            else
-                return 0;
-            break;
-
-        case TYPE_VARCHAR:
-            //printf("a:%s , b:%s\n", (const char *)a, (const char *)b);
-            if ((strcmp(op, "<") && strcmp((const char *) a, (const char *) b) < 0) == 0)
-                return 1;
-            else if ((strcmp(op, ">") && strcmp((const char *) a, (const char *) b) > 0) == 0)
-                return 1;
-            else if ((strcmp(op, "<=") && strcmp((const char *) a, (const char *) b) <= 0) == 0)
-                return 1;
-            else if ((strcmp(op, ">=") && strcmp((const char *) a, (const char *) b) >= 0) == 0)
-                return 1;
-            else
-                return 0;
-    }
-}
-
-/**
  * @brief Function iterates through blocks of the two tables and copies the rows which pass the constraint check into the new table
  * @author Tomislav Mikulček
  * @param tbl1_temp_block - block of the first table
@@ -210,167 +140,55 @@ void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int
     dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
 
     int tbl1_att, tbl2_att, tbl1_row, tbl2_row;
-    int address, size, type, column;
-    int true = 1, false = 0, result;
-    int found;
+    int address, size, type;
     char data[MAX_VARCHAR_LENGTH];
 
-    list *row_root = (list *) malloc(sizeof (list));
-    list *row_root_insert = (list *) malloc(sizeof (list));
-    AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
-    AK_list_elem list_elem, a, b;
+    element row_root_init = (element) malloc(sizeof (list));
+    element row_root_full;
     AK_header *t_header = (AK_header *) AK_get_header(new_table);
 
-    InitializeList(row_root);
-	InitializeList(row_root_insert);
+    InitializeList(row_root_init);
 
     for (tbl1_row = 0; tbl1_row < DATA_BLOCK_SIZE; tbl1_row += tbl1_num_att){
 
     	if (tbl1_temp_block->tuple_dict[tbl1_row].type == FREE_INT)
 			break;
 
+		for (tbl1_att = 0; tbl1_att < tbl1_num_att; tbl1_att++){
+			address = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].address;
+			size = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].size;
+			type = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].type;
+			memset(data, 0, MAX_VARCHAR_LENGTH);
+			memcpy(data, &(tbl1_temp_block->data[address]), size);
+			InsertNewElement(type, data, new_table, t_header[tbl1_att].att_name, row_root_init);
+		}
+
+
     	for (tbl2_row = 0; tbl2_row < DATA_BLOCK_SIZE; tbl2_row += tbl2_num_att){
 
     		if (tbl2_temp_block->tuple_dict[tbl2_row].type == FREE_INT)
 				break;
-    		//@TODO theta join i selekcija imaju iste uvjete pa se provjera ograničenja može apstrahirati
-    		list_elem = (AK_list_elem) FirstL(constraints);
-    		while (list_elem) {
 
-				switch(list_elem->type){
+    		row_root_full = row_root_init;
 
-					case TYPE_ATTRIBS:
-
-						found = 0;
-
-						for (tbl1_att = 0; tbl1_att < tbl1_num_att; tbl1_att++){
-							if (strcmp(list_elem->data, tbl1_temp_block->header[tbl1_att].att_name) == 0) {
-								found = 1;
-								address = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].address;
-								size = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].size;
-								type = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].type;
-								memset(data, 0, MAX_VARCHAR_LENGTH);
-								memcpy(data, &(tbl1_temp_block->data[address]), size);
-								InsertAtEndL(type, data, size, temp);
-								break;
-							}
-						}
-
-						if (!found) {
-
-							for (tbl2_att = 0; tbl2_att < tbl2_num_att; tbl2_att++){
-								if (strcmp(list_elem->data, tbl2_temp_block->header[tbl2_att].att_name) == 0) {
-									found = 1;
-									address = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].address;
-									size = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].size;
-									type = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].type;
-									memset(data, 0, MAX_VARCHAR_LENGTH);
-									memcpy(data, &(tbl2_temp_block->data[address]), size);
-									InsertAtEndL(type, data, size, temp);
-									break;
-								}
-							}
-						}
-
-						if (!found)
-							return;
-
-						break;
-
-					case TYPE_OPERATOR:
-
-						b = (AK_list_elem) EndL(temp);
-						a = (AK_list_elem) PreviousL(b, temp);
-
-						if (strcmp(list_elem->data, "=") == 0) {
-
-							if (memcmp(a->data, b->data, a->size) == 0)
-								InsertAtEndL(TYPE_INT, &true, sizeof (int), temp);
-							else
-								InsertAtEndL(TYPE_INT, &false, sizeof (int), temp);
-
-						} else if (strcmp(list_elem->data, "<>") == 0) {
-
-							if (memcmp(a->data, b->data, a->size) != 0)
-								InsertAtEndL(TYPE_INT, &true, sizeof (int), temp);
-							else
-								InsertAtEndL(TYPE_INT, &false, sizeof (int), temp);
-
-						} else if (strcmp(list_elem->data, "OR") == 0) {
-
-							int val_a, val_b;
-							memcpy(&val_a, a->data, sizeof (int));
-							memcpy(&val_b, b->data, sizeof (int));
-
-							if (val_a || val_b)
-								InsertAtEndL(TYPE_INT, &true, sizeof (int), temp);
-							else
-								InsertAtEndL(TYPE_INT, &false, sizeof (int), temp);
-
-						} else if (strcmp(list_elem->data, "AND") == 0) {
-
-							int val_a, val_b;
-							memcpy(&val_a, a->data, sizeof (int));
-							memcpy(&val_b, b->data, sizeof (int));
-
-							if (val_a && val_b)
-								InsertAtEndL(TYPE_INT, &true, sizeof (int), temp);
-							else
-								InsertAtEndL(TYPE_INT, &false, sizeof (int), temp);
-
-						} else {
-
-							int rs;
-							rs = inequality_check(b, list_elem->data, a->data, b->data);
-							InsertAtEndL(TYPE_INT, &rs, sizeof (int), temp);
-						}
-
-						DeleteL(a, temp);
-						DeleteL(b, temp);
-						break;
-
-					default:
-						InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-				}
-
-				list_elem = list_elem->next;
+    		for (tbl2_att = 0; tbl2_att < tbl2_num_att; tbl2_att++){
+				address = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].address;
+				size = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].size;
+				type = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].type;
+				memset(data, 0, MAX_VARCHAR_LENGTH);
+				memcpy(data, &(tbl2_temp_block->data[address]), size);
+				InsertNewElement(type, data, new_table, t_header[tbl1_att + tbl2_att].att_name, row_root_full);
 			}
 
-    		memcpy(&result, ((AK_list_elem) FirstL(temp))->data, sizeof (int));
-    		DeleteAllL(temp);
-
-    		if (result){
-
-    			column = 0;
-
-    			for (tbl1_att = 0; tbl1_att < tbl1_num_att; tbl1_att++){
-					address = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].address;
-					size = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].size;
-					type = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].type;
-					memset(data, 0, MAX_VARCHAR_LENGTH);
-					memcpy(data, &(tbl1_temp_block->data[address]), size);
-					InsertNewElement(type, data, new_table, t_header[column].att_name, row_root);
-					column++;
-    			}
-
-    			for (tbl2_att = 0; tbl2_att < tbl2_num_att; tbl2_att++){
-					address = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].address;
-					size = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].size;
-					type = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].type;
-					memset(data, 0, MAX_VARCHAR_LENGTH);
-					memcpy(data, &(tbl2_temp_block->data[address]), size);
-					InsertNewElement(type, data, new_table, t_header[column].att_name, row_root);
-					column++;
-				}
-
-    			insert_row(row_root);
-				DeleteAllElements(row_root);
-    		}
+			if (AK_check_expr(row_root_full, constraints)){
+    			insert_row(row_root_full);
+			}
     	}
+
+    	DeleteAllElements(row_root_init);
     }
 
-    free(row_root);
-    free(row_root_insert);
+    free(row_root_init);
 }
 
 /**
@@ -381,6 +199,9 @@ void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int
  * @param constraints - list of attributes, (in)equality and logical operators which are the conditions for the join in postfix notation
  * @param dstTable - name of the theta join table
  * @return int - if successful returns EXIT_SUCCESS and EXIT_ERROR otherwise
+ *
+ * Names of the attibutes in the constraints parameter must be prefixed with the table name followed by a dot if and only if they exist in both tables.
+ * This is left for the preprocessing. Also, for now the constraints must come from the two source tables and not from a third.
  */
 int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *constraints) {
 
@@ -463,6 +284,11 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
     }
 }
 
+/**
+ * @brief Function for testing the theta join
+ * @author Tomislav Mikulček
+ * @return void
+ */
 void op_theta_join_test() {
     printf("\n********** THETA JOIN TEST **********\n\n");
 
@@ -490,6 +316,32 @@ void op_theta_join_test() {
     AK_print_table("theta_join_test2");
 
     DeleteAllL(constraints);
+
+    //test where overlaping columns are a part of the constraints
+    printf("SELECT * FROM employee, department WHERE employee.id_department = department.id_department;\n");
+    InsertAtEndL(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
+    InsertAtEndL(TYPE_ATTRIBS, "department.id_department", sizeof ("department.id_department"), constraints);
+    InsertAtEndL(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+
+    AK_theta_join("employee", "department", "theta_join_test3", constraints);
+    AK_print_table("theta_join_test3");
+
+    DeleteAllL(constraints);
+
+    //test for addition and inequality
+    int num = 37895;
+    printf("SELECT * FROM student, professor2 WHERE year + id_prof > 37895;\n");
+    InsertAtEndL(TYPE_ATTRIBS, "year", sizeof ("year"), constraints);
+    InsertAtEndL(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
+    InsertAtEndL(TYPE_OPERATOR, "+", sizeof ("+"), constraints);
+    InsertAtEndL(TYPE_INT, &num, sizeof (int), constraints);
+    InsertAtEndL(TYPE_OPERATOR, ">", sizeof (">"), constraints);
+
+    AK_theta_join("student", "professor2", "theta_join_test4", constraints);
+    AK_print_table("theta_join_test4");
+
+    DeleteAllL(constraints);
+
     free(constraints);
 }
 

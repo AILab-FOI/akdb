@@ -20,6 +20,6 @@
 #ifndef SELECTION
 #define SELECTION
 
-#include "table.h"
+#include "expression_check.h"
 
 #endif
