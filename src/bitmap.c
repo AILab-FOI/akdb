@@ -19,26 +19,26 @@
 
 #include "bitmap.h"
 
-int IfExistOp(list_op *L, char *ele) {
-    list_op *Currentelement_op;
+int IfExistOp(list *L, char *ele) {
+    list *Currentelement_op;
     Currentelement_op = L->next;
     while (Currentelement_op) {
         //printf("iz liste: %s, iz tablice: %s \n", Currentelement_op->attribute_name, ele);
         if (strcmp(Currentelement_op->attribute_name, ele) == 0) {
             return 1;
         }
-        Currentelement_op = (element_op) Currentelement_op->next;
+        Currentelement_op = (element) Currentelement_op->next;
     }
     return 0;
 }
 
 /**
  * @author Saša Vukšić
- * @brief reads teable on which we create index and call functions for creating index (the function should be revised so it can initialize SEGMENT_TYPE_INDEX insted of SEGMENT_TYPE_TABLE :) )
+ * @brief reads teable on which we create index and call functions for creating index (the function should be revised so it can initialize SEGMENT_TYPE_INDEX instead of SEGMENT_TYPE_TABLE :) )
  * @param char* tblName - name of table
- * @param list_op *attributes - list of attributes on which we will create indexes
+ * @param list *attributes - list of attributes on which we will create indexes
  * */
-void AKcreateIndex(char *tblName, list_op *attributes) {
+void AKcreateIndex(char *tblName, list *attributes) {
     int num_attr, num_rec;
     int i, j, k;
     //start and end addresses of segment's
@@ -53,9 +53,9 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
     char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
 
-    element_op some_element;
-    element_op e, ee;
-    list_op *headerAtributes = (list_op *) malloc(sizeof (list_op));
+    element some_element;
+    element e, ee;
+    list *headerAtributes = (list *) malloc(sizeof (list));
 
     int br;
     char * indexName;
@@ -65,12 +65,12 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
     AK_header* tempHeader;
 
     for (i = 0; i < num_attr; i++) {
-        some_element = GetFirstelementOp(attributes);
+        some_element = GetFirstElement(attributes);
         while (some_element != 0) {
             //printf("atribut u listi: %s, atribut u zaglavlju: %s \n",some_element->attribute_name, (temp_head+i)->att_name);
             if (strcmp((temp_head + i)->att_name, some_element->attribute_name) == 0) {
                 //printf("Atribut %s postoji u tablici, nalazi se na poziciji: %d\n",(temp_head+i)->att_name,i);
-                InitializelistOp(headerAtributes);
+                InitializeList(headerAtributes);
                 br = 0;
                 while (addresses->address_from[ br ] != 0) {
                     for (j = addresses->address_from[ br ]; j < addresses->address_to[ br ]; j++) {
@@ -83,13 +83,13 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
                                                 temp->tuple_dict[k].size);
                                         temp_int = sprintf(temp_char, "%d", temp_int);
 
-                                        ee = (element_op) GetFirstelementOp(headerAtributes);
+                                        ee = (element) GetFirstElement(headerAtributes);
                                         if (ee == 0) {
-                                            InsertNewelementOp("indexLista", temp_char, headerAtributes);
+                                            InsertNewElement(TYPE_VARCHAR, temp_char, "indexLista", temp_char, headerAtributes);
                                         } else {
                                             if (IfExistOp(headerAtributes, temp_char) == 0) {
-                                                ee = (element_op) GetLastelementOp(headerAtributes);
-                                                InsertNewelementOp("indexLista", temp_char, ee);
+                                                ee = (element) GetLastElement(headerAtributes);
+                                                InsertNewElement(TYPE_VARCHAR, temp_char, "indexLista", temp_char, ee);
                                             }
                                         }
                                         // printf("%-10s", temp_char);
@@ -105,13 +105,13 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
                                                 temp->tuple_dict[k].size);
                                         temp_char[ temp->tuple_dict[k].size ] = '\0';
 
-                                        ee = (element_op) GetFirstelementOp(headerAtributes);
+                                        ee = (element) GetFirstElement(headerAtributes);
                                         if (ee == 0) {
-                                            InsertNewelementOp("indexLista", temp_char, headerAtributes);
+                                            InsertNewElement(TYPE_VARCHAR, temp_char, "indexLista", temp_char, headerAtributes);
                                         } else {
                                             if (IfExistOp(headerAtributes, temp_char) == 0) {
-                                                ee = (element_op) GetLastelementOp(headerAtributes);
-                                                InsertNewelementOp("indexLista", temp_char, ee);
+                                                ee = (element) GetLastElement(headerAtributes);
+                                                InsertNewElement(TYPE_VARCHAR, temp_char, "indexLista", temp_char, ee);
                                             }
                                         }
                                         // printf("%-10s", temp_char);
@@ -130,13 +130,13 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
                 int startAddress;
                 switch ((temp_head + i)->type) {
                     case TYPE_VARCHAR:
-                        brr = 2; //3
-                        e = (element_op) GetFirstelementOp(headerAtributes);
+                        brr = 2; //3 First two places are reserved for block and row pointers
+                        e = (element) GetFirstElement(headerAtributes);
                         while (e != 0) {
                             //printf("%s : %s \n", (temp_head + i)->att_name, e->attribute_name);
                             tempHeader = (AK_header*) AK_create_header(e->attribute_name, TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
                             memcpy(t_header + brr, tempHeader, sizeof ( AK_header));
-                            e = (element_op) GetNextelementOp(e);
+                            e = (element) GetNextElement(e);
                             brr++;
                         }
                         //dodaje se jos jedan atribut za pokazivac(adresu)
@@ -165,7 +165,7 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
                         break;
 
                     case TYPE_INT:
-                        brr = 2; //3
+                        brr = 2; //3 First two places are reserved for block and row pointers
 
                         tempHeader = (AK_header*) AK_create_header("addBlock", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                         memcpy(t_headerr, tempHeader, sizeof ( AK_header));
@@ -174,12 +174,12 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
                         //tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                         //memcpy( t_headerr + 2 , tempHeader, sizeof( AK_header ));
 
-                        e = (element_op) GetFirstelementOp(headerAtributes);
+                        e = (element) GetFirstElement(headerAtributes);
                         while (e != 0) {
                             //printf("%s : %s : %i \n", (temp_head + i)->att_name, e->attribute_name,brr);
                             tempHeader = (AK_header*) AK_create_header(e->attribute_name, TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                             memcpy(t_headerr + brr, tempHeader, sizeof ( AK_header));
-                            e = (element_op) GetNextelementOp(e);
+                            e = (element) GetNextElement(e);
                             brr++;
                         }
 
@@ -201,11 +201,11 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
                 }
 
             }
-            some_element = (element_op) GetNextelementOp(some_element);
+            some_element = (element) GetNextElement(some_element);
         }
     }
 
-    element_op ele = GetFirstelementOp(headerAtributes);
+    element ele = GetFirstElement(headerAtributes);
     //ispis liste za header TEST
     /*
             while(ele != 0)
@@ -214,7 +214,7 @@ void AKcreateIndex(char *tblName, list_op *attributes) {
                 ele = GetNextelementOp(ele);
             }
      * */
-    DeleteAllelementsOp(headerAtributes);
+    DeleteAllElements(headerAtributes);
     free(headerAtributes);
     free(tempHeader);
     free(temp_head);
@@ -609,21 +609,21 @@ int write_block(AK_block * block) {
 void bitmap_test() {
     printf("\n********** BITMAP INDEX TEST **********\n\n");
 
-    char *tblName = "professor";
+    char *tblName = "assistant";
 
-    list_op *att_root = (list_op *) malloc(sizeof (list_op));
-    InitializelistOp(att_root);
+    list *att_root = (list *) malloc(sizeof (list));
+    InitializeList(att_root);
 
-    InsertNewelementOp(tblName, "firstname", att_root);
-    element_op some_element;
-    some_element = (element_op) GetFirstelementOp(att_root);
-    InsertNewelementOp(tblName, "tel", some_element);
+    InsertNewElement(TYPE_VARCHAR, "firstname", tblName, "firstname", att_root);
+    element some_element;
+    some_element = (element) GetFirstElement(att_root);
+    InsertNewElement(TYPE_VARCHAR, "tel", tblName, "tel", some_element);
 
     AKcreateIndex(tblName, att_root);
 
     AK_print_table(tblName);
-    AK_print_table("professorfirstname_bmapIndex");
-    AK_print_table("professortel_bmapIndex");
+    AK_print_table("assistantfirstname_bmapIndex");
+    AK_print_table("assistanttel_bmapIndex");
 
     AK_update(321, 58, tblName, "firstname", "Alen", "Markus");
 }

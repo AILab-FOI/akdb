@@ -93,10 +93,10 @@ int main()
 
 //			table_test();
 //
-			op_selection_test();
+//			op_selection_test();
 //			op_projection_test();
 //			op_join_test();
-			op_theta_join_test();
+//			op_theta_join_test();
 //			op_intersect_test();
 //			op_union_test();
 //			op_difference_test();
@@ -105,16 +105,16 @@ int main()
 //
 //			btree_test();
 //			hash_test();
-			//bitmap_test(); 	//needs complete rewrite, currently doesn't work correctly
-
+//			bitmap_test(); 	//needs complete rewrite, currently doesn't work correctly
+//
 //			reference_test();
 //
 //			trigger_test();
 //
 //			aggregation_test();
-
-			//memoman_test();
-
+//
+//			memoman_test();
+//
 //			constraint_between_test();
 //			id_test();
 //			null_test();

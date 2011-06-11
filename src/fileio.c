@@ -27,65 +27,75 @@
         @result void
  */
 void InitializeList(list *L) {
-    L->next = 0;
+//	memset(L->attribute_name, '\0', sizeof(MAX_ATT_NAME));
+//	L->constraint = 0;
+//	memset(L->data, '\0', sizeof(MAX_VARCHAR_LENGTH));
+//	memset(L->table, '\0', sizeof(MAX_ATT_NAME));
+//	L->type = 0;
+//    L->next = 0;
+	InitL(L);
 }
 
 /** 	@author Matija Novak
         Get the frst list element
         @param L - root of the list
-        @result element_op first element of the list
+        @result element first element of the list
  */
 element GetFirstElement(list *L) {
-    return (element) L->next;
+//    return (element) L->next;
+	FirstL(L);
 }
 
 /** 	@author Matija Novak
         Get the last list element
         @param L - root of the list
-        @result element_op last element of the list
+        @result element last element of the list
  */
 element GetLastElement(list *L) {
-    list *CurrentElement;
-    CurrentElement = L;
-    while (CurrentElement->next)
-        CurrentElement = (element) CurrentElement->next;
-    if (CurrentElement != L)
-        return (element) CurrentElement;
-    else
-        return 0;
+//    list *CurrentElement;
+//    CurrentElement = L;
+//    while (CurrentElement->next)
+//        CurrentElement = (element) CurrentElement->next;
+//    if (CurrentElement != L)
+//        return (element) CurrentElement;
+//    else
+//        return 0;
+	EndL(L);
 }
 
 /** 	@author Matija Novak
         Gets the next list element of an given element
         @param CurrenetElelemnt - some element of the list form which we want the next element
-        @result element - next element of given element_op
+        @result element - next element of given element
  */
 element GetNextElement(element CurrentElement) {
-    if (CurrentElement->next == 0) {
-        return 0;
-    } else {
-        list *NextElement;
-        NextElement = (element) CurrentElement->next;
-        return (element) NextElement;
-    }
+//    if (CurrentElement->next == 0) {
+//        return 0;
+//    } else {
+//        list *NextElement;
+//        NextElement = (element) CurrentElement->next;
+//        return (element) NextElement;
+//    }
+	NextL(CurrentElement);
 }
 
 /** 	@author Matija Novak
         Get the previous element of some element in the list
         @param CurrentElelemnt - element of which we want the previous element
         @param L - root of the list
-        @result element_op - previous element of the element that we give as first parameter
+        @result element - previous element of the element that we give as first parameter
  */
 element GetPreviousElement(element CurrentElement, list *L) {
-    list *PreviousElement;
-    PreviousElement = L;
-    while ((PreviousElement->next != 0) && ((element) PreviousElement->next != CurrentElement))
-        PreviousElement = (element) PreviousElement->next;
-    if (PreviousElement->next != 0 && PreviousElement != L) {
-        return (element) PreviousElement;
-    } else {
-        return 0;
-    }
+//    list *PreviousElement;
+//    PreviousElement = L;
+//    while ((PreviousElement->next != 0) && ((element) PreviousElement->next != CurrentElement))
+//        PreviousElement = (element) PreviousElement->next;
+//    if (PreviousElement->next != 0 && PreviousElement != L) {
+//        return (element) PreviousElement;
+//    } else {
+//        return 0;
+//    }
+	PreviousL(CurrentElement, L);
 }
 
 /** 	@author Matija Novak
@@ -112,13 +122,14 @@ int GetPositionOfElement(element SearchedElement, list *L) {
         @result void
  */
 void DeleteElement(element DeletedElement, list *L) {
-    element PreviousElement = (element) GetPreviousElement(DeletedElement, L);
-    if (PreviousElement != 0) {
-        PreviousElement->next = DeletedElement->next;
-    } else {
-        L->next = DeletedElement->next;
-    }
-    free(DeletedElement);
+//    element PreviousElement = (element) GetPreviousElement(DeletedElement, L);
+//    if (PreviousElement != 0) {
+//        PreviousElement->next = DeletedElement->next;
+//    } else {
+//        L->next = DeletedElement->next;
+//    }
+//    free(DeletedElement);
+    DeleteL(DeletedElement, L);
 }
 
 /** 	@author Matija Novak
@@ -127,14 +138,15 @@ void DeleteElement(element DeletedElement, list *L) {
         @result void
  */
 void DeleteAllElements(list *L) {
-    list *CurrentElement = L;
-    list *DeletedElement = (list *) L->next;
-    while (CurrentElement->next != 0) {
-        CurrentElement->next = DeletedElement->next;
-        ;
-        free(DeletedElement);
-        DeletedElement = (list *) CurrentElement->next;
-    }
+//    list *CurrentElement = L;
+//    list *DeletedElement = (list *) L->next;
+//    while (CurrentElement->next != 0) {
+//        CurrentElement->next = DeletedElement->next;
+//        ;
+//        free(DeletedElement);
+//        DeletedElement = (list *) CurrentElement->next;
+//    }
+	DeleteAllL(L);
 }
 
 //END GLOBAL FUNCTIONS
@@ -142,12 +154,12 @@ void DeleteAllElements(list *L) {
 //START SPECIAL FUNCTIONS FOR WORK WITH row_element_structure
 
 /** 	@author Matija Novak
-        Inserts new element_op after some element, to insert on first place give list as before element
+        Inserts new element after some element, to insert on first place give list as before element
         @param newtype - type of the data
         @param data - the data
         @param table - table name
         @param attribute_name - attribute name
-        @param element_op - element after we which insert the new element
+        @param element - element after we which insert the new element
         @param constraint - 0 if data is new value, 1 if data is constraint to search for
         @result void
  */
@@ -173,12 +185,12 @@ void InsertNewElementForUpdate(int newtype, void * data, char * table, char * at
 }
 
 /** 	@author Matija Novak, changed by Dino Laktašić
-        Inserts new element_op after some element, to insert on first place give list as before element
+        Inserts new element after some element, to insert on first place give list as before element
         @param newtype - type of the data
         @param data - the data
         @param table - table name
         @param attribute_name - attribute name
-        @param element_op - element after we which insert the new element
+        @param element - element after we which insert the new element
         @param constraint - is 0
         @result void
  */

@@ -30,7 +30,7 @@
 
 #include "expression_check.h"
 
-int AK_check_rs(AK_list_elem el, const char *op, const void *a, const void *b) {
+static int AK_check_rs(AK_list_elem el, const char *op, const void *a, const void *b) {
 
 	if(strcmp(op, "<") == 0){
 

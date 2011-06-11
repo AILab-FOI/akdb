@@ -27,7 +27,7 @@
  * @param new_table - name of the destination table
  * @return int - returns EXIT_SUCCESS if the header was successfully created and EXIT_ERROR if the renamed headers are too long
  */
-int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table) {
+static int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table) {
 
 	table_addresses *src_addr1 = (table_addresses *) get_table_addresses(srcTable1);
 	table_addresses *src_addr2 = (table_addresses *) get_table_addresses(srcTable2);
@@ -39,7 +39,7 @@ int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table)
     AK_block *temp_block_tbl2 = (AK_block *) AK_read_block(table_address2);
 
 	//Currently it works with headers no longer than MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
-	//This is wrong and need to be corrected.
+	//This is wrong and needs to be corrected.
 	//If header doesn't fit in the first block than system must write the remain attributes from header to the new block.
 	//Correction must be handled in all functions that write, read or count header attributes.
 	AK_header header[MAX_ATTRIBUTES];
@@ -86,15 +86,17 @@ int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table)
     	//if an overlap is found, the column is renamed by prepending its table name and a dot.
     	if (rename){
 
-    		dbg_messg(HIGH, REL_OP, "Theta join: renaming header: %s", temp_block_tbl2->header[head2].att_name);
+    		dbg_messg(HIGH, REL_OP, "Theta join: renaming attribute: %s", temp_block_tbl2->header[head2].att_name);
 
     		renamed_att = malloc(length_tbl1 + strlen(temp_block_tbl1->header[head1].att_name) + 2);
     		memcpy(renamed_att, srcTable1, length_tbl1);
     		memcpy(renamed_att + length_tbl1, ".", strlen("."));
     		memcpy(renamed_att + length_tbl1 + 1, temp_block_tbl1->header[head1].att_name, strlen(temp_block_tbl1->header[head1].att_name) + 1);
 
-    		if (strlen(renamed_att) > MAX_ATT_NAME)
+    		if (strlen(renamed_att) > MAX_ATT_NAME){
+    			dbg_messg(HIGH, REL_OP, "Theta join: renaming failed for attribute: %s (name is too long)", renamed_att);
     			return EXIT_ERROR;
+    		}
     		else
     			memcpy(header[head1].att_name, renamed_att, strlen(renamed_att) + 1);
 
@@ -105,8 +107,10 @@ int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table)
 			memcpy(renamed_att + length_tbl2, ".", strlen("."));
 			memcpy(renamed_att + length_tbl2 + 1, temp_block_tbl2->header[head2].att_name, strlen(temp_block_tbl2->header[head2].att_name) + 1);
 
-			if (strlen(renamed_att) > MAX_ATT_NAME)
+			if (strlen(renamed_att) > MAX_ATT_NAME){
+				dbg_messg(HIGH, REL_OP, "Theta join: renaming failed for attribute: %s (name is too long)", renamed_att);
 				return EXIT_ERROR;
+			}
 			else
 				memcpy(header[new_head].att_name, renamed_att, strlen(renamed_att) + 1);
 
@@ -136,7 +140,7 @@ int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table)
  * @param constraints - list of attributes, (in)equality and logical operators which are the conditions for the join in postfix notation
  * @param new_table - name of the theta_join table
  */
-void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
+static void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
     dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
 
     int tbl1_att, tbl2_att, tbl1_row, tbl2_row;
@@ -275,7 +279,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
         return EXIT_SUCCESS;
     } else {
 
-        dbg_messg(LOW, REL_OP, "\n AK_theta_join: Table/s doesn't exist!");
+        dbg_messg(LOW, REL_OP, "\n AK_theta_join: Table doesn't exist!");
 
         free(src_addr1);
         free(src_addr2);
