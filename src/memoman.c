@@ -500,8 +500,8 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     int end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
     mem_block = (AK_mem_block *) AK_get_block(0);
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
     //DeleteAllElements(row_root);
     int obj_id = 0;
     InsertNewElement(TYPE_INT, &obj_id, sys_table, "obj_id", row_root);

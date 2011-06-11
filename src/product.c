@@ -73,7 +73,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
         dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
 		dbg_messg(MIDDLE, REL_OP, "\nAK_product: start copying data\n");
 
-        list *row_root = (list *) malloc(sizeof (list));
+        AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
 
         //for each extent in table1 that contains blocks needed for join
         for (i = 0; i < src_addr1->address_from[i] != 0; i++) {
@@ -141,7 +141,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 												}
 												
 												insert_row(row_root);
-												DeleteAllElements(row_root);
+												DeleteAllL(row_root);
 											}
 										}
                                     }

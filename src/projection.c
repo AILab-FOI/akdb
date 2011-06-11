@@ -110,8 +110,8 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
     //if(DEBUG)
     //	printf("\nCOPYING PROJECTION DATA FROM BLOCK...\n");
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     AK_list_elem list_elem;
 
@@ -159,7 +159,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
             dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
 
             insert_row(row_root);
-            DeleteAllElements(row_root);
+            DeleteAllL(row_root);
         }
     }
 

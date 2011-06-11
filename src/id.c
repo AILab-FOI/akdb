@@ -27,8 +27,8 @@
 int AK_get_id() {
     char temp_data[MAX_VARCHAR_LENGTH];
     
-	list * row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+	AK_list * row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
     
 	AK_list *row = (AK_list*) malloc(sizeof (AK_list));
     
@@ -51,13 +51,13 @@ int AK_get_id() {
     }
     
 	if (exists) {
-        DeleteAllElements(row_root);
+        DeleteAllL(row_root);
         InsertNewElementForUpdate(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root, 1);
         delete_row(row_root);
         current_value++;
     }
 	
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     int value = 0;
     InsertNewElement(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);
     InsertNewElement(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);

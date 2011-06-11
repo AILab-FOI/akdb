@@ -43,8 +43,8 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 
     table_addresses *src_addr = (table_addresses*) get_table_addresses(srcTable);
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
@@ -74,7 +74,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 				if (AK_check_expr(row_root, expr))
                     insert_row(row_root);
 
-				DeleteAllElements(row_root);
+				DeleteAllL(row_root);
             }
         }
     }

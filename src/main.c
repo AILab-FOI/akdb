@@ -90,7 +90,7 @@ int main()
 //			rel_eq_assoc_test();
 //			rel_eq_comut_test();
 //			query_optimization_test();
-
+//
 //			table_test();
 //
 //			op_selection_test();
@@ -102,7 +102,7 @@ int main()
 //			op_difference_test();
 //			op_rename_test();
 //			op_product_test();
-//
+
 //			btree_test();
 //			hash_test();
 //			bitmap_test(); 	//needs complete rewrite, currently doesn't work correctly

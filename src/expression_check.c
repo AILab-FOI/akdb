@@ -149,7 +149,7 @@ static int AK_check_rs(AK_list_elem el, const char *op, const void *a, const voi
  * @param *expr - list with the logical expression in posfix notation
  * @result int - 0 if false, 1 if true
  */
-int AK_check_expr(element row_root, AK_list *expr) {
+int AK_check_expr(AK_list_elem row_root, AK_list *expr) {
 
 	int true = 1, false = 0;
     int found, result;
@@ -158,7 +158,7 @@ int AK_check_expr(element row_root, AK_list *expr) {
     InitL(temp);
 
     AK_list_elem el = (AK_list_elem) FirstL(expr);
-    element row;
+    AK_list_elem row;
     AK_list_elem a, b;
 
     char data[MAX_VARCHAR_LENGTH];

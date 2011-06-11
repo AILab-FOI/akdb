@@ -18,139 +18,6 @@
  17 */
 #include "fileio.h"
 
-
-//START GLOBAL FUNCTIONS TO WORK WITH LIST
-
-/**	@author Matija Novak
-        alocate empty list
-        @param L - root of the list
-        @result void
- */
-void InitializeList(list *L) {
-//	memset(L->attribute_name, '\0', sizeof(MAX_ATT_NAME));
-//	L->constraint = 0;
-//	memset(L->data, '\0', sizeof(MAX_VARCHAR_LENGTH));
-//	memset(L->table, '\0', sizeof(MAX_ATT_NAME));
-//	L->type = 0;
-//    L->next = 0;
-	InitL(L);
-}
-
-/** 	@author Matija Novak
-        Get the frst list element
-        @param L - root of the list
-        @result element first element of the list
- */
-element GetFirstElement(list *L) {
-//    return (element) L->next;
-	FirstL(L);
-}
-
-/** 	@author Matija Novak
-        Get the last list element
-        @param L - root of the list
-        @result element last element of the list
- */
-element GetLastElement(list *L) {
-//    list *CurrentElement;
-//    CurrentElement = L;
-//    while (CurrentElement->next)
-//        CurrentElement = (element) CurrentElement->next;
-//    if (CurrentElement != L)
-//        return (element) CurrentElement;
-//    else
-//        return 0;
-	EndL(L);
-}
-
-/** 	@author Matija Novak
-        Gets the next list element of an given element
-        @param CurrenetElelemnt - some element of the list form which we want the next element
-        @result element - next element of given element
- */
-element GetNextElement(element CurrentElement) {
-//    if (CurrentElement->next == 0) {
-//        return 0;
-//    } else {
-//        list *NextElement;
-//        NextElement = (element) CurrentElement->next;
-//        return (element) NextElement;
-//    }
-	NextL(CurrentElement);
-}
-
-/** 	@author Matija Novak
-        Get the previous element of some element in the list
-        @param CurrentElelemnt - element of which we want the previous element
-        @param L - root of the list
-        @result element - previous element of the element that we give as first parameter
- */
-element GetPreviousElement(element CurrentElement, list *L) {
-//    list *PreviousElement;
-//    PreviousElement = L;
-//    while ((PreviousElement->next != 0) && ((element) PreviousElement->next != CurrentElement))
-//        PreviousElement = (element) PreviousElement->next;
-//    if (PreviousElement->next != 0 && PreviousElement != L) {
-//        return (element) PreviousElement;
-//    } else {
-//        return 0;
-//    }
-	PreviousL(CurrentElement, L);
-}
-
-/** 	@author Matija Novak
-        Get the posititn of given elelment
-        @param SearchElement - element which posititon we search for
-        @param L - root of the list
-        @result returns the posititon number of some elelemnt
- */
-int GetPositionOfElement(element SearchedElement, list *L) {
-    list *CurrentElement;
-    int i = 0;
-    CurrentElement = L;
-    while (CurrentElement->next != 0 && CurrentElement != SearchedElement) {
-        CurrentElement = (list *) CurrentElement->next;
-        i++;
-    }
-    return i;
-}
-
-/** 	@author Matija Novak
-        Delete given elelment from the list
-        @param DeletedElement - element which we delete
-        @param L - root of the list
-        @result void
- */
-void DeleteElement(element DeletedElement, list *L) {
-//    element PreviousElement = (element) GetPreviousElement(DeletedElement, L);
-//    if (PreviousElement != 0) {
-//        PreviousElement->next = DeletedElement->next;
-//    } else {
-//        L->next = DeletedElement->next;
-//    }
-//    free(DeletedElement);
-    DeleteL(DeletedElement, L);
-}
-
-/** 	@author Matija Novak
-        Delete all elelments from the list
-        @param L - root of the list
-        @result void
- */
-void DeleteAllElements(list *L) {
-//    list *CurrentElement = L;
-//    list *DeletedElement = (list *) L->next;
-//    while (CurrentElement->next != 0) {
-//        CurrentElement->next = DeletedElement->next;
-//        ;
-//        free(DeletedElement);
-//        DeletedElement = (list *) CurrentElement->next;
-//    }
-	DeleteAllL(L);
-}
-
-//END GLOBAL FUNCTIONS
-
 //START SPECIAL FUNCTIONS FOR WORK WITH row_element_structure
 
 /** 	@author Matija Novak
@@ -163,8 +30,8 @@ void DeleteAllElements(list *L) {
         @param constraint - 0 if data is new value, 1 if data is constraint to search for
         @result void
  */
-void InsertNewElementForUpdate(int newtype, void * data, char * table, char * attribute_name, element ElementBefore, int newconstraint) {
-    list *newElement = (list *) malloc(sizeof (list));
+void InsertNewElementForUpdate(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint) {
+    AK_list *newElement = (AK_list *) malloc(sizeof (AK_list));
     newElement->type = newtype;
 
     memcpy(newElement->data, data, AK_type_size(newtype, data));
@@ -194,7 +61,7 @@ void InsertNewElementForUpdate(int newtype, void * data, char * table, char * at
         @param constraint - is 0
         @result void
  */
-void InsertNewElement(int newtype, void * data, char * table, char * attribute_name, element ElementBefore) {
+void InsertNewElement(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore) {
     InsertNewElementForUpdate(newtype, data, table, attribute_name, ElementBefore, 0);
 }
 
@@ -206,8 +73,8 @@ void InsertNewElement(int newtype, void * data, char * table, char * attribute_n
         @param temp_block -block in which we insert data
         @result int - EXIT SUCCES if success
  */
-int insert_row_to_block(list *row_root, AK_block *temp_block) {
-    element some_element;
+int insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
+    AK_list_elem some_element;
     int type; //type od entry data
     int size; //size of entry data
     int id = 0; //id tuple dict in which is inserted next data
@@ -222,7 +89,7 @@ int insert_row_to_block(list *row_root, AK_block *temp_block) {
 		dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
 		
 		search_elem = 1;
-		some_element = (element) GetFirstElement(row_root);
+		some_element = (AK_list_elem) FirstL(row_root);
 		while (search_elem) {
 			if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0)
 					&& (some_element->constraint == 0)) {//found correct element
@@ -234,7 +101,7 @@ int insert_row_to_block(list *row_root, AK_block *temp_block) {
 
 				search_elem = 0;
 			} else {
-				some_element = (element) GetNextElement(some_element);
+				some_element = (AK_list_elem) NextL(some_element);
 				if (some_element == 0) { //no data exist for this header write null
 					memcpy(entry_data, "null", strlen("null"));
 					type = TYPE_VARCHAR;
@@ -267,7 +134,7 @@ int insert_row_to_block(list *row_root, AK_block *temp_block) {
         @result EXIT_SUCCESS if success elese EXIT_ERROR
 
  */
-int insert_row(list *row_root) {
+int insert_row(AK_list *row_root) {
     dbg_messg(HIGH, FILE_MAN, "insert_row: Start testing reference integrity.\n");
 
     if (AK_reference_check_entry(row_root) == EXIT_ERROR) {
@@ -276,7 +143,7 @@ int insert_row(list *row_root) {
     }
 	
     dbg_messg(HIGH, FILE_MAN, "insert_row: Start inserting data\n");
-    element some_element = (element) GetFirstElement(row_root);
+    AK_list_elem some_element = (AK_list_elem) FirstL(row_root);
 
     char table[MAX_ATT_NAME];	
 	
@@ -311,21 +178,21 @@ int insert_row(list *row_root) {
         @param operation -if 0 then update, if 1 then delete
         @result void
  */
-void update_delete_row_from_block(AK_block *temp_block, list *row_root, int operation) {
+void update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, int operation) {
     int head = 0; //counting headers
     int del = 1; //if can delete gorup of tuple dicts which are in the same row of table
     int exists_equal_attrib = 0; //if we found at least one header in the list
     int diff_varchar_exist = 0; //to now on update if exist varchar that is not the same so that i must delete/insert the entry
 	unsigned char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
 	
-    list * row_root_backup = (list *) malloc(sizeof (list));
-    InitializeList(row_root_backup);
+    AK_list * row_root_backup = (AK_list *) malloc(sizeof (AK_list));
+    InitL(row_root_backup);
 
-    element some_element = (element) GetFirstElement(row_root);
+    AK_list_elem some_element = (AK_list_elem) FirstL(row_root);
 
     while (some_element) {//make a copy of list
         InsertNewElementForUpdate(some_element->type, some_element->data, some_element->table, some_element->attribute_name, row_root_backup, some_element->constraint);
-        some_element = (element) GetNextElement(some_element);
+        some_element = (AK_list_elem) NextL(some_element);
     }
 
 	int i, overflow, address, type, size;
@@ -339,7 +206,7 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
         overflow = address + size;
 		
         while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers
-                some_element = (element) GetFirstElement(row_root);
+                some_element = (AK_list_elem) FirstL(row_root);
 
                 while (some_element) {
 					//if we found header that is constraint in list
@@ -374,7 +241,7 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                             diff_varchar_exist = 1;
                         }
                     }
-                    some_element = (element) GetNextElement(some_element);
+                    some_element = (AK_list_elem) NextL(some_element);
                 }
                 head++; //next header
                 //i++; //next tuple dict
@@ -410,21 +277,21 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                     
 					if (diff_varchar_exist == 1) {//delete and insert row
 						int exist_new_data = 0;
-                        some_element = (element) GetFirstElement(row_root);
+                        some_element = (AK_list_elem) FirstL(row_root);
 
                         while (some_element) {//going through list elements
                             if ((strcmp(some_element->attribute_name, temp_block->header[j % head].att_name) == 0)
 								&& (some_element->constraint == 0)) {//if exist new data then we must not copy old one
                                 exist_new_data = 1;
                             }
-                            some_element = (element) GetNextElement(some_element);
+                            some_element = (AK_list_elem) NextL(some_element);
                         }
 
                         if (exist_new_data == 0) {//exist data which we must copy while we dont have the new one
 							memset(up_entry, '\0', MAX_VARCHAR_LENGTH);
                             memcpy(up_entry, temp_block->data + k, l);
 
-                            some_element = (element) GetFirstElement(row_root);
+                            some_element = (AK_list_elem) FirstL(row_root);
 
                             InsertNewElementForUpdate(temp_block->tuple_dict[j].type, up_entry,
 								some_element->table, temp_block->header[j % head].att_name, some_element, 0);
@@ -438,7 +305,7 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
 						memset(up_entry, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(up_entry, temp_block->data + k, l);
 
-                        some_element = (element) GetFirstElement(row_root);
+                        some_element = (AK_list_elem) FirstL(row_root);
 
                         while (some_element) {//going throught elements
                             if ((strcmp(some_element->attribute_name, temp_block->header[j % head].att_name) == 0)
@@ -447,21 +314,21 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
                                     memcpy(temp_block->data + k, some_element->data, l);
                                 }
                             }
-                            some_element = (element) GetNextElement(some_element);
+                            some_element = (AK_list_elem) NextL(some_element);
                         }
                     }
                 }
 
                 if (diff_varchar_exist == 1) {//must insert new data becouse we deleted the old one? BUBA
                     insert_row(row_root);
-                    DeleteAllElements(row_root);
+                    DeleteAllL(row_root);
 
-                    some_element = (element) GetFirstElement(row_root_backup);
+                    some_element = (AK_list_elem) FirstL(row_root_backup);
 					
                     while (some_element) {//make a copy of list
                         InsertNewElementForUpdate(some_element->type, some_element->data, some_element->table, 
 						some_element->attribute_name, row_root, some_element->constraint);
-                        some_element = (element) GetNextElement(some_element);
+                        some_element = (AK_list_elem) NextL(some_element);
                     }
                 }
             }
@@ -479,9 +346,9 @@ void update_delete_row_from_block(AK_block *temp_block, list *row_root, int oper
         @param del - 1 we make delete, 0 we make update
         @returs EXIT_SUCCESS if success
  */
-int delete_update_segment(list *row_root, int del) {
+int delete_update_segment(AK_list *row_root, int del) {
 	char table[MAX_ATT_NAME];
-    element some_element = (element) GetFirstElement(row_root);
+    AK_list_elem some_element = (AK_list_elem) FirstL(row_root);
 
 	//memset(table, '\0', MAX_ATT_NAME);
     strcpy(table, some_element->table);
@@ -516,7 +383,7 @@ int delete_update_segment(list *row_root, int del) {
         @param row_root -  elements of one row
         @returs EXIT_SUCCESS if success
  */
-int delete_row(list *row_root) {
+int delete_row(AK_list *row_root) {
     if (AK_reference_check_restricion(row_root, 1) == EXIT_ERROR) {
         dbg_messg(HIGH, FILE_MAN, "Could not delete row. Reference integrity violation (restricted).\n");
         return EXIT_ERROR;
@@ -534,7 +401,7 @@ int delete_row(list *row_root) {
         @param row_root -  elements of one row
         @returs EXIT_SUCCESS if success
  */
-int update_row(list *row_root) {
+int update_row(AK_list *row_root) {
     if (AK_reference_check_restricion(row_root, 0) == EXIT_ERROR) {
         dbg_messg(HIGH, FILE_MAN, "Could not update row. Reference integrity violation (restricted).\n");
         return EXIT_ERROR;
@@ -673,13 +540,13 @@ void fileio_test() {
 
     /*OVO JE UBITI SVE VEĆ SPREMNO*/
     //prepraing data and inserting data to list
-    list *row_root = (list *) malloc(sizeof (list));
-    InitializeList(row_root);
-    element some_element;
+    AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
+    InitL(row_root);
+    AK_list_elem some_element;
     int broj;
 
     broj = 1;
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElement(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
     ;
     InsertNewElementForUpdate(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root, 0);
@@ -687,15 +554,15 @@ void fileio_test() {
     insert_row(row_root);
 
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     broj = 2;
     InsertNewElement(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
     InsertNewElementForUpdate(TYPE_VARCHAR, "Nikola", "testna", "Ime", row_root, 0);
     InsertNewElement(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
-    some_element = GetFirstElement(row_root);
+    some_element = FirstL(row_root);
     insert_row(row_root);
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     broj = 3;
     InsertNewElement(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
     InsertNewElementForUpdate(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root, 0);
@@ -705,25 +572,25 @@ void fileio_test() {
     int i;
     //for (i=5;i<50;i++)
     for (i = 5; i < 10; i++) {
-        DeleteAllElements(row_root);
+        DeleteAllL(row_root);
         broj = i;
         InsertNewElement(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
         InsertNewElementForUpdate(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, 0);
         InsertNewElement(TYPE_VARCHAR, "Vacenovski", "testna", "Prezime", row_root);
-        some_element = GetFirstElement(row_root);
+        some_element = FirstL(row_root);
         insert_row(row_root);
     }
 
     //AK_print_table("testna");
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     broj = 1;
     InsertNewElementForUpdate(TYPE_INT, &broj, "testna", "Redni_broj", row_root, 1);
     delete_row(row_root);
 
     // AK_print_table("testna");
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     broj = 1;
     InsertNewElementForUpdate(TYPE_INT, &broj, "testna", "Redni_broj", row_root, 0);
     InsertNewElementForUpdate(TYPE_VARCHAR, "Nikola", "testna", "Ime", row_root, 1);
@@ -732,14 +599,14 @@ void fileio_test() {
 
     AK_print_table("testna");
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElementForUpdate(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root, 1);
     InsertNewElementForUpdate(TYPE_VARCHAR, "", "testna", "Prezime", row_root, 0);
     update_row(row_root);
 
     AK_print_table("testna");
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     broj = 3;
     InsertNewElementForUpdate(TYPE_INT, &broj, "testna", "Redni_broj", row_root, 1);
     InsertNewElementForUpdate(TYPE_VARCHAR, "Slonic", "testna", "Ime", row_root, 0);
@@ -748,13 +615,13 @@ void fileio_test() {
 
     //AK_print_table("testna");
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElementForUpdate(TYPE_VARCHAR, "Slonic", "testna", "Ime", row_root, 1);
     delete_row(row_root);
 
     //AK_print_table("testna");
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElementForUpdate(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, 1);
     InsertNewElementForUpdate(TYPE_VARCHAR, "Mihi", "testna", "Ime", row_root, 0);
     update_row(row_root);
@@ -798,7 +665,7 @@ void fileio_test() {
     some_element=GetFirstElement(row_root);
     insert_row(row_root);*/
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     free(row_root);
 }
 

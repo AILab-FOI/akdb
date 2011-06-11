@@ -209,7 +209,7 @@ void filesearch_test() {
     double f;
     AK_mem_block *mem_block, tmp;
     AK_header hBroj_int[4], *hTmp;
-    list *row_root;
+    AK_list *row_root;
 
     // create table and fill it for testing purposes
     hTmp = (AK_header *) AK_create_header("Number int", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -225,19 +225,19 @@ void filesearch_test() {
         exit(EXIT_ERROR);
     }
 
-    row_root = malloc(sizeof (list));
+    row_root = malloc(sizeof (AK_list));
     if (row_root == NULL) {
         printf("filesearch_test: ERROR. Cannot allocate row_root.\n", i);
         exit(EXIT_ERROR);
     }
 
     for (i = -10, f = -i; i < 10; i++, f = -i) {
-        InitializeList(row_root);
+        InitL(row_root);
         InsertNewElement(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
         InsertNewElement(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
         InsertNewElement(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);
         insert_row(row_root);
-        DeleteAllElements(row_root);
+        DeleteAllL(row_root);
     }
 
     free(row_root);

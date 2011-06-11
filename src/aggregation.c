@@ -212,8 +212,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_block *temp;
     AK_mem_block *mem_block;
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     i = 0;
     counter = 0;
@@ -341,7 +341,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 					sresult = AK_search_unsorted(new_table, search_parameters, agg_group_number);
 
 					if (sresult.iNum_tuple_addresses == 0) {
-						DeleteAllElements(row_root);
+						DeleteAllL(row_root);
 
 						for (l = 0; l < header_size; l++) {
 							switch (needed_values[l].agg_task) {
@@ -491,7 +491,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 							}
 						}
 						AK_deallocate_search_result(sresult);
-						DeleteAllElements(row_root);
+						DeleteAllL(row_root);
 
 						for (l = 0; l<header_size;l++) {
 							if (needed_values[l].agg_task == AGG_TASK_GROUP)
@@ -529,7 +529,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		if (startAddress != EXIT_ERROR)
 			printf("\nTABLE %s CREATED!\n", agg_table);
 
-    	DeleteAllElements(row_root);
+    	DeleteAllL(row_root);
 
 		for (l = 0; l < header_size; l++) {
 

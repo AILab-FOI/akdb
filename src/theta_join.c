@@ -147,11 +147,11 @@ static void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_blo
     int address, size, type;
     char data[MAX_VARCHAR_LENGTH];
 
-    element row_root_init = (element) malloc(sizeof (list));
-    element row_root_full;
+    AK_list_elem row_root_init = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root_full;
     AK_header *t_header = (AK_header *) AK_get_header(new_table);
 
-    InitializeList(row_root_init);
+    InitL(row_root_init);
 
     for (tbl1_row = 0; tbl1_row < DATA_BLOCK_SIZE; tbl1_row += tbl1_num_att){
 
@@ -189,7 +189,7 @@ static void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_blo
 			}
     	}
 
-    	DeleteAllElements(row_root_init);
+    	DeleteAllL(row_root_init);
     }
 
     free(row_root_init);

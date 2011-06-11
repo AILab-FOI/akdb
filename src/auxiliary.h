@@ -43,33 +43,12 @@ struct list_elem {
     //attribute name
 	char attribute_name[ MAX_ATT_NAME ];
 	int constraint; //if 0 then it is new data for insertion, if 1 then it is a constraint on which update and delete searches the data
-    ///point to next element
+    ///pointer to next element
     struct list_elem *next;
 };
 
 typedef struct list_elem AK_list;
 typedef struct list_elem *AK_list_elem;
-typedef struct list_elem *element;
-typedef struct list_elem list;
-
-///**
-// * @author Matija Novak
-// * @struct list_structure_op
-// * @brief defines a list (obsolete)
-// */
-//typedef struct {
-//    ///START row_element_op
-//    ///structure that reperesents one attribute which is used for projection or nat_join ect.
-//
-//    ///table name
-//    char table[ MAX_ATT_NAME ];
-//    ///needed atribute in the table
-//    char attribute_name[ MAX_ATT_NAME ];
-//    ///next element in list
-//    struct list_structure_op *next;
-//} list_structure_op;
-
-
 
 #define TBL_BOX_OFFSET 1
 //#define TBL_COL_DELIMITER '|'
@@ -80,24 +59,6 @@ enum tbl_valalign {
         ALIGN_LEFT  0,
         ALIGN_RIGHT 1;
 };*/
-
-/**
- * @author Matija Novak, moved to auxiliary.h from fileio.h by Tomislav Mikulček to avoid circular inclusions
- */
-//typedef struct list_structure_ {
-//    ///START row_element
-//    ///structure that reperesents one row of table that is inserted, updated, or deleted
-//    int type; //type of data
-//    unsigned char data[MAX_VARCHAR_LENGTH]; //data
-//    char table[ MAX_ATT_NAME ]; //table name
-//    char attribute_name[ MAX_ATT_NAME ]; //attribute name
-//    int constraint; //if 0 then it is new data for insertion, if 1 then it is a constraint on which update and delete searches the data
-//    ///END row_element
-//    struct list_structure_ *next; //next element in the list
-//} list_structure;
-
-//typedef list_structure *element;
-//typedef list_structure list;
 
 int AK_strcmp(const void *a, const void *b);
 

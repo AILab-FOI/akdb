@@ -434,8 +434,8 @@ void rel_eq_assoc_test() {
 
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     int id = 35890, year = 1999;
     float weight = 80.00;
@@ -444,7 +444,7 @@ void rel_eq_assoc_test() {
     id++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElement(TYPE_INT, &id, tblName, "id", row_root);
     InsertNewElement(TYPE_VARCHAR, "Mirko", tblName, "firstname", row_root);
     InsertNewElement(TYPE_VARCHAR, "Sestak", tblName, "job", row_root);
@@ -455,7 +455,7 @@ void rel_eq_assoc_test() {
     id++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElement(TYPE_INT, &id, tblName, "id", row_root);
     InsertNewElement(TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
     InsertNewElement(TYPE_VARCHAR, "Mesaric", tblName, "job", row_root);
@@ -466,7 +466,7 @@ void rel_eq_assoc_test() {
     id++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElement(TYPE_INT, &id, tblName, "id", row_root);
     InsertNewElement(TYPE_VARCHAR, "Dalibor", tblName, "firstname", row_root);
     InsertNewElement(TYPE_VARCHAR, "Slunjski", tblName, "job", row_root);
@@ -477,7 +477,7 @@ void rel_eq_assoc_test() {
     id++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElement(TYPE_INT, &id, tblName, "id", row_root);
     InsertNewElement(TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
     InsertNewElement(TYPE_VARCHAR, "Alagic", tblName, "job", row_root);
@@ -488,7 +488,7 @@ void rel_eq_assoc_test() {
     id++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElement(TYPE_INT, &id, tblName, "id", row_root);
     InsertNewElement(TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root);
     InsertNewElement(TYPE_VARCHAR, "Zver", tblName, "job", row_root);
@@ -499,7 +499,7 @@ void rel_eq_assoc_test() {
     id++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElement(TYPE_INT, &id, tblName, "id", row_root);
     InsertNewElement(TYPE_VARCHAR, "Josip", tblName, "firstname", row_root);
     InsertNewElement(TYPE_VARCHAR, "Vincek", tblName, "job", row_root);
@@ -535,8 +535,8 @@ void rel_eq_assoc_test() {
 
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName2));
 
-    element row_root2 = (element) malloc(sizeof (list));
-    InitializeList(row_root2);
+    AK_list_elem row_root2 = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root2);
 
     int mbr = 35890;
     year = 1999;
@@ -546,7 +546,7 @@ void rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root2);
+    DeleteAllL(row_root2);
     InsertNewElement(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Matija", tblName2, "firstname", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Sestak", tblName2, "lastname", row_root2);
@@ -557,7 +557,7 @@ void rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root2);
+    DeleteAllL(row_root2);
     InsertNewElement(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Igor", tblName2, "firstname", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Mesaric", tblName2, "lastname", row_root2);
@@ -568,7 +568,7 @@ void rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root2);
+    DeleteAllL(row_root2);
     InsertNewElement(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Dalibor", tblName2, "firstname", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Slunjski", tblName2, "lastname", row_root2);
@@ -579,7 +579,7 @@ void rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root2);
+    DeleteAllL(row_root2);
     InsertNewElement(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Dino", tblName2, "firstname", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Alagic", tblName2, "lastname", row_root2);
@@ -590,7 +590,7 @@ void rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root2);
+    DeleteAllL(row_root2);
     InsertNewElement(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Miroslav", tblName2, "firstname", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Zver", tblName2, "lastname", row_root2);
@@ -601,7 +601,7 @@ void rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root2);
+    DeleteAllL(row_root2);
     InsertNewElement(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Josip", tblName2, "firstname", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Vincek", tblName2, "lastname", row_root2);
@@ -612,7 +612,7 @@ void rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root2);
+    DeleteAllL(row_root2);
     InsertNewElement(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Netko", tblName2, "firstname", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Netkic", tblName2, "lastname", row_root2);
@@ -623,7 +623,7 @@ void rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    DeleteAllElements(row_root2);
+    DeleteAllL(row_root2);
     InsertNewElement(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Dino", tblName2, "firstname", row_root2);
     InsertNewElement(TYPE_VARCHAR, "Laktašić", tblName2, "lastname", row_root2);

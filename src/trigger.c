@@ -29,14 +29,14 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
     int i = 0;
     char tempData[MAX_VARCHAR_LENGTH];
     AK_list_elem temp = (AK_list_elem)FirstL(condition);
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     InsertNewElementForUpdate(TYPE_INT, &trigger, "AK_trigger_conditions", "trigger", row_root, 1);
     if (delete_row(row_root) == EXIT_ERROR)
         return EXIT_ERROR;
 
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     while (temp != NULL) {
         memcpy(tempData, temp->data, temp->size);
         tempData[temp->size] = '\0';
@@ -83,8 +83,8 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
         return EXIT_ERROR;
     }
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     trigg_id = AK_get_id();
     InsertNewElement(TYPE_INT, &trigg_id, "AK_trigger", "obj_id", row_root);
@@ -142,8 +142,8 @@ int AK_trigger_get_id(char *name, char *table) {
 int AK_trigger_remove_by_name(char *name, char *table) {
     int trigg_id = AK_trigger_get_id(name, table);
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     InsertNewElementForUpdate(TYPE_VARCHAR, name, "AK_trigger", "name", row_root, 1);
 
@@ -155,7 +155,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
     }
 
     // the following can be avoided if foreign key is declared...
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElementForUpdate(TYPE_INT, &trigg_id, "AK_trigger_conditions", "trigger", row_root, 1);
     return delete_row(row_root);
 }
@@ -166,8 +166,8 @@ int AK_trigger_remove_by_name(char *name, char *table) {
  * @result EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_remove_by_obj_id(int obj_id) {
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     InsertNewElementForUpdate(TYPE_INT, &obj_id, "AK_trigger", "obj_id", row_root, 1);
 
@@ -179,7 +179,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
     }
 
     // the following can be avoided if foreign key is declared...
-    DeleteAllElements(row_root);
+    DeleteAllL(row_root);
     InsertNewElementForUpdate(TYPE_INT, &obj_id, "AK_trigger_conditions", "trigger", row_root, 1);
     return delete_row(row_root);
 }
@@ -227,8 +227,8 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
         return EXIT_ERROR;
     }
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     if (obj_id != NULL)
         InsertNewElementForUpdate(TYPE_INT, obj_id, "AK_trigger", "obj_id", row_root, 1);
@@ -308,8 +308,8 @@ AK_list *AK_trigger_get_conditions(int trigger) {
 void trigger_test() {
     printf("trigger.c: Present!\n");
 
-    element row_root = (element) malloc(sizeof (list));
-    InitializeList(row_root);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    InitL(row_root);
 
     int i = AK_get_id();
     InsertNewElement(TYPE_INT, &i, "AK_function", "obj_id", row_root);

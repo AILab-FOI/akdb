@@ -93,12 +93,12 @@ void create_join_block_header(int table_address1, int table_address2, char *new_
  * @param new_table - name of the nat_join table
  * @return void
  */
-void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_block, char *new_table) {
+void merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *temp_block, char *new_table) {
     dbg_messg(HIGH, REL_OP, "\n MERGE NAT JOIN...");
 
-    element some_element;
-    list * row_root_insert2 = (list *) malloc(sizeof (list));
-    InitializeList(row_root_insert2);
+    AK_list_elem some_element;
+    AK_list * row_root_insert2 = (AK_list *) malloc(sizeof (AK_list));
+    InitL(row_root_insert2);
 
     int i; //counter of tuple_dicts
     int head; //counter of the headers
@@ -116,7 +116,7 @@ void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_bloc
         something_to_copy = 1;
 
         //make a copy of insert row list of the first table
-        some_element = (element) GetFirstElement(row_root_insert);
+        some_element = (AK_list_elem) FirstL(row_root_insert);
 
         while (some_element != NULL) {
             InsertNewElementForUpdate(some_element->type, some_element->data, new_table, some_element->attribute_name, row_root_insert2, 0);
@@ -126,7 +126,7 @@ void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_bloc
         //going through headers of the second table
         while (strcmp(temp_block->header[head].att_name, "") != 0) {
             //going through list of elements to compare
-            some_element = (element) GetFirstElement(row_root);
+            some_element = (AK_list_elem) FirstL(row_root);
 
             while (some_element != NULL) {
                 size = temp_block->tuple_dict[i].size;
@@ -169,7 +169,7 @@ void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_bloc
         if (something_to_copy) {
             insert_row(row_root_insert2);
         }
-        DeleteAllElements(row_root_insert2);
+        DeleteAllL(row_root_insert2);
     }
     free(row_root_insert2);
 }
@@ -187,10 +187,10 @@ void merge_block_join(list *row_root, list *row_root_insert, AK_block *temp_bloc
 void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
     dbg_messg(HIGH, REL_OP, "\n COPYING NAT JOIN");
 
-    list *row_root = (list *) malloc(sizeof (list));
-    list *row_root_insert = (list *) malloc(sizeof (list));
-    InitializeList(row_root);
-    InitializeList(row_root_insert);
+    AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *row_root_insert = (AK_list *) malloc(sizeof (AK_list));
+    InitL(row_root);
+    InitL(row_root_insert);
     AK_list_elem list_elem;
 
     int i;
@@ -248,8 +248,8 @@ void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_l
         if (something_to_copy) {
             //merge data with second table
             merge_block_join(row_root, row_root_insert, tbl2_temp_block, new_table);
-            DeleteAllElements(row_root);
-            DeleteAllElements(row_root_insert);
+            DeleteAllL(row_root);
+            DeleteAllL(row_root_insert);
         }
     }
     free(row_root);

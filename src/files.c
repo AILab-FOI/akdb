@@ -54,8 +54,8 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
                 break;
         }
 		
-        element row_root = (element) malloc(sizeof (list));
-        InitializeList(row_root);
+        AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+        InitL(row_root);
         //DeleteAllElements(row_root);
         InsertNewElement(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
         InsertNewElement(TYPE_VARCHAR, name, sys_table, "name", row_root);

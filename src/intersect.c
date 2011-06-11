@@ -58,7 +58,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
         free(header);
 
-        list *row_root = (list *) malloc(sizeof (list));
+        AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
 
         //TABLE1: for each extent in table1
         for (i = 0; src_addr1->address_from[i] != 0; i++) {
@@ -129,7 +129,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                         InsertNewElementForUpdate(type, data1, dstTable, tbl1_temp_block->block->header[n].att_name, row_root, 0);
                                                     }
                                                     insert_row(row_root);
-                                                    DeleteAllElements(row_root);
+                                                    DeleteAllL(row_root);
                                                 }
                                             }
                                         }

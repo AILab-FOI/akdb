@@ -324,6 +324,24 @@ AK_list_elem GetNthL(int pos, AK_list *row) {
 }
 
 /**
+ * @author Matija Novak
+ * Get the posititn of given element
+ * @param SearchElement - element whose posititon we search for
+ * @param L - root of the list
+ * @result returns the posititon number of some elelemnt
+ */
+int GetPositionOfElement(AK_list_elem SearchedElement, AK_list *L) {
+    AK_list *CurrentElement;
+    int i = 0;
+    CurrentElement = L;
+    while (CurrentElement->next != 0 && CurrentElement != SearchedElement) {
+        CurrentElement = (AK_list *) CurrentElement->next;
+        i++;
+    }
+    return i;
+}
+
+/**
  * @author Dino Laktašić.
  * @brief  Get all permutations without repetition (currently not used, but it can be helpful)
  * @param char *arr - array of chars to permute
