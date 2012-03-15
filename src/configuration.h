@@ -368,5 +368,29 @@
 #define RO_EXCEPT 'e'
 #define RO_THETA_JOIN 't'
 
+/**
+\def NEW_VALUE
+\brief indicates data is new value
+ */
+#define NEW_VALUE 0
+
+/**
+\def SEARCH_CONSTRAINT
+\brief indicates data is constraint to search for
+ */
+#define SEARCH_CONSTRAINT 1
+
+/**
+\def UPDATE
+\brief indicates operation to be performed is update
+ */
+#define UPDATE 0
+
+/**
+\def DELETE
+\brief indicates operation to be performed is delete
+ */
+#define DELETE 1
+
 #endif
 

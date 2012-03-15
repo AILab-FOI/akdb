@@ -27,7 +27,7 @@
         @param table - table name
         @param attribute_name - attribute name
         @param element - element after we which insert the new element
-        @param constraint - 0 if data is new value, 1 if data is constraint to search for
+        @param constraint - NEW_VALUE if data is new value, SEARCH_CONSTRAINT if data is constraint to search for
         @result void
  */
 void InsertNewElementForUpdate(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint) {
@@ -58,11 +58,11 @@ void InsertNewElementForUpdate(int newtype, void * data, char * table, char * at
         @param table - table name
         @param attribute_name - attribute name
         @param element - element after we which insert the new element
-        @param constraint - is 0
+        @param constraint - is NEW_VALUE
         @result void
  */
 void InsertNewElement(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore) {
-    InsertNewElementForUpdate(newtype, data, table, attribute_name, ElementBefore, 0);
+    InsertNewElementForUpdate(newtype, data, table, attribute_name, ElementBefore, NEW_VALUE);
 }
 
 //END SPECIAL FUNCTIONS row_element_structure
@@ -175,7 +175,7 @@ int insert_row(AK_list *row_root) {
         update or delete rows table block
         @param temp_block - block to work with
         @param row_list - list of elements which contain data for delete or update
-        @param operation -if 0 then update, if 1 then delete
+        @param operation - UPDATE or DELETE
         @result void
  */
 void update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, int operation) {
@@ -230,7 +230,7 @@ void update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, int o
 
 					//update if there is varchar which we must change (when yes we delete old data and insert new one else only update data)
                     if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && 
-						(some_element->constraint == 0) && (operation == 0) && 
+						(some_element->constraint == 0) && (operation == UPDATE) && 
 						(diff_varchar_exist == 0) && (type == TYPE_VARCHAR)) {
 
 						memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
@@ -247,7 +247,7 @@ void update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, int o
                 //i++; //next tuple dict
         }
 		
-        if (operation == 1) {//delete
+        if (operation == DELETE) {//delete
             if ((exists_equal_attrib == 1) && (del == 1)) {
                 int j, k, l;
 				
@@ -343,7 +343,7 @@ void update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, int o
 /**	@author Matija Novak, updated by Matija Šestak (function now uses caching)
         function update or delete the whole segment of an table
         @param row_root -  elements of one row
-        @param del - 1 we make delete, 0 we make update
+        @param del - DELETE or UPDATE
         @returs EXIT_SUCCESS if success
  */
 int delete_update_segment(AK_list *row_root, int del) {
