@@ -33,7 +33,7 @@
  */
 int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable, char *parentAttNames[], int attNum, char *constraintName, int type) {
     int i;
-    if (type != REF_TYPE_CASCADE && type != REF_TYPE_NO_ACTION && type != REF_TYPE_RESTRICT && type != REF_TYPE_SET_DEFAULT && type != REF_TYPE_SET_NULL) return;
+    if (type != REF_TYPE_CASCADE && type != REF_TYPE_NO_ACTION && type != REF_TYPE_RESTRICT && type != REF_TYPE_SET_DEFAULT && type != REF_TYPE_SET_NULL) return 0;
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     InitL(row_root);
@@ -115,10 +115,10 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
  * A quick check if there are any referential constraints that should be applied on a given list of changes.
  * @author Dejan Frankovic
  * @param list of elements for update
- * @param is it update(0) or delete(1) action?
+ * @param is action UPDATE or DELETE ?
  * @result EXIT_SUCCESS if update is needed, EXIT_ERROR if not
  */
-int AK_reference_check_if_update_needed(AK_list *lista, int delete) {
+int AK_reference_check_if_update_needed(AK_list *lista, int action) {
     AK_list_elem temp;
     int i = 0, j, con_num = 0;
     AK_list *row;
@@ -127,9 +127,9 @@ int AK_reference_check_if_update_needed(AK_list *lista, int delete) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
             temp = FirstL(lista);
             while (temp != NULL) {
-                if (delete == 0 && temp->constraint == 0 && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0)
+                if (action == UPDATE && temp->constraint == 0 && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0)
                     return EXIT_SUCCESS;
-                else if (delete == 1 && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0)
+                else if (action == DELETE && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0)
                     return EXIT_SUCCESS;
                 temp = NextL(temp);
             }
@@ -143,10 +143,10 @@ int AK_reference_check_if_update_needed(AK_list *lista, int delete) {
 /**
  * Checks for REF_TYPE_RESTRICT references appliable to the operation of updating or deleting a row in a table.
  * @param list of elements for update
- * @param is it update(0) or delete(1) action?
+ * @param is action UPDATE or DELETE?
  * @result EXIT_SUCCESS if there is no restriction on this action, EXIT_ERROR if there is
  */
-int AK_reference_check_restricion(AK_list *lista, int delete) {
+int AK_reference_check_restricion(AK_list *lista, int action) {
     AK_list_elem temp;
     int i = 0, j, con_num = 0;
     AK_list *row;
@@ -155,9 +155,9 @@ int AK_reference_check_restricion(AK_list *lista, int delete) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
             temp = FirstL(lista);
             while (temp != NULL) {
-                if (delete == 0 && temp->constraint == 0 && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
+                if (action == UPDATE && temp->constraint == 0 && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
                     return EXIT_ERROR;
-                else if (delete == 1 && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
+                else if (action == DELETE && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
                     return EXIT_ERROR;
                 temp = NextL(temp);
             }
@@ -171,10 +171,10 @@ int AK_reference_check_restricion(AK_list *lista, int delete) {
 /**
  * Updates child table entries according to ongoing update of parent table entries.
  * @param list of elements for update
- * @param is it update(0) or delete(1) action?
+ * @param is action UPDATE or DELETE ?
  * @result EXIT_SUCCESS
  */
-int AK_reference_update(AK_list *lista, int delete) {
+int AK_reference_update(AK_list *lista, int action) {
     int parent_i, i, j, ref_i, con_num = 0;
     AK_list *parent_row;
     AK_list *ref_row;
@@ -212,7 +212,7 @@ int AK_reference_update(AK_list *lista, int delete) {
     i = 0;
     temp = FirstL(lista);
     while (temp != NULL) {
-        if (delete == 1 || temp->constraint == 1) {
+        if (action == DELETE || temp->constraint == 1) {
             InsertAtEndL(TYPE_OPERAND, temp->attribute_name, strlen(temp->attribute_name), &expr);
             InsertAtEndL(temp->type, temp->data, AK_type_size(temp->type, temp->data), &expr);
             InsertAtEndL(TYPE_OPERATOR, "=", 1, &expr);
@@ -247,7 +247,7 @@ int AK_reference_update(AK_list *lista, int delete) {
 
                 switch (reference.type) {
                     case REF_TYPE_CASCADE:
-                        if (delete == 0) {
+                        if (action == UPDATE) {
                             temp = FirstL(lista);
                             while (temp != NULL) {
                                 if (strcmp(temp->attribute_name, reference.parent_attributes[j]) == 0 && temp->constraint == 0) {
@@ -266,7 +266,7 @@ int AK_reference_update(AK_list *lista, int delete) {
                     case REF_TYPE_SET_DEFAULT: // default values are currently unsupported by this DBMS... reserved for future use
                         break;
                     case REF_TYPE_SET_NULL:
-                        if (delete == 1) {
+                        if (action == DELETE) {
                             InsertNewElementForUpdate(0, "", reference.table, reference.attributes[j], row_root, 0);
                         } else {
                             temp = FirstL(lista);
@@ -283,7 +283,7 @@ int AK_reference_update(AK_list *lista, int delete) {
             }
 
             //InsertNewElementForUpdate(tempcell->type, "" ,ref_row->next->data, ref_row->next->next->next->data, row_root,0);
-            if (delete == 0 || reference.type == REF_TYPE_SET_NULL)
+            if (action == UPDATE || reference.type == REF_TYPE_SET_NULL)
                 update_row(row_root);
             else
                 delete_row(row_root);
