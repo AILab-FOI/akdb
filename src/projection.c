@@ -175,7 +175,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
  */
 int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
     //geting the table addresses from table on which we make projection
-    table_addresses *src_addr = (table_addresses *) get_table_addresses(srcTable);
+    table_addresses *src_addr = (table_addresses *) AK_get_table_addresses(srcTable);
 
     if (src_addr->address_from[0] != 0) {
         //create new segmenet for the projection table

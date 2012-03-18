@@ -42,7 +42,7 @@ void AKcreateIndex(char *tblName, AK_list *attributes) {
     int num_attr, num_rec;
     int i, j, k;
     //start and end addresses of segment's
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
     num_attr = AK_num_attr(tblName);
     num_rec = AK_get_num_records(tblName);
@@ -251,7 +251,7 @@ void printHeaderTest(char* tblName) {
  * @param headerIndex - header of index table
  */
 void createIndex(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex) {
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
 
     //AK_header *t_header = AK_get_header( tblNameIndex );
@@ -356,7 +356,7 @@ list_ad* getAttribute(char *indexName, char *attribute) {
     int num_attr, num_rec;
     int i, j, k;
     //start and end addresses of segment's
-    table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(indexName);
 
     num_attr = AK_num_attr(indexName);
     num_rec = AK_get_num_records(indexName);
@@ -486,7 +486,7 @@ list_ad* AKgetAttribute(char *tableName, char *attributeName, char *attributeVal
 
     // printf("Naziv indexa: %s",indexName);
 
-    table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(indexName);
     AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
     if (addresses->address_from[ 0 ] == 0) {
         printf("Ne postoji index za tablicu: %s nad atributom: %s", tableName, attributeName);
@@ -543,7 +543,7 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
         exit(1);
     }
 
-    table_addresses *addresses = (table_addresses*) get_table_addresses(indexName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(indexName);
     AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
     if (addresses->address_from[ 0 ] == 0) {
         printf("Ne postoji index za tablicu: %s nad atributom: %s", tableName, attributeName);

@@ -30,7 +30,7 @@
  @author Mislav Čakarić
  */
 int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr) {
-    table_addresses *adresses = (table_addresses *)get_table_addresses(old_table_name);
+    table_addresses *adresses = (table_addresses *)AK_get_table_addresses(old_table_name);
     int tab_addresses[MAX_NUM_OF_BLOCKS];
     int num_extents = 0, num_blocks = 0;
     register int i, j;

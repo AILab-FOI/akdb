@@ -376,7 +376,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
         when form and to are 0 you are on the end of addresses
         @param table - table name that you search for
  */
-table_addresses *get_table_addresses(char *table) {
+table_addresses *AK_get_table_addresses(char *table) {
     return AK_get_segment_addresses(table, SEGMENT_TYPE_TABLE);
 }
 
@@ -386,7 +386,7 @@ table_addresses *get_table_addresses(char *table) {
         when form and to are 0 you are on the end of addresses
         @param index - index name that you search for
  */
-table_addresses *get_index_addresses(char * index) {
+table_addresses *AK_get_index_addresses(char * index) {
     return AK_get_segment_addresses(index, SEGMENT_TYPE_INDEX);
 }
 
@@ -396,7 +396,7 @@ table_addresses *get_index_addresses(char * index) {
         @param address - addresses of extents
         @returns int - address of the block to write in
  */
-int find_free_space(table_addresses * addresses) {
+int AK_find_free_space(table_addresses * addresses) {
     AK_mem_block *mem_block;
     int from = 0, to = 0, j = 0, i = 0;
 
@@ -538,6 +538,6 @@ int AK_flush_cache() {
     return EXIT_SUCCESS;
 }
 
-void memoman_test() {
+void AK_memoman_test() {
 
 }

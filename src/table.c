@@ -34,7 +34,7 @@
 int AK_num_attr(char * tblName) {
     int num_attr = 0;
 
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0)
         num_attr = -1;
     else {
@@ -68,7 +68,7 @@ int AK_num_attr(char * tblName) {
  */
 int AK_get_num_records(char *tblName) {
     int num_rec = 0;
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0)
         return -1;
     int i = 0, j, k;
@@ -105,7 +105,7 @@ int AK_get_num_records(char *tblName) {
  * @result AK_header* - array of table header
  */
 AK_header *AK_get_header(char *tblName) {
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0)
         return 0;
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
@@ -169,7 +169,7 @@ AK_list *AK_get_column(int num, char *tblName) {
     AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
     InitL(row_root);
 
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     int i, j, k;
     char data[ MAX_VARCHAR_LENGTH ];
 
@@ -202,7 +202,7 @@ AK_list *AK_get_column(int num, char *tblName) {
  * @result AK_list* - row values list
  */
 AK_list * AK_get_row(int num, char * tblName) {
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     AK_header *t_header = AK_get_header(tblName);
 
     AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
@@ -256,7 +256,7 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
     if (row >= num_rows || column >= num_attr)
         return NULL;
 
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
     AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
     InitL(row_root);
@@ -404,7 +404,7 @@ AK_print_row(int col_len[], AK_list *row) {
  * @return void
  */
 void AK_print_table(char *tblName) {
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0) {
         printf("Table %s does not exist!\n", tblName);
     } else {
@@ -533,7 +533,7 @@ void AK_print_table(char *tblName) {
  * @result int - ture/false
  */
 int AK_table_empty(char *tblName) {
-    table_addresses *addresses = (table_addresses*) get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
     return (temp->block->last_tuple_dict_id == 0) ? 1 : 0;
 }

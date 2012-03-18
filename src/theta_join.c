@@ -29,8 +29,8 @@
  */
 static int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table) {
 
-	table_addresses *src_addr1 = (table_addresses *) get_table_addresses(srcTable1);
-	table_addresses *src_addr2 = (table_addresses *) get_table_addresses(srcTable2);
+	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
+	table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
 
 	int table_address1 = src_addr1->address_from[0];
 	int table_address2 = src_addr2->address_from[0];
@@ -209,8 +209,8 @@ static void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_blo
  */
 int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *constraints) {
 
-	table_addresses *src_addr1 = (table_addresses *) get_table_addresses(srcTable1);
-    table_addresses *src_addr2 = (table_addresses *) get_table_addresses(srcTable2);
+	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
+    table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
 
     int startAddress1 = src_addr1->address_from[0];
     int startAddress2 = src_addr2->address_from[0];

@@ -51,7 +51,7 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
     if (aspParams == NULL || iNum_search_params == 0)
         return srResult;
 
-    taAddresses = get_table_addresses(szRelation);
+    taAddresses = AK_get_table_addresses(szRelation);
 
     /// iterate through all the blocks
     for (k = 0; k < MAX_EXTENTS_IN_SEGMENT && taAddresses->address_from[k] > 0; k++) { // 200 == Novak's magic number :)

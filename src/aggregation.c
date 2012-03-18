@@ -203,7 +203,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     j = 0;
 
 
-    table_addresses *addresses = (table_addresses*) get_table_addresses(source_table);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(source_table);
     int num_attr = AK_num_attr(source_table);
 
     int k, l, m, n, o, counter;
@@ -582,7 +582,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     }
 
     //@TODO zamijeniti ovaj segment sa AK_drop_table() jednom kad ga netko napravi
-	addresses = (table_addresses*) get_table_addresses(new_table);
+	addresses = (table_addresses*) AK_get_table_addresses(new_table);
 	i = 0;
 	while (addresses->address_from[i] != 0) {
 		AK_delete_extent(addresses->address_from[i], addresses->address_to[i]);

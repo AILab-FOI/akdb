@@ -153,7 +153,7 @@ int insert_row(AK_list *row_root) {
 	dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
 
-    adr_to_write = (int) find_free_space(get_table_addresses(&table));
+    adr_to_write = (int) AK_find_free_space(AK_get_table_addresses(&table));
     if (adr_to_write == -1)
         adr_to_write = (int) AK_init_new_extent(table, SEGMENT_TYPE_TABLE);
 
@@ -355,7 +355,7 @@ int delete_update_segment(AK_list *row_root, int del) {
     table[strlen(some_element->table)] = '\0';
     dbg_messg(HIGH, FILE_MAN, "delete_update_segment: table to delete_update from: %s, source %s\n", table, some_element->table);
 
-    table_addresses * addresses = (table_addresses *) get_table_addresses(&table);
+    table_addresses * addresses = (table_addresses *) AK_get_table_addresses(&table);
 
     AK_mem_block *mem_block;
     int startAddress, j, i;

@@ -27,8 +27,8 @@
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
-	table_addresses *src_addr1 = (table_addresses*) get_table_addresses(srcTable1);
-    table_addresses *src_addr2 = (table_addresses*) get_table_addresses(srcTable2);
+	table_addresses *src_addr1 = (table_addresses*) AK_get_table_addresses(srcTable1);
+    table_addresses *src_addr2 = (table_addresses*) AK_get_table_addresses(srcTable2);
 
     int startAddress1 = src_addr1->address_from[0];
     int startAddress2 = src_addr2->address_from[0];

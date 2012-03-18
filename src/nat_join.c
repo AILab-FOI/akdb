@@ -266,8 +266,8 @@ void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_l
  * @return if success returns EXIT_SUCCESS
  */
 int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
-    table_addresses *src_addr1 = (table_addresses *) get_table_addresses(srcTable1);
-    table_addresses *src_addr2 = (table_addresses *) get_table_addresses(srcTable2);
+    table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
+    table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
 
     int startAddress1 = src_addr1->address_from[0];
     int startAddress2 = src_addr2->address_from[0];

@@ -91,7 +91,7 @@ void AK_sort_segment(char *table_name, char *attr) {
     //---------------------------------------------------------------------------------
 	
     //Get number of extents and number of blocks for given table
-	table_addresses *addresses = (table_addresses *) get_table_addresses(table_name);
+	table_addresses *addresses = (table_addresses *) AK_get_table_addresses(table_name);
 	
     for (i = 0; addresses->address_from[i] != 0; i++) {
         for (j = addresses->address_from[i]; j <= addresses->address_to[i]; j++) {
@@ -120,7 +120,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 	//---------------------------------------------------------------------------------
     
 	//search for all blocks in segment
-    addresses = (table_addresses *) get_table_addresses(temp_segment);
+    addresses = (table_addresses *) AK_get_table_addresses(temp_segment);
 
     for (i = 0; addresses->address_from[i] != 0; i++) {
         for (j = addresses->address_from[i]; j <= addresses->address_to[i]; j++) {

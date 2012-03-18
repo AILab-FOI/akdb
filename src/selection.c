@@ -41,7 +41,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 
     dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
 
-    table_addresses *src_addr = (table_addresses*) get_table_addresses(srcTable);
+    table_addresses *src_addr = (table_addresses*) AK_get_table_addresses(srcTable);
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     InitL(row_root);
