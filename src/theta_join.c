@@ -226,8 +226,8 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
 
         AK_mem_block *tbl1_temp_block, *tbl2_temp_block;
 
-        int i, j, k, l, m;
-        i = j = k = l = m = 0;
+        int i, j, k, l;
+        i = j = k = l = 0;
 
         //for each extent in table1 that contains blocks needed for join
         for (i = 0; (i < src_addr1->address_from[i]) != 0; i++) {
