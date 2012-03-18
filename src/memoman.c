@@ -283,7 +283,7 @@ int AK_refresh_cache() {
         when form and to are 0 you are on the end of addresses
         @param table - table name that you search for
  */
-table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
+table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     int i = 0;
     int freeVar = 0;
     int data_adr = 0;
@@ -377,7 +377,7 @@ table_addresses *get_segment_addresses(char * segmentName, int segmentType) {
         @param table - table name that you search for
  */
 table_addresses *get_table_addresses(char *table) {
-    return get_segment_addresses(table, SEGMENT_TYPE_TABLE);
+    return AK_get_segment_addresses(table, SEGMENT_TYPE_TABLE);
 }
 
 /** 	@author Mislav Čakarić
@@ -387,7 +387,7 @@ table_addresses *get_table_addresses(char *table) {
         @param index - index name that you search for
  */
 table_addresses *get_index_addresses(char * index) {
-    return get_segment_addresses(index, SEGMENT_TYPE_INDEX);
+    return AK_get_segment_addresses(index, SEGMENT_TYPE_INDEX);
 }
 
 /** 	@author Matija Novak, updated by Matija Šestak( function now uses caching)
@@ -448,7 +448,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
 	int old_size = 0;
 	int new_size = 0;
 
-	table_addresses *addresses = (table_addresses *) get_segment_addresses(table_name, SEGMENT_TYPE_TABLE);
+	table_addresses *addresses = (table_addresses *) AK_get_segment_addresses(table_name, SEGMENT_TYPE_TABLE);
     int block_address = addresses->address_from[0]; //before 1
     int block_written;
 	
