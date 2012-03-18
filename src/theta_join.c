@@ -184,7 +184,7 @@ static void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_blo
 				InsertNewElement(type, data, new_table, t_header[tbl1_att + tbl2_att].att_name, row_root_full);
 			}
 
-			if (AK_check_expr(row_root_full, constraints)){
+			if (AK_check_if_row_satisfies_expression(row_root_full, constraints)){
     			insert_row(row_root_full);
 			}
     	}

@@ -19,18 +19,18 @@
  */
 
 /**
- * @brief  Value comparison according to data type
+ * @brief  Value comparison according to data type, checks aritmetic statement in whole expression given in the function below
  * @author Dino Laktašić, abstracted by Tomislav Mikulček
- * @param el - list element
- * @param *op - comparison operator
+ * @param el - list element, last element put in list temp which holds elements of row ordered according to expression and results of their evaluation
+ * @param *op - comparison operator 
  * @param *a - left operand
  * @param *b - right operand
- * @return int - 0 if false, 1 if true
+ * @return int - 0 if arithmetic statement is false, 1 if arithmetic statement is true
  */
 
 #include "expression_check.h"
 
-static int AK_check_rs(AK_list_elem el, const char *op, const void *a, const void *b) {
+static int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a, const void *b) {
 
 	if(strcmp(op, "<") == 0){
 
@@ -143,13 +143,13 @@ static int AK_check_rs(AK_list_elem el, const char *op, const void *a, const voi
 }
 
 /**
- * @brief  Evaluate logical expression
+ * @brief  Evaluate whether one record (row) satisfies logical expression
  * @author Matija Šestak, updated by Dino Laktašić, abstracted by Tomislav Mikulček
  * @param row_root - beggining of the row that is to be evaluated
  * @param *expr - list with the logical expression in posfix notation
- * @result int - 0 if false, 1 if true
+ * @result int - 0 if row does not satisfy, 1 if row satisfies expresson
  */
-int AK_check_expr(AK_list_elem row_root, AK_list *expr) {
+int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
 
 	int true = 1, false = 0;
     int found, result;
@@ -164,7 +164,7 @@ int AK_check_expr(AK_list_elem row_root, AK_list *expr) {
     char data[MAX_VARCHAR_LENGTH];
 
     while (el) {
-
+     
         if (el->type == TYPE_ATTRIBS) {
 
             found = 0;
@@ -231,7 +231,7 @@ int AK_check_expr(AK_list_elem row_root, AK_list *expr) {
             } else {
 
                 int rs;
-                rs = AK_check_rs(b, el->data, a->data, b->data);
+                rs = AK_check_arithmetic_statement(b, el->data, a->data, b->data);
                 InsertAtEndL(TYPE_INT, &rs, sizeof (int), temp);
             }
 

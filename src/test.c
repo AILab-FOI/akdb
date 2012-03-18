@@ -830,5 +830,5 @@ void create_test_tables() {
     DeleteAllL(row_root);
     free(row_root);
     //------------------------------------------------------------------------------------------------------
-
+    op_theta_join_test();
 }

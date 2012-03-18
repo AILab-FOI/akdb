@@ -71,7 +71,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 					InsertNewElement(type, data, dstTable, t_header[l].att_name, row_root);
 				}
 
-				if (AK_check_expr(row_root, expr))
+				if (AK_check_if_row_satisfies_expression(row_root, expr))
                     insert_row(row_root);
 
 				DeleteAllL(row_root);
