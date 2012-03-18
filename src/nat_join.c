@@ -106,7 +106,6 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
     int size;
     int overflow;
     int not_in_list = 1;
-    int freeVar;
 
     char data[MAX_VARCHAR_LENGTH];
 
@@ -199,7 +198,6 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, A
     int size;
     int overflow;
     int not_in_list = 1;
-    int freeVar;
     char data[MAX_VARCHAR_LENGTH];
 
     //going through tuple_dict of the table block
