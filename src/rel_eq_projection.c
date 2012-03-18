@@ -691,7 +691,7 @@ void AK_print_rel_eq_projection(AK_list *list_rel_eq) {
  * @brief Test rel_eq_selection
  * @author Dino Laktašić.
  */
-void rel_eq_projection_test() {
+void AK_rel_eq_projection_test() {
     printf("rel_eq_projection.c: Present!\n");
     printf("\n********** REL_EQ_PROJECTION TEST by Dino Laktašić **********\n");
 

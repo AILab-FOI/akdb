@@ -606,7 +606,7 @@ int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_tem
 		return num_att1;
 }
 
-void table_test() {
+void AK_table_test() {
     printf("table.c: Present!\n");
 
     printf("\n********** TABLE ABSTRACTION TEST by Matija Šestak **********\n\n");

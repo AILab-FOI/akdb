@@ -26,7 +26,7 @@
  * @param const void *b - second value
  * @return int - returns result of comparison
  */
-int compare(const void *a, const void *b) {
+int AK_compare(const void *a, const void *b) {
     return ((*(struct cost_eval_t*) a).value - (*(struct cost_eval_t*) b).value);
 }
 
@@ -81,7 +81,7 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                                 strcpy(cost[0].data, temp_elem->data);
                                 strcpy(cost[1].data, temp_elem_prev->data);
                                 strcpy(cost[2].data, list_elem_next->data);
-                                qsort(cost, 3, sizeof (cost_eval), compare);
+                                qsort(cost, 3, sizeof (cost_eval), AK_compare);
 
                                 //printf("ROW_COUNT: (%s) %i rows\n", cost[0].data, cost[0].value);
                                 //printf("ROW_COUNT: (%s) %i rows\n", cost[1].data, cost[1].value);
@@ -160,7 +160,7 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                                 if ((list_elem_next->next)->type == TYPE_OPERAND) {
                                     cost[next_cost].value = AK_get_num_records((list_elem_next->next)->data);
                                     strcpy(cost[next_cost].data, (list_elem_next->next)->data);
-                                    qsort(cost, 3, sizeof (cost_eval), compare);
+                                    qsort(cost, 3, sizeof (cost_eval), AK_compare);
                                 }
 
                                 //if values for all three relations are saved, rearrange tables in list
@@ -292,7 +292,7 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                                     //see comment on the previous operator for getting heuristics values
                                     cost[next_cost].value = AK_get_num_records((list_elem_next->next)->data);
                                     strcpy(cost[next_cost].data, (list_elem_next->next)->data);
-                                    qsort(cost, 3, sizeof (cost_eval), compare);
+                                    qsort(cost, 3, sizeof (cost_eval), AK_compare);
                                     temp_elem = (AK_list_elem) EndL(temp);
 
                                     next_cost = 1;
@@ -404,7 +404,7 @@ void AK_print_rel_eq_assoc(AK_list *list_rel_eq) {
     }
 }
 
-void rel_eq_assoc_test() {
+void AK_rel_eq_assoc_test() {
     printf("rel_eq_assoc.c: Present!\n");
     printf("\n********** REL_EQ_ASSOCIATIVITY TEST by Dino Laktašić **********\n");
 

@@ -78,7 +78,7 @@ int main()
 		if( AK_memoman_init() == EXIT_SUCCESS )
 		{
 			/* component test area --- begin */
-			create_test_tables();
+			AK_create_test_tables();
 			
 //			files_test();
 //			fileio_test();

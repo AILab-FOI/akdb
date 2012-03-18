@@ -225,7 +225,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
  * @brief  Function for projection operator testing
  * @author Dino Laktašić
  */
-void op_projection_test() {
+void AK_op_projection_test() {
     printf("\n********** PROJECTION TEST **********\n\n");
 
     AK_list *att = (AK_list *) malloc(sizeof (AK_list));

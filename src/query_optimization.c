@@ -214,7 +214,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
     return temp;
 }
 
-void query_optimization_test(AK_list *list_query) {
+void AK_query_optimization_test(AK_list *list_query) {
     printf("query_optimization.c: Present!\n");
     printf("\n********** QUERY OPTIMIZATION TEST by Dino Laktašić **********\n");
 

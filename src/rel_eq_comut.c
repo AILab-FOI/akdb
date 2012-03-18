@@ -19,6 +19,6 @@
 
 #include "rel_eq_comut.h"
 
-void rel_eq_comut_test() {
+void AK_rel_eq_comut_test() {
     printf("rel_eq_comut.c: Present!\n");
 }

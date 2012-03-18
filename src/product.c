@@ -169,7 +169,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
  * @brief  Function for product operator testing
  * @author Dino Laktašić
  */
-void op_product_test() {
+void AK_op_product_test() {
     printf("\n********** PRODUCT TEST **********\n\n");
 
     AK_product("employee", "department", "product_test");

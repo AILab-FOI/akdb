@@ -27,7 +27,7 @@
  * @param new_table - name of the destination table
  * @return int - returns EXIT_SUCCESS if the header was successfully created and EXIT_ERROR if the renamed headers are too long
  */
-static int create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table) {
+static int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table) {
 
 	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
 	table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
@@ -140,7 +140,7 @@ static int create_theta_join_header(char *srcTable1, char * srcTable2, char *new
  * @param constraints - list of attributes, (in)equality and logical operators which are the conditions for the join in postfix notation
  * @param new_table - name of the theta_join table
  */
-static void check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
+static void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
     dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
 
     int tbl1_att, tbl2_att, tbl1_row, tbl2_row;
@@ -218,7 +218,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
     int tbl2_num_att = AK_num_attr(srcTable2);
 
     if ((startAddress1 != 0) && (startAddress2 != 0)) {
-        if (create_theta_join_header(srcTable1, srcTable2, dstTable) == EXIT_ERROR)
+        if (AK_create_theta_join_header(srcTable1, srcTable2, dstTable) == EXIT_ERROR)
         	return EXIT_ERROR;
 
         dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
@@ -261,7 +261,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
                                     //if there is data in the block
                                     if (tbl2_temp_block->block->free_space != 0) {
 
-                                    		check_constraints(tbl1_temp_block->block, tbl2_temp_block->block, tbl1_num_att, tbl2_num_att, constraints, dstTable);
+                                    		AK_check_constraints(tbl1_temp_block->block, tbl2_temp_block->block, tbl1_num_att, tbl2_num_att, constraints, dstTable);
                                     }
                                 }
                             } else break;
@@ -293,7 +293,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
  * @author Tomislav Mikulček
  * @return void
  */
-void op_theta_join_test() {
+void AK_op_theta_join_test() {
     printf("\n********** THETA JOIN TEST **********\n\n");
 
     AK_list *constraints = (AK_list *) malloc(sizeof (AK_list));

@@ -305,7 +305,7 @@ AK_list *AK_trigger_get_conditions(int trigger) {
     return result;
 }
 
-void trigger_test() {
+void AK_trigger_test() {
     printf("trigger.c: Present!\n");
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));

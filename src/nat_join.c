@@ -28,7 +28,7 @@
  * @param att_root - attributes on which we make nat_join
  * @return void
  */
-void create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att) {
+void AK_create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att) {
     AK_block *temp_block = (AK_block *) AK_read_block(table_address1);
     
 	//Currently it works with headers no longer than MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
@@ -93,7 +93,7 @@ void create_join_block_header(int table_address1, int table_address2, char *new_
  * @param new_table - name of the nat_join table
  * @return void
  */
-void merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *temp_block, char *new_table) {
+void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *temp_block, char *new_table) {
     dbg_messg(HIGH, REL_OP, "\n MERGE NAT JOIN...");
 
     AK_list_elem some_element;
@@ -184,7 +184,7 @@ void merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *tem
  * @param new_table - name of the nat_join table
  * @return void
  */
-void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
+void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
     dbg_messg(HIGH, REL_OP, "\n COPYING NAT JOIN");
 
     AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
@@ -247,7 +247,7 @@ void copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_l
         //if there is a data to copy
         if (something_to_copy) {
             //merge data with second table
-            merge_block_join(row_root, row_root_insert, tbl2_temp_block, new_table);
+            AK_merge_block_join(row_root, row_root_insert, tbl2_temp_block, new_table);
             DeleteAllL(row_root);
             DeleteAllL(row_root_insert);
         }
@@ -273,7 +273,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
     int startAddress2 = src_addr2->address_from[0];
 
     if ((startAddress1 != 0) && (startAddress2 != 0)) {
-        create_join_block_header(startAddress1, startAddress2, dstTable, att);
+        AK_create_join_block_header(startAddress1, startAddress2, dstTable, att);
 
         dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
 		dbg_messg(MIDDLE, REL_OP, "\nAK_join: start copying data\n");
@@ -313,7 +313,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
 
                                     //if there is data in the block
                                     if (tbl2_temp_block->block->free_space != 0) {
-                                        copy_blocks_join(tbl1_temp_block->block, tbl2_temp_block->block, att, dstTable);
+                                        AK_copy_blocks_join(tbl1_temp_block->block, tbl2_temp_block->block, att, dstTable);
                                     }
                                 }
                             } else break;
@@ -334,7 +334,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
     }
 }
 
-void op_join_test() {
+void AK_op_join_test() {
     printf("\n********** NAT JOIN TEST **********\n\n");
 
     AK_list *att = (AK_list *) malloc(sizeof (AK_list));

@@ -173,7 +173,7 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
     return flag;
 }
 
-int is_number(char* s) {
+int AK_is_number(char* s) {
     int i;
     for (i = 0; i < strlen(s); i++) {
         if (isdigit(s[i]) == 0)
@@ -182,7 +182,7 @@ int is_number(char* s) {
     return 1;
 }
 
-void null_test() {
+void AK_null_test() {
     char* tableName = "studenti";
     char* constraintName = "studentiNotNull";
     char* attName = "ime";

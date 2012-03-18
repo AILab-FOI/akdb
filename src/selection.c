@@ -92,7 +92,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
  * @brief  Function for selection operator testing
  * @author Matija Šestak, updated by Dino Laktašić
  */
-void op_selection_test() {
+void AK_op_selection_test() {
     printf("\n********** SELECTION TEST **********\n");
 
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));

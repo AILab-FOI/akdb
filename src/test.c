@@ -24,7 +24,7 @@
  * @author Dino Laktašić
  * @return void
  */
-void create_test_tables() {
+void AK_create_test_tables() {
     int mbr, year, id_prof, id_department;
     float weight;
 
@@ -830,5 +830,5 @@ void create_test_tables() {
     DeleteAllL(row_root);
     free(row_root);
     //------------------------------------------------------------------------------------------------------
-    op_theta_join_test();
+    AK_op_theta_join_test();
 }

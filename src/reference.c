@@ -394,7 +394,7 @@ int AK_reference_check_entry(AK_list *lista) {
 /**
  * Test function.
  */
-void reference_test() {
+void AK_reference_test() {
     printf("reference.c: Present!\n");
 
     AK_header t_header[4] ={

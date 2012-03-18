@@ -89,7 +89,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
  Function for rename operator testing
  @author Mislav Čakarić
  */
-void op_rename_test() {
+void AK_op_rename_test() {
     //printf( "rename_test: Present!\n" );
     printf("\n********** RENAME TEST **********\n\n");
 

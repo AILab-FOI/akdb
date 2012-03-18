@@ -144,7 +144,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
  * @brief  Function for union operator testing
  * @author Dino Laktašić
  */
-void op_union_test() {
+void AK_op_union_test() {
     printf("\n********** UNION TEST **********\n\n");
 
     AK_union("professor", "assistant", "union_test");

@@ -820,7 +820,7 @@ void AK_print_rel_eq_selection(AK_list *list_rel_eq) {
  * @brief Test rel_eq_selection
  * @author Dino Laktašić.
  */
-void rel_eq_selection_test() {
+void AK_rel_eq_selection_test() {
     printf("rel_eq_selection.c: Present!\n");
     printf("\n********** REL_EQ_SELECTION TEST by Dino Laktašić **********\n");
 
