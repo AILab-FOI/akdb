@@ -20,23 +20,6 @@
 #include "query_optimization.h"
 
 /**
- * @brief Get number of chars for given number
- * @author Dino Laktašić.
- * @param int number - number to evaluate 
- * @param int base - mathematic base (e.g. 2, 10 etc.)  
- * @result characters number for given number
- */
-int AK_chars_num_from_number(int number, int base) {
-    int len = 0;
-
-    do {
-        len++;
-    } while ((double) (number /= base) > 0);
-
-    return len;
-}
-
-/**
  * @brief Print optimization table for testing purposes
  * @author Dino Laktašić.
  * @param AK_list *list_query - optimized RA expresion list 
