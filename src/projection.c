@@ -32,13 +32,6 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
     sys_block = (AK_block *) AK_read_block(1);
 
     int startAddress = AK_initialize_new_segment(table, type_segment, header);
-    /*
-    if (startAddress == EXIT_ERROR) {
-            return EXIT_ERROR;
-    }
-     */
-
-    //dbg_messg(LOW, REL_OP, "temp_create_table: First block address of the new segmet: %d", startAddress);
 
     int broj = 8;
     //insert object_id
@@ -95,7 +88,6 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
     memset(header + new_head, '\0', MAX_ATTRIBUTES - new_head);
 
     free(temp_block);
-    //AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
     AK_temp_create_table(dstTable, header, SEGMENT_TYPE_TABLE);
 }
 
@@ -107,9 +99,6 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
         @result void
  */
 void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable) {
-    //if(DEBUG)
-    //	printf("\nCOPYING PROJECTION DATA FROM BLOCK...\n");
-
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     InitL(row_root);
 
@@ -125,9 +114,6 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
     //iterate through all tuple_dicts in block
     for (i = 0; i < DATA_BLOCK_SIZE;) {
         head = something_to_copy = 0;
-
-        //if (old_block->tuple_dict[i].type == FREE_INT)
-        //	break;
 
         while (strcmp(old_block->header[head].att_name, "") != 0) {
             list_elem = (AK_list_elem) FirstL(att);
@@ -206,7 +192,6 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
 
                     //get projection tuples from block
                     AK_copy_block_projection(temp->block, att, dstTable);
-                    //
                 }
             } else break;
         }
