@@ -167,7 +167,7 @@ AK_list *AK_get_column(int num, char *tblName) {
     if (num >= num_attr || num < 0)
         return NULL;
     AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     int i, j, k;
@@ -185,7 +185,7 @@ AK_list *AK_get_column(int num, char *tblName) {
                     int address = temp->block->tuple_dict[k].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_Insert_At_EndL(type, &data, size, row_root);
+                    Ak_InsertAtEnd_L(type, &data, size, row_root);
                 }
             }
         }
@@ -206,7 +206,7 @@ AK_list * AK_get_row(int num, char * tblName) {
     AK_header *t_header = AK_get_header(tblName);
 
     AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     int num_rows = AK_get_num_records(tblName);
     int num_attr = AK_num_attr(tblName);
@@ -230,7 +230,7 @@ AK_list * AK_get_row(int num, char * tblName) {
                         int address = temp->block->tuple_dict[k + l].address;
                         memcpy(data, &(temp->block->data[address]), size);
                         data[size] = '\0';
-                        Ak_Insert_At_EndL(type, &data, size, row_root);
+                        Ak_InsertAtEnd_L(type, &data, size, row_root);
                     }
                     return row_root;
                 }
@@ -259,7 +259,7 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
     AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     int i, j, k, counter;
     char data[ MAX_VARCHAR_LENGTH ];
@@ -279,8 +279,8 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
                     int address = temp->block->tuple_dict[ k + column ].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_Insert_At_EndL(type, &data, size, row_root);
-                    return (AK_list_elem) Ak_FirstL(row_root);
+                    Ak_InsertAtEnd_L(type, &data, size, row_root);
+                    return (AK_list_elem) Ak_First_L(row_root);
                 }
             }
         }
@@ -356,7 +356,7 @@ void AK_print_row_spacer(int col_len[], int length) {
  * @return void
  */
 AK_print_row(int col_len[], AK_list *row) {
-    AK_list_elem el = (AK_list_elem) Ak_FirstL(row);
+    AK_list_elem el = (AK_list_elem) Ak_First_L(row);
 
     int i = 0;
     void *data = (void *) calloc(MAX_VARCHAR_LENGTH, sizeof (void));
@@ -482,7 +482,7 @@ void AK_print_table(char *tblName) {
             AK_print_row_spacer(len, length);
 
             AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
-            Ak_InitL(row_root);
+            Ak_Init_L(row_root);
 
             i = 0;
 			int type, size, address;
@@ -498,11 +498,11 @@ void AK_print_table(char *tblName) {
 								type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
-                                Ak_Insert_At_EndL(type, &(temp->block->data[address]), size, row_root);
+                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row(len, row_root);
                             AK_print_row_spacer(len, length);
-                            Ak_DeleteAllL(row_root);
+                            Ak_DeleteAll_L(row_root);
                         }
                     }
                 }

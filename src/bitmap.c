@@ -65,12 +65,12 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
     AK_header* tempHeader;
 
     for (i = 0; i < num_attr; i++) {
-        some_element = Ak_FirstL(attributes);
+        some_element = Ak_First_L(attributes);
         while (some_element != 0) {
             //printf("atribut u listi: %s, atribut u zaglavlju: %s \n",some_element->attribute_name, (temp_head+i)->att_name);
             if (strcmp((temp_head + i)->att_name, some_element->attribute_name) == 0) {
                 //printf("Atribut %s postoji u tablici, nalazi se na poziciji: %d\n",(temp_head+i)->att_name,i);
-                Ak_InitL(headerAtributes);
+                Ak_Init_L(headerAtributes);
                 br = 0;
                 while (addresses->address_from[ br ] != 0) {
                     for (j = addresses->address_from[ br ]; j < addresses->address_to[ br ]; j++) {
@@ -83,12 +83,12 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                                                 temp->tuple_dict[k].size);
                                         temp_int = sprintf(temp_char, "%d", temp_int);
 
-                                        ee = (AK_list_elem) Ak_FirstL(headerAtributes);
+                                        ee = (AK_list_elem) Ak_First_L(headerAtributes);
                                         if (ee == 0) {
                                             Ak_Insert_New_Element(TYPE_VARCHAR, temp_char, "indexLista", temp_char, headerAtributes);
                                         } else {
                                             if (Ak_If_ExistOp(headerAtributes, temp_char) == 0) {
-                                                ee = (AK_list_elem) Ak_EndL(headerAtributes);
+                                                ee = (AK_list_elem) Ak_End_L(headerAtributes);
                                                 Ak_Insert_New_Element(TYPE_VARCHAR, temp_char, "indexLista", temp_char, ee);
                                             }
                                         }
@@ -105,12 +105,12 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                                                 temp->tuple_dict[k].size);
                                         temp_char[ temp->tuple_dict[k].size ] = '\0';
 
-                                        ee = (AK_list_elem) Ak_FirstL(headerAtributes);
+                                        ee = (AK_list_elem) Ak_First_L(headerAtributes);
                                         if (ee == 0) {
                                             Ak_Insert_New_Element(TYPE_VARCHAR, temp_char, "indexLista", temp_char, headerAtributes);
                                         } else {
                                             if (Ak_If_ExistOp(headerAtributes, temp_char) == 0) {
-                                                ee = (AK_list_elem) Ak_EndL(headerAtributes);
+                                                ee = (AK_list_elem) Ak_End_L(headerAtributes);
                                                 Ak_Insert_New_Element(TYPE_VARCHAR, temp_char, "indexLista", temp_char, ee);
                                             }
                                         }
@@ -131,12 +131,12 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                 switch ((temp_head + i)->type) {
                     case TYPE_VARCHAR:
                         brr = 2; //3 First two places are reserved for block and row pointers
-                        e = (AK_list_elem) Ak_FirstL(headerAtributes);
+                        e = (AK_list_elem) Ak_First_L(headerAtributes);
                         while (e != 0) {
                             //printf("%s : %s \n", (temp_head + i)->att_name, e->attribute_name);
                             tempHeader = (AK_header*) AK_create_header(e->attribute_name, TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
                             memcpy(t_header + brr, tempHeader, sizeof ( AK_header));
-                            e = (AK_list_elem) Ak_NextL(e);
+                            e = (AK_list_elem) Ak_Next_L(e);
                             brr++;
                         }
                         //dodaje se jos jedan atribut za pokazivac(adresu)
@@ -174,12 +174,12 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                         //tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                         //memcpy( t_headerr + 2 , tempHeader, sizeof( AK_header ));
 
-                        e = (AK_list_elem) Ak_FirstL(headerAtributes);
+                        e = (AK_list_elem) Ak_First_L(headerAtributes);
                         while (e != 0) {
                             //printf("%s : %s : %i \n", (temp_head + i)->att_name, e->attribute_name,brr);
                             tempHeader = (AK_header*) AK_create_header(e->attribute_name, TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                             memcpy(t_headerr + brr, tempHeader, sizeof ( AK_header));
-                            e = (AK_list_elem) Ak_NextL(e);
+                            e = (AK_list_elem) Ak_Next_L(e);
                             brr++;
                         }
 
@@ -201,11 +201,11 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                 }
 
             }
-            some_element = (AK_list_elem) Ak_NextL(some_element);
+            some_element = (AK_list_elem) Ak_Next_L(some_element);
         }
     }
 
-    AK_list_elem ele = Ak_FirstL(headerAtributes);
+    AK_list_elem ele = Ak_First_L(headerAtributes);
     //ispis liste za header TEST
     /*
             while(ele != 0)
@@ -214,7 +214,7 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                 ele = GetNextelementOp(ele);
             }
      * */
-    Ak_DeleteAllL(headerAtributes);
+    Ak_DeleteAll_L(headerAtributes);
     free(headerAtributes);
     free(tempHeader);
     free(temp_head);
@@ -278,7 +278,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
                                     temp->tuple_dict[k].size);
                             temp_int = sprintf(temp_char, "%d", temp_int);
                             row_root = (AK_list_elem) malloc(sizeof (AK_list));
-                            Ak_InitL(row_root);
+                            Ak_Init_L(row_root);
                             temp_indexTd = k - positionTbl;
                             Ak_Insert_New_Element(TYPE_INT, &(temp->address), tblNameIndex, "addBlock", row_root);
                             Ak_Insert_New_Element(TYPE_INT, &temp_indexTd, tblNameIndex, "indexTd", row_root);
@@ -295,7 +295,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
 
                             //       }
                             Ak_insert_row(row_root);
-                            Ak_DeleteAllL(row_root);
+                            Ak_DeleteAll_L(row_root);
                             free(row_root);
                             //printf( "%-10d", temp_int );
                             break;
@@ -313,7 +313,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
                             //printf("Pozicija u headeru: %i \n",posOfAttr(tblNameIndex,temp_char));
                             //prolazi kroz header i dodaje nule na sve pozicije osim na onu na kojoj se nalazi unutar headera ovaj atribut
                             row_root = (AK_list_elem) malloc(sizeof (AK_list));
-                            Ak_InitL(row_root);
+                            Ak_Init_L(row_root);
                             temp_indexTd = k - positionTbl;
                             Ak_Insert_New_Element(TYPE_INT, &(temp->address), tblNameIndex, "addBlock", row_root);
                             Ak_Insert_New_Element(TYPE_INT, &temp_indexTd, tblNameIndex, "indexTd", row_root);
@@ -330,7 +330,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
 
                             //       }
                             Ak_insert_row(row_root);
-                            Ak_DeleteAllL(row_root);
+                            Ak_DeleteAll_L(row_root);
                             free(row_root);
                             break;
                     }
@@ -612,11 +612,11 @@ void Ak_bitmap_test() {
     char *tblName = "assistant";
 
     AK_list *att_root = (AK_list *) malloc(sizeof (AK_list));
-    Ak_InitL(att_root);
+    Ak_Init_L(att_root);
 
     Ak_Insert_New_Element(TYPE_VARCHAR, "firstname", tblName, "firstname", att_root);
     AK_list_elem some_element;
-    some_element = (AK_list_elem) Ak_FirstL(att_root);
+    some_element = (AK_list_elem) Ak_First_L(att_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "tel", tblName, "tel", some_element);
 
     AK_create_Index(tblName, att_root);

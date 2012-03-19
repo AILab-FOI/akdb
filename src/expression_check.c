@@ -155,9 +155,9 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
     int found, result;
 
     AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
-    Ak_InitL(temp);
+    Ak_Init_L(temp);
 
-    AK_list_elem el = (AK_list_elem) Ak_FirstL(expr);
+    AK_list_elem el = (AK_list_elem) Ak_First_L(expr);
     AK_list_elem row;
     AK_list_elem a, b;
 
@@ -188,25 +188,25 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
                 int type = row->type;
                 memset(data, 0, MAX_VARCHAR_LENGTH);
                 memcpy(data, &row->data, sizeof(row->data));
-                Ak_Insert_At_EndL(type, data, sizeof(row->data), temp);
+                Ak_InsertAtEnd_L(type, data, sizeof(row->data), temp);
             }
 
         } else if (el->type == TYPE_OPERATOR) {
             //operators implementation
-            b = (AK_list_elem) Ak_EndL(temp);
-            a = (AK_list_elem) Ak_PreviousL(b, temp);
+            b = (AK_list_elem) Ak_End_L(temp);
+            a = (AK_list_elem) Ak_Previous_L(b, temp);
 
             if (strcmp(el->data, "=") == 0) {
                 if (memcmp(a->data, b->data, sizeof(a->type)) == 0)
-                    Ak_Insert_At_EndL(TYPE_INT, &true, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
                 else
-                    Ak_Insert_At_EndL(TYPE_INT, &false, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
 
             } else if (strcmp(el->data, "<>") == 0) {
                 if (memcmp(a->data, b->data, a->size) != 0)
-                    Ak_Insert_At_EndL(TYPE_INT, &true, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
                 else
-                    Ak_Insert_At_EndL(TYPE_INT, &false, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
 
             } else if (strcmp(el->data, "OR") == 0) {
                 int val_a, val_b;
@@ -214,9 +214,9 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
                 memcpy(&val_b, b->data, sizeof (int));
 
                 if (val_a || val_b)
-                    Ak_Insert_At_EndL(TYPE_INT, &true, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
                 else
-                    Ak_Insert_At_EndL(TYPE_INT, &false, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
 
             } else if (strcmp(el->data, "AND") == 0) {
                 int val_a, val_b;
@@ -224,28 +224,28 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
                 memcpy(&val_b, b->data, sizeof (int));
 
                 if (val_a && val_b)
-                    Ak_Insert_At_EndL(TYPE_INT, &true, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
                 else
-                    Ak_Insert_At_EndL(TYPE_INT, &false, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
 
             } else {
 
                 int rs;
                 rs = AK_check_arithmetic_statement(b, el->data, a->data, b->data);
-                Ak_Insert_At_EndL(TYPE_INT, &rs, sizeof (int), temp);
+                Ak_InsertAtEnd_L(TYPE_INT, &rs, sizeof (int), temp);
             }
 
-            Ak_DeleteL(a, temp);
-            Ak_DeleteL(b, temp);
+            Ak_Delete_L(a, temp);
+            Ak_Delete_L(b, temp);
 
         } else {
-            Ak_Insert_At_EndL(el->type, el->data, el->size, temp);
+        	Ak_InsertAtEnd_L(el->type, el->data, el->size, temp);
         }
         el = el->next;
     }
 
-    memcpy(&result, ((AK_list_elem) Ak_FirstL(temp))->data, sizeof (int));
-    Ak_DeleteAllL(temp);
+    memcpy(&result, ((AK_list_elem) Ak_First_L(temp))->data, sizeof (int));
+    Ak_DeleteAll_L(temp);
     free(temp);
 
     return result;

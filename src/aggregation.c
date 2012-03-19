@@ -213,7 +213,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_mem_block *mem_block;
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     i = 0;
     counter = 0;
@@ -341,7 +341,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 					sresult = AK_search_unsorted(new_table, search_parameters, agg_group_number);
 
 					if (sresult.iNum_tuple_addresses == 0) {
-						Ak_DeleteAllL(row_root);
+						Ak_DeleteAll_L(row_root);
 
 						for (l = 0; l < header_size; l++) {
 							switch (needed_values[l].agg_task) {
@@ -491,7 +491,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 							}
 						}
 						AK_deallocate_search_result(sresult);
-						Ak_DeleteAllL(row_root);
+						Ak_DeleteAll_L(row_root);
 
 						for (l = 0; l<header_size;l++) {
 							if (needed_values[l].agg_task == AGG_TASK_GROUP)
@@ -529,7 +529,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		if (startAddress != EXIT_ERROR)
 			printf("\nTABLE %s CREATED!\n", agg_table);
 
-    	Ak_DeleteAllL(row_root);
+    	Ak_DeleteAll_L(row_root);
 
 		for (l = 0; l < header_size; l++) {
 
@@ -567,17 +567,17 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     else{
 
     	AK_list *projection_att = (AK_list *) malloc(sizeof (AK_list));
-		Ak_InitL(projection_att);
+		Ak_Init_L(projection_att);
 
 		for (i = 0; i < header_size; i++) {
 			if (agg_head[i].att_name[0] != '_') {
-				Ak_Insert_At_EndL(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
+				Ak_InsertAtEnd_L(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
 			}
 		}
 
 		AK_projection(new_table, agg_table, projection_att);
 
-		Ak_DeleteAllL(projection_att);
+		Ak_DeleteAll_L(projection_att);
 		free(projection_att);
     }
 

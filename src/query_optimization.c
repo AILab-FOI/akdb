@@ -26,11 +26,11 @@
  * @result list output
  */
 void AK_print_optimized_query(AK_list *list_query) {
-    AK_list_elem list_elem = (AK_list_elem) Ak_FirstL(list_query);
+    AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_query);
 
     int length;
     int len[] = {strlen("Type"), strlen("Size"), strlen("Data")};
-    list_elem = (AK_list_elem) Ak_FirstL(list_query);
+    list_elem = (AK_list_elem) Ak_First_L(list_query);
 
     printf("==>");
     while (list_elem != NULL) {
@@ -65,7 +65,7 @@ void AK_print_optimized_query(AK_list *list_query) {
             len[1] + TBL_BOX_OFFSET, "Size", len[2] + TBL_BOX_OFFSET, "Data");
     AK_print_row_spacer(len, length);
 
-    list_elem = (AK_list_elem) Ak_FirstL(list_query);
+    list_elem = (AK_list_elem) Ak_First_L(list_query);
 
     while (list_elem != NULL) {
         printf("\n| %-*i| %-*i| %-*s|\n", len[0] + TBL_BOX_OFFSET, list_elem->type,
@@ -143,7 +143,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
     int len_flags = strlen(FLAGS);
 
     AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
-    Ak_InitL(temp);
+    Ak_Init_L(temp);
 
     temp = list_query;
 
@@ -192,7 +192,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
         //memcpy(temp, temps, sizeof(temps) * num_perms);
     }
 
-    Ak_DeleteAllL(list_query);
+    Ak_DeleteAll_L(list_query);
 
     return temp;
 }
@@ -203,82 +203,82 @@ void AK_query_optimization_test(AK_list *list_query) {
 
     //Init list and insert elements (Query parser output)
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
-    Ak_InitL(expr);
+    Ak_Init_L(expr);
 
     //*Commutativity of Selection and Projection
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    Ak_Insert_At_EndL(TYPE_CONDITION, "`firstname` = 'Dino'", sizeof ("`firstname` = 'Dino'"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_InsertAtEnd_L(TYPE_CONDITION, "`firstname` = 'Dino'", sizeof ("`firstname` = 'Dino'"), expr);
     //...
     //*Cascade of Projection p[L1](p[L2](...p[Ln](R)...)) = p[L1](R)
     //[L1,...] < [L2,...] < [...,Ln-1,Ln]
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_Insert_At_EndL(TYPE_ATTRIBS, "firstname;lastname", sizeof ("firstname;lastname"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_Insert_At_EndL(TYPE_ATTRIBS, "firstname;lastname;year", sizeof ("firstname;lastname;year"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname;lastname", sizeof ("firstname;lastname"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname;lastname;year", sizeof ("firstname;lastname;year"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "student", sizeof ("student"), expr);
     //---------------------------------------------------------------------------------------------------------
     //*/
 
     //*Cascade of Selection and Commutativity of Selection
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "i", sizeof ("u"), expr); //u, i, e
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    Ak_Insert_At_EndL(TYPE_CONDITION, "`year` 2008 <", sizeof ("`year` 2008 <"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "i", sizeof ("u"), expr); //u, i, e
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_InsertAtEnd_L(TYPE_CONDITION, "`year` 2008 <", sizeof ("`year` 2008 <"), expr);
     //...
     //*Commutativity of Selection and set operations (Union, Intersection, and Set difference)
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    Ak_Insert_At_EndL(TYPE_CONDITION, "`mbr` 35895 < `id_prof` 35897 < OR", sizeof ("`mbr` 35895 < `id_prof` 35897 < OR"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "u", sizeof ("u"), expr); //u, i, e
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "i", sizeof ("i"), expr); //u, i, e
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_InsertAtEnd_L(TYPE_CONDITION, "`mbr` 35895 < `id_prof` 35897 < OR", sizeof ("`mbr` 35895 < `id_prof` 35897 < OR"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), expr); //u, i, e
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "i", sizeof ("i"), expr); //u, i, e
     //---------------------------------------------------------------------------------------------------------
     //*/
 
     //*Commutativity of Selection and Theta join (or Cartesian product)
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    Ak_Insert_At_EndL(TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof ("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "course", sizeof ("course"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_Insert_At_EndL(TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof ("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "e", sizeof ("e"), expr); //u, i, e
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_InsertAtEnd_L(TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof ("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "course", sizeof ("course"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "t", sizeof ("t"), expr);
+    Ak_InsertAtEnd_L(TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof ("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "e", sizeof ("e"), expr); //u, i, e
     //*/
 
     //*Commutativity of Projection and Theta join (or Cartesian product)
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_Insert_At_EndL(TYPE_ATTRIBS, "mbr;id_prof", sizeof ("mbr;id_prof"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_Insert_At_EndL(TYPE_CONDITION, "`mbr` 35891 > `id_prof` 35897 < AND", sizeof ("`mbr` 35891 > `id_prof` 35897 < AND"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr;id_prof", sizeof ("mbr;id_prof"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "t", sizeof ("t"), expr);
+    Ak_InsertAtEnd_L(TYPE_CONDITION, "`mbr` 35891 > `id_prof` 35897 < AND", sizeof ("`mbr` 35891 > `id_prof` 35897 < AND"), expr);
     //*/
 
     //*Associativity of natural joins
-    Ak_Insert_At_EndL(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "n", sizeof ("n"), expr);
-    Ak_Insert_At_EndL(TYPE_ATTRIBS, "mbr;id_prof", sizeof ("mbr;id_prof"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "course", sizeof ("course"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "n", sizeof ("n"), expr);
-    Ak_Insert_At_EndL(TYPE_ATTRIBS, "id_course", sizeof ("id_course"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "n", sizeof ("n"), expr);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr;id_prof", sizeof ("mbr;id_prof"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "course", sizeof ("course"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "n", sizeof ("n"), expr);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_course", sizeof ("id_course"), expr);
     //*/
 
     //*Associativity of union and intersection
-    Ak_Insert_At_EndL(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "u", sizeof ("u"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "course", sizeof ("course"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "u", sizeof ("u"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "course", sizeof ("course"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), expr);
     //*/
 
     //*Associativity of theta-joins
-    Ak_Insert_At_EndL(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "`mbr` 35891 > `id_prof` 35897 <", sizeof ("`mbr` 35891 > `id_prof` 35897 <"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "course", sizeof ("course"), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_Insert_At_EndL(TYPE_CONDITION, "`id_course` 7 < `mbr` 35891 > AND", sizeof ("`id_course` 7 < `mbr` 35891 > AND"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "t", sizeof ("t"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "`mbr` 35891 > `id_prof` 35897 <", sizeof ("`mbr` 35891 > `id_prof` 35897 <"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "course", sizeof ("course"), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "t", sizeof ("t"), expr);
+    Ak_InsertAtEnd_L(TYPE_CONDITION, "`id_course` 7 < `mbr` 35891 > AND", sizeof ("`id_course` 7 < `mbr` 35891 > AND"), expr);
     //*/
 
     time_t start = clock();
@@ -330,5 +330,5 @@ void AK_query_optimization_test(AK_list *list_query) {
         printf("\n...\n");
     }
 
-    Ak_DeleteAllL(expr);
+    Ak_DeleteAll_L(expr);
 }

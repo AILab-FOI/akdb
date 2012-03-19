@@ -68,7 +68,7 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
     int new_head = 0; //counter of the new headers created for the projection table
 
     while (strcmp(temp_block->header[head].att_name, "") != 0) {
-        list_elem = (AK_list_elem) FirstL(att);
+        list_elem = (AK_list_elem) Ak_First_L(att);
 
         while (list_elem != NULL) {
             //if header is found than copy header
@@ -76,7 +76,7 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
                 //make a copy of the header needed for projection
                 memcpy(&header[new_head], &temp_block->header[head], sizeof (temp_block->header[head]));
 
-                dbg_messg(HIGH, REL_OP, "Copy attribute header: %s\n", header[new_head].att_name);
+                Ak_dbg_messg(HIGH, REL_OP, "Copy attribute header: %s\n", header[new_head].att_name);
 
                 new_head++;
             }
@@ -100,7 +100,7 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
  */
 void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable) {
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    InitL(row_root);
+    Ak_Init_L(row_root);
 
     AK_list_elem list_elem;
 
@@ -116,7 +116,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
         head = something_to_copy = 0;
 
         while (strcmp(old_block->header[head].att_name, "") != 0) {
-            list_elem = (AK_list_elem) FirstL(att);
+            list_elem = (AK_list_elem) Ak_First_L(att);
 
             while (list_elem != NULL) {
                 size = old_block->tuple_dict[i].size;
@@ -131,7 +131,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
                     memcpy(data, old_block->data + old_block->tuple_dict[i].address, old_block->tuple_dict[i].size);
 
                     //insert element to list to be inserted into new table
-                    InsertNewElement(old_block->tuple_dict[i].type, data, dstTable, list_elem->data, row_root); //ForUpdate 0
+                    Ak_Insert_New_Element(old_block->tuple_dict[i].type, data, dstTable, list_elem->data, row_root); //ForUpdate 0
                     something_to_copy = 1;
                 }
                 list_elem = list_elem->next;
@@ -142,10 +142,10 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
 
         //write row to the porojection table
         if (something_to_copy) {
-            dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
+            Ak_dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
 
-            insert_row(row_root);
-            DeleteAllL(row_root);
+            Ak_insert_row(row_root);
+            Ak_DeleteAll_L(row_root);
         }
     }
 
@@ -167,8 +167,8 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
         //create new segmenet for the projection table
         AK_create_block_header(src_addr->address_from[0], dstTable, att);
 
-        dbg_messg(LOW, REL_OP, "TABLE %s CREATED from %s!\n", dstTable, srcTable);
-        dbg_messg(MIDDLE, REL_OP, "\nAK_projection: start copying data\n");
+        Ak_dbg_messg(LOW, REL_OP, "TABLE %s CREATED from %s!\n", dstTable, srcTable);
+        Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: start copying data\n");
 
         int startAddress = 0, i = 0, j;
 
@@ -177,7 +177,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
             startAddress = src_addr->address_from[i];
 
             if (startAddress != 0) {
-                dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy extent: %d\n", i);
+                Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy extent: %d\n", i);
 
                 //for each block in extent
                 for (j = startAddress; j <= src_addr->address_to[i]; j++) {
@@ -188,7 +188,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
                         break;
                     }
 
-                    dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy block: %d\n", j);
+                    Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy block: %d\n", j);
 
                     //get projection tuples from block
                     AK_copy_block_projection(temp->block, att, dstTable);
@@ -197,11 +197,11 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
         }
 		
         free(src_addr);
-        dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n\n");
+        Ak_dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n\n");
         return EXIT_SUCCESS;
     } else {
 		free(src_addr);
-        dbg_messg(LOW, REL_OP, "\n AK_projection: Table doesn't exist!");
+        Ak_dbg_messg(LOW, REL_OP, "\n AK_projection: Table doesn't exist!");
         return EXIT_ERROR;
     }
 }
@@ -214,13 +214,13 @@ void AK_op_projection_test() {
     printf("\n********** PROJECTION TEST **********\n\n");
 
     AK_list *att = (AK_list *) malloc(sizeof (AK_list));
-    InitL(att);
+    Ak_Init_L(att);
 
-    InsertAtEndL(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);
-    InsertAtEndL(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), att);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), att);
 
     AK_projection("selection_test", "projection_test", att);
     AK_print_table("projection_test");
 
-    DeleteAllL(att);
+    Ak_DeleteAll_L(att);
 }

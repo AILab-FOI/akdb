@@ -1087,7 +1087,7 @@ int AK_delete_segment(char * name, int type) {
         i++;
     }
     AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
     char *system_table;
     switch (type) {
         case SEGMENT_TYPE_TABLE:
@@ -1105,7 +1105,7 @@ int AK_delete_segment(char * name, int type) {
         default:
             return EXIT_ERROR;
     }
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, system_table, "name", row_root, 1);
     Ak_delete_row(row_root);
     free(row_root);

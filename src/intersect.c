@@ -129,7 +129,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                         Ak_Insert_New_Element_For_Update(type, data1, dstTable, tbl1_temp_block->block->header[n].att_name, row_root, 0);
                                                     }
                                                     Ak_insert_row(row_root);
-                                                    Ak_DeleteAllL(row_root);
+                                                    Ak_DeleteAll_L(row_root);
                                                 }
                                             }
                                         }

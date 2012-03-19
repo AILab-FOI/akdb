@@ -141,7 +141,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 												}
 												
 												Ak_insert_row(row_root);
-												Ak_DeleteAllL(row_root);
+												Ak_DeleteAll_L(row_root);
 											}
 										}
                                     }

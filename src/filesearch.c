@@ -232,12 +232,12 @@ void Ak_filesearch_test() {
     }
 
     for (i = -10, f = -i; i < 10; i++, f = -i) {
-        Ak_InitL(row_root);
+        Ak_Init_L(row_root);
         Ak_Insert_New_Element(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
         Ak_Insert_New_Element(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
         Ak_Insert_New_Element(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);
         Ak_insert_row(row_root);
-        Ak_DeleteAllL(row_root);
+        Ak_DeleteAll_L(row_root);
     }
 
     free(row_root);

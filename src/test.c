@@ -53,7 +53,7 @@ void AK_create_test_tables() {
         printf("\nTABLE %s CREATED!\n", tblName);
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     mbr = 35890;
     year = 1999;
@@ -63,7 +63,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Laktasic", tblName, "lastname", row_root);
@@ -74,7 +74,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Netko", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Netkic", tblName, "lastname", row_root);
@@ -85,7 +85,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Mislav", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Cakaric", tblName, "lastname", row_root);
@@ -96,7 +96,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ivan", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Horvat", tblName, "lastname", row_root);
@@ -107,7 +107,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ivo", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ivic", tblName, "lastname", row_root);
@@ -118,7 +118,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Marko", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Markovic", tblName, "lastname", row_root);
@@ -129,7 +129,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ivan", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ivanovic", tblName, "lastname", row_root);
@@ -140,7 +140,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Josip", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Josipovic", tblName, "lastname", row_root);
@@ -151,7 +151,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ivan", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ankovic", tblName, "lastname", row_root);
@@ -162,7 +162,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Marina", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Marovic", tblName, "lastname", row_root);
@@ -173,7 +173,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Mario", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Maric", tblName, "lastname", row_root);
@@ -184,7 +184,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Matija", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Matkovic", tblName, "lastname", row_root);
@@ -195,7 +195,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ivana", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Ivic", tblName, "lastname", row_root);
@@ -206,7 +206,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "John", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Smith", tblName, "lastname", row_root);
@@ -217,7 +217,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "William", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Brown", tblName, "lastname", row_root);
@@ -228,7 +228,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "David", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Jones", tblName, "lastname", row_root);
@@ -239,7 +239,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Robert", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "White", tblName, "lastname", row_root);
@@ -250,7 +250,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "James", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Jones", tblName, "lastname", row_root);
@@ -261,7 +261,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Jack", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Moore", tblName, "lastname", row_root);
@@ -272,7 +272,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Joseph", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Harris", tblName, "lastname", row_root);
@@ -283,7 +283,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Richard", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Thomas", tblName, "lastname", row_root);
@@ -294,7 +294,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Daniel", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Jackson", tblName, "lastname", row_root);
@@ -305,7 +305,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Martin", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Clark", tblName, "lastname", row_root);
@@ -316,7 +316,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Joe", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Davis", tblName, "lastname", row_root);
@@ -327,7 +327,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Paul", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Lee", tblName, "lastname", row_root);
@@ -338,7 +338,7 @@ void AK_create_test_tables() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Steve", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Parker", tblName, "lastname", row_root);
@@ -376,11 +376,11 @@ void AK_create_test_tables() {
         printf("\nTABLE %s CREATED!\n", tblName);
 
     //row_root = (element) malloc(sizeof (list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     id_prof = 35890;
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Baca", tblName, "lastname", row_root);
@@ -390,7 +390,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Balaban", tblName, "lastname", row_root);
@@ -400,7 +400,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Antun", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Brumnic", tblName, "lastname", row_root);
@@ -410,7 +410,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Mirko", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Cubrilo", tblName, "lastname", row_root);
@@ -420,7 +420,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Dragutin", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Kermek", tblName, "lastname", row_root);
@@ -430,7 +430,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Tonimir", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Kisasondi", tblName, "lastname", row_root);
@@ -440,7 +440,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Alen", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Lovrencic", tblName, "lastname", row_root);
@@ -450,7 +450,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Markus", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Schatten", tblName, "lastname", row_root);
@@ -460,7 +460,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Neven", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Vrcek", tblName, "lastname", row_root);
@@ -495,11 +495,11 @@ void AK_create_test_tables() {
 		printf("\nTABLE %s CREATED!\n", tblName);
 
 	//row_root = (element) malloc(sizeof (list));
-	Ak_InitL(row_root);
+	Ak_Init_L(row_root);
 
 	id_prof = 35890;
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Baca", tblName, "lastname", row_root);
@@ -507,7 +507,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Balaban", tblName, "lastname", row_root);
@@ -515,7 +515,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Antun", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Brumnic", tblName, "lastname", row_root);
@@ -523,7 +523,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Mirko", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Cubrilo", tblName, "lastname", row_root);
@@ -531,7 +531,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Dragutin", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Kermek", tblName, "lastname", row_root);
@@ -539,7 +539,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Tonimir", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Kisasondi", tblName, "lastname", row_root);
@@ -547,7 +547,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Alen", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Lovrencic", tblName, "lastname", row_root);
@@ -555,7 +555,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Markus", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Schatten", tblName, "lastname", row_root);
@@ -563,7 +563,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	id_prof++;
-	Ak_DeleteAllL(row_root);
+	Ak_DeleteAll_L(row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Neven", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Vrcek", tblName, "lastname", row_root);
@@ -599,10 +599,10 @@ void AK_create_test_tables() {
         printf("\nTABLE %s CREATED!\n", tblName);
 
     //row_root = (element) malloc(sizeof (list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     id_prof = 35892;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Balaban", tblName, "lastname", row_root);
@@ -612,7 +612,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof = 35896;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Tonimir", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Kisasondi", tblName, "lastname", row_root);
@@ -622,7 +622,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     id_prof = 35898;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Markus", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Schatten", tblName, "lastname", row_root);
@@ -632,7 +632,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 	
 	id_prof = 35899;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Miran", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Zlatovic", tblName, "lastname", row_root);
@@ -663,54 +663,54 @@ void AK_create_test_tables() {
         printf("\nTABLE %s CREATED!\n", tblName);
 
     //row_root = (element) malloc(sizeof (list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     id_prof = 35890;
     id_department = 1;
     id_prof++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_insert_row(row_root);
 
     id_prof++;
     id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_insert_row(row_root);
 
     id_prof++;
     id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_insert_row(row_root);
 
     id_prof++;
     id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_insert_row(row_root);
 
     id_prof++;
     id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_insert_row(row_root);
 
     id_prof++;
     id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_insert_row(row_root);
 
     id_prof++;
     id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_insert_row(row_root);
@@ -718,7 +718,7 @@ void AK_create_test_tables() {
     //don't need id_prof++ here
     id_prof++;
     //id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_insert_row(row_root);
@@ -747,24 +747,24 @@ void AK_create_test_tables() {
         printf("\nTABLE %s CREATED!\n", tblName);
 
     row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     id_department = 1;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Department of Economics", tblName, "dep_name", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Redep", tblName, "manager", row_root);
     Ak_insert_row(row_root);
 
     //id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Department of Organization", tblName, "dep_name", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Zugaj", tblName, "manager", row_root);
     Ak_insert_row(row_root);
 
     id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Department of Quantitative Methods", tblName, "dep_name", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Kero", tblName, "manager", row_root);
@@ -779,14 +779,14 @@ void AK_create_test_tables() {
     insert_row(row_root);*/
 
     //id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Department of Information Technology and Computing", tblName, "dep_name", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Hutinski", tblName, "manager", row_root);
     Ak_insert_row(row_root);
 
     id_department++;
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Department of Information Systems Development", tblName, "dep_name", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Vrcek", tblName, "manager", row_root);
@@ -827,7 +827,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     free(row_root);
     //------------------------------------------------------------------------------------------------------
     AK_op_theta_join_test();

@@ -28,15 +28,15 @@
 int AK_trigger_save_conditions(int trigger, AK_list* condition) {
     int i = 0;
     char tempData[MAX_VARCHAR_LENGTH];
-    AK_list_elem temp = (AK_list_elem)Ak_FirstL(condition);
+    AK_list_elem temp = (AK_list_elem)Ak_First_L(condition);
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &trigger, "AK_trigger_conditions", "trigger", row_root, 1);
     if (Ak_delete_row(row_root) == EXIT_ERROR)
         return EXIT_ERROR;
 
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     while (temp != NULL) {
         memcpy(tempData, temp->data, temp->size);
         tempData[temp->size] = '\0';
@@ -48,7 +48,7 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
             free(row_root);
             return EXIT_ERROR;
         }
-        temp = (AK_list_elem)Ak_NextL(temp, condition);
+        temp = (AK_list_elem)Ak_Next_L(temp, condition);
         i++;
     }
 
@@ -84,13 +84,13 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
     }
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     trigg_id = AK_get_id();
     Ak_Insert_New_Element(TYPE_INT, &trigg_id, "AK_trigger", "obj_id", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, name, "AK_trigger", "name", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, event, "AK_trigger", "event", row_root);
-    if (condition == NULL || Ak_IsEmptyL(condition) == 1)
+    if (condition == NULL || Ak_IsEmpty_L(condition) == 1)
         Ak_Insert_New_Element(0, "", "AK_trigger", "condition", row_root);
     else
         Ak_Insert_New_Element(TYPE_VARCHAR, "T", "AK_trigger", "condition", row_root);
@@ -100,7 +100,7 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
 
     free(row_root);
 
-    if (condition != NULL && Ak_IsEmptyL(condition) == 0)
+    if (condition != NULL && Ak_IsEmpty_L(condition) == 0)
         AK_trigger_save_conditions(trigg_id, condition);
 
     return trigg_id;
@@ -143,7 +143,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
     int trigg_id = AK_trigger_get_id(name, table);
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_trigger", "name", row_root, 1);
 
@@ -155,7 +155,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
     }
 
     // the following can be avoided if foreign key is declared...
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &trigg_id, "AK_trigger_conditions", "trigger", row_root, 1);
     return Ak_delete_row(row_root);
 }
@@ -167,7 +167,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
  */
 int AK_trigger_remove_by_obj_id(int obj_id) {
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_trigger", "obj_id", row_root, 1);
 
@@ -179,7 +179,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
     }
 
     // the following can be avoided if foreign key is declared...
-    Ak_DeleteAllL(row_root);
+    Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_trigger_conditions", "trigger", row_root, 1);
     return Ak_delete_row(row_root);
 }
@@ -228,7 +228,7 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
     }
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     if (obj_id != NULL)
         Ak_Insert_New_Element_For_Update(TYPE_INT, obj_id, "AK_trigger", "obj_id", row_root, 1);
@@ -236,7 +236,7 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
         Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_trigger", "name", row_root, 1);
     if (event != NULL && strcmp(event, "") != 0)
         Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, event, "AK_trigger", "event", row_root, 0);
-    if (condition != NULL && Ak_IsEmptyL(condition) == 0)
+    if (condition != NULL && Ak_IsEmpty_L(condition) == 0)
         Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "T", "AK_trigger", "condition", row_root, 0);
     else
         Ak_Insert_New_Element_For_Update(0, "", "AK_trigger", "condition", row_root, 0);
@@ -259,7 +259,7 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
     Ak_update_row(row_root);
     free(row_root);
 
-    if (condition != NULL && Ak_IsEmptyL(condition) == 0) {
+    if (condition != NULL && Ak_IsEmpty_L(condition) == 0) {
         if (obj_id == NULL) {
             id = AK_trigger_get_id(name, table);
         } else id = obj_id;
@@ -276,27 +276,27 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
  */
 AK_list *AK_trigger_get_conditions(int trigger) {
     AK_list expr;
-    Ak_InitL(&expr);
-    Ak_Insert_At_EndL(TYPE_OPERAND, "trigger", strlen("trigger"), &expr);
-    Ak_Insert_At_EndL(TYPE_INT, &trigger, sizeof (int), &expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "=", 1, &expr);
+    Ak_Init_L(&expr);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "trigger", strlen("trigger"), &expr);
+    Ak_InsertAtEnd_L(TYPE_INT, &trigger, sizeof (int), &expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", 1, &expr);
     AK_selection("AK_trigger_conditions", "AK_trigger_conditions_temp", &expr);
     printf("::::::::::: %d\n", trigger);
     AK_print_table("AK_trigger_conditions_temp");
 
     AK_list *result = malloc(sizeof (AK_list));
-    Ak_InitL(result);
+    Ak_Init_L(result);
     int i = 0;
     AK_list *row;
     int a, b;
     AK_list_elem temp;
     while ((row = (AK_list *)AK_get_row(i, "AK_trigger_conditions_temp")) != NULL) {
-        temp = Ak_GetNthL(3, row);
+        temp = Ak_GetNth_L(3, row);
         memcpy(&a, temp->data, sizeof (int));
-        temp = Ak_GetNthL(1, row);
+        temp = Ak_GetNth_L(1, row);
         memcpy(&b, temp->data, sizeof (int));
-        temp = Ak_GetNthL(2, row);
-        Ak_InsertBeforeL(a, temp->data, temp->size, Ak_GetNthL(b), result);
+        temp = Ak_GetNth_L(2, row);
+        Ak_InsertBefore_L(a, temp->data, temp->size, Ak_GetNth_L(b), result);
         i++;
     }
 
@@ -309,7 +309,7 @@ void AK_trigger_test() {
     printf("trigger.c: Present!\n");
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_InitL(row_root);
+    Ak_Init_L(row_root);
 
     int i = AK_get_id();
     Ak_Insert_New_Element(TYPE_INT, &i, "AK_function", "obj_id", row_root);
@@ -330,15 +330,15 @@ void AK_trigger_test() {
     AK_print_table("AK_function");
 
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
-    Ak_InitL(expr);
+    Ak_Init_L(expr);
     int num = 2002;
-    Ak_Insert_At_EndL(TYPE_ATTRIBS, "year", 4, expr);
-    Ak_Insert_At_EndL(TYPE_INT, &num, sizeof (int), expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, ">", 2, expr);
-    Ak_Insert_At_EndL(TYPE_ATTRIBS, "firstname", 9, expr);
-    Ak_Insert_At_EndL(TYPE_VARCHAR, "Matija", 6, expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "=", 2, expr);
-    Ak_Insert_At_EndL(TYPE_OPERATOR, "OR", 2, expr);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", 4, expr);
+    Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", 2, expr);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", 9, expr);
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "Matija", 6, expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", 2, expr);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "OR", 2, expr);
 
     AK_trigger_add("trigg1", "insert", expr, "AK_reference", "dummy_funk_1");
     AK_trigger_add("trigg2", "update", expr, "dummy_table", "dummy_funk_1");
@@ -347,8 +347,8 @@ void AK_trigger_test() {
     AK_print_table("AK_trigger");
     AK_print_table("AK_trigger_conditions");
 
-    Ak_DeleteAllL(expr);
-    Ak_Insert_At_EndL(TYPE_ATTRIBS, "not null", 4, expr);
+    Ak_DeleteAll_L(expr);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "not null", 4, expr);
 
     //look for 'trigg1' on table 'AK_reference' and change it's event to drop and it's function to 'dummy_funk_2'
     AK_trigger_edit(NULL, "trigg1", "drop", expr, "AK_reference", "dummy_funk_2");
