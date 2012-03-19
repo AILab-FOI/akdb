@@ -204,7 +204,7 @@ void AK_deallocate_search_result(search_result srResult) {
     free(srResult.aiBlocks);
 }
 
-void filesearch_test() {
+void Ak_filesearch_test() {
     int i;
     double f;
     AK_mem_block *mem_block, tmp;
@@ -232,12 +232,12 @@ void filesearch_test() {
     }
 
     for (i = -10, f = -i; i < 10; i++, f = -i) {
-        InitL(row_root);
-        InsertNewElement(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
-        InsertNewElement(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
-        InsertNewElement(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);
-        insert_row(row_root);
-        DeleteAllL(row_root);
+        Ak_InitL(row_root);
+        Ak_Insert_New_Element(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
+        Ak_Insert_New_Element(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
+        Ak_Insert_New_Element(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);
+        Ak_insert_row(row_root);
+        Ak_DeleteAllL(row_root);
     }
 
     free(row_root);
@@ -265,7 +265,7 @@ void filesearch_test() {
         dTmp = 2;
         sp[2].pData_lower = &dTmp;
 
-        dbg_messg(LOW, FILE_MAN, "Calling AK_search_unsorted");
+        Ak_dbg_messg(LOW, FILE_MAN, "Calling AK_search_unsorted");
         sr = AK_search_unsorted("filesearch test table", sp, 3);
 
         for (i = 0; i < sr.iNum_tuple_addresses; i++) {

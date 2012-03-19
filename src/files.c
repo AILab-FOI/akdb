@@ -38,7 +38,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     char *sys_table;
 
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
-        dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
+        Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
         return EXIT_ERROR;
     } else {
         end_address += start_address;
@@ -55,20 +55,20 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
         }
 		
         AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-        InitL(row_root);
+        Ak_InitL(row_root);
         //DeleteAllElements(row_root);
-        InsertNewElement(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
-        InsertNewElement(TYPE_VARCHAR, name, sys_table, "name", row_root);
-        InsertNewElement(TYPE_INT, &start_address, sys_table, "start_address", row_root);
-        InsertNewElement(TYPE_INT, &end_address, sys_table, "end_address", row_root);
-        insert_row(row_root);
+        Ak_Insert_New_Element(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
+        Ak_Insert_New_Element(TYPE_VARCHAR, name, sys_table, "name", row_root);
+        Ak_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
+        Ak_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
+        Ak_insert_row(row_root);
 
-        dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
+        Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
         return start_address;
     }
 }
 
-void files_test() {
+void Ak_files_test() {
     AK_header header[MAX_ATTRIBUTES], header1[MAX_ATTRIBUTES];
     memset(header, '\0', MAX_ATTRIBUTES);
     memset(header1, '\0', MAX_ATTRIBUTES);

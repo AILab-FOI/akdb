@@ -28,7 +28,7 @@ int AK_get_id() {
     char temp_data[MAX_VARCHAR_LENGTH];
     
 	AK_list * row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    InitL(row_root);
+    Ak_InitL(row_root);
     
 	AK_list *row = (AK_list*) malloc(sizeof (AK_list));
     
@@ -38,33 +38,33 @@ int AK_get_id() {
     
 	for (i = 0; i < num_rec; i++) {
         row = (AK_list *)AK_get_row(i, "AK_sequence");
-        AK_list_elem value = GetNthL(1, row);
+        AK_list_elem value = Ak_GetNthL(1, row);
         memcpy(temp_data, &value->data, value->size);
         temp_data[value->size] = 0; //terminate string
         
 		if (strcmp(temp_data, "objectID") == 0) {
             exists = 1;
-            value = GetNthL(2, row);
+            value = Ak_GetNthL(2, row);
             memcpy(&current_value, &value->data, value->size);
             break;
         }
     }
     
 	if (exists) {
-        DeleteAllL(row_root);
-        InsertNewElementForUpdate(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root, 1);
-        delete_row(row_root);
+        Ak_DeleteAllL(row_root);
+        Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root, 1);
+        Ak_delete_row(row_root);
         current_value++;
     }
 	
-    DeleteAllL(row_root);
+    Ak_DeleteAllL(row_root);
     int value = 0;
-    InsertNewElement(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);
-    InsertNewElement(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
-    InsertNewElement(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
     value = 1;
-    InsertNewElement(TYPE_INT, &value, "AK_sequence", "increment", row_root);
-    insert_row(row_root);
+    Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "increment", row_root);
+    Ak_insert_row(row_root);
     return current_value;
 }
 
@@ -72,7 +72,7 @@ int AK_get_id() {
  * @author Mislav Čakarić.
  * @brief  function for testing getting ID's
  */
-void id_test() {
+void Ak_id_test() {
     printf("ID: %i\n", AK_get_id());
     AK_print_table("AK_sequence");
     printf("ID: %i\n", AK_get_id());

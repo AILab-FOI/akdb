@@ -46,7 +46,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
         if (strcmp(systemTableName, "AK_constraints_not_null") == 0) {
-            dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
+            Ak_dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
 
             tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
@@ -109,7 +109,7 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
         if (strcmp(systemTableName, "AK_constraints_not_null") == 0) {
-            dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
+            Ak_dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
             itis = 0;
         }
         i++;

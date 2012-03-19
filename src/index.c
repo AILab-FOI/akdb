@@ -19,15 +19,15 @@
 
 #include "index.h"
 
-void InitializelistAd(list_ad *L) {
+void Ak_InitializelistAd(list_ad *L) {
     L->next = 0;
 }
 
-element_ad GetFirstelementAd(list_ad *L) {
+element_ad Ak_Get_First_elementAd(list_ad *L) {
     return (element_ad) L->next;
 }
 
-element_ad GetLastelementAd(list_ad *L) {
+element_ad Ak_Get_Last_elementAd(list_ad *L) {
     list_ad *Currentelement_op;
     Currentelement_op = L;
     while (Currentelement_op->next)
@@ -38,7 +38,7 @@ element_ad GetLastelementAd(list_ad *L) {
         return 0;
 }
 
-element_ad GetNextelementAd(element_ad Currentelement_op) {
+element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op) {
     if (Currentelement_op->next == 0) {
         return 0;
     } else {
@@ -48,7 +48,7 @@ element_ad GetNextelementAd(element_ad Currentelement_op) {
     }
 }
 
-element_ad GetPreviouselementAd(element_ad Currentelement_op, element_ad L) {
+element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L) {
     element_ad Previouselement_op;
     Previouselement_op = L;
     while ((Previouselement_op->next != 0) && ((element_ad) Previouselement_op->next != Currentelement_op))
@@ -60,7 +60,7 @@ element_ad GetPreviouselementAd(element_ad Currentelement_op, element_ad L) {
     }
 }
 
-int GetPositionOfelementAd(element_ad Searchedelement_op, list_ad *L) {
+int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
     list_ad *Currentelement_op;
     int i = 0;
     Currentelement_op = L;
@@ -71,8 +71,8 @@ int GetPositionOfelementAd(element_ad Searchedelement_op, list_ad *L) {
     return i;
 }
 
-void DeleteelementAd(element_ad Deletedelement_op, list_ad *L) {
-    element_ad Previouselement_op = (element_ad) GetPreviouselementAd(Deletedelement_op, L);
+void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
+    element_ad Previouselement_op = (element_ad) Ak_Get_Previous_elementAd(Deletedelement_op, L);
     if (Previouselement_op != 0) {
         Previouselement_op->next = Deletedelement_op->next;
     } else {
@@ -81,7 +81,7 @@ void DeleteelementAd(element_ad Deletedelement_op, list_ad *L) {
     free(Deletedelement_op);
 }
 
-void DeleteAllelementsAd(list_ad *L) {
+void Ak_Delete_All_elementsAd(list_ad *L) {
     list_ad *Currentelement_op = L;
     list_ad *Deletedelement_op = (list_ad *) L->next;
     while (Currentelement_op->next != 0) {
@@ -91,7 +91,7 @@ void DeleteAllelementsAd(list_ad *L) {
     }
 }
 
-void InsertNewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore) {
+void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore) {
     list_ad *newelement_op = (list_ad *) malloc(sizeof (list_ad));
     newelement_op->add.addBlock = addBlock;
     newelement_op->add.indexTd = indexTd;

@@ -213,7 +213,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_mem_block *mem_block;
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    InitL(row_root);
+    Ak_InitL(row_root);
 
     i = 0;
     counter = 0;
@@ -341,7 +341,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 					sresult = AK_search_unsorted(new_table, search_parameters, agg_group_number);
 
 					if (sresult.iNum_tuple_addresses == 0) {
-						DeleteAllL(row_root);
+						Ak_DeleteAllL(row_root);
 
 						for (l = 0; l < header_size; l++) {
 							switch (needed_values[l].agg_task) {
@@ -351,7 +351,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 									inttemp = 1;
 									memcpy(needed_values[l].data, &inttemp, sizeof (int));
 									needed_values[l].data[sizeof (int) ] = '\0';
-									InsertNewElement(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
+									Ak_Insert_New_Element(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
 									break;
 
 								case AGG_TASK_AVG:
@@ -367,11 +367,11 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 								case AGG_TASK_AVG_SUM:
 									//no break is intentional
 								default:
-									InsertNewElement(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
+									Ak_Insert_New_Element(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
 							}
 
 						}
-						insert_row(row_root);
+						Ak_insert_row(row_root);
 					} else {
 						mem_block = AK_get_block(sresult.aiBlocks[0]);
 
@@ -491,17 +491,17 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 							}
 						}
 						AK_deallocate_search_result(sresult);
-						DeleteAllL(row_root);
+						Ak_DeleteAllL(row_root);
 
 						for (l = 0; l<header_size;l++) {
 							if (needed_values[l].agg_task == AGG_TASK_GROUP)
 							   inttemp = 1;
 							else
 								inttemp = 0;
-							InsertNewElementForUpdate(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root, inttemp);
+							Ak_Insert_New_Element_For_Update(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root, inttemp);
 						}
 
-						update_delete_row_from_block(mem_block->block, row_root, 0);
+						Ak_update_delete_row_from_block(mem_block->block, row_root, 0);
 						mem_block->timestamp_last_change = clock();
 						mem_block->dirty = BLOCK_DIRTY;
 					}
@@ -529,7 +529,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		if (startAddress != EXIT_ERROR)
 			printf("\nTABLE %s CREATED!\n", agg_table);
 
-    	DeleteAllL(row_root);
+    	Ak_DeleteAllL(row_root);
 
 		for (l = 0; l < header_size; l++) {
 
@@ -557,27 +557,27 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 				case AGG_TASK_SUM:
 					//no break is intentional
 				default:
-					InsertNewElement(agg_head[l].type, needed_values[l].data, agg_table, agg_head[l].att_name, row_root);
+					Ak_Insert_New_Element(agg_head[l].type, needed_values[l].data, agg_table, agg_head[l].att_name, row_root);
 					break;
 			}
 
 		}
-		insert_row(row_root);
+		Ak_insert_row(row_root);
     }
     else{
 
     	AK_list *projection_att = (AK_list *) malloc(sizeof (AK_list));
-		InitL(projection_att);
+		Ak_InitL(projection_att);
 
 		for (i = 0; i < header_size; i++) {
 			if (agg_head[i].att_name[0] != '_') {
-				InsertAtEndL(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
+				Ak_Insert_At_EndL(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
 			}
 		}
 
 		AK_projection(new_table, agg_table, projection_att);
 
-		DeleteAllL(projection_att);
+		Ak_DeleteAllL(projection_att);
 		free(projection_att);
     }
 
@@ -596,7 +596,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     return EXIT_SUCCESS;
 }
 
-void aggregation_test() {
+void Ak_aggregation_test() {
     printf("aggregation.c: Present!\n");
 
     char *tblName = "student";

@@ -48,7 +48,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
         if (strcmp(systemTableName, "AK_constraints_between") == 0) {
-            dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
+            Ak_dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
 
             tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
@@ -113,7 +113,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
         memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
         if (strcmp(systemTableName, "AK_constraints_between") == 0) {
-            dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
+            Ak_dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
             itis = 0;
         }
         i++;
@@ -148,23 +148,23 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
             memcpy(value, tempBlock->data + tempBlock->tuple_dict[tupleDictID].address, tempBlock->tuple_dict[tupleDictID].size);
             if (strcmp(value, tableName) == 0) {
 
-                dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
-                dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
                 memcpy(attName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
-                dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
                 for (j = 0; j < 50; j++)
                     value[j] = FREE_CHAR;
                 memcpy(constraintName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 1].address, tempBlock->tuple_dict[tupleDictID + 1].size);
-                dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
                 memcpy(valueF, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 3].address, tempBlock->tuple_dict[tupleDictID + 3].size);
                 startValue = atof(valueF);
                 for (j = 0; j < 50; j++)
                     value[j] = FREE_CHAR;
-                dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %f\n", startValue);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %f\n", startValue);
                 memcpy(valueS, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 4].address, tempBlock->tuple_dict[tupleDictID + 4].size);
                 endValue = atof(valueS);
-				dbg_messg(HIGH, CONSTRAINTS, "High boundary: %f\n", endValue);
-                dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
+				Ak_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %f\n", endValue);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
 
                 if (strcmp(attName, attNamePar) == 0) {
                     if ((startValue != 0) && (endValue != 0)) {
@@ -206,7 +206,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     return flag;
 }
 
-constraint_between_test() {
+Ak_constraint_between_test() {
     char* tableName = "studenti";
     char* attName = "ime";
     char* constraintName = "imeBetween";

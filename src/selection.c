@@ -39,12 +39,12 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
         return EXIT_ERROR;
     }
 
-    dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
+    Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
 
     table_addresses *src_addr = (table_addresses*) AK_get_table_addresses(srcTable);
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    InitL(row_root);
+    Ak_InitL(row_root);
 
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
@@ -68,13 +68,13 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 					address = temp->block->tuple_dict[k + l].address;
 					memcpy(data, &(temp->block->data[address]), size);
 					data[size] = '\0';
-					InsertNewElement(type, data, dstTable, t_header[l].att_name, row_root);
+					Ak_Insert_New_Element(type, data, dstTable, t_header[l].att_name, row_root);
 				}
 
 				if (AK_check_if_row_satisfies_expression(row_root, expr))
-                    insert_row(row_root);
+                    Ak_insert_row(row_root);
 
-				DeleteAllL(row_root);
+				Ak_DeleteAllL(row_root);
             }
         }
     }
@@ -83,7 +83,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
     free(t_header);
     free(row_root);
 
-	dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
+	Ak_dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
     return EXIT_SUCCESS;
 }
 
@@ -96,20 +96,20 @@ void AK_op_selection_test() {
     printf("\n********** SELECTION TEST **********\n");
 
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
-    InitL(expr);
+    Ak_InitL(expr);
 
     int num = 2010;
     //float weight = 83.750;
     //InsertAtEndL( TYPE_ATTRIBS, "weight", sizeof("weight"), expr );
     //InsertAtEndL( TYPE_FLOAT, &weight, sizeof(float), expr );
     //InsertAtEndL( TYPE_OPERATOR, "<", sizeof("<"), expr );
-    InsertAtEndL(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
-    InsertAtEndL(TYPE_INT, &num, sizeof (int), expr);
-    InsertAtEndL(TYPE_OPERATOR, "<", sizeof ("<"), expr);
-    InsertAtEndL(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    InsertAtEndL(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
-    InsertAtEndL(TYPE_OPERATOR, "=", sizeof ("="), expr);
-    InsertAtEndL(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
+    Ak_Insert_At_EndL(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
+    Ak_Insert_At_EndL(TYPE_INT, &num, sizeof (int), expr);
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "<", sizeof ("<"), expr);
+    Ak_Insert_At_EndL(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    Ak_Insert_At_EndL(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "=", sizeof ("="), expr);
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
     //InsertAtEndL( TYPE_OPERATOR, "AND", sizeof("AND"), expr );
 
     printf("\nQUERY: SELECT * FROM student WHERE year < 2010 OR firstname = 'Robert';\n\n");
@@ -119,6 +119,6 @@ void AK_op_selection_test() {
     AK_selection(tblName, "selection_test", expr);
     AK_print_table("selection_test");
 
-    DeleteAllL(expr);
+    Ak_DeleteAllL(expr);
     free(expr);
 }

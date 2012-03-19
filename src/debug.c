@@ -28,7 +28,7 @@
  * ... - variable number of (different) type args used in printf
  * @return int - if debug message is printed return 1, else return 0
  */
-int dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...) {
+int Ak_dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...) {
 	/*if (DEBUG_NONE) {
 		return 0;
 	}*/

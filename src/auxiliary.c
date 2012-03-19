@@ -93,7 +93,7 @@ int AK_strcmp(const void *a, const void *b) {
  * @param AK_list* - root of the list
  * @result void
  */
-void InitL(AK_list *L) {
+void Ak_InitL(AK_list *L) {
     L->next = NULL;
 }
 
@@ -103,7 +103,7 @@ void InitL(AK_list *L) {
  * @param AK_list* - root of the list
  * @result AK_list_elem - first element of the list
  */
-AK_list_elem FirstL(AK_list *L) {
+AK_list_elem Ak_FirstL(AK_list *L) {
     return L->next;
 }
 
@@ -113,8 +113,8 @@ AK_list_elem FirstL(AK_list *L) {
  * @param AK_list* - root of the list
  * @result AK_list_elem - last element of the list
  */
-AK_list_elem EndL(AK_list *L) {
-    AK_list_elem current = FirstL(L);
+AK_list_elem Ak_EndL(AK_list *L) {
+    AK_list_elem current = Ak_FirstL(L);
     if (current == NULL)
         return NULL;
     while (current->next != NULL)
@@ -129,7 +129,7 @@ AK_list_elem EndL(AK_list *L) {
  * @param AK_list* - root of the list
  * @result AK_list_elem - next element in the list
  */
-AK_list_elem NextL(AK_list_elem current) {
+AK_list_elem Ak_NextL(AK_list_elem current) {
     if (current == NULL)
         return NULL;
     return current->next;
@@ -142,7 +142,7 @@ AK_list_elem NextL(AK_list_elem current) {
  * @param AK_list* - root of the list
  * @result AK_list_elem - previous element in the list
  */
-AK_list_elem PreviousL(AK_list_elem current, AK_list *L) {
+AK_list_elem Ak_PreviousL(AK_list_elem current, AK_list *L) {
     if (current == NULL || current == L)
         return NULL;
     AK_list_elem previous = L;
@@ -157,8 +157,8 @@ AK_list_elem PreviousL(AK_list_elem current, AK_list *L) {
  * @param AK_list* - root of the list
  * @result int - returns 1 if the list is empty, otherwise returns 0
  */
-int IsEmptyL(AK_list *L) {
-    return FirstL(L) == NULL ? 1 : 0;
+int Ak_IsEmptyL(AK_list *L) {
+    return Ak_FirstL(L) == NULL ? 1 : 0;
 }
 
 /**
@@ -171,7 +171,7 @@ int IsEmptyL(AK_list *L) {
  * @param AK_list* - root of the list
  * @result void
  */
-void InsertBeforeL(int type, char* data, int size, AK_list_elem current, AK_list *L) {
+void Ak_InsertBeforeL(int type, char* data, int size, AK_list_elem current, AK_list *L) {
     AK_list_elem new_elem = (AK_list_elem) malloc(sizeof ( struct list_elem));
     new_elem->size = size;
     new_elem->type = type;
@@ -181,7 +181,7 @@ void InsertBeforeL(int type, char* data, int size, AK_list_elem current, AK_list
         new_elem->next = NULL;
         return;
     }
-    AK_list_elem previous = PreviousL(current, L);
+    AK_list_elem previous = Ak_PreviousL(current, L);
     previous->next = new_elem;
     new_elem->next = current;
 }
@@ -196,7 +196,7 @@ void InsertBeforeL(int type, char* data, int size, AK_list_elem current, AK_list
  * @param AK_list* - root of the list
  * @result void
  */
-void InsertAfterL(int type, char* data, int size, AK_list_elem current, AK_list *L) {
+void Ak_InsertAfterL(int type, char* data, int size, AK_list_elem current, AK_list *L) {
     AK_list_elem new_elem = (AK_list_elem) malloc(sizeof ( struct list_elem));
     new_elem->size = size;
     new_elem->type = type;
@@ -219,8 +219,8 @@ void InsertAfterL(int type, char* data, int size, AK_list_elem current, AK_list 
  * @param AK_list* - root of the list
  * @result void
  */
-void InsertAtBeginL(int type, char* data, int size, AK_list *L) {
-    InsertBeforeL(type, data, size, FirstL(L), L);
+void Ak_Insert_At_BeginL(int type, char* data, int size, AK_list *L) {
+    Ak_InsertBeforeL(type, data, size, Ak_FirstL(L), L);
 }
 
 /**
@@ -232,8 +232,8 @@ void InsertAtBeginL(int type, char* data, int size, AK_list *L) {
  * @param AK_list* - root of the list
  * @result void
  */
-void InsertAtEndL(int type, char* data, int size, AK_list *L) {
-    InsertAfterL(type, data, size, EndL(L), L);
+void Ak_Insert_At_EndL(int type, char* data, int size, AK_list *L) {
+    Ak_InsertAfterL(type, data, size, Ak_EndL(L), L);
 }
 
 /**
@@ -243,10 +243,10 @@ void InsertAtEndL(int type, char* data, int size, AK_list *L) {
  * @param AK_list* - root of the list
  * @result void
  */
-void DeleteL(AK_list_elem current, AK_list *L) {
+void Ak_DeleteL(AK_list_elem current, AK_list *L) {
     if (current == NULL)
         return;
-    AK_list_elem previous = PreviousL(current, L);
+    AK_list_elem previous = Ak_PreviousL(current, L);
     AK_list_elem next = current->next; //NextL( current, L );
 
     previous->next = next;
@@ -259,9 +259,9 @@ void DeleteL(AK_list_elem current, AK_list *L) {
  * @param AK_list* - root of the list
  * @result void
  */
-void DeleteAllL(AK_list *L) {
+void Ak_DeleteAllL(AK_list *L) {
     AK_list_elem current;
-    while (current = FirstL(L)) {
+    while (current = Ak_FirstL(L)) {
         L->next = current->next;
         free(current);
     }
@@ -273,12 +273,12 @@ void DeleteAllL(AK_list *L) {
  * @param AK_list* - root of the list
  * @result int - size of the list
  */
-int SizeL(AK_list *L) {
+int Ak_SizeL(AK_list *L) {
     int size = 0;
-    AK_list_elem current = FirstL(L);
+    AK_list_elem current = Ak_FirstL(L);
     while (current) {
         size++;
-        current = NextL(current);
+        current = Ak_NextL(current);
     }
     return size;
 }
@@ -290,7 +290,7 @@ int SizeL(AK_list *L) {
  * @param AK_list* - root of the list
  * @result char* - data from the list element
  */
-char* RetrieveL(AK_list_elem current, AK_list *L) {
+char* Ak_RetrieveL(AK_list_elem current, AK_list *L) {
     if (current == NULL)
         return NULL;
     char *data = (char*) malloc(current->size);
@@ -305,7 +305,7 @@ char* RetrieveL(AK_list_elem current, AK_list *L) {
  * @param AK_list* - root of the list
  * @result int - data type  of the current list element
  */
-int GetTypeL(AK_list_elem current, AK_list *L) {
+int Ak_GetTypeL(AK_list_elem current, AK_list *L) {
     return (current == NULL) ? 0 : current->type;
 }
 
@@ -316,7 +316,7 @@ int GetTypeL(AK_list_elem current, AK_list *L) {
  * @param AK_list* - root of the list
  * @result int - data size of the current list element
  */
-int GetSizeL(AK_list_elem current, AK_list *L) {
+int Ak_GetSizeL(AK_list_elem current, AK_list *L) {
     return (current == NULL) ? 0 : current->size;
 }
 
@@ -327,15 +327,15 @@ int GetSizeL(AK_list_elem current, AK_list *L) {
  @return element of list of elements of row in table
  @author Mislav Čakarić
  */
-AK_list_elem GetNthL(int pos, AK_list *row) {
+AK_list_elem Ak_GetNthL(int pos, AK_list *row) {
     int i = 0;
     AK_list_elem temp_elem;
 
-    temp_elem = FirstL(row);
+    temp_elem = Ak_FirstL(row);
     do {
         if (pos == i)
             return temp_elem;
-        temp_elem = NextL(temp_elem);
+        temp_elem = Ak_NextL(temp_elem);
         i++;
     } while (temp_elem);
     return NULL;
@@ -348,7 +348,7 @@ AK_list_elem GetNthL(int pos, AK_list *row) {
  * @param L - root of the list
  * @result returns the posititon number of some elelemnt
  */
-int GetPositionOfElement(AK_list_elem SearchedElement, AK_list *L) {
+int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L) {
     AK_list *CurrentElement;
     int i = 0;
     CurrentElement = L;

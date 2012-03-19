@@ -80,11 +80,11 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 							memset(data, '\0', MAX_VARCHAR_LENGTH);
 							memcpy(data, tbl1_temp_block->block->data + address, size);
 						
-							InsertNewElementForUpdate(type, data, dstTable, tbl1_temp_block->block->header[k % num_att].att_name, row_root, 0);
+							Ak_Insert_New_Element_For_Update(type, data, dstTable, tbl1_temp_block->block->header[k % num_att].att_name, row_root, 0);
 							
 							if ((k + 1) % num_att == 0 && k != 0) {
-								insert_row(row_root);
-								DeleteAllL(row_root);
+								Ak_insert_row(row_root);
+								Ak_DeleteAllL(row_root);
 							}
 						}
 					}
@@ -116,11 +116,11 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 							memset(data, '\0', MAX_VARCHAR_LENGTH);
 							memcpy(data, tbl2_temp_block->block->data + address, size);
 
-							InsertNewElementForUpdate(type, data, dstTable, tbl2_temp_block->block->header[k % num_att].att_name, row_root, 0);
+							Ak_Insert_New_Element_For_Update(type, data, dstTable, tbl2_temp_block->block->header[k % num_att].att_name, row_root, 0);
 							
 							if ((k + 1) % num_att == 0) {
-								insert_row(row_root);
-								DeleteAllL(row_root);
+								Ak_insert_row(row_root);
+								Ak_DeleteAllL(row_root);
 							}
 						}
 					}
@@ -130,10 +130,10 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 		
 		free(src_addr1);
         free(src_addr2);
-		dbg_messg(LOW, REL_OP, "UNION_TEST_SUCCESS\n\n");
+		Ak_dbg_messg(LOW, REL_OP, "UNION_TEST_SUCCESS\n\n");
 		return EXIT_SUCCESS;
 	} else {
-		dbg_messg(LOW, REL_OP, "\nAK_union: Table/s doesn't exist!");
+		Ak_dbg_messg(LOW, REL_OP, "\nAK_union: Table/s doesn't exist!");
         free(src_addr1);
         free(src_addr2);
 		return EXIT_ERROR;

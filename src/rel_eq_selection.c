@@ -58,7 +58,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     memcpy(temp_set, set, strlen(set));
     memcpy(temp_subset, subset, strlen(subset));
 
-    dbg_messg(HIGH, REL_EQ, "RULE - is (%s) subset of set (%s) in rel_eq_selection\n", subset, set);
+    Ak_dbg_messg(HIGH, REL_EQ, "RULE - is (%s) subset of set (%s) in rel_eq_selection\n", subset, set);
 
     for ((token_set = strtok_r(temp_set, ATTR_DELIMITER, &save_token_set)); token_set;
             (token_set = strtok_r(NULL, ATTR_DELIMITER, &save_token_set)), set_id++) {
@@ -77,7 +77,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     }
 
     if (len_set < len_subset) {
-        dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
+        Ak_dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
         return EXIT_FAILURE;
     }
 
@@ -95,14 +95,14 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     }
 
     if (len_set != len_subset) {
-        dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
+        Ak_dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
         return EXIT_FAILURE;
     }
 
     free(temp_set);
     free(temp_subset);
 
-    dbg_messg(HIGH, REL_EQ, "RULE - succeed (%s) is subset of set (%s).\n", subset, set);
+    Ak_dbg_messg(HIGH, REL_EQ, "RULE - succeed (%s) is subset of set (%s).\n", subset, set);
     return EXIT_SUCCESS;
 }
 
@@ -285,7 +285,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
     memcpy(temp_cond, cond, strlen(cond));
     memcpy(temp_cond + strlen(cond) + 1, "\0", 1);
 
-    dbg_messg(HIGH, REL_EQ, "RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
+    Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
 
     for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond;
             (token_cond = strtok_r(NULL, " ", &save_token_cond)), token_id++) {
@@ -319,10 +319,10 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
     }
 
     if (ret_attributes > 0) {
-        dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join succeed.\n");
+        Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join succeed.\n");
         return ret_attributes;
     } else {
-        dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
+        Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
         free(ret_attributes);
         return NULL;
     }
@@ -453,7 +453,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
  */
 AK_list *AK_rel_eq_split_condition(char *cond) {
     AK_list *list_attr = (AK_list *) malloc(sizeof (AK_list));
-    InitL(list_attr);
+    Ak_InitL(list_attr);
 
     int token_id = 0;
     int attr_address = 0;
@@ -473,7 +473,7 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
             len_token = strlen(token_cond);
 
             if (strcmp(token_cond, "AND") == 0) {
-                InsertAtEndL(TYPE_CONDITION, temp_attr, strlen(temp_attr), list_attr);
+                Ak_Insert_At_EndL(TYPE_CONDITION, temp_attr, strlen(temp_attr), list_attr);
 
                 attr_address = 0;
                 free(temp_attr);
@@ -497,7 +497,7 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
     }
 
     //memcpy(temp_attr + attr_address, "\0", 1);
-    InsertAtEndL(TYPE_CONDITION, temp_attr, strlen(temp_attr), list_attr);
+    Ak_Insert_At_EndL(TYPE_CONDITION, temp_attr, strlen(temp_attr), list_attr);
 
     free(temp_cond);
     free(temp_attr);
@@ -516,11 +516,11 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 
     //Initialize temporary linked list
     AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
-    InitL(temp);
+    Ak_InitL(temp);
 
     AK_list *list_split_sel;
     AK_list_elem tmp, temp_elem, temp_elem_prev, temp_elem_next;
-    AK_list_elem list_elem_next, list_elem = (AK_list_elem) FirstL(list_rel_eq);
+    AK_list_elem list_elem_next, list_elem = (AK_list_elem) Ak_FirstL(list_rel_eq);
 
     //Iterate through all the elements of RA linked list
     while (list_elem != NULL) {
@@ -528,11 +528,11 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
         switch (list_elem->type) {
 
             case TYPE_OPERATOR:
-                dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
-                dbg_messg(LOW, REL_EQ, "----------------------\n");
-                temp_elem = (AK_list_elem) EndL(temp);
-                temp_elem_prev = (AK_list_elem) PreviousL(temp_elem, temp);
-                list_elem_next = (AK_list_elem) NextL(list_elem, list_rel_eq);
+                Ak_dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
+                Ak_dbg_messg(LOW, REL_EQ, "----------------------\n");
+                temp_elem = (AK_list_elem) Ak_EndL(temp);
+                temp_elem_prev = (AK_list_elem) Ak_PreviousL(temp_elem, temp);
+                list_elem_next = (AK_list_elem) Ak_NextL(list_elem, list_rel_eq);
 
                 switch (list_elem->data[0]) {
                         //Commutativity of Selection and Projection.
@@ -543,33 +543,33 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                             while (temp_elem != NULL) {
                                 if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_CONDITION) {
                                     if (temp_elem->type == TYPE_CONDITION) {
-                                        temp_elem_prev = (AK_list_elem) PreviousL(temp_elem, temp);
+                                        temp_elem_prev = (AK_list_elem) Ak_PreviousL(temp_elem, temp);
 
                                         if ((AK_rel_eq_can_commute(list_elem_next, temp_elem) == EXIT_FAILURE) &&
                                                 (temp_elem_prev->data[0] == RO_SELECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
-                                            InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                                            InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                                            Ak_Insert_At_EndL(list_elem->type, list_elem->data, list_elem->size, temp);
+                                            Ak_Insert_At_EndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                                             step++;
                                             break;
                                         } else if ((AK_rel_eq_can_commute(list_elem_next, temp_elem) == EXIT_SUCCESS) &&
                                                 (temp_elem_prev->data[0] == RO_SELECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
-                                            InsertBeforeL(list_elem->type, list_elem->data, list_elem->size, temp_elem_prev, temp);
-                                            InsertBeforeL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp_elem_prev, temp);
-                                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                                            Ak_InsertBeforeL(list_elem->type, list_elem->data, list_elem->size, temp_elem_prev, temp);
+                                            Ak_InsertBeforeL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp_elem_prev, temp);
+                                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                                             step++;
                                             break;
                                         }
                                     }
                                 }
-                                temp_elem = (AK_list_elem) PreviousL(temp_elem, temp);
+                                temp_elem = (AK_list_elem) Ak_PreviousL(temp_elem, temp);
                             }
                         }
 
                         if (temp_elem == NULL || step != 0) {
-                            InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                            InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                            Ak_Insert_At_EndL(list_elem->type, list_elem->data, list_elem->size, temp);
+                            Ak_Insert_At_EndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         }
 
                         list_elem = list_elem->next;
@@ -587,11 +587,11 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                             strcat(temp_elem->data, list_elem_next->data);
                             strcat(temp_elem->data, " AND"); //comment if using infix format
                             memcpy(temp_elem->data, temp_elem->data, temp_elem->size);
-                            dbg_messg(MIDDLE, REL_EQ, "::selection cascade - condition changed to (%s) in temp list\n", temp_elem->data);
+                            Ak_dbg_messg(MIDDLE, REL_EQ, "::selection cascade - condition changed to (%s) in temp list\n", temp_elem->data);
                         } else {
-                            InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                            InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                            dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                            Ak_Insert_At_EndL(list_elem->type, list_elem->data, list_elem->size, temp);
+                            Ak_Insert_At_EndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         }
 
                         /*//Divide selection condition (slower than upper solution but can be useful in certain cases)
@@ -640,7 +640,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                         while (temp_elem != NULL) {
                             if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_CONDITION) {
                                 step++;
-                                temp_elem_prev = (AK_list_elem) PreviousL(temp_elem, temp);
+                                temp_elem_prev = (AK_list_elem) Ak_PreviousL(temp_elem, temp);
 
                                 if (temp_elem_prev->data[0] == RO_SELECTION && temp_elem_prev->type == TYPE_OPERATOR) {
                                     if (step > 1) {
@@ -648,25 +648,25 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                                         while (tmp->type != TYPE_OPERAND) {
                                             tmp = tmp->next;
                                         }
-                                        InsertAfterL(temp_elem->type, temp_elem->data, temp_elem->size, tmp, temp);
-                                        InsertAfterL(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
-                                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
+                                        Ak_InsertAfterL(temp_elem->type, temp_elem->data, temp_elem->size, tmp, temp);
+                                        Ak_InsertAfterL(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
+                                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
                                     }
                                     break;
                                 }
                             } else {
                                 break;
                             }
-                            temp_elem = (AK_list_elem) PreviousL(temp_elem, temp);
+                            temp_elem = (AK_list_elem) Ak_PreviousL(temp_elem, temp);
                         }
-                        InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+                        Ak_Insert_At_EndL(list_elem->type, list_elem->data, list_elem->size, temp);
+                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     case RO_NAT_JOIN:
-                        InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                        InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+                        Ak_Insert_At_EndL(list_elem->type, list_elem->data, list_elem->size, temp);
+                        Ak_Insert_At_EndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         list_elem = list_elem->next;
                         break;
 
@@ -677,7 +677,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                         while (temp_elem != NULL) {
                             if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_CONDITION) {
                                 step++;
-                                temp_elem_prev = (AK_list_elem) PreviousL(temp_elem, temp);
+                                temp_elem_prev = (AK_list_elem) Ak_PreviousL(temp_elem, temp);
 
                                 if (temp_elem_prev->data[0] == RO_SELECTION && temp_elem_prev->type == TYPE_OPERATOR) {
                                     if (step > 1) {
@@ -705,9 +705,9 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                                                 temp_elem->size = strlen(data1) + 1;
                                                 memcpy(temp_elem->data, data1, temp_elem->size);
                                                 memset(temp_elem->data + temp_elem->size, '\0', MAX_VARCHAR_LENGTH - temp_elem->size);
-                                                dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
+                                                Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
                                             } else {
-                                                AK_list_elem temp_elem_prevprev = (AK_list_elem) PreviousL(temp_elem_prev, temp);
+                                                AK_list_elem temp_elem_prevprev = (AK_list_elem) Ak_PreviousL(temp_elem_prev, temp);
                                                 temp_elem_prevprev->next = temp_elem;
                                                 free(temp_elem_prev);
                                                 AK_list_elem temp_elem_prev = temp_elem_prevprev;
@@ -725,9 +725,9 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 
                                             if (cond_attr2 != NULL) {
                                                 memset(data2 + strlen(data2), '\0', 1);
-                                                InsertAfterL(temp_elem->type, data2, strlen(data2) + 1, tmp, temp);
-                                                InsertAfterL(TYPE_OPERATOR, op_selected, 2, tmp, temp);
-                                                dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", op_selected, data2);
+                                                Ak_InsertAfterL(temp_elem->type, data2, strlen(data2) + 1, tmp, temp);
+                                                Ak_InsertAfterL(TYPE_OPERATOR, op_selected, 2, tmp, temp);
+                                                Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", op_selected, data2);
                                             }
                                         }
 
@@ -741,22 +741,22 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                             } else {
                                 break;
                             }
-                            temp_elem = (AK_list_elem) PreviousL(temp_elem, temp);
+                            temp_elem = (AK_list_elem) Ak_PreviousL(temp_elem, temp);
                         }
 
-                        InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                        InsertAtEndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                        Ak_Insert_At_EndL(list_elem->type, list_elem->data, list_elem->size, temp);
+                        Ak_Insert_At_EndL(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         list_elem = list_elem->next;
                         break;
 
                     case RO_RENAME:
-                        InsertAtEndL(list_elem->type, list_elem->data, list_elem->size, temp);
-                        dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+                        Ak_Insert_At_EndL(list_elem->type, list_elem->data, list_elem->size, temp);
+                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     default:
-                        dbg_messg(LOW, REL_EQ, "Invalid operator: %s", list_elem->data);
+                        Ak_dbg_messg(LOW, REL_EQ, "Invalid operator: %s", list_elem->data);
                         break;
                 }
                 break;
@@ -772,12 +772,12 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                 break;
 
             case TYPE_OPERAND:
-                dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in the temp list\n", list_elem->data);
-                InsertAtEndL(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
+                Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in the temp list\n", list_elem->data);
+                Ak_Insert_At_EndL(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
                 break;
 
             default:
-                dbg_messg(LOW, REL_EQ, "Invalid type: %s", list_elem->data);
+                Ak_dbg_messg(LOW, REL_EQ, "Invalid type: %s", list_elem->data);
                 break;
         }
 
@@ -797,7 +797,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
     //	}
     //}
 
-    DeleteAllL(list_rel_eq);
+    Ak_DeleteAllL(list_rel_eq);
     return temp;
 }
 
@@ -807,7 +807,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
  * @param AK_list *list_rel_eq - RA expresion as the AK_list
  */
 void AK_print_rel_eq_selection(AK_list *list_rel_eq) {
-    AK_list_elem list_elem = (AK_list_elem) FirstL(list_rel_eq);
+    AK_list_elem list_elem = (AK_list_elem) Ak_FirstL(list_rel_eq);
 
     printf("\n");
     while (list_elem != NULL) {
@@ -879,34 +879,34 @@ void AK_rel_eq_selection_test() {
 
     //Init list and insert elements (Query parser output)
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
-    InitL(expr);
+    Ak_InitL(expr);
 
     //Commutativity of Selection and Projection
-    InsertAtEndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    InsertAtEndL(TYPE_CONDITION, "`L1` 100 >", sizeof ("`L1` 100 >"), expr);
-    InsertAtEndL(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    InsertAtEndL(TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof ("L1;L2;L3;L4"), expr); //projection attribute
-    InsertAtEndL(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    InsertAtEndL(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_Insert_At_EndL(TYPE_CONDITION, "`L1` 100 >", sizeof ("`L1` 100 >"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    Ak_Insert_At_EndL(TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof ("L1;L2;L3;L4"), expr); //projection attribute
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    Ak_Insert_At_EndL(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
 
     //Cascade of Selection and Commutativity of Selection
-    InsertAtEndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    InsertAtEndL(TYPE_CONDITION, "`L1` 100 >", sizeof ("`L1` 100 >"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_Insert_At_EndL(TYPE_CONDITION, "`L1` 100 >", sizeof ("`L1` 100 >"), expr);
     //
     //Commutativity of Selection and set operations (Union, Intersection, and Set difference)
-    InsertAtEndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    InsertAtEndL(TYPE_CONDITION, "`L2` 100 > `L3` 50 < OR", sizeof ("`L2` 100 > `L3` 50 < OR"), expr);
-    InsertAtEndL(TYPE_OPERAND, "R", sizeof ("R"), expr);
-    InsertAtEndL(TYPE_OPERAND, "S", sizeof ("S"), expr);
-    InsertAtEndL(TYPE_OPERATOR, "u", sizeof ("u"), expr); //u, i, e
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_Insert_At_EndL(TYPE_CONDITION, "`L2` 100 > `L3` 50 < OR", sizeof ("`L2` 100 > `L3` 50 < OR"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERAND, "R", sizeof ("R"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERAND, "S", sizeof ("S"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "u", sizeof ("u"), expr); //u, i, e
 
     //Commutativity of Selection and Theta join (or Cartesian product)
-    InsertAtEndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    InsertAtEndL(TYPE_CONDITION, "`job` 'teacher' = `mbr` 50 < AND", sizeof ("`job` 'teacher' = `mbr` 50 < AND"), expr);
-    InsertAtEndL(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    InsertAtEndL(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    InsertAtEndL(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    InsertAtEndL(TYPE_CONDITION, "`mbr` 50 = `job` 'teacher' = AND", sizeof ("`mbr` 50 = `job` 'teacher' = AND"), expr); //theta join attribute
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_Insert_At_EndL(TYPE_CONDITION, "`job` 'teacher' = `mbr` 50 < AND", sizeof ("`job` 'teacher' = `mbr` 50 < AND"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
+    Ak_Insert_At_EndL(TYPE_OPERATOR, "t", sizeof ("t"), expr);
+    Ak_Insert_At_EndL(TYPE_CONDITION, "`mbr` 50 = `job` 'teacher' = AND", sizeof ("`mbr` 50 = `job` 'teacher' = AND"), expr); //theta join attribute
 
     //printf("\nRA expr. before rel_eq optimization:\n");
     //AK_print_rel_eq_projection(expr);
@@ -936,6 +936,6 @@ void AK_rel_eq_selection_test() {
         printf("...\n");
     }
 
-    DeleteAllL(expr);
+    Ak_DeleteAllL(expr);
     //dealocate variables ;)
 }

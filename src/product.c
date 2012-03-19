@@ -70,8 +70,8 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 		
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
 
-        dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
-		dbg_messg(MIDDLE, REL_OP, "\nAK_product: start copying data\n");
+        Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
+		Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_product: start copying data\n");
 
         AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
 
@@ -80,11 +80,11 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
             startAddress1 = src_addr1->address_from[i];
 
             if (startAddress1 != 0) {
-                dbg_messg(MIDDLE, REL_OP, "\nProduct: copy extent1: %d\n", i);
+                Ak_dbg_messg(MIDDLE, REL_OP, "\nProduct: copy extent1: %d\n", i);
 
                 //for each block in table1 extent
                 for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
-                    dbg_messg(MIDDLE, REL_OP, "Product: copy block1: %d\n", j);
+                    Ak_dbg_messg(MIDDLE, REL_OP, "Product: copy block1: %d\n", j);
 
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
@@ -95,11 +95,11 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
                             startAddress2 = src_addr2->address_from[k];
 
                             if (startAddress2 != 0) {
-                                dbg_messg(MIDDLE, REL_OP, "Product: copy extent2: %d\n", k);
+                                Ak_dbg_messg(MIDDLE, REL_OP, "Product: copy extent2: %d\n", k);
 
                                 //for each block in table2 extent
                                 for (l = startAddress2; l < src_addr2->address_to[k]; l++) {
-                                    dbg_messg(MIDDLE, REL_OP, "Product: copy block2: %d\n", l);
+                                    Ak_dbg_messg(MIDDLE, REL_OP, "Product: copy block2: %d\n", l);
 
                                     tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 
@@ -125,7 +125,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 													memset(data1, '\0', MAX_VARCHAR_LENGTH);
 													memcpy(data1, &(tbl1_temp_block->block->data[address]), size);
 													
-													InsertNewElementForUpdate(type, data1, dstTable, tbl1_temp_block->block->header[o].att_name, row_root, 0);
+													Ak_Insert_New_Element_For_Update(type, data1, dstTable, tbl1_temp_block->block->header[o].att_name, row_root, 0);
 												}
 												
 												//for each element in row
@@ -137,11 +137,11 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 													memset(data2, '\0', MAX_VARCHAR_LENGTH);
 													memcpy(data2, &(tbl2_temp_block->block->data[address]), size);
 
-													InsertNewElementForUpdate(type, data2, dstTable, tbl2_temp_block->block->header[o].att_name, row_root, 0);
+													Ak_Insert_New_Element_For_Update(type, data2, dstTable, tbl2_temp_block->block->header[o].att_name, row_root, 0);
 												}
 												
-												insert_row(row_root);
-												DeleteAllL(row_root);
+												Ak_insert_row(row_root);
+												Ak_DeleteAllL(row_root);
 											}
 										}
                                     }
@@ -155,10 +155,10 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 		
         free(src_addr1);
         free(src_addr2);
-		dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
+		Ak_dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
         return EXIT_SUCCESS;
     } else {
-        dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");
+        Ak_dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");
         free(src_addr1);
         free(src_addr2);
         return EXIT_ERROR;

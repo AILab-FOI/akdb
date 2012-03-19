@@ -126,10 +126,10 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                         memcpy(data1, &(tbl1_temp_block->block->data[address]), size);
                                                         data1[size] = '\0';
 														
-                                                        InsertNewElementForUpdate(type, data1, dstTable, tbl1_temp_block->block->header[n].att_name, row_root, 0);
+                                                        Ak_Insert_New_Element_For_Update(type, data1, dstTable, tbl1_temp_block->block->header[n].att_name, row_root, 0);
                                                     }
-                                                    insert_row(row_root);
-                                                    DeleteAllL(row_root);
+                                                    Ak_insert_row(row_root);
+                                                    Ak_DeleteAllL(row_root);
                                                 }
                                             }
                                         }
@@ -144,10 +144,10 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 
         free(src_addr1);
         free(src_addr2);
-		dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
+		Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
         return EXIT_SUCCESS;
     } else {
-        dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
+        Ak_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
         free(src_addr1);
         free(src_addr2);
 		return EXIT_ERROR;
@@ -158,7 +158,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
  * @brief  Function for intersect operator testing
  * @author Dino Laktašić
  */
-void op_intersect_test() {
+void Ak_op_intersect_test() {
     printf("\n********** INTERSECT TEST **********\n\n");
 
     AK_intersect("professor", "assistant", "intersect_test");

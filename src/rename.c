@@ -54,12 +54,12 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 
 		for (i = 0; i < MAX_ATTRIBUTES; i++) {
 			if (strcmp(newHeader[i].att_name, old_attr)==0) {
-				dbg_messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
+				Ak_dbg_messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
 				memset(&newHeader[i].att_name, 0, MAX_ATT_NAME);
 				memcpy(&newHeader[i].att_name, new_attr, strlen(new_attr));
 				break;
 			} else if (strcmp(newHeader[i].att_name, "\0")==0) { //if there is no more attributes
-				dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: atribute: %s does not exist in this table\n", old_attr);
+				Ak_dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: atribute: %s does not exist in this table\n", old_attr);
 				return (EXIT_ERROR);
 			}
 		}
@@ -74,11 +74,11 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 
     if(strcmp(old_table_name, new_table_name) != 0){//new name is different than old, and old needs to be replaced
         AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-		InitL(row_root);
+		Ak_InitL(row_root);
 		
-		InsertNewElementForUpdate(TYPE_VARCHAR, old_table_name, "AK_relation", "name", row_root, 1);
-		InsertNewElementForUpdate(TYPE_VARCHAR, new_table_name, "AK_relation", "name", row_root, 0);        
-        update_row(row_root);
+		Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, old_table_name, "AK_relation", "name", row_root, 1);
+		Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_table_name, "AK_relation", "name", row_root, 0);        
+        Ak_update_row(row_root);
 		free(row_root);
     }
 
