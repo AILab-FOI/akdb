@@ -47,7 +47,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         int num_att = AK_check_tables_scheme(tbl1_temp_block, tbl2_temp_block, "Intersect");
 
         int something_to_copy = 0, m, n, o;
-		int address, type, size;
+	int address, type, size;
 		
         char data1[MAX_VARCHAR_LENGTH];
         char data2[MAX_VARCHAR_LENGTH];
@@ -63,8 +63,6 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         //TABLE1: for each extent in table1
         for (i = 0; src_addr1->address_from[i] != 0; i++) {
             startAddress1 = src_addr1->address_from[i];
-
-            if (startAddress1 != 0) {
 
                 //BLOCK: for each block in table1 extent
                 for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
@@ -139,18 +137,17 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                         }
                     }
                 }
-            } else break;
         }
 
         free(src_addr1);
         free(src_addr2);
-		Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
+	Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
         free(src_addr1);
         free(src_addr2);
-		return EXIT_ERROR;
+	return EXIT_ERROR;
     }
 }
 

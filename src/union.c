@@ -30,7 +30,7 @@
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
-	table_addresses *src_addr1 = (table_addresses*) AK_get_table_addresses(srcTable1);
+    table_addresses *src_addr1 = (table_addresses*) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses*) AK_get_table_addresses(srcTable2);
 
     int startAddress1 = src_addr1->address_from[0];
@@ -45,7 +45,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
         
         int num_att = AK_check_tables_scheme(tbl1_temp_block, tbl2_temp_block, "Union");
 
-		int address, type, size;
+	int address, type, size;
         char data[MAX_VARCHAR_LENGTH];
 
 		//initialize new segment
@@ -56,11 +56,9 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 
         AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
 		
-		//writing first block or table to new segment
-		for (i = 0; src_addr1->address_from[i] != 0; i++) {
+	//writing first block or table to new segment
+	for (i = 0; src_addr1->address_from[i] != 0; i++) {
             startAddress1 = src_addr1->address_from[i];
-
-            if (startAddress1 != 0) {
 
                 //BLOCK: for each block in table1 extent
                 for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
@@ -89,14 +87,11 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 						}
 					}
 				}
-			} else break;
 		}
 		
-		//writing first block or table to new segment
-		for (i = 0; src_addr2->address_from[i] != 0; i++) {
+	//writing first block or table to new segment
+	for (i = 0; src_addr2->address_from[i] != 0; i++) {
             startAddress2 = src_addr2->address_from[i];
-
-            if (startAddress2 != 0) {
 
                 //BLOCK: for each block in table2 extent
                 for (j = startAddress2; j < src_addr2->address_to[i]; j++) {
@@ -125,17 +120,16 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 						}
 					}
 				}
-			} else break;
 		}
 		
-		free(src_addr1);
-        free(src_addr2);
-		Ak_dbg_messg(LOW, REL_OP, "UNION_TEST_SUCCESS\n\n");
-		return EXIT_SUCCESS;
+	    free(src_addr1);
+	    free(src_addr2);
+	    Ak_dbg_messg(LOW, REL_OP, "UNION_TEST_SUCCESS\n\n");
+	    return EXIT_SUCCESS;
 	} else {
 		Ak_dbg_messg(LOW, REL_OP, "\nAK_union: Table/s doesn't exist!");
-        free(src_addr1);
-        free(src_addr2);
+		free(src_addr1);
+		free(src_addr2);
 		return EXIT_ERROR;
 	}
 }

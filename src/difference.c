@@ -27,7 +27,7 @@
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
-	table_addresses *src_addr1 = (table_addresses*) AK_get_table_addresses(srcTable1);
+    table_addresses *src_addr1 = (table_addresses*) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses*) AK_get_table_addresses(srcTable2);
 
     int startAddress1 = src_addr1->address_from[0];
@@ -53,9 +53,9 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 		float temp_float = 0;
 		
         char data1[MAX_VARCHAR_LENGTH];
-		char data2[MAX_VARCHAR_LENGTH];
+	char data2[MAX_VARCHAR_LENGTH];
 		
-		//initialize new segment
+	//initialize new segment
         AK_header *header = (AK_header *) malloc(num_att * sizeof (AK_header));
         memcpy(header, tbl1_temp_block->block->header, num_att * sizeof (AK_header));
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
@@ -63,10 +63,8 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 
         AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
 		
-		for (i = 0; src_addr1->address_from[i] != 0; i++) {
+	for (i = 0; src_addr1->address_from[i] != 0; i++) {
             startAddress1 = src_addr1->address_from[i];
-
-            if (startAddress1 != 0) {
 
                 //BLOCK: for each block in table1 extent
                 for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
@@ -75,7 +73,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
                     //if there is data in the block
                     if (tbl1_temp_block->block->free_space != 0) {
 						
-						//TABLE2: for each extent in table2
+			//TABLE2: for each extent in table2
                         for (k = 0; k < src_addr2->address_from[k] != 0; k++) {
                             startAddress2 = src_addr2->address_from[k];
 
@@ -88,12 +86,12 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
                                     //if there is data in the block
                                     if (tbl2_temp_block->block->free_space != 0) {
 										
-										//TUPLE_DICTS: for each tuple_dict in the block
+					//TUPLE_DICTS: for each tuple_dict in the block
                                         for (m = 0; m < DATA_BLOCK_SIZE; m += num_att) {
                                             if (tbl1_temp_block->block->tuple_dict[m + 1].type == FREE_INT)
                                                 break;
 
-											//TUPLE_DICTS: for each tuple_dict in the block
+					    //TUPLE_DICTS: for each tuple_dict in the block
                                             for (n = 0; n < DATA_BLOCK_SIZE; n += num_att) {
                                                 if (tbl2_temp_block->block->tuple_dict[n + 1].type == FREE_INT)
                                                     break;
@@ -173,10 +171,9 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 						}
 					}
 				}
-			} else break;
 		}
 		
-		free(src_addr1);
+	free(src_addr1);
         free(src_addr2);
 		Ak_dbg_messg(LOW, REL_OP, "DIFFERENCE_TEST_SUCCESS\n\n");
 		return EXIT_SUCCESS;
