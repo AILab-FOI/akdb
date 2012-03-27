@@ -198,6 +198,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
 		
         free(src_addr);
         Ak_dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n\n");
+	AK_archive_log("AK_projection", srcTable, dstTable); //ARCHIVE_LOG
         return EXIT_SUCCESS;
     } else {
 		free(src_addr);

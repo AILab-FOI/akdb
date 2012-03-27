@@ -99,7 +99,9 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
     Ak_insert_row(row_root);
 
     free(row_root);
-
+    
+    AK_archive_log("AK_trigger_add", name, event, condition, table, function); //ARCHIVE_LOG
+    
     if (condition != NULL && Ak_IsEmpty_L(condition) == 0)
         AK_trigger_save_conditions(trigg_id, condition);
 
@@ -157,6 +159,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
     // the following can be avoided if foreign key is declared...
     Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &trigg_id, "AK_trigger_conditions", "trigger", row_root, 1);
+    AK_archive_log("AK_trigger_remove_by_name", name, table); //ARCHIVE_LOG
     return Ak_delete_row(row_root);
 }
 
