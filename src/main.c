@@ -21,6 +21,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>  //ARCHIVE LOG
 
 // Global configuration
 #include "configuration.h"
@@ -37,6 +38,9 @@
 #include "filesearch.h"
 #include "filesort.h"
 #include "table.h"
+
+//Logging
+#include "archive_log.h" //ARCHIVE LOG
 
 // Indices
 #include "hash.h"
@@ -71,7 +75,7 @@ Main program function
 */
 int main()
 {
-	printf( "Калашникова DB - STARTING\n\n" );
+	printf( "KALASHNIKOV DB - STARTING\n\n" );
 
 	if( AK_init_disk_manager() == EXIT_SUCCESS )
 	{
