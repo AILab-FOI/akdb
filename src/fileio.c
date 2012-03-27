@@ -62,7 +62,8 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
         @result void
  */
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore) {
-    Ak_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, NEW_VALUE);
+  AK_archive_log("Ak_Insert_New_Element", newtype, data, table, attribute_name); //ARCHIVE_LOG  
+  Ak_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, NEW_VALUE);
 }
 
 //END SPECIAL FUNCTIONS row_element_structure
