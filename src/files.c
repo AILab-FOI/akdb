@@ -37,6 +37,8 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     int objectID = AK_get_id();
     char *sys_table;
 
+    AK_archive_log("AK_initialize_new_segment", name, type); //ARCHIVE_LOG
+    
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
         return EXIT_ERROR;
