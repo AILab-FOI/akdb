@@ -1,3 +1,9 @@
+/**
+ * @brief  Function for making archive log.
+ * @author Mario Kolmacic
+
+ */
+
 #include "archive_log.h"
 
 
@@ -20,12 +26,6 @@ AK_archive_log(char* A, char* B, char* C, char *D, char *E, char *F, char *G)
     	 fprintf(fp,  " | Destination table: %s", D);
      }
 
-     /*else if(!strcmp(A, "Ak_dbg_messg")){
-    	 fprintf(fp,  " | Level: %d,", B);
-    	 fprintf(fp,  " | Type: %d", C);
-    	 fprintf(fp,  " | Format: %s", D);
-     }
-*/
      else if(!strcmp(A, "AK_theta_join")){
     	 fprintf(fp,  " | Tables: %s, %s", B, C);
     	 fprintf(fp,  " | Destination table: %s", D);
