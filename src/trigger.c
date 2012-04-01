@@ -48,7 +48,7 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
             free(row_root);
             return EXIT_ERROR;
         }
-        temp = (AK_list_elem)Ak_Next_L(temp, condition);
+        temp = (AK_list_elem)Ak_Next_L(temp);
         i++;
     }
 
@@ -299,7 +299,7 @@ AK_list *AK_trigger_get_conditions(int trigger) {
         temp = Ak_GetNth_L(1, row);
         memcpy(&b, temp->data, sizeof (int));
         temp = Ak_GetNth_L(2, row);
-        Ak_InsertBefore_L(a, temp->data, temp->size, Ak_GetNth_L(b), result);
+        Ak_InsertBefore_L(a, temp->data, temp->size, Ak_GetNth_L(b, row), result);
         i++;
     }
 
