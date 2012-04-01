@@ -21,11 +21,11 @@
 
 
 /**
- * @brief Get number of chars for given number
- * @author Dino Laktašić.
- * @param int number - number to evaluate 
- * @param int base - mathematic base (e.g. 2, 10 etc.)  
- * @result characters number for given number
+  @author Dino Laktašić.	
+  @brief Function get number of digits for given number
+  @param int number - number to evaluate 
+  @param int base - mathematic base (e.g. 2, 10 etc.)  
+  @return number of digits for given number
  */
 int AK_chars_num_from_number(int number, int base) {
     int len = 0;
@@ -39,12 +39,9 @@ int AK_chars_num_from_number(int number, int base) {
 
 /** 
  @author Miroslav Policki
- 
- Returns size in bytes of the provided database type
-
+ @brief Function returns size in bytes of the provided database type
  @param iDB_type database data type (defined in configuration.h)
  @param szVarchar if iDB_type == TYPE_VARCHAR, pointer to the string, otherwise unused
-
  @return size of provided data type in bytes if provided data type is valid, else 0
  */
 size_t AK_type_size(int iDB_type, char *szVarchar) {
@@ -75,11 +72,11 @@ size_t AK_type_size(int iDB_type, char *szVarchar) {
 }
 
 /**
- * @brief String comparison function
- * @author Dino Laktašić
- * @param const void *a - value to compare
- * @param const void *b - value to compare
- * @return int - returns result of comparison
+  @author Dino Laktašić
+  @brief Function compares to Strings
+  @param const void *a - value to compare
+  @param const void *b - value to compare
+  @return result of comparison according to strcmp function
  */
 int AK_strcmp(const void *a, const void *b) {
     const char **ia = (const char **) a;
@@ -89,9 +86,9 @@ int AK_strcmp(const void *a, const void *b) {
 
 /**
  * @author Matija Šestak.
- * @brief  Alocate empty list
+ * @brief  Function initializes empty list
  * @param AK_list* - root of the list
- * @result void
+ * @return NO return value
  */
 void Ak_Init_L(AK_list *L) {
     L->next = NULL;
@@ -99,9 +96,9 @@ void Ak_Init_L(AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get the first element of the list
+ * @brief  Function gets the first element of the list
  * @param AK_list* - root of the list
- * @result AK_list_elem - first element of the list
+ * @return first element of the list
  */
 AK_list_elem Ak_First_L(AK_list *L) {
     return L->next;
@@ -109,9 +106,9 @@ AK_list_elem Ak_First_L(AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get the last element of the list
+ * @brief  Function gets the last element of the list
  * @param AK_list* - root of the list
- * @result AK_list_elem - last element of the list
+ * @return last element of the list
  */
 AK_list_elem Ak_End_L(AK_list *L) {
     AK_list_elem current = Ak_First_L(L);
@@ -124,10 +121,10 @@ AK_list_elem Ak_End_L(AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get the next element of the list
+ * @brief  Function gets the next element of the list
  * @param AK_list_elem - current element in the list
  * @param AK_list* - root of the list
- * @result AK_list_elem - next element in the list
+ * @return next element in the list
  */
 AK_list_elem Ak_Next_L(AK_list_elem current) {
     if (current == NULL)
@@ -137,10 +134,10 @@ AK_list_elem Ak_Next_L(AK_list_elem current) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get the previous element of the list
+ * @brief  Function gets the previous element of the list
  * @param AK_list_elem - current element in the list
  * @param AK_list* - root of the list
- * @result AK_list_elem - previous element in the list
+ * @return previous element in the list
  */
 AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L) {
     if (current == NULL || current == L)
@@ -153,9 +150,9 @@ AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Test whether the list is empty
+ * @brief  Function tests whether the list is empty
  * @param AK_list* - root of the list
- * @result int - returns 1 if the list is empty, otherwise returns 0
+ * @return 1 if the list is empty, otherwise returns 0
  */
 int Ak_IsEmpty_L(AK_list *L) {
     return Ak_First_L(L) == NULL ? 1 : 0;
@@ -163,13 +160,13 @@ int Ak_IsEmpty_L(AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Inserts new element before the current element in the list
+ * @brief  Function inserts new element before the current element in the list. 
  * @param int - data type of the new element
  * @param char* - new data
  * @param int - data size of the new element in the list
  * @param AK_list_elem - current element in the list
  * @param AK_list* - root of the list
- * @result void
+ * @return NO return value
  */
 void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_list *L) {
     AK_list_elem new_elem = (AK_list_elem) malloc(sizeof ( struct list_elem));
@@ -188,13 +185,13 @@ void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_
 
 /**
  * @author Matija Šestak.
- * @brief  Inserts new element after the current element in the list
+ * @brief  Function inserts new element after the current element in the list
  * @param int - data type of the new element
  * @param char* - new data
  * @param int - data size of the new element in the list
  * @param AK_list_elem - current element in the list
  * @param AK_list* - root of the list
- * @result void
+ * @return No return value
  */
 void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L) {
     AK_list_elem new_elem = (AK_list_elem) malloc(sizeof ( struct list_elem));
@@ -212,12 +209,12 @@ void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_l
 
 /**
  * @author Matija Šestak.
- * @brief  Inserts new element at the begin of the list
+ * @brief  Function inserts new element at the begin of the list. It uses function AK_InsertBefore_L
  * @param int - data type of the new element
  * @param char* - new data
  * @param int - data size of the new element in the list
  * @param AK_list* - root of the list
- * @result void
+ * @return No return value
  */
 void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L) {
     Ak_InsertBefore_L(type, data, size, Ak_First_L(L), L);
@@ -225,12 +222,12 @@ void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Inserts new element at the end of the list
+ * @brief  Function inserts new element at the end of the list. It uses function Ak_InsertAfter_L
  * @param int - data type of the new element
  * @param char* - new data
  * @param int - data size of the new element in the list
  * @param AK_list* - root of the list
- * @result void
+ * @return No return value
  */
 void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L) {
     Ak_InsertAfter_L(type, data, size, Ak_End_L(L), L);
@@ -238,10 +235,10 @@ void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Deletes the current element in the list
+ * @brief  Function deletes the current element in the list
  * @param AK_list_elem - current element in the list
  * @param AK_list* - root of the list
- * @result void
+ * @retrun No return value
  */
 void Ak_Delete_L(AK_list_elem current, AK_list *L) {
     if (current == NULL)
@@ -255,9 +252,9 @@ void Ak_Delete_L(AK_list_elem current, AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Makes list empty.
+ * @brief  Function empties list 
  * @param AK_list* - root of the list
- * @result void
+ * @return No return value
  */
 void Ak_DeleteAll_L(AK_list *L) {
     AK_list_elem current;
@@ -269,9 +266,9 @@ void Ak_DeleteAll_L(AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get a number of the elements in the list
+ * @brief  Function gets a number of the elements in the list. 
  * @param AK_list* - root of the list
- * @result int - size of the list
+ * @return Size of the list
  */
 int Ak_Size_L(AK_list *L) {
     int size = 0;
@@ -285,10 +282,10 @@ int Ak_Size_L(AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Retrieves data from the current element in the list
+ * @brief  Function retrieves data from the current element in the list
  * @param AK_list_elem - current element in the list
  * @param AK_list* - root of the list
- * @result char* - data from the list element
+ * @return data from the list element
  */
 char* Ak_Retrieve_L(AK_list_elem current, AK_list *L) {
     if (current == NULL)
@@ -300,10 +297,10 @@ char* Ak_Retrieve_L(AK_list_elem current, AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get a type of the current list element
+ * @brief  Function gets a type of the current list element
  * @param AK_list_elem - current list element
  * @param AK_list* - root of the list
- * @result int - data type  of the current list element
+ * @return data type  of the current list element
  */
 int Ak_GetType_L(AK_list_elem current, AK_list *L) {
     return (current == NULL) ? 0 : current->type;
@@ -311,21 +308,22 @@ int Ak_GetType_L(AK_list_elem current, AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get a data size of the element
+ * @brief  Function gets a data size of the element
  * @param AK_list_elem - current list element
  * @param AK_list* - root of the list
- * @result int - data size of the current list element
+ * @return data size of the current list element
  */
 int Ak_GetSize_L(AK_list_elem current, AK_list *L) {
     return (current == NULL) ? 0 : current->size;
 }
 
 /**
- Function for fetching nth element in row
+ @author Mislav Čakarić
+ @brief Function for fetching nth element in row
  @param pos position of element in row
  @param row list of elements of row in table
  @return element of list of elements of row in table
- @author Mislav Čakarić
+
  */
 AK_list_elem Ak_GetNth_L(int pos, AK_list *row) {
     int i = 0;
@@ -343,10 +341,10 @@ AK_list_elem Ak_GetNth_L(int pos, AK_list *row) {
 
 /**
  * @author Matija Novak
- * Get the posititn of given element
+ * @brief Function gets the position of given element
  * @param SearchElement - element whose posititon we search for
- * @param L - root of the list
- * @result returns the posititon number of some elelemnt
+ * @param L -root of the list
+ * @return returns the posititon number of some elelemnt
  */
 int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L) {
     AK_list *CurrentElement;
@@ -363,7 +361,7 @@ int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L) {
  * @author Dino Laktašić.
  * @brief  Get all permutations without repetition (currently not used, but it can be helpful)
  * @param char *arr - array of chars to permute
- * @result char* - pointer to array of pointers to permuted char arrays
+ * @return char pointer to array of pointers to permuted char arrays
  */
 char *AK_get_array_perms(char *arr) {
     int div, num_perms = 1;

@@ -22,12 +22,15 @@
 
 /**
  * @author Saša Vukšić
- * @brief Set between constraints on particulary attribute, string constraint should be writen in lowercase
+ * @brief Function sets between constraints on particulary attribute, string constraint should be writen in lowercase.
+	  It searches for free space. Then it inserts id, name of table, name of constraint, name of attribute, start and
+	   end value in temporary block.	  
  * @param char* tableName - table name
  * @param char* constraintName - name of constraint
  * @param char* attName - name of attribute
  * @param char* startValue - initial constraint
  * @param char* endValue - final constraint
+   @return No return value
  **/
 void AK_set_constraint_between(char* tableName, char* constraintName, char* attName, char* startValue, char* endValue) {
     char systemTableName[50];
@@ -88,7 +91,8 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
 
 /**
  * @author Saša Vukšić
- * @brief check if is this value between constraints
+ * @brief Function checks if this value is between constraints. First it gets table name, attribute name, constraint name,
+	  low boundary and high boundary from temporary block and than checks between constraint.
  * @param char* tableName - name of table
  * @param char* newValue - new value
  * @param char* attNamePar - name of attribute

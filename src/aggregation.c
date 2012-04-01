@@ -22,10 +22,11 @@
 extern search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params);
 
 /**
- Function calculates how meany attributes there are in a header.
- @param header A header array
- @return Number of attributes defined in header array
  @author Dejan Frankovic
+ @brief  Function calculates how meany attributes there are in a header with while loop.
+ @param  header A header array
+ @return Number of attributes defined in header array 
+ 
  */
 int AK_header_size(AK_header *header) {
     int counter = 0;
@@ -36,9 +37,10 @@ int AK_header_size(AK_header *header) {
 }
 
 /**
- Initialize the input object for aggregation
- @param input - the input object
   @author Dejan Frankovic
+  @brief  Function initializes the input object for aggregation whit init values
+  @param  input the input object
+  @return No return value
  */
 void AK_agg_input_init(AK_agg_input *input) {
     int i;
@@ -50,13 +52,14 @@ void AK_agg_input_init(AK_agg_input *input) {
 }
 
 /**
- Adds a header with a task in input object for aggregation
-@param header - a header that is being aggregated
-@param agg_task - the task which is to be done on the header
-@param input - the input object
-@return On success, returns EXIT_SUCCESS, otherwise EXIT_FAILURE
- @author Dejan Frankovic
- */
+  @author Dejan Frankovic
+  @brief  Function adds a header with a task in input object for aggregation
+  @param header a header that is being aggregated
+  @param agg_task the task which is to be done on the header
+  @param input the input object
+  @return On success, returns EXIT_SUCCESS, otherwise EXIT_FAILURE
+  */
+
 int AK_agg_input_add(AK_header header, int agg_task, AK_agg_input *input) {
     if ((char*) & header == '\0' || agg_task < 0 || (*input).counter == MAX_ATTRIBUTES)
         return EXIT_FAILURE;
@@ -65,14 +68,16 @@ int AK_agg_input_add(AK_header header, int agg_task, AK_agg_input *input) {
     (*input).counter++;
     return EXIT_SUCCESS;
 }
-
 /**
- Adds a header with a task on the beginning of the input object for aggregation
-@param header - a header that is being aggregated
-@param agg_task - the task which is to be done on the header
-@param input - the input object
-@return On success, returns EXIT_SUCCESS, otherwise EXIT_FAILURE
- @author Dejan Frankovic
+  @author Dejan Frankovic
+  @brief Function adds a header with a task on the beginning of the input object for aggregation so
+         with for loop existing attributes and tasks are moved one place forward in input object
+
+  @param header a header that is being aggregated
+  @param agg_task  the task which is to be done on the header
+  @param input the input object
+  @return On success, returns EXIT_SUCCESS, otherwise EXIT_FAILURE
+ 
  */
 int AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *input) {
     if ((char*) & header == '\0' || agg_task < 0 || (*input).counter == MAX_ATTRIBUTES)
@@ -92,9 +97,13 @@ int AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *
 }
 
 /**
- Used to handle AVG (average) aggregation
-@param input - the input object
- @author Dejan Frankovic
+  @author Dejan Frankovic
+  @brief This function is used to handle AVG (average) aggregation. It  goes through array of tasks in input
+          object until it comes to task with value -1. While loop examines whether the task in array is equal to 
+          AGG_TASK_AVG. If so, AGG_TASK_AVG_COUNT is put on the beginning of input object. After that, 
+          AGG_TASK_AVG_SUM is put on the begginig of input object. 
+  @param input the input object
+  @return No return value
  */
 void AK_agg_input_fix(AK_agg_input *input) {
     int i = 0;
@@ -110,12 +119,18 @@ void AK_agg_input_fix(AK_agg_input *input) {
 }
 
 /**
-Function aggregates a given table by given attributes
-@param input - input object with list of atributes by which we aggregate and types of aggregations
-@param source_table - table name for the source table
-@param agg_table - table name for aggregated table
-@return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
-@author Dejan Frankovic
+   @author Dejan Frankovic
+   @brief Function aggregates a given table by given attributes. Firstly, AGG_TASK_AVG_COUNT and
+          AGG_TASK_AVG_SUM are put on the beginning of the input object. Then for loop iterates through
+          input tasks and assignes the type of aggregation operation according to aggregation operation.
+	  New table has to be created. For loop goes through given table. GROUP operation is executed separately
+	  from other operations. Addresses of records are put in needed_values array and
+	  results are put in new table 
+   @param input input object with list of atributes by which we aggregate and types of aggregations
+   @param source_table - table name for the source table
+   @param agg_table  table name for aggregated table
+   @return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
+
  */
 int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     //int AK_aggregation (AK_header *att_root,int *att_tasks,char *source_table, char *new_table) {

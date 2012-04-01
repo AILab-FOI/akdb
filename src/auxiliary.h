@@ -28,8 +28,8 @@
 #include "configuration.h"
 
 /**
- * \struct list_elem
- * \brief defines a list element
+ * @struct list_elem
+ * @brief defines a list element. Every list_elem has its type, size, data and name of column which it belongs
  */
 struct list_elem {
     ///data type
