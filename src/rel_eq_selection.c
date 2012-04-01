@@ -532,7 +532,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                 Ak_dbg_messg(LOW, REL_EQ, "----------------------\n");
                 temp_elem = (AK_list_elem) Ak_End_L(temp);
                 temp_elem_prev = (AK_list_elem) Ak_Previous_L(temp_elem, temp);
-                list_elem_next = (AK_list_elem) Ak_Next_L(list_elem, list_rel_eq);
+                list_elem_next = (AK_list_elem) Ak_Next_L(list_elem);
 
                 switch (list_elem->data[0]) {
                         //Commutativity of Selection and Projection.
