@@ -18,7 +18,7 @@
  */
 
 #ifndef DEBUG
-//#define DEBUG
+#define DEBUG
 
 #include "stdarg.h"
 #include "stdio.h"
