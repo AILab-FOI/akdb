@@ -20,14 +20,27 @@
 #ifndef INDEX
 #define	INDEX
 
+/**
+\struct struct_add
+\brief structure for node address
+ */
 typedef struct {
+	/// block address
     int addBlock;
+    /// index table destination
     int indexTd;
 } struct_add;
 
+/**
+\struct list_structure_add
+\brief linked list node structure for index
+ */
 typedef struct {
+	/// attribute name
     char *attName;
+    /// addresses
     struct_add add;
+    /// next node pointer
     struct list_structure_ad *next;
 } list_structure_ad;
 

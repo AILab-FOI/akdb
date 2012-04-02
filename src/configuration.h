@@ -407,5 +407,47 @@
  */
 #define DELETE 1
 
+/**
+ * @def FIND
+ * @brief Constant indicating that operation to be performed is searching
+ */
+#define FIND 2
+
+/**
+ * @def MAX_MAIN_BUCKETS
+ * @brief Constant declaring the maximum number of main buckets
+*/
+#define MAX_MAIN_BUCKETS 512
+
+/**
+ * @def MAIN_BUCKET_SIZE
+ * @brief Constant declaring the size of main buckets
+*/
+#define MAIN_BUCKET_SIZE 4
+
+/**
+ * @def HASH_BUCKET_SIZE
+ * @brief Constant declaring the size of hash buckets
+*/
+#define HASH_BUCKET_SIZE 4
+
+/**
+ * @def INFO_BUCKET
+ * @brief Constant declaring type of bucket as "info bucket" when inserting bucket to block
+*/
+#define INFO_BUCKET 0
+
+/**
+ * @def MAIN_BUCKET
+ * @brief Constant declaring type of bucket as "main bucket" when inserting bucket to block
+*/
+#define MAIN_BUCKET 1
+
+/**
+ * @def HASH_BUCKET
+ * @brief Constant declaring type of bucket as "hash bucket" when inserting bucket to block
+*/
+#define HASH_BUCKET 2
+
 #endif
 

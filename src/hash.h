@@ -22,31 +22,49 @@
 
 #include "index.h"
 #include "table.h"
+#include "configuration.h"
 
-#define MAX_MAIN_BUCKETS 512
-#define MAIN_BUCKET_SIZE 4 //only the power of 2 (ie: 2, 4, 8, 16, 32, 64, 128 etc.)
-#define HASH_BUCKET_SIZE 4
-#define INFO_BUCKET 0
-#define MAIN_BUCKET 1
-#define HASH_BUCKET 2
-
+/**
+ * @struct hash_info
+ * @brief Structure for defining a hash info element
+*/
 typedef struct {
+	/// modulo value for hash function
     int modulo;
+    /// bucket number
     int main_bucket_num;
+    /// hash bucket number
     int hash_bucket_num;
 } hash_info;
 
+/**
+ * @struct bucket_elem
+ * @brief Structure for defining a single bucket element
+ */
 typedef struct {
+	/// bucket element hash value
     unsigned int value;
+    /// bucket element address values
     struct_add add;
 } bucket_elem;
 
+/**
+ * @struct main_bucket
+ * @brief Main bucket for table hashing
+ */
 typedef struct {
+	/// main bucket array of bucket_elem elements
     bucket_elem element[MAIN_BUCKET_SIZE];
 } main_bucket;
 
+/**
+ * @struct hash_bucket
+ * @brief Hash bucket for table hashing
+ */
 typedef struct {
+	/// hash bucket level
     int bucket_level;
+    /// hash bucket array of bucket_elem elements
     bucket_elem element[HASH_BUCKET_SIZE];
 } hash_bucket;
 

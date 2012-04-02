@@ -397,7 +397,7 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
                 if (match) {
                     int addBlock = temp_hash_bucket->element[i].add.addBlock;
                     int indexTd = temp_hash_bucket->element[i].add.indexTd;
-                    if (delete) {
+                    if (delete==1) {
                         temp_hash_bucket->element[i].value = -1;
                         memcpy(data, temp_hash_bucket, sizeof (hash_bucket));
                         Ak_update_bucket_in_block(hash_add, data);
@@ -421,7 +421,7 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
  @author Mislav Čakarić
  */
 struct_add * AK_find_in_hash_index(char *indexName, AK_list *values) {
-    return AK_find_delete_in_hash_index(indexName, values, 0);
+    return AK_find_delete_in_hash_index(indexName, values, FIND);
 }
 
 /**
@@ -431,7 +431,7 @@ struct_add * AK_find_in_hash_index(char *indexName, AK_list *values) {
  @author Mislav Čakarić
  */
 void AK_delete_in_hash_index(char *indexName, AK_list *values) {
-    AK_find_delete_in_hash_index(indexName, values, 1);
+    AK_find_delete_in_hash_index(indexName, values, DELETE);
 }
 
 /**
