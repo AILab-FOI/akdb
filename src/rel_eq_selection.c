@@ -259,6 +259,7 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
 }
 
 
+
 /**
  * @brief Check if selection can commute with theta-join or product (if working with conditions in infix format use this function insteed - also remember to change code at the other places)
  * <ol>

@@ -49,7 +49,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
     memcpy(temp_cond, cond, strlen(cond));
     memcpy(temp_cond + strlen(cond) + 1, "\0", 1);
 
-    dbg_messg(HIGH, REL_EQ, "RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
+    Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection (%s) with theta-join, table name (%s)\n", temp_cond, tblName);
 
     for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond;
             (token_cond = strtok_r(NULL, " ", &save_token_cond)), token_id++) {
@@ -83,10 +83,10 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
     }
 
     if (ret_attributes > 0) {
-        dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join succeed.\n");
+        Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join succeed.\n");
         return ret_attributes;
     } else {
-        dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
+        Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
         free(ret_attributes);
         return NULL;
     }
