@@ -20,6 +20,6 @@
 #ifndef REL_EQ_COMUT
 #define REL_EQ_COMUT
 
-
+#include "table.h"
 
 #endif
