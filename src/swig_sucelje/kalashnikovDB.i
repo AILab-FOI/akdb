@@ -4,6 +4,8 @@
 %{
 #define SWIG_FILE_WITH_INIT
 
+extern char * AK_config_get(char * key, char * def);
+
 #include "../debug.h"
 #include "../debug.c"
 
@@ -123,7 +125,21 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 #include "../archive_log.c"
 #include "../archive_log.h"
 
+#include "../command.c"
+#include "../command.h"
+
+
+#include "../iniparser/iniparser.c"
+#include "../iniparser/iniparser.h"
+
+#include "../iniparser/dictionary.c"
+#include "../iniparser/dictionary.h"
+
 %}
+
+extern char * AK_config_get(char * key, char * def);
+
+
 %include "../debug.h"
 %include "../debug.c"
 
@@ -246,3 +262,12 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 
 %include "../archive_log.c"
 %include "../archive_log.h"
+
+%include "../command.c"
+%include "../command.h"
+
+%include "../iniparser/iniparser.c"
+%include "../iniparser/iniparser.h"
+
+%include "../iniparser/dictionary.c"
+%include "../iniparser/dictionary.h"
