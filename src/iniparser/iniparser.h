@@ -306,8 +306,6 @@ void iniparser_freedict(dictionary * d);
 
 void AK_inflate_config();
 
-char * AK_config_get();
-
 extern dictionary * AK_config;
 
 #endif
