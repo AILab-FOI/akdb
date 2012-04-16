@@ -1,5 +1,5 @@
 /**
-@file configuration.h Defines global macros, constants and variables
+@file configuration.h Header file that provides global macros, constants and variables
  */
 /*
  * This program is free software; you can redistribute it and/or modify

@@ -1,7 +1,14 @@
 /**
- * @brief  Function for making archive log.
+ * @brief  Function for making archive log. According to parameters different values are stored in file named log.log
  * @author Mario Kolmacic
-
+ * @param A value to be archived
+ * @param B value to be archived
+ * @param C value to be archived
+ * @param D value to be archived
+ * @param E value to be archived
+ * @param F value to be archived
+ * @param G value to be archived
+ * @return No retun value
  */
 
 #include "archive_log.h"

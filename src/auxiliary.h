@@ -1,5 +1,5 @@
 /**
-@file auxiliary.h Provides data structures for the auxiliary functions
+@file auxiliary.h Header file zhat provides data structures for the auxiliary functions
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -28,8 +28,9 @@
 #include "configuration.h"
 
 /**
+ * @author Unknown
  * @struct list_elem
- * @brief defines a list element. Every list_elem has its type, size, data and name of column which it belongs
+ * @brief Structure defines a list element. Every list_elem has its type, size, data and name of column which it belongs
  */
 struct list_elem {
     ///data type

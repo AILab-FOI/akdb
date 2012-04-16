@@ -1,5 +1,5 @@
 /**
-@file btree.c Provides functions for BTree indices
+@file btree.c Header file that provides functions for BTree indices
  */
 /*
  * This program is free software; you can redistribute it and/or modify

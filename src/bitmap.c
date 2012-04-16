@@ -20,8 +20,8 @@
 #include "bitmap.h"
 /**
   @brief Function examines whether list L contains operator ele
-  @param L -list of elements
-  @param ele - operator to be found in list
+  @param L list of elements
+  @param ele operator to be found in list
   @return 1 if operator ele is found in list, otherwise 0
 */
 int Ak_If_ExistOp(AK_list *L, char *ele) {
@@ -44,8 +44,8 @@ int Ak_If_ExistOp(AK_list *L, char *ele) {
            Elements that will be in index are put in list indexLista and headerAttributes. According to those elements new indexes
 	   are created.
 	   
- * @param char* tblName - name of table
- * @param list *attributes - list of attributes on which we will create indexes
+ * @param tblName name of table
+ * @param attributes list of attributes on which we will create indexes
  * @return No return value
  * */
 void AK_create_Index(char *tblName, AK_list *attributes) {
@@ -234,7 +234,7 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
 /**
  * @author Saša Vukšić
  * @brief Function that tests printing header of table
- * @param char* tblName - name of table who's header we are printing
+ * @param tblName name of table who's header we are printing
    @return No return value
  **/
 void Ak_print_Header_Test(char* tblName) {
@@ -254,12 +254,12 @@ void Ak_print_Header_Test(char* tblName) {
 /*
  * @author Saša Vukšić
  * @brief Function that loads index table with value of particulary atribute
- * @param tblName - source table
- * @param tblNameIndex - new name of index table
- * @param attributeName - attribute on which we make index
- * @param positionTbl - position of attribute in header of table
- * @param numAtributes - number of attributes in table
- * @param headerIndex - header of index table
+ * @param tblName source table
+ * @param tblNameIndex new name of index table
+ * @param attributeName attribute on which we make index
+ * @param positionTbl position of attribute in header of table
+ * @param numAtributes number of attributes in table
+ * @param headerIndex header of index table
  * @return No return value
  */
 void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex) {
@@ -362,8 +362,8 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
  * @brief Function gets adresses of the particuliary attribute from bitmap index. It fetches addresses of indexes and header
 	  of index table.  Using while loop it goes through index and gets necessary data. Those data are put in list called
 	  add_root.
- * @param char *indexName - name of index
- * @param char *attribute - name of attribute
+ * @param indexName name of index
+ * @param attribute name of attribute
  * @return list of adresses
  **/
 list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
@@ -441,7 +441,7 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
 
 /**
  * @author Saša Vukšić
- * @brief Function for test list creation testing
+ * @brief Function for test list creation 
  * @return No return value
  **/
 void Ak_create_List_Address_Test() {
@@ -468,7 +468,7 @@ void Ak_create_List_Address_Test() {
 /**
  * @author Saša Vukšić
  * @brief Function for printing list of adresses
- * @param list_ad *list - list of adresses
+ * @param list list of adresses
  * @return No return value
  **/
 void Ak_print_Att_Test(list_ad *list) {
@@ -484,8 +484,8 @@ void Ak_print_Att_Test(list_ad *list) {
 /**
  * @author Saša Vukšić
  * @brief Function for getting values from the bitmap index if there is one for given table. It should be started when we are 		  making selection on the table with bitmap index. 
- * @param char *tableName - name of table
- * @param char *attributeValue - value of attribute
+ * @param tableName name of table
+ * @param attributeValue value of attribute
  * @return list of adresses
  **/
 list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeValue) {
@@ -516,12 +516,12 @@ list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeV
 /**
  * @author Saša Vukšić
  * @brief Function for updating the index, only on values that alredy exist. If there is no value in bitmap index or bitmap index 		  on this value, warning is showed to the user. Otherwise, bitmap index is updated with new attribute value.
- * @param int addBlock - adress of block
- * @param int addTD - adress of tuple dict
- * @param char* tableName - name of table
- * @param char* *attributeName -name of attribute
- * @param char *attributeValue - value of atribute
- * @param char *newAttributeValue - new value of updated attribute
+ * @param addBlock adress of block
+ * @param addTD adress of tuple dict
+ * @param tableName name of table
+ * @param attributeName name of attribute
+ * @param attributeValue value of atribute
+ * @param newAttributeValue new value of updated attribute
  * @return No return value
  **/
 void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue) {
@@ -600,6 +600,7 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
 /**
  * @author Saša Vukšić
  * @brief Function for writing new value in block when index is updated
+ * @param block block to write on
  * @return EXIT_SUCESS when write operation is successful, otherwise EXIT_ERROR
  **/
 int Ak_write_block(AK_block * block) {

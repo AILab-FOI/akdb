@@ -1,5 +1,5 @@
 /**
-@file aggregation.h Provides data structures for aggregation and grouping
+@file aggregation.h Header file that provides data structures for aggregation and grouping
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -33,12 +33,21 @@
 #define AGG_TASK_AVG_COUNT 10 //used internaly
 #define AGG_TASK_AVG_SUM 11 //used internaly
 
+/**
+  * @author Unknown
+  * @struct AK_agg_value
+  * @brief Structure that contains atribute name, date and aggregation task associated
+  */
 typedef struct {
     char att_name[MAX_ATT_NAME];
     char data[ MAX_VARCHAR_LENGTH ];
     int agg_task;
 } AK_agg_value;
-
+/**
+  * @author Unknown
+  * @struct AK_agg_input
+  * @brief Structure that contains attributes from table header, tasks for this table and counter value
+  */
 typedef struct {
     AK_header attributes[MAX_ATTRIBUTES];
     int tasks[MAX_ATTRIBUTES];

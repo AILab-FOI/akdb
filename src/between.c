@@ -25,11 +25,11 @@
  * @brief Function sets between constraints on particulary attribute, string constraint should be writen in lowercase.
 	  It searches for free space. Then it inserts id, name of table, name of constraint, name of attribute, start and
 	   end value in temporary block.	  
- * @param char* tableName - table name
- * @param char* constraintName - name of constraint
- * @param char* attName - name of attribute
- * @param char* startValue - initial constraint
- * @param char* endValue - final constraint
+ * @param tableName table name
+ * @param constraintName name of constraint
+ * @param attName name of attribute
+ * @param startValue initial constraint
+ * @param endValue final constraint
    @return No return value
  **/
 void AK_set_constraint_between(char* tableName, char* constraintName, char* attName, char* startValue, char* endValue) {
@@ -93,9 +93,9 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
  * @author Saša Vukšić
  * @brief Function checks if this value is between constraints. First it gets table name, attribute name, constraint name,
 	  low boundary and high boundary from temporary block and than checks between constraint.
- * @param char* tableName - name of table
- * @param char* newValue - new value
- * @param char* attNamePar - name of attribute
+ * @param tableName name of table
+ * @param newValue new value
+ * @param attNamePar name of attribute
  * @return EXIT_ERROR or EXIT_SUCCESS
  **/
 int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar) {
@@ -209,6 +209,11 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     free(tempBlock);
     return flag;
 }
+/**
+  * @author Saša Vukšić
+  * @brief Function that tests the functionality of implemented between constrain
+  * @return No return value
+*/
 
 Ak_constraint_between_test() {
     char* tableName = "studenti";

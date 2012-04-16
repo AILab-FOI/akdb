@@ -24,8 +24,9 @@
 #include "dbman.h"
 
 /**
- * @brief  Initializes a new database file named DB_FILE
  * @author Markus Schatten
+ * @brief  Function that initializes a new database file named DB_FILE. It opens database file. New block is allocated. In this
+           block type of header is set to FREE_INT, attribute names are set to FREE_CHAR, integrities are set to FREE_INT,       	    constraint names are set to FREE_CHAR, constraint names and codes are set to FREE_CHAR. Type, address and size of tuples 		   are set to FREE_INT. Data in block is set to FREE_CHAR. Type of block is BLOCK_TYPE_FREE, it is not chained and id of 		   last tuple is 0.          
  * @param size size of new file in in blocks
  * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
  */
@@ -100,9 +101,9 @@ int AK_init_db_file(int size) {
 }
 
 /**
- * @brief  Reads a block at a given address (block number less than db_file_size)
  * @author Markus Schatten
- * @param address - block number (address)
+ * @brief  Function that reads a block at a given address (block number less than db_file_size). New block is allocated. Database 		   file is opened. Position is set to provided address block. At the end function reads file from that position.
+ * @param address block number (address)
  * @return pointer to block allocated in memory
  */
 AK_block * AK_read_block(int address) {
@@ -129,9 +130,10 @@ AK_block * AK_read_block(int address) {
 }
 
 /**
- * @brief  Writes a block to DB file
  * @author Markus Schatten
- * @param block - poiner to block allocated in memory to write
+ * @brief  Function writes a block to DB file. Database file is opened. Position is set to provided address block. Block is 
+           written to provided address.
+ * @param block poiner to block allocated in memory to write
  * @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
  */
 int AK_write_block(AK_block * block) {
@@ -153,8 +155,9 @@ int AK_write_block(AK_block * block) {
 }
 
 /**
- * @brief  Function to alocate new extent of blocks
  * @author Nikola Bakoš, updated by Dino Laktašić (fixed header BUG)
+ * @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE. 		   Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is 
+ *         incremented.
  * @param start_address address (block number) to start searching for sufficient space
  * @param old_size size of previous extent in same segment (in blocks)
  * @param extent_type type of extent (can be one of:
@@ -270,9 +273,13 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
 }
 
 /**
- * @brief  Function to allocate new segment of extents. In this phase of implementation, only extents
- containing INITIAL_EXTENT_SIZE blocks can be allocated
  * @author Tomislav Fotak
+ * @brief  Function that allocates new segment of extents. In this phase of implementation, only extents
+ 	   containing INITIAL_EXTENT_SIZE blocks can be allocated. If extent is successfully allocated,
+           number of allocated extents is incremented and function goes to next block after allocated extent. 
+           Otherwise, function moves to INITIAL_EXTENT_SIZE blocks. In that way function gets either first block of
+           new extent or some block in that extent which will not be free.
+ 
  * @param name (character pointer) name of segment
  * @param type segment type (possible values:
         SEGMENT_TYPE_SYSTEM_TABLE,
@@ -298,9 +305,6 @@ int AK_new_segment(char * name, int type, AK_header *header) {
 
         if (block->type == BLOCK_TYPE_FREE) {
             current_extent_start_addr = AK_new_extent(i, 0, type, header); /// allocate new extent
-            /// if extent is successfully allocated, increment number of allocated extents and move to
-            /// next block after allocated extent, else move for INITIAL_EXTENT_SIZE blocks, so in that way get
-            /// either first block of new extent or some block in this extent which will not be free
             if (current_extent_start_addr != EXIT_ERROR) {
                 if (first_allocated_block == -1)
                     first_allocated_block = current_extent_start_addr;
@@ -318,13 +322,15 @@ int AK_new_segment(char * name, int type, AK_header *header) {
 }
 
 /**
- * @brief  Function for creating header and initalize with default values
  * @author Matija Novak
- * @param name (char) - name of the atribute
- * @param type (int) - type of the atribute
- * @param integrity (int) - standard integrity costraint
- * @param constr_name (char) - extra integrity constraint name
- * @param contr_code - extra integrity costraint code
+ * @brief  Function for creating header and initalize integrity, constraint name and constraint
+	   code with parameter values of function.
+
+ * @param name name of the atribute
+ * @param type type of the atribute
+ * @param integrity standard integrity costraint
+ * @param constr_name extra integrity constraint name
+ * @param contr_code extra integrity costraint code
  * @return AK_header
  */
 AK_header * AK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code) {
@@ -354,13 +360,14 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
 }
 
 /**
- * @brief  Function for inserting entry in tuple_dict and data of a block
  * @author Matija Novak
- * @param block_adress (AK_block) - adress of a block in which we want insert data
- * @param type (int) - type of entry_data
- * @param entry_data (char) - data which is inserted, can be int but must first be converted to char
- * @param i (int) -adress in tuple_dict array (example block_address->tuple_dict[i])
- * @return nothing because it gets the address of an block like a function parameter
+ * @brief  Function for inserting entry in tuple_dict and data of a block. Address, type and size of 
+           catalog_tuple_dict are set.  Free space of block is also set.
+ * @param block_adress adress of a block in which we want insert data
+ * @param type type of entry_data
+ * @param entry_data (char) data which is inserted, can be int but must first be converted to char
+ * @param i (int) adress in tuple_dict array (example block_address->tuple_dict[i])
+ * @return No return value because it gets the address of an block like a function parameter
  and works directly with the orginal block
  */
 void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int i) {
@@ -395,10 +402,28 @@ void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int 
 }
 
 /**
- * @brief  Function initialises the sytem table catalog and writes the result in first (0) block in db_file
  * @author Matija Novak
- * @param adresses of system table blocks in db_file
- * @return nothing EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
+ * @brief  Function initialises the sytem table catalog and writes the result in first (0) block in db_file. Catalog block,
+           catalog header name, catalog header address are allocated. Address, type, chained_with and free_space attributes are
+           initialized. Names of various database elements are written in block.
+ * @param relation address of system table of relation in db_file
+ * @param attribute address of system table of attribute in db_file
+ * @param index address of system table of index in db_file
+ * @param view address of system table of view in db_file
+ * @param sequence address of system table of sequence in db_file
+ * @param function address of system table of function in db_file
+ * @param function_arguments address of system table of function_arguments in db_file
+ * @param trigger address of system table of trigger in db_file
+ * @param trigger_conditions address of system table of trigger_conditions in db_file
+ * @param db address of system table of db in db_file
+ * @param db_obj address of system table of db_obj in db_file
+ * @param user address of system table of user in db_file
+ * @param group address of system table of group in db_file
+ * @param right address of system table of right in db_file
+ * @param constraint address of system table of constraint in db_file
+ * @param constraintNull address of system table of constraintNull in db_file
+ * @param reference address of system table of reference in db_file
+ * @return EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
  */
 int AK_init_system_tables_catalog(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
         int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull, int reference) {
@@ -506,11 +531,12 @@ int AK_init_system_tables_catalog(int relation, int attribute, int index, int vi
 }
 
 /**
- * @brief  Sets the first num ints of a block of memory to the specified value
  * @author Miroslav Policki
+ * @brief  Function that sets the first num ints of a block of memory to the specified value
  * @param block pointer to the block of memory to fill
  * @param value int value to be set
  * @param num number of ints in the block of memory to be set
+ * @return No return value
  */
 void AK_memset_int(void *block, int value, size_t num) {
     size_t i;
@@ -518,7 +544,28 @@ void AK_memset_int(void *block, int value, size_t num) {
     for (i = 0; i < num; i++)
         *((int *) block + i) = value;
 }
-
+/**
+  * @author Unknown
+  * @brief Function that registers system tables. Block at the given address is read. Various data from function arguments are 		   written in block about different database elements.
+  * @param relation relation in database
+  * @param attribute attribute in databse
+  * @param index index in database
+  * @param view view in database
+  * @param sequence sequence in database
+  * @param function function in database
+  * @param function_arguments functional_arguments in databse
+  * @param trigger trigger in database
+  * @param trigger_conditions trigger conditions in databse
+  * @param db database
+  * @param db_obj database object
+  * @param user user in database
+  * @param group group in database
+  * @param right right in database
+  * @param constraint constraint in database
+  * @param constraintNull Null constraint in database
+  * @param reference reference database
+  * @return EXIT_SUCCESS 
+*/
 int AK_register_system_tables(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
         int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull, int reference) {
     AK_block *relationTable = AK_read_block(relation);
@@ -719,9 +766,10 @@ int AK_register_system_tables(int relation, int attribute, int index, int view, 
 }
 
 /**
- * @brief  Initializes the system catalog
  * @author Miroslav Policki
- * @return EXIT_SUCCESS if the system catalog has been initialized, EXIT_ERROR otherwise
+ * @brief  Function initializes the system catalog. Headers for system tables are defined. Segments for those system tables are
+           allocated. Above function AK_register_system_tables() to register system tables.
+ * @return EXIT_SUCCESS if the system catalog has been successfully initialized, EXIT_ERROR otherwise
  */
 int AK_init_system_catalog() {
     int relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, right, constraint, constraintNull, reference;
@@ -1006,9 +1054,10 @@ int AK_init_system_catalog() {
 }
 
 /**
- * @brief  Deletes a block by a given block address (resets the header and data)
  * @author Markus Schatten
- * @param address - address of the block to be deleted
+ * @brief  Function deletes a block by a given block address (resets the header and data). Types, integrities, constraint names,
+           constraint codes are set to "free" values. In tuple dictionary type, address and size are set to FREE_INT values. Data 		   of block is set to FREE_CHAR. 
+ * @param address address of the block to be deleted
  * @return returns EXIT_SUCCESS if deletion successful, else EXIT_ERROR
  */
 int AK_delete_block(int address) {
@@ -1058,11 +1107,11 @@ int AK_delete_block(int address) {
 }
 
 /**
- * @brief  Deletes an extent between begin and end blocks
  * @author Dejan Sambolić
- * @param begin - address of extent's first block
- * @param end - adress of extent's last block
- * @return returns EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
+ * @brief  Function deletes an extent between begin and end blocks
+ * @param begin address of extent's first block
+ * @param end address of extent's last block
+ * @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
  */
 int AK_delete_extent(int begin, int end) {
     int address;
@@ -1076,9 +1125,9 @@ int AK_delete_extent(int begin, int end) {
 
 /**
  * @author Mislav Čakarić
- * @param name - name of the segment
- * @param type - type of the segment
- * @return success or error
+ * @param name name of the segment
+ * @param type type of the segment
+ * @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
  */
 int AK_delete_segment(char * name, int type) {
     int i = 0;
@@ -1116,6 +1165,7 @@ int AK_delete_segment(char * name, int type) {
 
 /**
  * @author Markus Schatten
+ * @return Function that calls functions AK_init_db_file() and AK_init_system_catalog() to initialize disk manager
  */
 int AK_init_disk_manager() {
     //int size_in_mb = DB_FILE_SIZE;

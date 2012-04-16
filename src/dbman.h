@@ -1,5 +1,5 @@
 /**
-@file dbman.h Defines includes and datastructures for the disk manager
+@file dbman.h Header file that defines includes and datastructures for the disk manager
  of Kalashnikov DB
  */
 /*
@@ -24,8 +24,10 @@
 #include "auxiliary.h"
 
 /**
-\struct AK_header
-\brief Header structure of blocks (describes an attribute inside an object)
+ * @author Markus Schatten
+ * @struct AK_header
+ * @brief Structure that represents header structure of blocks (describes an attribute inside an object). It contains
+          type, attribute name, integrity, constraint name and constraint code.
  */
 typedef struct {
     /// type of attribute
@@ -41,8 +43,10 @@ typedef struct {
 } AK_header;
 
 /**
-\struct AK_tuple_dict
-\brief Defines a mapping in a header of an object to the actual entries (data)
+ * @author Markus Schatten
+ * @struct AK_tuple_dict
+ * @brief Structure that defines a mapping in a header of an object to the actual entries (data). It contains type, address
+          and size.
  */
 typedef struct {
     /// data entry type
@@ -54,8 +58,10 @@ typedef struct {
 } AK_tuple_dict;
 
 /**
-\struct AK_block
-\brief Defines a block of data inside a DB file
+  * @author Markus Schatten
+  * @struct AK_block
+  * @brief Structure that defines a block of data inside a DB file. It contains address, type, chained_with, free space,
+           last_tuple_dict_id, header and tuple_dict and data.
  */
 typedef struct {
     /// block number (address) in DB file
@@ -76,19 +82,24 @@ typedef struct {
 } AK_block;
 
 /**
-\var db
-\brief Defines the DB file file handle
+ * @author Markus Schatten
+ * @var db
+ * @brief Variable that defines the DB file file handle
  */
 FILE * db;
 
 /**
-\var db_file_size
-\brief Defines the size of the DB file (in blocks)
+ * @author Markus Schatten
+ * @var db_file_size
+ * @brief Variable that defines the size of the DB file (in blocks)
  */
 unsigned int db_file_size;
 
-///@author Matija Novak
-
+/**
+  * @author Matija Novak
+  * @struct table_addresses
+  * @brief Structure that defines start and end address of extent
+  */
 typedef struct {
     ///sturcture for extents start end stop adresses
     int address_from[ MAX_EXTENTS_IN_SEGMENT ]; //start adress of the extent

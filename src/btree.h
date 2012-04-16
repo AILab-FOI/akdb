@@ -1,5 +1,5 @@
 /**
-@file btree.h Provides data strucures for BTree indices
+@file btree.h Header file that provides data strucures for BTree indices
  */
 /*
  * This program is free software; you can redistribute it and/or modify

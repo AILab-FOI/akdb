@@ -20,15 +20,18 @@
 
 //START SPECIAL FUNCTIONS FOR WORK WITH row_element_structure
 
-/** 	@author Matija Novak
-        Inserts new element after some element, to insert on first place give list as before element
-        @param newtype - type of the data
-        @param data - the data
-        @param table - table name
-        @param attribute_name - attribute name
-        @param element - element after we which insert the new element
-        @param constraint - NEW_VALUE if data is new value, SEARCH_CONSTRAINT if data is constraint to search for
-        @result void
+/** 
+   * @author Matija Novak
+   * @brief Function inserts new element after some element, to insert on first place give list as before element. New element
+            is allocated. Type, data, attribute name and constraint of new elemets are set according to function arguments. Pointers
+            are changed so that before element points to new element.
+   * @param newtype type of the data
+   * @param data the data
+   * @param table table name
+   * @param attribute_name attribute name
+   * @param element element after we which insert the new element
+   * @param constraint NEW_VALUE if data is new value, SEARCH_CONSTRAINT if data is constraint to search for
+   * @return No return value
  */
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint) {
     AK_list *newElement = (AK_list *) malloc(sizeof (AK_list));
@@ -51,15 +54,17 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
     ElementBefore->next = newElement;
 }
 
-/** 	@author Matija Novak, changed by Dino Laktašić
-        Inserts new element after some element, to insert on first place give list as before element
-        @param newtype - type of the data
-        @param data - the data
-        @param table - table name
-        @param attribute_name - attribute name
-        @param element - element after we which insert the new element
-        @param constraint - is NEW_VALUE
-        @result void
+/** 
+   * @author Matija Novak, changed by Dino Laktašić
+   * @brief Function inserts new element after some element, to insert on first place give list as before element. It calls function
+            Ak_Insert_New_Element_For_Update.
+   * @param newtype type of the data
+   * @param data the data
+   * @param table table name
+   * @param attribute_name attribute name
+   * @param element element after we which insert the new element
+   * @param constraint is NEW_VALUE
+   * @return No return value
  */
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore) {
   AK_archive_log("Ak_Insert_New_Element", newtype, data, table, attribute_name); //ARCHIVE_LOG  
@@ -69,10 +74,11 @@ void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attrib
 //END SPECIAL FUNCTIONS row_element_structure
 
 /**	@author Matija Novak, updated by Dino Laktašić
-        insets one row into some block
-        @param row_root - list of elements to insert
-        @param temp_block -block in which we insert data
-        @result int - EXIT SUCCES if success
+        @brief Function inserts one row into some block.  Firstly it checks wether block contain attributes from the list. Then
+               data, type, size and last_tuple_id are put in temp_block.
+        @param row_root list of elements to insert
+        @param temp_block block in which we insert data
+        @return EXIT SUCCES if success
  */
 int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     AK_list_elem some_element;
@@ -129,9 +135,10 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     return EXIT_SUCCESS;
 }
 
-/**	@author Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference check)
-        inserts a one row into table, updated by Dino Laktašić (removed variable free, variable table initialized using memset)
-        @param list of elements which contain data of one row
+/**	@author Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference 		check), updated by Dino Laktašić (removed variable free, variable table initialized using memset)
+        @brief Function inserts a one row into table. Firstly it is checked wether inserted row would violite reference integrity. 
+	 	Then it is checked in which table should row be inserted. If there is no free space for new table, new extent is 			allocated. New block is allocated on given address. Row is inserted in this block and dirty flag is set to 			BLOCK_DIRTY. 
+        @param row_root list of elements which contain data of one row
         @result EXIT_SUCCESS if success elese EXIT_ERROR
 
  */
@@ -172,12 +179,13 @@ int Ak_insert_row(AK_list *row_root) {
     return end;
 }
 
-/**	@author Matija Novak, updated by Dino Laktašić
-        update or delete rows table block
-        @param temp_block - block to work with
-        @param row_list - list of elements which contain data for delete or update
-        @param operation - UPDATE or DELETE
-        @result void
+/**	
+   * @author Matija Novak, updated by Dino Laktašić
+   * @brief Function updates or deletes row from table in given block. Given list of elements is firstly back-upped.  According to 		    given argument in function, delete or update is peformed.
+   * @param temp_block block to work with
+   * @param row_list list of elements which contain data for delete or update
+   * @param operation UPDATE or DELETE
+   * @return No return value
  */
 void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, int operation) {
     int head = 0; //counting headers
@@ -341,11 +349,13 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
     free(row_root_backup);
 }
 
-/**	@author Matija Novak, updated by Matija Šestak (function now uses caching)
-        function update or delete the whole segment of an table
-        @param row_root -  elements of one row
-        @param del - DELETE or UPDATE
-        @returs EXIT_SUCCESS if success
+/**	
+      * @author Matija Novak, updated by Matija Šestak (function now uses caching)
+      * @brief Function updates or deletes the whole segment of an table. Addresses for given table atr fetched. For each block
+	  	in extent row is updated or deleted according to operator del.
+      * @param row_root elements of one row
+      * @param del - DELETE or UPDATE
+      * @return EXIT_SUCCESS if success
  */
 int Ak_delete_update_segment(AK_list *row_root, int del) {
 	char table[MAX_ATT_NAME];

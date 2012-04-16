@@ -20,13 +20,13 @@
 #include "debug.h"
 
 /**
- * @brief Print debug message. Provide debug level, debug type and message with corresponding variables for the output.
  * @author Dino Laktašić
- * @param DEBUG_LEVEL level - level of debug information for a given DB module
- * @param DEBUG_TYPE type - the name of DB module for which to print debug information
- * const char *format - format for the output message
- * ... - variable number of (different) type args used in printf
- * @return int - if debug message is printed return 1, else return 0
+ * @brief Function for printing debug message. Provides debug level, debug type and message with corresponding variables for the 		  output. 
+ * @param level level of debug information for a given DB module
+ * @param type the name of DB module for which to print debug information
+ * @param format format for the output message
+ * @param ... variable number of (different) type args used in printf
+ * @return if debug message is printed return 1, else return 0
  */
 int Ak_dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...) {
 	/*if (DEBUG_NONE) {

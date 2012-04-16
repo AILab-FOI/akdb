@@ -19,13 +19,14 @@
  */
 
 /**
- * @brief  Value comparison according to data type, checks aritmetic statement in whole expression given in the function below
  * @author Dino Laktašić, abstracted by Tomislav Mikulček
- * @param el - list element, last element put in list temp which holds elements of row ordered according to expression and results of their evaluation
- * @param *op - comparison operator 
- * @param *a - left operand
- * @param *b - right operand
- * @return int - 0 if arithmetic statement is false, 1 if arithmetic statement is true
+ * @brief  Function compares values according to their data type, checks aritmetic statement which is part of expression given in   	       the function below. For every type of arithmetic operator, there is switch-case statement which examines type of el and
+           casts void operands to this type.
+ * @param el list element, last element put in list temp which holds elements of row ordered according to expression and results of 		     their evaluation
+ * @param *op comparison operator 
+ * @param *a left operand
+ * @param *b right operand
+ * @return 0 if arithmetic statement is false, 1 if arithmetic statement is true
  */
 
 #include "expression_check.h"
@@ -143,11 +144,13 @@ static int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const 
 }
 
 /**
- * @brief  Evaluate whether one record (row) satisfies logical expression
  * @author Matija Šestak, updated by Dino Laktašić, abstracted by Tomislav Mikulček
- * @param row_root - beggining of the row that is to be evaluated
- * @param *expr - list with the logical expression in posfix notation
- * @result int - 0 if row does not satisfy, 1 if row satisfies expresson
+ * @brief  Function evaluates whether one record (row) satisfies logical expression. It goes through
+           given row. If it comes to logical operator, it evaluates by itself. For arithmetic operators
+           funcion AK_check_arithmetic_statement() is called.
+ * @param row_root beggining of the row that is to be evaluated
+ * @param *expr list with the logical expression in posfix notation
+ * @result 0 if row does not satisfy, 1 if row satisfies expresson
  */
 int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
 

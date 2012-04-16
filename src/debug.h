@@ -1,5 +1,5 @@
 /**
-@file debug.h Defines global macros, constants and variables for debuging
+@file debug.h Header file that defines global macros, constants and variables for debuging
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -33,10 +33,11 @@
 
 
 /**
- * @brief Set debug level. Divide debug information according to their importance. 
- * More levels can be defined in the enum if needed. 
- * Each debug level can be easly excluded from output by setting corresponding enum element to 0.
  * @author Dino Laktašić
+ * @struct DEBUG_LEVEL
+ * @brief Strecture for setting debug level. Divide debug information according to their importance. 
+ *         More levels can be defined in the enum if needed. Each debug level can be easly excluded 
+ *         from output by setting corresponding enum element to 0.
  */
 typedef enum debug_level {
 	LOW = 1,	//BASIC		low level of details in output
@@ -45,10 +46,12 @@ typedef enum debug_level {
 } DEBUG_LEVEL;
 
 /**
- * @brief Set debug type. Divide debug information according to their type (e.g. DB modules). 
- * More modules can be aditional added to the enum
- * Each debug type can be easly excluded from output by setting corresponding enum element to 0
  * @author Dino Laktašić
+ * @struct DEBUG_TYPE
+ * @brief Structure for setting debug type. Divide debug information according to their type (e.g. DB modules). 
+ *         More modules can be aditional added to the enum. Each debug type can be easly excluded from output 
+ *         by setting corresponding enum element to 0
+ * 
  */
 typedef enum debug_type {
 	GLOBAL = 0,
