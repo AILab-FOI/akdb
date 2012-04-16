@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <string.h>  //ARCHIVE LOG
+#include <stdlib.h>
 
 // Global configuration
 #include "configuration.h"
@@ -57,6 +58,9 @@
 #include "selection.h"
 #include "union.h"
 #include "aggregation.h"
+
+//Command
+#include "command.h"
 
 // Query processing
 #include "query_optimization.h"
