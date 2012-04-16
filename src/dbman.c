@@ -39,8 +39,8 @@ int AK_init_db_file(int size) {
 
     db_file_size = size;
 
-    if ((db = fopen(DB_FILE, "wb")) == NULL) {
-        printf("AK_init_db_file: ERROR. Cannot open db file %s.\n", DB_FILE);
+    if ((db = fopen(AK_config_get("general:db_file", NULL), "wb")) == NULL) {
+        printf("AK_init_db_file: ERROR. Cannot open db file %s.\n", AK_config_get("general:db_file", NULL));
         exit(EXIT_ERROR);
     }
 
@@ -109,8 +109,8 @@ int AK_init_db_file(int size) {
 AK_block * AK_read_block(int address) {
     AK_block * block = (AK_block *) malloc(sizeof ( AK_block));
 
-    if ((db = fopen(DB_FILE, "r")) == NULL) {
-        printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+    if ((db = fopen(AK_config_get("general:db_file", NULL), "r")) == NULL) {
+        printf("AK_read_block: ERROR. Cannot open db file %s.\n", AK_config_get("general:db_file", NULL));
         exit(EXIT_ERROR);
     }
 
@@ -137,8 +137,8 @@ AK_block * AK_read_block(int address) {
  * @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
  */
 int AK_write_block(AK_block * block) {
-    if ((db = fopen(DB_FILE, "r+")) == NULL) {
-        printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+    if ((db = fopen(AK_config_get("general:db_file", NULL), "r+")) == NULL) {
+        printf("AK_write_block: ERROR. Cannot open db file %s.\n", AK_config_get("general:db_file", NULL));
         exit(EXIT_ERROR);
     }
     if (fseek(db, block->address * sizeof ( AK_block), SEEK_SET) != 0) {

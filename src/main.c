@@ -71,6 +71,7 @@
 
 //Other
 #include "trigger.h"
+#include "iniparser/iniparser.h"
 
 /**
 Main program function
@@ -80,6 +81,9 @@ Main program function
 int main()
 {
 	printf( "KALASHNIKOV DB - STARTING\n\n" );
+
+	AK_inflate_config();
+	printf("db_name: %s\n", AK_config_get("general:db_file", NULL));
 
 	if( AK_init_disk_manager() == EXIT_SUCCESS )
 	{

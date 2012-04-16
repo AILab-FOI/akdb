@@ -95,12 +95,6 @@
 #define FREE_CHAR '\0'
 
 /**
-  * @def DB_FILE
-  * @brief Constant declaring name of the main DB file
- */
-#define DB_FILE "kalashnikov.db"
-
-/**
   * @def MAX_EXTENTS
   * @brief Constant declaring maximum number of extents for a given segment
  */
