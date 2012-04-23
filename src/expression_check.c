@@ -153,7 +153,7 @@ static int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const 
  * @result 0 if row does not satisfy, 1 if row satisfies expresson
  */
 int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
-
+    if (expr == 0) return 1;
 	int true = 1, false = 0;
     int found, result;
 

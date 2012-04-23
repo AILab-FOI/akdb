@@ -830,7 +830,7 @@ void AK_create_test_tables() {
     Ak_DeleteAll_L(row_root);
     free(row_root);
     //------------------------------------------------------------------------------------------------------
-    AK_op_theta_join_test();
+    AK_op_rename_test();
 }
 
 

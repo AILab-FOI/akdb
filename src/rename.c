@@ -73,13 +73,10 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 	}
 
     if(strcmp(old_table_name, new_table_name) != 0){//new name is different than old, and old needs to be replaced
-        AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-		Ak_Init_L(row_root);
-		
-		Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, old_table_name, "AK_relation", "name", row_root, 1);
-		Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_table_name, "AK_relation", "name", row_root, 0);        
-        Ak_update_row(row_root);
-		free(row_root);
+        AK_list *expr;
+	expr = 0;
+	AK_selection(old_table_name, new_table_name, expr);
+    	AK_delete_segment(old_table_name, SEGMENT_TYPE_TABLE);
     }
 
     return EXIT_SUCCESS;
