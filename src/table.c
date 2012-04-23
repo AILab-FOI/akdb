@@ -20,6 +20,7 @@
 #include "table.h"
 
 /**
+ * @author Matija Šestak.
  * @brief  Determine the number of attributes in the table
  * <ol>
  * <li>Read addresses of extents</li>
@@ -27,9 +28,8 @@
  * <li>else read the first block</li>
  * <li>while  header tuple exists in the block, increment num_attr</li>
  * </ol>
- * @author Matija Šestak.
- * @param char* - table name
- * @result int - number of attributes in the table
+ * @param  * tblName table name
+ * @return number of attributes in the table
  */
 int AK_num_attr(char * tblName) {
     int num_attr = 0;
@@ -51,6 +51,7 @@ int AK_num_attr(char * tblName) {
 }
 
 /**
+ * @author Matija Šestak.
  * @brief  Determine number of rows in the table
  * <ol>
  * <li>Read addresses of extents</li>
@@ -62,9 +63,8 @@ int AK_num_attr(char * tblName) {
  * <li>Count tuples in block</li>
  * <li>Return the number of tuples divided by number of attributes</li>
  * </ol>
- * @author Matija Šestak.
- * @param char* - table name
- * @result int - number of rows in the table
+ * @param *tableName table name
+ * @return number of rows in the table
  */
 int AK_get_num_records(char *tblName) {
     int num_rec = 0;
@@ -92,17 +92,17 @@ int AK_get_num_records(char *tblName) {
 }
 
 /**
- * @brief  Get table header
+ * @author Matija Šestak.
+ * @brief  Function that getts table header
  * <ol>
  * <li>Read addresses of extents</li>
  * <li>If there is no extents in the table, return -1</li>
  * <li>else read the first block</li>
  * <li>allocate array</li>
  * <li>copy table header to the array</li>
- * </ol>
- * @author Matija Šestak.
- * @param char* - table name
- * @result AK_header* - array of table header
+ * </ol> 
+ * @param  *tblName table name
+ * @result array of table header
  */
 AK_header *AK_get_header(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
@@ -119,10 +119,10 @@ AK_header *AK_get_header(char *tblName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get attribute name for some zero-based index
- * @param char* - table name
- * @param int - zero-based index
- * @result char* - attribute name
+ * @brief  Function that gets attribute name for some zero-based index
+ * @param *tblName table name
+ * @param index zero-based index
+ * @return attribute name
  */
 char *AK_get_attr_name(char *tblName, int index) {
     int num_attr = AK_num_attr(tblName);
@@ -136,10 +136,10 @@ char *AK_get_attr_name(char *tblName, int index) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get zero-based index for atrribute
- * @param char* - table name
- * @param char* - attribute name
- * @result int - zero-based index
+ * @brief  Function that gets zero-based index for atrribute
+ * @param  *tblName table name
+ * @param *attrName attribute name
+ * @return zero-based index
  */
 int AK_get_attr_index(char *tblName, char *attrName) {
     if (tblName == NULL || attrName == NULL)
@@ -157,10 +157,10 @@ int AK_get_attr_index(char *tblName, char *attrName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get all values in some column and put on the list
- * @param int - zero-based column index
- * @param char* - table name
- * @result AK_list* - column values list
+ * @brief  Function that gets all values in some column and put on the list
+ * @param num zero-based column index
+ * @param  *tblName table name
+ * @return column values list
  */
 AK_list *AK_get_column(int num, char *tblName) {
     int num_attr = AK_num_attr(tblName);
@@ -196,10 +196,10 @@ AK_list *AK_get_column(int num, char *tblName) {
 
 /**
  * @author Markus Schatten, Matija Šestak.
- * @brief  Get all values in some row and put on the list
- * @param int - zero-based row index
- * @param char* - table name
- * @result AK_list* - row values list
+ * @brief  Function that gets all values in some row and put on the list
+ * @param num zero-based row index
+ * @param  * tblName table name
+ * @return row values list
  */
 AK_list * AK_get_row(int num, char * tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
@@ -243,11 +243,11 @@ AK_list * AK_get_row(int num, char * tblName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Get value in some row and column
- * @param int - zero-based row index
- * @param int - zero-based column index
- * @param char* - table name
- * @result AK_list* - value in the list
+ * @brief Function that gets value in some row and column
+ * @param row zero-based row index
+ * @param column zero-based column index
+ * @param *tblName table name
+ * @return value in the list
  */
 AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
     int num_rows = AK_get_num_records(tblName);
@@ -291,9 +291,9 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Convert tuple value to string
- * @param AK_list* - tuple in the list
- * @result char* - string
+ * @brief  Function that converts tuple value to string
+ * @param *tuple tuple in the list
+ * @return tuple value as a string
  */
 char * AK_tuple_to_string(AK_list *tuple) {
     int temp_int;
@@ -326,11 +326,11 @@ char * AK_tuple_to_string(AK_list *tuple) {
 }
 
 /**
- * @brief Print row spacer
- * @author Dino Laktašić.
- * @param int col_len[] - max lengths for each attribute cell 
- * @param int length -  total table width 
- * @result printed row spacer
+ * @author Dino Laktašić. 
+ * @brief Function that prints row spacer 
+ * @param col_len[] max lengths for each attribute cell 
+ * @param length total table width 
+ * @return printed row spacer
  */
 void AK_print_row_spacer(int col_len[], int length) {
     int i, j, col, temp;
@@ -349,11 +349,11 @@ void AK_print_row_spacer(int col_len[], int length) {
 }
 
 /**
- * @brief  Print table row
  * @author Dino Laktašić
- * @param int col_len[] - array of max lengths for each attribute
- * @param AK_list *row - list with row elements
- * @return void
+ * @brief  Function that prints table row 
+ * @param col_len[] array of max lengths for each attribute
+ * @param *row  list with row elements
+ * @return No return value
  */
 AK_print_row(int col_len[], AK_list *row) {
     AK_list_elem el = (AK_list_elem) Ak_First_L(row);
@@ -398,10 +398,10 @@ AK_print_row(int col_len[], AK_list *row) {
 }
 
 /**
- * @brief  Print table
  * @author Dino Laktašić and Mislav Čakarić (replaced old print table function by new one)
- * @param char* - table name
- * @return void
+ * @brief  Function for printing table
+ * @param *tblName table name
+ * @return No return value
  */
 void AK_print_table(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
@@ -528,9 +528,9 @@ void AK_print_table(char *tblName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Check if table empty
- * @param char* - table name
- * @result int - ture/false
+ * @brief  Function that check whether table is empty
+ * @param *tblName table name
+ * @return true/false
  */
 int AK_table_empty(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
@@ -539,9 +539,9 @@ int AK_table_empty(char *tblName) {
 }
 
 /**
- * @brief  Gets obj_id of named table from AK_relation system table
  * @author Dejan Frankovic
- * @param char* - table name
+ * @brief  Function that gets obj_id of named table from AK_relation system table
+ * @param *table table name
  * @return obj_id of the table or EXIT_ERROR if there is no table with that name
  */
 int AK_get_table_obj_id(char *table) {
@@ -562,11 +562,11 @@ int AK_get_table_obj_id(char *table) {
 }
 
 /**
- * @brief  Function to check if tables have the same relation schema
  * @author Dino Laktašić, abstracted from difference.c for use in difference.c, intersect.c and union.c by Tomislav Mikulček
- * @param tbl1_temp_block - first cache block of the first table 
- * @param tbl2_temp_block - first cache block of the second table
- * @param operator_name - the name of operator, used for displaying error message
+ * @brief  Function to check if tables have the same relation schema
+ * @param tbl1_temp_block first cache block of the first table 
+ * @param tbl2_temp_block first cache block of the second table
+ * @param operator_name the name of operator, used for displaying error message
  * @return if success returns num of attributes in schema, else returns EXIT_ERROR
  */
 int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_temp_block, char *operator_name) {
@@ -605,7 +605,11 @@ int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_tem
 		
 		return num_att1;
 }
-
+/**
+ * @author Unknown
+ * @brief Function for testing table abstraction
+ * @return No return value
+ */
 void AK_table_test() {
     printf("table.c: Present!\n");
 

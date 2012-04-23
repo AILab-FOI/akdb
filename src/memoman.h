@@ -1,5 +1,5 @@
 /**
-@file memoman.h Defines includes and datastructures for the memory manager
+@file memoman.h Header file that defines includes and datastructures for the memory manager
  of Kalashnikov DB
  */
 /*
@@ -23,8 +23,9 @@
 #include "dbman.h"
 
 /**
-\struct AK_mem_block
-\brief Defines a block of data in memory
+  * @author Unknown
+  * @struct AK_mem_block
+  * @brief Structure that defines a block of data in memory
  */
 typedef struct {
     /// pointer to block from DB file
@@ -38,8 +39,9 @@ typedef struct {
 } AK_mem_block;
 
 /**
-\struct AK_db_cache
-\brief Global cache memory
+  * @author Unknown
+  * @struct AK_db_cache
+  * @brief Structure that defines global cache memory
  */
 typedef struct {
     /// last recently read blocks
@@ -49,8 +51,9 @@ typedef struct {
 } AK_db_cache;
 
 /**
-\struct AK_redo_log
-\brief Global redo log
+  * @author Unkown
+  * @struct AK_redo_log
+  * @brief Structure that defines global redo log
  */
 typedef struct {
     /// last recently changed blocks
@@ -60,8 +63,9 @@ typedef struct {
 } AK_redo_log;
 
 /**
-\struct AK_query_mem_lib
-\brief Global query memory for libraries
+  * @author Unkown
+  * @struct AK_query_mem_lib
+  * @brief Structure that defines global query memory for libraries
  */
 typedef struct {
     /// last parsed queries; to be changed to more adequate data structure
@@ -71,8 +75,9 @@ typedef struct {
 } AK_query_mem_lib;
 
 /**
-\struct AK_query_mem_dict
-\brief Global query memory for data dictionaries
+  * @author Unkown
+  * @struct AK_query_mem_dict
+  * @brief Structure that defines global query memory for data dictionaries
  */
 typedef struct {
     /// last used data dictionaries
@@ -82,8 +87,9 @@ typedef struct {
 } AK_query_mem_dict;
 
 /**
-\struct AK_query_mem_result
-\brief Global query memory for results
+  * @author Unknown
+  * @struct AK_query_mem_result
+  * @brief Structure that defines global query memory for results
  */
 typedef struct {
     /// last recently obtained results; to be changed to more adequate data structure
@@ -93,8 +99,9 @@ typedef struct {
 } AK_query_mem_result;
 
 /**
-\struct AK_query_mem
-\brief Global query memory
+  * @author Unknown
+  * @struct AK_query_mem
+  * @brief Structure that defines global query memory
  */
 typedef struct {
     /// parsed queries
@@ -106,18 +113,18 @@ typedef struct {
 } AK_query_mem;
 
 /**
-\var db_cache
-\brief Defines the db cache
+ * @var db_cache
+ * @brief Variable that defines the db cache
  */
 AK_db_cache * db_cache;
 /**
-\var redo_log
-\brief Defines the global redo log
+ * @var redo_log
+ * @brief Variable that defines the global redo log
  */
 AK_redo_log * redo_log;
 /**
-\var query_mem
-\brief Defines the global query memory
+ * @var query_mem
+ * @brief Variable that defines the global query memory
  */
 AK_query_mem * query_mem;
 

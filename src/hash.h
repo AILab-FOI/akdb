@@ -1,5 +1,5 @@
 /**
-@file hash.h Provides data structures for Hash indices
+@file hash.h Header file that provides data structures for Hash indices
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -25,6 +25,7 @@
 #include "configuration.h"
 
 /**
+ * @author Unknown
  * @struct hash_info
  * @brief Structure for defining a hash info element
 */
@@ -38,6 +39,7 @@ typedef struct {
 } hash_info;
 
 /**
+ * @author Unknown
  * @struct bucket_elem
  * @brief Structure for defining a single bucket element
  */
@@ -49,8 +51,9 @@ typedef struct {
 } bucket_elem;
 
 /**
+ * @author Unknown
  * @struct main_bucket
- * @brief Main bucket for table hashing
+ * @brief Structure for defining main bucket for table hashing
  */
 typedef struct {
 	/// main bucket array of bucket_elem elements
@@ -58,8 +61,9 @@ typedef struct {
 } main_bucket;
 
 /**
+ * @author Unknown
  * @struct hash_bucket
- * @brief Hash bucket for table hashing
+ * @brief Structure for hash bucket for table hashing
  */
 typedef struct {
 	/// hash bucket level

@@ -21,10 +21,11 @@
 #include "hash.h"
 
 /**
- Function for computing a hash value from varchar or integer
- @param elem element of row for wich value is to be computed
- @return hash value
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for computing a hash value from varchar or integer
+  * @param elem element of row for wich value is to be computed
+  * @return hash value
+ 
  */
 int AK_elem_hash_value(AK_list_elem elem) {
     int type = elem->type, value = 0, i = 0;
@@ -45,12 +46,12 @@ int AK_elem_hash_value(AK_list_elem elem) {
 }
 
 /**
- Function for inserting bucket to block
- @param indexName name of index
- @param data content of bucket stored in char array
- @param type type of bucket (MAIN_BUCKET or HASH_BUCKET)
- @return address structure with data where the bucket is stored
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for inserting bucket to block
+  * @param indexName name of index
+  * @param data content of bucket stored in char array
+  * @param type type of bucket (MAIN_BUCKET or HASH_BUCKET)
+  * @return address structure with data where the bucket is stored 
  */
 struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type) {
     int id, size;
@@ -92,10 +93,11 @@ struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type) {
 }
 
 /**
- Function for update bucket in block
- @param add address of where the bucket is stored
- @param data content of bucket stored in char array
- @author Mislav Čakarić
+  *  @author Mislav Čakarić
+  *  @brief Function for update bucket in block
+  *  @param add address of where the bucket is stored
+  *  @param data content of bucket stored in char array
+  *  @return No return value
  */
 void Ak_update_bucket_in_block(struct_add *add, char *data) {
     AK_block *block = (AK_block*) AK_read_block(add->addBlock);
@@ -106,12 +108,13 @@ void Ak_update_bucket_in_block(struct_add *add, char *data) {
 }
 
 /**
- Function for changing info of hash index
- @param indexName name of index
- @param modulo value for modulo hash function
- @param main_bucket_num number of main buckets
- @param hash_bucket_num number of hash buckets
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for changing info of hash index
+  * @param indexName name of index
+  * @param modulo value for modulo hash function
+  * @param main_bucket_num number of main buckets
+  * @param hash_bucket_num number of hash buckets
+  * @return No return value
  */
 void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int hash_bucket_num) {
     table_addresses *hash_addresses = (table_addresses*) AK_get_index_addresses(indexName);
@@ -133,10 +136,10 @@ void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int h
 }
 
 /**
- Function for fetching info for hash index
- @param indexName name of index
- @return info bucket with info data for hash index
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for fetching info for hash index
+  * @param indexName name of index
+  * @return info bucket with info data for hash index
  */
 hash_info* AK_get_hash_info(char *indexName) {
     table_addresses *hash_addresses = (table_addresses*) AK_get_index_addresses(indexName);
@@ -153,11 +156,11 @@ hash_info* AK_get_hash_info(char *indexName) {
 }
 
 /**
- Function for fetching nth main bucket
- @param indexName name of index
- @param n number of main bucket
- @return address structure with data where the bucket is stored
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for fetching nth main bucket
+  * @param indexName name of index
+  * @param n number of main bucket
+  * @return address structure with data where the bucket is stored
  */
 struct_add* Ak_get_nth_main_bucket_add(char *indexName, int n) {
     int i = 0, j = 0, k = 0, counter = 0, end = 0;
@@ -190,11 +193,12 @@ struct_add* Ak_get_nth_main_bucket_add(char *indexName, int n) {
 }
 
 /**
- Function for inserting record in hash bucket
- @param indexName name of index
- @param hashValue hash value of record that is being inserted
- @param add address structure with data where the hash bucket is stored
- @author Mislav Čakarić
+  *  @author Mislav Čakarić
+  *  @brief Function for inserting record in hash bucket
+  *  @param indexName name of index
+  *  @param hashValue hash value of record that is being inserted
+  *  @param add address structure with data where the hash bucket is stored
+  *  @return No return value
  */
 int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
     int i, j, address, size, hash_free_space = 0;
@@ -320,12 +324,13 @@ int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
 }
 
 /**
- Function for fetching or deleting record from hash index
- @param indexName name of index
- @param values list of values (one row) to search in hash index
- @param delete if delete is 0 then record is only read otherwise it's deleted from hash index
- @return address structure with data where the record is in table
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for fetching or deleting record from hash index
+  * @param indexName name of index
+  * @param values list of values (one row) to search in hash index
+  * @param delete if delete is 0 then record is only read otherwise it's deleted from hash index
+  * @return address structure with data where the record is in table
+ 
  */
 struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int delete) {
     struct_add *add = (struct_add*) malloc(sizeof (struct_add));
@@ -414,33 +419,37 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
 }
 
 /**
- Function for fetching record from hash index
- @param indexName name of index
- @param values list of values (one row) to search in hash index
- @return address structure with data where the record is in table
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for fetching record from hash index
+  * @param indexName name of index
+  * @param values list of values (one row) to search in hash index
+  * @return address structure with data where the record is in table
+ 
  */
 struct_add * AK_find_in_hash_index(char *indexName, AK_list *values) {
     return AK_find_delete_in_hash_index(indexName, values, FIND);
 }
 
 /**
- Function for deleting record from hash index
- @param indexName name of index
- @param values list of values (one row) to search in hash index
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for deleting record from hash index
+  * @param indexName name of index
+  * @param values list of values (one row) to search in hash index
+  * @return No return value
+ 
  */
 void AK_delete_in_hash_index(char *indexName, AK_list *values) {
     AK_find_delete_in_hash_index(indexName, values, DELETE);
 }
 
 /**
- Function for creating hash index
- @param tblName name of table for which the index is being created
- @param indexName name of index
- @param attributes list of attributes over which the index is being created
- @return success or error
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for creating hash index
+  * @param tblName name of table for which the index is being created
+  * @param indexName name of index
+  * @param attributes list of attributes over which the index is being created
+  * @return success or error
+ 
  */
 int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
     int i, j, k, l, n, exist, hashValue;
@@ -550,8 +559,10 @@ int AK_delete_hash_index(char *indexName) {
 }
 
 /**
- Function for testing hash index
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for testing hash index
+  * @return No return value 
+
  */
 void Ak_hash_test() {
     char *tblName = "student";

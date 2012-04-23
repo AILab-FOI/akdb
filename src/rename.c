@@ -21,13 +21,13 @@
 #include "rename.h"
 
 /**
- Function for renaming table and/or attribute in table
- @param old_table_name old name of the table
- @param new_table_name new name of the table
- @param old_attr name of the attribute to rename
- @param new_attr new name for the attribute to rename
- @return EXIT_ERROR or EXIT_SUCCESS
- @author Mislav Čakarić
+ * @author Mislav Čakarić
+ * @brief Function for renaming table and/or attribute in table
+ * @param old_table_name old name of the table
+ * @param new_table_name new name of the table
+ * @param old_attr name of the attribute to rename
+ * @param new_attr new name for the attribute to rename
+ * @return EXIT_ERROR or EXIT_SUCCESS
  */
 int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr) {
     table_addresses *adresses = (table_addresses *)AK_get_table_addresses(old_table_name);
@@ -86,8 +86,9 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 }
 
 /**
- Function for rename operator testing
- @author Mislav Čakarić
+  * @author Mislav Čakarić
+  * @brief Function for rename operator testing
+  * @return No return value
  */
 void AK_op_rename_test() {
     //printf( "rename_test: Present!\n" );

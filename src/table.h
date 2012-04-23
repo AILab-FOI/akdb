@@ -1,5 +1,5 @@
 /**
-@file table.h Provides data structures for table abstraction
+@file table.h Header file that provides data structures for table abstraction
  */
 /*
  * This program is free software; you can redistribute it and/or modify

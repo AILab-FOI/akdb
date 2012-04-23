@@ -20,8 +20,8 @@
 #include "reference.h"
 
 /**
- * Adds a reference for a group of attributes over a given table to a group of attributes over another table with a given constraint name..
- * @author Dejan Frankovic
+ * @author Dejan Frankovic 
+ * @brief Function adds a reference for a group of attributes over a given table to a group of attributes over another table with a given constraint name..
  * @param name of the child table
  * @param array of child table attribute names (foreign key attributes)
  * @param name of the parent table
@@ -29,7 +29,7 @@
  * @param number of attributes in foreign key
  * @param name of the constraint
  * @param type of the constraint, constants defined in 'reference.h'
- * @result returns EXIT_SUCCESS
+ * @return EXIT_SUCCESS
  */
 int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable, char *parentAttNames[], int attNum, char *constraintName, int type) {
     int i;
@@ -54,11 +54,11 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
 }
 
 /**
- * Reads a reference entry from system table.
  * @author Dejan Frankovic
+ * @brief Function reads a reference entry from system table. 
  * @param name of the table with reference (with foreign key)
  * @param name of the reference constraint
- * @result AK_ref_item object with all neccessary information about the reference
+ * @return AK_ref_item object with all neccessary information about the reference
  */
 AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
     int i = 0;
@@ -84,12 +84,12 @@ AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
 }
 
 /**
- * Check referential integrity for one attribute
  * @author Dejan Frankovic
+ * @brief Function checks referential integrity for one attribute
  * @param child table name
  * @param attribute name (foreign key attribute)
  * @param value of the attribute we're checking
- * @result EXIT ERROR if check failed, EXIT_SUCCESS if referential integrity is ok
+ * @return EXIT ERROR if check failed, EXIT_SUCCESS if referential integrity is ok
  */
 int AK_reference_check_attribute(char *tableName, char *attribute, char *value) {
     int i;
@@ -112,11 +112,11 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
 }
 
 /**
- * A quick check if there are any referential constraints that should be applied on a given list of changes.
  * @author Dejan Frankovic
+ * @brief Funvction that quickly checks if there are any referential constraints that should be applied on a given list of changes.
  * @param list of elements for update
  * @param is action UPDATE or DELETE ?
- * @result EXIT_SUCCESS if update is needed, EXIT_ERROR if not
+ * @return EXIT_SUCCESS if update is needed, EXIT_ERROR if not
  */
 int AK_reference_check_if_update_needed(AK_list *lista, int action) {
     AK_list_elem temp;
@@ -141,10 +141,11 @@ int AK_reference_check_if_update_needed(AK_list *lista, int action) {
 }
 
 /**
- * Checks for REF_TYPE_RESTRICT references appliable to the operation of updating or deleting a row in a table.
+ * @author Dejan Franković
+ * @brief Function checks for REF_TYPE_RESTRICT references appliable to the operation of updating or deleting a row in a table.
  * @param list of elements for update
  * @param is action UPDATE or DELETE?
- * @result EXIT_SUCCESS if there is no restriction on this action, EXIT_ERROR if there is
+ * @return EXIT_SUCCESS if there is no restriction on this action, EXIT_ERROR if there is
  */
 int AK_reference_check_restricion(AK_list *lista, int action) {
     AK_list_elem temp;
@@ -169,10 +170,11 @@ int AK_reference_check_restricion(AK_list *lista, int action) {
 }
 
 /**
- * Updates child table entries according to ongoing update of parent table entries.
+ * @author Dejan Franković
+ * @brief Function updates child table entries according to ongoing update of parent table entries.
  * @param list of elements for update
  * @param is action UPDATE or DELETE ?
- * @result EXIT_SUCCESS
+ * @return EXIT_SUCCESS
  */
 int AK_reference_update(AK_list *lista, int action) {
     int parent_i, i, j, ref_i, con_num = 0;
@@ -300,9 +302,10 @@ int AK_reference_update(AK_list *lista, int action) {
 }
 
 /**
- * Checks new entry for referential integrity.
+ * @author Dejan Franković
+ * @brief Function checks new entry for referential integrity.
  * @param list of elements for insert row
- * @result EXIT_SUCCESS if referential integrity is ok, EXIT_ERROR if it is compromised
+ * @return EXIT_SUCCESS if referential integrity is ok, EXIT_ERROR if it is compromised
  */
 int AK_reference_check_entry(AK_list *lista) {
     AK_list_elem temp;
@@ -392,7 +395,9 @@ int AK_reference_check_entry(AK_list *lista) {
 }
 
 /**
- * Test function.
+ * @author Dejan Franković
+ * @brief Function for testing referential integrity.
+ * @return No return value
  */
 void AK_reference_test() {
     printf("reference.c: Present!\n");

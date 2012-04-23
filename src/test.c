@@ -20,9 +20,9 @@
 #include "test.h"
 
 /**
- * @brief Function for creating test tables
  * @author Dino Laktašić
- * @return void
+ * @brief Function for creating test tables
+ * @return No return value
  */
 void AK_create_test_tables() {
     int mbr, year, id_prof, id_department;

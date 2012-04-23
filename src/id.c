@@ -21,7 +21,7 @@
 
 /**
  * @author Saša Vukšić, updated by Mislav Čakarić.
- * @brief  Get unique ID for any object, stored in sequence
+ * @brief Function for getting unique ID for any object, stored in sequence
  * @return objectID
  */
 int AK_get_id() {
@@ -70,7 +70,7 @@ int AK_get_id() {
 
 /**
  * @author Mislav Čakarić.
- * @brief  function for testing getting ID's
+ * @brief  Function for testing getting ID's
  */
 void Ak_id_test() {
     printf("ID: %i\n", AK_get_id());

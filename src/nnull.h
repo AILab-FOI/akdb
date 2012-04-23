@@ -1,5 +1,5 @@
 /**
-@file nnull.h Provides data structures for not null constaint
+@file nnull.h Header file that provides data structures for not null constaint
  */
 /*
  * This program is free software; you can redistribute it and/or modify

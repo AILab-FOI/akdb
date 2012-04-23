@@ -22,12 +22,12 @@
 
 
 /**
- * @brief  Implementation of selection
  * @author Matija Šestak.
- * @param *srcTable - source table name
- * @param *dstTable - destination table name
- * @param *expr - list with posfix notation of the logical expression
- * @result int - return EXIT_SUCCESS
+ * @brief  Function which implements selection
+ * @param *srcTable source table name
+ * @param *dstTable destination table name
+ * @param *expr list with posfix notation of the logical expression
+ * @return EXIT_SUCCESS
  */
 int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
     AK_header *t_header = (AK_header *) AK_get_header(srcTable);
@@ -89,8 +89,9 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 
 
 /**
- * @brief  Function for selection operator testing
  * @author Matija Šestak, updated by Dino Laktašić
+ * @brief  Function for selection operator testing
+ *
  */
 void AK_op_selection_test() {
     printf("\n********** SELECTION TEST **********\n");

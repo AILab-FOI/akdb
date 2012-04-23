@@ -135,11 +135,11 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     return EXIT_SUCCESS;
 }
 
-/**	@author Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference 		check), updated by Dino Laktašić (removed variable free, variable table initialized using memset)
-        @brief Function inserts a one row into table. Firstly it is checked wether inserted row would violite reference integrity. 
-	 	Then it is checked in which table should row be inserted. If there is no free space for new table, new extent is 			allocated. New block is allocated on given address. Row is inserted in this block and dirty flag is set to 			BLOCK_DIRTY. 
+/**	@author Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference check), updated by Dino 		Laktašić (removed variable free, variable table initialized using memset)
+        @brief Function inserts a one row into table. Firstly it is checked whether inserted row would violite reference integrity. 
+	 	Then it is checked in which table should row be inserted. If there is no free space for new table, new extent is allocated. New block is 			allocated on given address. Row is inserted in this block and dirty flag is set to BLOCK_DIRTY. 
         @param row_root list of elements which contain data of one row
-        @result EXIT_SUCCESS if success elese EXIT_ERROR
+        @return EXIT_SUCCESS if success else EXIT_ERROR
 
  */
 int Ak_insert_row(AK_list *row_root) {
@@ -181,7 +181,7 @@ int Ak_insert_row(AK_list *row_root) {
 
 /**	
    * @author Matija Novak, updated by Dino Laktašić
-   * @brief Function updates or deletes row from table in given block. Given list of elements is firstly back-upped.  According to 		    given argument in function, delete or update is peformed.
+   * @brief Function updates or deletes row from table in given block. Given list of elements is firstly back-upped. According to given argument in function, 	          delete or update is peformed.
    * @param temp_block block to work with
    * @param row_list list of elements which contain data for delete or update
    * @param operation UPDATE or DELETE
@@ -390,8 +390,8 @@ int Ak_delete_update_segment(AK_list *row_root, int del) {
 }
 
 /**	@author Matija Novak, Dejan Frankovic (added referential integrity)
-        function delete rows
-        @param row_root -  elements of one row
+        @brief Function deletes rows
+        @param row_root elements of one row
         @returs EXIT_SUCCESS if success
  */
 int Ak_delete_row(AK_list *row_root) {
@@ -408,9 +408,9 @@ int Ak_delete_row(AK_list *row_root) {
 }
 
 /**	@author Matija Novak, Dejan Frankovic (added referential integrity)
-        function update rows of some table
-        @param row_root -  elements of one row
-        @returs EXIT_SUCCESS if success
+        @brief Function updates rows of some table
+        @param row_root elements of one row
+        @return EXIT_SUCCESS if success
  */
 int Ak_update_row(AK_list *row_root) {
     if (AK_reference_check_restricion(row_root, 0) == EXIT_ERROR) {

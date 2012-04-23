@@ -1,5 +1,5 @@
 /**
-@file index.h Provides data structures for bitmap index
+@file index.h Header file that provides data structures for bitmap index
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -21,8 +21,9 @@
 #define	INDEX
 
 /**
-\struct struct_add
-\brief structure for node address
+  * @author Unknown
+  * @struct struct_add
+  * @brief Structure defining node address
  */
 typedef struct {
 	/// block address
@@ -32,8 +33,8 @@ typedef struct {
 } struct_add;
 
 /**
-\struct list_structure_add
-\brief linked list node structure for index
+  * @struct list_structure_add
+  * @brief Structure that defines linked list node for index
  */
 typedef struct {
 	/// attribute name

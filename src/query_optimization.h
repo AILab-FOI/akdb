@@ -1,5 +1,5 @@
 /**
-@file query_optimization.h Provides functions for general query optimization
+@file query_optimization.h Header file that provides functions for general query optimization
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,10 @@
 #include "rel_eq_assoc.h"
 #include "rel_eq_projection.h"
 #include "rel_eq_selection.h"
-
+/**
+ * @def MAX_PERMUTATION
+ * @brief Constant declaring maximum number of permutations 
+*/
 #define MAX_PERMUTATION 24
 
 #endif

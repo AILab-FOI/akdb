@@ -22,10 +22,11 @@
 
 /**
  * @author Saša Vukšić
- * @brief set null constraint on attribute
- * @param char* tableName - name of table
- * @param char* constraintName - name of constraint
- * @param char* attName - name of attribute
+ * @brief Function that sets null constraint on attribute
+ * @param char* tableName name of table
+ * @param char* constraintName name of constraint
+ * @param char* attName name of attribute
+ * @return No return value
  **/
 void AK_set_constraint_not_null(char* tableName, char* constraintName, char* attName) {
     char systemTableName[50];
@@ -83,10 +84,10 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
 
 /**
  * @author Saša Vukšić
- * @brief check if value is not null 
- * @param char* tableName - name of table
- * @param char* newValue - new value
- * @param char* attNamePar - name of attribute
+ * @brief Function checks if value is not null 
+ * @param char* tableName name of table
+ * @param char* newValue new value
+ * @param char* attNamePar name of attribute
  * @return EXIT_ERROR or EXIT_SUCCESS
  **/
 
@@ -172,7 +173,12 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
     }
     return flag;
 }
-
+/**
+  * @author Unknown
+  * @brief Function checks wether some char is number
+  * @param *s sign which we want to check
+  * @return 0 if s is number, otherwise 1 
+  */
 int AK_is_number(char* s) {
     int i;
     for (i = 0; i < strlen(s); i++) {
@@ -181,7 +187,11 @@ int AK_is_number(char* s) {
     }
     return 1;
 }
-
+/**
+  * @author Saša Vukšić
+  * @brief Function for testing testing not null constraint
+  * @return No return value
+  */
 void AK_null_test() {
     char* tableName = "studenti";
     char* constraintName = "studentiNotNull";

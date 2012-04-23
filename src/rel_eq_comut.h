@@ -1,5 +1,5 @@
 /**
-@file rel_eq_comut.h Provides data structures for relational equivalences regarding comutativity
+@file rel_eq_comut.h Header file that provides data structures for relational equivalences regarding comutativity
  */
 /*
  * This program is free software; you can redistribute it and/or modify

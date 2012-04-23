@@ -20,13 +20,12 @@
 #include "union.h"
  
 /**
- * @brief  Function to make union of the two tables
- * Union is implemented for working with multiple sets of data, i.e. duplicate 
- * tuples can be written in same table (union)
  * @author Dino Laktašić
- * @param srcTable1 - name of the first table
- * @param srcTable2 - name of the second table
- * @param dstTable - name of the new table
+ * @brief  Function to make union of the two tables. Union is implemented for working with multiple sets of data, i.e. duplicate 
+ * 	   tuples can be written in same table (union) 
+ * @param srcTable1 name of the first table
+ * @param srcTable2 name of the second table
+ * @param dstTable name of the new table
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
@@ -137,8 +136,10 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 }
 
 /**
- * @brief  Function for union operator testing
  * @author Dino Laktašić
+ * @brief  Function for union operator testing
+ * @return No return value
+ * 
  */
 void AK_op_union_test() {
     printf("\n********** UNION TEST **********\n\n");

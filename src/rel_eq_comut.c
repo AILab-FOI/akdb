@@ -1,5 +1,5 @@
 /**
-@file rel_eq_comut.c Provides functions for for relational equivalences regarding commutativity
+@file rel_eq_comut.c Provides functions for relational equivalences regarding commutativity
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 
 
 /**
+ * @author Dino Laktašić.
  * @brief Check if selection can commute with theta-join or product
  * <ol>
  * <li>For each token (delimited by " ") in selection condition first check if token represents attribute/s and is subset in the given table</li>
@@ -30,10 +31,9 @@
  * <li>else if token equals to "AND" or "OR" and id equals to 1 and there are two added tokens add "AND" or "OR" to condition string</li>
  * <li>When exits from loop, return pointer to char array that contains new condition for a given table
  * </ol>
- * @author Dino Laktašić.
- * @param char *cond - condition array that contains condition data 
- * @param char *tblName - name of the table
- * @result char * - returns pointer to char array that contains new condition for a given table
+ * @param *cond condition array that contains condition data 
+ * @param *tblName name of the table
+ * @result pointer to char array that contains new condition for a given table
  */
 
 
@@ -91,7 +91,11 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
         return NULL;
     }
 }
-
+/**
+ * @author Dino Laktašić.
+ * @brief relational equivalences regarding commutativity
+ * @return No return vlaue
+ */
 void rel_eq_comut_test() {
     printf(AK_rel_eq_commute_with_theta_join("`mbr` 100 > `firstname` 50 < AND `id` 'A' > OR", "profesor"));
     printf("rel_eq_comut.c: Present!\n");

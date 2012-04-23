@@ -1,5 +1,5 @@
 /**
-@file rel_eq_assoc.h Provides data structures for relational equivalences regarding associativity
+@file rel_eq_assoc.h Header file that provides data structures for relational equivalences regarding associativity
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -23,10 +23,10 @@
 #include "table.h"
 
 /**
- * @brief Stucture for cost estimation on relations
  * @author Dino Laktašić
- * int value - number of rows in table
- * char data[MAX_VARCHAR_LENGHT] - used to store table name
+ * @struct cost_eval_t
+ * @brief Stucture for cost estimation on relations. It contains value (number of rows in table) and data (used to store table name)
+ * 
  */
 struct cost_eval_t {
     int value;

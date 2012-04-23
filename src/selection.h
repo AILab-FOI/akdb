@@ -1,5 +1,5 @@
 /**
-@file selection.h Provides data structures for relational selection operation
+@file selection.h Header file that provides data structures for relational selection operation
  */
 /*
  * This program is free software; you can redistribute it and/or modify

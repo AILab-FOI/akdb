@@ -1,5 +1,5 @@
 /**
-@file rel_eq_selection.h Provides data structures for relational equivalences in selection
+@file rel_eq_selection.h Header file that provides data structures for relational equivalences in selection
  */
 /*
  * This program is free software; you can redistribute it and/or modify

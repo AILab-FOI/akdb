@@ -24,14 +24,11 @@
 #include "memoman.h"
 
 /**
- @author Nikola Bakoš, Matija Šestak(revised)
-
- Caches block into memory.
-
- @param num block number (address)
- @param mem_block address of memmory block
-
- @return EXIT_SUCCESS if the block has been successfully read into memory, EXIT_ERROR otherwise
+  * @author Nikola Bakoš, Matija Šestak(revised)
+  * @brief Function caches block into memory.
+  * @param num block number (address)
+  * @param mem_block address of memmory block
+  * @return EXIT_SUCCESS if the block has been successfully read into memory, EXIT_ERROR otherwise
  */
 int AK_cache_block(int num, AK_mem_block *mem_block) {
     unsigned long timestamp;
@@ -52,11 +49,9 @@ int AK_cache_block(int num, AK_mem_block *mem_block) {
 }
 
 /**
- @author Markus Schatten, Matija Šestak(revised)
-
- Initializes the global cache memory (variable db_cache)
-
- @return EXIT_SUCCESS if the cache memory has been initialized, EXIT_ERROR otherwise
+  * @author Markus Schatten, Matija Šestak(revised)
+  * @brief Function initializes the global cache memory (variable db_cache)
+  * @return EXIT_SUCCESS if the cache memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_cache_malloc() {
     register int i;
@@ -80,11 +75,9 @@ int AK_cache_malloc() {
 }
 
 /**
- @author Dejan Sambolić
-
- Initializes the global redo log memory (variable redo_log)
-
- @return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
+  * @author Dejan Sambolić
+  * @brief Function initializes the global redo log memory (variable redo_log)
+  * @return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_redo_log_malloc() {
     if ((redo_log = (AK_redo_log *) malloc(sizeof ( AK_redo_log))) == NULL) {
@@ -94,11 +87,9 @@ int AK_redo_log_malloc() {
 }
 
 /**
- @author Matija Novak
-
- Initializes the global query memory (variable query_mem)
-
- @return EXIT_SUCCESS if the query memory has been initialized, EXIT_ERROR otherwise
+  *  @author Matija Novak
+  *  @brief Function initializes the global query memory (variable query_mem)
+  *  @return EXIT_SUCCESS if the query memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_query_mem_malloc() {
 	
@@ -155,8 +146,8 @@ int AK_query_mem_malloc() {
 }
 
 /**
- * @brief  Initializes memory manager (cache, redo log and query memory)
  * @author Miroslav Policki
+ * @brief  Function initializes memory manager (cache, redo log and query memory) 
  * @return EXIT_SUCCESS if the query memory manager has been initialized, EXIT_ERROR otherwise
  */
 int AK_memoman_init() {
@@ -183,14 +174,11 @@ int AK_memoman_init() {
 }
 
 /**
- @author Tomislav Fotak, updated by Matija Šestak
-
- Reads a block from memory. If the block is cached returns the cached block. Else uses
- AK_cache_block to read the block to cache and then returns it.
-
- @param num block number (address)
-
- @return segment start address
+  * @author Tomislav Fotak, updated by Matija Šestak
+  * @brief Function reads a block from memory. If the block is cached returns the cached block. Else uses AK_cache_block to read the block 
+		to cache and then returns it.
+  * @param num block number (address)
+  * @return segment start address
  */
 AK_mem_block *AK_get_block(int num) {
     int i = 0;
@@ -264,7 +252,7 @@ AK_mem_block *AK_get_block(int num) {
 /**
  * @author Matija Šestak.
  * @brief  Function re-read all the blocks from disk
- * @result int-EXIT_SUCCESS
+ * @result EXIT_SUCCESS
  */
 int AK_refresh_cache() {
     int i;
@@ -277,11 +265,11 @@ int AK_refresh_cache() {
     return EXIT_SUCCESS;
 }
 
-/** 	@author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić
-        function for geting addresses of some table
-        @return structure table_addresses witch contains start and end adresses of table extents,
-        when form and to are 0 you are on the end of addresses
-        @param table - table name that you search for
+/** 	
+  * @author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić
+  * @brief Function for geting addresses of some table
+  * @param table table name that you search for
+  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses       
  */
 table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     int i = 0;
@@ -370,31 +358,31 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     return addresses;
 }
 
-/** 	@author Mislav Čakarić
-        function for geting addresses of some table
-        @return structure table_addresses witch contains start and end adresses of table extents,
-        when form and to are 0 you are on the end of addresses
-        @param table - table name that you search for
+/** 	
+  * @author Mislav Čakarić
+  * @brief function for geting addresses of some table
+  * @param table table name that you search for
+  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses      
  */
 table_addresses *AK_get_table_addresses(char *table) {
     return AK_get_segment_addresses(table, SEGMENT_TYPE_TABLE);
 }
 
-/** 	@author Mislav Čakarić
-        function for geting addresses of some index
-        @return structure table_addresses witch contains start and end adresses of table extents,
-        when form and to are 0 you are on the end of addresses
-        @param index - index name that you search for
+/** 	
+  * @author Mislav Čakarić
+  * @brief Function for geting addresses of some index
+  * @param index index name that you search for
+  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses       
  */
 table_addresses *AK_get_index_addresses(char * index) {
     return AK_get_segment_addresses(index, SEGMENT_TYPE_INDEX);
 }
 
-/** 	@author Matija Novak, updated by Matija Šestak( function now uses caching)
-        function to find free space in some block betwen block addresses
-        function made for insert_row()
-        @param address - addresses of extents
-        @returns int - address of the block to write in
+/** 	
+  * @author Matija Novak, updated by Matija Šestak( function now uses caching)
+  * @brief Function to find free space in some block betwen block addresses. It's made for insert_row()
+  * @param address addresses of extents
+  * @return address of the block to write in
  */
 int AK_find_free_space(table_addresses * addresses) {
     AK_mem_block *mem_block;
@@ -430,16 +418,16 @@ int AK_find_free_space(table_addresses * addresses) {
 }
 
 /**
- * Extends the segment
- @author Nikola Bakoš, updated by Matija Šestak (function now uses caching), updated by Mislav Čakarić, updated by Dino Laktašić
- @param table_name name of segment to extent
- @param extent_type type of extent (can be one of:
+ * @author Nikola Bakoš, updated by Matija Šestak (function now uses caching), updated by Mislav Čakarić, updated by Dino Laktašić
+ * @brief Function that extends the segment
+ * @param table_name name of segment to extent
+ * @param extent_type type of extent (can be one of:
         SEGMENT_TYPE_SYSTEM_TABLE,
         SEGMENT_TYPE_TABLE,
         SEGMENT_TYPE_INDEX,
         SEGMENT_TYPE_TRANSACTION,
         SEGMENT_TYPE_TEMP
- @return address of new extent, otherwise EXIT_ERROR
+  * @return address of new extent, otherwise EXIT_ERROR
 
  */
 int AK_init_new_extent(char *table_name, int extent_type) {
@@ -514,10 +502,9 @@ int AK_init_new_extent(char *table_name, int extent_type) {
 }
 
 /**
- * @brief flush memory blocks to disk file
  * @author Matija Šestak
- * @param void
- * @return int - EXIT_SUCCESS
+ * @brief Function that flushes memory blocks to disk file
+ * @return EXIT_SUCCESS
  */
 int AK_flush_cache() {
     int i = 0;

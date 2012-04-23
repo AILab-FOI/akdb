@@ -21,13 +21,12 @@
 #include "intersect.h"
 
 /**
- * @brief  Function to make intersect of the two tables
- * Intersect is implemented for working with multiple sets of data, i.e. duplicate 
- * tuples can be written in same table (intersect)
  * @author Dino Laktašić
- * @param srcTable1 - name of the first table
- * @param srcTable2 - name of the second table
- * @param dstTable - name of the new table
+ * @brief  Function to make intersect of the two tables. Intersect is implemented for working with multiple sets of data, i.e. duplicate 
+          tuples can be written in same table (intersect)
+ * @param srcTable1 name of the first table
+ * @param srcTable2 name of the second table
+ * @param dstTable name of the new table
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
@@ -155,8 +154,9 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 }
 
 /**
- * @brief  Function for intersect operator testing
  * @author Dino Laktašić
+ * @brief  Function for intersect operator testing
+ * @return No return value
  */
 void Ak_op_intersect_test() {
     printf("\n********** INTERSECT TEST **********\n\n");

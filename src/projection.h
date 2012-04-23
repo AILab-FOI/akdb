@@ -1,5 +1,5 @@
 /**
-@file projection.h Provides data structures for relational projection operation
+@file projection.h Header file that provides data structures for relational projection operation
  */
 /*
  * This program is free software; you can redistribute it and/or modify

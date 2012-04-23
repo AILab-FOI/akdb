@@ -1,5 +1,5 @@
 /**
-@file filesort.h Provides data structures for file sorting
+@file filesort.h Header filr provides data structures for file sorting
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -21,11 +21,17 @@
 #define FILESORT
 
 #include "memoman.h"
+/**
+  * @def DATA_ROW_SIZE
+  * @brief Constatnt declaring size of data to be compared
+  */
 
-//velicina podatka koji se usporedjuje
 #define DATA_ROW_SIZE 200
+/**
+  * @def DATA_TUPLE_SIZE
+  * @brief Costant declaring size of data to be copied
+  */
 
-//velicina podatka koji se mora kopirati
 #define DATA_TUPLE_SIZE 500
 
 

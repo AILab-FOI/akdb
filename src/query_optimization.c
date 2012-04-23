@@ -20,9 +20,9 @@
 #include "query_optimization.h"
 
 /**
- * @brief Print optimization table for testing purposes
  * @author Dino Laktašić.
- * @param AK_list *list_query - optimized RA expresion list 
+ * @brief Print optimization table for testing purposes
+ * @param *list_query optimized RA expresion list 
  * @result list output
  */
 void AK_print_optimized_query(AK_list *list_query) {
@@ -76,17 +76,17 @@ void AK_print_optimized_query(AK_list *list_query) {
 }
 
 /**
+ * @author Dino Laktašić.
  * @brief Call and execute relation equivalence
  * /* RELATION EQUIVALENCE RULES FLAGS
  * c - commutation
  * a - associativity
  * p - projection
  * s - selection	
- * @author Dino Laktašić.
- * @param AK_list *list_query - RA expresion list where we need to apply relational equivalences rules
- * @param const char rel_eq - rel_eq to execute 
- * @param const char *FLAGS - flags for relation equivalences (execute rel_eq for given flags) 
- * @result returns AK_list (RA expresion list) optimized by given relational equivalence rule 
+ * @param *list_query RA expresion list where we need to apply relational equivalences rules
+ * @param rel_eq rel_eq to execute 
+ * @param *FLAGS flags for relation equivalences (execute rel_eq for given flags) 
+ * @return returns AK_list (RA expresion list) optimized by given relational equivalence rule 
  */
 AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *FLAGS) {
     Ak_dbg_messg(LOW, REL_EQ, "\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
@@ -123,12 +123,12 @@ AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *F
 }
 
 /**
+ * @author Dino Laktašić.
  * @brief Execute all relational equivalences provided by FLAGS (one or more), 
  * if DIFF_PLANS turned on execute permutations without repetition on given RA list from SQL parser output
- * @author Dino Laktašić.
- * @param AK_list *list_query - RA expresion list where we need to apply relational equivalences rules
- * @param const char *FLAGS - flags for relation equivalences (execute rel_eq for given flags) 
- * @result returns AK_list (RA expresion list) optimized by all relational equivalence rules provided by FLAGS 
+ * @param *list_query RA expresion list where we need to apply relational equivalences rules
+ * @param *FLAGS flags for relation equivalences (execute rel_eq for given flags) 
+ * @return returns AK_list (RA expresion list) optimized by all relational equivalence rules provided by FLAGS 
  * (commented code can be edited so AK_list can return the list of lists (lists of different optimization plans),
  * with permutation switched on (DIFF_PLANS = 1) time for execution will be significantly increased
  * Current implementation without uncommenting code doesn't produce list of list, 
@@ -196,7 +196,11 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
 
     return temp;
 }
-
+/**
+  * @author Dino Laktašić
+  * @param *list_query query to be optimized
+  * @return No return value
+  */
 void AK_query_optimization_test(AK_list *list_query) {
     printf("query_optimization.c: Present!\n");
     printf("\n********** QUERY OPTIMIZATION TEST by Dino Laktašić **********\n");

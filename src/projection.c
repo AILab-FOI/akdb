@@ -19,13 +19,13 @@
 
 #include "projection.h"
 
-/** 
+/**
+ * @author Matija Novak, updated by Dino Laktašić 
  * @brief  Temporaly function to create table, and insert entry to the system_relation catalog
- * @author Matija Novak, updated by Dino Laktašić
- * @param table - table name
- * @param header - AK_header of the new table
- * @param type_segment - type of the new segment
- * @return void
+ * @param table table name
+ * @param header AK_header of the new table
+ * @param type_segment type of the new segment
+ * @return No return value
  */
 void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
     AK_block *sys_block = (AK_block *) malloc(sizeof (AK_block));
@@ -49,13 +49,13 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
     free(sys_block);
 }
 
-/** 
+/**
+ * @author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list  
  * @brief  Function to create a new header for the projection table
- * @author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list 
- * @param old_block_add - address of the block from which we copy headers we need
- * @param dstTable - name of the new table
- * @param att - list of the attributes which should the projeciton table contain
- * @return void
+ * @param old_block_add address of the block from which we copy headers we need
+ * @param dstTable name of the new table
+ * @param att list of the attributes which should the projeciton table contain
+ * @return No return value
  */
 void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
     AK_block *temp_block = (AK_block *) malloc(sizeof (AK_block));
@@ -91,12 +91,13 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
     AK_temp_create_table(dstTable, header, SEGMENT_TYPE_TABLE);
 }
 
-/** @brief  Function for copying the data from old table block to the new projection table
-        @author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list
-        @param old_block - block from which we copy data
-        @param dstTable - name of the new table
-        @param att - list of the attributes which should the projeciton table contain
-        @result void
+/** 
+  * @author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list
+  * @brief  Function for copying the data from old table block to the new projection table
+  * @param old_block block from which we copy data
+  * @param dstTable name of the new table
+  * @param att list of the attributes which should the projeciton table contain
+  * @retrun No return value
  */
 void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable) {
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
@@ -153,11 +154,11 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
 }
 
 /**
- *@brief  Function makes a projection of some table
- *@author Matija Novak, rewrited and optimized by Dino Laktašić, now support cacheing
- *@param att - list of atributes on which we make projection
- *@param dstTable - table name for projection table
- *@return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
+ * @author Matija Novak, rewrited and optimized by Dino Laktašić, now support cacheing
+ * @brief  Function makes a projection of some table
+ * @param att - list of atributes on which we make projection
+ * @param dstTable table name for projection table
+ * @return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
  */
 int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
     //geting the table addresses from table on which we make projection
@@ -208,8 +209,9 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
 }
 
 /**
+ *  @author Dino Laktašić
  * @brief  Function for projection operator testing
- * @author Dino Laktašić
+ * @return No return value
  */
 void AK_op_projection_test() {
     printf("\n********** PROJECTION TEST **********\n\n");

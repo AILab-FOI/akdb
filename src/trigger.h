@@ -1,5 +1,5 @@
 /**
-@file trigger.h Provides data structures triggers
+@file trigger.h Header file that provides data structures triggers
  */
 /*
  * This program is free software; you can redistribute it and/or modify

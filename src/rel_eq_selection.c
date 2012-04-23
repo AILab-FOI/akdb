@@ -20,6 +20,7 @@
 #include "rel_eq_selection.h"
 
 /**
+ * @author Dino Laktašić.
  * @brief Check if some set of attributes is subset of larger set
  * <ol>
  * <li>Tokenize set and subset of projection attributes and store each of them to it's own array</li>
@@ -30,11 +31,10 @@
  * <li>if there is an item in the subset array that doesn't match attribute at the same position in the set array return 0</li>
  * <li>else continue comparing until final item in the subset array is ritched</li>
  * <li>on loop exit return EXIT_SUCCESS</li>
- * </ol>
- * @author Dino Laktašić.
- * @param char *set - set array 
- * @param char *subset - subset array 
- * @result int - returns EXIT_SUCCESS if some set of attributes is subset of larger set, else returns EXIT_FAILURE
+ * </ol> 
+ * @param *set set array 
+ * @param *subset subset array 
+ * @return EXIT_SUCCESS if some set of attributes is subset of larger set, else returns EXIT_FAILURE
  */
 int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     int len_set, len_subset;
@@ -107,6 +107,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 }
 
 /**
+ * @author Dino Laktašić.
  * @brief Get attributes for a given table and store them to the char array 
  * <ol>
  * <li>Get the number of attributes in a given table</li>
@@ -117,9 +118,8 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
  * <li>Delimit each new attribute with ";" (ATTR_DELIMITER)</li>
  * <li>return pointer to char array</li>
  * </ol>
- * @author Dino Laktašić.
- * @param char *tblName - name of the table
- * @result char * - returns pointer to char array 
+ * @param *tblName name of the table
+ * @result pointer to char array 
  */
 char *AK_rel_eq_get_atrributes_char(char *tblName) {
     int len_attr, num_attr, next_attr;
@@ -162,10 +162,10 @@ char *AK_rel_eq_get_atrributes_char(char *tblName) {
 }
 
 /**
- * @brief Filtering and returning attributes from condition 
  * @author Dino Laktašić.
- * @param char *cond - condition array that contains condition data
- * @result char * - returns pointer to array that contains attributes for a given condition
+ * @brief Function for filtering and returning attributes from condition 
+ * @param *cond condition array that contains condition data
+ * @result pointer to array that contains attributes for a given condition
  */
 char *AK_rel_eq_cond_attributes(char *cond) {
     int next_chr = 0;
@@ -212,6 +212,7 @@ char *AK_rel_eq_cond_attributes(char *cond) {
 }
 
 /**
+ * @author Dino Laktašić.
  * @brief Check if two sets share one or more of it's attributes
  * <ol>
  * <li>If is empty set or subset returns EXIT_FAILURE</li>
@@ -219,10 +220,9 @@ char *AK_rel_eq_cond_attributes(char *cond) {
  * <li>If there is the same attribute return EXIT_SUCCESS</li>
  * <li>else remove unused pointers and return EXIT_FAILURE</li>
  * </ol>
- * @author Dino Laktašić.
- * @param char *set - first set of attributes delimited by ";" (ATTR_DELIMITER)
- * @param char *subset - second set of attributes delimited by ";" (ATTR_DELIMITER)
- * @result char * - returns EXIT_SUCCESS if set and subset share at least one attribute, else returns EXIT_FAILURE 
+ * @param *set first set of attributes delimited by ";" (ATTR_DELIMITER)
+ * @param *subset second set of attributes delimited by ";" (ATTR_DELIMITER)
+ * @result EXIT_SUCCESS if set and subset share at least one attribute, else returns EXIT_FAILURE 
  */
 int AK_rel_eq_share_attributes(char *set, char *subset) {
     if (set == NULL || subset == NULL) {
@@ -261,6 +261,7 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
 
 
 /**
+ * @author Dino Laktašić.
  * @brief Check if selection can commute with theta-join or product (if working with conditions in infix format use this function insteed - also remember to change code at the other places)
  * <ol>
  * <li>For each token (delimited by " ") in selection condition first check if token represents attribute/s and is subset in the given table</li>
@@ -272,10 +273,9 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
  * <li>When exits from loop if id greater then 0, append the last collected data to result</li>
  * <li>return pointer to char array that contains new condition for a given table
  * </ol>
- * @author Dino Laktašić.
- * @param char *cond - condition array that contains condition data 
- * @param char *tblName - name of the table
- * @result char * - returns pointer to char array that contains new condition for a given table
+ * @param *cond condition array that contains condition data 
+ * @param *tblName name of the table
+ * @return pointer to char array that contains new condition for a given table
  */
 /*
 char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
@@ -373,15 +373,15 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 }*/
 
 /**
+ * @author Dino Laktašić.
  * @brief Break conjunctive conditions to individual conditions 
  * (currently not used - commented in main AK_rel_eq_selection function), it can be usefull in some optimization cases
  * <ol>
  * <li>For each delimited item (' AND ') insert item to the AK_list</li>
  * <li>Remove unused pointers and return the conditions list</li>
  * </ol>
- * @author Dino Laktašić.
- * @param char *cond - condition expression
- * @result AK_list * - returns conditions list
+ * @param *cond condition expression
+ * @result conditions list
  */
 AK_list *AK_rel_eq_split_condition(char *cond) {
     AK_list *list_attr = (AK_list *) malloc(sizeof (AK_list));
@@ -438,10 +438,10 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
 }
 
 /**
- * @brief Main function for generating RA expresion according to selection equivalence rules 
  * @author Dino Laktašić.
- * @param AK_list *list_rel_eq - RA expresion as the AK_list
- * @result AK_list - returns optimised RA expresion as the AK_list
+ * @brief Main function for generating RA expresion according to selection equivalence rules 
+ * @param *list_rel_eq RA expresion as the AK_list
+ * @return optimised RA expresion as the AK_list
  */
 AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
     int step; //, exit_cond[5] = {0};
@@ -734,9 +734,10 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
 }
 
 /**
- * @brief Print AK_list to the screen 
  * @author Dino Laktašić.
- * @param AK_list *list_rel_eq - RA expresion as the AK_list
+ * @brief Function for printing AK_list to the screen 
+ * @param *list_rel_eq RA expresion as the AK_list
+ * @return void
  */
 void AK_print_rel_eq_selection(AK_list *list_rel_eq) {
     AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_rel_eq);
@@ -749,8 +750,9 @@ void AK_print_rel_eq_selection(AK_list *list_rel_eq) {
 }
 
 /**
- * @brief Test rel_eq_selection
  * @author Dino Laktašić.
+ * @brief Function for testing rel_eq_selection
+ * @return No return value
  */
 void AK_rel_eq_selection_test() {
     printf("rel_eq_selection.c: Present!\n");

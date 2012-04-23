@@ -20,9 +20,9 @@
 #include "index.h"
 
 /**
- * @author 
+ * @author Unknown 
  * @brief Function for initalizing linked list
- * @param list_ad *L - linked list head
+ * @param list_ad *L linked list head
  * @return No return value
  * */
 void Ak_InitializelistAd(list_ad *L) {
@@ -30,9 +30,9 @@ void Ak_InitializelistAd(list_ad *L) {
 }
 
 /**
- * @author 
+ * @author Unknown
  * @brief Function for finding first node of linked list
- * @param list_ad *L - linked list head
+ * @param list_ad *L linked list head
  * @return Address of first node
  * */
 element_ad Ak_Get_First_elementAd(list_ad *L) {
@@ -40,9 +40,9 @@ element_ad Ak_Get_First_elementAd(list_ad *L) {
 }
 
 /**
- * @author 
+ * @author Unknown
  * @brief Function for finding last node of linked list  
- * @param list_ad *L - linked list head
+ * @param list_ad *L linked list head
  * @return Address of last node or 0 if list is empty
  * */
 element_ad Ak_Get_Last_elementAd(list_ad *L) {
@@ -57,9 +57,9 @@ element_ad Ak_Get_Last_elementAd(list_ad *L) {
 }
 
 /**
- * @author 
+ * @author Unknown
  * @brief Function for finding the next node of a node in linked list
- * @param Address of current node
+ * @param Currentelement_op address of current node
  * @return Address of next node or 0 if current node is last in list
  * */
 element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op) {
@@ -73,9 +73,10 @@ element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op) {
 }
 
 /**
- * @author 
+ * @author Unknown
  * @brief Function for finding the previous node of a node in linked list
- * @param Address of current node
+ * @param Currentelement_op Address of current node
+ * @param L previous element
  * @return Address of previous node or 0 if the current node is the head or the list is empty
  * */
 element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L) {
@@ -91,10 +92,10 @@ element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L)
 }
 
 /**
- * @author 
+ * @author Unknown
  * @brief Function for finding the position of a node in linked list
- * @param elment_ad Searchedelement_op - address of current note
- * @param list_ad *L - linked list head
+ * @param Searchedelement_op address of current note
+ * @param *L linked list head
  * @return Integer value of current node's order in the list
  * */
 int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
@@ -109,9 +110,9 @@ int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
 }
 
 /**
- * @author 
+ * @author Unknown
  * @brief Function for deleting a node in linked list
- * @param element_ad Deletedelement_op - address of node to delete
+ * @param Deletedelement_op - address of node to delete
  * @param list_ad *L - list head
  * @return No return value
  * */
@@ -126,9 +127,9 @@ void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
 }
 
 /**
- * @author 
+ * @author Unknown
  * @brief Function for deleting all nodes in linked list  
- * @param list_ad *L - list head
+ * @param L list head
  * @return No return value
  * */
 void Ak_Delete_All_elementsAd(list_ad *L) {
@@ -142,12 +143,12 @@ void Ak_Delete_All_elementsAd(list_ad *L) {
 }
 
 /**
- * @author 
+ * @author Unknown
  * @brief Function for inserting a new element into linked list
- * @param int addBlock - address block
- * @param int indexTd - index table destination
- * @param char *attname - attribute name
- * @param element_ad elementBefore - address of the node after which the new node will be inserted
+ * @param addBlock address block
+ * @param indexTd index table destination
+ * @param *attname attribute name
+ * @param elementBefore address of the node after which the new node will be inserted
  * @return No return value
  * */
 void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore) {

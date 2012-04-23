@@ -20,11 +20,11 @@
 #include "product.h"
 
 /**
- * @brief  Function to make product of two tables
  * @author Dino Laktašić
- * @param srcTable1 - name of the first table
- * @param srcTable2 - name of the second table
- * @param dstTable - name of the product table
+ * @brief  Function to make product of two tables 
+ * @param srcTable1 name of the first table
+ * @param srcTable2 name of the second table
+ * @param dstTable name of the product table
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
@@ -167,8 +167,9 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 }
 
 /**
- * @brief  Function for product operator testing
  * @author Dino Laktašić
+ * @brief  Function for product operator testing
+ *
  */
 void AK_op_product_test() {
     printf("\n********** PRODUCT TEST **********\n\n");

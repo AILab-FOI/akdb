@@ -1,5 +1,5 @@
 /**
-@file filesearch.h Provides data structures for file searching
+@file filesearch.h Header file provides data structures for file searching
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -28,8 +28,9 @@
 #define SEARCH_RANGE      3
 
 /**
-\struct search_params
-\brief Attribute name, lower and upper data value, special(NULL or *) - input for AK_equisearch_unsorted and AK_rangesearch_unsorted
+ * @author Unknown
+ * @struct search_params
+ * @brief Structure that contains attribute name, lower and upper data value, special(NULL or *) which is input for AK_equisearch_unsorted and  		AK_rangesearch_unsorted
  */
 typedef struct {
     /// name of attribute
@@ -43,8 +44,9 @@ typedef struct {
 } search_params;
 
 /**
-\struct search_result
-\brief Search result of AK_equisearch_unsorted and AK_rangesearch_unsorted
+  * @author Unknown
+  * @struct search_result
+  * @brief Structure which represents search result of AK_equisearch_unsorted and AK_rangesearch_unsorted
  */
 typedef struct {
     /// array of tuple addresses

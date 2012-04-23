@@ -20,7 +20,11 @@
 #define INTERSECT
 
 #include "table.h"
-
+/**
+ * @author Dino Laktašić
+ * @struct intersect_attr
+ * @brief Structure defines intersect attribute
+ */
 typedef struct {
     /// type of attribute
     int type;

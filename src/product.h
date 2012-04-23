@@ -1,5 +1,5 @@
 /**
-@file product.h Provides data structures for relational product operation
+@file product.h Header file that provides data structures for relational product operation
  */
 /*
  * This program is free software; you can redistribute it and/or modify

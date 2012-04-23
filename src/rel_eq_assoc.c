@@ -20,21 +20,21 @@
 #include "rel_eq_assoc.h"
 
 /**
- * @brief Struct cost_eval comparison function
  * @author Dino Laktašić
- * @param const void *a - first value
- * @param const void *b - second value
- * @return int - returns result of comparison
+ * @brief Function for Struct cost_eval comparison 
+ * @param *a first value
+ * @param *b second value
+ * @return returns result of comparison
  */
 int AK_compare(const void *a, const void *b) {
     return ((*(struct cost_eval_t*) a).value - (*(struct cost_eval_t*) b).value);
 }
 
 /**
- * @brief Main function for generating RA expresion according to associativity equivalence rules 
  * @author Dino Laktašić.
- * @param AK_list *list_rel_eq - RA expresion as the AK_list
- * @result AK_list - returns optimised RA expresion as the AK_list
+ * @brief Main function for generating RA expresion according to associativity equivalence rules 
+ * @param *list_rel_eq RA expresion as the AK_list
+ * @return optimised RA expresion as the AK_list
  */
 AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
     //int exit_cond[5] = {0};
@@ -393,7 +393,12 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
     Ak_DeleteAll_L(list_rel_eq);
     return temp;
 }
-
+/**
+ * @author Dino Laktašić.
+ * @brief Function for printing RA expresion AK_list
+ * @param *list_rel_eq RA expresion as the AK_list
+ * @return optimised RA expresion as the AK_list
+ */
 void AK_print_rel_eq_assoc(AK_list *list_rel_eq) {
     AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_rel_eq);
 
@@ -403,7 +408,11 @@ void AK_print_rel_eq_assoc(AK_list *list_rel_eq) {
         list_elem = list_elem->next;
     }
 }
-
+/**
+ * @author Dino Laktašić.
+ * @brief Function for testing relational equivalences regarding associativity
+ * @return No return value
+ */
 void AK_rel_eq_assoc_test() {
     printf("rel_eq_assoc.c: Present!\n");
     printf("\n********** REL_EQ_ASSOCIATIVITY TEST by Dino Laktašić **********\n");

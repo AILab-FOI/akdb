@@ -19,8 +19,9 @@
 #include "filesort.h"
 
 /**
- * @brief total number of headers in the block
- * @return returns num - number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
+ * @author Unknown
+ * @brief Function returns total number of headers in the block
+ * @return number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
  */
 int Ak_get_total_headers(AK_block *iBlock) {
     register int i;
@@ -32,8 +33,9 @@ int Ak_get_total_headers(AK_block *iBlock) {
 }
 
 /**
- * @brief number of header in the block which to sort
- * @return returns num - number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
+ * @author Unknown
+ * @brief Function returns number of header in the block which to sort
+ * @return number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
  */
 int Ak_get_header_number(AK_block *iBlock, char *attribute_name) {
     register int i;
@@ -51,8 +53,9 @@ int Ak_get_header_number(AK_block *iBlock, char *attribute_name) {
 }
 
 /**
- * @brief get tuples number in block
- * @return int
+ * @author Unknown
+ * @brief Function returns tuples number in block
+ * @return tuples number in block
  */
 int Ak_get_num_of_tuples(AK_block *iBlock) {
     int i = 0;
@@ -79,7 +82,11 @@ AK_mem_block *get_next_block(int num) {
     //memcpy(mem_block->block, temp_block, sizeof(AK_block));
     return mem_block;
 }*/
-
+/*
+ * @author Unknown
+ * @brief Function sorts segment
+ * @return No return value.
+ */
 void AK_sort_segment(char *table_name, char *attr) {
     //initialize variables
 	register int i, j, n, q, k;
@@ -425,7 +432,12 @@ void AK_sort_segment(char *table_name, char *attr) {
         }
     } // end : for(n = 1; n < num_blocks; n = n * 2 )
 }
-
+/*
+ * @author Unknown
+ * @brief Function resets block
+ * @param block block to be resetted
+ * @return No return value
+ */
 int Ak_reset_block(AK_block * block) {
     register int i, j, k;
 
@@ -469,10 +481,11 @@ int Ak_reset_block(AK_block * block) {
 }
 
 /**
-@author Bakoš Nikola
-@version v1.0
-Sorts the given block
-@param iBlock - block
+  * @author Bakoš Nikola
+  * @version v1.0
+  * @brief Function sorts the given block
+  * @param iBlock block to be sorted
+  * @return No return value
  */
 void AK_block_sort(AK_block * iBlock, char * atr_name) {
     register int i, j, k, n, t, q;
@@ -726,6 +739,11 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
 }
 
 //extern int address_of_tempBlock = 0;
+/*
+ * @author Unknown
+ * @brief Function for file sorting
+ * @return No return value
+ */
 void Ak_filesort_test() {
     printf("filesort_test: Present!\n");
     AK_sort_segment("student", "year");

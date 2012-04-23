@@ -20,10 +20,11 @@
 #include "trigger.h"
 
 /**
- * Saves conditions for a trigger.
- * @param obj_id of the trigger in question
- * @param AK_list list of conditions
- * @result EXIT_SUCCESS or EXIT_ERROR
+ * @author Unknown
+ * @brief Saves conditions for a trigger.
+ * @param trigger obj_id of the trigger in question
+ * @param *condition AK_list list of conditions
+ * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_save_conditions(int trigger, AK_list* condition) {
     int i = 0;
@@ -57,13 +58,14 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
 }
 
 /**
- * Adds a trigger to system table.
- * @param name of the trigger
- * @param event that calls the trigger - this should perhaps be an integer with defined constants...
- * @param AK_list list of conditions in postfix
- * @param name of the table trigger is hooked on
- * @param function that is being called by the trigger
- * @result trigger id or EXIT_ERROR
+ * @author Unknown
+ * @brief Function that adds a trigger to system table.
+ * @param *name name of the trigger
+ * @param *event event that calls the trigger - this should perhaps be an integer with defined constants...
+ * @param *condition AK_list list of conditions in postfix
+ * @param *table name of the table trigger is hooked on
+ * @param *function function that is being called by the trigger
+ * @return trigger id or EXIT_ERROR
  */
 int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, char* function) {
     int i;
@@ -109,10 +111,11 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
 }
 
 /**
- * Get obj_id of a trigger defined by name and table.
- * @param name of the trigger
- * @param name of the table on which the trigger is hooked
- * @result obj_id of the trigger or EXIT_ERROR
+ * @author
+ * @brief Function that gets obj_id of a trigger defined by name and table.
+ * @param *name name of the trigger
+ * @param *table name of the table on which the trigger is hooked
+ * @return obj_id of the trigger or EXIT_ERROR
  */
 int AK_trigger_get_id(char *name, char *table) {
     int i = 0, table_id = -1;
@@ -136,10 +139,11 @@ int AK_trigger_get_id(char *name, char *table) {
 }
 
 /**
- * Removes a trigger from system table by name
- * @param name of the trigger
- * @param name of the table
- * @result EXIT_SUCCESS or EXIT_ERROR
+ * @author Unknown
+ * @brief Function that removes a trigger from system table by name
+ * @param *name name of the trigger
+ * @param *table name of the table
+ * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_remove_by_name(char *name, char *table) {
     int trigg_id = AK_trigger_get_id(name, table);
@@ -164,9 +168,10 @@ int AK_trigger_remove_by_name(char *name, char *table) {
 }
 
 /**
- * Removes a trigger by its obj_id
- * @param obj_id of the trigger
- * @result EXIT_SUCCESS or EXIT_ERROR
+ * @author Unknown
+ * @brief Function removes a trigger by its obj_id
+ * @param obj_id obj_id of the trigger
+ * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_remove_by_obj_id(int obj_id) {
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
@@ -188,9 +193,10 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
 }
 
 /**
- * Gets obj_id of a function by name (this should be transferred to another file upon implementation of functions.
- * @param name of the function
- * @result obj_id of the function or EXIT_ERROR
+ * @author Unknown
+ * @brief Function that gets obj_id of a function by name (this should be transferred to another file upon implementation of functions.
+ * @param *function name of the function
+ * @return obj_id of the function or EXIT_ERROR
  */
 int AK_get_function_obj_id(char* function) {
     int i = 0;
@@ -209,17 +215,18 @@ int AK_get_function_obj_id(char* function) {
 }
 
 /**
- * Edits information about the trigger in system table.
- * In order to identify the trigger, either obj_id or table and name parameters should be defined. The other options should be set to NULL.
- * Values of parameters that aren't changing can be left NULL.
- * If conditions are to be removed, condition parameter should hold an empty list.
- * @param obj_id of the trigger (or NULL if using name and table)
- * @param name of the trigger (or NULL if using obj_id)
- * @param event of the trigger (or NULL if it isn't changing)
- * @param list of conditions for trigger (or NULL if it isn't changing; empty list if all conditions are to be removed)
- * @param name of the connected table (or NULL id using obj_id)
- * @param name of the connected function (or NULL if it isn't changing)
- * @result EXIT_SUCCESS or EXIT_ERROR
+ * @author Unknown
+ * @brief Function edits information about the trigger in system table. In order to identify the trigger,
+ *	  either obj_id or table and name parameters should be defined. The other options should be set to NULL.
+ *   	  Values of parameters that aren't changing can be left NULL. If conditions are to be removed,
+ * 	  condition parameter should hold an empty list. 
+ * @param *obj_id obj_id of the trigger (or NULL if using name and table)
+ * @param *name name of the trigger (or NULL if using obj_id)
+ * @param *event event of the trigger (or NULL if it isn't changing)
+ * @param *condition list of conditions for trigger (or NULL if it isn't changing; empty list if all conditions are to be removed)
+ * @param *table name of the connected table (or NULL id using obj_id)
+ * @param *function name of the connected function (or NULL if it isn't changing)
+ * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, char* table, char* function) {
     AK_list *row;
@@ -273,9 +280,10 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
 }
 
 /**
- * Gets postfix list of conditions for the trigger (compatible with selection)
- * @param obj_id of the trigger
- * @result list of conditions for the trigger
+ * @author Unknown
+ * @brief Function gets postfix list of conditions for the trigger (compatible with selection)
+ * @param trigger obj_id of the trigger
+ * @return list of conditions for the trigger
  */
 AK_list *AK_trigger_get_conditions(int trigger) {
     AK_list expr;
@@ -307,7 +315,11 @@ AK_list *AK_trigger_get_conditions(int trigger) {
     free(row);
     return result;
 }
-
+/**
+ * @author Unknown
+ * @brief Function for trigger testing
+ * @return No return value
+ */
 void AK_trigger_test() {
     printf("trigger.c: Present!\n");
 

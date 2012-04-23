@@ -1,5 +1,5 @@
 /**
-@file fileio.h Provides data structures for file input/output
+@file fileio.h Header file provides data structures for file input/output
  */
 /*
  * This program is free software; you can redistribute it and/or modify

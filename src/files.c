@@ -1,5 +1,5 @@
 /**
-@file files.c Provides functions for file management
+@file files.c Header file provides functions for file management
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -20,15 +20,11 @@
 
 /**
  * @author Tomislav Fotak, updated by Matija Šestak (function now uses caching)
- *
- * Function initializes new segment and writes its start and finish address in
- * system catalog table
- * For creting new table, index, temporary table, etc. call this function
- * @param name (char*) - segment name
- * @param type (int) - segment type
- * @param header (AK_header*) - pointer to header that should be written to the new extent (all blocks)
- *
- * @return
+ * @brief Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, 	     etc. call this function
+ * @param name segment name
+ * @param type segment type
+ * @param header pointer to header that should be written to the new extent (all blocks)
+ * @return start address of new segment
  */
 
 int AK_initialize_new_segment(char *name, int type, AK_header *header) {
@@ -69,7 +65,11 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
         return start_address;
     }
 }
-
+/**
+  * @author Unknown
+  * @brief Test function
+  * @return No return value
+  */
 void Ak_files_test() {
     AK_header header[MAX_ATTRIBUTES], header1[MAX_ATTRIBUTES];
     memset(header, '\0', MAX_ATTRIBUTES);
