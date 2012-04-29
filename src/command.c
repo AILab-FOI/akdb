@@ -5,89 +5,128 @@
  */
 #include "command.h"
 
-struct lista {
-   //void *novi;
-   int br;
-   char tblName;
-   int mbr;
-   char ime;
-   char prezime;
-   int year;
-   float weight;
-   struct lista * next;
+struct AK_command {
+  int id_command;
+  char *tblName;
+  void *parameters;
 };
 
-typedef struct lista item;
+typedef struct AK_command command;
 
-
-void AK_command(char *table, int *mb, char *a, char *b, int *c, float d) {
+void AK_command(command * komande, int brojkomandi) {
    int i;
-   item * curr, * head;
-
-   AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-   Ak_Init_L(row_root);
-   head = NULL;
-
-   for(i=1;i<=4;i++) {
-      curr = (item *)malloc(sizeof(item));
-      curr->br = i;
-      curr->tblName = table;
-      curr->mbr = mb;
-      curr->ime = a;
-      curr->prezime = b;
-      curr->year = c;
-      curr->weight = d;
-      curr->next = head;
-      head = curr;
-   switch(i){
+    
+      for (i = 0; i <= brojkomandi - 1 ; i++) {
+   switch(komande[i].id_command){
          case 1:
-        	 printf("INSERT INTO student VALUES(35917, 'Lee','Harvey', 2027, 100.250);\n");
-        	 Ak_DeleteAll_L(row_root);
-        	 Ak_Insert_New_Element(TYPE_INT, &mb, "student", "mbr", row_root);
-        	 Ak_Insert_New_Element(TYPE_VARCHAR, a, "student", "firstname", row_root);
-        	 Ak_Insert_New_Element(TYPE_VARCHAR, b, "student", "lastname", row_root);
-        	 Ak_Insert_New_Element(TYPE_INT, &c, "student", "year", row_root);
-        	 Ak_Insert_New_Element(TYPE_FLOAT, &d, "student", "weight", row_root);
-        	 Ak_insert_row(row_root);
+		printf("***INSERT***\n");
+        	Ak_insert_row( ((AK_list_elem) (komande[i].parameters)));
+        	AK_print_table(komande[i].tblName);
+             break;
 
-        	 AK_print_table(table);
-             break;
          case 2:
-        	 printf("\nUPDATE student SET firstname='Ivo', lastname='Ivic' where mbr=35916;\n");
-        	 Ak_DeleteAll_L(row_root);
-        	 Ak_Insert_New_Element_For_Update(TYPE_INT, &mb, "student", "mbr", row_root, 1);
-        	 Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Ivo", "student", "firstname", row_root, 0);
-        	 Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Ivic", "student", "lastname", row_root, 0);
-        	 Ak_update_row(row_root);
-        	 //Ak_delete_row(row_root);
-        	 AK_print_table(table);
-        	 break;
-         case 3:
-        	 printf("\nDELETE FROM student WHERE mbr=35916;\n");
-        	 Ak_delete_row(row_root);
+		printf("***UPDATE***\n");			 
+		Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
+        	AK_print_table(komande[i].tblName);
              break;
-         case 4:
-        	 printf("\nSELECT * FROM student;\n");
-        	 AK_print_table(table);
-        	 break;
+
+         case 3:
+		printf("***DELETE***\n");        	 
+		Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
+        	Ak_delete_row( ((AK_list_elem) (komande[i].parameters)));
+		AK_print_table(komande[i].tblName);
+             break;
+
          default:
              break;
              }
    }
 
-   curr = head;
-
-   /*while(curr) {
-      printf("%d\n", curr->novi);
-      curr = curr->next ;
-   }*/
-   system("pause");
 }
 
 
 
 void AK_test_command(){
-    printf("***Test Command***\n");
-	AK_command("student", 35917, "Lee", "Harvey", 2027, 100.250);
+   printf("***Test Command***\n");
+   int brojkomandi;
 
+   AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+   Ak_Init_L(row_root);
+   char *tblName = "student";
+   
+   int mbr, year;
+   float weight;
+   mbr = 35917;
+   year = 2012;
+   weight = 82.00;
+   Ak_DeleteAll_L(row_root);
+   Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
+   Ak_Insert_New_Element(TYPE_VARCHAR, "Mario", tblName, "firstname", row_root);
+   Ak_Insert_New_Element(TYPE_VARCHAR, "Kolmacic", tblName, "lastname", row_root);
+   Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
+   Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
+   command *komande = malloc(sizeof(command)*4);
+   komande[0].id_command = 1;
+   komande[0].tblName = "student";
+   komande[0].parameters = row_root;
+
+   mbr = 35900;
+   row_root = (AK_list_elem) malloc(sizeof (AK_list));
+   Ak_Init_L(row_root);
+   Ak_DeleteAll_L(row_root);
+
+   Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root, 1);
+   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
+
+   komande[1].id_command = 2;
+   komande[1].tblName = "student";
+   komande[1].parameters = row_root;
+
+   int id_prof;
+   id_prof = 35893;
+   row_root = (AK_list_elem) malloc(sizeof (AK_list));
+   Ak_Init_L(row_root);
+   Ak_DeleteAll_L(row_root);
+
+   Ak_Insert_New_Element_For_Update(TYPE_INT, &id_prof, tblName, "id_prof", row_root, 1);
+   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
+
+   komande[2].id_command = 3;
+   komande[2].tblName = "professor";
+   komande[2].parameters = row_root;
+
+brojkomandi = 3;
+
+AK_command(komande, brojkomandi);
     }
+
+/*
+    int id_prof;
+    id_prof = 35888;
+    Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "Lee", tblName, "firstname", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "Harvey", tblName, "lastname", row_root);
+    Ak_Insert_New_Element(TYPE_INT, "000000000", tblName, "tel", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "email@foi.hr", tblName, "email", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "www.foi.hr/nastavnici", tblName, "web_page", row_root);
+
+
+   Ak_Insert_New_Element_For_Update(TYPE_INT, &id_prof, tblName, "id_prof", row_root, 1);
+   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
+*/
+
+/*
+
+    mbr = 35915;
+   row_root = (AK_list_elem) malloc(sizeof (AK_list));
+   Ak_Init_L(row_root);
+   Ak_DeleteAll_L(row_root);
+
+   Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root, 1);
+   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "DELETE", tblName, "firstname", row_root, 0);
+
+   komande[2].id_command = 3;
+   komande[2].tblName = "student";
+   komande[2].parameters = row_root;
+
+*/
