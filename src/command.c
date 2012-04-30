@@ -18,25 +18,23 @@ void AK_command(command * komande, int brojkomandi) {
     
       for (i = 0; i <= brojkomandi - 1 ; i++) {
    switch(komande[i].id_command){
-         case 1:
-		printf("***INSERT***\n");
-        	Ak_insert_row( ((AK_list_elem) (komande[i].parameters)));
-        	AK_print_table(komande[i].tblName);
-             break;
-
-         case 2:
+         case UPDATE:
 		printf("***UPDATE***\n");			 
 		Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
         	AK_print_table(komande[i].tblName);
              break;
-
-         case 3:
+         case DELETE:
 		printf("***DELETE***\n");        	 
 		Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
         	Ak_delete_row( ((AK_list_elem) (komande[i].parameters)));
 		AK_print_table(komande[i].tblName);
              break;
 
+         case INSERT:
+		printf("***INSERT***\n");
+        	Ak_insert_row( ((AK_list_elem) (komande[i].parameters)));
+        	AK_print_table(komande[i].tblName);
+             break;
          default:
              break;
              }
@@ -66,7 +64,7 @@ void AK_test_command(){
    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
    command *komande = malloc(sizeof(command)*4);
-   komande[0].id_command = 1;
+   komande[0].id_command = 2;
    komande[0].tblName = "student";
    komande[0].parameters = row_root;
 
@@ -78,7 +76,7 @@ void AK_test_command(){
    Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root, 1);
    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
 
-   komande[1].id_command = 2;
+   komande[1].id_command = 0;
    komande[1].tblName = "student";
    komande[1].parameters = row_root;
 
@@ -91,7 +89,7 @@ void AK_test_command(){
    Ak_Insert_New_Element_For_Update(TYPE_INT, &id_prof, tblName, "id_prof", row_root, 1);
    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
 
-   komande[2].id_command = 3;
+   komande[2].id_command = 1;
    komande[2].tblName = "professor";
    komande[2].parameters = row_root;
 
