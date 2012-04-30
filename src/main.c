@@ -72,6 +72,7 @@
 //Other
 #include "trigger.h"
 #include "iniparser/iniparser.h"
+#include "privileges.h"
 
 /**
 Main program function
