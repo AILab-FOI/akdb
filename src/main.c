@@ -130,6 +130,7 @@ int main()
 //			constraint_between_test();
 //			id_test();
 //			null_test();
+//			privileges_test();
 
 			/* component test area --- end */
 			

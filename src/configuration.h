@@ -221,8 +221,8 @@
 #define TYPE_INTERNAL 0
 
 /**
-\def TYPE_INT
-\brief integer data type (used in AK_header->type and AK_tuple_dict->type)
+ * @def TYPE_INT
+ * @brief integer data type (used in AK_header->type and AK_tuple_dict->type)
  */
 #define TYPE_INT 1
 
@@ -400,7 +400,21 @@
  * @brief Constant indicating that operation to be performed is delete
  */
 #define DELETE 1
-
+/**
+ * @def INSERT
+ * @brief Constant indicating that operation to be performed is insert
+ */
+#define INSERT 2
+/**
+ * @def SELECT
+ * @brief Constant indicating that operation to be performed is select
+ */
+#define SELECT 3
+/**
+ * @def ALL
+ * @brief Constant indicating all privileges
+ */
+#define ALL 4
 /**
  * @def FIND
  * @brief Constant indicating that operation to be performed is searching
