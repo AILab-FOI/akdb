@@ -747,11 +747,6 @@ void iniparser_freedict(dictionary * d)
 
 dictionary * AK_config;
 
-void AK_inflate_config()
-{
-  AK_config = iniparser_load("config.ini");
-}
-
 char * AK_config_get(char * key, char * def)
 {
     char * lc_key ;
@@ -763,6 +758,14 @@ char * AK_config_get(char * key, char * def)
     lc_key = strlwc(key);
     sval = dictionary_get(AK_config, lc_key, def);
     return sval ;
+}
+
+char * DB_FILE;
+
+void AK_inflate_config()
+{
+  AK_config = iniparser_load("config.ini");
+  DB_FILE = AK_config_get("general:db_file", NULL);
 }
 
 /* vim: set ts=4 et sw=4 tw=75 */

@@ -605,8 +605,8 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
  * @return EXIT_SUCESS when write operation is successful, otherwise EXIT_ERROR
  **/
 int Ak_write_block(AK_block * block) {
-    if ((db = fopen(AK_config_get("general:db_file", NULL), "r+")) == NULL) {
-        printf("AK_write_block: ERROR. Cannot open db file %s.\n", AK_config_get("general:db_file", NULL));
+    if ((db = fopen(DB_FILE, "r+")) == NULL) {
+        printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
         exit(EXIT_ERROR);
     }
     if (fseek(db, block->address * sizeof ( AK_block), SEEK_SET) != 0) {

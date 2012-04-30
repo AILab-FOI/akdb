@@ -84,7 +84,7 @@ int main()
 	printf( "KALASHNIKOV DB - STARTING\n\n" );
 
 	AK_inflate_config();
-	printf("db_name: %s\n", AK_config_get("general:db_file", NULL));
+	printf("db_file: %s\n", DB_FILE);
 
 	if( AK_init_disk_manager() == EXIT_SUCCESS )
 	{

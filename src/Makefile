@@ -20,7 +20,7 @@ kalashnikov-db: auxiliary.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) 
 	$(CC) main.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/akdb
 
 clean:
-	rm -rf *~ *.o iniparser/*.o ../bin/akdb ../doc/* ../bin/kalashnikov.db
+	rm -rf *~ *.o iniparser/*.o ../bin/akdb ../bin/log.log ../doc/* ../bin/kalashnikov.db
 
 doc:
 	doxygen doxygen.config
