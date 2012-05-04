@@ -2,15 +2,15 @@
 
 CC = gcc
 DEBUG = -g
-CFLAGS = $(DEBUG) -c -Wall
+CFLAGS = $(DEBUG) -c -Wall -pthread
 
 DISKTARGETS = dbman.o 
 MEMORYTARGETS = memoman.o
 FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bitmap.o table.o
-RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o product.o theta_join.o
+RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o product.o theta_join.o transaction.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o query_optimization.o
 CONSTRAINTTARGETS = reference.o between.o nnull.o id.o expression_check.o
-OTHERTARGETS = trigger.o test.o debug.o archive_log.o command.o iniparser/dictionary.o iniparser/iniparser.o privileges.o
+OTHERTARGETS = trigger.o test.o debug.o archive_log.o command.o iniparser/dictionary.o iniparser/iniparser.o privileges.o 
 
 OUTDIR = ../bin
 

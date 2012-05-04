@@ -457,5 +457,54 @@
 */
 #define HASH_BUCKET 2
 
+/**
+ * @def SHARED_LOCK
+ * @brief Constant declaring type of lock as SHARED LOCK
+*/
+#define SHARED_LOCK 0
+
+/**
+ * @def EXCLUSIVE_LOCK
+ * @brief Constant declaring type of lock as EXCLUSIVE LOCK
+*/
+#define EXCLUSIVE_LOCK 1
+
+/**
+ * @def WAIT_FOR_UNLOCK
+ * @brief Constant declaring that a lock has to wait until other locks release the resource
+*/
+#define WAIT_FOR_UNLOCK 0
+
+/**
+ * @def PASS_LOCK_QUEUE
+ * @brief Constant declaring that a lock can acquire the resource freely
+*/
+#define PASS_LOCK_QUEUE 1
+
+/**
+ * @def NUMBER_OF_KEYS
+ * @brief Constant declaring number of buckets in hash table
+*/
+#define NUMBER_OF_KEYS 512
+
+/**
+ * @def NUMBER_OF_THREADS
+ * @brief Constant declaring maximum number of threads that an application can acquire
+*/
+#define NUMBER_OF_THREADS 42
+
+/**
+ * @def OK
+ * @brief Constant declaring that the method is completed successfuly
+*/
+#define OK 1
+
+/**
+ * @def HASH_BUCKET
+ * @brief Constant declaring that the method isn't completed successfuly
+*/
+#define NOT_OK 0
+
+
 #endif
 

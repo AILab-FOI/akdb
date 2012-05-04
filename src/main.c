@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <string.h>  //ARCHIVE LOG
 #include <stdlib.h>
-
 // Global configuration
 #include "configuration.h"
 
@@ -73,7 +72,7 @@
 #include "trigger.h"
 #include "iniparser/iniparser.h"
 #include "privileges.h"
-
+#include "transaction.h"
 /**
 Main program function
 
