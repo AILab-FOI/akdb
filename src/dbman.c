@@ -419,14 +419,16 @@ void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int 
  * @param db_obj address of system table of db_obj in db_file
  * @param user address of system table of user in db_file
  * @param group address of system table of group in db_file
- * @param right address of system table of right in db_file
+ * @param user_group address of system table of users associated with groups in db_file
+ * @param user_right address of system table of user right in db_file
+ * @param group_right address of system table of group right in db_file
  * @param constraint address of system table of constraint in db_file
  * @param constraintNull address of system table of constraintNull in db_file
  * @param reference address of system table of reference in db_file
  * @return EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
  */
 int AK_init_system_tables_catalog(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-        int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull, int reference) {
+        int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int reference) {
     Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_tables_catalog: Initializing system tables catalog\n");
     
 	AK_block * catalog_block = (AK_block *) malloc(sizeof ( AK_block));
@@ -505,9 +507,17 @@ int AK_init_system_tables_catalog(int relation, int attribute, int index, int vi
     i++;
     AK_insert_entry(catalog_block, TYPE_INT, &group, i);
     i++;
-    AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_right", i);
+    AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_user_group", i);
     i++;
-    AK_insert_entry(catalog_block, TYPE_INT, &right, i);
+    AK_insert_entry(catalog_block, TYPE_INT, &user_group, i);
+    i++;
+    AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_user_right", i);
+    i++;
+    AK_insert_entry(catalog_block, TYPE_INT, &user_right, i);
+    i++;
+    AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_group_right", i);
+    i++;
+    AK_insert_entry(catalog_block, TYPE_INT, &group_right, i);
     i++;
     AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_constraints_between", i);
     i++;
@@ -560,14 +570,16 @@ void AK_memset_int(void *block, int value, size_t num) {
   * @param db_obj database object
   * @param user user in database
   * @param group group in database
-  * @param right right in database
+  * @param user_group user associated with group in database
+  * @param user_right user right in database
+  * @param group_right group right in database
   * @param constraint constraint in database
   * @param constraintNull Null constraint in database
   * @param reference reference database
   * @return EXIT_SUCCESS 
 */
 int AK_register_system_tables(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-        int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int right, int constraint, int constraintNull, int reference) {
+        int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int reference) {
     AK_block *relationTable = AK_read_block(relation);
     int i = 1, j = 0;
     int end;
@@ -717,11 +729,33 @@ int AK_register_system_tables(int relation, int attribute, int index, int view, 
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j);
     j++;
-    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_right", j);
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_user_group", j);
     j++;
-    AK_insert_entry(relationTable, TYPE_INT, &right, j);
+    AK_insert_entry(relationTable, TYPE_INT, &user_group, j);
     j++;
-    end = right + INITIAL_EXTENT_SIZE;
+    end =user_group + INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j);
+    j++;
+    i++;
+    
+    AK_insert_entry(relationTable, TYPE_INT, &i, j);
+    j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_user_right", j);
+    j++;
+    AK_insert_entry(relationTable, TYPE_INT, &user_right, j);
+    j++;
+    end = user_right + INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j);
+    j++;
+    i++;
+    
+    AK_insert_entry(relationTable, TYPE_INT, &i, j);
+    j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_group_right", j);
+    j++;
+    AK_insert_entry(relationTable, TYPE_INT, &group_right, j);
+    j++;
+    end = group_right + INITIAL_EXTENT_SIZE;
     AK_insert_entry(relationTable, TYPE_INT, &end, j);
     j++;
     i++;
@@ -772,7 +806,7 @@ int AK_register_system_tables(int relation, int attribute, int index, int view, 
  * @return EXIT_SUCCESS if the system catalog has been successfully initialized, EXIT_ERROR otherwise
  */
 int AK_init_system_catalog() {
-    int relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, right, constraint, constraintNull, reference;
+    int relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group,  user_right, group_right, constraint, constraintNull, reference;
     int i;
 
     Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: System catalog initialization started...\n");
@@ -901,9 +935,22 @@ int AK_init_system_catalog() {
         {0, '\0', 0, '\0', '\0'}
     };
 
-    AK_header hRight[6] = {
+    AK_header hUserGroup[3] = {
+        {TYPE_INT, "user_id", 0, '\0', '\0',},
+        {TYPE_INT, "group_id", 0, '\0', '\0',},
+        {0, '\0', 0, '\0', '\0'}
+    };
+
+    AK_header hUserRight[5] = {
         {TYPE_INT, "obj_id", 0, '\0', '\0',},
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
+        {TYPE_INT, "artifact_id", 0, '\0', '\0',},
+        {TYPE_INT, "right_type", 0, '\0', '\0',},
+        {0, '\0', 0, '\0', '\0'}
+    };
+    
+    AK_header hGroupRight[5] = {
+        {TYPE_INT, "obj_id", 0, '\0', '\0',},
         {TYPE_INT, "group_id", 0, '\0', '\0',},
         {TYPE_INT, "artifact_id", 0, '\0', '\0',},
         {TYPE_INT, "right_type", 0, '\0', '\0',},
@@ -1009,11 +1056,23 @@ int AK_init_system_catalog() {
         memset(hGroup[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
         memset(hGroup[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
     }
+    
+    for (i = 0; i < 2; i++) {
+        AK_memset_int(hUserGroup[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+        memset(hUserGroup[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
+        memset(hUserGroup[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
+    }
 
-    for (i = 0; i < 5; i++) {
-        AK_memset_int(hRight[i].integrity, FREE_INT, MAX_CONSTRAINTS);
-        memset(hRight[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
-        memset(hRight[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
+    for (i = 0; i < 4; i++) {
+        AK_memset_int(hUserRight[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+        memset(hUserRight[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
+        memset(hUserRight[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
+    }
+
+    for (i = 0; i < 4; i++) {
+        AK_memset_int(hGroupRight[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+        memset(hGroupRight[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
+        memset(hGroupRight[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
     }
 
     for (i = 0; i < 6; i++) {
@@ -1036,19 +1095,21 @@ int AK_init_system_catalog() {
     db_obj = AK_new_segment("AK_db_obj", SEGMENT_TYPE_SYSTEM_TABLE, hDb_obj);
     user = AK_new_segment("AK_user", SEGMENT_TYPE_SYSTEM_TABLE, hUser);
     group = AK_new_segment("AK_group", SEGMENT_TYPE_SYSTEM_TABLE, hGroup);
-    right = AK_new_segment("AK_right", SEGMENT_TYPE_SYSTEM_TABLE, hRight);
+    user_group = AK_new_segment("AK_user_group", SEGMENT_TYPE_SYSTEM_TABLE, hUserGroup);
+    user_right = AK_new_segment("AK_user_right", SEGMENT_TYPE_SYSTEM_TABLE, hUserRight);
+    group_right = AK_new_segment("AK_group_right", SEGMENT_TYPE_SYSTEM_TABLE, hGroupRight);
     constraint = AK_new_segment("AK_constraints_between", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintBetween);
     constraintNull = AK_new_segment("AK_constraints_not_null", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintNotNull);
     reference = AK_new_segment("AK_reference", SEGMENT_TYPE_SYSTEM_TABLE, hReference);
 
     Ak_dbg_messg(LOW, DB_MAN, "AK_init_system_catalog: Segments created!\n");
 
-    if (EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, right, constraint, constraintNull, reference)) {
-        AK_register_system_tables(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, right, constraint, constraintNull, reference);
+    if (EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right, constraint, constraintNull, reference)) {
+        AK_register_system_tables(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group,user_group, user_right, group_right, constraint, constraintNull, reference);
         printf("AK_init_system_catalog: System catalog initialized!\n");
         return EXIT_SUCCESS;
     } else {
-        printf("AK_init_system_catalog: ERROR. AK_init_system_tables_catalog(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d) failed.\n", relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, right);
+        printf("AK_init_system_catalog: ERROR. AK_init_system_tables_catalog(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d) failed.\n", relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right);
         return EXIT_ERROR;
     }
 }
