@@ -192,27 +192,6 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
     return Ak_delete_row(row_root);
 }
 
-/**
- * @author Unknown
- * @brief Function that gets obj_id of a function by name (this should be transferred to another file upon implementation of functions.
- * @param *function name of the function
- * @return obj_id of the function or EXIT_ERROR
- */
-int AK_get_function_obj_id(char* function) {
-    int i = 0;
-    int id = -1;
-    AK_list *row;
-    while ((row = (AK_list *)AK_get_row(i, "AK_function")) != NULL) {
-        if (strcmp(row->next->next->data, function) == 0) {
-            memcpy(&id, row->next->data, sizeof (int));
-            break;
-        }
-        i++;
-    }
-    if (id == -1)
-        return EXIT_ERROR;
-    return id;
-}
 
 /**
  * @author Unknown

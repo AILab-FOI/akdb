@@ -63,6 +63,7 @@ typedef enum debug_type {
 	REL_OP = 0,
 	REL_EQ = 1,
 	CONSTRAINTS = 0,
+	FUNCTIONS = 0,
 	TRIGGERS = 0
 } DEBUG_TYPE;
 
