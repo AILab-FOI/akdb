@@ -1,0 +1,39 @@
+/**
+@file function.h Header file that provides data structures functions
+ */
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
+ */
+
+#ifndef FUNCTION
+#define FUNCTION
+
+#include "table.h"
+
+/**
+  * @author Boris Kišić
+  * @struct function_arguments_list
+  * @brief Structure defines a list element for function arguments list.
+  */
+/*struct function_arguments_list{
+  ///argument name
+  char name;
+  int type;
+  struct function_arguments_list *next; 
+};
+
+typedef struct function_arguments_list;*/
+
+#endif
