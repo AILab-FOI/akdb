@@ -22,18 +22,4 @@
 
 #include "table.h"
 
-/**
-  * @author Boris Kišić
-  * @struct function_arguments_list
-  * @brief Structure defines a list element for function arguments list.
-  */
-/*struct function_arguments_list{
-  ///argument name
-  char name;
-  int type;
-  struct function_arguments_list *next; 
-};
-
-typedef struct function_arguments_list;*/
-
 #endif
