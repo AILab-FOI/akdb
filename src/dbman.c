@@ -883,10 +883,11 @@ int AK_init_system_catalog() {
         {0, '\0', 0, '\0', '\0'}
     };
 
-    AK_header hFunction_arguments[4] = {
+    AK_header hFunction_arguments[5] = {
         {TYPE_INT, "func_id", 0, '\0', '\0',},
         {TYPE_INT, "att_num", 0, '\0', '\0',},
-        {TYPE_INT, "att_type", 0, '\0', '\0',},
+        {TYPE_VARCHAR, "att_type", 0, '\0', '\0',},
+	{TYPE_VARCHAR, "att_name", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
 
@@ -1015,7 +1016,7 @@ int AK_init_system_catalog() {
         memset(hFunction[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
     }
 
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 4; i++) {
         AK_memset_int(hFunction_arguments[i].integrity, FREE_INT, MAX_CONSTRAINTS);
         memset(hFunction_arguments[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
         memset(hFunction_arguments[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);

@@ -835,6 +835,7 @@ void AK_create_test_tables() {
     printf("Transaction Test.\nLoad and release locks.\n#######################################\n");
     transactionTest();
     printf("#######################################\nEnd transaction Test.\n");
+    AK_function_test();
 }
 
 
