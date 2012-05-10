@@ -136,6 +136,7 @@ int main()
 			
 			if ( AK_flush_cache() == EXIT_SUCCESS ){
 				printf( "\nEverything was fine!\nBye =)\n" );
+                                pthread_exit(NULL);
 				return ( EXIT_SUCCESS );
 			}
 		}
@@ -144,4 +145,5 @@ int main()
 	}
 	printf( "ERROR. Failed to initialize disk manager\n" );
 	return ( EXIT_ERROR );
+        
 }

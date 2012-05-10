@@ -1,8 +1,8 @@
 # KalashnikovDB MakeFile
 
-CC = gcc
+CC = gcc -pthread
 DEBUG = -g
-CFLAGS = $(DEBUG) -c -Wall -pthread
+CFLAGS = $(DEBUG) -c -Wall 
 
 DISKTARGETS = dbman.o 
 MEMORYTARGETS = memoman.o

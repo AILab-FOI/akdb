@@ -804,6 +804,12 @@ void AK_create_test_tables() {
     //-------------------------------------------------------------------------------------------------------
 
 
+    printf("Transaction Test.\nLoad and release locks.\n#######################################\n");
+    AK_test_Transaction();
+    printf("#######################################\nEnd transaction Test.\n");
+    
+    
+    
     //---------------------------------------> CREATE TABLE 'COURSE' <---------------------------------------
     //create header
     AK_header t_header6[MAX_ATTRIBUTES];
@@ -831,11 +837,8 @@ void AK_create_test_tables() {
     free(row_root);
     //------------------------------------------------------------------------------------------------------
     AK_op_rename_test();
-
-    printf("Transaction Test.\nLoad and release locks.\n#######################################\n");
-    transactionTest();
-    printf("#######################################\nEnd transaction Test.\n");
     AK_function_test();
+  
 }
 
 

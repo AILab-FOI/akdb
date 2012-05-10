@@ -21,13 +21,13 @@
 #define TRANSACTION_H_
 #include <pthread.h> //TRANSACTIONS
 #include "configuration.h"
-
+#include "command.h"
 /**
- * @author Frane Jakelic
+ * @author Frane Jakelić
  * @struct transaction_locks_list_elem
  * @brief Structure that represents LockTable entry about transaction resource lock.
  */
-struct transaction_locks_list_elem{
+struct transaction_locks_list_elem {
     int TransactionId;
     int lock_type;
     int isWaiting;
@@ -36,11 +36,11 @@ struct transaction_locks_list_elem{
 };
 
 /**
- * @author Frane Jakelic
+ * @author Frane Jakelić
  * @struct transaction_list_elem
  * @brief Structure that represents LockTable entry about transaction lock holder.Element indexed by Hash table.
  */
-struct transaction_list_elem{
+struct transaction_list_elem {
     int id;
     int lock_type;
     int isWaiting;
@@ -50,16 +50,37 @@ struct transaction_list_elem{
 };
 
 /**
- * @author Frane Jakelic
+ * @author Frane Jakelić
  * @struct transaction_list_head
  * @brief Structure that represents LockTable entry about doubly linked list of collision in Hash table.
  */
-struct transaction_list_head{
+struct transaction_list_head {
     struct transaction_list_elem *DLLHead;
 };
 
+/**
+ * @author Frane Jakelić
+ * @struct memoryAddresses
+ * @brief Structure that represents a linked list of locked addresses.
+ */
+struct memoryAddresses{
+	int adresa;
+	struct memoryAddresses *nextElement;
+};
+/**
+ * @author Frane Jakelić
+ * @struct transactionData
+ * @brief Structure used to transport transaction data to the thread.
+ */
+struct transactionData{
+	int transactionId;
+        int lengthOfArray;
+	command *array;
+};
 
-
+typedef struct transactionData AK_transaction_data;
+typedef struct memoryAddresses AK_memoryAddresses;
+typedef struct memoryAddresses* AK_memoryAddresses_link;
 typedef struct transaction_list_head AK_transaction_list;
 typedef struct transaction_list_elem *AK_transaction_elem;
 typedef struct transaction_locks_list_elem *AK_transaction_lock_elem;

@@ -5,13 +5,7 @@
  */
 #include "command.h"
 
-struct AK_command {
-  int id_command;
-  char *tblName;
-  void *parameters;
-};
 
-typedef struct AK_command command;
 
 void AK_command(command * komande, int brojkomandi) {
    int i;

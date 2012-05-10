@@ -500,10 +500,23 @@
 #define OK 1
 
 /**
- * @def HASH_BUCKET
+ * @def NOT_OK
  * @brief Constant declaring that the method isn't completed successfuly
 */
 #define NOT_OK 0
+
+
+/**
+ * @def COMMIT
+ * @brief Constant declaring that the transaction is completed successfuly
+*/
+#define COMMIT 1
+
+/**
+ * @def ABORT
+ * @brief Constant declaring if the transaction is being aborted
+*/
+#define ABORT 0
 
 
 #endif
