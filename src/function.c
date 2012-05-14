@@ -135,6 +135,7 @@ int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
  * @param *function_id id of the function to which the argument belongs
  * @param *arg_number number of the argument
  * @param *arg_type data type of the argument
+ * @param *argname name of the argument
  * @return function argument id or EXIT_ERROR
  */
 int AK_function_arguments_add(int function_id, int arg_number, int arg_type, char *argname){
@@ -277,8 +278,7 @@ int AK_function_remove_by_name(char *name, AK_list *arguments_list) {
 int AK_function_rename(char *name, AK_list *arguments_list, char *new_name){
   printf("***Function rename***\n");
 
-  //int func_id = AK_get_function_obj_id(name, arguments_list);
-  int func_id=109;
+  int func_id = AK_get_function_obj_id(name, arguments_list);
   AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
   Ak_Init_L(row_root);
 
@@ -302,14 +302,15 @@ int AK_function_rename(char *name, AK_list *arguments_list, char *new_name){
  * @brief Function that changes the function name.
  * @param *name name of the function to be modified
  * @param *arguments_list list of function arguments
- * @param *new_name new name of the function
+ * @param *new_return_type new return type
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_return_type){
   printf("***Change function return type***\n");
 
-  //int func_id = AK_get_function_obj_id(name, arguments_list);
-  int func_id=109;
+  int func_id = AK_get_function_obj_id(name, arguments_list);
+
+  printf("%d %d", func_id, new_return_type);
   AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
   Ak_Init_L(row_root);
 
@@ -320,6 +321,7 @@ int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_
   
   if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
       Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_change_return_type: Could not change return type.\n");
+      printf("not good");
       return EXIT_ERROR;
     }
   
@@ -367,7 +369,7 @@ void AK_function_test() {
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");
     
-    AK_function_rename("test_funkcija", arguments_list2, "nova_funkcija");
+    //AK_function_rename("test_funkcija2", arguments_list2, "nova_funkcija");
     AK_function_change_return_type("test_funkcija2", arguments_list2, 5);
     AK_print_table("AK_function");
 
