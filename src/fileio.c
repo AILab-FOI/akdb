@@ -180,7 +180,7 @@ int Ak_insert_row(AK_list *row_root) {
 }
 
 /**	
-   * @author Matija Novak, updated by Dino Laktašić
+   * @author Matija Novak, updated by Dino Laktašić, modified by Mario Kolmačić
    * @brief Function updates or deletes row from table in given block. Given list of elements is firstly back-upped. According to given argument in function, 	          delete or update is peformed.
    * @param temp_block block to work with
    * @param row_list list of elements which contain data for delete or update
@@ -255,35 +255,57 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
                 head++; //next header
                 //i++; //next tuple dict
         }
-		
-        if (operation == DELETE) {//delete
+	
+	if (operation == DELETE) {//delete
             if ((exists_equal_attrib == 1) && (del == 1)) {
-                int j, k, l;
-				
+                int j, k, l, hh;
+		int x;		
                 for (j = i - head; j < i; j++) {//delete one row
-                    k = temp_block->tuple_dict[j].address;
+                    //j += head;
+                    hh = head;
+		    x = j;
+		 if(temp_block->tuple_dict[j+hh].address > 0){   
+		    j += head;
+		    k = temp_block->tuple_dict[j].address;
                     l = temp_block->tuple_dict[j].size;
-					
-					memset(temp_block->data + k, '\0', l);
-					Ak_dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);
-					
+	    		    
+				memset(temp_block->data + k, '\0', l);
+				Ak_dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);					
                     //clean tuple dict
-                    temp_block->tuple_dict[j].size = 0;
+ 		    temp_block->tuple_dict[j].size = 0;
                     temp_block->tuple_dict[j].type = 0;
                     temp_block->tuple_dict[j].address = 0;
+		    
+		    j -= head;
+ 		}
+		else{
+		    k = temp_block->tuple_dict[j].address;
+                    l = temp_block->tuple_dict[j].size;
+	    		    
+				memset(temp_block->data + k, '\0', l);
+				Ak_dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);					
+                    //clean tuple dict
+ 		    temp_block->tuple_dict[j].size = 0;
+                    temp_block->tuple_dict[j].type = 0;
+                    temp_block->tuple_dict[j].address = 0;
+		}
+
+
                 }
+
             }
-        } else {//update
+        }
+	else {//update
             //is there an varchar to which has changed the size
             //when yes delete all insert new, else update data
             if ((exists_equal_attrib == 1) && (del == 1)) {
-                int j;
+                int j, ss;
                 char up_entry[MAX_VARCHAR_LENGTH];
 				
                 for (j = i - head; j < i; j++) {//go through row
-					int k = temp_block->tuple_dict[j].address;
-					int l = temp_block->tuple_dict[j].size;
-                    
+					int k = temp_block->tuple_dict[j+ss].address;
+					int l = temp_block->tuple_dict[j+ss].size;
+					ss = head;
 					if (diff_varchar_exist == 1) {//delete and insert row
 						int exist_new_data = 0;
                         some_element = (AK_list_elem) Ak_First_L(row_root);
@@ -307,9 +329,9 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
                         }
 						
 						memset(temp_block->data + k, '\0', l);
-                        temp_block->tuple_dict[j].size = 0;
-                        temp_block->tuple_dict[j].type = 0;
-                        temp_block->tuple_dict[j].address = 0;
+                        temp_block->tuple_dict[j+ss].size = 0;
+                        temp_block->tuple_dict[j+ss].type = 0;
+                        temp_block->tuple_dict[j+ss].address = 0;
                     } else {//update row
 						memset(up_entry, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(up_entry, temp_block->data + k, l);
