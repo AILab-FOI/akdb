@@ -324,7 +324,7 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
 
                             some_element = (AK_list_elem) Ak_First_L(row_root);
 
-                            Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[j].type, up_entry,
+                            Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[j+ss].type, up_entry,
 								some_element->table, temp_block->header[j % head].att_name, some_element, 0);
                         }
 						
