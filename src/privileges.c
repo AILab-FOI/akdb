@@ -63,6 +63,7 @@ int AK_user_get_id(char *username) {
     free(row);
     return EXIT_ERROR;
 }
+
 /**
  * @author Kristina Takač.
  * @brief Function that inserts group in table AK_group
@@ -135,7 +136,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right){
 			Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "artifact_id", row_root);
 			Ak_Insert_New_Element(TYPE_INT, &rights[i], "AK_user_right", "right_type", row_root);
 			Ak_insert_row(row_root);
-
+			
 			free(row_root);
 		}
 
@@ -156,7 +157,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right){
 		Ak_Init_L(row_root);
 		
 			
-
+		privilege_id = AK_get_id();
 		Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
 	        Ak_Insert_New_Element(TYPE_VARCHAR, username, "AK_user_right", "name", row_root);
 		Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "artifact_id", row_root);
@@ -215,13 +216,17 @@ void AK_revoke_privilege_user(char *username, char *table, char *right){
             while ((row = (AK_list *)AK_get_row(i, "AK_user_right")) != NULL) {
                     if ((strcmp(row->next->next->data, username) == 0) && (table_id ==  (int) * row->next->next->next->data) && 
 			(right_type ==  (int) * row->next->next->next->next->data)) {
-                        Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, username, "AK_user_right", "name", row_root, 1);
+			int id = (int) * row->next->data;
+                        Ak_Insert_New_Element_For_Update(TYPE_INT, &id, "AK_user_right", "obj_id", row_root, 1);
 	                Ak_delete_row(row_root);
+                        
 	            }
                     i++;
-	           Ak_DeleteAll_L(row_root);
-	           free(row);
+	           
+	            Ak_DeleteAll_L(row_root);
+	            free(row);
                 }
+	    
 
         }
 		             
@@ -276,7 +281,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right){
 		Ak_Init_L(row_root);
 		
 			
-
+		privilege_id = AK_get_id();
 		Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
 	        Ak_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
 		Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "artifact_id", row_root);
@@ -326,20 +331,22 @@ void AK_revoke_privilege_group(char *groupname, char *table, char *right){
             int right_type;
   	    if(strcmp(right, "UPDATE")==0){
 			right_type = UPDATE;
-		}
-		if(strcmp(right, "DELETE")==0){
+	    }
+	    if(strcmp(right, "DELETE")==0){
 			right_type = DELETE;
-		}
-		if(strcmp(right, "INSERT")==0){
+	     }
+	    if(strcmp(right, "INSERT")==0){
 			right_type = INSERT;
-		}
-		if(strcmp(right, "SELECT")==0){
+	    }
+	    if(strcmp(right, "SELECT")==0){
 			right_type = SELECT;
-		}
+	    }
             while ((row = (AK_list *)AK_get_row(i, "AK_group_right")) != NULL) {
                   if (((int ) * row->next->next->data == group_id) && (table_id ==  (int) * row->next->next->next->data) && 
 			(right_type ==  (int) * row->next->next->next->next->data)) {
-                        Ak_Insert_New_Element_For_Update(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root, 1);
+			int id = (int) * row->next->data;
+			
+                        Ak_Insert_New_Element_For_Update(TYPE_INT, &id, "AK_group_right", "obj_id", row_root, 1);
 	                Ak_delete_row(row_root);
 	            }
                     i++;
@@ -362,7 +369,6 @@ void AK_revoke_privilege_group(char *groupname, char *table, char *right){
 int AK_add_user_to_group(char *user, char *group){
     int user_id = AK_user_get_id(user);
     int group_id = AK_group_get_id(group);
-
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
@@ -375,39 +381,216 @@ int AK_add_user_to_group(char *user, char *group){
     AK_archive_log("AK_add_user_to_group", user, group); //ARCHIVE_LOG
     return EXIT_SUCCESS;
 }
-
-
 /**
  * @author Kristina Takač.
- * @brief Function that test functions above for privileges
+ * @brief Function that checks whether given user has right for given operation on given table
+ * @param *user username for which we want check privileges
+ * @param *table name of table for which we want to check whether user has right on
+ * @param *privilege privilege for which we want to check whether user has right for
+ * @return has_right, 1 if user has right, otherwise 0                                                  
+*/    
+int AK_check_privilege(char *username, char *table, char *privilege){
+	int user_id = AK_user_get_id(username);
+	int table_id = AK_get_table_obj_id(table);
+	int privilege_num;
+	int i = 0;
+	int number_of_groups = 0;
+	int has_right = 0;
+	int groups[100];
+	if(strcmp(privilege, "UPDATE")==0){
+		privilege_num = UPDATE;
+	}
+	if(strcmp(privilege, "DELETE")==0){
+		privilege_num = DELETE;
+	}
+        if(strcmp(privilege, "INSERT")==0){
+		privilege_num = INSERT;
+	}
+        if(strcmp(privilege, "SELECT")==0){
+		privilege_num = SELECT;
+	}
+        if(strcmp(privilege, "ALL")==0){
+		privilege_num = ALL;
+	}
+	
+	AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+	Ak_Init_L(row_root);
+        AK_list *row;
+	if(privilege_num != ALL){
+	         while ((row = (AK_list *)AK_get_row(i, "AK_user_right")) != NULL) {
+                      if ((strcmp(row->next->next->data,username) == 0) && (table_id == (int) * row->next->next->next->data) &&
+			   (privilege_num == (int) * row->next->next->next->next->data)) {
+				has_right = 1;
+				return has_right;
+                        
+	               }
+
+                       i++;
+	               Ak_DeleteAll_L(row_root);
+	              free(row);
+                  }
+	          i = 0;
+	          while ((row = (AK_list *)AK_get_row(i, "AK_user_group")) != NULL) {
+                       if (user_id == (int) * row->next->data) {
+			    groups[number_of_groups] = (int) * row->next->next->data;
+			    number_of_groups++;	
+                        
+	                }
+                       i++;
+	               Ak_DeleteAll_L(row_root);
+	               free(row);
+                   }
+                  for(i=0; i < number_of_groups; i++){
+                         int j=0;
+		         while ((row = (AK_list *)AK_get_row(j, "AK_group_right")) != NULL) {
+                            if ((groups[i] == (int) * row->next->next->data) && (table_id == (int) * row->next->next->next->data) &&
+			          (privilege_num == (int) * row->next->next->next->next->data)) {
+				       has_right = 1;
+				       return has_right;
+                        
+	                     }
+                            j++;
+	                    Ak_DeleteAll_L(row_root);
+	                    free(row);
+                          }	
+                   }
+	}
+	if(privilege_num == ALL){
+		
+		int checking_privileges[4] = {0, 0, 0, 0};
+		int found_privilege;
+		while ((row = (AK_list *)AK_get_row(i, "AK_user_right")) != NULL) {
+                      if ((strcmp(row->next->next->data,username) == 0) && (table_id == (int) * row->next->next->next->data)) {
+				found_privilege = (int) * row->next->next->next->next->data;
+				switch(found_privilege){
+					case UPDATE:
+						checking_privileges[0] = 1;
+						break;
+					case DELETE:
+						checking_privileges[1] = 1;
+						break;
+					case INSERT:
+						checking_privileges[2] = 1;
+						break;
+					case SELECT:
+						checking_privileges[3] = 1;
+						break;
+						
+				}
+                        
+	               }
+
+                       i++;
+	               Ak_DeleteAll_L(row_root);
+	              free(row);
+                  }
+		  
+		  for(i=0;i<4;i++){
+			if(checking_privileges[i] == 1){
+				has_right = 1;
+				
+			}else{
+				has_right = 0;
+				break;
+                        }
+		  }
+		  if(has_right == 1){
+			return has_right;
+		  }
+	          i = 0;
+		  while ((row = (AK_list *)AK_get_row(i, "AK_user_group")) != NULL) {
+                       if (user_id == (int) * row->next->data) {
+			    groups[number_of_groups] = (int) * row->next->next->data;
+			    number_of_groups++;	
+                        
+	                }
+                       i++;
+	               Ak_DeleteAll_L(row_root);
+	               free(row);
+                   }
+		 for(i=0; i < number_of_groups; i++){
+                         int j=0;
+		         while ((row = (AK_list *)AK_get_row(j, "AK_group_right")) != NULL) {
+                            if ((groups[i] == (int) * row->next->next->data) && (table_id == (int) * row->next->next->next->data)) {
+				    found_privilege = (int) * row->next->next->next->next->data;  
+                        	    switch(found_privilege){
+					case UPDATE:
+						checking_privileges[0] = 1;
+						break;
+					case DELETE:
+						checking_privileges[1] = 1;
+						break;
+					case INSERT:
+						checking_privileges[2] = 1;
+						break;
+					case SELECT:
+						checking_privileges[3] = 1;
+						break;
+						
+				    }
+	                     }
+                            j++;
+	                    Ak_DeleteAll_L(row_root);
+	                    free(row);
+                          }
+				
+                   }
+		for(i=0;i<4;i++){
+			if(checking_privileges[i] == 1){
+				has_right = 1;
+				
+			}else{
+				has_right = 0;
+				break;
+                        }
+	        }
+		if(has_right == 1){
+			return has_right;
+		}
+		  
+		
+	}
+	return has_right;
+	
+}
+/**
+ * @author Kristina Takač.
+ * @brief Function that tests functions above for privileges
  * @return no return value                                                     
 */
 void AK_privileges_test(){
     AK_user_add("proba", 123);
     AK_user_add("kritakac", 321);
-
     AK_print_table("AK_user");
+    
     
     
     AK_group_add("grupa1");
     AK_group_add("grupa2");
     AK_print_table("AK_group");
+
+    AK_add_user_to_group("kritakac", "grupa1");
+    AK_add_user_to_group("proba", "grupa2");
+    AK_print_table("AK_user_group");
    
     AK_grant_privilege_group("grupa2", "student1", "DELETE");
     AK_grant_privilege_group("grupa1", "student1", "ALL");
     
     AK_print_table("AK_group_right");
-    AK_revoke_privilege_group("grupa2", "student1", "DELETE");
+    AK_revoke_privilege_group("grupa2", "student1", "ALL");
     AK_print_table("AK_group_right");
     
-    AK_grant_privilege_user("proba", "student1", "DELETE");
-    AK_grant_privilege_user("kritakac", "student1", "ALL");
+    AK_grant_privilege_user("kritakac", "student1", "DELETE");
+    AK_grant_privilege_user("proba", "student1", "UPDATE");
+    AK_grant_privilege_user("kritakac", "professor", "SELECT");
     
     AK_print_table("AK_user_right");
-    AK_revoke_privilege_user("proba", "student1", "DELETE");
+    AK_revoke_privilege_user("proba", "student1", "UPDATE");
     AK_print_table("AK_user_right");
+
+    AK_check_privilege("kritakac", "professor", "SELECT");
    
-    AK_add_user_to_group("kritakac", "grupa1");
-    AK_print_table("AK_user_group");
+
+
 
 }
