@@ -22,7 +22,7 @@
 
 /**
  * @author Unknown
- * @brief Function that gets obj_id of a function by name (transferred from trigger.c).
+ * @brief Function that gets obj_id of a function by name and arguments list (transferred from trigger.c).
  * @param *function name of the function
  * @return obj_id of the function or EXIT_ERROR
  */
@@ -321,7 +321,6 @@ int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_
   
   if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
       Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_change_return_type: Could not change return type.\n");
-      printf("not good");
       return EXIT_ERROR;
     }
   

@@ -1,5 +1,5 @@
 /**
-@file function.h Header file that provides data structures for functions
+@file sequence.h Header file that provides data structures for sequences
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-#ifndef FUNCTION
-#define FUNCTION
+#ifndef SEQUENCE
+#define SEQUENCE
 
 #include "table.h"
 
