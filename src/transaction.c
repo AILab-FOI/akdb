@@ -21,7 +21,9 @@
 
 AK_transaction_list LockTable[NUMBER_OF_KEYS];
 pthread_mutex_t accessLockMutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_t transactionThreads[NUMBER_OF_THREADS];
+pthread_mutex_t accessThreadCounterMutex = PTHREAD_MUTEX_INITIALIZER;
+int numberOfActiveTransactionThreads = 0;
+int id=0;
 /**
  * @author Frane Jakelić
  * @brief Calculates hash value for a given memory address. Hash values are used to identify location of locked resources.
@@ -168,23 +170,23 @@ int AK_delete_lock_entry_list(int memoryAddress, int id) {
     AK_transaction_elem elemListHolder = AK_search_hash_entry_list_by_key(memoryAddress);
 
     if (elemDelete != NULL) {
-        
-        do{
-        printf("Lock released by transId:%i. Memory address:%i\n", elemDelete->TransactionId,elemListHolder->id);
-        (*elemDelete->prevLock).nextLock = elemDelete->nextLock;
-        (*elemDelete->nextLock).prevLock = elemDelete->prevLock;
 
-        if (elemDelete == elemListHolder->DLLLocksHead && elemDelete->nextLock != elemDelete) {
-            elemListHolder->DLLLocksHead = elemDelete->nextLock;
-        } else if (elemDelete == elemListHolder->DLLLocksHead) {
-            elemListHolder->DLLLocksHead = NULL;
-        }
+        do {
+            printf("##########################\n# Lock Released		 #\n#------------------------#\n# Lock	ID:%i		 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", elemDelete->TransactionId, elemListHolder->id);
+            (*elemDelete->prevLock).nextLock = elemDelete->nextLock;
+            (*elemDelete->nextLock).prevLock = elemDelete->prevLock;
 
-        elemDelete->prevLock = NULL;
-        elemDelete->nextLock = NULL;
-        
-        elemDelete = AK_search_lock_entry_list_by_key(memoryAddress, id);
-        }while(elemDelete != NULL);
+            if (elemDelete == elemListHolder->DLLLocksHead && elemDelete->nextLock != elemDelete) {
+                elemListHolder->DLLLocksHead = elemDelete->nextLock;
+            } else if (elemDelete == elemListHolder->DLLLocksHead) {
+                elemListHolder->DLLLocksHead = NULL;
+            }
+
+            elemDelete->prevLock = NULL;
+            elemDelete->nextLock = NULL;
+
+            elemDelete = AK_search_lock_entry_list_by_key(memoryAddress, id);
+        } while (elemDelete != NULL);
         return OK;
 
     } else {
@@ -321,7 +323,7 @@ int AK_acquire_lock(int memoryAddress, int type, int transactionId) {
     int counter = 0;
     while (!lock->isWaiting) {
         if (counter == 0) {
-            printf("Transaction %i waiting for lock-a.Locktype:%i Memory Address:%i\n", lock->TransactionId,lock->lock_type,memoryAddress);
+            printf("################\n# Lock Waiting		 #\n#------------------------#\n# Lock	ID:%i	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", lock->TransactionId, lock->lock_type, memoryAddress);
 
         }
         counter++;
@@ -329,9 +331,10 @@ int AK_acquire_lock(int memoryAddress, int type, int transactionId) {
         if (counter == 10)return NOT_OK;
     }
     if (counter > 0) {
-        printf("Lock granted after wait.Transaction:%i Memory Address:%i\n", lock->TransactionId,memoryAddress);
+        printf("################\n# Lock Granted after wait#\n#------------------------#\n# Lock	ID:%i	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", lock->TransactionId, lock->lock_type, memoryAddress);
     } else {
-        printf("Lock granted to Transaction:%i lockType:%i Memory Address:%i\n", lock->TransactionId,lock->lock_type,memoryAddress);
+        printf("##########################\n# Lock Granted		 #\n#------------------------#\n# Lock	ID:%i	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", lock->TransactionId, lock->lock_type, memoryAddress);
+
     }
     return OK;
 }
@@ -345,12 +348,12 @@ int AK_acquire_lock(int memoryAddress, int type, int transactionId) {
 void AK_release_locks(AK_memoryAddresses_link addresses, int transactionId) {
     pthread_mutex_lock(&accessLockMutex);
     AK_memoryAddresses_link addressesTmp = addresses;
-    while(addressesTmp->nextElement !=NULL) {
+    while (addressesTmp->nextElement != NULL) {
         addressesTmp = addressesTmp->nextElement;
-        
-        
+
+
         AK_delete_lock_entry_list(addressesTmp->adresa, transactionId);
-        
+
         AK_transaction_lock_elem tmp = AK_search_hash_entry_list_by_key(addressesTmp->adresa)->DLLLocksHead;
         AK_transaction_lock_elem anchor = tmp;
         if (tmp != NULL && tmp->nextLock != anchor && tmp->nextLock->TransactionId != transactionId) {
@@ -362,10 +365,11 @@ void AK_release_locks(AK_memoryAddresses_link addresses, int transactionId) {
                 tmp = tmp->nextLock;
             };
         }
-       
+
     }
     pthread_mutex_unlock(&accessLockMutex);
 }
+
 /**
  * @author Frane Jakelić
  * @brief Method that appends all addresses affected by the transaction
@@ -378,6 +382,10 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses *addressList) {
     if (addresses->address_from[0] == 0)
         return NOT_OK;
 
+    if (addressList->nextElement != NULL) {
+        addressList->nextElement = NULL;
+    }
+
     int i = 0, j;
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
 
@@ -388,7 +396,7 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses *addressList) {
         memset(address, 0, sizeof (struct memoryAddresses));
 
         AK_memoryAddresses_link tmp = addressList;
-        if(tmp==NULL)return NOT_OK;
+        if (tmp == NULL)return NOT_OK;
         while (tmp->nextElement != NULL) {
             tmp = tmp->nextElement;
         }
@@ -403,6 +411,7 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses *addressList) {
     return OK;
 
 }
+
 /**
  * @author Frane Jakelić
  * @brief Method that is called in a seperate thread that is responsible for acquiring locks releasing them and finding the associated block addresses
@@ -419,10 +428,10 @@ int AK_execute_commands(command * commandArray, int lengthOfArray, int transacti
     AK_memoryAddresses_link address;
 
     for (i = 0; i < lengthOfArray; i++) {
-
+       
         if (!AK_get_memory_blocks(commandArray[i].tblName, &addresses)) {
             printf("Error reading block Addresses. Aborting\n");
-            AK_release_locks(&addresses,transactionID);
+            AK_release_locks(&addresses, transactionID);
             return ABORT;
         };
 
@@ -448,14 +457,14 @@ int AK_execute_commands(command * commandArray, int lengthOfArray, int transacti
 
             if (status == NOT_OK) {
                 printf("Error acquiring lock. Aborting\n");
-                AK_release_locks(&addresses,transactionID);
+                AK_release_locks(&addresses, transactionID);
                 return ABORT;
             }
         }
 
     }
     //TODO dodat poziv prave funkcije koja vrši ove promjene
-    AK_release_locks(&addresses,transactionID);
+    AK_release_locks(&addresses, transactionID);
     return COMMIT;
 }
 
@@ -464,77 +473,80 @@ int AK_execute_commands(command * commandArray, int lengthOfArray, int transacti
  * @brief checks if there is any free thread spaces.
  * @return empty index else return -1
  */
-int AK_get_free_transaction_slot(){
-    int i = 0;
-    for (i=0;i<NUMBER_OF_THREADS;i++){
-        if(transactionThreads[i]==NULL){
-            return i;
-        }
-    }
-    return -1;
+void AK_update_transaction_thread_count(int offset) {
+    pthread_mutex_lock(&accessThreadCounterMutex);
+    numberOfActiveTransactionThreads += offset;
+    pthread_mutex_unlock(&accessThreadCounterMutex);
 }
+
 /**
  * @author Frane Jakelić
  * @brief thread start point all relevant functions are called from this function. It acts as an intermidary between the main thread and other threads
  * @param data transmited to the thread from the main thread
  */
-void AK_execute_transaction(void* params){
+void AK_execute_transaction(void *params) {
     int status;
     AK_transaction_data *data = (AK_transaction_data*) params;
-    status = AK_execute_commands(data->array,data->lengthOfArray,data->transactionId);
-    if(status==ABORT){
+    status = AK_execute_commands(data->array, data->lengthOfArray, data->transactionId);
+    AK_update_transaction_thread_count(-1);
+    if (status == ABORT) {
         printf("Transaction ABORTED!\n");
-    }else{
+    } else {
         printf("Transaction COMMITED!\n");
     }
 }
-
-
 /**
  * @author Frane Jakelić
  * @brief method that receives all the data and gives an id to that data and starts a thread that executes the transaction 
  * @param commandArray array filled with commands that need to be secured using transactions
  * @param lengthOfArray length of commandArray
  */
+
 void AK_transaction_manager(command * commandArray, int lengthOfArray) {
+    pthread_attr_t attr;
+    pthread_t transactionThread;
+
+    //pthread_attr_init(&attr);
+    //pthread_attr_setdetachstate(&attr,PTHREAD_CREATE_JOINABLE);
+
     memset(LockTable, 0, NUMBER_OF_KEYS * sizeof (struct transaction_list_head));
-    int transactionSlot = AK_get_free_transaction_slot();
-    
-    while(transactionSlot == -1){
-        transactionSlot = AK_get_free_transaction_slot();
+
+
+    while (numberOfActiveTransactionThreads == NUMBER_OF_THREADS) {
         sleep(1);
     }
-    
+    AK_update_transaction_thread_count(1);
     AK_transaction_data params;
     params.array = commandArray;
     params.lengthOfArray = lengthOfArray;
-    params.transactionId = transactionSlot;
-    AK_execute_transaction(&params);
-    //pthread_create(&transactionThreads[transactionSlot], NULL, AK_execute_transaction, &params);
+    params.transactionId = id++; //transactionSlot;
+    //pthread_create(&transactionThread, &attr, AK_execute_transaction, (void*)&params);
+    pthread_create(&transactionThread, NULL, AK_execute_transaction, (void*) &params);
+    
 }
 
+void AK_test_Transaction() {
+    printf("***Test Transaction***\n");
+    int brojkomandi;
 
-void AK_test_Transaction(){
-   printf("***Test Transaction***\n");
-   int brojkomandi;
-
-   command *komande = malloc(sizeof(command)*5);
-   komande[0].id_command = 2;
-   komande[0].tblName = "student";
+    command *komande = malloc(sizeof (command)*3);
+    komande[0].id_command = INSERT;
+    komande[0].tblName = "professor";
 
 
-   komande[1].id_command = 0;
-   komande[1].tblName = "student";
 
-   
-   komande[2].id_command = 1;
-   komande[2].tblName = "professor";
+    brojkomandi = 1;
+    
+     command *komande2 = malloc(sizeof (command)*3);
+    komande2[0].id_command = SELECT;
+    komande2[0].tblName = "professor";
 
-    komande[3].id_command = 3;
-    komande[3].tblName = "professor";
-
-    brojkomandi = 4;
-
+    
+    
     AK_transaction_manager(komande, brojkomandi);
-      printf("***End test Transaction***\n");
-    }
+    AK_transaction_manager(komande2, brojkomandi);
+   
+
+       
+    printf("***End test Transaction***\n");
+}

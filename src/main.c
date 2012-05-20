@@ -81,7 +81,6 @@ Main program function
 int main()
 {
 	printf( "KALASHNIKOV DB - STARTING\n\n" );
-
 	AK_inflate_config();
 	printf("db_file: %s\n", DB_FILE);
 
@@ -133,10 +132,9 @@ int main()
 //			privileges_test();
 
 			/* component test area --- end */
-			
+                        
 			if ( AK_flush_cache() == EXIT_SUCCESS ){
 				printf( "\nEverything was fine!\nBye =)\n" );
-                                pthread_exit(NULL);
 				return ( EXIT_SUCCESS );
 			}
 		}

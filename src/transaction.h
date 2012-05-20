@@ -22,6 +22,8 @@
 #include <pthread.h> //TRANSACTIONS
 #include "configuration.h"
 #include "command.h"
+#include <string.h>
+extern int numberOfActiveTransactionThreads;
 /**
  * @author Frane Jakelić
  * @struct transaction_locks_list_elem

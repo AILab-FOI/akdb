@@ -17,7 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  17 */
 
+#include <pthread.h>
+
 #include "test.h"
+#include "transaction.h"
 
 /**
  * @author Dino Laktašić
@@ -804,9 +807,7 @@ void AK_create_test_tables() {
     //-------------------------------------------------------------------------------------------------------
 
 
-    printf("Transaction Test.\nLoad and release locks.\n#######################################\n");
-    AK_test_Transaction();
-    printf("#######################################\nEnd transaction Test.\n");
+    
     
     
     
@@ -837,6 +838,15 @@ void AK_create_test_tables() {
     free(row_root);
     //------------------------------------------------------------------------------------------------------
     AK_op_rename_test();
+    printf("Transaction Test.\nLoad and release locks.\n#######################################\n");
+    AK_test_Transaction();
+    printf("#######################################\nEnd transaction Test.\n");
+    
+    while(numberOfActiveTransactionThreads>0){
+       sleep(1);
+       
+    }
+    
 }
 
 
