@@ -470,8 +470,7 @@ int AK_execute_commands(command * commandArray, int lengthOfArray, int transacti
 
 /**
  * @author Frane Jakelić
- * @brief checks if there is any free thread spaces.
- * @return empty index else return -1
+ * @brief Keeps track of allocated transaction threads
  */
 void AK_update_transaction_thread_count(int offset) {
     pthread_mutex_lock(&accessThreadCounterMutex);

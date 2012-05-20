@@ -64,5 +64,45 @@ enum tbl_valalign {
 
 int AK_strcmp(const void *a, const void *b);
 
+/**
+ * @author Frane Jakelić
+ * @struct Vertex
+ * @brief Structure defines a Vertex node element. Every Vertex has its VertexId, index, lowLink and pointer to next edge and vertex
+ */
+struct Vertex{
+    int vertexId;
+    int index;
+    int lowLink;
+    struct Succesor *nextSuccesor;
+    struct Vertex *nextVertex;
+};
+
+/**
+ * @author Frane Jakelić
+ * @struct Succesor
+ * @brief Structure defines a Succesor  element. Every Succesor has its Vertex pointer and pointer to next Succesor in the linked list
+ */
+struct Succesor{
+	struct Vertex *link;
+	struct Succesor *nextSuccesor;
+};
+
+/**
+ * @author Frane Jakelić
+ * @struct Stack
+ * @brief Structure defines a Stack element. Every Stack has its Vertex pointer and pointer to next Stack in the linked list
+ */
+struct Stack{
+	struct Vertex *link;
+	struct Stack *nextElement;
+};
+
+typedef struct Vertex AK_graph;
+typedef struct Succesor *AK_succesor;
+typedef struct Vertex *AK_vertex;
+typedef struct Stack *AK_stack;
+typedef struct Stack AK_stackHead;
+
+
 #endif
 

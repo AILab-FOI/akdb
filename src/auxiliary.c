@@ -19,13 +19,16 @@
 
 #include "auxiliary.h"
 
+AK_graph G;
+AK_stackHead S;
+int indexCounter = 0;
 
 /**
-  * @author Dino Laktašić.	
-  * @brief Function gets number of digits for given number
-  * @param number number to evaluate 
-  * @param int base mathematic base (e.g. 2, 10 etc.)  
-  * @return number of digits for given number
+ * @author Dino Laktašić.	
+ * @brief Function gets number of digits for given number
+ * @param number number to evaluate 
+ * @param int base mathematic base (e.g. 2, 10 etc.)  
+ * @return number of digits for given number
  */
 int AK_chars_num_from_number(int number, int base) {
     int len = 0;
@@ -72,11 +75,11 @@ size_t AK_type_size(int iDB_type, char *szVarchar) {
 }
 
 /**
-  * @author Dino Laktašić
-  * @brief Function compares to Strings
-  * @param *a  pointer of value to compare
-  * @param *b pointer of value to compare
-  * @return result of comparison according to strcmp function
+ * @author Dino Laktašić
+ * @brief Function compares to Strings
+ * @param *a  pointer of value to compare
+ * @param *b pointer of value to compare
+ * @return result of comparison according to strcmp function
  */
 int AK_strcmp(const void *a, const void *b) {
     const char **ia = (const char **) a;
@@ -317,11 +320,11 @@ int Ak_GetSize_L(AK_list_elem current, AK_list *L) {
 }
 
 /**
-  * @author Mislav Čakarić
-  * @brief Function for fetching nth element in row
-  * @param pos position of element in row
-  * @param row list of elements of row in table
-  * @return element of list of elements of row in table
+ * @author Mislav Čakarić
+ * @brief Function for fetching nth element in row
+ * @param pos position of element in row
+ * @param row list of elements of row in table
+ * @return element of list of elements of row in table
 
  */
 AK_list_elem Ak_GetNth_L(int pos, AK_list *row) {
@@ -392,7 +395,7 @@ char *AK_get_array_perms(char *arr) {
         //printf("%s\n", perms[next_perm]);
 
         free(perm);
-		//perm = NULL;
+        //perm = NULL;
     }
 
     res_perm = (char *) calloc(num_perms, sizeof (char*));
@@ -400,3 +403,248 @@ char *AK_get_array_perms(char *arr) {
 
     return res_perm;
 }
+
+/**
+ * @author Frane Jakelić
+ * @briefFunction that searches for a specific graph node by its ID
+ * @param id of the vertex that needs to be found
+ * @param graphRoot root node of the graph structure
+ * @return found graph nod or null
+ */
+AK_vertex AK_search_vertex(int id, AK_vertex graphRoot) {
+    AK_vertex tmp = graphRoot;
+
+    while (tmp->nextVertex != NULL) {
+        if (tmp->nextVertex->vertexId == id) {
+            return tmp->nextVertex;
+        }
+        tmp = tmp->nextVertex;
+
+    }
+    return NULL;
+}
+/**
+ * @author Frane Jakelić
+ * @briefLooks for empty link for a new graph node
+ * @param graphRoot oot node of the graph structure
+ * @return empty link for new graph node
+ */
+AK_vertex AK_search_empty_link(AK_vertex graphRoot) {
+
+    AK_vertex tmp = graphRoot;
+
+    while (tmp->nextVertex != NULL) {
+        tmp = tmp->nextVertex;
+    }
+    return tmp;
+}
+
+/**
+ * @author Frane Jakelić
+ * @brief Function that adds a new graph node
+ * @param id of the vertex that needs to be added
+ * @param graphRoot root node of the graph structure
+ * @return pointer to the newly created node
+ */
+AK_vertex AK_add_vertex(int id, AK_vertex graphRoot) {
+
+    AK_vertex node = (AK_vertex) malloc(sizeof (struct Vertex));
+    memset(node, 0, sizeof (struct Vertex));
+
+    AK_search_empty_link(graphRoot)->nextVertex = node;
+    node->vertexId = id;
+    node->index = -1;
+    node->lowLink = -1;
+    return node;
+}
+/**
+ * @author Frane Jakelić
+ * @brief Creates a edge between two nodes
+ * @param succesorId id of a newly created edge
+ * @param succesorOf source of the newly created edge
+ * @return pointer to the newly created edge
+ */
+AK_succesor AK_add_succesor(int succesorId, int succesorOf) {
+
+    AK_succesor edge = (AK_succesor) malloc(sizeof (struct Succesor));
+    memset(edge, 0, sizeof (struct Succesor));
+    AK_vertex root = AK_search_vertex(succesorOf, &G);
+    AK_succesor suc = root->nextSuccesor;
+
+    if (root->nextSuccesor == NULL) {
+        root->nextSuccesor = edge;
+    } else {
+        while (suc->nextSuccesor != NULL) {
+            suc = suc->nextSuccesor;
+        }
+        suc->nextSuccesor = edge;
+    }
+
+    edge->link = AK_search_vertex(succesorId, &G);
+
+    return edge;
+}
+
+/**
+ * @author Frane Jakelić
+ * @brief Returns a empty link for the stack
+ * @param stackRoot root node of the selected stack
+ * @return pointer to the empty link
+ */
+AK_stack AK_search_empty_stack_link(AK_stack stackRoot) {
+
+    AK_stack tmp = stackRoot;
+
+    while (tmp->nextElement != NULL) {
+        tmp = tmp->nextElement;
+    }
+    return tmp;
+}
+/**
+ * @author Frane Jakelić
+ * @brief Adds a entry to the stack
+ * @param id of the element that is being added to the stack
+ * @return pointer to the newly added stack node
+ */
+AK_stack AK_push_to_stack(int id) {
+
+    AK_stack node = (AK_stack) malloc(sizeof (struct Stack));
+    memset(node, 0, sizeof (struct Stack));
+
+    AK_search_empty_stack_link(&S)->nextElement = node;
+    node->link = AK_search_vertex(id, &G);
+    return node;
+}
+
+/**
+ * @author Frane Jakelić
+ * @brief Pops a entry to the stack
+ * @return pointer to the popped stack node
+ */
+AK_stack AK_pop_from_stack() {
+
+    AK_stack node = AK_search_empty_stack_link(&S);
+    AK_stack tmp = &S;
+
+
+    if (node == tmp) return NULL;
+
+    while (tmp->nextElement != node) {
+        tmp = tmp->nextElement;
+    }
+    tmp->nextElement = NULL;
+
+    return node;
+}
+/**
+ * @author Frane Jakelić
+ * @brief Finds an element in the stack
+ * @param id  of the node that needs to be found in the stac
+ * @return pointer to the found stack node
+ */
+AK_stack AK_search_in_stack(int id) {
+
+    AK_stack tmp = &S;
+
+    while (tmp->nextElement != NULL) {
+        if (tmp->nextElement->link->vertexId == id) {
+            return tmp->nextElement;
+        }
+        tmp = tmp->nextElement;
+
+    }
+    return NULL;
+}
+
+int MIN(int X, int Y) {
+    return X > Y ? Y : X;
+}
+
+/**
+ * @author Frane Jakelić
+ * @brief Tarjan algorithm that looks for a strongly connected component inside all subgraphs; using DFS
+ * @param id of the element on which the algorithm looks for a id of a strongly connected component
+ */
+void AK_tarjan(int id) {
+    AK_vertex node = AK_search_vertex(id, &G);
+    node->index = indexCounter;
+    node->lowLink = indexCounter;
+    indexCounter = indexCounter + 1;
+    AK_succesor succ = node->nextSuccesor;
+
+    if (succ != NULL)AK_push_to_stack(id);
+
+    while (succ != NULL) {
+
+        if (succ->link->index == -1) {
+
+            AK_tarjan(succ->link->vertexId);
+            node->lowLink = MIN(node->lowLink, succ->link->lowLink);
+
+        } else if (AK_search_in_stack(succ->link->vertexId) != NULL) {
+            node->lowLink = MIN(node->lowLink, succ->link->index);
+        }
+
+        succ = succ->nextSuccesor;
+    }
+
+    if (node->lowLink == node->index) {
+        AK_vertex loop = NULL;
+        printf("############\nStrongy connected component. Edges:\n");
+        do {
+            AK_stack elem = AK_pop_from_stack();
+            if (elem == NULL)break;
+            loop = elem->link;
+            printf("%i\n", loop->vertexId);
+        } while (loop->vertexId != node->vertexId);
+        printf("############\n");
+    }
+}
+
+void AK_tarjan_test() {
+    AK_add_vertex(1, &G);
+    AK_add_vertex(2, &G);
+    AK_add_vertex(3, &G);
+    AK_add_vertex(4, &G);
+    AK_add_vertex(5, &G);
+    AK_add_vertex(6, &G);
+    AK_add_vertex(7, &G);
+    AK_add_vertex(8, &G);
+
+    AK_add_succesor(2, 1);
+
+    AK_add_succesor(3, 2);
+    AK_add_succesor(5, 2);
+    AK_add_succesor(6, 2);
+
+    AK_add_succesor(4, 3);
+    AK_add_succesor(7, 3);
+
+    AK_add_succesor(3, 4);
+    AK_add_succesor(8, 4);
+
+    AK_add_succesor(1, 5);
+    AK_add_succesor(6, 5);
+
+    AK_add_succesor(7, 6);
+
+    AK_add_succesor(6, 7);
+
+    AK_add_succesor(4, 8);
+    AK_add_succesor(7, 8);
+    AK_vertex root = G.nextVertex;
+    AK_vertex ro_ot = G.nextVertex;
+    while (root != NULL) {
+        if (root->index == -1) {
+
+            AK_tarjan(root->vertexId);
+        }
+        while (ro_ot != NULL) {
+            ro_ot->index = -1;
+            ro_ot->lowLink = -1;
+            ro_ot = ro_ot->nextVertex;
+        }
+        root = root->nextVertex;
+    }
+}
+

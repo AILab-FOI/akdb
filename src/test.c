@@ -842,6 +842,10 @@ void AK_create_test_tables() {
     AK_test_Transaction();
     printf("#######################################\nEnd transaction Test.\n");
     
+    printf("Tarjan algorithm test\n#######################################\n");
+    AK_tarjan_test();
+    printf("#######################################\nEnd Tarjan algorithm Test.\n");
+    
     
 }
 
