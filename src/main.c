@@ -134,8 +134,10 @@ int main()
 			/* component test area --- end */
                         
 			if ( AK_flush_cache() == EXIT_SUCCESS ){
+                            
 				printf( "\nEverything was fine!\nBye =)\n" );
-				return ( EXIT_SUCCESS );
+                                pthread_exit(NULL);
+                                return ( EXIT_SUCCESS );
 			}
 		}
 		printf( "ERROR. Failed to initialize memory manager\n" );

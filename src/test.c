@@ -842,10 +842,6 @@ void AK_create_test_tables() {
     AK_test_Transaction();
     printf("#######################################\nEnd transaction Test.\n");
     
-    while(numberOfActiveTransactionThreads>0){
-       sleep(1);
-       
-    }
     
 }
 
