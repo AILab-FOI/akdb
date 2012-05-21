@@ -148,7 +148,7 @@ int AK_sequence_next_value(char *name){
     
     if(next_value > max_value){
 	if(cycle==0){
-	    printf("\nNon-cyclic sequence can not go over its minimum value.");
+	    printf("\nNon-cyclic sequence can not go over its maximum value.");
 	    return EXIT_ERROR;
 	}
 	else{
@@ -212,12 +212,57 @@ int AK_sequence_rename(char *old_name, char *new_name){
 
 /**
  * @author Boris Kišić
+ * @brief Function for modifying sequence
+ * @param name Name of the sequence
+ * @param start_value start value of the sequence
+ * @param increment increment of the sequence
+ * @param max_value maximium value of the sequence
+ * @param min_value minimum value of the sequence
+ * @param cycle 0:non-cyclic sequence, 1:cyclic sequence
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
+int AK_sequence_modify(char *name, int start_value, int increment, int max_value, int min_value, int cycle){
+    printf("\n***Edit sequence***");
+    int i = 0;
+    int seq_id = -1;
+    AK_list *row;
+    while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+        if (strcmp(row->next->next->data, name) == 0) {
+            memcpy(&seq_id, row->next->data, sizeof (int));
+	    break;
+        }
+        i++;
+    }
+    
+    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root); 
+
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, 1);
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &start_value, "AK_sequence", "current_value", row_root, 0);
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &increment, "AK_sequence", "increment", row_root, 0);
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &max_value, "AK_sequence", "max", row_root, 0);
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &min_value, "AK_sequence", "min", row_root, 0);
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &cycle, "AK_sequence", "cycle", row_root, 0);
+    int result =  Ak_update_row(row_root); 
+    Ak_DeleteAll_L(row_root);
+    free(row_root);
+    
+    if (result == EXIT_ERROR || seq_id == -1) {
+      Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_modify: Could not modify sequence.\n");
+      return EXIT_ERROR;
+    }
+    
+    return EXIT_SUCCESS;
+}
+
+/**
+ * @author Boris Kišić
  * @brief Function for sequences testing.
  * @return No return value
  */
 void AK_sequence_test() {
     printf("sequence.c: Present!\n");
-    AK_sequence_add("sekvenca1", 100, 5, 200, 100, 1);
+    AK_sequence_add("sekvenca1", 100, 5, 200, 100, 1);    
     AK_print_table("AK_sequence");
     AK_sequence_remove("sekvenca1");
     AK_sequence_add("sekvenca2", 200, 10, 205, 100, 1);
@@ -228,6 +273,8 @@ void AK_sequence_test() {
     printf("\nNext value of sequence sekvenca2: %d\n", nextval);
     AK_print_table("AK_sequence"); 
     AK_sequence_rename("sekvenca2", "sekvenca3");
+    AK_print_table("AK_sequence"); 
+    AK_sequence_modify("sekvenca3", 200, 20, 300, 150, 0);
     AK_print_table("AK_sequence"); 
 }
     
