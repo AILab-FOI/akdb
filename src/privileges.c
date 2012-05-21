@@ -112,18 +112,22 @@ int AK_group_get_id(char *name) {
 }
 /**
  * @author Kristina Takač.
- * @brief Function that grabts privilege to user
+ * @brief Function that grants privilege to user
  * @param *username username of user to whom we want to grant privilege
  * @param *table name of table on which privilege will be granted to user
  * @param *right type of privilege which will be granted to user on given table
  * @return privilege_id                                                     
 */
 int AK_grant_privilege_user(char *username, char *table, char *right){
-	int privilege_id, table_id, right_type;
+	int privilege_id, table_id;
 	table_id = AK_get_table_obj_id(table);
 	
 	if(strcmp(right, "ALL")==0){
-		int rights[4] = {0, 1, 2, 3};
+		char rights[100];
+		strcpy(&rights[0], "UPDATE\0");
+		strcpy(&rights[10], "DELETE\0");
+		strcpy(&rights[20], "INSERT\0");
+		strcpy(&rights[30], "SELECT\0");
 		int i;
 		for(i=0; i< 4; i++){
 			AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
@@ -134,25 +138,14 @@ int AK_grant_privilege_user(char *username, char *table, char *right){
 		        Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
 			Ak_Insert_New_Element(TYPE_VARCHAR, username, "AK_user_right", "name", row_root);
 			Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "artifact_id", row_root);
-			Ak_Insert_New_Element(TYPE_INT, &rights[i], "AK_user_right", "right_type", row_root);
+			Ak_Insert_New_Element(TYPE_VARCHAR, &rights[i*10], "AK_user_right", "right_type", row_root);
 			Ak_insert_row(row_root);
 			
 			free(row_root);
 		}
 
 	}else{
-		if(strcmp(right, "UPDATE")==0){
-			right_type = UPDATE;
-		}
-		if(strcmp(right, "DELETE")==0){
-			right_type = DELETE;
-		}
-		if(strcmp(right, "INSERT")==0){
-			right_type = INSERT;
-		}
-		if(strcmp(right, "SELECT")==0){
-			right_type = SELECT;
-		}
+		
     		AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
 		Ak_Init_L(row_root);
 		
@@ -161,7 +154,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right){
 		Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
 	        Ak_Insert_New_Element(TYPE_VARCHAR, username, "AK_user_right", "name", row_root);
 		Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "artifact_id", row_root);
-		Ak_Insert_New_Element(TYPE_INT, &right_type, "AK_user_right", "right_type", row_root);
+		Ak_Insert_New_Element(TYPE_VARCHAR, right, "AK_user_right", "right_type", row_root);
 		Ak_insert_row(row_root);
 		free(row_root);
 	}
@@ -178,6 +171,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right){
  * @return privilege_id                                                     
 */
 void AK_revoke_privilege_user(char *username, char *table, char *right){
+	printf("Revokanje: %s %s %s\n", username, table, right);
 	int table_id;
 	if(strcmp(right, "ALL")==0){
 		AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
@@ -200,35 +194,28 @@ void AK_revoke_privilege_user(char *username, char *table, char *right){
     	    Ak_Init_L(row_root);
 	    int i = 0;
             AK_list *row; 
-            int right_type;
-  	    if(strcmp(right, "UPDATE")==0){
-			right_type = UPDATE;
-		}
-		if(strcmp(right, "DELETE")==0){
-			right_type = DELETE;
-		}
-		if(strcmp(right, "INSERT")==0){
-			right_type = INSERT;
-		}
-		if(strcmp(right, "SELECT")==0){
-			right_type = SELECT;
-		}
+           
             while ((row = (AK_list *)AK_get_row(i, "AK_user_right")) != NULL) {
                     if ((strcmp(row->next->next->data, username) == 0) && (table_id ==  (int) * row->next->next->next->data) && 
-			(right_type ==  (int) * row->next->next->next->next->data)) {
+			(strcmp(row->next->next->next->next->data,right)==0)) {
+			
 			int id = (int) * row->next->data;
+			id = id + 1;
                         Ak_Insert_New_Element_For_Update(TYPE_INT, &id, "AK_user_right", "obj_id", row_root, 1);
 	                Ak_delete_row(row_root);
+			
+			
                         
-	            }
+	            }//if
                     i++;
-	           
 	            Ak_DeleteAll_L(row_root);
-	            free(row);
-                }
+	           free(row);
+             }//while 
+	   
+	     
 	    
 
-        }
+        }//else
 		             
 }
 /**
@@ -240,14 +227,18 @@ void AK_revoke_privilege_user(char *username, char *table, char *right){
  * @return privilege_id                                                     
 */
 int AK_grant_privilege_group(char *groupname, char *table, char *right){
-	int privilege_id, table_id, right_type, group_id;
+	int privilege_id, table_id,group_id;
 	table_id = AK_get_table_obj_id(table);
 	group_id = AK_group_get_id(groupname);
 
 	
 	
 	if(strcmp(right, "ALL")==0){
-		int rights[4] = {0, 1, 2, 3};
+		char rights[100];
+		strcpy(&rights[0], "UPDATE\0");
+		strcpy(&rights[10], "DELETE\0");
+		strcpy(&rights[20], "INSERT\0");
+		strcpy(&rights[30], "SELECT\0");
 		int i;
 		for(i=0; i< 4; i++){
 			AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
@@ -258,25 +249,13 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right){
 		        Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
 			Ak_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
 			Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "artifact_id", row_root);
-			Ak_Insert_New_Element(TYPE_INT, &rights[i], "AK_group_right", "right_type", row_root);
+			Ak_Insert_New_Element(TYPE_VARCHAR, &rights[i*10], "AK_group_right", "right_type", row_root);
 			Ak_insert_row(row_root);
 
 			free(row_root);
 		}
 
 	}else{
-		if(strcmp(right, "UPDATE")==0){
-			right_type = UPDATE;
-		}
-		if(strcmp(right, "DELETE")==0){
-			right_type = DELETE;
-		}
-		if(strcmp(right, "INSERT")==0){
-			right_type = INSERT;
-		}
-		if(strcmp(right, "SELECT")==0){
-			right_type = SELECT;
-		}
     		AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
 		Ak_Init_L(row_root);
 		
@@ -285,7 +264,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right){
 		Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
 	        Ak_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
 		Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "artifact_id", row_root);
-		Ak_Insert_New_Element(TYPE_INT, &right_type, "AK_group_right", "right_type", row_root);
+		Ak_Insert_New_Element(TYPE_VARCHAR, right, "AK_group_right", "right_type", row_root);
 		Ak_insert_row(row_root);
 		free(row_root);
 	}
@@ -305,6 +284,7 @@ void AK_revoke_privilege_group(char *groupname, char *table, char *right){
      int table_id, group_id;
      group_id = AK_group_get_id(groupname);
 	if(strcmp(right, "ALL")==0){
+		printf("Revokanje  %s %s %s\n", groupname, table, right);
 		AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     	        Ak_Init_L(row_root);
 		int i = 0;
@@ -323,29 +303,16 @@ void AK_revoke_privilege_group(char *groupname, char *table, char *right){
                 
        
         }else{
+	    
 	    table_id = AK_get_table_obj_id(table);
 	    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     	    Ak_Init_L(row_root);
 	    int i = 0;
             AK_list *row; 
-            int right_type;
-  	    if(strcmp(right, "UPDATE")==0){
-			right_type = UPDATE;
-	    }
-	    if(strcmp(right, "DELETE")==0){
-			right_type = DELETE;
-	     }
-	    if(strcmp(right, "INSERT")==0){
-			right_type = INSERT;
-	    }
-	    if(strcmp(right, "SELECT")==0){
-			right_type = SELECT;
-	    }
             while ((row = (AK_list *)AK_get_row(i, "AK_group_right")) != NULL) {
                   if (((int ) * row->next->next->data == group_id) && (table_id ==  (int) * row->next->next->next->data) && 
-			(right_type ==  (int) * row->next->next->next->next->data)) {
+			(strcmp(row->next->next->next->next->data,right))) {
 			int id = (int) * row->next->data;
-			
                         Ak_Insert_New_Element_For_Update(TYPE_INT, &id, "AK_group_right", "obj_id", row_root, 1);
 	                Ak_delete_row(row_root);
 	            }
@@ -392,35 +359,19 @@ int AK_add_user_to_group(char *user, char *group){
 int AK_check_privilege(char *username, char *table, char *privilege){
 	int user_id = AK_user_get_id(username);
 	int table_id = AK_get_table_obj_id(table);
-	int privilege_num;
 	int i = 0;
 	int number_of_groups = 0;
 	int has_right = 0;
-	int groups[100];
-	if(strcmp(privilege, "UPDATE")==0){
-		privilege_num = UPDATE;
-	}
-	if(strcmp(privilege, "DELETE")==0){
-		privilege_num = DELETE;
-	}
-        if(strcmp(privilege, "INSERT")==0){
-		privilege_num = INSERT;
-	}
-        if(strcmp(privilege, "SELECT")==0){
-		privilege_num = SELECT;
-	}
-        if(strcmp(privilege, "ALL")==0){
-		privilege_num = ALL;
-	}
-	
+	int groups[100];	
 	AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
 	Ak_Init_L(row_root);
         AK_list *row;
-	if(privilege_num != ALL){
+	if(strcmp(privilege, "ALL")!=0){
 	         while ((row = (AK_list *)AK_get_row(i, "AK_user_right")) != NULL) {
                       if ((strcmp(row->next->next->data,username) == 0) && (table_id == (int) * row->next->next->next->data) &&
-			   (privilege_num == (int) * row->next->next->next->next->data)) {
+			   (strcmp(row->next->next->next->next->data, privilege)==0)) {
 				has_right = 1;
+				printf("User %s has right to %s on %s", username, privilege, table);
 				return has_right;
                         
 	               }
@@ -444,8 +395,9 @@ int AK_check_privilege(char *username, char *table, char *privilege){
                          int j=0;
 		         while ((row = (AK_list *)AK_get_row(j, "AK_group_right")) != NULL) {
                             if ((groups[i] == (int) * row->next->next->data) && (table_id == (int) * row->next->next->next->data) &&
-			          (privilege_num == (int) * row->next->next->next->next->data)) {
+			          (strcmp(row->next->next->next->next->data,privilege)==0)) {
 				       has_right = 1;
+				       printf("User %s has right to %s on %s", username, privilege, table);
 				       return has_right;
                         
 	                     }
@@ -455,28 +407,25 @@ int AK_check_privilege(char *username, char *table, char *privilege){
                           }	
                    }
 	}
-	if(privilege_num == ALL){
+	if(strcmp(privilege, "ALL")==0){
 		
 		int checking_privileges[4] = {0, 0, 0, 0};
-		int found_privilege;
+		char found_privilege[10];
 		while ((row = (AK_list *)AK_get_row(i, "AK_user_right")) != NULL) {
                       if ((strcmp(row->next->next->data,username) == 0) && (table_id == (int) * row->next->next->next->data)) {
-				found_privilege = (int) * row->next->next->next->next->data;
-				switch(found_privilege){
-					case UPDATE:
-						checking_privileges[0] = 1;
-						break;
-					case DELETE:
-						checking_privileges[1] = 1;
-						break;
-					case INSERT:
-						checking_privileges[2] = 1;
-						break;
-					case SELECT:
-						checking_privileges[3] = 1;
-						break;
+				strcpy(found_privilege, row->next->next->next->next->data);
+				if(strcmp(found_privilege, "UPDATE")==0)
+					checking_privileges[0] = 1;
+				if(strcmp(found_privilege, "DELETE")==0){
+					checking_privileges[1] = 1;
+				}		
+				if(strcmp(found_privilege, "INSERT")==0)
+					checking_privileges[2] = 1;			
+				if(strcmp(found_privilege, "SELECT")==0)
+					checking_privileges[3] = 1;		
+					
 						
-				}
+				
                         
 	               }
 
@@ -487,14 +436,18 @@ int AK_check_privilege(char *username, char *table, char *privilege){
 		  
 		  for(i=0;i<4;i++){
 			if(checking_privileges[i] == 1){
+				
 				has_right = 1;
 				
 			}else{
 				has_right = 0;
 				break;
                         }
+			
 		  }
+		  
 		  if(has_right == 1){
+			printf("User %s has right to %s on %s", username, privilege, table);
 			return has_right;
 		  }
 	          i = 0;
@@ -512,22 +465,17 @@ int AK_check_privilege(char *username, char *table, char *privilege){
                          int j=0;
 		         while ((row = (AK_list *)AK_get_row(j, "AK_group_right")) != NULL) {
                             if ((groups[i] == (int) * row->next->next->data) && (table_id == (int) * row->next->next->next->data)) {
-				    found_privilege = (int) * row->next->next->next->next->data;  
-                        	    switch(found_privilege){
-					case UPDATE:
-						checking_privileges[0] = 1;
-						break;
-					case DELETE:
-						checking_privileges[1] = 1;
-						break;
-					case INSERT:
-						checking_privileges[2] = 1;
-						break;
-					case SELECT:
-						checking_privileges[3] = 1;
-						break;
-						
-				    }
+				    strcpy(found_privilege, row->next->next->next->next->data);
+				    if(strcmp(found_privilege, "UPDATE")==0)
+					checking_privileges[0] = 1;
+				    if(strcmp(found_privilege, "DELETE")==0)
+					checking_privileges[1] = 1;		
+				    if(strcmp(found_privilege, "INSERT")==0)
+					checking_privileges[2] = 1;			
+				    if(strcmp(found_privilege, "SELECT")==0)
+					checking_privileges[3] = 1;		
+					  
+                        	  
 	                     }
                             j++;
 	                    Ak_DeleteAll_L(row_root);
@@ -544,12 +492,15 @@ int AK_check_privilege(char *username, char *table, char *privilege){
 				break;
                         }
 	        }
+
 		if(has_right == 1){
+			printf("User %s has right to %s on %s", username, privilege, table);
 			return has_right;
 		}
 		  
 		
 	}
+	printf("User %s has no right to %s on %s", username, privilege, table);
 	return has_right;
 	
 }
@@ -588,9 +539,9 @@ void AK_privileges_test(){
     AK_revoke_privilege_user("proba", "student1", "UPDATE");
     AK_print_table("AK_user_right");
 
-    AK_check_privilege("kritakac", "professor", "SELECT");
-   
-
+    AK_check_privilege("kritakac", "student1", "ALL");
+  
+    
 
 
 }

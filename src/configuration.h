@@ -388,7 +388,6 @@
   * @brief Constant indicating that data is constraint to search for
  */
 #define SEARCH_CONSTRAINT 1
-
 /**
   * @def UPDATE
   * @brief Constant indicating that operation to be performed is update
@@ -407,14 +406,9 @@
 #define INSERT 2
 /**
  * @def SELECT
- * @brief Constant indicating that operation to be performed is select
+ * @brief Constant indicating select operation
  */
 #define SELECT 3
-/**
- * @def ALL
- * @brief Constant indicating all privileges
- */
-#define ALL 4
 /**
  * @def FIND
  * @brief Constant indicating that operation to be performed is searching

@@ -156,7 +156,7 @@ int AK_write_block(AK_block * block) {
 
 /**
  * @author Nikola Bakoš, updated by Dino Laktašić (fixed header BUG)
- * @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE. 		   Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is 
+ * @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE.Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is 
  *         incremented.
  * @param start_address address (block number) to start searching for sufficient space
  * @param old_size size of previous extent in same segment (in blocks)
@@ -946,7 +946,7 @@ int AK_init_system_catalog() {
         {TYPE_INT, "obj_id", 0, '\0', '\0',},
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_INT, "artifact_id", 0, '\0', '\0',},
-        {TYPE_INT, "right_type", 0, '\0', '\0',},
+        {TYPE_VARCHAR, "right_type", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
     
@@ -954,7 +954,7 @@ int AK_init_system_catalog() {
         {TYPE_INT, "obj_id", 0, '\0', '\0',},
         {TYPE_INT, "group_id", 0, '\0', '\0',},
         {TYPE_INT, "artifact_id", 0, '\0', '\0',},
-        {TYPE_INT, "right_type", 0, '\0', '\0',},
+        {TYPE_VARCHAR, "right_type", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
 
