@@ -638,7 +638,7 @@ void AK_create_test_tables() {
     Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Miran", tblName, "firstname", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Zlatovic", tblName, "lastname", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "Zlatović", tblName, "lastname", row_root);
     Ak_Insert_New_Element(TYPE_INT, "042390858", tblName, "tel", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "miran.zlatovic@foi.hr", tblName, "email", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "www.foi.hr/nastavnici/zlatovic.miran/index.html", tblName, "web_page", row_root);

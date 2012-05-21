@@ -520,8 +520,8 @@ void AK_transaction_manager(command * commandArray, int lengthOfArray) {
     params.lengthOfArray = lengthOfArray;
     params.transactionId = id++; //transactionSlot;
     //pthread_create(&transactionThread, &attr, AK_execute_transaction, (void*)&params);
-    pthread_create(&transactionThread, NULL, AK_execute_transaction, (void*) &params);
-    
+    //pthread_create(&transactionThread, NULL, AK_execute_transaction, (void*) &params);
+    AK_execute_transaction(&params);
 }
 
 void AK_test_Transaction() {
