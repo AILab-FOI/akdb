@@ -1,6 +1,121 @@
 /* File: kalashnikovDB.i */
 %module kalashnikovDB
 
+%typemap(in) void* {
+  if (PyString_Check($input))
+   {
+    char* b =  PyString_AsString($input);
+    $1 = (void*)b;
+   }
+  else if (PyInt_Check($input))
+  {
+    int a =  PyInt_AsLong($input);
+    $1 = (void*)&a;
+  }
+  else if (PyFloat_Check($input))
+  {
+    float c =  PyFloat_AsDouble($input);
+    $1 = (void*)&c;
+  }
+    
+}
+
+%typemap(out) unsigned char * {
+  $1 = PyString_FromString((char *)$input);
+}
+
+%typemap(in) char* data {
+   
+  if (PyString_Check($input))
+   {
+    char* b =  PyString_AsString($input);
+    $1 = (char*)b;
+   }
+  else if (PyInt_Check($input))
+  {
+    int a =  PyInt_AsLong($input);
+    $1 = (char*)&a;
+  }
+  else if (PyFloat_Check($input))
+  {
+    float c =  PyFloat_AsDouble($input);
+    $1 = (char*)&c;
+  }
+}
+
+%typemap(out) int * {
+  PyObject *list = PyList_New(MAX_CONSTRAINTS);
+  int i = 0;
+  int *polje = $1;
+  for (i = 0; i < MAX_CONSTRAINTS; i++) {
+    PyObject *item = PyInt_FromLong(polje[i]);
+    PyList_Append(list, item);
+  }
+  $result = list;
+}
+
+
+%typemap(in) AK_block * block{
+
+  AK_block *bl = malloc(sizeof(AK_block));
+  memcpy(bl, $input, sizeof(AK_block));
+  $1 = bl;
+  //$1 = (AK_block*)$input;
+}
+/*
+%typemap(in) char ** {
+  if (PyList_Check($input)) {
+    int size = PyList_Size($input);
+    int i = 0;
+    $1 = (char **) malloc((size+1)*sizeof(char *));
+    for (i = 0; i < size; i++) {
+      PyObject *o = PyList_GetItem($input,i);
+      if (PyString_Check(o))
+	$1[i] = PyString_AsString(PyList_GetItem($input,i));
+      else {
+	PyErr_SetString(PyExc_TypeError,"list must contain strings");
+	free($1);
+	return NULL;
+      }
+    }
+    $1[i] = 0;
+  } else {
+    PyErr_SetString(PyExc_TypeError,"not a list");
+    return NULL;
+  }
+}
+%typemap(freearg) char ** {
+  free((char *) $1);
+}*/
+
+//AK_create_table_parameters
+%typemap(out) AK_create_table_parameter * {
+  AK_create_table_parameter* parametar = malloc(sizeof(AK_create_table_parameter));
+  memcpy(parametar, $1, sizeof(AK_create_table_parameter));
+  $result = parametar;
+  //$result = $1;
+}
+
+%typemap(in) AK_create_table_parameter * parameters{
+  if (PyList_Check($input)) {
+    int size = PyList_Size($input);
+    int i = 0;
+    AK_create_table_parameter parameters[ size ];
+    AK_create_table_parameter* parametar;
+
+    for (i = 0; i < size; i++) {
+      parametar = (AK_create_table_parameter *) PyList_GetItem($input, i);
+      memcpy(parameters + i, parametar, sizeof ( AK_create_table_parameter));
+    }
+    $1 = parameters;
+  }
+  else $1 = (AK_create_table_parameter*)$input;
+}
+
+%typemap(freearg) AK_create_table_parameter ** {
+  free($1);
+}
+
 %{
 #define SWIG_FILE_WITH_INIT
 
@@ -35,15 +150,12 @@ extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, ele
 
 #include "../bitmap.c"
 
-
-
 #include "../hash.c"
 #include "../hash.h"
 
 #include "../btree.c"
 #include "../btree.h"
 #include "../index.c"
-
 
 #include "../filesort.c"
 #include "../filesort.h"
@@ -103,7 +215,6 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 #include "../rel_eq_projection.c"
 #include "../rel_eq_projection.h"
 
-
 #include "../expression_check.c"
 #include "../expression_check.h"
 #include "../id.c"
@@ -114,7 +225,6 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 #include "../between.h"
 #include "../reference.c"
 #include "../reference.h"
-
 
 #include "../test.c"
 #include "../test.h"
@@ -128,17 +238,23 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 #include "../command.c"
 #include "../command.h"
 
-
 #include "../iniparser/iniparser.c"
 #include "../iniparser/iniparser.h"
 
 #include "../iniparser/dictionary.c"
 #include "../iniparser/dictionary.h"
 
+#include "../transaction.h"
+#include "../transaction.c"
+
+#include "../function.h"
+#include "../function.c"
+
+#include "../sequence.h"
+#include "../sequence.c"
 %}
 
 extern char * AK_config_get(char * key, char * def);
-
 
 %include "../debug.h"
 %include "../debug.c"
@@ -167,10 +283,7 @@ extern element_ad Ak_Get_Last_elementAd(list_ad *L);
 extern element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op);
 extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore);
 
-
 %include "../bitmap.c"
-
-
 
 %include "../hash.c"
 %include "../hash.h"
@@ -188,7 +301,6 @@ extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, ele
 %include "../files.c"
 %include "../files.h"
 
-
 %include "../theta_join.c"
 %include "../theta_join.h"
 %include "../product.c"
@@ -204,7 +316,6 @@ extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, ele
 %include "../rename.h"
 %include "../projection.c"
 %include "../projection.h"
-
 
 %include "../nat_join.c"
 %include "../nat_join.h"
@@ -229,18 +340,15 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 %include "../query_optimization.c"
 %include "../query_optimization.h"
 
-
 %include "../rel_eq_comut.c"
 %include "../rel_eq_comut.h"
 %include "../rel_eq_assoc.c"
 %include "../rel_eq_assoc.h"
 
-
 %include "../rel_eq_selection.c"
 %include "../rel_eq_selection.h"
 %include "../rel_eq_projection.c"
 %include "../rel_eq_projection.h"
-
 
 %include "../expression_check.c"
 %include "../expression_check.h"
@@ -252,7 +360,6 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 %include "../between.h"
 %include "../reference.c"
 %include "../reference.h"
-
 
 %include "../test.c"
 %include "../test.h"
@@ -271,3 +378,12 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 
 %include "../iniparser/dictionary.c"
 %include "../iniparser/dictionary.h"
+
+%include "../transaction.h"
+%include "../transaction.c"
+
+%include "../function.h"
+%include "../function.c"
+
+%include "../sequence.h"
+%include "../sequence.c"

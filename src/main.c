@@ -136,7 +136,7 @@ int main()
 			if ( AK_flush_cache() == EXIT_SUCCESS ){
                             
 				printf( "\nEverything was fine!\nBye =)\n" );
-                                pthread_exit(NULL);
+                    //            pthread_exit(NULL);
                                 return ( EXIT_SUCCESS );
 			}
 		}

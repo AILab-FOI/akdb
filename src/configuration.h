@@ -146,7 +146,7 @@
   * @def DB_FILE_SIZE
   * @brief Constant declaring size of DB file in MB
  */
-#define DB_FILE_SIZE 20 //before 40
+#define DB_FILE_SIZE 40 //before 40
 
 /**
   * @def MAX_DB_FILE_BLOCKS

@@ -846,7 +846,7 @@ void AK_create_test_tables() {
     AK_tarjan_test();
     printf("#######################################\nEnd Tarjan algorithm Test.\n");
     
-    AK_sequence_test();
+  //  AK_sequence_test();
 }
 
 

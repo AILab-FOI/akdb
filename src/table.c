@@ -19,6 +19,37 @@
 
 #include "table.h"
 
+AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name) {
+	AK_create_table_parameter* par = malloc(sizeof(AK_create_table_parameter));
+	par->type = type;
+	strcpy(par->name, name);
+	return par;
+}
+
+int AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) {
+	int i;
+  AK_header t_header[ MAX_ATTRIBUTES ];
+  AK_header* temp;
+	for (i = 0; i < attribute_count; i++) {
+		switch (parameters[i].type) {
+			case TYPE_INT:
+				temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+				memcpy(t_header + i, temp, sizeof ( AK_header));
+				break;
+			case TYPE_VARCHAR:
+				temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+				memcpy(t_header + i, temp, sizeof ( AK_header));
+				break;
+			case TYPE_FLOAT:
+				temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
+				memcpy(t_header + i, temp, sizeof ( AK_header));
+				break;
+		}
+	}
+	memset(t_header + attribute_count, 0, MAX_ATTRIBUTES - attribute_count);
+	int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header);
+}
+
 /**
  * @author Matija Šestak.
  * @brief  Determine the number of attributes in the table

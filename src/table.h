@@ -22,4 +22,12 @@
 
 #include "memoman.h"
 
+struct AK_create_table {
+	char name[MAX_ATT_NAME];
+	int type;
+};
+
+typedef struct AK_create_table AK_create_table_parameter;
+
+
 #endif
