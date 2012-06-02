@@ -68,6 +68,7 @@
 #include "reference.h"
 #include "expression_check.h"
 
+
 //Other
 #include "trigger.h"
 #include "iniparser/iniparser.h"
@@ -130,6 +131,7 @@ int main()
 //			id_test();
 //			null_test();
 //			privileges_test();
+                        AK_unique_test();
 
 			/* component test area --- end */
                         
