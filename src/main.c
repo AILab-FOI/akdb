@@ -74,6 +74,7 @@
 #include "iniparser/iniparser.h"
 #include "privileges.h"
 #include "transaction.h"
+#include "redo_log.h"
 /**
 Main program function
 
@@ -106,6 +107,7 @@ int main()
 //			table_test();
 //
 //			op_selection_test();
+//			AK_op_selection_test_redolog();
 //			op_projection_test();
 //			op_join_test();
 //			op_theta_join_test();
@@ -131,7 +133,7 @@ int main()
 //			id_test();
 //			null_test();
 //			privileges_test();
-                        AK_unique_test();
+//          AK_unique_test();
 
 			/* component test area --- end */
                         

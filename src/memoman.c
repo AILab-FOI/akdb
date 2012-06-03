@@ -80,8 +80,20 @@ int AK_cache_malloc() {
   * @return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_redo_log_malloc() {
-    if ((redo_log = (AK_redo_log *) malloc(sizeof ( AK_redo_log))) == NULL) {
+	register int i;
+
+	if ((redo_log = (AK_redo_log *) malloc(sizeof ( AK_redo_log))) == NULL) {
         return EXIT_ERROR;
+    }
+
+    redo_log->next_replace = 0;
+
+    for (i = 0; i < MAX_REDO_LOG_MEMORY; i++) {
+    	redo_log->redo_log_cache[i] = (AK_mem_block *) malloc(sizeof (AK_mem_block));
+    	redo_log->redo_log_cache[i]->block = (AK_block *) malloc (sizeof(AK_block));
+    	redo_log->expr[i] =  (AK_list *) malloc (sizeof (AK_list));
+    	redo_log->expr[i]->next = (AK_list *) malloc (sizeof(AK_list));
+
     }
     return EXIT_SUCCESS;
 }

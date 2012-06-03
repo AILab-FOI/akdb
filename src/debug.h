@@ -65,7 +65,8 @@ typedef enum debug_type {
 	CONSTRAINTS = 0,
 	FUNCTIONS = 0,
 	SEQUENCES = 0,
-	TRIGGERS = 0
+	TRIGGERS = 0,
+	REDO = 0
 } DEBUG_TYPE;
 
 #endif

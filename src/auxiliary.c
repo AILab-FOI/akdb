@@ -648,3 +648,87 @@ void AK_tarjan_test() {
     }
 }
 
+/**
+ * @author Krunoslav Bilić
+ * @brief Function used to copy one "AK_list_elem" to another.
+ * @param first "AK_list_elem" to be compared - source
+ * @param second "AK_list_elem" to be compared - destination
+ * @return No return value.
+ */
+void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem) {
+
+	destElem->size = srcElem->size;
+	destElem->type = srcElem->type;
+	memcpy(destElem->data, srcElem->data, srcElem->size);
+	memcpy(destElem->table, srcElem->table, sizeof(srcElem->table));
+
+}
+
+/**
+ * @author Krunoslav Bilić
+ * @brief Function used to copy one "AK_list" to another. Uses AK_copy_L_Ele(..) for copying.
+ * @param first "AK_list" to be compared - source
+ * @param second "AK_list" to be compared - destination
+ * @return No return value.
+ */
+void AK_copy_L(AK_list *src, AK_list *dest) {
+
+	AK_list_elem srcElem = (AK_list_elem) malloc(sizeof(struct list_elem));
+	AK_list_elem destElem;
+	srcElem = (AK_list_elem) Ak_First_L(src);
+	destElem = (AK_list_elem) Ak_First_L(dest);
+
+	do {
+		AK_copy_L_Ele(srcElem, destElem);
+
+		srcElem = (AK_list_elem) Ak_Next_L(srcElem);
+
+		if (destElem->next == NULL && srcElem != NULL) {
+			destElem->next = (AK_list_elem) malloc(sizeof(struct list_elem));
+			destElem = (AK_list_elem) Ak_Next_L(destElem);
+			destElem->next = NULL;
+		}
+	} while (srcElem != NULL);
+}
+
+/**
+ * @author Krunoslav Bilić
+ * @brief Function compares two "AK_list" lists by DATA, SIZE and TYPE
+ * @param first "AK_list" to be compared
+ * @param second "AK_list" to be compared
+ * @return EXIT_SUCCESS if content is same, otherwise EXIT_FAILURE
+ */
+int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal) {
+
+	// inicijalna provjera, da li su velicine identicne, ukoliko nisu : izlaz
+	if (Ak_Size_L(srcInput) != Ak_Size_L(srcOriginal))
+		return EXIT_FAILURE;
+
+	AK_list_elem srcElemInp = (AK_list_elem) Ak_First_L(srcInput);
+	AK_list_elem srcElemOrig = (AK_list_elem) Ak_First_L(srcOriginal);
+
+	// provjera za elemente data, size, type, table
+	do {
+		int compare = 0;
+		compare = srcElemInp->size == srcElemOrig->size ? 0 : 1;
+		if (compare != 0)
+			return EXIT_FAILURE;
+		compare = srcElemInp->type == srcElemOrig->type ? 0 : 1;
+		if (compare != 0)
+			return EXIT_FAILURE;
+		compare = strcmp(srcElemInp->data, srcElemOrig->data);
+		if (compare != 0)
+			return EXIT_FAILURE;
+		compare = strcmp(srcElemInp->table, srcElemOrig->table);
+		if (compare != 0)
+			return EXIT_FAILURE;
+
+
+		//dohvaca novi element liste
+		srcElemInp = (AK_list_elem) Ak_Next_L(srcElemInp);
+		srcElemOrig = (AK_list_elem) Ak_Next_L(srcElemOrig);
+	} while (srcElemOrig != NULL);
+
+	return EXIT_SUCCESS;
+
+}

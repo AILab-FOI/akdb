@@ -21,5 +21,7 @@
 #define SELECTION
 
 #include "expression_check.h"
+#include "redo_log.h"
+#include "configuration.h"
 
 #endif

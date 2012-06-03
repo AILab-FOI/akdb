@@ -837,7 +837,7 @@ void AK_create_test_tables() {
     Ak_DeleteAll_L(row_root);
     free(row_root);
     //------------------------------------------------------------------------------------------------------
-    AK_op_rename_test();
+    //AK_op_rename_test();
     printf("Transaction Test.\nLoad and release locks.\n#######################################\n");
     AK_test_Transaction();
     printf("#######################################\nEnd transaction Test.\n");

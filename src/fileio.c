@@ -131,7 +131,7 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     //writes the last used tuple dict id
 
     temp_block->last_tuple_dict_id = id;
-    ;
+
     return EXIT_SUCCESS;
 }
 
@@ -176,6 +176,11 @@ int Ak_insert_row(AK_list *row_root) {
 
     //AK_write_block(mem_block->block);
     mem_block->dirty = BLOCK_DIRTY;
+
+    //timestamp
+    unsigned long timestamp;
+    timestamp = clock(); /// get the timestamp
+    mem_block->timestamp_last_change = timestamp; /// set timestamp_last_change
     return end;
 }
 

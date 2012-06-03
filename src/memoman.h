@@ -57,9 +57,12 @@ typedef struct {
  */
 typedef struct {
     /// last recently changed blocks
-    AK_mem_block redo_log[ MAX_REDO_LOG_MEMORY ];
-    /// next block to be replaced (0 - MAX_REDO_LOG_MEMORY-1); field pointer (LIFO)
+    AK_mem_block * redo_log_cache[ MAX_REDO_LOG_MEMORY ];
+	/// expression used in select
+	AK_list * expr[MAX_REDO_LOG_MEMORY];
+    /// next block to be replaced (LIFO)
     int next_replace;
+
 } AK_redo_log;
 
 /**
