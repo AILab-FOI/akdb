@@ -411,8 +411,8 @@ char *AK_get_array_perms(char *arr) {
  * @param graphRoot root node of the graph structure
  * @return found graph nod or null
  */
-AK_vertex AK_search_vertex(int id, AK_vertex graphRoot) {
-    AK_vertex tmp = graphRoot;
+AK_vertex AK_search_vertex(int id) {
+    AK_vertex tmp = &G;
 
     while (tmp->nextVertex != NULL) {
         if (tmp->nextVertex->vertexId == id) {
@@ -429,9 +429,9 @@ AK_vertex AK_search_vertex(int id, AK_vertex graphRoot) {
  * @param graphRoot oot node of the graph structure
  * @return empty link for new graph node
  */
-AK_vertex AK_search_empty_link(AK_vertex graphRoot) {
+AK_vertex AK_search_empty_link() {
 
-    AK_vertex tmp = graphRoot;
+    AK_vertex tmp = &G;
 
     while (tmp->nextVertex != NULL) {
         tmp = tmp->nextVertex;
@@ -446,12 +446,12 @@ AK_vertex AK_search_empty_link(AK_vertex graphRoot) {
  * @param graphRoot root node of the graph structure
  * @return pointer to the newly created node
  */
-AK_vertex AK_add_vertex(int id, AK_vertex graphRoot) {
+AK_vertex AK_add_vertex(int id) {
 
     AK_vertex node = (AK_vertex) malloc(sizeof (struct Vertex));
     memset(node, 0, sizeof (struct Vertex));
 
-    AK_search_empty_link(graphRoot)->nextVertex = node;
+    AK_search_empty_link(&G)->nextVertex = node;
     node->vertexId = id;
     node->index = -1;
     node->lowLink = -1;
@@ -468,7 +468,7 @@ AK_succesor AK_add_succesor(int succesorId, int succesorOf) {
 
     AK_succesor edge = (AK_succesor) malloc(sizeof (struct Succesor));
     memset(edge, 0, sizeof (struct Succesor));
-    AK_vertex root = AK_search_vertex(succesorOf, &G);
+    AK_vertex root = AK_search_vertex(succesorOf);
     AK_succesor suc = root->nextSuccesor;
 
     if (root->nextSuccesor == NULL) {
@@ -480,7 +480,7 @@ AK_succesor AK_add_succesor(int succesorId, int succesorOf) {
         suc->nextSuccesor = edge;
     }
 
-    edge->link = AK_search_vertex(succesorId, &G);
+    edge->link = AK_search_vertex(succesorId);
 
     return edge;
 }
@@ -512,7 +512,7 @@ AK_stack AK_push_to_stack(int id) {
     memset(node, 0, sizeof (struct Stack));
 
     AK_search_empty_stack_link(&S)->nextElement = node;
-    node->link = AK_search_vertex(id, &G);
+    node->link = AK_search_vertex(id);
     return node;
 }
 
@@ -566,7 +566,7 @@ int MIN(int X, int Y) {
  * @param id of the element on which the algorithm looks for a id of a strongly connected component
  */
 void AK_tarjan(int id) {
-    AK_vertex node = AK_search_vertex(id, &G);
+    AK_vertex node = AK_search_vertex(id);
     node->index = indexCounter;
     node->lowLink = indexCounter;
     indexCounter = indexCounter + 1;
@@ -602,36 +602,6 @@ void AK_tarjan(int id) {
 }
 
 void AK_tarjan_test() {
-    AK_add_vertex(1, &G);
-    AK_add_vertex(2, &G);
-    AK_add_vertex(3, &G);
-    AK_add_vertex(4, &G);
-    AK_add_vertex(5, &G);
-    AK_add_vertex(6, &G);
-    AK_add_vertex(7, &G);
-    AK_add_vertex(8, &G);
-
-    AK_add_succesor(2, 1);
-
-    AK_add_succesor(3, 2);
-    AK_add_succesor(5, 2);
-    AK_add_succesor(6, 2);
-
-    AK_add_succesor(4, 3);
-    AK_add_succesor(7, 3);
-
-    AK_add_succesor(3, 4);
-    AK_add_succesor(8, 4);
-
-    AK_add_succesor(1, 5);
-    AK_add_succesor(6, 5);
-
-    AK_add_succesor(7, 6);
-
-    AK_add_succesor(6, 7);
-
-    AK_add_succesor(4, 8);
-    AK_add_succesor(7, 8);
     AK_vertex root = G.nextVertex;
     AK_vertex ro_ot = G.nextVertex;
     while (root != NULL) {
