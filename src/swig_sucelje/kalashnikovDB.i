@@ -252,6 +252,9 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 
 #include "../sequence.h"
 #include "../sequence.c"
+
+#include "../redo_log.h"
+#include "../redo_log.c"
 %}
 
 extern char * AK_config_get(char * key, char * def);
@@ -387,3 +390,6 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 
 %include "../sequence.h"
 %include "../sequence.c"
+
+%include "../redo_log.h"
+%include "../redo_log.c"
