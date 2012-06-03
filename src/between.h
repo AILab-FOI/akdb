@@ -23,3 +23,7 @@
 #include "memoman.h"
 
 #endif
+
+void AK_set_constraint_between(char* tableName, char* constraintName, char* attName, char* startValue, char* endValue);
+int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar);
+Ak_constraint_between_test();

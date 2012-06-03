@@ -34,3 +34,5 @@ typedef struct {
 
 #endif
 
+int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable);
+void Ak_op_intersect_test();

@@ -78,3 +78,13 @@ typedef struct {
 } AK_ref_item;
 
 #endif
+
+int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable, char *parentAttNames[], int attNum, char *constraintName, int type) ;
+AK_ref_item AK_get_reference(char *tableName, char *constraintName) ;
+int AK_reference_check_attribute(char *tableName, char *attribute, char *value) ;
+int AK_reference_check_if_update_needed(AK_list *lista, int action) ;
+int AK_reference_check_restricion(AK_list *lista, int action) ;
+int AK_reference_update(AK_list *lista, int action) ;
+int AK_reference_check_entry(AK_list *lista) ;
+void AK_reference_test();
+

@@ -50,3 +50,12 @@ typedef list_structure_ad list_ad;
 
 #endif
 
+void Ak_InitializelistAd(list_ad *L);
+element_ad Ak_Get_First_elementAd(list_ad *L);
+element_ad Ak_Get_Last_elementAd(list_ad *L);
+element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op);
+element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L) ;
+int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L);
+void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) ;
+void Ak_Delete_All_elementsAd(list_ad *L) ;
+void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore);

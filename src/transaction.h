@@ -89,4 +89,21 @@ typedef struct transaction_locks_list_elem *AK_transaction_lock_elem;
 
 #endif /* TRANSACTION_H_ */
 
-
+int AK_calculate_hash(int memoryAddress) ;
+AK_transaction_elem AK_add_hash_entry_list(int memoryAddress, int type);
+AK_transaction_elem AK_search_hash_entry_list_by_key(int memoryAddress);
+int AK_delete_hash_entry_list(int memoryAddress);
+AK_transaction_lock_elem AK_search_lock_entry_list_by_key(int memoryAddress, int id);
+int AK_delete_lock_entry_list(int memoryAddress, int id);
+int AK_isLock_waiting(AK_transaction_elem lockHolder, int type, int transactionId, AK_transaction_lock_elem lock);
+AK_transaction_lock_elem AK_add_lock(AK_transaction_elem LocksList, int type, int transactionId);
+AK_transaction_lock_elem AK_create_lock(int memoryAddress, int type, int transactionId);
+void AK_check_for_deadLock(int id);
+int AK_acquire_lock(int memoryAddress, int type, int transactionId);
+void AK_release_locks(AK_memoryAddresses_link addresses, int transactionId);
+int AK_get_memory_blocks(char *tblName, AK_memoryAddresses *addressList);
+int AK_execute_commands(command * commandArray, int lengthOfArray, int transactionID);
+void AK_update_transaction_thread_count(int offset) ;
+void AK_execute_transaction(void *params);
+void AK_transaction_manager(command * commandArray, int lengthOfArray);
+void AK_test_Transaction();

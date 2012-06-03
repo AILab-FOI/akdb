@@ -73,3 +73,17 @@ typedef struct {
 } hash_bucket;
 
 #endif
+
+int AK_elem_hash_value(AK_list_elem elem);
+struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type);
+void Ak_update_bucket_in_block(struct_add *add, char *data);
+void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int hash_bucket_num);
+hash_info* AK_get_hash_info(char *indexName);
+struct_add* Ak_get_nth_main_bucket_add(char *indexName, int n);
+int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add);
+struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int delete);
+struct_add * AK_find_in_hash_index(char *indexName, AK_list *values);
+void AK_delete_in_hash_index(char *indexName, AK_list *values);
+int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName);
+int AK_delete_hash_index(char *indexName) ;
+void Ak_hash_test() ;

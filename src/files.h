@@ -23,3 +23,6 @@
 #include "id.h"
 
 #endif
+
+int AK_initialize_new_segment(char *name, int type, AK_header *header);
+void Ak_files_test();

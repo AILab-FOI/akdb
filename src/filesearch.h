@@ -64,3 +64,7 @@ typedef struct {
 } search_result;
 
 #endif
+
+search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params);
+void AK_deallocate_search_result(search_result srResult);
+void Ak_filesearch_test();

@@ -22,5 +22,18 @@
 
 #include "memoman.h"
 #include "index.h"
+#include "table.h"
 
 #endif
+
+int Ak_If_ExistOp(AK_list *L, char *ele);
+void AK_create_Index(char *tblName, AK_list *attributes);
+void Ak_print_Header_Test(char* tblName);
+void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex);
+list_ad* Ak_get_Attribute(char *indexName, char *attribute);
+void Ak_create_List_Address_Test();
+void Ak_print_Att_Test(list_ad *list);
+list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeValue);
+void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue);
+int Ak_write_block(AK_block * block);
+void Ak_bitmap_test();

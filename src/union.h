@@ -23,3 +23,6 @@
 #include "table.h"
 
 #endif
+
+int AK_union(char *srcTable1, char *srcTable2, char *dstTable);
+void AK_op_union_test();

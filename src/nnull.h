@@ -23,3 +23,8 @@
 #include "memoman.h"
 
 #endif
+
+void AK_set_constraint_not_null(char* tableName, char* constraintName, char* attName);
+int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNamePar) ;
+int AK_is_number(char* s);
+void AK_null_test() ;

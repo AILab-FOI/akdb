@@ -78,7 +78,7 @@ void AK_print_optimized_query(AK_list *list_query) {
 /**
  * @author Dino Laktašić.
  * @brief Call and execute relation equivalence
- * /* RELATION EQUIVALENCE RULES FLAGS
+ * RELATION EQUIVALENCE RULES FLAGS
  * c - commutation
  * a - associativity
  * p - projection

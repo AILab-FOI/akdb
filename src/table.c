@@ -26,7 +26,7 @@ AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name
 	return par;
 }
 
-int AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) {
+void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) {
 	int i;
   AK_header t_header[ MAX_ATTRIBUTES ];
   AK_header* temp;
@@ -386,7 +386,7 @@ void AK_print_row_spacer(int col_len[], int length) {
  * @param *row  list with row elements
  * @return No return value
  */
-AK_print_row(int col_len[], AK_list *row) {
+void AK_print_row(int col_len[], AK_list *row) {
     AK_list_elem el = (AK_list_elem) Ak_First_L(row);
 
     int i = 0;
@@ -420,6 +420,7 @@ AK_print_row(int col_len[], AK_list *row) {
             default:
                 memcpy(data, el->data, el->size);
                 printf(" %-*s|", col_len[i] + TBL_BOX_OFFSET, (const char *) data);
+                break;
         }
         el = el->next;
         i++;
@@ -476,6 +477,7 @@ void AK_print_table(char *tblName) {
                         if (len[i] < el->size) {
                             len[i] = el->size;
                         }
+                        break;
                 }
             }
         }

@@ -23,3 +23,5 @@
 #include "files.h"
 
 #endif
+
+void AK_create_test_tables();

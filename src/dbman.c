@@ -1242,9 +1242,13 @@ int AK_delete_segment(char * name, int type) {
         case SEGMENT_TYPE_TRANSACTION:
             //TO-DO
             printf("Not implemented yet!\n");
+            return EXIT_ERROR;
+            break;
         case SEGMENT_TYPE_TEMP:
             //TO-DO
             printf("Not implemented yet!\n");
+            return EXIT_ERROR;
+            break;
         default:
             return EXIT_ERROR;
     }

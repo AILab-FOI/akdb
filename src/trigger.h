@@ -21,5 +21,15 @@
 #define TRIGGER
 
 #include "table.h"
+#include "fileio.h"
 
 #endif
+
+int AK_trigger_save_conditions(int trigger, AK_list* condition);
+int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, char* function);
+int AK_trigger_get_id(char *name, char *table);
+int AK_trigger_remove_by_name(char *name, char *table) ;
+int AK_trigger_remove_by_obj_id(int obj_id);
+int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, char* table, char* function);
+AK_list *AK_trigger_get_conditions(int trigger);
+void AK_trigger_test();

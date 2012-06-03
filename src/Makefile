@@ -1,6 +1,6 @@
 # KalashnikovDB MakeFile
 
-CC = gcc -pthread
+CC = gcc -pthread -w
 DEBUG = -g
 CFLAGS = $(DEBUG) -c -Wall 
 
@@ -14,7 +14,7 @@ OTHERTARGETS = trigger.o test.o debug.o archive_log.o command.o iniparser/dictio
 
 OUTDIR = ../bin
 
-all: kalashnikov-db 
+all: kalashnikov-db
 
 kalashnikov-db: auxiliary.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
 	$(CC) main.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/akdb

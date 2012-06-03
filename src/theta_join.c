@@ -27,7 +27,7 @@
  * @param new_table name of the destination table
  * @return EXIT_SUCCESS if the header was successfully created and EXIT_ERROR if the renamed headers are too long
  */
-static int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table) {
+int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table) {
 
 	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
 	table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
@@ -141,7 +141,7 @@ static int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *
  * @param new_table name of the theta_join table
  * @return No return value
  */
-static void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
+void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
 
     int tbl1_att, tbl2_att, tbl1_row, tbl2_row;

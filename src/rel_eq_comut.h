@@ -23,3 +23,7 @@
 #include "table.h"
 
 #endif
+
+char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName);
+void rel_eq_comut_test();
+

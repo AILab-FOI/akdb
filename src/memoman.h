@@ -132,3 +132,18 @@ AK_redo_log * redo_log;
 AK_query_mem * query_mem;
 
 #endif
+
+
+int AK_cache_block(int num, AK_mem_block *mem_block);
+int AK_cache_malloc();
+int AK_redo_log_malloc();
+int AK_query_mem_malloc();
+int AK_memoman_init();
+AK_mem_block *AK_get_block(int num);
+int AK_refresh_cache();
+table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType);
+table_addresses *AK_get_table_addresses(char *table);
+table_addresses *AK_get_index_addresses(char * index);
+int AK_find_free_space(table_addresses * addresses);
+int AK_init_new_extent(char *table_name, int extent_type);
+int AK_flush_cache();

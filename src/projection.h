@@ -23,3 +23,11 @@
 #include "table.h"
 
 #endif
+
+void AK_temp_create_table(char *table, AK_header *header, int type_segment);
+void AK_create_block_header(int old_block, char *dstTable, AK_list *att);
+void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable);
+int AK_projection(char *srcTable, char *dstTable, AK_list *att);
+void AK_op_projection_test();
+
+

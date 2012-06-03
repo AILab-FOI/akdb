@@ -21,3 +21,5 @@
 #define BTREE
 
 #endif
+
+void Ak_btree_test() ;

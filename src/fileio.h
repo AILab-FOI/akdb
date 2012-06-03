@@ -23,3 +23,13 @@
 #include "memoman.h"
 
 #endif
+
+void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint);
+void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore);
+int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block);
+int Ak_insert_row(AK_list *row_root);
+void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, int operation);
+int Ak_delete_update_segment(AK_list *row_root, int del);
+int Ak_delete_row(AK_list *row_root) ;
+int Ak_update_row(AK_list *row_root);
+void Ak_fileio_test();

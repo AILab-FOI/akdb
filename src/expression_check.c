@@ -31,7 +31,7 @@
 
 #include "expression_check.h"
 
-static int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a, const void *b) {
+int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a, const void *b) {
 
 	if(strcmp(op, "<") == 0){
 

@@ -252,7 +252,6 @@ void Ak_print_Header_Test(char* tblName) {
 }
 
 /*
-/*
  * @author Saša Vukšić
  * @brief Function that loads index table with value of particulary atribute
  * @param tblName source table

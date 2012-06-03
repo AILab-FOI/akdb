@@ -24,3 +24,5 @@
 
 #endif
 
+int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr);
+void AK_op_rename_test() ;

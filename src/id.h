@@ -28,3 +28,6 @@
 #define ID_START_VALUE 100
 
 #endif
+
+int AK_get_id();
+void Ak_id_test();

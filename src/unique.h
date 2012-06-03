@@ -15,3 +15,6 @@
 
 #endif
 
+void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attName);
+int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar);
+void AK_unique_test();

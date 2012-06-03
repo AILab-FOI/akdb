@@ -31,3 +31,8 @@
 #define MAX_PERMUTATION 24
 
 #endif
+
+void AK_print_optimized_query(AK_list *list_query);
+AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *FLAGS);
+AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int DIFF_PLANS);
+void AK_query_optimization_test(AK_list *list_query) ;
