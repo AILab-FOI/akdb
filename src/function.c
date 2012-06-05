@@ -224,7 +224,6 @@ int AK_function_remove_by_obj_id(int obj_id) {
     return EXIT_SUCCESS;
 }
 
-
 /**
  * @author Boris Kišić
  * @brief Function removes function arguments by function id.

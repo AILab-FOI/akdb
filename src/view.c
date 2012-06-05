@@ -39,7 +39,7 @@ int AK_get_view_obj_id(char *name) {
 
 /**
  * @author Kresimir Ivkovic
- * @brief Adds a new view to the view table with the corresponding name and value (view query)
+ * @brief Adds a new view to the view table with the corresponding name and value (view query); set_id is optional, if it's not set, the system will determine the new id automatically
  * @return Id of the newly inserted view
  */
 int AK_view_add(char *name, char *query, int set_id){
@@ -67,7 +67,7 @@ int AK_view_remove_by_obj_id(int obj_id) {
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root, 1);
     int result = Ak_delete_row((AK_list_elem)row_root);  
     Ak_DeleteAll_L((AK_list_elem)row_root);
-    return result; 
+    return result;
 }
 
 /**
@@ -76,9 +76,11 @@ int AK_view_remove_by_obj_id(int obj_id) {
  * @return Result of AK_view_remove_by_obj_id or EXIT_ERROR if no id is found
  */
 int AK_view_remove_by_name(char *name) {
-   int view_id = AK_get_view_obj_id(name);
-   if(view_id==EXIT_ERROR) return view_id;
-   return AK_view_remove_by_obj_id(view_id);
+   AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+   Ak_Init_L((AK_list_elem)row_root);
+   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_view", "name", row_root, 1);
+   int result = Ak_delete_row(row_root);
+   return result;
 }
 
 /**
@@ -135,8 +137,9 @@ void AK_view_test() {
    printf("Obj_id za view4: %d\n", AK_get_view_obj_id("view4"));
    printf("Obj_id za view5: %d\n", AK_get_view_obj_id("view5"));
 
-   printf("\nRemoving view 'view1'...\n");
+   printf("\nRemoving view 'view1' and 'view2'...\n");
    AK_view_remove_by_name("view1");
+   AK_view_remove_by_name("view2");
    AK_print_table("AK_view");
 
    printf("\nRenaming view 'view3' to 'view300'...\n");
