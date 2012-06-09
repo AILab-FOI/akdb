@@ -43,7 +43,7 @@ int AK_chars_num_from_number(int number, int base) {
 /** 
  * @author Miroslav Policki
  * @brief Function returns size in bytes of the provided database type
- * @param iDB_type database data type (defined in configuration.h)
+ * @param iDB_type database data type (defined in constants.h)
  * @param szVarchar if iDB_type == TYPE_VARCHAR, pointer to the string, otherwise unused
  * @return size of provided data type in bytes if provided data type is valid, else 0
  */

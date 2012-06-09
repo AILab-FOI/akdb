@@ -22,7 +22,7 @@
 
 #include "expression_check.h"
 #include "redo_log.h"
-#include "configuration.h"
+#include "constants.h"
 
 #endif
 

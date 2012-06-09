@@ -10,7 +10,7 @@
 
 #include "auxiliary.h"
 #include "memoman.h"
-#include "configuration.h"
+#include "constants.h"
 #include "debug.h"
 
 #endif /* REDOLOG */

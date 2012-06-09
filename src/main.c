@@ -24,7 +24,7 @@
 #include <string.h>  //ARCHIVE LOG
 #include <stdlib.h>
 // Global configuration
-#include "configuration.h"
+#include "constants.h"
 
 // Disk management
 #include "dbman.h"

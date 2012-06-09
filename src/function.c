@@ -95,7 +95,7 @@ int AK_check_function_arguments(int function_id, AK_list *arguments_list){
  * @author Boris Kišić
  * @brief Function that adds a function to system table.
  * @param *name name of the function
- * @param *return_type data type returned from a function - values from 0 to 13 - defined in configuration.h
+ * @param *return_type data type returned from a function - values from 0 to 13 - defined in constants.h
  * @param *arguments_list list of function arguments
  * @return function id or EXIT_ERROR
  */

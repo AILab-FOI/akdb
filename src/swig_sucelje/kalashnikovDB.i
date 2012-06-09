@@ -124,7 +124,7 @@ extern char * AK_config_get(char * key, char * def);
 #include "../debug.h"
 #include "../debug.c"
 
-#include "../configuration.h"
+#include "../constants.h"
 
 #include "../auxiliary.c"
 #include "../auxiliary.h"
@@ -262,7 +262,7 @@ extern char * AK_config_get(char * key, char * def);
 %include "../debug.h"
 %include "../debug.c"
 
-%include "../configuration.h"
+%include "../constants.h"
 
 %include "../auxiliary.c"
 %include "../auxiliary.h"

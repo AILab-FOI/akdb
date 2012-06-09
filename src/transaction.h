@@ -20,7 +20,7 @@
 #ifndef TRANSACTION_H_
 #define TRANSACTION_H_
 #include <pthread.h> //TRANSACTIONS
-#include "configuration.h"
+#include "constants.h"
 #include "command.h"
 #include <string.h>
 extern int numberOfActiveTransactionThreads;
