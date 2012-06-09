@@ -1,6 +1,6 @@
 #@file sql_tokenizer.py - Parsing commands
 
-from pyparsing import Word, alphas, alphanums, Keyword, delimitedList, Group, Forward, ParseException, Optional, restOfLine
+from pyparsing import Word, alphas, alphanums, Keyword, delimitedList, Group, Forward, ParseException, Optional, restOfLine, Upcase
 
 class sql_tokenizer:
 
@@ -38,6 +38,49 @@ class sql_tokenizer:
       return tokens
     
 
+  def AK_parse_drop(self, string):
+      '''
+      @autor mparavac
+      @brief sql parsing of DROP command
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+      ident = Word( alphas, alphanums + "_$" ).setName("identifier")
+      dropToken=Keyword("drop", caseless=True)
+      objectToken=( Keyword("table", caseless=True) | Keyword("user", caseless=True) | Keyword("column", caseless=True) | Keyword("index", caseless=True) |
+		  Keyword("sequence", caseless=True) | Keyword("function", caseless=True) | Keyword("procedure", caseless=True) | Keyword("schema", caseless=True) | Keyword("trigger", caseless=True) | Keyword("role", caseless=True)
+		  )
+      onToken=Keyword("on", caseless=True)
+      optionalToken1= Keyword("temporary", caseless=True)
+      optionalToken2= Keyword("if", caseless=True) + Keyword("exists", caseless=True)
+      optionalToken3= Keyword("cascade", caseless=True) | Keyword("restrict", caseless=True)
+      objectName      = Upcase( delimitedList( ident, ",", combine=True ) )
+      objectNameList  = Group( delimitedList( objectName ) )
+      objectName2      = Upcase( delimitedList( ident, ",", combine=True ) )
+      objectNameList2  = Group( delimitedList( objectName ) )
+      optionalName = Upcase( delimitedList( ident, ",", combine=True ) )
+      optionalNameList  = Group( delimitedList( objectName ) )
+      sequenceName = Upcase( delimitedList( ident, ",", combine=True ) )
+      sequenceNameList = Group( delimitedList( sequenceName ) )
+
+      dropStmt=Forward()
+      dropStmt << ( dropToken + Optional(optionalToken1.setResultsName("opcija1")) + objectToken.setResultsName("objekt") + Optional(optionalToken2.setResultsName("opcija2")) +
+		   objectNameList.setResultsName("ime_objekta") + Optional(optionalToken3.setResultsName("opcija3")) + Optional(onToken.setResultsName("onToken") + Optional(objectNameList2.setResultsName("ime_objekta2")))
+		   
+		  )
+      try:
+	tokens = dropStmt.parseString( string )
+  
+      except ParseException, err:
+	return " "*err.loc + "^\n" + err.msg
+      print
+      return tokens
+
+
+
+#----------------------testne funkcije---------------#  
+
+
   def AK_parse_grant_test(self):
       '''
       @author Boris Kisic
@@ -60,6 +103,32 @@ class sql_tokenizer:
 	  print "tokens.users =", token.users
 	  print "tokens.grantOption =", token.grantOption
 	  
-	
+  def AK_parse_drop_test(self):
+     
+     commands=["DROP temporary table if exists tabela1231 cascade",
+             "drop user matija, pero, jura",
+             "Drop column kolona1, kolona_2",
+             "drop index bla on tablica",
+             "drop trigger bla on tablica2",
+             "drop role test",
+             "drop function if exists funcija1",
+             "drop procedure if exists procedurea_df489f"]
+             
+     for command in commands:
+       token = test_drop.AK_parse_drop(command)
+       if isinstance(token, str):
+	 print "Error" + token
+       else:
+	  print "tokens = ", token
+	  print "tokens.opcija1 = ", token.opcija1
+	  print "tokens.objekt = ", token.objekt
+	  print "tokens.ime_objekta = ", token.ime_objekta
+	  print "tokens.opcija2 = ", token.opcija2
+	  print "tokens.opcija3 = ", token.opcija3
+	  print "tokens.onToken = ", token.onToken
+	  print "tokens.ime_objekta2 = ", token.ime_objekta2	  
+
 test_grant = sql_tokenizer()
 test_grant.AK_parse_grant_test()
+test_drop = sql_tokenizer()
+test_drop.AK_parse_drop_test()
