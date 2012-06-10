@@ -110,6 +110,40 @@ class sql_tokenizer:
         print
         return tokens
 
+     def AK_create_sequence(self, string):
+
+         '''
+      @autor Domagoj Tulicic
+      @brief sql parsing of CREATE SEQUENCE command
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string
+      '''
+
+        LPAR, RPAR, COMMA = map(Suppress,"(),")
+        (CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE, CYCLE ) =  map(CaselessKeyword, """CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE, CYCLE """.replace(",","").split())
+        keyword = MatchFirst((CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE, CYCLE ))
+
+        identifier = ~keyword + Word(alphas, alphanums+"_")
+        identifier2 = ~keyword + Word(nums)
+
+        sequence_name = identifier.copy()
+        min_value = identifier2.copy()
+        max_value = identifier2.copy()
+        start_with = identifier2.copy()
+        increment_by = identifier2.copy()
+        cache_value = identifier2.copy()
+
+        sequence_stmt = Forward()
+        sequence_stmt << (CREATE + SEQUENCE + sequence_name.setResultsName("Sekvenca") + MINVALUE + min_value +  (Optional((MAXVALUE),default=MAXVALUE) + Optional((max_value),default="999999999999999999999999999")) + START +  WITH + start_with + INCREMENT + BY + increment_by + CACHE + cache_value) + Optional(CYCLE)
+
+
+        try:
+            tokens = sequence_stmt.parseString( string )
+      	except ParseException, err:
+	  	return " "*err.loc + "^\n" + err.msg
+      	print
+      	return tokens
+
 
 
 #----------------------testne funkcije---------------#  
@@ -169,7 +203,7 @@ test_drop.AK_parse_drop_test()
 
 def AK_parse_createIndex_test(self):
 
-       '''
+      '''
       @author Domagoj Tulicic
       @brief testing of sql parsing command CREATE INDEX
       @return No return value
@@ -195,3 +229,26 @@ def AK_parse_createIndex_test(self):
 
 test_createIndex = sql_tokenizer()
 test_createIndex.AK_parse_createIndex_test()
+
+def AK_create_sequence_test(self):
+
+      '''
+      @author Domagoj Tulicic
+      @brief testing of sql parsing command CREATE SEQUENCE
+      @return No return value
+      '''
+        tests = ["create sequence sequenca minvalue 9 maxvalue 9999999 start with 1 increment by 2 cache 10 CYCLE"]
+
+        for test in tests:
+            print test
+            token = test_sequence.AK_create_sequence(test)
+            if isinstance(token, str):
+                print "Error: " + token
+	else:
+	    print "tokens = ", token
+	    #print "tokens.Sekvenca = ", token.Sekvenca
+
+
+test_sequence = sql_tokenizer()
+test_sequence.AK_create_sequence_test()
+
