@@ -76,6 +76,40 @@ class sql_tokenizer:
       print
       return tokens
 
+  def AK_parse_createIndex(self, string):
+      '''
+      @autor Domagoj Tulicic
+      @brief sql parsing of CREATE INDEX command
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string
+      '''
+
+        ident = Word( alphas, alphanums + "_$").setName("identifier")
+        nazivIndexa = Word( alphas, alphanums + "_$").setName("identifier")
+        nazivTablice = Word( alphas, alphanums + "_$").setName("identifier")
+        createToken = Keyword("create", caseless=True)
+        indexToken = Keyword("index", caseless = True)
+        onToken = Keyword("on", caseless = True)
+        usingToken = Keyword("using", caseless=True)
+        column = delimitedList(ident, ",", combine=True)
+        columnList = Group(delimitedList(column))
+        lzagrada = Suppress("(")
+        dzagrada = Suppress(")")
+
+
+        createIndexStmt = Forward()
+        createIndexStmt << (createToken + indexToken + nazivIndexa.setResultsName("IndexIme") + onToken +
+                            nazivTablice.setResultsName("tablica") + lzagrada + columnList.setResultsName("stupci") + dzagrada +
+                            usingToken + restOfLine.setResultsName("IndexVrsta"))
+
+        try:
+            tokens = createIndexStmt.parseString( string )
+
+        except ParseException, err:
+                return " "*err.loc + "^\n" + err.msg
+        print
+        return tokens
+
 
 
 #----------------------testne funkcije---------------#  
@@ -132,3 +166,32 @@ test_grant = sql_tokenizer()
 test_grant.AK_parse_grant_test()
 test_drop = sql_tokenizer()
 test_drop.AK_parse_drop_test()
+
+def AK_parse_createIndex_test(self):
+
+       '''
+      @author Domagoj Tulicic
+      @brief testing of sql parsing command CREATE INDEX
+      @return No return value
+      '''
+
+        commands = ["CREATE INDEX Pindex ON tablica ( stupac1, stupac2 ) USING Btree",
+                    "create index Pindex on tablica ( stupac1 ) USING Btree",
+                    "create index Pindex on tablica ( stupac1, stupac2 ) USING Hash"]
+
+        for command in commands:
+            token = test_createIndex.AK_parse_createIndex(command)
+            if isinstance(token, str):
+                print "Error: " + token
+
+            else:
+                print "token = ", token
+                print "token = ", token.IndexIme
+                print "token = ", token.tablica
+                print "token = ", token.stupci
+                print "token = ", token.IndexVrsta
+
+
+
+test_createIndex = sql_tokenizer()
+test_createIndex.AK_parse_createIndex_test()

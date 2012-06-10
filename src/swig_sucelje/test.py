@@ -177,6 +177,7 @@ class Funkcije:
             brojac += 1
         ak47.Ak_insert_row(element)
 
+  
 
 ak47.main()
 
@@ -223,5 +224,8 @@ f.insert_Row("create_test", [222, "A", "B", 2013, 90.53])
 f.insert_Row("create_test", [333, "A", "B", 2013, 90.53])
 f.insert_Row("create_test", [444, "A", "B", 2013, 90.53])
 ak47.AK_print_table("create_test")
+
+
+
 
 #ak47.AK_flush_cache()
