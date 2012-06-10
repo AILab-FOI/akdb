@@ -1,24 +1,11 @@
 #@file sql_parser.py sql parser, currently only understands INSERT and CREATE TABLE
-#
-# autor: Matej Vidakovic
-# dopunio: Kresimir Ivkovic
-#
-# 2012-06-01 izmjene:
-# ispravljen insert into
-# dodan select
-# dodan delete
-# dodan where
 
 from pyparsing import *
 
 #literals
 createTableLit=CaselessKeyword("create table")
 insertLit=CaselessKeyword("insert into")
-deleteLit=CaselessKeyword("delete")
-selectLit=CaselessKeyword("select")
-fromLit=CaselessKeyword("from")
-usingLit=CaselessKeyword("using")
-whereLit=CaselessKeyword("where")
+createUserLit=CaselessKeyword("CREATE USER")
 lBracket=Suppress(Literal("("))
 rBracket=Suppress(Literal(")"))
 valuesLiteral=Suppress(CaselessLiteral("values"))
@@ -27,6 +14,9 @@ comma=Suppress(Literal(","))
 #identifier
 identifier=Word(alphas, alphanums + "_$")
 tableName=identifier
+
+#username
+userName=Word(alphas, alphanums)
 
 #values
 E = CaselessLiteral("e")
@@ -40,7 +30,6 @@ values=lBracket+valuesList+rBracket
 #columns
 columnName=identifier
 columnNameList=Group(delimitedList(columnName))
-columnNameListSelect=Group(delimitedList(columnName)) | '*'
 columns=lBracket+columnNameList+rBracket
 
 #data types
@@ -51,13 +40,10 @@ varcharType=CaselessKeyword("varchar")+dataSize
 
 #predicate(limited)
 binrelop=oneOf(["<", "<=", ">=", ">", "=", "!="])
-sqlIN=CaselessKeyword("IN")
-sqlBetween=CaselessKeyword("BETWEEN")
-sqlLike=CaselessKeyword("LIKE")
 sqlOR=CaselessKeyword("OR")
 sqlAND=CaselessKeyword("AND")
 predicate=Forward()
-predicate<<columnName+binrelop+value+ZeroOrMore((sqlOR | sqlAND | sqlIN | sqlBetween | sqlLike)+predicate)
+predicate<<columnName+binrelop+value+ZeroOrMore((sqlOR | sqlAND)+predicate)
 
 #constraints in atribute definition
 notNullConstraint=CaselessKeyword("NOT NULL")
@@ -84,10 +70,20 @@ atributeDefinition=Group(identifier+atributeType+constraints)
 atributeDefinitionList=Group(delimitedList(atributeDefinition))
 atributes=atributeDefinitionList
 
+#constraints in user creation
+c0=CaselessKeyword("WITH")
+c1=CaselessKeyword("PASSWORD") + value.setResultsName("PASSWORD")
+c2=CaselessKeyword("CREATEDB").setResultsName("CREATEDB") ^ CaselessKeyword("NOCREATEDB").setResultsName("NOCREATEDB")
+c4=CaselessKeyword("CREATEUSER").setResultsName("CREATEUSER") ^ CaselessKeyword("NOCREATEUSER").setResultsName("NOCREATEUSER")
+c6=CaselessKeyword("IN GROUP") + value.setResultsName("IN GROUP")
+c7=CaselessKeyword("VALID UNTIL")
+
+createConstraints = OneOrMore ((c1 | c2 | c4 | c6))
+
 #INSERT INTO 
 insert=insertLit.setResultsName("commandName")+\
-        tableName.setResultsName("tableName")+\
         Optional(columns).setResultsName("columns")+\
+        tableName.setResultsName("tableName")+\
         valuesLiteral+\
         values.setResultsName("columnValues")+stringEnd
 
@@ -95,49 +91,19 @@ insert=insertLit.setResultsName("commandName")+\
 createTable=createTableLit.setResultsName("commandName")+\
              tableName.setResultsName("tableName")+\
              lBracket+\
-             atributes.setResultsName("attributes")+\
+             atributes.setResultsName("atriburtes")+\
              Optional(comma+endConstraints).setResultsName("endConstraints")+\
              rBracket+stringEnd
-
-#WHERE
-whereExpression=Forward()
-select=Forward()
-selectInner=Forward()
-
-
-#### za ugnijezdjene select upite unutar where-a treba staviti da select ide unutar liste (u uglate zagrade)
-whereCond = Group(
-				(columnName.setResultsName("whereCondLval") + binrelop.setResultsName("whereOp") + columnName.setResultsName("whereCondRval")) |
-				(columnName.setResultsName("whereCondLval") + binrelop.setResultsName("whereOp") + value.setResultsName("whereCondRval")) |
-				(columnName.setResultsName("whereCondLval") + sqlIN.setResultsName("whereOp") + values.setResultsName("whereCondRval")) |
-				(columnName.setResultsName("whereCondLval") + sqlIN.setResultsName("whereOp") + selectInner.setResultsName("whereCondRval"))
-			)
-
-where = whereLit.setResultsName("where")+\
-		whereExpression.setResultsName("whereExpression")
-
-whereExpression << whereCond + ZeroOrMore( ( sqlOR | sqlAND ) + whereExpression )
-
-            
-#SELECT
-selectStatement=selectLit.setResultsName("commandName")+\
-		columnNameListSelect.setResultsName("attributes")+\
-		fromLit.setResultsName("from")+\
-		tableName.setResultsName("tableName")+\
-		Optional(where.setResultsName("condition"))
-
-select << selectStatement + stringEnd
-selectInner << lBracket+selectStatement+rBracket
-
-#DELETE
-deleteFrom=deleteLit.setResultsName("commandName")+\
-		fromLit.setResultsName("from")+\
-		tableName.setResultsName("tableName")+\
-		Optional(usingLit.setResultsName("using")+tableName.setResultsName("usingTable"))+\
-		Optional(where.setResultsName("condition"))+stringEnd
+             
+#CREATE USER  
+creteUser = createUserLit.setResultsName("commandName")+\
+             userName.setResultsName("USERNAME")+\
+             Optional(c0) +\
+             Optional(createConstraints).setResultsName("createConstraints")+\
+             stringEnd
 
 #add other commands with |
-sqlGrammar= insert | createTable | select | deleteFrom
+sqlGrammar= insert | createTable | creteUser
 
 def AKparseSql(command):
     '''
@@ -153,16 +119,29 @@ def AKparseSql(command):
     except ParseException, err:
         return "Syntax error at char "+str(err.loc)+" "+err.msg
 
-if __name__ == '__main__':
-	print AKparseSql("insert into table (a, b, c) values(1, 2, 3)");
-	print AKparseSql("insert into table values(1, 2, 3)");
-	print AKparseSql("select * from tablica");
-	print AKparseSql("select a from tablica");
-	print AKparseSql("select a, b, c from tablica");
-	print AKparseSql("delete from tablica");
-	print AKparseSql("delete from tablica using b where a = b");
-	print AKparseSql("select a,b,c from a where b = c");
-	print AKparseSql("select * from b where b = c and c = 2 or x > 0");
-	print AKparseSql("select * from b where b in ('1','2')");
-	print AKparseSql("select * from b where b in (select * from c where c = 2)");
-	print AKparseSql("delete from b where a in (select c from d where c in (select e from e))");
+create_user_test_strings = ["create user korisnik with createdb CREATEUSER", "create user korisnik createdb CREATEUSER", "create user korisnik with createdb CREATEUSER password 'lozinka' in group 'grupa'", "create user korisnik with createdb CREATEUSER in group 'grupa'", "create user korisnik with createdb nocreatedb CREATEUSER in group 'grupa'", "CREATE USER manuel WITH PASSWORD 'jw8s0F4' CREATEDB", "asdasd"]
+
+def test_create_user(string):
+    a = AKparseSql(string)
+    if type(a) == str:
+        print
+        print "Invalid CREATE USER query"
+        return
+    print
+    print string
+    options = a.keys()
+    options.remove("commandName")
+    options.remove("createConstraints")
+    if (options.count("CREATEDB") == 1 and options.count("NOCREATEDB") == 1) or (options.count("CREATEUSER") == 1 and options.count("NOCREATEUSER") == 1):
+        print
+        print "Invalid CREATE USER query"
+        return		
+    print "Options: "
+    print options
+    print "Username =", a["USERNAME"]
+    if "IN GROUP" in a.keys():
+        print "Group =", eval(a["IN GROUP"])
+    if "PASSWORD" in a.keys():
+        print "Password =", eval(a["PASSWORD"])
+        
+map(test_create_user, create_user_test_strings)
