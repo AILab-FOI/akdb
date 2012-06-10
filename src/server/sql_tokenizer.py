@@ -1,6 +1,7 @@
 #@file sql_tokenizer.py - Parsing commands
 
-from pyparsing import Word, alphas, alphanums, Keyword, delimitedList, Group, Forward, ParseException, Optional, restOfLine, Upcase
+from pyparsing import Word, alphas, nums, alphanums, Keyword, delimitedList, Group, Forward, ParseException, Optional,\
+		      restOfLine, Upcase, Suppress, CaselessKeyword, MatchFirst, ZeroOrMore, OneOrMore, CharsNotIn
 
 class sql_tokenizer:
 
@@ -47,8 +48,10 @@ class sql_tokenizer:
       '''
       ident = Word( alphas, alphanums + "_$" ).setName("identifier")
       dropToken=Keyword("drop", caseless=True)
-      objectToken=( Keyword("table", caseless=True) | Keyword("user", caseless=True) | Keyword("column", caseless=True) | Keyword("index", caseless=True) |
-		  Keyword("sequence", caseless=True) | Keyword("function", caseless=True) | Keyword("procedure", caseless=True) | Keyword("schema", caseless=True) | Keyword("trigger", caseless=True) | Keyword("role", caseless=True)
+      objectToken=( Keyword("table", caseless=True) | Keyword("user", caseless=True) | Keyword("column", caseless=True) |\
+                    Keyword("index", caseless=True) | Keyword("sequence", caseless=True) |\
+                    Keyword("function", caseless=True) | Keyword("procedure", caseless=True) |\
+                    Keyword("schema", caseless=True) | Keyword("trigger", caseless=True) | Keyword("role", caseless=True)
 		  )
       onToken=Keyword("on", caseless=True)
       optionalToken1= Keyword("temporary", caseless=True)
@@ -64,8 +67,10 @@ class sql_tokenizer:
       sequenceNameList = Group( delimitedList( sequenceName ) )
 
       dropStmt=Forward()
-      dropStmt << ( dropToken + Optional(optionalToken1.setResultsName("opcija1")) + objectToken.setResultsName("objekt") + Optional(optionalToken2.setResultsName("opcija2")) +
-		   objectNameList.setResultsName("ime_objekta") + Optional(optionalToken3.setResultsName("opcija3")) + Optional(onToken.setResultsName("onToken") + Optional(objectNameList2.setResultsName("ime_objekta2")))
+      dropStmt << ( dropToken + Optional(optionalToken1.setResultsName("opcija1")) + objectToken.setResultsName("objekt") +\
+                    Optional(optionalToken2.setResultsName("opcija2")) + objectNameList.setResultsName("ime_objekta") +\
+                    Optional(optionalToken3.setResultsName("opcija3")) + Optional(onToken.setResultsName("onToken") +\
+                    Optional(objectNameList2.setResultsName("ime_objekta2")))
 		   
 		  )
       try:
@@ -76,6 +81,50 @@ class sql_tokenizer:
       print
       return tokens
 
+  def AK_alter_table(self, string):
+      '''
+      @autor Krunoslav Bilic
+      @brief sql parsing of ALTER TABLE command (ref. http://www.w3schools.com/sql/sql_alter.asp )
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+      LPAR, RPAR, COMMA = map(Suppress,"(),")
+
+      #keywords
+      alterToken  = Keyword("alter",caseless=True).setResultsName("statement")
+      addToken    = Keyword("add",caseless=True).setResultsName("operation")
+      dropToken   = Keyword("drop",caseless=True).setResultsName("operation")
+      tableToken  = Keyword("table",caseless=True)
+      columnToken = Keyword("column",caseless=True)
+
+      #definiranje gramatike
+      slozeni = LPAR + ZeroOrMore(CharsNotIn(")")) + RPAR
+      jednostavni = Word(alphas,alphanums+"_\"':-")
+
+      #dohvacanje naziva tablice i stupca
+      table_name = jednostavni.copy().setResultsName("table_name")       
+      column_name = jednostavni.copy().setResultsName("column_name")
+      #definiranje tipa podataka iz add naredbe
+      field_def = OneOrMore(jednostavni | slozeni)
+      field_list_def = delimitedList(field_def).setResultsName("data_type")
+
+      #definiranje osnove upita te operacija dodavanja i uklanjanja stupca tablice
+      alter_core = (alterToken + tableToken + table_name)
+      adding = (addToken + column_name + field_list_def) 
+      dropping = (dropToken + columnToken + column_name)
+
+      #definiranje same naredbe
+      alter_stmt = Forward()        
+      alter_def =  (dropping) | (adding)
+      alter_stmt << (alter_core + alter_def)
+
+      try:
+	tokens = alter_stmt.parseString( string )
+      except ParseException, err:
+	  return " "*err.loc + "^\n" + err.msg
+      print  
+      return tokens
+
   def AK_parse_createIndex(self, string):
       '''
       @autor Domagoj Tulicic
@@ -84,69 +133,71 @@ class sql_tokenizer:
       @return if command is successfully parsed returns list of tokens, else returns error message as string
       '''
 
-        ident = Word( alphas, alphanums + "_$").setName("identifier")
-        nazivIndexa = Word( alphas, alphanums + "_$").setName("identifier")
-        nazivTablice = Word( alphas, alphanums + "_$").setName("identifier")
-        createToken = Keyword("create", caseless=True)
-        indexToken = Keyword("index", caseless = True)
-        onToken = Keyword("on", caseless = True)
-        usingToken = Keyword("using", caseless=True)
-        column = delimitedList(ident, ",", combine=True)
-        columnList = Group(delimitedList(column))
-        lzagrada = Suppress("(")
-        dzagrada = Suppress(")")
+      ident = Word( alphas, alphanums + "_$").setName("identifier")
+      nazivIndexa = Word( alphas, alphanums + "_$").setName("identifier")
+      nazivTablice = Word( alphas, alphanums + "_$").setName("identifier")
+      createToken = Keyword("create", caseless=True)
+      indexToken = Keyword("index", caseless = True)
+      onToken = Keyword("on", caseless = True)
+      usingToken = Keyword("using", caseless=True)
+      column = delimitedList(ident, ",", combine=True)
+      columnList = Group(delimitedList(column))
+      lzagrada = Suppress("(")
+      dzagrada = Suppress(")")
 
+      createIndexStmt = Forward()
+      createIndexStmt << (createToken + indexToken + nazivIndexa.setResultsName("IndexIme") + onToken +
+                          nazivTablice.setResultsName("tablica") + lzagrada + columnList.setResultsName("stupci") + dzagrada +
+                          usingToken + restOfLine.setResultsName("IndexVrsta"))
+      try:
+          tokens = createIndexStmt.parseString( string )
+      except ParseException, err:
+          return " "*err.loc + "^\n" + err.msg
+      print
+      return tokens
 
-        createIndexStmt = Forward()
-        createIndexStmt << (createToken + indexToken + nazivIndexa.setResultsName("IndexIme") + onToken +
-                            nazivTablice.setResultsName("tablica") + lzagrada + columnList.setResultsName("stupci") + dzagrada +
-                            usingToken + restOfLine.setResultsName("IndexVrsta"))
+  def AK_create_sequence(self, string):
 
-        try:
-            tokens = createIndexStmt.parseString( string )
-
-        except ParseException, err:
-                return " "*err.loc + "^\n" + err.msg
-        print
-        return tokens
-
-     def AK_create_sequence(self, string):
-
-         '''
+      '''
       @autor Domagoj Tulicic
       @brief sql parsing of CREATE SEQUENCE command
       @param string sql command as string
       @return if command is successfully parsed returns list of tokens, else returns error message as string
       '''
 
-        LPAR, RPAR, COMMA = map(Suppress,"(),")
-        (CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE, CYCLE ) =  map(CaselessKeyword, """CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE, CYCLE """.replace(",","").split())
-        keyword = MatchFirst((CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE, CYCLE ))
+      LPAR, RPAR, COMMA = map(Suppress,"(),")
+      (CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE ) =  map(CaselessKeyword, """CREATE,\
+         SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE""".replace(",","").split())
+      
+      keyword = MatchFirst((CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE))
+      cycleToken = Keyword("cycle", caseless=True).setResultsName("cycle")
 
-        identifier = ~keyword + Word(alphas, alphanums+"_")
-        identifier2 = ~keyword + Word(nums)
+      identifier = ~keyword + Word(alphas, alphanums+"_")
+      identifier2 = ~keyword + Word(nums)
 
-        sequence_name = identifier.copy()
-        min_value = identifier2.copy()
-        max_value = identifier2.copy()
-        start_with = identifier2.copy()
-        increment_by = identifier2.copy()
-        cache_value = identifier2.copy()
+      sequence_name = identifier.copy().setResultsName("sekvenca")
+      min_value     = identifier2.copy().setResultsName("min_value")
+      max_value     = identifier2.copy().setResultsName("max_value")
+      start_with    = identifier2.copy().setResultsName("start_with")
+      increment_by  = identifier2.copy().setResultsName("increment_by")
+      cache_value   = identifier2.copy().setResultsName("cache")
 
-        sequence_stmt = Forward()
-        sequence_stmt << (CREATE + SEQUENCE + sequence_name.setResultsName("Sekvenca") + MINVALUE + min_value +  (Optional((MAXVALUE),default=MAXVALUE) + Optional((max_value),default="999999999999999999999999999")) + START +  WITH + start_with + INCREMENT + BY + increment_by + CACHE + cache_value) + Optional(CYCLE)
+      sequence_stmt = Forward()
+      sequence_stmt << (CREATE + SEQUENCE + sequence_name + MINVALUE + min_value +\
+			(Optional((MAXVALUE),default=MAXVALUE) +\
+			Optional((max_value),default="999999999999999999999999999")) + START +  WITH +\
+			start_with + INCREMENT + BY + increment_by + CACHE + cache_value + Optional(cycleToken)) 
+
+      try:
+          tokens = sequence_stmt.parseString(string)
+      except ParseException, err:
+	  return " "*err.loc + "^\n" + err.msg
+      print
+      return tokens
 
 
-        try:
-            tokens = sequence_stmt.parseString( string )
-      	except ParseException, err:
-	  	return " "*err.loc + "^\n" + err.msg
-      	print
-      	return tokens
 
-
-
-#----------------------testne funkcije---------------#  
+#--------------------------------------------testne funkcije--------------------------------------------#  
 
 
   def AK_parse_grant_test(self):
@@ -155,12 +206,13 @@ class sql_tokenizer:
       @brief testing of sql parsing command GRANT
       @return No return value
       '''
+      print "\n---------------------------------GRANT test---------------------------------\n"
       commands = ["GRANT SELECT, INSERT, UPDATE, DELETE ON album, song TO Elvis, Jimmy WITH ADMIN OPTION",
 		"grant update on table1, table2 to Ivica, pero22foi1",
 		"Grant insert on drivers to Hamilton, Raikkonen, Alonso"]
 	    
       for command in commands:
-	token = test_grant.AK_parse_grant(command)
+	token = test.AK_parse_grant(command)
 	if isinstance(token, str):
 	  print "Error: " + token
 	  
@@ -173,6 +225,7 @@ class sql_tokenizer:
 	  
   def AK_parse_drop_test(self):
      
+     print "\n---------------------------------DROP test---------------------------------\n"
      commands=["DROP temporary table if exists tabela1231 cascade",
              "drop user matija, pero, jura",
              "Drop column kolona1, kolona_2",
@@ -183,7 +236,7 @@ class sql_tokenizer:
              "drop procedure if exists procedurea_df489f"]
              
      for command in commands:
-       token = test_drop.AK_parse_drop(command)
+       token = test.AK_parse_drop(command)
        if isinstance(token, str):
 	 print "Error" + token
        else:
@@ -196,59 +249,97 @@ class sql_tokenizer:
 	  print "tokens.onToken = ", token.onToken
 	  print "tokens.ime_objekta2 = ", token.ime_objekta2	  
 
-test_grant = sql_tokenizer()
-test_grant.AK_parse_grant_test()
-test_drop = sql_tokenizer()
-test_drop.AK_parse_drop_test()
+  def AK_alter_table_test(self):
+    
+     '''
+     @author Krunoslav Bilic
+     @brief testing of sql parsing command ALTER TABLE
+     @return statement, operation, table_name, column_name, data_type[list]
+     '''
+     print "\n---------------------------------ALTER TABLE test---------------------------------\n"
+     commands = ["alter table imena drop column srednje_ime",\
+                 "alter table icecream add flavor varchar(20)",\
+	         "alter table icecream add flavor",\
+		 "alter table icecream drop flavor varchar(20)"]
+	
+     for command in commands:
+        print "\n"+command
+        token = test.AK_alter_table(command)
+        if isinstance(token, str):
+  	  print "\nError: " + token
+        else:
+	  print "tokens =      ", token
+  	  print "statement =   ", token.statement
+	  print "operation =   ", token.operation
+	  print "table_name =  ", token.table_name
+	  print "column_name = ", token.column_name
+	  print "data_type =   ", token.data_type
 
-def AK_parse_createIndex_test(self):
+  def AK_parse_createIndex_test(self):
 
-      '''
-      @author Domagoj Tulicic
-      @brief testing of sql parsing command CREATE INDEX
-      @return No return value
-      '''
-
-        commands = ["CREATE INDEX Pindex ON tablica ( stupac1, stupac2 ) USING Btree",
-                    "create index Pindex on tablica ( stupac1 ) USING Btree",
+     '''
+     @author Domagoj Tulicic
+     @brief testing of sql parsing command CREATE INDEX
+     @return No return value
+     '''
+     print "\n---------------------------------CREATE INDEX test---------------------------------\n"
+     commands = ["CREATE INDEX Pindex ON tablica ( stupac1, stupac2 ) USING Btree",\
+                    "create index Pindex on tablica ( stupac1 ) USING Btree",\
                     "create index Pindex on tablica ( stupac1, stupac2 ) USING Hash"]
 
-        for command in commands:
-            token = test_createIndex.AK_parse_createIndex(command)
-            if isinstance(token, str):
-                print "Error: " + token
+     for command in commands:
+	  print "\n"+command
+          token = test.AK_parse_createIndex(command)
+          if isinstance(token, str):
+          	print "Error: " + token
+          else:
+	        print "token = ", token
+                print "IndexIme = ", token.IndexIme
+                print "tablica = ", token.tablica
+                print "stupci = ", token.stupci
+                print "IndexVrsta = ", token.IndexVrsta
 
-            else:
-                print "token = ", token
-                print "token = ", token.IndexIme
-                print "token = ", token.tablica
-                print "token = ", token.stupci
-                print "token = ", token.IndexVrsta
+  def AK_create_sequence_test(self):
+
+     '''
+     @author Domagoj Tulicic
+     @brief testing of sql parsing command CREATE SEQUENCE
+     @return No return value
+     '''
+     print "\n---------------------------------CREATE SEQUENCE test---------------------------------\n"
+     commands = ["create sequence sequenca minvalue 9 maxvalue 9999999 start with 1 increment by 2 cache 10 CYCLE",\
+              "create sequence sequenca minvalue 9 maxvalue 9999999 start with 1 increment by 2 cache 10"]
+    
+     for command in commands:
+         print "\n"+command
+         token = test.AK_create_sequence(command)
+         if isinstance(token, str):
+             print "Error: " + token
+	 else:
+	     print "tokens = ", token
+	     print "SekvencaIme = ", token.sekvenca
+	     print "min value = ", token.min_value
+             print "max value = ", token.max_value
+             print "increment by = ", token.increment_by
+             print "cache = ", token.cache
+	     print "cycle = ", token.cycle
 
 
 
-test_createIndex = sql_tokenizer()
-test_createIndex.AK_parse_createIndex_test()
 
-def AK_create_sequence_test(self):
+test = sql_tokenizer()
 
-      '''
-      @author Domagoj Tulicic
-      @brief testing of sql parsing command CREATE SEQUENCE
-      @return No return value
-      '''
-        tests = ["create sequence sequenca minvalue 9 maxvalue 9999999 start with 1 increment by 2 cache 10 CYCLE"]
+#testing grant statement
+test.AK_parse_grant_test()
 
-        for test in tests:
-            print test
-            token = test_sequence.AK_create_sequence(test)
-            if isinstance(token, str):
-                print "Error: " + token
-	else:
-	    print "tokens = ", token
-	    #print "tokens.Sekvenca = ", token.Sekvenca
+#testing drop statement
+test.AK_parse_drop_test()
 
+#testing alter statement
+test.AK_alter_table_test()
 
-test_sequence = sql_tokenizer()
-test_sequence.AK_create_sequence_test()
+#testing create sequence statement
+test.AK_create_sequence_test()
 
+#testing create index statement
+test.AK_parse_createIndex_test()
