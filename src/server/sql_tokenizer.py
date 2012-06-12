@@ -1,7 +1,6 @@
 #@file sql_tokenizer.py - Parsing commands
 
-from pyparsing import Word, alphas, nums, alphanums, Keyword, delimitedList, Group, Forward, ParseException, Optional,\
-		      restOfLine, Upcase, Suppress, CaselessKeyword, MatchFirst, ZeroOrMore, OneOrMore, CharsNotIn
+from pyparsing import *
 
 class sql_tokenizer:
 
@@ -195,7 +194,134 @@ class sql_tokenizer:
       print
       return tokens
 
+  def AK_parse_where(self, string):
+      '''
+      @author Kresimir Ivkovic
+      @brief parser for select, delete and any function containing the "WHERE" clause (automatically detects statement type)
+      @param string: sql query as string
+      @return tokenized query
+      '''      
+      tokens = None
+      
+      #literals
+      deleteLit=CaselessKeyword("DELETE")
+      selectLit=CaselessKeyword("SELECT")
+      fromLit=CaselessKeyword("FROM")
+      usingLit=CaselessKeyword("USING")
+      whereLit=CaselessKeyword("WHERE")
+      lBracket=Suppress(Literal("("))
+      rBracket=Suppress(Literal(")"))
+      valuesLiteral=Suppress(CaselessLiteral("VALUES"))
+      comma=Suppress(Literal(","))
+      
+      #identifier
+      identifier=Word(alphas, alphanums + "_$")
+      tableName=identifier
+      userName=Word(alphas, alphanums)
 
+      #values
+      E = CaselessLiteral("e")
+      arithSign=Word("+-",exact=1)
+      realNum=Combine(Optional(arithSign)+(Word(nums)+"."+Optional( Word(nums))|("."+Word(nums)))+Optional(E+Optional(arithSign)+Word(nums)))
+      intNum=Combine(Optional(arithSign)+Word(nums)+Optional(E+Optional("+")+Word(nums)))
+      value=quotedString | realNum | intNum
+      valuesList=Group(delimitedList(value))
+      values=lBracket+valuesList+rBracket
+
+      #columns
+      columnName= tableName+'.'+identifier | identifier
+      colAs = columnName + CaselessKeyword("AS") + identifier
+      aggrfn = Group((CaselessKeyword("AVG") | CaselessKeyword("SUM") | CaselessKeyword("COUNT") | CaselessKeyword("MIN") | CaselessKeyword("MAX")) + lBracket + ('*' | columnName) + rBracket)
+      columnNameSelect= Group(colAs) | aggrfn | (tableName+'.'+identifier) | identifier ### select stmt can contain aggr. functions in their att list, so a special columnName is needed for select
+      columnNameList=Group(delimitedList(columnName))
+      columnNameListSelect = Group(delimitedList(columnNameSelect) | '*') ### select can contain an asterisk for "all attributes" instead of att names
+      columns=lBracket+columnNameList+rBracket
+
+      #data types
+      dataSize=lBracket+intNum+rBracket
+      floatType=CaselessKeyword("float")
+      integerType=CaselessKeyword("integer")
+      varcharType=CaselessKeyword("varchar")+dataSize
+
+      #predicate(limited)
+      binrelop=oneOf(["<", "<=", ">=", ">", "=", "!="])
+      sqlIN=CaselessKeyword("IN")
+      sqlBetween=CaselessKeyword("BETWEEN")
+      sqlLike=CaselessKeyword("LIKE")
+      sqlOR=CaselessKeyword("OR")
+      sqlAND=CaselessKeyword("AND")
+      sqlUnion=CaselessKeyword("UNION")+Optional(CaselessKeyword("ALL"))
+      sqlIntersect=CaselessKeyword("INTERSECT")+Optional(CaselessKeyword("ALL"))
+      sqlExcept=CaselessKeyword("EXCEPT")+Optional(CaselessKeyword("ALL"))
+      predicate=Forward()
+      predicate<<columnName+binrelop+value+ZeroOrMore((sqlOR | sqlAND | sqlIN | sqlBetween | sqlLike)+predicate)
+      
+      selectInner=Forward()
+      expression=Forward()
+      where=Forward()
+      
+      expression << Group(
+            (columnName.setResultsName("expLval") + binrelop.setResultsName("whereOp") + columnName.setResultsName("expRval")) |
+            (aggrfn.setResultsName("expLval") + binrelop.setResultsName("whereOp") + columnName.setResultsName("expRval")) |
+            (columnName.setResultsName("expLval") + binrelop.setResultsName("whereOp") + value.setResultsName("expRval")) |
+            (aggrfn.setResultsName("expLval") + binrelop.setResultsName("whereOp") + value.setResultsName("expRval")) |
+            (columnName.setResultsName("expLval") + sqlIN.setResultsName("whereOp") + values.setResultsName("expRval")) |
+            (columnName.setResultsName("expLval") + sqlIN.setResultsName("whereOp") + Group(selectInner.setResultsName("expRval")))
+            ) + ZeroOrMore((sqlOR | sqlAND) + expression)
+
+      where << whereLit.setResultsName("where")+expression.setResultsName("expression")
+           
+      select=Forward()
+      join=Forward()
+      distinct = CaselessKeyword("DISTINCT ON")+lBracket+columnNameList+rBracket
+      limit = CaselessKeyword("LIMIT")+intNum.setResultsName("limitVal")
+      offset = CaselessKeyword("OFFSET")+intNum.setResultsName("offsetVal")
+      groupBy = CaselessKeyword("GROUP BY")+columnNameList.setResultsName("groupByCol")+Optional(CaselessKeyword("HAVING")+expression)
+      orderBy = CaselessKeyword("ORDER BY")+columnNameList+Optional(CaselessKeyword("ASC")|CaselessKeyword("DESC"))
+
+      joinStatement = Optional(
+            CaselessKeyword("INNER")|
+            CaselessKeyword("CROSS")|
+            (
+                  CaselessKeyword("LEFT")|
+                  CaselessKeyword("RIGHT")|
+                  CaselessKeyword("FULL")
+            )+Optional(CaselessKeyword("OUTER"))
+            )+CaselessKeyword("JOIN")+columnName.setResultsName("joinCol")+CaselessKeyword("ON")+expression
+
+      join << joinStatement + ZeroOrMore(joinStatement)
+
+      selectStatement=selectLit.setResultsName("commandName")+\
+            Optional(Group(distinct.setResultsName("distinct")))+\
+            columnNameListSelect.setResultsName("attributes")+\
+            fromLit.setResultsName("from")+\
+            tableName.setResultsName("tableName")+\
+            Optional(Group(join.setResultsName("join")))+\
+            Optional(where.setResultsName("condition"))+\
+            Optional(Group(groupBy.setResultsName("group")))+\
+            Optional(Group(orderBy.setResultsName("order")))+\
+            Optional(Group(limit.setResultsName("limit")))+\
+            Optional(Group(offset.setResultsName("offset")))
+
+      select << selectStatement + ZeroOrMore((sqlUnion|sqlIntersect|sqlExcept) + select) + stringEnd
+      selectInner << lBracket+selectStatement+rBracket + ZeroOrMore((sqlUnion|sqlIntersect|sqlExcept) + selectInner)
+
+      deleteFrom=Forward()
+      deleteFrom<<deleteLit.setResultsName("commandName")+\
+        fromLit.setResultsName("from")+\
+        tableName.setResultsName("tableName")+\
+        Optional(usingLit.setResultsName("using")+tableName.setResultsName("usingTable"))+\
+        Optional(where.setResultsName("condition"))+stringEnd
+      
+      sqlGrammar= select | deleteFrom
+      
+      try: 
+          tokens = sqlGrammar.parseString(string)
+      except ParseException, err:
+          return "\n\t"+"Syntax error at char "+str(err.loc)+" "+err.msg+":\n"+\
+            '\t"'+string+'"'+\
+            '\n\t-'+''.join(['-' for i in range(0,err.loc)])+'^'+'\n'
+      return tokens  
 
 #--------------------------------------------testne funkcije--------------------------------------------#  
 
@@ -325,6 +451,31 @@ class sql_tokenizer:
 	     print "cycle = ", token.cycle
 
 
+  def AK_parse_where_test(self):
+      '''
+      @author Kresimir Ivkovic
+      @brief tests parsing of select and delete statements
+      @return No return value
+      '''
+      
+      query = ["select * from t1 inner join t2 on t1.at1 = t2.at1 left outer join t3 on t2.at2 = t3.at2 where t3.at3 > 0 and t2.at1 in (select count(*) from t3) order by t1.at1 desc limit 100 offset 10",
+      "select at1, avg(at2) from t1 cross join t2 on t1.at1 > t2.at1 group by at1 having avg(at2) > 100 order by at1 asc union select count(*) from t3 where t3 in (select distinct on(a) a, b, c from t4)",
+      "delete from t1 using t2 where t1.at1 = t2.at2",
+      "delete from t1 where t1.at1 in (select * from t2 where at2 > 0 and at3 < 0 or at4 = 0) or t1.at2 in (select * from at3)"
+      ]
+      
+      print "\n---------------------------------SELECT test---------------------------------\n"
+      print query[0]
+      print test.AK_parse_where(query[0])
+      print '\n'
+      print query[1]
+      print test.AK_parse_where(query[1])      
+      print "\n---------------------------------DELETE test---------------------------------\n"
+      print query[2]
+      print test.AK_parse_where(query[2])
+      print '\n'
+      print query[3]
+      print test.AK_parse_where(query[3])
 
 
 test = sql_tokenizer()
@@ -343,3 +494,6 @@ test.AK_create_sequence_test()
 
 #testing create index statement
 test.AK_parse_createIndex_test()
+
+#testing select and delete statements
+test.AK_parse_where_test()
