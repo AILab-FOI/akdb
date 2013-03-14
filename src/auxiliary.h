@@ -26,7 +26,7 @@
 #include "ctype.h"
 #include "debug.h"
 #include "constants.h"
-#include "iniparser/iniparser.h"
+#include "ini_parser/iniparser.h"
 
 /**
  * @author Unknown

@@ -1,8 +1,0 @@
-SWIG sucelje se generira pokretanjem sljedecih naredbi:
-
-swig -python kalashnikovDB.i
-python setup.py build_ext --inplace
-
-Nakon toga se sucelje moze testirati pokretanjem Python skripte test.py:
-
-python test.py

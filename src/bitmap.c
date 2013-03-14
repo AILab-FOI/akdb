@@ -18,7 +18,7 @@
  17 */
 
 #include "bitmap.h"
-#include "iniparser/iniparser.h"
+#include "ini_parser/iniparser.h"
 /**
   @brief Function examines whether list L contains operator ele
   @param L list of elements

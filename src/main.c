@@ -71,7 +71,7 @@
 
 //Other
 #include "trigger.h"
-#include "iniparser/iniparser.h"
+#include "ini_parser/iniparser.h"
 #include "privileges.h"
 #include "transaction.h"
 #include "redo_log.h"
