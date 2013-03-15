@@ -23,14 +23,13 @@
 #include "constants.h"
 #include "command.h"
 #include <string.h>
-extern int numberOfActiveTransactionThreads;
 /**
  * @author Frane Jakelić
  * @struct transaction_locks_list_elem
  * @brief Structure that represents LockTable entry about transaction resource lock.
  */
 struct transaction_locks_list_elem {
-    int TransactionId;
+	pthread_t TransactionId;
     int lock_type;
     int isWaiting;
     struct transaction_locks_list_elem *nextLock;
@@ -43,7 +42,7 @@ struct transaction_locks_list_elem {
  * @brief Structure that represents LockTable entry about transaction lock holder.Element indexed by Hash table.
  */
 struct transaction_list_elem {
-    int id;
+	int address;
     int lock_type;
     int isWaiting;
     struct transaction_locks_list_elem *DLLLocksHead;
@@ -75,35 +74,60 @@ struct memoryAddresses{
  * @brief Structure used to transport transaction data to the thread.
  */
 struct transactionData{
-	int transactionId;
-        int lengthOfArray;
+
+    int lengthOfArray;
 	command *array;
 };
 
 typedef struct transactionData AK_transaction_data;
 typedef struct memoryAddresses AK_memoryAddresses;
 typedef struct memoryAddresses* AK_memoryAddresses_link;
+
 typedef struct transaction_list_head AK_transaction_list;
-typedef struct transaction_list_elem *AK_transaction_elem;
-typedef struct transaction_locks_list_elem *AK_transaction_lock_elem;
+typedef struct transaction_list_elem* AK_transaction_elem_P;
+typedef struct transaction_list_elem AK_transaction_elem;
+
+typedef struct transaction_locks_list_elem* AK_transaction_lock_elem_P;
+typedef struct transaction_locks_list_elem AK_transaction_lock_elem;
+
+
+
+/**
+ * @author Frane Jakelić
+ * @struct threadContainer
+ * @brief Structure that represents a linked list of threads.
+ */
+struct threadContainer{
+	pthread_t thread;
+	struct threadContainer *nextThread;
+};
+
+
+typedef struct threadContainer *AK_thread_elem;
+typedef struct threadContainer AK_thread_Container;
 
 #endif /* TRANSACTION_H_ */
-
-int AK_calculate_hash(int memoryAddress) ;
-AK_transaction_elem AK_add_hash_entry_list(int memoryAddress, int type);
-AK_transaction_elem AK_search_hash_entry_list_by_key(int memoryAddress);
-int AK_delete_hash_entry_list(int memoryAddress);
-AK_transaction_lock_elem AK_search_lock_entry_list_by_key(int memoryAddress, int id);
-int AK_delete_lock_entry_list(int memoryAddress, int id);
-int AK_isLock_waiting(AK_transaction_elem lockHolder, int type, int transactionId, AK_transaction_lock_elem lock);
-AK_transaction_lock_elem AK_add_lock(AK_transaction_elem LocksList, int type, int transactionId);
-AK_transaction_lock_elem AK_create_lock(int memoryAddress, int type, int transactionId);
-void AK_check_for_deadLock(int id);
-int AK_acquire_lock(int memoryAddress, int type, int transactionId);
-void AK_release_locks(AK_memoryAddresses_link addresses, int transactionId);
-int AK_get_memory_blocks(char *tblName, AK_memoryAddresses *addressList);
-int AK_execute_commands(command * commandArray, int lengthOfArray, int transactionID);
-void AK_update_transaction_thread_count(int offset) ;
-void AK_execute_transaction(void *params);
-void AK_transaction_manager(command * commandArray, int lengthOfArray);
+AK_thread_elem AK_search_empty_thread_link();
+void AK_add_thread(pthread_t);
+void AK_delete_thread(pthread_t);
+void AK_join_all_threads();
+int AK_memory_block_hash(int) ;
+AK_transaction_elem_P AK_search_existing_link_for_hook(int);
+AK_transaction_elem_P AK_search_empty_link_for_hook(int);
+AK_transaction_elem_P AK_add_hash_entry_list(int, int);
+int AK_delete_hash_entry_list(int);
+AK_transaction_lock_elem_P AK_search_lock_entry_list_by_key(AK_transaction_elem_P, int, pthread_t);
+int AK_delete_lock_entry_list(int, pthread_t);
+int AK_isLock_waiting(AK_transaction_elem_P, int, pthread_t, AK_transaction_lock_elem_P);
+AK_transaction_lock_elem_P AK_add_lock(AK_transaction_elem_P, int, pthread_t);
+AK_transaction_lock_elem_P AK_create_lock(int, int, pthread_t);
+int AK_acquire_lock(int, int, pthread_t);
+void AK_release_locks(AK_memoryAddresses_link, pthread_t);
+int AK_get_memory_blocks(char*, AK_memoryAddresses_link);
+int AK_execute_commands(command* , int);
+void AK_execute_transaction(void*);
+void AK_transaction_manager(command*, int);
 void AK_test_Transaction();
+
+
+
