@@ -176,6 +176,10 @@ extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, ele
 #include "../union.h"
 #include "../selection.c"
 #include "../selection.h"
+#include "../drop.c"
+#include "../drop.h"
+#include "../view.c"
+#include "../view.h"
 
 #include "../rename.c"
 #include "../rename.h"
