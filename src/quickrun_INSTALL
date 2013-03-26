@@ -1,7 +1,6 @@
 #!/usr/bin/bash
 
-if [ ! -f /bin/kalashnikovDB_quickrun ];
-then
+function createQuickStartFile() {
     echo -e "Creating file...."
     
     SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -11,11 +10,16 @@ then
 
     bold=`tput bold`
     echo -e "File successufully created. You can run it by typing: ${bold}kalashnikovDB_quickrun"
+}
+
+if [ ! -f /bin/kalashnikovDB_quickrun ];
+then
+    createQuickStartFile
 else
-    echo "File already exists!!!"    
+    echo "File already exists! Removing file..."
+    sudo rm -rf /bin/kalashnikovDB_quickrun
+    createQuickStartFile
 fi
-
-
 
 
 
