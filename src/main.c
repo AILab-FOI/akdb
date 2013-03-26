@@ -75,6 +75,7 @@
 #include "privileges.h"
 #include "transaction.h"
 #include "redo_log.h"
+#include "observable.h"
 /**
 Main program function
 

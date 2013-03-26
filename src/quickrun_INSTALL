@@ -7,7 +7,7 @@ then
     SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     sudo touch /bin/kalashnikovDB_quickrun
     sudo chmod +x /bin/kalashnikovDB_quickrun
-    sudo sh -c "echo -e '#!/usr/bin/bash\ncd $SRC_DIR && make clean && make all && cd ../bin/ && ./akdb' > /bin/kalashnikovDB_quickrun"
+    sudo sh -c "echo -e '#!/usr/bin/bash\ncd $SRC_DIR && make clean && make all && cd ../bin/ && ./akdb && cd ../src && make clean' > /bin/kalashnikovDB_quickrun"
 
     bold=`tput bold`
     echo -e "File successufully created. You can run it by typing: ${bold}kalashnikovDB_quickrun"

@@ -10,7 +10,7 @@ FILETARGETS = files.o fileio.o filesearch.o filesort.o index.o btree.o hash.o bi
 RELOPTARGETS = difference.o intersect.o nat_join.o projection.o rename.o selection.o union.o aggregation.o product.o theta_join.o transaction.o
 OPTITARGETS = rel_eq_projection.o rel_eq_selection.o rel_eq_assoc.o rel_eq_comut.o query_optimization.o
 CONSTRAINTTARGETS = reference.o between.o nnull.o id.o expression_check.o check_constraint.o unique.o
-OTHERTARGETS = trigger.o test.o debug.o archive_log.o command.o ini_parser/dictionary.o ini_parser/iniparser.o privileges.o function.o sequence.o redo_log.o drop.o view.o
+OTHERTARGETS = trigger.o test.o debug.o archive_log.o command.o ini_parser/dictionary.o ini_parser/iniparser.o privileges.o function.o sequence.o redo_log.o drop.o view.o observable.o
 
 OUTDIR = ../bin
 
