@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 function createQuickStartFile() {
     echo -e "Creating file...."
