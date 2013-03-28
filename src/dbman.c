@@ -967,7 +967,7 @@ int AK_init_system_catalog() {
 
     AK_header hUserRight[5] = {
         {TYPE_INT, "obj_id", 0, '\0', '\0',},
-        {TYPE_VARCHAR, "name", 0, '\0', '\0',},
+        {TYPE_INT, "user_id", 0, '\0', '\0',},
         {TYPE_INT, "artifact_id", 0, '\0', '\0',},
         {TYPE_VARCHAR, "right_type", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
