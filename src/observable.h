@@ -22,6 +22,7 @@
 #define MAX_OBSERVABLE_SERVERS 10
 
 #include "constants.h"
+#include "debug.h"
 
 /**
  * @author Ivan Pusic
@@ -29,8 +30,12 @@
  * @brief Structure defines functions for observer object
  */
 struct Observer {
-    void (*AK_destroy_observer) (struct Observer*);
-    void (*AK_notify_handler) (struct Observer*, void*);
+    // Members
+    int observer_id;
+    
+    // Methods
+    int (*AK_destroy_observer) (struct Observer*);
+    int (*AK_notify_handler) (struct Observer*, void*);
 };
 typedef struct Observer AK_observer;
 
@@ -41,8 +46,9 @@ typedef struct Observer AK_observer;
  */
 struct Observable {
     // Members
-    AK_observer observers[MAX_OBSERVABLE_SERVERS];
-
+    AK_observer *observers[MAX_OBSERVABLE_SERVERS];
+    int observer_id_counter;
+    
     // Methods
     int (*AK_destroy_observable) (struct Observable*);
     int (*AK_register_observer) (struct Observable*, struct AK_observer*);
