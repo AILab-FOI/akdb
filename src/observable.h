@@ -56,12 +56,13 @@ struct Observable {
     int (*AK_run_action) ();
     int (*AK_notify_observer) (struct Observable*, struct AK_observer*);
     int (*AK_notify_observers) (struct Observable*);
+    AK_observer* (*AK_get_observer_by_id) (struct AK_observable*, int id);
 };
 typedef struct Observable AK_observable;
 
 #endif
 
-extern AK_observer *AK_init_observer();
-extern AK_observable *AK_init_observable();
+extern AK_observer * AK_init_observer();
+extern AK_observable * AK_init_observable();
 
 extern void AK_observable_test();

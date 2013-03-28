@@ -118,11 +118,32 @@ static inline int *AK_notify_observers(AK_observable *self)
 
 /** 
  * @author Ivan Pusic
+ * @brief Function for getting observer object from observable type by observer id
+ * @param self Observable type instance
+ * @param id Observer id
+ * 
+ * @return Requested observer instance
+ */
+static inline AK_observer * AK_get_observer_by_id(AK_observable *self, int id)
+{
+    int i;
+    for(i = 0; i < MAX_OBSERVABLE_SERVERS; ++i) {
+        if(self->observers[i] != NULL && self->observers[i]->observer_id == id) {
+            Ak_dbg_messg(LOW, GLOBAL, "REQUESTED OBSERVER FOUND. RETURNING OBSERVER BY ID");
+            return self->observers[i];
+        }
+    }
+    Ak_dbg_messg(LOW, GLOBAL, "OBSERVER WITH ID:%d DOESN'T EXIST!", id);
+    return NULL;
+}
+
+/** 
+ * @author Ivan Pusic
  * @brief Function for initializing observable object
  *
  * @return Pointer to new observable object
  */
-AK_observable *AK_init_observable()
+AK_observable * AK_init_observable()
 {
     AK_observable *self;
     self = (AK_observable*) calloc(1, sizeof(AK_observable));
@@ -131,6 +152,7 @@ AK_observable *AK_init_observable()
     self->AK_run_action = AK_run_action;
     self->AK_notify_observer = AK_notify_observer;
     self->AK_notify_observers = AK_notify_observers;
+    self->AK_get_observer_by_id = AK_get_observer_by_id;
     self->observer_id_counter = 1;
     Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVABLE OBJECT INITIALIZED!");
     
@@ -143,10 +165,19 @@ AK_observable *AK_init_observable()
  *
  * @return Exit status
  */
-static inline int AK_destroy_observer()
+static inline int *AK_destroy_observer(AK_observer *self)
 {
-    return OK;
+    if(self != NULL) {
+        free(self);
+        self = NULL;
+        Ak_dbg_messg(LOW, GLOBAL, "OBSERVER DESTROYED!");        
+        return OK;
+    }
+    
+    Ak_dbg_messg(LOW, GLOBAL, "ERROR WHILE DESTROYING OBSERVER");
+    return NOT_OK;
 }
+    
 
 /** 
  * @author Ivan Pusic
@@ -154,7 +185,7 @@ static inline int AK_destroy_observer()
  *
  * @return Exit status
  */
-static inline int AK_notify_handler()
+static inline int *AK_notify_handler()
 {
     return OK;
 }
@@ -165,14 +196,14 @@ static inline int AK_notify_handler()
  * 
  * @return Pointer to new observer object
  */
-AK_observer *AK_init_observer()
+AK_observer * AK_init_observer()
 {
     AK_observer *self;
     self = calloc(1, sizeof(AK_observer));
     self->AK_destroy_observer = AK_destroy_observer;
     self->AK_notify_handler = AK_notify_handler;
-    Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVER OBJECT INITIALIZED!");
     
+    Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVER OBJECT INITIALIZED!");    
     return self;
 }
 
@@ -192,6 +223,10 @@ void AK_observable_test()
     observableObject->AK_register_observer(observableObject, observer_first);
     observableObject->AK_register_observer(observableObject, observer_second);
     observableObject->AK_notify_observers(observableObject);
+    
+    AK_observer *requested_observer = observableObject->AK_get_observer_by_id(observableObject, observer_second->observer_id);
+    printf("Returned observer id: %d", requested_observer->observer_id);
+    
     observableObject->AK_unregister_observer(observableObject, observer_first);
     observableObject->AK_unregister_observer(observableObject, observer_second);
     
