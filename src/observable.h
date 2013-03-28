@@ -19,7 +19,6 @@
 
 #ifndef OBSERVABLE
 #define OBSERVABLE
-#define MAX_OBSERVABLE_SERVERS 10
 
 #include "constants.h"
 #include "debug.h"
@@ -32,10 +31,11 @@
 struct Observer {
     // Members
     int observer_id;
+    void * AK_observable_type;
     
     // Methods
-    void * AK_observable_type;
     int (*AK_observable_type_event_handler) (void *, void *);
+    int (*AK_notify) (struct Observer*, void *observable_type);
     int (*AK_destroy_observer) (struct Observer*);
 };
 typedef struct Observer AK_observer;
@@ -47,14 +47,14 @@ typedef struct Observer AK_observer;
  */
 struct Observable {
     // Members
-    AK_observer *observers[MAX_OBSERVABLE_SERVERS];
+    AK_observer *observers[MAX_OBSERVABLE_OBSERVERS];
     int observer_id_counter;
+    void * AK_observable_type;
     
     // Methods
     int (*AK_destroy_observable) (struct Observable*);
     int (*AK_register_observer) (struct Observable*, struct AK_observer*);
     int (*AK_unregister_observer) (struct Observable*, struct AK_observer*);
-    int (*AK_run_action) ();
     int (*AK_notify_observer) (struct Observable*, struct AK_observer*);
     int (*AK_notify_observers) (struct Observable*);
     AK_observer* (*AK_get_observer_by_id) (struct AK_observable*, int id);
@@ -63,7 +63,6 @@ typedef struct Observable AK_observable;
 
 #endif
 
-extern AK_observer * AK_init_observer();
-extern AK_observable * AK_init_observable();
-
+extern AK_observer * AK_init_observer(void *observable_type, void (*observable_type_event_handler)(void*, void*));
+extern AK_observable * AK_init_observable(void *AK_observable_type);
 extern void AK_observable_test();
