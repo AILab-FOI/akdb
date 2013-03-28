@@ -34,8 +34,9 @@ struct Observer {
     int observer_id;
     
     // Methods
+    void * AK_observable_type;
+    int (*AK_observable_type_event_handler) (void *, void *);
     int (*AK_destroy_observer) (struct Observer*);
-    int (*AK_notify_handler) (struct Observer*, void*);
 };
 typedef struct Observer AK_observer;
 

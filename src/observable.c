@@ -185,7 +185,7 @@ static inline int *AK_destroy_observer(AK_observer *self)
  *
  * @return Exit status
  */
-static inline int *AK_notify_handler()
+static inline int *AK_observable_type_event_handler()
 {
     return OK;
 }
@@ -201,7 +201,7 @@ AK_observer * AK_init_observer()
     AK_observer *self;
     self = calloc(1, sizeof(AK_observer));
     self->AK_destroy_observer = AK_destroy_observer;
-    self->AK_notify_handler = AK_notify_handler;
+    self->AK_observable_type_event_handler = AK_observable_type_event_handler;
     
     Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVER OBJECT INITIALIZED!");    
     return self;
