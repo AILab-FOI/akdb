@@ -25,6 +25,17 @@
 
 /**
  * @author Ivan Pusic
+ * @enum ObservableType
+ * @brief Enumeration which defines possible observable types. You can also add your custom observable type here
+ */
+typedef enum {
+	AK_TRANSACTION,
+	AK_TRIGGER,
+	AK_CUSTOM,
+} AK_ObservableType_Enum;
+
+/**
+ * @author Ivan Pusic
  * @struct Observer
  * @brief Structure defines functions for observer object
  */
@@ -34,11 +45,12 @@ struct Observer {
     void * AK_observer_type;
     
     // Methods
-    int (*AK_observer_type_event_handler) (void *, void *);
-    int (*AK_notify) (struct Observer*, void *observable_type);
+    int (*AK_observer_type_event_handler) (void *, void *, AK_ObservableType_Enum);
+    int (*AK_notify) (struct Observer*, void *observable_type, AK_ObservableType_Enum);
     int (*AK_destroy_observer) (struct Observer*);
 };
 typedef struct Observer AK_observer;
+
 
 /**
  * @author Ivan Pusic
@@ -50,6 +62,7 @@ struct Observable {
     AK_observer *observers[MAX_OBSERVABLE_OBSERVERS];
     int observer_id_counter;
     void * AK_observable_type;
+    int AK_ObservableType_Def;
     
     // Methods
     int (*AK_destroy_observable) (struct Observable*);
@@ -64,5 +77,5 @@ typedef struct Observable AK_observable;
 #endif
 
 extern AK_observer * AK_init_observer(void *observable_type, void (*observable_type_event_handler)(void*, void*));
-extern AK_observable * AK_init_observable(void *AK_observable_type);
+extern AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_Enum AK_ObservableType_Def);
 extern void AK_observable_test();
