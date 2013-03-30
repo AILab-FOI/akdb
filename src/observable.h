@@ -31,10 +31,10 @@
 struct Observer {
     // Members
     int observer_id;
-    void * AK_observable_type;
+    void * AK_observer_type;
     
     // Methods
-    int (*AK_observable_type_event_handler) (void *, void *);
+    int (*AK_observer_type_event_handler) (void *, void *);
     int (*AK_notify) (struct Observer*, void *observable_type);
     int (*AK_destroy_observer) (struct Observer*);
 };

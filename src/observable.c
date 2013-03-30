@@ -107,8 +107,6 @@ static inline int *AK_notify_observers(AK_observable *self)
     for(i = 0; i < MAX_OBSERVABLE_OBSERVERS; ++i) {
         if(self->observers[i] != NULL) {
             self->observers[i]->AK_notify(self->observers[i], self->AK_observable_type);
-            id = self->observers[i]->observer_id;
-            printf ("OBSERVER ID: %d\n", id);
         }
     }
     
@@ -146,7 +144,7 @@ static inline AK_observer * AK_get_observer_by_id(AK_observable *self, int id)
 AK_observable * AK_init_observable(void *AK_observable_type)
 {
     AK_observable *self;
-    self = (AK_observable*) calloc(1, sizeof(AK_observable));
+    self = (AK_observable*) calloc(1, sizeof(*self));
     self->AK_register_observer = AK_register_observer;
     self->AK_unregister_observer = AK_unregister_observer;
     self->AK_notify_observer = AK_notify_observer;
@@ -156,7 +154,6 @@ AK_observable * AK_init_observable(void *AK_observable_type)
     self->observer_id_counter = 1;
     self->AK_observable_type = AK_observable_type;
     Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVABLE OBJECT INITIALIZED!");
-    
     return self;
 }
 
@@ -189,8 +186,9 @@ static inline int *AK_destroy_observer(AK_observer *self)
  * 
  * @return Exit status
  */
-static inline int AK_notify(AK_observer *observer, void *observable_type)
+static inline int * AK_notify(AK_observer *observer, void *observable_type)
 {
+    observer->AK_observer_type_event_handler(observer->AK_observer_type, observable_type);
     return OK;
 }
 
@@ -200,16 +198,105 @@ static inline int AK_notify(AK_observer *observer, void *observable_type)
  * 
  * @return Pointer to new observer object
  */
-AK_observer * AK_init_observer(void *observable_type, void (*observable_type_event_handler)(void*, void*))
+AK_observer * AK_init_observer(void *observer_type, void (*observer_type_event_handler)(void*, void*))
 {
     AK_observer *self;
-    self = calloc(1, sizeof(AK_observer));
+    self = calloc(1, sizeof(*self));
     self->AK_destroy_observer = AK_destroy_observer;
-    self->AK_observable_type = observable_type;
-    self->AK_observable_type_event_handler = observable_type_event_handler;
+    self->AK_observer_type = observer_type;
+    self->AK_observer_type_event_handler = observer_type_event_handler;
     self->AK_notify = AK_notify;
-    
     Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVER OBJECT INITIALIZED!");    
+    return self;
+}
+
+/**
+ * @author Ivan Pusic
+ * @brief OBSERVABLE MANUAL
+ */
+
+// First define you observable type 
+struct TypeObservable {
+    // Then specify your type variables
+    char *message;
+    // And your methods
+    char* (*AK_get_message) (struct TypeObservable*);
+    
+    // You should define methods for adding and removing observers. You can also define some other method for achieveing this
+    int (*AK_custom_register_observer) (struct TypeObservable*, AK_observer*);
+    int (*AK_custom_unregister_observer) (struct TypeObservable*, AK_observer*);
+    // Define observable variable, nedded for observable pattern
+    AK_observable *observable;
+};
+typedef struct TypeObservable AK_TypeObservable;
+
+// Implement method for getting some message from observable custom type
+char * AK_get_message(AK_TypeObservable *self) {
+    return self->message;
+}
+
+// Implement method for adding observer to custom observable type
+int * AK_custom_register_observer(AK_TypeObservable* self, AK_observer* observer) {
+    self->observable->AK_register_observer(self->observable, observer);
+    return OK;
+}
+
+// Implement method for removing observer from custom observable type
+int * AK_custom_unregister_observer(AK_TypeObservable * self, AK_observer* observer) {
+	self->observable->AK_unregister_observer(self->observable, observer);
+    return OK;
+}
+
+// You should have some kind of method for initializing observable type
+AK_TypeObservable * init_observable_type() {
+    AK_TypeObservable *self;
+    self = calloc(1, sizeof(AK_TypeObservable));
+    self->AK_get_message = AK_get_message;
+    self->AK_custom_register_observer = AK_custom_register_observer;
+    self->AK_custom_unregister_observer = AK_custom_unregister_observer;
+    self->message = "This is some message from my custom observable type";
+
+    // Very important!!! Call method for initializing AK_Observable and pass instance of custom observable type
+    self->observable = AK_init_observable(self);
+    return self;
+}
+
+struct TypeObserver {
+    // This is observable type we will track.
+    // You can declare instance of custom observable type here if you want, but it isn't necessary
+    AK_TypeObservable *observable;
+    
+    // Nedded for observable pattern
+    AK_observer *observer;
+}; 
+typedef struct TypeObserver AK_TypeObserver;
+
+void * custom_observer_event_handler(AK_TypeObserver *observer, AK_TypeObservable *observable) {
+    // Handle event, and call some method from observable type. In this case that is method for getting some message from observable type.
+    // You can also define your custom methods and call that method in event handler (here).
+    char *message = observable->AK_get_message(observable);
+    printf ("%s\n",message);
+}
+
+// Define some method for init observer type
+AK_TypeObserver * init_observer_type(void *observable) {
+    AK_TypeObserver *self;
+    self = calloc(1, sizeof(AK_TypeObserver));
+    //self->observable = observable;
+    // Init AK_Observer type. This is very important!!! Pass custom type observer instance as first parameter, and
+    // pointer to event handler function of custom observer type
+    self->observer = AK_init_observer(self, custom_observer_event_handler);
+    return self;
+}
+
+// Define some method for init observer type. This method is without passing custom observable type to observer.
+// This is also correct, if you don't want to have instance of custom observable type in custom observer type
+AK_TypeObserver * init_observer_type_second() {
+    AK_TypeObserver *self;
+    self = calloc(1, sizeof(AK_TypeObserver));
+    // Init AK_Observer type. This is very important!!! Pass custom type observer instance as first parameter, and
+    // pointer to event handler function of custom observer type
+    self->observer = AK_init_observer(self, custom_observer_event_handler);
     return self;
 }
 
@@ -220,34 +307,30 @@ AK_observer * AK_init_observer(void *observable_type, void (*observable_type_eve
 void AK_observable_test()
 {
     printf ("\n========== OBSERVABLE PATTERN BEGIN ==========\n");
-    AK_observable *observableObject = AK_init_observable(NULL);
 
-    AK_observer *observer_first = AK_init_observer(NULL, NULL);
-    AK_observer *observer_second = AK_init_observer(NULL, NULL);
-    
-    observableObject->AK_register_observer(observableObject, observer_first);
-    observableObject->AK_register_observer(observableObject, observer_second);
+    // Fucntion for init custom observable type
+    AK_TypeObservable *observable_type = init_observable_type();
+    // Init observer type with passing observable type instance
+    AK_TypeObserver *observer_first = init_observer_type(observable_type);
+    // You can also initialize obsever type without passing observable type instance
+    AK_TypeObserver *observer_second = init_observer_type_second();
 
-    observableObject->AK_notify_observers(observableObject);
-    AK_observer *requested_observer = observableObject->AK_get_observer_by_id(observableObject, observer_second->observer_id);
-    printf("Returned observer id: %d", requested_observer->observer_id);
-    
-    observableObject->AK_unregister_observer(observableObject, observer_first);
-    observableObject->AK_unregister_observer(observableObject, observer_second);
+    // Register out observers to observable type
+    observable_type->AK_custom_register_observer(observable_type, observer_first->observer);
+    observable_type->AK_custom_register_observer(observable_type, observer_second->observer);
+
+    // Notify all observers
+    observable_type->observable->AK_notify_observers(observable_type->observable);
+    // Notify specified observer
+    observable_type->observable->AK_notify_observer(observable_type->observable, observer_first->observer);
+
+    // Search for observer by ID
+    AK_observer *requested_observer = observable_type->observable->AK_get_observer_by_id(observable_type->observable, 1);
+    if(requested_observer) {
+        printf ("Observer was found. Observer adress: %d\n", requested_observer);
+    }
+    else
+        printf ("Requested observer was not found!\n");
     
     printf ("\n========== OBSERVABLE PATTERN END ==========\n");
 }
-
-/**
- * @author Ivan Pusic
- * @brief OBSERVABLE MANUAL
- *
- *
- *
- *
- *
- *
- *
- * 
- */
-
