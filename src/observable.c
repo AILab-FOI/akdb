@@ -212,17 +212,16 @@ AK_observer * AK_init_observer(void *observer_type, void (*observer_type_event_h
     return self;
 }
 
-/**
- * @author Ivan Pusic
- * @brief OBSERVABLE MANUAL
- */
+/******************** OBSERVABLE PATTERN EXAMPLE ********************/
 
+// This is optional. You can define some notifyTypes for your custom observable type
 typedef enum {
     ERROR,
     INFO,
     WARMING,
 } NotifyType;
 
+// This is also optional. Here we define structure that holds message, and notiy type
 typedef struct _notifyDetails {
     char *message;
     NotifyType type;
@@ -238,8 +237,9 @@ struct TypeObservable {
     // You should define methods for adding and removing observers. You can also define some other method for achieveing this
     int (*AK_custom_register_observer) (struct TypeObservable*, AK_observer*);
     int (*AK_custom_unregister_observer) (struct TypeObservable*, AK_observer*);
+    // If you want you can define method for setting observable type and message for our custom observable type
     void (*AK_set_notify_info_details) (struct TypeObservable*, NotifyType type, char *message);
-    // Define observable variable, nedded for observable pattern
+    // Define observable variable, nedded for observable pattern. Important!
     AK_observable *observable;
 };
 typedef struct TypeObservable AK_TypeObservable;
@@ -261,6 +261,7 @@ int * AK_custom_unregister_observer(AK_TypeObservable * self, AK_observer* obser
     return OK;
 }
 
+// Helper method for setting notify details
 void * AK_set_notify_info_details(AK_TypeObservable *self, NotifyType type, char *message) {
     // Info about notify
     NotifyDetails *notifyDetails;
@@ -270,7 +271,7 @@ void * AK_set_notify_info_details(AK_TypeObservable *self, NotifyType type, char
     self->notifyDetails = notifyDetails;
 }
 
-// You should have thissome kind of method for initializing observable type
+// You should have some kind of method for initializing observable type
 AK_TypeObservable * init_observable_type() {
     AK_TypeObservable *self;
     self = calloc(1, sizeof(AK_TypeObservable));
@@ -287,7 +288,7 @@ AK_TypeObservable * init_observable_type() {
     self->notifyDetails = notifyDetails;
 
     // Very important!!! Call method for initializing AK_Observable and pass instance of custom observable type
-    self->observable = AK_init_observable(self, AK_CUSTOM);
+    self->observable = AK_init_observable(self, AK_CUSTOM_FIRST);
     return self;
 }
 
@@ -296,16 +297,19 @@ struct TypeObserver {
     // You can declare instance of custom observable type here if you want, but it isn't necessary
     AK_TypeObservable *observable;
     
-    // Nedded for observable pattern
+    // Nedded for observable pattern. Important!
     AK_observer *observer;
 }; 
 typedef struct TypeObserver AK_TypeObserver;
+typedef struct TypeObserver AK_TypeObserver_Second;
 
-// Define handler for our AK_TypeObservable type. You should also define event handlers for other types if you need.
+// Define event handler for our AK_TypeObservable type. You should also define event handlers for other types if you need.
 void * handle_ak_custom_type(AK_TypeObserver *observer, AK_TypeObservable *observable) {
     char *message;
     switch(observable->notifyDetails->type) {
+        // we define possible notify types 
     case ERROR:
+        // for every possibility some action
         message = observable->AK_get_message(observable);
         printf ("%s\n", message);
         break;
@@ -318,16 +322,21 @@ void * handle_ak_custom_type(AK_TypeObserver *observer, AK_TypeObservable *obser
     }
 }
 
-void * custom_observer_event_handler(AK_TypeObserver *observer, void *observable, AK_ObservableType_Enum AK_ObservableType_Def) {
+// This method will be called by observable type 
+void * custom_observer_event_handler(void *observer, void *observable, AK_ObservableType_Enum AK_ObservableType_Def) {
     // Handle event, and call some method from observable type. In this case that is method for getting some message from observable type.
     // You can also define your custom methods and call that method in event handler (here).
     switch(AK_ObservableType_Def) {
+        // we define possible observable types
     case AK_TRANSACTION:
         break;
     case AK_TRIGGER:
         break;
-    case AK_CUSTOM:
-        handle_ak_custom_type(observer, (AK_TypeObservable*)observable);
+    case AK_CUSTOM_FIRST:
+        // for some type we call specified function
+        handle_ak_custom_type((AK_TypeObserver*)observer, (AK_TypeObservable*)observable);
+        break;
+    case AK_CUSTOM_SECOND:
         break;
     default:
         printf("ERROR! OBSERVABLE TYPE NOT FOUND");
@@ -348,8 +357,8 @@ AK_TypeObserver * init_observer_type(void *observable) {
 // Define some method for init observer type. This method is without passing custom observable type to observer.
 // This is also correct, if you don't want to have instance of custom observable type in custom observer type
 AK_TypeObserver * init_observer_type_second() {
-    AK_TypeObserver *self;
-    self = calloc(1, sizeof(AK_TypeObserver));
+    AK_TypeObserver_Second *self;
+    self = calloc(1, sizeof(AK_TypeObserver_Second));
     // Init AK_Observer type. This is very important!!! Pass custom type observer instance as first parameter, and
     // pointer to event handler function of custom observer type
     self->observer = AK_init_observer(self, custom_observer_event_handler);
@@ -368,21 +377,21 @@ void AK_observable_test()
     AK_TypeObservable *observable_type = init_observable_type();
     // Init observer type with passing observable type instance
     AK_TypeObserver *observer_first = init_observer_type(observable_type);
-    // You can also initialize obsever type without passing observable type instance
-    AK_TypeObserver *observer_second = init_observer_type_second();
+    // You can also initialize second obsever type without passing observable type instance
+    AK_TypeObserver_Second *observer_second = init_observer_type_second();
 
     // Register out observers to observable type
     observable_type->AK_custom_register_observer(observable_type, observer_first->observer);
     observable_type->AK_custom_register_observer(observable_type, observer_second->observer);
 
-    observable_type->AK_set_notify_info_details(observable_type, ERROR, "THIS IS SOME ERROR");
-    
+    // Set notify type and message
+    observable_type->AK_set_notify_info_details(observable_type, ERROR, "THIS IS SOME ERROR FOR ALL OBSERVERS");
     // Notify all observers
     observable_type->observable->AK_notify_observers(observable_type->observable);
+
+    // Set notify type and message
+    observable_type->AK_set_notify_info_details(observable_type, WARMING, "THIS IS SOME WARMING FOR SPECIFIED OBSERVER");
     // Notify specified observer
-
-
-    observable_type->AK_set_notify_info_details(observable_type, WARMING, "THIS IS SOME WARMING");
     observable_type->observable->AK_notify_observer(observable_type->observable, observer_first->observer);
 
     // Search for observer by ID

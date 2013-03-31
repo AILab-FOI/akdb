@@ -31,7 +31,8 @@
 typedef enum {
 	AK_TRANSACTION,
 	AK_TRIGGER,
-	AK_CUSTOM,
+	AK_CUSTOM_FIRST,
+    AK_CUSTOM_SECOND,
 } AK_ObservableType_Enum;
 
 /**
