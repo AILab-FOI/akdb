@@ -20,7 +20,7 @@ kalashnikov-db: auxiliary.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) 
 	$(CC) main.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) auxiliary.o -o $(OUTDIR)/akdb
 
 clean:
-	rm -rf *~ *.o iniparser/*.o ../bin/akdb ../bin/log.log ../doc/* ../bin/kalashnikov.db swig_interface/build swig_interface/*.pyc swig_interface/*.so swig_interface/*~ swig_interface/kalashnikovDB_wrap.c
+	rm -rf *~ *.o ini_parser/*.o ../bin/akdb ../bin/log.log ../doc/* ../bin/kalashnikov.db swig_interface/build swig_interface/*.pyc swig_interface/*.so swig_interface/*~ swig_interface/kalashnikovDB_wrap.c
 
 doc:
 	doxygen doxygen.config

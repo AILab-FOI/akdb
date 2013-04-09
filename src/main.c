@@ -25,6 +25,7 @@
 #include <stdlib.h>
 // Global configuration
 #include "constants.h"
+#include "configuration.h"
 
 // Disk management
 #include "dbman.h"

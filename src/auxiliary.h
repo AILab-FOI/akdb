@@ -20,19 +20,24 @@
 #ifndef AUXILIARY
 #define AUXILIARY
 
+#include "constants.h"
+#include "configuration.h"
+
 #include "assert.h"
 #include "time.h"
 #include "string.h"
 #include "ctype.h"
 #include "debug.h"
-#include "constants.h"
-#include "ini_parser/iniparser.h"
+
+//#include "ini_parser/iniparser.h"
+
 
 /**
  * @author Unknown
  * @struct list_elem
  * @brief Structure defines a list element. Every list_elem has its type, size, data and name of column which it belongs
  */
+
 struct list_elem {
     ///data type
     int type;
@@ -49,8 +54,11 @@ struct list_elem {
     struct list_elem *next;
 };
 
+
 typedef struct list_elem AK_list;
 typedef struct list_elem *AK_list_elem;
+
+
 
 #define TBL_BOX_OFFSET 1
 //#define TBL_COL_DELIMITER '|'

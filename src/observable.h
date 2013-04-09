@@ -21,6 +21,7 @@
 #define OBSERVABLE
 
 #include "constants.h"
+#include "configuration.h"
 #include "debug.h"
 
 /**

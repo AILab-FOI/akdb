@@ -29,6 +29,9 @@
 /** Invalid key token */
 #define DICT_INVALID_KEY    ((char*)-1)
 
+//* Debug */
+//#define TESTDIC
+
 /*---------------------------------------------------------------------------
                             Private functions
  ---------------------------------------------------------------------------*/
@@ -356,13 +359,17 @@ void dictionary_dump(dictionary * d, FILE * out)
 
 /* Test code */
 #ifdef TESTDIC
-#define NVALS 20000
+#define NVALS 20
 int main(int argc, char *argv[])
 {
     dictionary  *   d ;
     char    *   val ;
     int         i ;
     char        cval[90] ;
+    char 						str[90];
+    char 						sign[90];
+    strcpy (str,"value no - ");
+			
 
     /* Allocate dictionary */
     printf("allocating...\n");
@@ -372,7 +379,10 @@ int main(int argc, char *argv[])
     printf("setting %d values...\n", NVALS);
     for (i=0 ; i<NVALS ; i++) {
         sprintf(cval, "%04d", i);
-        dictionary_set(d, cval, "salut");
+        sprintf(sign, "%d", i);
+        strcat (str,sign);
+        dictionary_set(d, cval, str);
+        strcpy (str,"value no - ");
     }
     printf("getting %d values...\n", NVALS);
     for (i=0 ; i<NVALS ; i++) {
@@ -380,7 +390,9 @@ int main(int argc, char *argv[])
         val = dictionary_get(d, cval, DICT_INVALID_KEY);
         if (val==DICT_INVALID_KEY) {
             printf("cannot get value for key [%s]\n", cval);
-        }
+        }else {
+        		printf("val for key [%s]: %s\n", cval, val);
+        	}
     }
     printf("unsetting %d values...\n", NVALS);
     for (i=0 ; i<NVALS ; i++) {

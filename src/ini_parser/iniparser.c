@@ -258,7 +258,7 @@ void iniparser_dumpsection_ini(dictionary * d, char * s, FILE * f)
             continue ;
         if (!strncmp(d->key[j], keym, seclen+1)) {
             fprintf(f,
-                    "%-30s = %s\n",
+                    "%s = %s\n",
                     d->key[j]+seclen+1,
                     d->val[j] ? d->val[j] : "");
         }
@@ -666,7 +666,8 @@ dictionary * iniparser_load(const char * ininame)
         if (len==0)
             continue;
         /* Safety check against buffer overflows */
-        if (line[len]!='\n') {
+        /* Added line[len+1] in case the last line in file doesnt end with \n */
+        if (line[len]!='\n' && line[len+1] != 0) {
             fprintf(stderr,
                     "iniparser: input line too long in %s (%d)\n",
                     ininame,
@@ -675,7 +676,9 @@ dictionary * iniparser_load(const char * ininame)
             fclose(in);
             return NULL ;
         }
+        
         /* Get rid of \n and spaces at end of line */
+
         while ((len>=0) &&
                 ((line[len]=='\n') || (isspace(line[len])))) {
             line[len]=0 ;
@@ -746,26 +749,51 @@ void iniparser_freedict(dictionary * d)
 }
 
 dictionary * AK_config;
-
-char * AK_config_get(char * key, char * def)
+/*
+char * AK_config_get(dictionary * d, char * key, char * def)
 {
     char * lc_key ;
-    char * sval ;
+    char * sval;
 
     if (AK_config==NULL || key==NULL)
         return def ;
 
     lc_key = strlwc(key);
-    sval = dictionary_get(AK_config, lc_key, def);
+    sval = dictionary_get(d, lc_key, def);
     return sval ;
 }
+*/
+
 
 char * DB_FILE;
+
+int max_varchar_length;
 
 void AK_inflate_config()
 {
   AK_config = iniparser_load("config.ini");
-  DB_FILE = AK_config_get("general:db_file", NULL);
+  max_varchar_length = 20;
+
+  //DB_FILE = AK_config_get(AK_config,"general:db_file", NULL);
+  //printf("DB_FILE: %s \n",DB_FILE);
 }
+
+
+
+/*
+int main(int argc, char *argv[]){
+	//AK_inflate_config();	
+	AK_config = iniparser_load("config.ini");
+ FILE * test;
+ test = fopen("test.ini", "w");
+ 	iniparser_dump_ini(AK_config, test);
+ 	fclose(test);
+ 	dictionary * AK_test;
+ 	AK_test = iniparser_load("test.ini");
+ 	char * val;
+ 	val = AK_config_get(AK_test,"general:db_file", NULL);
+ 	printf("DB_FILE: %s \n",val);
+	}
++/
 
 /* vim: set ts=4 et sw=4 tw=75 */
