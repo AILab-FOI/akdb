@@ -53,7 +53,6 @@ struct Observer {
 };
 typedef struct Observer AK_observer;
 
-
 /**
  * @author Ivan Pusic
  * @struct Observable
@@ -68,16 +67,17 @@ struct Observable {
     
     // Methods
     int (*AK_destroy_observable) (struct Observable*);
-    int (*AK_register_observer) (struct Observable*, struct AK_observer*);
-    int (*AK_unregister_observer) (struct Observable*, struct AK_observer*);
-    int (*AK_notify_observer) (struct Observable*, struct AK_observer*);
+    int (*AK_register_observer) (struct Observable*, AK_observer*);
+    int (*AK_unregister_observer) (struct Observable*, AK_observer*);
+    int (*AK_notify_observer) (struct Observable*, AK_observer*);
     int (*AK_notify_observers) (struct Observable*);
-    AK_observer* (*AK_get_observer_by_id) (struct AK_observable*, int id);
+    int (*AK_run_custom_action) ();
+    AK_observer* (*AK_get_observer_by_id) (struct Observable*, int id);
 };
 typedef struct Observable AK_observable;
 
 #endif
 
 extern AK_observer * AK_init_observer(void *observable_type, void (*observable_type_event_handler)(void*, void*));
-extern AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_Enum AK_ObservableType_Def);
+extern AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_Enum AK_ObservableType_Def, void * AK_custom_action);
 extern void AK_observable_test();
