@@ -103,7 +103,7 @@ static inline int AK_notify_observer(AK_observable *self, AK_observer *observer)
  */
 static inline int AK_notify_observers(AK_observable *self)
 {
-    int i, id;
+    int i;
     for(i = 0; i < MAX_OBSERVABLE_OBSERVERS; ++i) {
         if(self->observers[i] != NULL) {
             // Call AK_notify and pass AK_observer observer and custom observable instances
@@ -201,7 +201,7 @@ static inline int AK_notify(AK_observer *observer, void *observable_type, AK_Obs
  * 
  * @return Pointer to new observer object
  */
-AK_observer *AK_init_observer(void *observer_type, void (*observer_type_event_handler)(void*, void*))
+AK_observer *AK_init_observer(void *observer_type, void (*observer_type_event_handler)(void*, void*, AK_ObservableType_Enum))
 {
     AK_observer *self;
     self = calloc(1, sizeof(*self));
@@ -399,7 +399,7 @@ void AK_observable_test()
     // Search for observer by ID
     AK_observer *requested_observer = observable_type->observable->AK_get_observer_by_id(observable_type->observable, 1);
     if(requested_observer) {
-        printf ("Observer was found. Observer adress: %d\n", requested_observer);
+        printf ("Observer was found. Observer adress: %p\n", requested_observer);
     }
     else
         printf ("Requested observer was not found!\n");

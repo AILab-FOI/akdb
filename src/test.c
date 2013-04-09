@@ -838,10 +838,6 @@ void AK_create_test_tables() {
     free(row_root);
     //------------------------------------------------------------------------------------------------------
     //AK_op_rename_test();
-    printf("Transaction Test.\nLoad and release locks.\n#######################################\n");
-    AK_test_Transaction();
-    printf("#######################################\nEnd transaction Test.\n");
-    
     
   //  AK_sequence_test();
 
@@ -855,6 +851,7 @@ printf("\n\n----------------View test----------------\n\n");
 
     /* RUN TESTS FOR OBSERVABLE DESIGN PATTERN */
     AK_observable_test();
+    AK_test_Transaction();
 }
 
 

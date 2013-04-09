@@ -22,6 +22,7 @@
 #include <pthread.h> //TRANSACTIONS
 #include "constants.h"
 #include "command.h"
+#include "observable.h"
 #include <string.h>
 /**
  * @author Frane Jakelić
@@ -74,10 +75,22 @@ struct memoryAddresses{
  * @brief Structure used to transport transaction data to the thread.
  */
 struct transactionData{
-
     int lengthOfArray;
 	command *array;
 };
+
+struct observable_transaction {
+    int (*AK_transaction_register_observer) (struct observable_transaction*, AK_observer*);
+    int (*AK_transaction_unregister_observer) (struct observable_transaction*, AK_observer*);
+    AK_observable *observable;
+};
+
+struct observer_transaction {
+    AK_observer *observer;
+};
+
+typedef struct observable_transaction AK_observable_transaction;
+typedef struct observer_transaction AK_observer_transaction;
 
 typedef struct transactionData AK_transaction_data;
 typedef struct memoryAddresses AK_memoryAddresses;
@@ -129,5 +142,5 @@ void AK_execute_transaction(void*);
 void AK_transaction_manager(command*, int);
 void AK_test_Transaction();
 
-
-
+AK_observable_transaction * AK_init_observable_transaction();
+AK_observer_transaction * AK_init_observer_transaction();
