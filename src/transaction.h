@@ -24,6 +24,27 @@
 #include "command.h"
 #include "observable.h"
 #include <string.h>
+
+/**
+ * 
+ * 
+ */
+struct observable_transaction {
+    int (*AK_transaction_register_observer) (struct observable_transaction*, AK_observer*);
+    int (*AK_transaction_unregister_observer) (struct observable_transaction*, AK_observer*);
+    AK_observable *observable;
+};
+typedef struct observable_transaction AK_observable_transaction;
+
+/**
+ * 
+ * 
+ */
+struct observer_transaction {
+    AK_observer *observer;
+};
+typedef struct observer_transaction AK_observer_transaction;
+
 /**
  * @author Frane Jakelić
  * @struct transaction_locks_list_elem
@@ -35,6 +56,10 @@ struct transaction_locks_list_elem {
     int isWaiting;
     struct transaction_locks_list_elem *nextLock;
     struct transaction_locks_list_elem *prevLock;
+
+    // Observable
+    AK_observer *observer;
+    AK_observable_transaction *observable_transaction;
 };
 
 /**
@@ -78,19 +103,6 @@ struct transactionData{
     int lengthOfArray;
 	command *array;
 };
-
-struct observable_transaction {
-    int (*AK_transaction_register_observer) (struct observable_transaction*, AK_observer*);
-    int (*AK_transaction_unregister_observer) (struct observable_transaction*, AK_observer*);
-    AK_observable *observable;
-};
-
-struct observer_transaction {
-    AK_observer *observer;
-};
-
-typedef struct observable_transaction AK_observable_transaction;
-typedef struct observer_transaction AK_observer_transaction;
 
 typedef struct transactionData AK_transaction_data;
 typedef struct memoryAddresses AK_memoryAddresses;
@@ -138,7 +150,7 @@ int AK_acquire_lock(int, int, pthread_t);
 void AK_release_locks(AK_memoryAddresses_link, pthread_t);
 int AK_get_memory_blocks(char*, AK_memoryAddresses_link);
 int AK_execute_commands(command* , int);
-void AK_execute_transaction(void*);
+void * AK_execute_transaction(void*);
 void AK_transaction_manager(command*, int);
 void AK_test_Transaction();
 

@@ -34,6 +34,10 @@ int AK_memory_block_hash(int blockMemoryAddress) {
     return blockMemoryAddress % NUMBER_OF_KEYS;
 }
 
+
+
+
+
 /**
  * @author Frane Jakelić
  * @brief Looks for empty link for a new thread
@@ -61,6 +65,9 @@ void AK_add_thread(pthread_t thread) {
 	memset(node,0,sizeof (struct threadContainer));
 	AK_search_empty_thread_link()->nextThread = node;
     node->thread = thread;
+
+
+
 }
 
 
@@ -82,6 +89,7 @@ void AK_delete_thread(pthread_t thread) {
         }
 
         tmp = tmp->nextThread;
+
     }
 
 }
@@ -119,6 +127,8 @@ AK_transaction_elem_P AK_search_existing_link_for_hook(int blockAddress){
 		if(tmp->address == blockAddress) return tmp;
 		tmp = tmp->nextBucket;
 	}while(tmp != LockTable[hash].DLLHead);
+
+
 
 	return NULL;
 }
@@ -573,7 +583,7 @@ int AK_execute_commands(command * commandArray, int lengthOfArray) {
  * @brief thread start point all relevant functions are called from this function. It acts as an intermediary between the main thread and other threads
  * @param data transmitted to the thread from the main thread
  */
-void AK_execute_transaction(void *params) {
+void * AK_execute_transaction(void *params) {
     int status;
     AK_transaction_data *data = (AK_transaction_data *)params;
 
@@ -583,11 +593,14 @@ void AK_execute_transaction(void *params) {
     AK_delete_thread(pthread_self());
     pthread_mutex_unlock(&accessLockMutex);
 
+
     if (status == ABORT) {
         printf("Transaction ABORTED!\n");
     } else {
         printf("Transaction COMMITED!\n");
     }
+
+    return NULL;
 }
 
 /**
@@ -607,92 +620,31 @@ void AK_transaction_manager(command * commandArray, int lengthOfArray) {
     params->lengthOfArray = lengthOfArray;
 
     pthread_create(&t1, NULL, AK_execute_transaction,params);
+
     pthread_mutex_lock(&accessLockMutex);
     AK_add_thread(t1);
     pthread_mutex_unlock(&accessLockMutex);
 }
 
-/** 
- * 
- * 
- * @param self 
- * @param observer 
- * 
- * @return 
- */
-int AK_transaction_register_observer(AK_observable_transaction *self, AK_observer *observer) {
-    self->observable->AK_register_observer(self->observable, observer);
-    return OK;
+AK_observable_transaction * AK_init_observable_transaction() {
+    return NULL;
 }
 
-/** 
- * 
- * 
- * @param self 
- * @param observer 
- * 
- * @return 
- */
-int AK_transaction_unregister_observer(AK_observable_transaction *self, AK_observer *observer){
-    self->observable->AK_register_observer(self->observable, observer);
-    return OK;
-}
-
-/** 
- * @author Ivan Pusic
- * 
- */
-AK_observable_transaction * AK_init_observable_transaction () {
-    AK_observable_transaction *self;
-
-    self = calloc(1, sizeof(AK_observable_transaction));
-    self->AK_transaction_register_observer = &AK_transaction_register_observer;
-    self->AK_transaction_unregister_observer = &AK_transaction_unregister_observer;
-
-    self->observable = AK_init_observable(self, AK_TRANSACTION, NULL);
-}
-
-/** 
- * 
- * 
- * @param observer 
- * @param observable 
- * @param AK_ObservableType_Def 
- */
-void AK_on_observable_transaction_notify(void *observer, void *observable, AK_ObservableType_Enum AK_ObservableType_Def){
-    printf ("TRANSACTIONS EVENT HANDLER\n");
-}
-
-/** 
- *
- * 
- * @param observable 
- */
 AK_observer_transaction * AK_init_observer_transaction() {
-    AK_observer_transaction *self;
-
-    self = calloc(1, sizeof(AK_observer_transaction));
-    self->observer = AK_init_observer(self, &AK_on_observable_transaction_notify);
-
-    return self;
+    return NULL;
 }
-
 
 void AK_test_Transaction() {
     printf("***Test Transaction***\n");
-
-    AK_observable_transaction *observable_transaction = AK_init_observable_transaction();
-    AK_observer_transaction *observer_transaction = AK_init_observer_transaction();
-    
     memset(LockTable, 0, NUMBER_OF_KEYS * sizeof (struct transaction_list_head));
-    command* commands = malloc(sizeof (command));
-    commands->id_command = INSERT;
-    commands->tblName = "professor";
-    //AK_transaction_manager(komande,1);
-    
+
+    command* komande = malloc(sizeof (command));
+    komande->id_command = INSERT;
+    komande->tblName = "professor";
+
+
+    AK_transaction_manager(komande,1);
+
+    sleep(1);
     printf("***End test Transaction***\n");
 }
-
-
-
-
