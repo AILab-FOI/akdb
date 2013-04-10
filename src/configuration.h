@@ -1,21 +1,17 @@
-
-
 #ifndef CONFIGURATION
 #define CONFIGURATION
-
-
 
 #include "ini_parser/iniparser.h"
 /**
  * @def DB_NAME
  * @brief Constant declaring the name oof database file
 */
-#define DB_FILE "kalashnikov.db"
+#define DB_FILE (iniparser_getstring(AK_config,"general:db_file","kalashnikov.db"))
 /**
  * @def MAX_NUM_OF_BLOCKS
  * @brief Constant declaring maximum number of blocks in a segment 
 */
-#define MAX_NUM_OF_BLOCKS 200
+#define MAX_NUM_OF_BLOCKS (iniparser_getint(AK_config,"general:max_num_of_blocks",200))
 /**
   * @def MAX_VARCHAR_LENGTH
   * @brief Constant declaring maximum length of varchar data value
@@ -30,12 +26,12 @@
   * @def MAX_FREE_SPACE_SIZE
   * @brief Constant declaring maximum free space in block
 */
-#define MAX_FREE_SPACE_SIZE 4000
+#define MAX_FREE_SPACE_SIZE (iniparser_getint(AK_config,"general:max_free_space_size",4000)) 
 /**
   * @def MAX_LAST_TUPLE_DICT_SIZE_TO_USE
   * @brief Constant declaring maximum size od last tuple in dictionary
 */
-#define MAX_LAST_TUPLE_DICT_SIZE_TO_USE 470
+#define MAX_LAST_TUPLE_DICT_SIZE_TO_USE (iniparser_getint(AK_config,"general:max_last_tuple_dict_size_to_use",470))
 /**
   * @def MAX_ATTRIBUTES
   * @brief Constant declaring maximum number of attributes per block
@@ -80,7 +76,7 @@
   * @def DB_FILE_SIZE
   * @brief Constant declaring size of DB file in MB
  */
-#define DB_FILE_SIZE 40
+#define DB_FILE_SIZE (iniparser_getint(AK_config,"general:db_file_size",40))
 /**
   * @def MAX_DB_FILE_BLOCKS
   * @brief Constant declaring total blocks in DB file (for the given DB_FILE size)
@@ -90,30 +86,30 @@
   * @def INITIAL_EXTENT_SIZE
   * @brief Constant declaring initial extent size in blocks
  */
-#define INITIAL_EXTENT_SIZE 15
+#define INITIAL_EXTENT_SIZE (iniparser_getint(AK_config,"general:initial_extent_size",15))
 /**
   * @def EXTENT_GROWTH_TABLE
   * @brief Constant declaring extent growth factor for tables
  */
-#define EXTENT_GROWTH_TABLE 0.5
+#define EXTENT_GROWTH_TABLE (iniparser_getdouble(AK_config,"general:extent_growth_table",0.5))
 
 /**
   * @def EXTENT_GROWTH_INDEX
   * @brief Constant declaring extent growth factor for indices
  */
-#define EXTENT_GROWTH_INDEX 0.2
+#define EXTENT_GROWTH_INDEX (iniparser_getdouble(AK_config,"general:extent_growth_index",0.2))
 
 /**
   * @def EXTENT_GROWTH_TRANSACTION
   * @brief Constant declaring extent growth factor for transaction segments
  */
-#define EXTENT_GROWTH_TRANSACTION 0.2
+#define EXTENT_GROWTH_TRANSACTION (iniparser_getdouble(AK_config,"general:extent_growth_transaction",0.2))
 
 /**
   * @def EXTENT_GROWTH_TEMP
   * @brief Constant declaring extent growth factor for temporary segments
  */
-#define EXTENT_GROWTH_TEMP 0.5
+#define EXTENT_GROWTH_TEMP (iniparser_getdouble(AK_config,"general:extent_growth_temp",0.5))
 
 /**
   * @def MAX_CACHE_MEMORY
@@ -155,7 +151,7 @@
  * @def MAX_MAIN_BUCKETS
  * @brief Constant declaring the maximum number of main buckets
 */
-#define MAX_MAIN_BUCKETS 512
+#define MAX_MAIN_BUCKETS (iniparser_getint(AK_config,"general:max_main_buckets",512))
 
 /**
  * @def MAIN_BUCKET_SIZE
@@ -179,7 +175,7 @@
  * @def NUMBER_OF_THREADS
  * @brief Constant declaring maximum number of threads that an application can acquire
 */
-#define NUMBER_OF_THREADS 42
+#define NUMBER_OF_THREADS (iniparser_getint(AK_config,"general:number_of_threads",42))
 
 /**
   * @def MAX_EXTENTS
