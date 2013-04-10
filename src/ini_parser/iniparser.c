@@ -666,7 +666,7 @@ dictionary * iniparser_load(const char * ininame)
         if (len==0)
             continue;
         /* Safety check against buffer overflows */
-        /* Added line[len+1] in case the last line in file doesnt end with \n */
+
         if (line[len]!='\n' && !feof(in)) {
             fprintf(stderr,
                     "iniparser: input line too long in %s (%d)\n",
@@ -765,14 +765,12 @@ char * AK_config_get(dictionary * d, char * key, char * def)
 */
 
 
-char * DB_FILE;
+//char * DB_FILE;
 
-int max_varchar_length;
 
 void AK_inflate_config()
 {
   AK_config = iniparser_load("config.ini");
-  max_varchar_length = 20;
 
   //DB_FILE = AK_config_get(AK_config,"general:db_file", NULL);
   //printf("DB_FILE: %s \n",DB_FILE);
