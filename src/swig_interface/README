@@ -6,3 +6,7 @@ python setup.py build_ext --inplace
 Afterwards you can use test.py to test the interface:
 
 python test.py
+
+to see doctest output, start it with:
+
+python -m doctest -v test.py

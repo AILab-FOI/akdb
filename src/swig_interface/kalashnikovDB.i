@@ -1,6 +1,7 @@
 /* File: kalashnikovDB.i */
 %module kalashnikovDB
 
+
 %typemap(in) void* {
   if (PyString_Check($input))
    {
@@ -18,6 +19,29 @@
     $1 = (void*)&c;
   }
     
+}
+
+%typemap(in) (int _num, int* _type) {
+  int i;
+  if (!PyList_Check($input)) {
+    PyErr_SetString(PyExc_ValueError, "Expecting a list");
+    return NULL;
+  }
+  $1 = PyList_Size($input);
+  $2 = (int *) malloc(($1)*sizeof(int));
+  for (i = 0; i < $1; i++) {
+    PyObject *s = PyList_GetItem($input,i);
+    if (!PyInt_Check(s)) {
+        free($2);
+        PyErr_SetString(PyExc_ValueError, "List items must be integers");
+        return NULL;
+    }
+    $2[i] = PyInt_AsLong(s);
+  }
+}
+
+%typemap(freearg) (int attr_num, int* attr_type) {
+   if ($2) free($2);
 }
 
 %typemap(out) unsigned char * {
@@ -43,6 +67,7 @@
   }
 }
 
+
 %typemap(out) int * {
   PyObject *list = PyList_New(MAX_CONSTRAINTS);
   int i = 0;
@@ -62,7 +87,7 @@
   $1 = bl;
   //$1 = (AK_block*)$input;
 }
-/*
+
 %typemap(in) char ** {
   if (PyList_Check($input)) {
     int size = PyList_Size($input);
@@ -86,7 +111,7 @@
 }
 %typemap(freearg) char ** {
   free((char *) $1);
-}*/
+}
 
 //AK_create_table_parameters
 %typemap(out) AK_create_table_parameter * {
@@ -119,7 +144,6 @@
 %{
 #define SWIG_FILE_WITH_INIT
 
-extern char * AK_config_get(char * key, char * def);
 
 #include "../debug.h"
 #include "../debug.c"
@@ -231,8 +255,13 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 #include "../reference.c"
 #include "../reference.h"
 
+#include "../observable.c"
+#include "../observable.h"
+
 #include "../test.c"
 #include "../test.h"
+
+
 #include "../trigger.c"
 #include "../trigger.h"
 #include "../main.c"
@@ -261,8 +290,6 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 #include "../redo_log.h"
 #include "../redo_log.c"
 %}
-
-extern char * AK_config_get(char * key, char * def);
 
 %include "../debug.h"
 %include "../debug.c"
@@ -320,6 +347,10 @@ extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, ele
 %include "../union.h"
 %include "../selection.c"
 %include "../selection.h"
+%include "../drop.c"
+%include "../drop.h"
+%include "../view.c"
+%include "../view.h"
 
 %include "../rename.c"
 %include "../rename.h"
@@ -370,6 +401,9 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 %include "../reference.c"
 %include "../reference.h"
 
+%include "../observable.c"
+%include "../observable.h"
+
 %include "../test.c"
 %include "../test.h"
 %include "../trigger.c"
@@ -399,3 +433,4 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 
 %include "../redo_log.h"
 %include "../redo_log.c"
+

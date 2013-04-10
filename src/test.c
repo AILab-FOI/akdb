@@ -23,6 +23,117 @@
 #include "transaction.h"
 
 /**
+ * @author Luka Rajcevic
+ * @brief Function for creating test table header
+ * @param tbl_name - name of the table for which the header will be created
+ * @param attr_name - array of attribute names
+ * @param _num - number of attributes
+ * @param _type - array of attribute types (eg. TYPE_INT, TYPE_VARCHAR, etc.)
+ * @return 1 if ok, 0 otherwise
+ */
+int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type){
+    
+    int i;
+    float weight;
+
+    AK_header t_header[ MAX_ATTRIBUTES ];
+    AK_header* temp;
+    for (i = 0; i < _num; i++){
+        temp = (AK_header*) AK_create_header(attr_name[i], _type[i], FREE_INT, FREE_CHAR, FREE_CHAR);
+        memcpy(t_header + i, temp, sizeof ( AK_header));
+    }
+
+    memset(t_header + _num, 0, MAX_ATTRIBUTES - _num);
+
+    int startAddress = AK_initialize_new_segment(tbl_name, SEGMENT_TYPE_TABLE, t_header);
+
+    if (startAddress != EXIT_ERROR)
+        return 1;
+    else
+        return 0;
+}
+
+/**
+ * @author Luka Rajcevic
+ * @brief Function for inserting test data into table (needed for python testing)
+ * @param tbl_name - name of the table for which the header will be created
+ * @param attr_name - array of attribute names
+ * @param attr_value - values of attributes to be inserted
+ * @param _num - number of attributes
+ * @param _type - array of attribute types (eg. TYPE_INT, TYPE_VARCHAR, etc.)
+ * @return EXIT_SUCCESS if ok, EXIT_ERROR otherwise
+ */
+int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _num, int* _type){
+
+    int i;
+
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root);
+
+    Ak_DeleteAll_L(row_root);
+    for (i = 0; i < _num; i++){
+        if (_type[i] == TYPE_VARCHAR)
+            Ak_Insert_New_Element(_type[i], attr_value[i], tbl_name, attr_name[i], row_root);
+        if (_type[i] == TYPE_INT){
+            int val = atoi(attr_value[i]);
+            Ak_Insert_New_Element(_type[i], &val, tbl_name, attr_name[i], row_root); 
+        }
+        if (_type[i] == TYPE_FLOAT){
+            float val = atof(attr_value[i]);
+            Ak_Insert_New_Element(_type[i], &val , tbl_name, attr_name[i], row_root);  
+        }
+    }
+
+    return Ak_insert_row(row_root);
+}
+
+/**
+ * @author Luka Rajcevic
+ * @brief Function for selection operator on one table
+ + @param src_table - name of the source table
+ + @param dest_table - table in which selection will be stored
+ * @param sel_query - array of operators, operands and attributes (postfix query)
+ * @param _num - number of attributes
+ * @param _type - array of attribute types (eg. TYPE_INT, TYPE_VARCHAR, etc.)
+ * @return EXIT_SUCCESS if ok, EXIT_ERROR otherwise
+ *
+ */
+int selection_test(char* src_table, char* dest_table, char** sel_query, int _num, int* _type){
+
+    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    Ak_Init_L(expr);
+
+    // TYPE_OPERAND 10
+    // TYPE_OPERATOR 11
+    // TYPE_ATTRIBS 12
+
+    strcpy(expr->table,dest_table);
+    int i;
+    for (i = 0; i < _num; i++){
+        if (_type[i] == TYPE_INT){
+            int val = atoi(sel_query[i]);
+            Ak_InsertAtEnd_L(_type[i], &val, sizeof(int), expr);    
+        }
+        if (_type[i] == TYPE_FLOAT){
+            float val = atof(sel_query[i]);
+            Ak_InsertAtEnd_L(_type[i], &val, sizeof(float), expr);
+        }
+        if (_type[i] == TYPE_OPERATOR || _type[i] == TYPE_ATTRIBS || _type[i] == TYPE_VARCHAR){
+            Ak_InsertAtEnd_L(_type[i], sel_query[i], sizeof(sel_query[i]), expr);
+        }
+    }
+
+    if (AK_selection(src_table, dest_table, expr) == EXIT_SUCCESS){
+        Ak_DeleteAll_L(expr);
+        free(expr);    
+        return 1;
+    }
+    return 0;
+
+}
+
+
+/**
  * @author Dino Laktašić
  * @brief Function for creating test tables
  * @return No return value

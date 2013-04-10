@@ -2,10 +2,14 @@
 
 import kalashnikovDB as ak47
 
-class Funkcije:
+class Functions:
+    '''
     def create_table(self, table, attributes, types):
         parameters = []
         t_header = []
+        if len(attributes) != len(types):
+            print "error"
+            return
         for i in range(len(attributes)):
             if types[i] == ak47.TYPE_INT:
                 parametar = ak47.AK_create_create_table_parameter(ak47.TYPE_INT, attributes[i])
@@ -18,7 +22,14 @@ class Funkcije:
                 parameters.append(parametar)
         parametar = ak47.AK_create_create_table_parameter(ak47.TYPE_VARCHAR, "abcd")
         parameters.append(parametar)
-        ak47.AK_create_table(table, parameters, len(attributes))	
+        ak47.AK_create_table(table, parameters, len(attributes))
+        print "table created"	
+    '''
+    def create_table_header(self, table, attr_name, attr_type):
+        return ak47.create_header_test(table, attr_name, attr_type)
+
+    def insert_data(self, table, attr_name, attr_value, attr_type):
+        return ak47.insert_data_test(table, attr_name, attr_value, attr_type)
     
     def update_Row(self, table, column1, column2, key, new_value):
         element = ak47.list_elem()
@@ -38,8 +49,9 @@ class Funkcije:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, new_value, table, column2, element, 0)
         elif type(new_value) == str:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, new_value, table, column2, element, 0)
-            
-        ak47.Ak_update_row(element)
+        
+        return ak47.Ak_update_row(element)
+        
         
     def delete_Row(self, table, column1, key):
         element = ak47.list_elem()
@@ -53,8 +65,11 @@ class Funkcije:
         elif type(key) == str:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, key, table, column1, element, 1)
             
-        ak47.Ak_delete_row(element)
-       
+        return ak47.Ak_delete_row(element)
+
+    def sel(self, src_table, dest_table, query, query_types ):
+        return ak47.selection_test(src_table, dest_table, query, query_types)
+    '''
     def selection(self, table, table_res, expr):
         element = ak47.list_elem()
         ak47.Ak_Init_L(element)
@@ -79,8 +94,8 @@ class Funkcije:
                     ak47.Ak_InsertAtEnd_L(ak47.TYPE_VARCHAR, el, len(el), element)
                 c = 0
         
-        ak47.AK_selection(table, table_res, element)        
-        
+        return ak47.AK_selection(table, table_res, element)        
+    '''
     def theta_join(self, table1, table2, table_res, expr):
         table1_attributes = []
         table2_attributes = []
@@ -179,20 +194,153 @@ class Funkcije:
             brojac += 1
         ak47.Ak_insert_row(element)
 
-  
+# call to main.c from python (invoking AK_create_test_tables) 
+#ak47.main()
 
-ak47.main()
 
-f = Funkcije()
+# author: Luka Rajcevic
+# Test data for "student" table
+# attribute names, attribute types and attribute data
+student_attr_name = ["id_student", "firstname", "lastname", "year", "weight"]
+student_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT]
+student_attr_value_1 = ["1", "Collin", "Channell", "1990", "100.1"]
+student_attr_value_2 = ["2", "Manuel", "Mcguffey", "1991", "80"]
+student_attr_value_3 = ["3", "Lawanda", "Leep", "1990", "75.6"]
+student_attr_value_4 = ["4", "Johnie", "Janda", "1992", "61"]
+student_attr_value_5 = ["5", "Daisey", "Dunagan", "1987", "63.2"]
+student_attr_value_6 = ["6", "Orpha", "Ousley", "1989", "80.23"]
+student_attr_value_7 = ["7", "Hedwig", "Hester", "1989", "66"]
+student_attr_value_8 = ["8", "James", "Jaime", "1993", "75.3"]
 
-#ak47.AK_inflate_config()
-#ak47.AK_init_disk_manager()
-#ak47.AK_memoman_init()
+# author: Luka Rajcevic
+# Test data for "class" table
+# attribute names, attribute types and attribute data
+class_attr_name = ["id_class", "class_name", "year"]
+class_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_INT]
+class_attr_value_1 = ["1", "Art History", "2009"]
+class_attr_value_2 = ["2", "Biology", "2011"]
+class_attr_value_3 = ["3", "Chemistry", "2011"]
+class_attr_value_4 = ["4", "Computer Science", "2012"]
 
+
+f = Functions()
+
+# author: Luka Rajcevic
+# this function tests methods from Functions class, more specifically its
+# create_table_header and insert_data methods.
+def functions_test():
+    '''
+    >>> ak47.AK_inflate_config()
+
+    >>> ak47.AK_init_disk_manager()
+    0
+    >>> ak47.AK_memoman_init()
+    0
+    >>> f.create_table_header("student", student_attr_name, student_attr_type)
+    1
+    >>> f.insert_data("student", student_attr_name, student_attr_value_1, student_attr_type)
+    0
+    >>> f.insert_data("student", student_attr_name, student_attr_value_2, student_attr_type)
+    0
+    >>> f.insert_data("student", student_attr_name, student_attr_value_3, student_attr_type)
+    0
+    >>> f.insert_data("student", student_attr_name, student_attr_value_4, student_attr_type)
+    0
+    >>> f.insert_data("student", student_attr_name, student_attr_value_5, student_attr_type)
+    0
+    >>> f.insert_data("student", student_attr_name, student_attr_value_6, student_attr_type)
+    0
+    >>> f.insert_data("student", student_attr_name, student_attr_value_7, student_attr_type)
+    0
+    >>> f.insert_data("student", student_attr_name, student_attr_value_8, student_attr_type)
+    0
+    >>> ak47.AK_print_table("student")
+
+    >>> f.create_table_header("class", class_attr_name, class_attr_type)
+    1
+    >>> f.insert_data("class", class_attr_name, class_attr_value_1, class_attr_type)
+    0
+    >>> f.insert_data("class", class_attr_name, class_attr_value_2, class_attr_type)
+    0
+    >>> f.insert_data("class", class_attr_name, class_attr_value_3, class_attr_type)
+    0
+    >>> f.insert_data("class", class_attr_name, class_attr_value_4, class_attr_type)
+    0
+    >>> ak47.AK_print_table("class")
+
+    ''' 
+
+# author: Luka Rajcevic
+# create test tables ()
+# made for saving space (for every function we would have to populate tables to test
+# methods, so this function is made to be called on start of every test (except insert test))
+
+def create_tables():
+    #initialize memory
+    ak47.AK_inflate_config()
+    ak47.AK_init_disk_manager()
+    ak47.AK_memoman_init()
+    
+    #create student table and insert data
+    ak47.create_header_test("student", student_attr_name, student_attr_type)
+    ak47.insert_data_test("student", student_attr_name, student_attr_value_1, student_attr_type)
+    ak47.insert_data_test("student", student_attr_name, student_attr_value_2, student_attr_type)
+    ak47.insert_data_test("student", student_attr_name, student_attr_value_3, student_attr_type)
+    ak47.insert_data_test("student", student_attr_name, student_attr_value_4, student_attr_type)
+    ak47.insert_data_test("student", student_attr_name, student_attr_value_5, student_attr_type)
+    ak47.insert_data_test("student", student_attr_name, student_attr_value_6, student_attr_type)
+    ak47.insert_data_test("student", student_attr_name, student_attr_value_7, student_attr_type)
+    ak47.insert_data_test("student", student_attr_name, student_attr_value_8, student_attr_type)
+
+    #create class table and insert data
+    ak47.create_header_test("class", class_attr_name, class_attr_type)
+    ak47.insert_data_test("class", class_attr_name, class_attr_value_1, class_attr_type)
+    ak47.insert_data_test("class", class_attr_name, class_attr_value_2, class_attr_type)
+    ak47.insert_data_test("class", class_attr_name, class_attr_value_3, class_attr_type)
+    ak47.insert_data_test("class", class_attr_name, class_attr_value_4, class_attr_type)
+    
+    return 1
+
+# author: Luka Rajcevic
+# Test data for selection
+# select * from student where year < 1990
+student_attr_name = ["id_student", "firstname", "lastname", "year", "weight"]
+selection_query_1 = ["year", "1991", ">"]
+selection_query_2 = ["year", "1990", ">"]
+selection_query_3 = ["firstname", "Manuel", "=="]
+selection_query_1_types = [ak47.TYPE_ATTRIBS, ak47.TYPE_INT, ak47.TYPE_OPERATOR]
+
+# author: Luka Rajcevic
+# test selection on student table
+# if test passes, function returns 1. Result is printed afterwards
+def selection_test():
+    '''
+    >>> create_tables()
+    1
+    >>> f.sel("student", "s2", selection_query_1, selection_query_1_types)
+    1
+    >>> f.sel("student", "s3", selection_query_2, selection_query_1_types)
+    1
+    >>> f.sel("student", "s4", selection_query_3, selection_query_1_types)
+    1
+    '''
+
+# author: Luka Rajcevic
+# function for other tests implemented in project
+def other_tests():
+    '''
+    >>ak47.AK_observable_test();
+
+    ''' 
+
+
+'''
+print "\n\n"
 print "Python insert test:"
 f.insert_Row("student", [689, "A", "B", 2012, 130.53])
 f.insert_Row("student", [777, "A", "B", 2013, 90.53])
-ak47.AK_print_table("student")
+#ak47.AK_print_table("student")
+
 
 print "\n\n"
 print "Python update test:"
@@ -204,12 +352,14 @@ print "\n\n"
 print "Python delete test:"
 f.delete_Row("student", "mbr", 689)
 ak47.AK_print_table("student")
-
+'''
+'''
 print "\n\n"
 print "Python selection test:"
 f.selection("student", "s2", ["year", 1000, "<", "firstname", "Robert","=", "OR"])
 ak47.AK_print_table("s2")
-
+'''
+'''
 print "\n\n"
 print "Python theta join test:"
 f.theta_join("department", "professor", "s3", ["manager", "lastname", "="])
@@ -231,3 +381,4 @@ ak47.AK_print_table("create_test")
 
 
 #ak47.AK_flush_cache()
+'''
