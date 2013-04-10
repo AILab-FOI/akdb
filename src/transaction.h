@@ -21,6 +21,7 @@
 #define TRANSACTION_H_
 #include <pthread.h> //TRANSACTIONS
 #include "constants.h"
+#include "configuration.h"
 #include "command.h"
 #include "observable.h"
 #include <string.h>

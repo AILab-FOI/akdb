@@ -11,6 +11,7 @@
 #include "auxiliary.h"
 #include "memoman.h"
 #include "constants.h"
+#include "configuration.h"
 #include "debug.h"
 
 #endif /* REDOLOG */

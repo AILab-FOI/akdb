@@ -23,6 +23,7 @@
 #include "expression_check.h"
 #include "redo_log.h"
 #include "constants.h"
+#include "configuration.h"
 
 #endif
 

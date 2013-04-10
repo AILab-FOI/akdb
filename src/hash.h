@@ -23,6 +23,7 @@
 #include "index.h"
 #include "table.h"
 #include "constants.h"
+#include "configuration.h"
 
 /**
  * @author Unknown
