@@ -667,7 +667,7 @@ dictionary * iniparser_load(const char * ininame)
             continue;
         /* Safety check against buffer overflows */
         /* Added line[len+1] in case the last line in file doesnt end with \n */
-        if (line[len]!='\n' && line[len+1] != 0) {
+        if (line[len]!='\n' && !feof(in)) {
             fprintf(stderr,
                     "iniparser: input line too long in %s (%d)\n",
                     ininame,
@@ -676,7 +676,7 @@ dictionary * iniparser_load(const char * ininame)
             fclose(in);
             return NULL ;
         }
-        
+         
         /* Get rid of \n and spaces at end of line */
 
         while ((len>=0) &&
