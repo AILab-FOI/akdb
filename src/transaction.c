@@ -22,6 +22,7 @@
 AK_transaction_list LockTable[NUMBER_OF_KEYS];
 pthread_mutex_t accessLockMutex = PTHREAD_MUTEX_INITIALIZER;
 AK_thread_Container Threads;
+AK_observable_transaction *observable_transaction;
 
 pthread_t activeThreads[100];
 int activeThreadsCount = 0;
@@ -115,7 +116,8 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
 
     bucket->address = blockAddress;
     bucket->lock_type = type;
-
+    bucket->observer_lock = AK_init_observer_lock();
+    
     return bucket;
 
 }
@@ -308,7 +310,7 @@ AK_transaction_lock_elem_P AK_add_lock(AK_transaction_elem_P HashList, int type,
 
     lock->TransactionId = transactionId;
     lock->lock_type = type;
-
+    
     lock->isWaiting = AK_isLock_waiting(HashList, type, transactionId, lock);
     return lock;
 }
@@ -404,6 +406,10 @@ void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactio
                 tmp = tmp->nextLock;
             };
         }
+        AK_observer *observer = AK_search_existing_link_for_hook(addressesTmp->adresa)->observer_lock->observer;
+        //AK_transaction_unregister_observer(observable_transaction, AK_search_existing_link_for_hook(addressesTmp->adresa)->observer_lock->observer);
+        
+        observable_transaction->observable->AK_run_custom_action();
         addressesTmp = addressesTmp->nextElement;
     }
     pthread_mutex_unlock(&accessLockMutex);
@@ -507,7 +513,7 @@ void * AK_execute_transaction(void *params) {
     AK_transaction_data *data = (AK_transaction_data *)params;
 
     status = AK_execute_commands(data->array, data->lengthOfArray);
-
+    AK_on_transaction_end(status);
     if (status == ABORT) {
         printf("Transaction ABORTED!\n");
     } else {
@@ -540,35 +546,76 @@ void AK_transaction_manager(command * commandArray, int lengthOfArray) {
     pthread_mutex_unlock(&accessLockMutex);
 }
 
-AK_observable_transaction * AK_init_observable_transaction() {
-    return NULL;
+int AK_transaction_register_observer(AK_observable_transaction *observable_transaction, AK_observer *observer) {
+    return observable_transaction->observable->AK_register_observer(observable_transaction->observable, observer);
 }
 
-AK_observer_transaction * AK_init_observer_transaction() {
-    return NULL;
+int AK_transaction_unregister_observer(AK_observable_transaction *observable_transaction, AK_observer *observer) {
+    return observable_transaction->observable->AK_unregister_observer(observable_transaction->observable, observer);
+}
+
+void handle_transaction_notify(AK_observer_lock *observer_lock) {
+    printf ("MESSAGE FROM TRANSACTION RECIEVED!\n");
+}
+
+void AK_on_observable_notify(void *observer, void *observable, AK_ObservableType_Enum type) {
+    switch(type) {
+    case AK_TRANSACTION:
+        handle_transaction_notify((AK_observer_lock*) observer);
+        break;
+    default:
+        break;
+    }
+}
+
+void AK_on_transaction_end(int status) {
+    printf ("TRANSACTIN END!!!!\n");
+}
+
+void AK_on_lock_release() {
+    printf ("TRANSACTION LOCK RELEASED!\n");
+}
+
+AK_observable_transaction * AK_init_observable_transaction() {
+    observable_transaction = calloc(1, sizeof(AK_observable_transaction));
+
+    observable_transaction->AK_transaction_register_observer = &AK_transaction_register_observer;
+    observable_transaction->AK_transaction_unregister_observer = &AK_transaction_unregister_observer;
+    observable_transaction->observable = AK_init_observable(observable_transaction, AK_TRANSACTION, &AK_on_lock_release);
+    
+    return observable_transaction;
+}
+
+AK_observer_lock * AK_init_observer_lock() {
+    AK_observer_lock *self;
+    self = calloc(1, sizeof(AK_observer_lock));
+    self->observer = AK_init_observer(self, AK_on_observable_notify);
+    observable_transaction->observable->AK_register_observer(observable_transaction->observable, self->observer);
+    return self;
 }
 
 void AK_test_Transaction() {
     printf("***Test Transaction***\n");
+    AK_init_observable_transaction();
+    observable_transaction->observable->AK_notify_observers(observable_transaction->observable);
+    
     memset(LockTable, 0, NUMBER_OF_KEYS * sizeof (struct transaction_list_head));
-
     command* komande = malloc(sizeof (command));
     komande->id_command = INSERT;
     komande->tblName = "student";
 
-
-    AK_transaction_manager(komande,1);
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
-    komande->id_command = UPDATE;
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
-    komande->tblName = "profesor";
-    AK_transaction_manager(komande, 1);
-    komande->id_command = SELECT;
-    AK_transaction_manager(komande, 1);
+    /* AK_transaction_manager(komande,1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* komande->id_command = UPDATE; */
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* komande->tblName = "profesor"; */
+    /* AK_transaction_manager(komande, 1); */
+    /* komande->id_command = SELECT; */
+    /* AK_transaction_manager(komande, 1); */
     
     int i;
     for (i = 0; i < activeThreadsCount; ++i)
@@ -576,6 +623,5 @@ void AK_test_Transaction() {
             pthread_join(activeThreads[i], NULL);
         }
     
-    sleep(1);
     printf("***End test Transaction***\n");
 }

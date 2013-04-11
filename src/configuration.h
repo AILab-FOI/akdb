@@ -61,7 +61,7 @@
   * @def MAX_OBSERVABLE_OBSERVERS
   * @brief Constant for declaring maximum number of observers objects for some observable type
  */
-#define MAX_OBSERVABLE_OBSERVERS 10
+#define MAX_OBSERVABLE_OBSERVERS 2048
 /**
   * @def DATA_BLOCK_SIZE
   * @brief Constant declaring length of data block size (used in AK_block->data)

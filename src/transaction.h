@@ -41,10 +41,10 @@ typedef struct observable_transaction AK_observable_transaction;
  * 
  * 
  */
-struct observer_transaction {
+struct observer_lock {
     AK_observer *observer;
 };
-typedef struct observer_transaction AK_observer_transaction;
+typedef struct observer_lock AK_observer_lock;
 
 /**
  * @author Frane Jakelić
@@ -71,6 +71,9 @@ struct transaction_list_elem {
     struct transaction_locks_list_elem *DLLLocksHead;
     struct transaction_list_elem *nextBucket;
     struct transaction_list_elem *prevBucket;
+
+    // Observer 
+    AK_observer_lock *observer_lock;
 };
 
 /**
@@ -129,10 +132,6 @@ typedef struct threadContainer *AK_thread_elem;
 typedef struct threadContainer AK_thread_Container;
 
 #endif /* TRANSACTION_H_ */
-AK_thread_elem AK_search_empty_thread_link();
-void AK_add_thread(pthread_t);
-void AK_delete_thread(pthread_t);
-void AK_join_all_threads();
 int AK_memory_block_hash(int) ;
 AK_transaction_elem_P AK_search_existing_link_for_hook(int);
 AK_transaction_elem_P AK_search_empty_link_for_hook(int);
@@ -152,4 +151,4 @@ void AK_transaction_manager(command*, int);
 void AK_test_Transaction();
 
 AK_observable_transaction * AK_init_observable_transaction();
-AK_observer_transaction * AK_init_observer_transaction();
+AK_observer_lock * AK_init_observer_lock();
