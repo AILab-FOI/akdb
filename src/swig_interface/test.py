@@ -35,7 +35,7 @@ class Functions:
         element = ak47.list_elem()
         ak47.Ak_Init_L(element)
         ak47.Ak_DeleteAll_L(element)
-        
+        #f.update_Row("student", "mbr", "year", 1, 50)
         if type(key) == int:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
         elif type(key) == float:
@@ -69,6 +69,18 @@ class Functions:
 
     def sel(self, src_table, dest_table, query, query_types ):
         return ak47.selection_test(src_table, dest_table, query, query_types)
+
+    def attribute_count(self, table):
+        return ak47.AK_num_attr(table)
+
+    def records_count(self, table):
+        return ak47.AK_get_num_records(table)
+
+    def get_column_test(self, col_num, table):
+        return ak47.get_column_test(col_num, table)
+
+    def get_row_test(self, row_num, table):
+        return ak47.get_row_test(row_num, table)
     '''
     def selection(self, table, table_res, expr):
         element = ak47.list_elem()
@@ -228,7 +240,7 @@ f = Functions()
 # author: Luka Rajcevic
 # this function tests methods from Functions class, more specifically its
 # create_table_header and insert_data methods.
-def functions_test():
+def create_test():
     '''
     >>> ak47.AK_inflate_config()
 
@@ -256,6 +268,21 @@ def functions_test():
     0
     >>> ak47.AK_print_table("student")
 
+    '''
+
+# author: Luka Rajcevic
+# this function tests methods from Functions class,
+# it queries table for its properties (attribute count, record count etc.)
+# bugs:
+#   -> get_row_test() does not print number values
+def table_properties_test():
+    '''
+    >>> ak47.AK_inflate_config()
+
+    >>> ak47.AK_init_disk_manager()
+    0
+    >>> ak47.AK_memoman_init()
+    0
     >>> f.create_table_header("class", class_attr_name, class_attr_type)
     1
     >>> f.insert_data("class", class_attr_name, class_attr_value_1, class_attr_type)
@@ -266,6 +293,14 @@ def functions_test():
     0
     >>> f.insert_data("class", class_attr_name, class_attr_value_4, class_attr_type)
     0
+    >>> f.attribute_count("class")
+    3
+    >>> f.records_count("class")
+    4
+    >>> f.get_column_test(1, "class")
+    1
+    >>> f.get_row_test(1, "class")
+    1
     >>> ak47.AK_print_table("class")
 
     ''' 
@@ -301,6 +336,7 @@ def create_tables():
     
     return 1
 
+
 # author: Luka Rajcevic
 # Test data for selection
 # select * from student where year < 1990
@@ -310,9 +346,13 @@ selection_query_2 = ["year", "1990", ">"]
 selection_query_3 = ["firstname", "Manuel", "=="]
 selection_query_1_types = [ak47.TYPE_ATTRIBS, ak47.TYPE_INT, ak47.TYPE_OPERATOR]
 
+
 # author: Luka Rajcevic
-# test selection on student table
-# if test passes, function returns 1. Result is printed afterwards
+# test functions for CRUD operations
+# current bugs:
+#   -> select works only on integers (floats and strings do not work)
+#   -> update doesn't do anything (table stays the same)
+#   -> delete is removing the wrong row (eg. 3 instead of 4, or 7 instead of 8)
 def selection_test():
     '''
     >>> create_tables()
@@ -321,12 +361,21 @@ def selection_test():
     1
     >>> f.sel("student", "s3", selection_query_2, selection_query_1_types)
     1
-    >>> f.sel("student", "s4", selection_query_3, selection_query_1_types)
-    1
+    >>> f.update_Row("student", "id_student", "year", 1, 50)
+    0
+    >>> ak47.AK_print_table("student")
+
+    >>> f.delete_Row("student", "id_student", 3)
+    0
+    >>> f.delete_Row("student", "id_student", 7)
+    0
+    >>> ak47.AK_print_table("student")
+
     '''
 
 # author: Luka Rajcevic
 # function for other tests implemented in project
+# ===>  ADD YOUR OWN TEST CALLS HERE
 def other_tests():
     '''
     >>ak47.AK_observable_test();
@@ -334,6 +383,10 @@ def other_tests():
     ''' 
 
 
+
+
+# old test method calls
+# not working because method implementation is changed
 '''
 print "\n\n"
 print "Python insert test:"
@@ -352,14 +405,12 @@ print "\n\n"
 print "Python delete test:"
 f.delete_Row("student", "mbr", 689)
 ak47.AK_print_table("student")
-'''
-'''
+
 print "\n\n"
 print "Python selection test:"
 f.selection("student", "s2", ["year", 1000, "<", "firstname", "Robert","=", "OR"])
 ak47.AK_print_table("s2")
-'''
-'''
+
 print "\n\n"
 print "Python theta join test:"
 f.theta_join("department", "professor", "s3", ["manager", "lastname", "="])
@@ -376,9 +427,6 @@ f.insert_Row("create_test", [222, "A", "B", 2013, 90.53])
 f.insert_Row("create_test", [333, "A", "B", 2013, 90.53])
 f.insert_Row("create_test", [444, "A", "B", 2013, 90.53])
 ak47.AK_print_table("create_test")
-
-
-
 
 #ak47.AK_flush_cache()
 '''

@@ -21,6 +21,8 @@
 
 #include "test.h"
 #include "transaction.h"
+#include "table.h"
+#include "auxiliary.h"
 
 /**
  * @author Luka Rajcevic
@@ -131,6 +133,61 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
     return 0;
 
 }
+
+/**
+ * @author Luka Rajcevic
+ * @brief prints requested column
+ * @return 1 if column is found, 0 otherwise
+ * @param num - 0 based index of column
+ * @param tbl - name of the table
+ */
+
+ int get_column_test(int num, char* tbl){
+    int i;
+    AK_list *row = AK_get_column(num, tbl);
+    if (!Ak_IsEmpty_L(row)){
+        printf("============\n");
+        printf("Printing column:\n");
+        printf("============\n");
+        while (row->next != NULL){
+            row = row->next;
+            printf("|  %s   ", row->data);
+        }
+        printf("\n============\n");
+        return 1;
+    }
+    return 0;
+ }
+
+/**
+ * @author Luka Rajcevic
+ * @brief prints requested row
+ * @return 1 if row is found, 0 otherwise
+ * @param num - 0 based index of row
+ * @param tbl - name of the table
+ */
+
+ int get_row_test(int num, char* tbl){
+    int i;
+    AK_list *row = AK_get_row(num, tbl);
+    if (!Ak_IsEmpty_L(row)){
+        printf("============\n");
+        printf("Printing row:\n");
+        printf("============\n");
+        while (row->next != NULL){
+            row = row->next;
+            if (row->type == TYPE_INT)
+                printf("|  %d  ", row->data);
+            if (row->type == TYPE_FLOAT)
+                printf("|  %f  ", &row->data);
+            if (row->type == TYPE_VARCHAR)
+                printf("|  %s ", &row->data);
+        }
+        printf("\n============\n");
+        return 1;
+    }
+    return 0;
+ }
 
 
 /**

@@ -2070,6 +2070,14 @@ def selection_test(*args):
   return _kalashnikovDB.selection_test(*args)
 selection_test = _kalashnikovDB.selection_test
 
+def get_column_test(*args):
+  return _kalashnikovDB.get_column_test(*args)
+get_column_test = _kalashnikovDB.get_column_test
+
+def get_row_test(*args):
+  return _kalashnikovDB.get_row_test(*args)
+get_row_test = _kalashnikovDB.get_row_test
+
 def AK_create_test_tables():
   return _kalashnikovDB.AK_create_test_tables()
 AK_create_test_tables = _kalashnikovDB.AK_create_test_tables
@@ -2335,12 +2343,6 @@ class transaction_locks_list_elem(_object):
     __swig_setmethods__["prevLock"] = _kalashnikovDB.transaction_locks_list_elem_prevLock_set
     __swig_getmethods__["prevLock"] = _kalashnikovDB.transaction_locks_list_elem_prevLock_get
     if _newclass:prevLock = _swig_property(_kalashnikovDB.transaction_locks_list_elem_prevLock_get, _kalashnikovDB.transaction_locks_list_elem_prevLock_set)
-    __swig_setmethods__["observer"] = _kalashnikovDB.transaction_locks_list_elem_observer_set
-    __swig_getmethods__["observer"] = _kalashnikovDB.transaction_locks_list_elem_observer_get
-    if _newclass:observer = _swig_property(_kalashnikovDB.transaction_locks_list_elem_observer_get, _kalashnikovDB.transaction_locks_list_elem_observer_set)
-    __swig_setmethods__["observable_transaction"] = _kalashnikovDB.transaction_locks_list_elem_observable_transaction_set
-    __swig_getmethods__["observable_transaction"] = _kalashnikovDB.transaction_locks_list_elem_observable_transaction_get
-    if _newclass:observable_transaction = _swig_property(_kalashnikovDB.transaction_locks_list_elem_observable_transaction_get, _kalashnikovDB.transaction_locks_list_elem_observable_transaction_set)
     def __init__(self): 
         this = _kalashnikovDB.new_transaction_locks_list_elem()
         try: self.this.append(this)
