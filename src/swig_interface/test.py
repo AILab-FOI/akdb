@@ -35,7 +35,7 @@ class Functions:
         element = ak47.list_elem()
         ak47.Ak_Init_L(element)
         ak47.Ak_DeleteAll_L(element)
-        #f.update_Row("student", "mbr", "year", 1, 50)
+        
         if type(key) == int:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
         elif type(key) == float:
@@ -81,6 +81,20 @@ class Functions:
 
     def get_row_test(self, row_num, table):
         return ak47.get_row_test(row_num, table)
+
+    def get_attr_name(self, table, index):
+        return ak47.AK_get_attr_name(table, index)
+
+    def get_attr_index(self, table, attr_name):
+        return ak47.AK_get_attr_index(table, attr_name)
+
+    def get_value(self, row, col, table):
+        element = ak47.list_elem()
+        ak47.Ak_Init_L(element)
+        ak47.Ak_DeleteAll_L(element)
+
+        element = ak47.AK_get_tuple(row, col, table)
+        return ak47.AK_tuple_to_string(element)
     '''
     def selection(self, table, table_res, expr):
         element = ak47.list_elem()
@@ -180,17 +194,19 @@ class Functions:
         ak47.Ak_DeleteAll_L(att)
         
     def product(self, table1, table2, table_res):
-        ak47.AK_product(table1, table2, table_res)
+        return ak47.AK_product(table1, table2, table_res)
         
     def rename_Table(self,table1, table2):
-        ak47.AK_rename(table1, "", table2, "")
+        return ak47.AK_rename(table1, "", table2, "")
         
     def rename_Attribute(self,table, att_old, att_new):
-        ak47.AK_rename(table, att_old, table, att_new)
+        return ak47.AK_rename(table, att_old, table, att_new)
         
     def intersect(self, table1, table2, table_res):
         ak47.AK_intersect(table1, table2, table_res)
-        
+    
+    '''
+    #deprecated    
     def insert_Row(self, table, row):
         element = ak47.list_elem()
         ak47.Ak_Init_L(element)
@@ -205,7 +221,7 @@ class Functions:
                 ak47.Ak_Insert_New_Element(ak47.TYPE_VARCHAR, row[i], table, ak47.AK_get_attr_name(table, brojac), element)
             brojac += 1
         ak47.Ak_insert_row(element)
-
+    '''
 # call to main.c from python (invoking AK_create_test_tables) 
 #ak47.main()
 
@@ -275,6 +291,7 @@ def create_test():
 # it queries table for its properties (attribute count, record count etc.)
 # bugs:
 #   -> get_row_test() does not print number values
+#   -> rename_Table() does not work (segfault)
 def table_properties_test():
     '''
     >>> ak47.AK_inflate_config()
@@ -299,8 +316,20 @@ def table_properties_test():
     4
     >>> f.get_column_test(1, "class")
     1
+    >>> f.get_column_test(0, "class")
+    1
     >>> f.get_row_test(1, "class")
     1
+    >>> f.get_attr_name("class", 1)
+    'class_name'
+    >>> f.get_attr_name("class", 0)
+    'id_class'
+    >>> f.get_attr_index("class", "year")
+    2
+    >>> f.get_value(1, 2, "class")
+    '2011'
+    >>> f.rename_Attribute("class", "year", "anno")
+    0
     >>> ak47.AK_print_table("class")
 
     ''' 
@@ -373,6 +402,15 @@ def selection_test():
 
     '''
 
+def rel_algebra_test():
+    '''
+    >>> create_tables() 
+    1
+    >>> f.product("student", "class", "product")
+    0
+    >>> ak47.AK_print_table("product")
+    
+    '''
 # author: Luka Rajcevic
 # function for other tests implemented in project
 # ===>  ADD YOUR OWN TEST CALLS HERE

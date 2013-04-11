@@ -141,6 +141,11 @@
   free($1);
 }
 
+%ignore AK_search_empty_thread_link;
+%ignore AK_add_thread;
+%ignore AK_delete_thread;
+%ignore AK_join_all_threads;
+
 %{
 #define SWIG_FILE_WITH_INIT
 

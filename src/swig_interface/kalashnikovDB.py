@@ -2467,22 +2467,6 @@ threadContainer_swigregister = _kalashnikovDB.threadContainer_swigregister
 threadContainer_swigregister(threadContainer)
 
 
-def AK_search_empty_thread_link():
-  return _kalashnikovDB.AK_search_empty_thread_link()
-AK_search_empty_thread_link = _kalashnikovDB.AK_search_empty_thread_link
-
-def AK_add_thread(*args):
-  return _kalashnikovDB.AK_add_thread(*args)
-AK_add_thread = _kalashnikovDB.AK_add_thread
-
-def AK_delete_thread(*args):
-  return _kalashnikovDB.AK_delete_thread(*args)
-AK_delete_thread = _kalashnikovDB.AK_delete_thread
-
-def AK_join_all_threads():
-  return _kalashnikovDB.AK_join_all_threads()
-AK_join_all_threads = _kalashnikovDB.AK_join_all_threads
-
 def AK_memory_block_hash(*args):
   return _kalashnikovDB.AK_memory_block_hash(*args)
 AK_memory_block_hash = _kalashnikovDB.AK_memory_block_hash

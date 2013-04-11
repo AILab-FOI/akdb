@@ -144,16 +144,21 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
 
  int get_column_test(int num, char* tbl){
     int i;
+
     AK_list *row = AK_get_column(num, tbl);
     if (!Ak_IsEmpty_L(row)){
-        printf("============\n");
-        printf("Printing column:\n");
-        printf("============\n");
         while (row->next != NULL){
             row = row->next;
-            printf("|  %s   ", row->data);
+            if (row->type == TYPE_INT){
+                printf("|  %d    ", *((int *) (row)->data) );
+            }
+            if (row->type == TYPE_FLOAT){
+                printf("|   %f   ", *((float *) (row)->data));
+            }
+            if (row->type == TYPE_VARCHAR){
+                printf("|   %s   ", row->data);
+            }
         }
-        printf("\n============\n");
         return 1;
     }
     return 0;
@@ -169,21 +174,21 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
 
  int get_row_test(int num, char* tbl){
     int i;
+
     AK_list *row = AK_get_row(num, tbl);
     if (!Ak_IsEmpty_L(row)){
-        printf("============\n");
-        printf("Printing row:\n");
-        printf("============\n");
         while (row->next != NULL){
             row = row->next;
-            if (row->type == TYPE_INT)
-                printf("|  %d  ", row->data);
-            if (row->type == TYPE_FLOAT)
-                printf("|  %f  ", &row->data);
-            if (row->type == TYPE_VARCHAR)
-                printf("|  %s ", &row->data);
+            if (row->type == TYPE_INT){
+                printf("|   %d   ", *((int *) (row)->data) );
+            }
+            if (row->type == TYPE_FLOAT){
+                printf("|   %f   ", *((float *) (row)->data));
+            }
+            if (row->type == TYPE_VARCHAR){
+                printf("|   %s   ", row->data);
+            }
         }
-        printf("\n============\n");
         return 1;
     }
     return 0;
