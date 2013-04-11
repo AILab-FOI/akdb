@@ -57,10 +57,6 @@ struct transaction_locks_list_elem {
     int isWaiting;
     struct transaction_locks_list_elem *nextLock;
     struct transaction_locks_list_elem *prevLock;
-
-    // Observable
-    AK_observer *observer;
-    AK_observable_transaction *observable_transaction;
 };
 
 /**

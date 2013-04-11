@@ -169,7 +169,7 @@
  * @def NUMBER_OF_KEYS
  * @brief Constant declaring number of buckets in hash table
 */
-#define NUMBER_OF_KEYS 512
+#define NUMBER_OF_KEYS 2048
 
 /**
  * @def NUMBER_OF_THREADS
