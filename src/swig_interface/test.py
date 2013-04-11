@@ -25,12 +25,24 @@ class Functions:
         ak47.AK_create_table(table, parameters, len(attributes))
         print "table created"	
     '''
+    # @author: Luka Rajcevic
+    # @brief: Creates header of attributes for a table
+    # @param table - table name
+    # @param attr_name - list of attribute names
+    # @param attr_type - list of attribute types
     def create_table_header(self, table, attr_name, attr_type):
         return ak47.create_header_test(table, attr_name, attr_type)
 
+    
+    # @Brief: inserts data into specific table
+    # @param table - table name
+    # @param attr_name - list of attribute names
+    # @param attr_value - list of attribute values
+    # @param attr_type - list of attribute types
     def insert_data(self, table, attr_name, attr_value, attr_type):
         return ak47.insert_data_test(table, attr_name, attr_value, attr_type)
     
+
     def update_Row(self, table, column1, column2, key, new_value):
         element = ak47.list_elem()
         ak47.Ak_Init_L(element)
@@ -175,23 +187,23 @@ class Functions:
         ak47.Ak_DeleteAll_L(att)
         for attribute in attributes:
             ak47.Ak_InsertAtEnd_L(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
-        ak47.AK_join(table1, table2, table_res, att)
-        ak47.Ak_DeleteAll_L(att)
+        return ak47.AK_join(table1, table2, table_res, att)
+        #ak47.Ak_DeleteAll_L(att)
         
     def union(self, table1, table2, table_res):
-        ak47.AK_union(table1, table2, table_res)
+        return ak47.AK_union(table1, table2, table_res)
         
     def difference(self, table1, table2, table_res):
-        ak47.AK_difference(table1, table2, table_res)
+        return ak47.AK_difference(table1, table2, table_res)
         
-    def projection(self, table1, table2, table_res, attributes):
+    def projection(self, table1, table_res, attributes):
         att = ak47.list_elem()
         ak47.Ak_Init_L(att)
         ak47.Ak_DeleteAll_L(att)
         for attribute in attributes:
             ak47.Ak_InsertAtEnd_L(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
-        ak47.AK_projection(table1, table2, table_res, att)
-        ak47.Ak_DeleteAll_L(att)
+        return ak47.AK_projection(table1, table_res, att)
+        #ak47.Ak_DeleteAll_L(att)
         
     def product(self, table1, table2, table_res):
         return ak47.AK_product(table1, table2, table_res)
@@ -203,7 +215,7 @@ class Functions:
         return ak47.AK_rename(table, att_old, table, att_new)
         
     def intersect(self, table1, table2, table_res):
-        ak47.AK_intersect(table1, table2, table_res)
+        return ak47.AK_intersect(table1, table2, table_res)
     
     '''
     #deprecated    
@@ -250,6 +262,25 @@ class_attr_value_2 = ["2", "Biology", "2011"]
 class_attr_value_3 = ["3", "Chemistry", "2011"]
 class_attr_value_4 = ["4", "Computer Science", "2012"]
 
+# author: Luka Rajcevic
+# Test data for "class_2" table
+# attribute names, attribute types and attribute data
+class_2_attr_name = ["id_class", "class_name", "year"]
+class_2_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_INT]
+class_2_attr_value_1 = ["1", "Art History", "2009"]
+class_2_attr_value_2 = ["2", "Cognitive Studies", "2002"]
+class_2_attr_value_3 = ["3", "Chemistry", "2011"]
+class_2_attr_value_4 = ["4", "Urban Design", "2000"]
+
+# author: Luka Rajcevic
+# Test data for "class_3" table
+# attribute names, attribute types and attribute data
+class_3_attr_name = ["id_class", "class_name", "year", "language"]
+class_3_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_INT]
+class_3_attr_value_1 = ["1", "Data Structures", "2009", "German"]
+class_3_attr_value_2 = ["2", "Cognitive Studies", "2002", "English"]
+class_3_attr_value_3 = ["3", "Chemistry", "2011", "Croatian"]
+class_3_attr_value_4 = ["4", "Urban Design", "2000", "Spanish"]
 
 f = Functions()
 
@@ -335,7 +366,7 @@ def table_properties_test():
     ''' 
 
 # author: Luka Rajcevic
-# create test tables ()
+# creates test tables
 # made for saving space (for every function we would have to populate tables to test
 # methods, so this function is made to be called on start of every test (except insert test))
 
@@ -362,6 +393,20 @@ def create_tables():
     ak47.insert_data_test("class", class_attr_name, class_attr_value_2, class_attr_type)
     ak47.insert_data_test("class", class_attr_name, class_attr_value_3, class_attr_type)
     ak47.insert_data_test("class", class_attr_name, class_attr_value_4, class_attr_type)
+
+    #create class_2 table and insert data
+    ak47.create_header_test("class_2", class_2_attr_name, class_2_attr_type)
+    ak47.insert_data_test("class_2", class_2_attr_name, class_2_attr_value_1, class_2_attr_type)
+    ak47.insert_data_test("class_2", class_2_attr_name, class_2_attr_value_2, class_2_attr_type)
+    ak47.insert_data_test("class_2", class_2_attr_name, class_2_attr_value_3, class_2_attr_type)
+    ak47.insert_data_test("class_2", class_2_attr_name, class_2_attr_value_4, class_2_attr_type)
+    
+    #create class_3 table and insert data
+    ak47.create_header_test("class_3", class_3_attr_name, class_3_attr_type)
+    ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_1, class_3_attr_type)
+    ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_2, class_3_attr_type)
+    ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_3, class_3_attr_type)
+    ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_4, class_3_attr_type)
     
     return 1
 
@@ -409,7 +454,34 @@ def rel_algebra_test():
     >>> f.product("student", "class", "product")
     0
     >>> ak47.AK_print_table("product")
+
+    >>> f.intersect("class_2", "class", "intersect")
+    0
+    >>> ak47.AK_print_table("intersect")
     
+    >>> f.difference("class_2", "class", "difference")
+    0
+    >>> ak47.AK_print_table("difference")
+    
+    >>> f.union("class_2", "class", "union")
+    0
+    >>> ak47.AK_print_table("union")
+    
+    >>> f.projection("student", "projection", ["id_student", "year"])
+    0
+    >>> ak47.AK_print_table("projection")
+
+    >>> f.projection("student", "projection", ["year"])
+    0
+    >>> ak47.AK_print_table("projection")
+    
+    >>> f.projection("student", "projection", ["firstname", "year", "lastname"])
+    0
+    >>> ak47.AK_print_table("projection")
+    
+    >>> f.nat_Join("class_2", "class_3", "natural_join", ["id_class", "class_name"])
+    0
+    >>> ak47.AK_print_table("natural_join")
     '''
 # author: Luka Rajcevic
 # function for other tests implemented in project
