@@ -98,11 +98,9 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
 
     root = AK_search_empty_link_for_hook(blockAddress);
     if(!root->nextBucket){
-
     	bucket = root;
     	root->nextBucket = root;
     	root->prevBucket = root;
-
     }else{
 
     	bucket = (AK_transaction_elem_P) malloc(sizeof (AK_transaction_elem));
@@ -112,7 +110,6 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
 
         (*root->prevBucket).nextBucket = bucket;
         root->prevBucket = bucket;
-
     }
 
     bucket->address = blockAddress;
@@ -330,7 +327,6 @@ AK_transaction_lock_elem_P AK_create_lock(int blockAddress, int type, pthread_t 
     if (!elem) {
         elem = AK_add_hash_entry_list(blockAddress, type);
     }
-
     return AK_add_lock(elem, type, transactionId);
 }
 
@@ -350,7 +346,6 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
     pthread_mutex_lock(&accessLockMutex);
     AK_transaction_lock_elem_P lock = AK_create_lock(memoryAddress, type, transactionId);
     pthread_mutex_unlock(&accessLockMutex);
-    AK_transaction_elem_P elem = AK_search_existing_link_for_hook(memoryAddress);
     int counter = 0;
     if(!lock->isWaiting){
     	//TODO Add deadlock test, partial implementation of tarjan test available in auxiliary.c
@@ -707,7 +702,6 @@ AK_observer_lock * AK_init_observer_lock() {
     AK_observer_lock *self;
     self = calloc(1, sizeof(AK_observer_lock));
     self->observer = AK_init_observer(self, AK_on_observable_notify);
-    observable_transaction->observable->AK_register_observer(observable_transaction->observable, self->observer);
     return self;
 }
 
