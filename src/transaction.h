@@ -27,8 +27,9 @@
 #include <string.h>
 
 /**
- * 
- * 
+ * @author Ivan Pusic
+ * @struct observable_transaction
+ * @brief Structure which defines transaction observable type
  */
 struct observable_transaction {
     int (*AK_transaction_register_observer) (struct observable_transaction*, AK_observer*);
@@ -38,8 +39,9 @@ struct observable_transaction {
 typedef struct observable_transaction AK_observable_transaction;
 
 /**
- * 
- * 
+ * @author Ivan Pusic
+ * @struct observer_lock
+ * @brief Structure which defines transaction lock observer type
  */
 struct observer_lock {
     AK_observer *observer;
@@ -115,22 +117,6 @@ typedef struct transaction_list_elem AK_transaction_elem;
 typedef struct transaction_locks_list_elem* AK_transaction_lock_elem_P;
 typedef struct transaction_locks_list_elem AK_transaction_lock_elem;
 
-
-
-/**
- * @author Frane Jakelić
- * @struct threadContainer
- * @brief Structure that represents a linked list of threads.
- */
-struct threadContainer{
-	pthread_t thread;
-	struct threadContainer *nextThread;
-};
-
-
-typedef struct threadContainer *AK_thread_elem;
-typedef struct threadContainer AK_thread_Container;
-
 #endif /* TRANSACTION_H_ */
 int AK_memory_block_hash(int) ;
 AK_transaction_elem_P AK_search_existing_link_for_hook(int);
@@ -150,5 +136,14 @@ void * AK_execute_transaction(void*);
 void AK_transaction_manager(command*, int);
 void AK_test_Transaction();
 
+void AK_create_new_transaction_thread(AK_transaction_data*);
+int AK_remove_transaction_thread(pthread_t);
+void AK_on_transaction_end(int, pthread_t);
+void AK_on_lock_release();
+void AK_on_all_transaction_end();
+void handle_transaction_notify(AK_observer_lock*);
+void AK_on_observable_notify();
+int AK_transaction_register_observer(AK_observable_transaction*, AK_observer*);
+int AK_transaction_unregister_observer(AK_observable_transaction*, AK_observer*);
 AK_observable_transaction * AK_init_observable_transaction();
 AK_observer_lock * AK_init_observer_lock();

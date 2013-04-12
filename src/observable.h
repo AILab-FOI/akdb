@@ -47,7 +47,7 @@ struct Observer {
     void * AK_observer_type;
     
     // Methods
-    int (*AK_observer_type_event_handler) (void *, void *, AK_ObservableType_Enum);
+    void (*AK_observer_type_event_handler) (void *, void *, AK_ObservableType_Enum);
     int (*AK_notify) (struct Observer*, void *observable_type, AK_ObservableType_Enum);
     int (*AK_destroy_observer) (struct Observer*);
 };

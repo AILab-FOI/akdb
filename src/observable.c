@@ -35,8 +35,7 @@ static inline int AK_register_observer(AK_observable *self, AK_observer *observe
     for (i = 0; i < MAX_OBSERVABLE_OBSERVERS; ++i) {
         if(self->observers[i] == NULL) {
             // Assigning unique ID to new observer
-            observer->observer_id = self->observer_id_counter;
-            self->observer_id_counter++;
+            observer->observer_id = self->observer_id_counter++;
             self->observers[i] = observer;
             Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVER ADDED");
             return OK;
@@ -59,9 +58,9 @@ static inline int AK_unregister_observer(AK_observable *self, AK_observer *obser
 {
     int i;
     for(i = 0; i < MAX_OBSERVABLE_OBSERVERS; ++i) {
-        if(observer == self->observers[i]) {
-            free(observer);
-            observer = NULL;
+        if(observer == self->observers[i] && observer != NULL) {
+            free(self->observers[i]);
+            self->observers[i] = NULL;
             Ak_dbg_messg(LOW, GLOBAL, "OBSERVER DELETED");
             return OK;
         }
@@ -152,6 +151,9 @@ AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_E
     self->AK_notify_observers = &AK_notify_observers;
     self->AK_get_observer_by_id = AK_get_observer_by_id;
     self->AK_run_custom_action = AK_custom_action;
+
+    memset(self->observers, 0, sizeof self->observers);
+           
     
     self->AK_ObservableType_Def = AK_ObservableType_Def;
     self->observer_id_counter = 1;
