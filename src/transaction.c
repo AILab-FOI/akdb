@@ -357,11 +357,9 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
         pthread_mutex_lock(&accessLockMutex);
         pthread_cond_wait(&cond_lock, &accessLockMutex);
         pthread_mutex_unlock(&accessLockMutex);
-
+        
+        /* if(counter == 10) return NOT_OK; */
         /* sleep(1); */
-        /* if (counter == 10) { */
-        /*     return NOT_OK; */
-        /* } */
         /* counter++; */
     }
 
@@ -411,7 +409,7 @@ void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactio
             };
         }
         // notify observable transaction about lock release
-        observable_transaction->observable->AK_run_custom_action();
+        observable_transaction->AK_lock_released();
         
         addressesTmp = addressesTmp->nextElement;
     }
@@ -521,7 +519,7 @@ void * AK_execute_transaction(void *params) {
         printf("Transaction COMMITED!\n");
     }
 
-    AK_on_transaction_end(status, pthread_self());
+    observable_transaction->AK_transaction_finished();
 
     return NULL;
 }
@@ -642,20 +640,10 @@ void AK_on_observable_notify(void *observer, void *observable, AK_ObservableType
 
 /** 
  * @author Ivan Pusic
- * @brief Function which is called when all transactions are finished
- */
-void AK_on_all_transaction_end() {
-    pthread_mutex_unlock(&endTransationTestLockMutex);
-    printf ("ALL TRANSACTIONS ENDED!!!\n");
-}
-
-/** 
- * @author Ivan Pusic
- * @brief Function which is called when some transaction is finished
- * @param status Status of transaction (COMMIT or ABORT)
+ * @brief Function for handling event when some transaction is finished
  * @param transaction_thread Thread ID of transaction which is finished
  */
-void AK_on_transaction_end(int status, pthread_t transaction_thread) {
+void AK_on_transaction_end(pthread_t transaction_thread) {
     AK_remove_transaction_thread(transaction_thread);
     // unlock mutex -> after this new transaction can be executed if lock stops transaction execution
     pthread_mutex_unlock(&newTransactionLockMutex);
@@ -663,17 +651,82 @@ void AK_on_transaction_end(int status, pthread_t transaction_thread) {
     printf ("TRANSACTIN END!!!!\n");
 
     if(transactionsCount == 0)
-        AK_on_all_transaction_end();
+        observable_transaction->AK_all_transactions_finished();
 }
-
 
 /** 
  * @author Ivan Pusic
- * @brief Function which is called when one of lock is released
+ * @brief Function for handling  event when all transactions are finished
+ */
+void AK_on_all_transactions_end() {
+    // after unlocking this mutex, main thread will continue execution
+    pthread_mutex_unlock(&endTransationTestLockMutex);
+    printf ("ALL TRANSACTIONS ENDED!!!\n");
+}
+
+/** 
+ * @author Ivan Pusic
+ * @brief Function for handling event when one of lock is released
  */
 void AK_on_lock_release() {
     pthread_cond_broadcast(&cond_lock);
     printf ("TRANSACTION LOCK RELEASED!\n");
+}
+
+/** 
+ * @author Ivan Pusic
+ * @brief Function for handling action which is called from observable_transaction type
+ * @param noticeType Type of action (event)
+ */
+void AK_handle_observable_transaction_action(NoticeType *noticeType) {
+    switch((NoticeType)noticeType) {
+    case AK_LOCK_RELEASED:
+        AK_on_lock_release();
+        break;
+    case AK_TRANSACTION_FINISHED:
+        AK_on_transaction_end(pthread_self());
+        break;
+    case AK_ALL_TRANSACTION_FINISHED:
+        AK_on_all_transactions_end();
+        break;
+    }
+}
+
+/** 
+ * @author Ivan Pusic
+ * @brief Function for setting and allocating new NoticeType
+ * @param type Type of notice
+ * 
+ * @return Pointer to new NoticeType
+ */
+NoticeType * AK_set_notice_type(NoticeType *type) {
+    NoticeType *noticeType = malloc(sizeof(NoticeType));
+    noticeType = type;
+    return noticeType;
+}
+
+/** 
+ * @author Ivan Pusic
+ * @brief Function which is called when lock is released
+ */
+void AK_lock_released() {
+    observable_transaction->observable->AK_run_custom_action(AK_set_notice_type((NoticeType*)AK_LOCK_RELEASED));
+}
+
+/** 
+ * @author Ivan Pusic
+ * @brief Function which is called when some transaction is finished
+ */
+void AK_transaction_finished() {
+    observable_transaction->observable->AK_run_custom_action(AK_set_notice_type((NoticeType*)AK_TRANSACTION_FINISHED));
+}
+
+/** 
+ * @author Ivan Pusic
+ * @brief Function which is called when all transactions are finished
+ */
+void AK_all_transactions_finished() {
+    observable_transaction->observable->AK_run_custom_action(AK_set_notice_type((NoticeType*)AK_ALL_TRANSACTION_FINISHED));
 }
 
 /** 
@@ -687,7 +740,10 @@ AK_observable_transaction * AK_init_observable_transaction() {
 
     observable_transaction->AK_transaction_register_observer = &AK_transaction_register_observer;
     observable_transaction->AK_transaction_unregister_observer = &AK_transaction_unregister_observer;
-    observable_transaction->observable = AK_init_observable(observable_transaction, AK_TRANSACTION, &AK_on_lock_release);
+    observable_transaction->AK_lock_released = &AK_lock_released;
+    observable_transaction->AK_transaction_finished = &AK_transaction_finished;
+    observable_transaction->AK_all_transactions_finished = &AK_all_transactions_finished;
+    observable_transaction->observable = AK_init_observable(observable_transaction, AK_TRANSACTION, &AK_handle_observable_transaction_action);
     
     return observable_transaction;
 }

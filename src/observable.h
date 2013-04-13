@@ -71,7 +71,7 @@ struct Observable {
     int (*AK_unregister_observer) (struct Observable*, AK_observer*);
     int (*AK_notify_observer) (struct Observable*, AK_observer*);
     int (*AK_notify_observers) (struct Observable*);
-    int (*AK_run_custom_action) ();
+    int (*AK_run_custom_action) (void*);
     AK_observer* (*AK_get_observer_by_id) (struct Observable*, int id);
 };
 typedef struct Observable AK_observable;

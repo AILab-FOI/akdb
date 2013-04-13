@@ -275,7 +275,7 @@ void AK_set_notify_info_details(AK_TypeObservable *self, NotifyType type, char *
 }
 
 // this is definition of custom action which can be called from custom observable type
-int AK_custom_action() {
+int AK_custom_action(void *data) {
     printf ("THIS IS SOME CUSTOM FUNCTION!\n");
     return OK;
 }
@@ -397,7 +397,7 @@ void AK_observable_test()
     // Notify specified observer
     observable_type->observable->AK_notify_observer(observable_type->observable, observer_first->observer);
 
-    observable_type->observable->AK_run_custom_action();
+    observable_type->observable->AK_run_custom_action(NULL);
     // Search for observer by ID
     AK_observer *requested_observer = observable_type->observable->AK_get_observer_by_id(observable_type->observable, 1);
     if(requested_observer) {

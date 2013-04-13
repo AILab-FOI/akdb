@@ -26,6 +26,12 @@
 #include "observable.h"
 #include <string.h>
 
+typedef enum {
+    AK_LOCK_RELEASED,
+    AK_TRANSACTION_FINISHED,
+    AK_ALL_TRANSACTION_FINISHED,
+} NoticeType;
+
 /**
  * @author Ivan Pusic
  * @struct observable_transaction
@@ -34,6 +40,9 @@
 struct observable_transaction {
     int (*AK_transaction_register_observer) (struct observable_transaction*, AK_observer*);
     int (*AK_transaction_unregister_observer) (struct observable_transaction*, AK_observer*);
+    void (*AK_lock_released) ();
+    void (*AK_transaction_finished) ();
+    void (*AK_all_transactions_finished) ();
     AK_observable *observable;
 };
 typedef struct observable_transaction AK_observable_transaction;
@@ -138,9 +147,9 @@ void AK_test_Transaction();
 
 void AK_create_new_transaction_thread(AK_transaction_data*);
 int AK_remove_transaction_thread(pthread_t);
-void AK_on_transaction_end(int, pthread_t);
+void AK_on_transaction_end(pthread_t);
 void AK_on_lock_release();
-void AK_on_all_transaction_end();
+void AK_on_all_transactions_end();
 void handle_transaction_notify(AK_observer_lock*);
 void AK_on_observable_notify();
 int AK_transaction_register_observer(AK_observable_transaction*, AK_observer*);
