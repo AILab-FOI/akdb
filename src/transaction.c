@@ -22,12 +22,15 @@
 #define MAX_ACTIVE_TRANSACTIONS_COUNT 10
 
 AK_transaction_list LockTable[NUMBER_OF_KEYS];
+
 pthread_mutex_t accessLockMutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t newTransactionLockMutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t endTransationTestLockMutex = PTHREAD_MUTEX_INITIALIZER;
+
 pthread_cond_t cond_lock  = PTHREAD_COND_INITIALIZER;
 AK_observable_transaction *observable_transaction;
 pthread_t activeThreads[MAX_ACTIVE_TRANSACTIONS_COUNT];
+
 int activeTransactionsCount = 0;
 int transactionsCount = 0;
 
@@ -518,7 +521,7 @@ void * AK_execute_transaction(void *params) {
     } else {
         printf("Transaction COMMITED!\n");
     }
-
+    // notify observable_transaction about transaction finish
     observable_transaction->AK_transaction_finished();
 
     return NULL;
@@ -547,8 +550,10 @@ int AK_remove_transaction_thread(pthread_t transaction_thread) {
  * @author Ivan Pusic
  * @brief Function for creating new thread. Function also adds thread ID to pthread_t array
  * @param transaction_data Data for executing transaction
+ *
+ * @return Exit status (OK or NOT_OK)
  */
-void AK_create_new_transaction_thread(AK_transaction_data *transaction_data) {
+int AK_create_new_transaction_thread(AK_transaction_data *transaction_data) {
     pthread_t t1;
 
     int i;
@@ -557,9 +562,10 @@ void AK_create_new_transaction_thread(AK_transaction_data *transaction_data) {
             pthread_create(&t1, NULL, AK_execute_transaction, transaction_data);
             activeThreads[i] = t1;
             activeTransactionsCount++;
-            break;
+            return OK;
         }
     }
+    return NOT_OK;
 }
 
 /**
@@ -689,20 +695,9 @@ void AK_handle_observable_transaction_action(NoticeType *noticeType) {
     case AK_ALL_TRANSACTION_FINISHED:
         AK_on_all_transactions_end();
         break;
+    default:
+        break;
     }
-}
-
-/** 
- * @author Ivan Pusic
- * @brief Function for setting and allocating new NoticeType
- * @param type Type of notice
- * 
- * @return Pointer to new NoticeType
- */
-NoticeType * AK_set_notice_type(NoticeType *type) {
-    NoticeType *noticeType = malloc(sizeof(NoticeType));
-    noticeType = type;
-    return noticeType;
 }
 
 /** 
@@ -710,7 +705,7 @@ NoticeType * AK_set_notice_type(NoticeType *type) {
  * @brief Function which is called when lock is released
  */
 void AK_lock_released() {
-    observable_transaction->observable->AK_run_custom_action(AK_set_notice_type((NoticeType*)AK_LOCK_RELEASED));
+    observable_transaction->observable->AK_run_custom_action((NoticeType*)AK_LOCK_RELEASED);
 }
 
 /** 
@@ -718,7 +713,7 @@ void AK_lock_released() {
  * @brief Function which is called when some transaction is finished
  */
 void AK_transaction_finished() {
-    observable_transaction->observable->AK_run_custom_action(AK_set_notice_type((NoticeType*)AK_TRANSACTION_FINISHED));
+    observable_transaction->observable->AK_run_custom_action((NoticeType*)AK_TRANSACTION_FINISHED);
 }
 
 /** 
@@ -726,7 +721,7 @@ void AK_transaction_finished() {
  * @brief Function which is called when all transactions are finished
  */
 void AK_all_transactions_finished() {
-    observable_transaction->observable->AK_run_custom_action(AK_set_notice_type((NoticeType*)AK_ALL_TRANSACTION_FINISHED));
+    observable_transaction->observable->AK_run_custom_action((NoticeType*)AK_ALL_TRANSACTION_FINISHED);
 }
 
 /** 
@@ -772,7 +767,8 @@ void AK_test_Transaction() {
     command* komande = malloc(sizeof (command));
     komande->id_command = INSERT;
     komande->tblName = "student";
-      
+
+    // Execute transactions
     AK_transaction_manager(komande,1);
     AK_transaction_manager(komande, 1);
     AK_transaction_manager(komande, 1);

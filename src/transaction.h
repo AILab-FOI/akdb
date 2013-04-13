@@ -26,6 +26,11 @@
 #include "observable.h"
 #include <string.h>
 
+/**
+ * @author Ivan Pusic
+ * @enum NoticeType
+ * @brief Enumeration which define notice types for transactions
+ */
 typedef enum {
     AK_LOCK_RELEASED,
     AK_TRANSACTION_FINISHED,
@@ -144,14 +149,17 @@ int AK_execute_commands(command* , int);
 void * AK_execute_transaction(void*);
 void AK_transaction_manager(command*, int);
 void AK_test_Transaction();
-
-void AK_create_new_transaction_thread(AK_transaction_data*);
+int AK_create_new_transaction_thread(AK_transaction_data*);
 int AK_remove_transaction_thread(pthread_t);
+void handle_transaction_notify(AK_observer_lock*);
+void AK_on_observable_notify();
 void AK_on_transaction_end(pthread_t);
 void AK_on_lock_release();
 void AK_on_all_transactions_end();
-void handle_transaction_notify(AK_observer_lock*);
-void AK_on_observable_notify();
+void AK_handle_observable_transaction_action(NoticeType*);
+void AK_lock_released();
+void AK_transaction_finished();
+void AK_all_transactions_finished();
 int AK_transaction_register_observer(AK_observable_transaction*, AK_observer*);
 int AK_transaction_unregister_observer(AK_observable_transaction*, AK_observer*);
 AK_observable_transaction * AK_init_observable_transaction();
