@@ -1817,6 +1817,336 @@ class AK_ref_item(_object):
 AK_ref_item_swigregister = _kalashnikovDB.AK_ref_item_swigregister
 AK_ref_item_swigregister(AK_ref_item)
 
+AK_LOCK_RELEASED = _kalashnikovDB.AK_LOCK_RELEASED
+AK_TRANSACTION_FINISHED = _kalashnikovDB.AK_TRANSACTION_FINISHED
+AK_ALL_TRANSACTION_FINISHED = _kalashnikovDB.AK_ALL_TRANSACTION_FINISHED
+class observable_transaction(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, observable_transaction, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, observable_transaction, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["AK_transaction_register_observer"] = _kalashnikovDB.observable_transaction_AK_transaction_register_observer_set
+    __swig_getmethods__["AK_transaction_register_observer"] = _kalashnikovDB.observable_transaction_AK_transaction_register_observer_get
+    if _newclass:AK_transaction_register_observer = _swig_property(_kalashnikovDB.observable_transaction_AK_transaction_register_observer_get, _kalashnikovDB.observable_transaction_AK_transaction_register_observer_set)
+    __swig_setmethods__["AK_transaction_unregister_observer"] = _kalashnikovDB.observable_transaction_AK_transaction_unregister_observer_set
+    __swig_getmethods__["AK_transaction_unregister_observer"] = _kalashnikovDB.observable_transaction_AK_transaction_unregister_observer_get
+    if _newclass:AK_transaction_unregister_observer = _swig_property(_kalashnikovDB.observable_transaction_AK_transaction_unregister_observer_get, _kalashnikovDB.observable_transaction_AK_transaction_unregister_observer_set)
+    __swig_setmethods__["AK_lock_released"] = _kalashnikovDB.observable_transaction_AK_lock_released_set
+    __swig_getmethods__["AK_lock_released"] = _kalashnikovDB.observable_transaction_AK_lock_released_get
+    if _newclass:AK_lock_released = _swig_property(_kalashnikovDB.observable_transaction_AK_lock_released_get, _kalashnikovDB.observable_transaction_AK_lock_released_set)
+    __swig_setmethods__["AK_transaction_finished"] = _kalashnikovDB.observable_transaction_AK_transaction_finished_set
+    __swig_getmethods__["AK_transaction_finished"] = _kalashnikovDB.observable_transaction_AK_transaction_finished_get
+    if _newclass:AK_transaction_finished = _swig_property(_kalashnikovDB.observable_transaction_AK_transaction_finished_get, _kalashnikovDB.observable_transaction_AK_transaction_finished_set)
+    __swig_setmethods__["AK_all_transactions_finished"] = _kalashnikovDB.observable_transaction_AK_all_transactions_finished_set
+    __swig_getmethods__["AK_all_transactions_finished"] = _kalashnikovDB.observable_transaction_AK_all_transactions_finished_get
+    if _newclass:AK_all_transactions_finished = _swig_property(_kalashnikovDB.observable_transaction_AK_all_transactions_finished_get, _kalashnikovDB.observable_transaction_AK_all_transactions_finished_set)
+    __swig_setmethods__["observable"] = _kalashnikovDB.observable_transaction_observable_set
+    __swig_getmethods__["observable"] = _kalashnikovDB.observable_transaction_observable_get
+    if _newclass:observable = _swig_property(_kalashnikovDB.observable_transaction_observable_get, _kalashnikovDB.observable_transaction_observable_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_observable_transaction()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_observable_transaction
+    __del__ = lambda self : None;
+observable_transaction_swigregister = _kalashnikovDB.observable_transaction_swigregister
+observable_transaction_swigregister(observable_transaction)
+
+class observer_lock(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, observer_lock, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, observer_lock, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["observer"] = _kalashnikovDB.observer_lock_observer_set
+    __swig_getmethods__["observer"] = _kalashnikovDB.observer_lock_observer_get
+    if _newclass:observer = _swig_property(_kalashnikovDB.observer_lock_observer_get, _kalashnikovDB.observer_lock_observer_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_observer_lock()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_observer_lock
+    __del__ = lambda self : None;
+observer_lock_swigregister = _kalashnikovDB.observer_lock_swigregister
+observer_lock_swigregister(observer_lock)
+
+class transaction_locks_list_elem(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, transaction_locks_list_elem, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, transaction_locks_list_elem, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["TransactionId"] = _kalashnikovDB.transaction_locks_list_elem_TransactionId_set
+    __swig_getmethods__["TransactionId"] = _kalashnikovDB.transaction_locks_list_elem_TransactionId_get
+    if _newclass:TransactionId = _swig_property(_kalashnikovDB.transaction_locks_list_elem_TransactionId_get, _kalashnikovDB.transaction_locks_list_elem_TransactionId_set)
+    __swig_setmethods__["lock_type"] = _kalashnikovDB.transaction_locks_list_elem_lock_type_set
+    __swig_getmethods__["lock_type"] = _kalashnikovDB.transaction_locks_list_elem_lock_type_get
+    if _newclass:lock_type = _swig_property(_kalashnikovDB.transaction_locks_list_elem_lock_type_get, _kalashnikovDB.transaction_locks_list_elem_lock_type_set)
+    __swig_setmethods__["isWaiting"] = _kalashnikovDB.transaction_locks_list_elem_isWaiting_set
+    __swig_getmethods__["isWaiting"] = _kalashnikovDB.transaction_locks_list_elem_isWaiting_get
+    if _newclass:isWaiting = _swig_property(_kalashnikovDB.transaction_locks_list_elem_isWaiting_get, _kalashnikovDB.transaction_locks_list_elem_isWaiting_set)
+    __swig_setmethods__["nextLock"] = _kalashnikovDB.transaction_locks_list_elem_nextLock_set
+    __swig_getmethods__["nextLock"] = _kalashnikovDB.transaction_locks_list_elem_nextLock_get
+    if _newclass:nextLock = _swig_property(_kalashnikovDB.transaction_locks_list_elem_nextLock_get, _kalashnikovDB.transaction_locks_list_elem_nextLock_set)
+    __swig_setmethods__["prevLock"] = _kalashnikovDB.transaction_locks_list_elem_prevLock_set
+    __swig_getmethods__["prevLock"] = _kalashnikovDB.transaction_locks_list_elem_prevLock_get
+    if _newclass:prevLock = _swig_property(_kalashnikovDB.transaction_locks_list_elem_prevLock_get, _kalashnikovDB.transaction_locks_list_elem_prevLock_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_transaction_locks_list_elem()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_transaction_locks_list_elem
+    __del__ = lambda self : None;
+transaction_locks_list_elem_swigregister = _kalashnikovDB.transaction_locks_list_elem_swigregister
+transaction_locks_list_elem_swigregister(transaction_locks_list_elem)
+
+class transaction_list_elem(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, transaction_list_elem, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, transaction_list_elem, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["address"] = _kalashnikovDB.transaction_list_elem_address_set
+    __swig_getmethods__["address"] = _kalashnikovDB.transaction_list_elem_address_get
+    if _newclass:address = _swig_property(_kalashnikovDB.transaction_list_elem_address_get, _kalashnikovDB.transaction_list_elem_address_set)
+    __swig_setmethods__["lock_type"] = _kalashnikovDB.transaction_list_elem_lock_type_set
+    __swig_getmethods__["lock_type"] = _kalashnikovDB.transaction_list_elem_lock_type_get
+    if _newclass:lock_type = _swig_property(_kalashnikovDB.transaction_list_elem_lock_type_get, _kalashnikovDB.transaction_list_elem_lock_type_set)
+    __swig_setmethods__["isWaiting"] = _kalashnikovDB.transaction_list_elem_isWaiting_set
+    __swig_getmethods__["isWaiting"] = _kalashnikovDB.transaction_list_elem_isWaiting_get
+    if _newclass:isWaiting = _swig_property(_kalashnikovDB.transaction_list_elem_isWaiting_get, _kalashnikovDB.transaction_list_elem_isWaiting_set)
+    __swig_setmethods__["DLLLocksHead"] = _kalashnikovDB.transaction_list_elem_DLLLocksHead_set
+    __swig_getmethods__["DLLLocksHead"] = _kalashnikovDB.transaction_list_elem_DLLLocksHead_get
+    if _newclass:DLLLocksHead = _swig_property(_kalashnikovDB.transaction_list_elem_DLLLocksHead_get, _kalashnikovDB.transaction_list_elem_DLLLocksHead_set)
+    __swig_setmethods__["nextBucket"] = _kalashnikovDB.transaction_list_elem_nextBucket_set
+    __swig_getmethods__["nextBucket"] = _kalashnikovDB.transaction_list_elem_nextBucket_get
+    if _newclass:nextBucket = _swig_property(_kalashnikovDB.transaction_list_elem_nextBucket_get, _kalashnikovDB.transaction_list_elem_nextBucket_set)
+    __swig_setmethods__["prevBucket"] = _kalashnikovDB.transaction_list_elem_prevBucket_set
+    __swig_getmethods__["prevBucket"] = _kalashnikovDB.transaction_list_elem_prevBucket_get
+    if _newclass:prevBucket = _swig_property(_kalashnikovDB.transaction_list_elem_prevBucket_get, _kalashnikovDB.transaction_list_elem_prevBucket_set)
+    __swig_setmethods__["observer_lock"] = _kalashnikovDB.transaction_list_elem_observer_lock_set
+    __swig_getmethods__["observer_lock"] = _kalashnikovDB.transaction_list_elem_observer_lock_get
+    if _newclass:observer_lock = _swig_property(_kalashnikovDB.transaction_list_elem_observer_lock_get, _kalashnikovDB.transaction_list_elem_observer_lock_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_transaction_list_elem()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_transaction_list_elem
+    __del__ = lambda self : None;
+transaction_list_elem_swigregister = _kalashnikovDB.transaction_list_elem_swigregister
+transaction_list_elem_swigregister(transaction_list_elem)
+
+class transaction_list_head(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, transaction_list_head, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, transaction_list_head, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["DLLHead"] = _kalashnikovDB.transaction_list_head_DLLHead_set
+    __swig_getmethods__["DLLHead"] = _kalashnikovDB.transaction_list_head_DLLHead_get
+    if _newclass:DLLHead = _swig_property(_kalashnikovDB.transaction_list_head_DLLHead_get, _kalashnikovDB.transaction_list_head_DLLHead_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_transaction_list_head()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_transaction_list_head
+    __del__ = lambda self : None;
+transaction_list_head_swigregister = _kalashnikovDB.transaction_list_head_swigregister
+transaction_list_head_swigregister(transaction_list_head)
+
+class memoryAddresses(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, memoryAddresses, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, memoryAddresses, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["adresa"] = _kalashnikovDB.memoryAddresses_adresa_set
+    __swig_getmethods__["adresa"] = _kalashnikovDB.memoryAddresses_adresa_get
+    if _newclass:adresa = _swig_property(_kalashnikovDB.memoryAddresses_adresa_get, _kalashnikovDB.memoryAddresses_adresa_set)
+    __swig_setmethods__["nextElement"] = _kalashnikovDB.memoryAddresses_nextElement_set
+    __swig_getmethods__["nextElement"] = _kalashnikovDB.memoryAddresses_nextElement_get
+    if _newclass:nextElement = _swig_property(_kalashnikovDB.memoryAddresses_nextElement_get, _kalashnikovDB.memoryAddresses_nextElement_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_memoryAddresses()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_memoryAddresses
+    __del__ = lambda self : None;
+memoryAddresses_swigregister = _kalashnikovDB.memoryAddresses_swigregister
+memoryAddresses_swigregister(memoryAddresses)
+
+class transactionData(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, transactionData, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, transactionData, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["lengthOfArray"] = _kalashnikovDB.transactionData_lengthOfArray_set
+    __swig_getmethods__["lengthOfArray"] = _kalashnikovDB.transactionData_lengthOfArray_get
+    if _newclass:lengthOfArray = _swig_property(_kalashnikovDB.transactionData_lengthOfArray_get, _kalashnikovDB.transactionData_lengthOfArray_set)
+    __swig_setmethods__["array"] = _kalashnikovDB.transactionData_array_set
+    __swig_getmethods__["array"] = _kalashnikovDB.transactionData_array_get
+    if _newclass:array = _swig_property(_kalashnikovDB.transactionData_array_get, _kalashnikovDB.transactionData_array_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_transactionData()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_transactionData
+    __del__ = lambda self : None;
+transactionData_swigregister = _kalashnikovDB.transactionData_swigregister
+transactionData_swigregister(transactionData)
+
+class threadContainer(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, threadContainer, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, threadContainer, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["thread"] = _kalashnikovDB.threadContainer_thread_set
+    __swig_getmethods__["thread"] = _kalashnikovDB.threadContainer_thread_get
+    if _newclass:thread = _swig_property(_kalashnikovDB.threadContainer_thread_get, _kalashnikovDB.threadContainer_thread_set)
+    __swig_setmethods__["nextThread"] = _kalashnikovDB.threadContainer_nextThread_set
+    __swig_getmethods__["nextThread"] = _kalashnikovDB.threadContainer_nextThread_get
+    if _newclass:nextThread = _swig_property(_kalashnikovDB.threadContainer_nextThread_get, _kalashnikovDB.threadContainer_nextThread_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_threadContainer()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_threadContainer
+    __del__ = lambda self : None;
+threadContainer_swigregister = _kalashnikovDB.threadContainer_swigregister
+threadContainer_swigregister(threadContainer)
+
+
+def AK_memory_block_hash(*args):
+  return _kalashnikovDB.AK_memory_block_hash(*args)
+AK_memory_block_hash = _kalashnikovDB.AK_memory_block_hash
+
+def AK_search_existing_link_for_hook(*args):
+  return _kalashnikovDB.AK_search_existing_link_for_hook(*args)
+AK_search_existing_link_for_hook = _kalashnikovDB.AK_search_existing_link_for_hook
+
+def AK_search_empty_link_for_hook(*args):
+  return _kalashnikovDB.AK_search_empty_link_for_hook(*args)
+AK_search_empty_link_for_hook = _kalashnikovDB.AK_search_empty_link_for_hook
+
+def AK_add_hash_entry_list(*args):
+  return _kalashnikovDB.AK_add_hash_entry_list(*args)
+AK_add_hash_entry_list = _kalashnikovDB.AK_add_hash_entry_list
+
+def AK_delete_hash_entry_list(*args):
+  return _kalashnikovDB.AK_delete_hash_entry_list(*args)
+AK_delete_hash_entry_list = _kalashnikovDB.AK_delete_hash_entry_list
+
+def AK_search_lock_entry_list_by_key(*args):
+  return _kalashnikovDB.AK_search_lock_entry_list_by_key(*args)
+AK_search_lock_entry_list_by_key = _kalashnikovDB.AK_search_lock_entry_list_by_key
+
+def AK_delete_lock_entry_list(*args):
+  return _kalashnikovDB.AK_delete_lock_entry_list(*args)
+AK_delete_lock_entry_list = _kalashnikovDB.AK_delete_lock_entry_list
+
+def AK_isLock_waiting(*args):
+  return _kalashnikovDB.AK_isLock_waiting(*args)
+AK_isLock_waiting = _kalashnikovDB.AK_isLock_waiting
+
+def AK_add_lock(*args):
+  return _kalashnikovDB.AK_add_lock(*args)
+AK_add_lock = _kalashnikovDB.AK_add_lock
+
+def AK_create_lock(*args):
+  return _kalashnikovDB.AK_create_lock(*args)
+AK_create_lock = _kalashnikovDB.AK_create_lock
+
+def AK_acquire_lock(*args):
+  return _kalashnikovDB.AK_acquire_lock(*args)
+AK_acquire_lock = _kalashnikovDB.AK_acquire_lock
+
+def AK_release_locks(*args):
+  return _kalashnikovDB.AK_release_locks(*args)
+AK_release_locks = _kalashnikovDB.AK_release_locks
+
+def AK_get_memory_blocks(*args):
+  return _kalashnikovDB.AK_get_memory_blocks(*args)
+AK_get_memory_blocks = _kalashnikovDB.AK_get_memory_blocks
+
+def AK_execute_commands(*args):
+  return _kalashnikovDB.AK_execute_commands(*args)
+AK_execute_commands = _kalashnikovDB.AK_execute_commands
+
+def AK_execute_transaction(*args):
+  return _kalashnikovDB.AK_execute_transaction(*args)
+AK_execute_transaction = _kalashnikovDB.AK_execute_transaction
+
+def AK_transaction_manager(*args):
+  return _kalashnikovDB.AK_transaction_manager(*args)
+AK_transaction_manager = _kalashnikovDB.AK_transaction_manager
+
+def AK_test_Transaction():
+  return _kalashnikovDB.AK_test_Transaction()
+AK_test_Transaction = _kalashnikovDB.AK_test_Transaction
+
+def AK_create_new_transaction_thread(*args):
+  return _kalashnikovDB.AK_create_new_transaction_thread(*args)
+AK_create_new_transaction_thread = _kalashnikovDB.AK_create_new_transaction_thread
+
+def AK_remove_transaction_thread(*args):
+  return _kalashnikovDB.AK_remove_transaction_thread(*args)
+AK_remove_transaction_thread = _kalashnikovDB.AK_remove_transaction_thread
+
+def handle_transaction_notify(*args):
+  return _kalashnikovDB.handle_transaction_notify(*args)
+handle_transaction_notify = _kalashnikovDB.handle_transaction_notify
+
+def AK_on_observable_notify(*args):
+  return _kalashnikovDB.AK_on_observable_notify(*args)
+AK_on_observable_notify = _kalashnikovDB.AK_on_observable_notify
+
+def AK_on_transaction_end(*args):
+  return _kalashnikovDB.AK_on_transaction_end(*args)
+AK_on_transaction_end = _kalashnikovDB.AK_on_transaction_end
+
+def AK_on_lock_release():
+  return _kalashnikovDB.AK_on_lock_release()
+AK_on_lock_release = _kalashnikovDB.AK_on_lock_release
+
+def AK_on_all_transactions_end():
+  return _kalashnikovDB.AK_on_all_transactions_end()
+AK_on_all_transactions_end = _kalashnikovDB.AK_on_all_transactions_end
+
+def AK_handle_observable_transaction_action(*args):
+  return _kalashnikovDB.AK_handle_observable_transaction_action(*args)
+AK_handle_observable_transaction_action = _kalashnikovDB.AK_handle_observable_transaction_action
+
+def AK_lock_released():
+  return _kalashnikovDB.AK_lock_released()
+AK_lock_released = _kalashnikovDB.AK_lock_released
+
+def AK_transaction_finished():
+  return _kalashnikovDB.AK_transaction_finished()
+AK_transaction_finished = _kalashnikovDB.AK_transaction_finished
+
+def AK_all_transactions_finished():
+  return _kalashnikovDB.AK_all_transactions_finished()
+AK_all_transactions_finished = _kalashnikovDB.AK_all_transactions_finished
+
+def AK_transaction_register_observer(*args):
+  return _kalashnikovDB.AK_transaction_register_observer(*args)
+AK_transaction_register_observer = _kalashnikovDB.AK_transaction_register_observer
+
+def AK_transaction_unregister_observer(*args):
+  return _kalashnikovDB.AK_transaction_unregister_observer(*args)
+AK_transaction_unregister_observer = _kalashnikovDB.AK_transaction_unregister_observer
+
+def AK_init_observable_transaction():
+  return _kalashnikovDB.AK_init_observable_transaction()
+AK_init_observable_transaction = _kalashnikovDB.AK_init_observable_transaction
+
+def AK_init_observer_lock():
+  return _kalashnikovDB.AK_init_observer_lock()
+AK_init_observer_lock = _kalashnikovDB.AK_init_observer_lock
+MAX_ACTIVE_TRANSACTIONS_COUNT = _kalashnikovDB.MAX_ACTIVE_TRANSACTIONS_COUNT
 
 def AK_register_observer(*args):
   return _kalashnikovDB.AK_register_observer(*args)
@@ -1927,8 +2257,8 @@ def AK_set_notify_info_details(*args):
   return _kalashnikovDB.AK_set_notify_info_details(*args)
 AK_set_notify_info_details = _kalashnikovDB.AK_set_notify_info_details
 
-def AK_custom_action():
-  return _kalashnikovDB.AK_custom_action()
+def AK_custom_action(*args):
+  return _kalashnikovDB.AK_custom_action(*args)
 AK_custom_action = _kalashnikovDB.AK_custom_action
 
 def init_observable_type():
@@ -2280,268 +2610,6 @@ class dictionary(_object):
 dictionary_swigregister = _kalashnikovDB.dictionary_swigregister
 dictionary_swigregister(dictionary)
 
-class observable_transaction(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, observable_transaction, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, observable_transaction, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["AK_transaction_register_observer"] = _kalashnikovDB.observable_transaction_AK_transaction_register_observer_set
-    __swig_getmethods__["AK_transaction_register_observer"] = _kalashnikovDB.observable_transaction_AK_transaction_register_observer_get
-    if _newclass:AK_transaction_register_observer = _swig_property(_kalashnikovDB.observable_transaction_AK_transaction_register_observer_get, _kalashnikovDB.observable_transaction_AK_transaction_register_observer_set)
-    __swig_setmethods__["AK_transaction_unregister_observer"] = _kalashnikovDB.observable_transaction_AK_transaction_unregister_observer_set
-    __swig_getmethods__["AK_transaction_unregister_observer"] = _kalashnikovDB.observable_transaction_AK_transaction_unregister_observer_get
-    if _newclass:AK_transaction_unregister_observer = _swig_property(_kalashnikovDB.observable_transaction_AK_transaction_unregister_observer_get, _kalashnikovDB.observable_transaction_AK_transaction_unregister_observer_set)
-    __swig_setmethods__["observable"] = _kalashnikovDB.observable_transaction_observable_set
-    __swig_getmethods__["observable"] = _kalashnikovDB.observable_transaction_observable_get
-    if _newclass:observable = _swig_property(_kalashnikovDB.observable_transaction_observable_get, _kalashnikovDB.observable_transaction_observable_set)
-    def __init__(self): 
-        this = _kalashnikovDB.new_observable_transaction()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _kalashnikovDB.delete_observable_transaction
-    __del__ = lambda self : None;
-observable_transaction_swigregister = _kalashnikovDB.observable_transaction_swigregister
-observable_transaction_swigregister(observable_transaction)
-
-class observer_transaction(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, observer_transaction, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, observer_transaction, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["observer"] = _kalashnikovDB.observer_transaction_observer_set
-    __swig_getmethods__["observer"] = _kalashnikovDB.observer_transaction_observer_get
-    if _newclass:observer = _swig_property(_kalashnikovDB.observer_transaction_observer_get, _kalashnikovDB.observer_transaction_observer_set)
-    def __init__(self): 
-        this = _kalashnikovDB.new_observer_transaction()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _kalashnikovDB.delete_observer_transaction
-    __del__ = lambda self : None;
-observer_transaction_swigregister = _kalashnikovDB.observer_transaction_swigregister
-observer_transaction_swigregister(observer_transaction)
-
-class transaction_locks_list_elem(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, transaction_locks_list_elem, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, transaction_locks_list_elem, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["TransactionId"] = _kalashnikovDB.transaction_locks_list_elem_TransactionId_set
-    __swig_getmethods__["TransactionId"] = _kalashnikovDB.transaction_locks_list_elem_TransactionId_get
-    if _newclass:TransactionId = _swig_property(_kalashnikovDB.transaction_locks_list_elem_TransactionId_get, _kalashnikovDB.transaction_locks_list_elem_TransactionId_set)
-    __swig_setmethods__["lock_type"] = _kalashnikovDB.transaction_locks_list_elem_lock_type_set
-    __swig_getmethods__["lock_type"] = _kalashnikovDB.transaction_locks_list_elem_lock_type_get
-    if _newclass:lock_type = _swig_property(_kalashnikovDB.transaction_locks_list_elem_lock_type_get, _kalashnikovDB.transaction_locks_list_elem_lock_type_set)
-    __swig_setmethods__["isWaiting"] = _kalashnikovDB.transaction_locks_list_elem_isWaiting_set
-    __swig_getmethods__["isWaiting"] = _kalashnikovDB.transaction_locks_list_elem_isWaiting_get
-    if _newclass:isWaiting = _swig_property(_kalashnikovDB.transaction_locks_list_elem_isWaiting_get, _kalashnikovDB.transaction_locks_list_elem_isWaiting_set)
-    __swig_setmethods__["nextLock"] = _kalashnikovDB.transaction_locks_list_elem_nextLock_set
-    __swig_getmethods__["nextLock"] = _kalashnikovDB.transaction_locks_list_elem_nextLock_get
-    if _newclass:nextLock = _swig_property(_kalashnikovDB.transaction_locks_list_elem_nextLock_get, _kalashnikovDB.transaction_locks_list_elem_nextLock_set)
-    __swig_setmethods__["prevLock"] = _kalashnikovDB.transaction_locks_list_elem_prevLock_set
-    __swig_getmethods__["prevLock"] = _kalashnikovDB.transaction_locks_list_elem_prevLock_get
-    if _newclass:prevLock = _swig_property(_kalashnikovDB.transaction_locks_list_elem_prevLock_get, _kalashnikovDB.transaction_locks_list_elem_prevLock_set)
-    def __init__(self): 
-        this = _kalashnikovDB.new_transaction_locks_list_elem()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _kalashnikovDB.delete_transaction_locks_list_elem
-    __del__ = lambda self : None;
-transaction_locks_list_elem_swigregister = _kalashnikovDB.transaction_locks_list_elem_swigregister
-transaction_locks_list_elem_swigregister(transaction_locks_list_elem)
-
-class transaction_list_elem(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, transaction_list_elem, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, transaction_list_elem, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["address"] = _kalashnikovDB.transaction_list_elem_address_set
-    __swig_getmethods__["address"] = _kalashnikovDB.transaction_list_elem_address_get
-    if _newclass:address = _swig_property(_kalashnikovDB.transaction_list_elem_address_get, _kalashnikovDB.transaction_list_elem_address_set)
-    __swig_setmethods__["lock_type"] = _kalashnikovDB.transaction_list_elem_lock_type_set
-    __swig_getmethods__["lock_type"] = _kalashnikovDB.transaction_list_elem_lock_type_get
-    if _newclass:lock_type = _swig_property(_kalashnikovDB.transaction_list_elem_lock_type_get, _kalashnikovDB.transaction_list_elem_lock_type_set)
-    __swig_setmethods__["isWaiting"] = _kalashnikovDB.transaction_list_elem_isWaiting_set
-    __swig_getmethods__["isWaiting"] = _kalashnikovDB.transaction_list_elem_isWaiting_get
-    if _newclass:isWaiting = _swig_property(_kalashnikovDB.transaction_list_elem_isWaiting_get, _kalashnikovDB.transaction_list_elem_isWaiting_set)
-    __swig_setmethods__["DLLLocksHead"] = _kalashnikovDB.transaction_list_elem_DLLLocksHead_set
-    __swig_getmethods__["DLLLocksHead"] = _kalashnikovDB.transaction_list_elem_DLLLocksHead_get
-    if _newclass:DLLLocksHead = _swig_property(_kalashnikovDB.transaction_list_elem_DLLLocksHead_get, _kalashnikovDB.transaction_list_elem_DLLLocksHead_set)
-    __swig_setmethods__["nextBucket"] = _kalashnikovDB.transaction_list_elem_nextBucket_set
-    __swig_getmethods__["nextBucket"] = _kalashnikovDB.transaction_list_elem_nextBucket_get
-    if _newclass:nextBucket = _swig_property(_kalashnikovDB.transaction_list_elem_nextBucket_get, _kalashnikovDB.transaction_list_elem_nextBucket_set)
-    __swig_setmethods__["prevBucket"] = _kalashnikovDB.transaction_list_elem_prevBucket_set
-    __swig_getmethods__["prevBucket"] = _kalashnikovDB.transaction_list_elem_prevBucket_get
-    if _newclass:prevBucket = _swig_property(_kalashnikovDB.transaction_list_elem_prevBucket_get, _kalashnikovDB.transaction_list_elem_prevBucket_set)
-    def __init__(self): 
-        this = _kalashnikovDB.new_transaction_list_elem()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _kalashnikovDB.delete_transaction_list_elem
-    __del__ = lambda self : None;
-transaction_list_elem_swigregister = _kalashnikovDB.transaction_list_elem_swigregister
-transaction_list_elem_swigregister(transaction_list_elem)
-
-class transaction_list_head(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, transaction_list_head, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, transaction_list_head, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["DLLHead"] = _kalashnikovDB.transaction_list_head_DLLHead_set
-    __swig_getmethods__["DLLHead"] = _kalashnikovDB.transaction_list_head_DLLHead_get
-    if _newclass:DLLHead = _swig_property(_kalashnikovDB.transaction_list_head_DLLHead_get, _kalashnikovDB.transaction_list_head_DLLHead_set)
-    def __init__(self): 
-        this = _kalashnikovDB.new_transaction_list_head()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _kalashnikovDB.delete_transaction_list_head
-    __del__ = lambda self : None;
-transaction_list_head_swigregister = _kalashnikovDB.transaction_list_head_swigregister
-transaction_list_head_swigregister(transaction_list_head)
-
-class memoryAddresses(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, memoryAddresses, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, memoryAddresses, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["adresa"] = _kalashnikovDB.memoryAddresses_adresa_set
-    __swig_getmethods__["adresa"] = _kalashnikovDB.memoryAddresses_adresa_get
-    if _newclass:adresa = _swig_property(_kalashnikovDB.memoryAddresses_adresa_get, _kalashnikovDB.memoryAddresses_adresa_set)
-    __swig_setmethods__["nextElement"] = _kalashnikovDB.memoryAddresses_nextElement_set
-    __swig_getmethods__["nextElement"] = _kalashnikovDB.memoryAddresses_nextElement_get
-    if _newclass:nextElement = _swig_property(_kalashnikovDB.memoryAddresses_nextElement_get, _kalashnikovDB.memoryAddresses_nextElement_set)
-    def __init__(self): 
-        this = _kalashnikovDB.new_memoryAddresses()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _kalashnikovDB.delete_memoryAddresses
-    __del__ = lambda self : None;
-memoryAddresses_swigregister = _kalashnikovDB.memoryAddresses_swigregister
-memoryAddresses_swigregister(memoryAddresses)
-
-class transactionData(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, transactionData, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, transactionData, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["lengthOfArray"] = _kalashnikovDB.transactionData_lengthOfArray_set
-    __swig_getmethods__["lengthOfArray"] = _kalashnikovDB.transactionData_lengthOfArray_get
-    if _newclass:lengthOfArray = _swig_property(_kalashnikovDB.transactionData_lengthOfArray_get, _kalashnikovDB.transactionData_lengthOfArray_set)
-    __swig_setmethods__["array"] = _kalashnikovDB.transactionData_array_set
-    __swig_getmethods__["array"] = _kalashnikovDB.transactionData_array_get
-    if _newclass:array = _swig_property(_kalashnikovDB.transactionData_array_get, _kalashnikovDB.transactionData_array_set)
-    def __init__(self): 
-        this = _kalashnikovDB.new_transactionData()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _kalashnikovDB.delete_transactionData
-    __del__ = lambda self : None;
-transactionData_swigregister = _kalashnikovDB.transactionData_swigregister
-transactionData_swigregister(transactionData)
-
-class threadContainer(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, threadContainer, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, threadContainer, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["thread"] = _kalashnikovDB.threadContainer_thread_set
-    __swig_getmethods__["thread"] = _kalashnikovDB.threadContainer_thread_get
-    if _newclass:thread = _swig_property(_kalashnikovDB.threadContainer_thread_get, _kalashnikovDB.threadContainer_thread_set)
-    __swig_setmethods__["nextThread"] = _kalashnikovDB.threadContainer_nextThread_set
-    __swig_getmethods__["nextThread"] = _kalashnikovDB.threadContainer_nextThread_get
-    if _newclass:nextThread = _swig_property(_kalashnikovDB.threadContainer_nextThread_get, _kalashnikovDB.threadContainer_nextThread_set)
-    def __init__(self): 
-        this = _kalashnikovDB.new_threadContainer()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _kalashnikovDB.delete_threadContainer
-    __del__ = lambda self : None;
-threadContainer_swigregister = _kalashnikovDB.threadContainer_swigregister
-threadContainer_swigregister(threadContainer)
-
-
-def AK_memory_block_hash(*args):
-  return _kalashnikovDB.AK_memory_block_hash(*args)
-AK_memory_block_hash = _kalashnikovDB.AK_memory_block_hash
-
-def AK_search_existing_link_for_hook(*args):
-  return _kalashnikovDB.AK_search_existing_link_for_hook(*args)
-AK_search_existing_link_for_hook = _kalashnikovDB.AK_search_existing_link_for_hook
-
-def AK_search_empty_link_for_hook(*args):
-  return _kalashnikovDB.AK_search_empty_link_for_hook(*args)
-AK_search_empty_link_for_hook = _kalashnikovDB.AK_search_empty_link_for_hook
-
-def AK_add_hash_entry_list(*args):
-  return _kalashnikovDB.AK_add_hash_entry_list(*args)
-AK_add_hash_entry_list = _kalashnikovDB.AK_add_hash_entry_list
-
-def AK_delete_hash_entry_list(*args):
-  return _kalashnikovDB.AK_delete_hash_entry_list(*args)
-AK_delete_hash_entry_list = _kalashnikovDB.AK_delete_hash_entry_list
-
-def AK_search_lock_entry_list_by_key(*args):
-  return _kalashnikovDB.AK_search_lock_entry_list_by_key(*args)
-AK_search_lock_entry_list_by_key = _kalashnikovDB.AK_search_lock_entry_list_by_key
-
-def AK_delete_lock_entry_list(*args):
-  return _kalashnikovDB.AK_delete_lock_entry_list(*args)
-AK_delete_lock_entry_list = _kalashnikovDB.AK_delete_lock_entry_list
-
-def AK_isLock_waiting(*args):
-  return _kalashnikovDB.AK_isLock_waiting(*args)
-AK_isLock_waiting = _kalashnikovDB.AK_isLock_waiting
-
-def AK_add_lock(*args):
-  return _kalashnikovDB.AK_add_lock(*args)
-AK_add_lock = _kalashnikovDB.AK_add_lock
-
-def AK_create_lock(*args):
-  return _kalashnikovDB.AK_create_lock(*args)
-AK_create_lock = _kalashnikovDB.AK_create_lock
-
-def AK_acquire_lock(*args):
-  return _kalashnikovDB.AK_acquire_lock(*args)
-AK_acquire_lock = _kalashnikovDB.AK_acquire_lock
-
-def AK_release_locks(*args):
-  return _kalashnikovDB.AK_release_locks(*args)
-AK_release_locks = _kalashnikovDB.AK_release_locks
-
-def AK_get_memory_blocks(*args):
-  return _kalashnikovDB.AK_get_memory_blocks(*args)
-AK_get_memory_blocks = _kalashnikovDB.AK_get_memory_blocks
-
-def AK_execute_commands(*args):
-  return _kalashnikovDB.AK_execute_commands(*args)
-AK_execute_commands = _kalashnikovDB.AK_execute_commands
-
-def AK_execute_transaction(*args):
-  return _kalashnikovDB.AK_execute_transaction(*args)
-AK_execute_transaction = _kalashnikovDB.AK_execute_transaction
-
-def AK_transaction_manager(*args):
-  return _kalashnikovDB.AK_transaction_manager(*args)
-AK_transaction_manager = _kalashnikovDB.AK_transaction_manager
-
-def AK_test_Transaction():
-  return _kalashnikovDB.AK_test_Transaction()
-AK_test_Transaction = _kalashnikovDB.AK_test_Transaction
-
-def AK_init_observable_transaction():
-  return _kalashnikovDB.AK_init_observable_transaction()
-AK_init_observable_transaction = _kalashnikovDB.AK_init_observable_transaction
-
-def AK_init_observer_transaction():
-  return _kalashnikovDB.AK_init_observer_transaction()
-AK_init_observer_transaction = _kalashnikovDB.AK_init_observer_transaction
 
 def AK_get_function_obj_id(*args):
   return _kalashnikovDB.AK_get_function_obj_id(*args)

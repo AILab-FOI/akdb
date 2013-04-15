@@ -22,6 +22,7 @@
 #include <pthread.h> //TRANSACTIONS
 #include "constants.h"
 #include "configuration.h"
+#include "memoman.h"
 #include "command.h"
 #include "observable.h"
 #include <string.h>
@@ -131,6 +132,20 @@ typedef struct transaction_list_elem AK_transaction_elem;
 typedef struct transaction_locks_list_elem* AK_transaction_lock_elem_P;
 typedef struct transaction_locks_list_elem AK_transaction_lock_elem;
 
+ /**     
+  * @author Frane Jakelić    
+  * @struct threadContainer      
+  * @brief Structure that represents a linked list of threads.   
+  */     
+ struct threadContainer{     
+         pthread_t thread;   
+         struct threadContainer *nextThread;     
+ };      
+     
+     
+ typedef struct threadContainer *AK_thread_elem;     
+ typedef struct threadContainer AK_thread_Container;
+
 #endif /* TRANSACTION_H_ */
 int AK_memory_block_hash(int) ;
 AK_transaction_elem_P AK_search_existing_link_for_hook(int);
@@ -152,7 +167,7 @@ void AK_test_Transaction();
 int AK_create_new_transaction_thread(AK_transaction_data*);
 int AK_remove_transaction_thread(pthread_t);
 void handle_transaction_notify(AK_observer_lock*);
-void AK_on_observable_notify();
+void AK_on_observable_notify(void*, void*, AK_ObservableType_Enum);
 void AK_on_transaction_end(pthread_t);
 void AK_on_lock_release();
 void AK_on_all_transactions_end();
