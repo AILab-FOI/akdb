@@ -11,12 +11,7 @@
  * @def MAX_NUM_OF_BLOCKS
  * @brief Constant declaring maximum number of blocks in a segment 
 */
-#define MAX_NUM_OF_BLOCKS (iniparser_getint(AK_config,"general:max_num_of_blocks",200))
-/**
-  * @def MAX_VARCHAR_LENGTH
-  * @brief Constant declaring maximum length of varchar data value
- */
-#define MAX_VARCHAR_LENGTH 200
+#define MAX_NUM_OF_BLOCKS (iniparser_getint(AK_config,"segments:max_num_of_blocks",200))
 /**
   * @def MAX_EXTENTS_IN_SEGMENT
   * @brief Constant declaring maximum number of extents in segment
@@ -26,52 +21,12 @@
   * @def MAX_FREE_SPACE_SIZE
   * @brief Constant declaring maximum free space in block
 */
-#define MAX_FREE_SPACE_SIZE (iniparser_getint(AK_config,"general:max_free_space_size",4000)) 
+#define MAX_FREE_SPACE_SIZE (iniparser_getint(AK_config,"blocks:max_free_space_size",4000)) 
 /**
   * @def MAX_LAST_TUPLE_DICT_SIZE_TO_USE
   * @brief Constant declaring maximum size od last tuple in dictionary
 */
-#define MAX_LAST_TUPLE_DICT_SIZE_TO_USE (iniparser_getint(AK_config,"general:max_last_tuple_dict_size_to_use",470))
-/**
-  * @def MAX_ATTRIBUTES
-  * @brief Constant declaring maximum number of attributes per block
- */
-#define MAX_ATTRIBUTES 10
-/**
-  * @def MAX_ATT_NAME
-  * @brief Constant declaring maximum length of attribute name string (used in AK_header->att_name)
- */
-#define MAX_ATT_NAME 255
-/**
-  * @def MAX_CONSTRAINTS
-  * @brief Constant declaring maximum number of constraints per attribute
- */
-#define MAX_CONSTRAINTS 5
-/**
-  * @def MAX_CONSTR_NAME
-  * @brief Constant declaring maximum length of constraint name string (used in AK_header->constr_name)
- */
-#define MAX_CONSTR_NAME 255
-/**
-  * @def MAX_CONSTR_CODE
-  * @brief Constant declaring maximum lenght of constraint code string
- */
-#define MAX_CONSTR_CODE 255
-/**
-  * @def MAX_OBSERVABLE_OBSERVERS
-  * @brief Constant for declaring maximum number of observers objects for some observable type
- */
-#define MAX_OBSERVABLE_OBSERVERS 2048
-/**
-  * @def DATA_BLOCK_SIZE
-  * @brief Constant declaring length of data block size (used in AK_block->data)
- */
-#define DATA_BLOCK_SIZE 500
-/**
-  * @def DATA_ENTRY_SIZE
-  * @brief Constant declaring lenght of data entry in sizeof( int )
- */
-#define DATA_ENTRY_SIZE 10
+#define MAX_LAST_TUPLE_DICT_SIZE_TO_USE (iniparser_getint(AK_config,"dictionary:max_last_tuple_dict_size_to_use",470))
 /**
   * @def DB_FILE_SIZE
   * @brief Constant declaring size of DB file in MB
@@ -86,97 +41,37 @@
   * @def INITIAL_EXTENT_SIZE
   * @brief Constant declaring initial extent size in blocks
  */
-#define INITIAL_EXTENT_SIZE (iniparser_getint(AK_config,"general:initial_extent_size",15))
+#define INITIAL_EXTENT_SIZE (iniparser_getint(AK_config,"extents:initial_extent_size",15))
 /**
   * @def EXTENT_GROWTH_TABLE
   * @brief Constant declaring extent growth factor for tables
  */
-#define EXTENT_GROWTH_TABLE (iniparser_getdouble(AK_config,"general:extent_growth_table",0.5))
-
+#define EXTENT_GROWTH_TABLE (iniparser_getdouble(AK_config,"extents:extent_growth_table",0.5))
 /**
   * @def EXTENT_GROWTH_INDEX
   * @brief Constant declaring extent growth factor for indices
  */
-#define EXTENT_GROWTH_INDEX (iniparser_getdouble(AK_config,"general:extent_growth_index",0.2))
-
+#define EXTENT_GROWTH_INDEX (iniparser_getdouble(AK_config,"extents:extent_growth_index",0.2))
 /**
   * @def EXTENT_GROWTH_TRANSACTION
   * @brief Constant declaring extent growth factor for transaction segments
  */
-#define EXTENT_GROWTH_TRANSACTION (iniparser_getdouble(AK_config,"general:extent_growth_transaction",0.2))
-
+#define EXTENT_GROWTH_TRANSACTION (iniparser_getdouble(AK_config,"extents:extent_growth_transaction",0.2))
 /**
   * @def EXTENT_GROWTH_TEMP
   * @brief Constant declaring extent growth factor for temporary segments
  */
-#define EXTENT_GROWTH_TEMP (iniparser_getdouble(AK_config,"general:extent_growth_temp",0.5))
-
-/**
-  * @def MAX_CACHE_MEMORY
-  * @brief Constant declaring maximum size of DB cache memory
- */
-#define MAX_CACHE_MEMORY 255
-
+#define EXTENT_GROWTH_TEMP (iniparser_getdouble(AK_config,"extents:extent_growth_temp",0.5))
 /**
  * @def MAX_REDO_LOG_MEMORY
  * @brief maximum size of REDO log memory
  */
 #define MAX_REDO_LOG_MEMORY 255
-
-/**
-  * @def MAX_QUERY_LIB_MEMORY
-  * @brief Constant declaring maximum size of query lib memory
- */
-#define MAX_QUERY_LIB_MEMORY 255
-
-/**
- * @def MAX_QUERY_DICT_MEMORY
- * @brief Constant declaring maximum size of query dictionary memory
- */
-#define MAX_QUERY_DICT_MEMORY 255
-
-/**
- * @def MAX_QUERY_RESULT_MEMORY
- * @brief Constant declaring maximum size of query result cache memory
- */
-#define MAX_QUERY_RESULT_MEMORY 255
-
-/**
- * @def MAX_TOKENS
- * @brief Constant declaring maximum number of attributes to handle in relation equivalence function
- */
-#define MAX_TOKENS 255
-
-/**
- * @def MAX_MAIN_BUCKETS
- * @brief Constant declaring the maximum number of main buckets
-*/
-#define MAX_MAIN_BUCKETS (iniparser_getint(AK_config,"general:max_main_buckets",512))
-
-/**
- * @def MAIN_BUCKET_SIZE
- * @brief Constant declaring the size of main buckets
-*/
-#define MAIN_BUCKET_SIZE 4
-
-/**
- * @def HASH_BUCKET_SIZE
- * @brief Constant declaring the size of hash buckets
-*/
-#define HASH_BUCKET_SIZE 4
-
-/**
- * @def NUMBER_OF_KEYS
- * @brief Constant declaring number of buckets in hash table
-*/
-#define NUMBER_OF_KEYS 2048
-
 /**
  * @def NUMBER_OF_THREADS
  * @brief Constant declaring maximum number of threads that an application can acquire
 */
 #define NUMBER_OF_THREADS (iniparser_getint(AK_config,"general:number_of_threads",42))
-
 /**
   * @def MAX_EXTENTS
   * @brief Constant declaring maximum number of extents for a given segment
