@@ -66,7 +66,14 @@
  * @def MAX_REDO_LOG_MEMORY
  * @brief maximum size of REDO log memory
  */
-#define MAX_REDO_LOG_MEMORY 255
+#define MAX_REDO_LOG_MEMORY 4096
+
+/**
+ *@def MAX_REDO_LOG_ENTRIES
+ *@brief maximum size of REDO log entries
+ */
+#define MAX_REDO_LOG_ENTRIES 100
+
 /**
  * @def NUMBER_OF_THREADS
  * @brief Constant declaring maximum number of threads that an application can acquire

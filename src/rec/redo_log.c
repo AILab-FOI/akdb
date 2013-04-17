@@ -20,6 +20,8 @@
 
 #include "redo_log.h"
 
+ #define SIZE 0
+
 /**
  * @author Krunoslav Bilić
  * @brief Function used to clean outdated redolog entries
@@ -27,10 +29,17 @@
  * @return No return value.
  */
 void AK_clean_redolog() {
-	int element = 0;
+	/*int element = 0;
+
+	//redo_log = (struct redo_log *) realloc(redo_log, MAX_REDO_LOG_MEMORY);
+
+	printf("%ld velicina\n", sizeof(redo_log));
 
 	// poništavanje elemenata liste koji su outdated
-	for (element = 0; element < MAX_REDO_LOG_MEMORY; element++) {
+	for (element = 0; element < MAX_REDO_LOG_MEMORY; element++) {    	
+
+		redo_log->redo_log_cache = (AK_mem_block *) malloc(sizeof (AK_mem_block));
+    	redo_log->expr = (AK_list *) malloc(sizeof (AK_list));
 
 		if (redo_log->redo_log_cache[element]->timestamp_read != 0) {
 			table_addresses *addresses = (table_addresses*) AK_get_table_addresses(redo_log->expr[element]->next->table);
@@ -77,7 +86,7 @@ void AK_clean_redolog() {
 
 		}
 
-	}
+	}*/
 }
 
 /**
@@ -89,32 +98,46 @@ void AK_clean_redolog() {
 
 int AK_add_to_redolog(char *srcTableName, AK_list *expr) {
 	int element = 0;
+	int size = 0;
+	AK_mem_block* memBlock;
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(srcTableName);
-    AK_mem_block* memBlock = (AK_mem_block *) malloc(sizeof ( AK_mem_block));
+
+    if((memBlock = (AK_mem_block *) malloc(sizeof ( AK_mem_block))) == NULL){
+     	return EXIT_FAILURE;
+     }
 
     memBlock = (AK_mem_block *)AK_get_block(addresses->address_from[0]);
 
-    // dodavanje na sljedece prazno mjesto
-    for (element = 0; element <MAX_REDO_LOG_MEMORY; element++){
+    size = (redo_log->next_replace + 1)*sizeof(AK_mem_block) + (redo_log->next_replace + 1)*sizeof(AK_list) + sizeof(int);
 
-    	if (redo_log->redo_log_cache[element]->timestamp_last_change == 0){
-    		memcpy(redo_log->redo_log_cache[element], memBlock, sizeof(AK_mem_block));
-    		AK_copy_L(expr, redo_log->expr[element]);
+    if(redo_log->next_replace == MAX_REDO_LOG_ENTRIES || size > MAX_REDO_LOG_MEMORY){
 
-    		redo_log->next_replace = element;
-    		Ak_dbg_messg(LOW, REDO, "\nAK_add_to_redolog: RedoLog dump");
-    		if (REDO == 1) {AK_printout_redolog();}
-    		return EXIT_SUCCESS;
-    	}
-    }
-    element = redo_log->next_replace;
+	    //pozvati archive
+	    //element = redo_log->next_replace;
 
-    memcpy(redo_log->redo_log_cache[element], memBlock, sizeof(AK_mem_block));
-    AK_copy_L(expr, redo_log->expr[element]);
-    Ak_dbg_messg(LOW, REDO, "\nAK_add_to_redolog: RedoLog dump");
-    if (REDO == 1) {AK_printout_redolog();}
-    return EXIT_SUCCESS;
+	    memcpy(redo_log->redo_log_cache[element], memBlock, sizeof(AK_mem_block));
+	    AK_copy_L(expr, redo_log->expr[element]);
+
+	    Ak_dbg_messg(LOW, REDO, "\nAK_add_to_redolog: RedoLog dump");
+	    if (REDO == 1) {AK_printout_redolog();}
+	    return EXIT_SUCCESS;
+
+    }else{
+	    // dodavanje na sljedece prazno mjesto
+	    for (element = 0; element < MAX_REDO_LOG_ENTRIES; element++){
+
+	    	if (redo_log->redo_log_cache[element]->timestamp_last_change == 0){
+	    		memcpy(redo_log->redo_log_cache[element], memBlock, sizeof(AK_mem_block));
+	    		AK_copy_L(expr, redo_log->expr[element]);
+
+	    		redo_log->next_replace = element + 1;
+	    		Ak_dbg_messg(LOW, REDO, "\nAK_add_to_redolog: RedoLog dump");
+	    		if (REDO == 1) {AK_printout_redolog();}
+	    		return EXIT_SUCCESS;
+	    	}
+	    }
+	}
 }
 
 /**
