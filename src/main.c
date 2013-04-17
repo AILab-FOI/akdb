@@ -24,59 +24,59 @@
 #include <string.h>  //ARCHIVE LOG
 #include <stdlib.h>
 // Global configuration
-#include "constants.h"
-#include "configuration.h"
+#include "aux/constants.h"
+#include "aux/configuration.h"
 
 // Disk management
-#include "dbman.h"
+#include "dm/dbman.h"
 
 // Memory management
-#include "memoman.h"
+#include "mm/memoman.h"
 
 // File management
-#include "fileio.h"
-#include "files.h"
-#include "filesearch.h"
-#include "filesort.h"
-#include "table.h"
+#include "file/fileio.h"
+#include "file/files.h"
+#include "file/filesearch.h"
+#include "file/filesort.h"
+#include "file/table.h"
 
 //Logging
-#include "archive_log.h" //ARCHIVE LOG
+#include "rec/archive_log.h" //ARCHIVE LOG
 
 // Indices
-#include "hash.h"
-#include "btree.h"
-#include "bitmap.h"
+#include "file/idx/hash.h"
+#include "file/idx/btree.h"
+#include "file/idx/bitmap.h"
 
 // Relational operators
-#include "difference.h"
-#include "intersect.h"
-#include "nat_join.h"
-#include "theta_join.h"
-#include "projection.h"
-#include "rename.h"
-#include "selection.h"
-#include "union.h"
-#include "aggregation.h"
+#include "rel/difference.h"
+#include "rel/intersect.h"
+#include "rel/nat_join.h"
+#include "rel/theta_join.h"
+#include "rel/projection.h"
+#include "sql/rename.h"
+#include "rel/selection.h"
+#include "rel/union.h"
+#include "rel/aggregation.h"
 
 //Command
-#include "command.h"
+#include "sql/command.h"
 
 // Query processing
-#include "query_optimization.h"
+#include "opti/query_optimization.h"
 
 // Constraints
-#include "reference.h"
-#include "expression_check.h"
+#include "sql/cs/reference.h"
+#include "rel/expression_check.h"
 
 
 //Other
-#include "trigger.h"
-#include "ini_parser/iniparser.h"
-#include "privileges.h"
-#include "transaction.h"
-#include "redo_log.h"
-#include "observable.h"
+#include "sql/trigger.h"
+#include "aux/iniparser.h"
+#include "sql/privileges.h"
+#include "trans/transaction.h"
+#include "rec/redo_log.h"
+#include "aux/observable.h"
 /**
 Main program function
 
