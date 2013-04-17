@@ -14,6 +14,8 @@ OTHERTARGETS = sql/trigger.o file/test.o aux/debug.o rec/archive_log.o sql/comma
 
 OUTDIR = ../bin
 
+.PHONY: swig
+
 all: kalashnikov-db
 
 kalashnikov-db: aux/auxiliary.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(DISKTARGETS) $(MEMORYTARGETS) $(FILETARGETS) main.o
