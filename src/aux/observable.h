@@ -20,8 +20,8 @@
 #ifndef OBSERVABLE
 #define OBSERVABLE
 
-#include "./constants.h"
-#include "./debug.h"
+#include "constants.h"
+#include "debug.h"
 
 /**
  * @author Ivan Pusic

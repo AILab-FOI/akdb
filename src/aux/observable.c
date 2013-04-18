@@ -291,7 +291,7 @@ AK_TypeObservable * init_observable_type() {
 
     // Very important!!! Call method for initializing AK_Observable and pass instance of custom observable type
     // Last parameter is pointer to function which is custom
-    self->observable = AK_init_observable(self, AK_CUSTOM_FIRST, AK_custom_action);
+    self->observable = AK_init_observable(self, AK_CUSTOM_FIRST, &AK_custom_action);
     return self;
 }
 

@@ -118,9 +118,9 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
     bucket->address = blockAddress;
     bucket->lock_type = type;
     bucket->observer_lock = AK_init_observer_lock();
-    
-    return bucket;
+    AK_transaction_register_observer(observable_transaction, bucket->observer_lock->observer);
 
+    return bucket;
 }
 
 /**
@@ -576,7 +576,7 @@ void AK_transaction_manager(command * commandArray, int lengthOfArray) {
     params->array = commandArray;
     params->lengthOfArray = lengthOfArray;
     transactionsCount++;
-    
+
     if(activeTransactionsCount < MAX_ACTIVE_TRANSACTIONS_COUNT) {
         pthread_mutex_lock(&accessLockMutex);
         AK_create_new_transaction_thread(params);
@@ -652,7 +652,6 @@ void AK_on_transaction_end(pthread_t transaction_thread) {
     pthread_mutex_unlock(&newTransactionLockMutex);
     transactionsCount--;
     printf ("TRANSACTIN END!!!!\n");
-
     if(transactionsCount == 0)
         observable_transaction->AK_all_transactions_finished();
 }
@@ -729,7 +728,6 @@ void AK_all_transactions_finished() {
  */
 AK_observable_transaction * AK_init_observable_transaction() {
     observable_transaction = calloc(1, sizeof(AK_observable_transaction));
-
     observable_transaction->AK_transaction_register_observer = &AK_transaction_register_observer;
     observable_transaction->AK_transaction_unregister_observer = &AK_transaction_unregister_observer;
     observable_transaction->AK_lock_released = &AK_lock_released;
@@ -749,7 +747,7 @@ AK_observable_transaction * AK_init_observable_transaction() {
 AK_observer_lock * AK_init_observer_lock() {
     AK_observer_lock *self;
     self = calloc(1, sizeof(AK_observer_lock));
-    self->observer = AK_init_observer(self, AK_on_observable_notify);
+    self->observer = AK_init_observer(self, &AK_on_observable_notify);
     return self;
 }
 
@@ -767,22 +765,7 @@ void AK_test_Transaction() {
 
     // Execute transactions
     AK_transaction_manager(komande,1);
-    /* AK_transaction_manager(komande, 1); */
-    /* AK_transaction_manager(komande, 1); */
-    /* komande->id_command = SELECT; */
-    /* AK_transaction_manager(komande, 1); */
-    /* AK_transaction_manager(komande, 1); */
-    /* komande->id_command = UPDATE; */
-    /* AK_transaction_manager(komande, 1); */
-    /* AK_transaction_manager(komande,1); */
-    /* AK_transaction_manager(komande, 1); */
-    /* AK_transaction_manager(komande, 1); */
-    /* komande->id_command = UPDATE; */
-    /* AK_transaction_manager(komande, 1); */
-    /* AK_transaction_manager(komande, 1); */
-
-    observable_transaction->observable->AK_notify_observers(observable_transaction->observable);
-
+    
     pthread_mutex_lock(&endTransationTestLockMutex);
 
     free(observable_transaction);
