@@ -10,30 +10,30 @@
 void AK_command(command * komande, int brojkomandi) {
    int i;
     
-      for (i = 0; i <= brojkomandi - 1 ; i++) {
-   switch(komande[i].id_command){
-         case UPDATE:
-		printf("***UPDATE***\n");			 
-		Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
-        	AK_print_table(komande[i].tblName);
-             break;
-         case DELETE:
-		printf("***DELETE***\n");        	 
-		Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
-        	Ak_delete_row( ((AK_list_elem) (komande[i].parameters)));
-		AK_print_table(komande[i].tblName);
-             break;
-
-         case INSERT:
-		printf("***INSERT***\n");
-        	Ak_insert_row( ((AK_list_elem) (komande[i].parameters)));
-        	AK_print_table(komande[i].tblName);
-             break;
-         default:
-             break;
-             }
-   }
-
+   for (i = 0; i <= brojkomandi - 1 ; i++) {
+       printf ("id komande je!!!!!!! %d\n", komande[i].id_command);
+       switch(komande[i].id_command){
+       case UPDATE:
+           printf("***UPDATE***\n");			 
+           Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
+           AK_print_table(komande[i].tblName);
+           break;
+       case DELETE:
+           printf("***DELETE***\n");        	 
+           Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
+           Ak_delete_row( ((AK_list_elem) (komande[i].parameters)));
+           AK_print_table(komande[i].tblName);
+           break;
+           
+       case INSERT:
+           printf("***INSERT***\n");
+           Ak_insert_row( ((AK_list_elem) (komande[i].parameters)));
+           AK_print_table(komande[i].tblName);
+           break;
+       default:
+           break;
+       }
+   }  
 }
 
 

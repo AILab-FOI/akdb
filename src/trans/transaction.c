@@ -194,7 +194,7 @@ int AK_delete_lock_entry_list(int blockAddress, pthread_t id) {
     if (!elemDelete) { return NOT_OK;}
     
     do {
-        printf("##########################\n# Lock Released		 #\n#------------------------#\n# Lock	ID:%lu		 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long) elemDelete->TransactionId, elemListHolder->address);
+        /* printf("##########################\n# Lock Released		 #\n#------------------------#\n# Lock	ID:%lu		 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long) elemDelete->TransactionId, elemListHolder->address); */
 
 
 
@@ -355,7 +355,7 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
     }
 
     while (!lock->isWaiting) {
-        printf("################\n# Lock Waiting		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n",(unsigned long) lock->TransactionId, lock->lock_type, memoryAddress);
+        /* printf("################\n# Lock Waiting		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n",(unsigned long) lock->TransactionId, lock->lock_type, memoryAddress); */
         pthread_mutex_lock(&accessLockMutex);
         pthread_cond_wait(&cond_lock, &accessLockMutex);
         pthread_mutex_unlock(&accessLockMutex);
@@ -363,11 +363,11 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
     
     if (counter > 0) {
 
-    	printf("################\n# Lock Granted after wait#\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long)lock->TransactionId, lock->lock_type, memoryAddress);
+    	/* printf("################\n# Lock Granted after wait#\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long)lock->TransactionId, lock->lock_type, memoryAddress); */
 
     } else {
 
-    	printf("##########################\n# Lock Granted		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long)lock->TransactionId, lock->lock_type, memoryAddress);
+    	/* printf("##########################\n# Lock Granted		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long)lock->TransactionId, lock->lock_type, memoryAddress); */
     }
 
     return OK;
@@ -494,6 +494,7 @@ int AK_execute_commands(command * commandArray, int lengthOfArray) {
             }
             address = address->nextElement;
         }
+        //AK_command(commandArray, 1);
         //TODO dodat poziv prave funkcije koja vrši ove promjene
     }
     AK_release_locks(&addresses, pthread_self());
@@ -766,19 +767,19 @@ void AK_test_Transaction() {
 
     // Execute transactions
     AK_transaction_manager(komande,1);
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
-    komande->id_command = SELECT;
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
-    komande->id_command = UPDATE;
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande,1);
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
-    komande->id_command = SELECT;
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* komande->id_command = SELECT; */
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* komande->id_command = UPDATE; */
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande,1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande, 1); */
+    /* komande->id_command = UPDATE; */
+    /* AK_transaction_manager(komande, 1); */
+    /* AK_transaction_manager(komande, 1); */
 
     observable_transaction->observable->AK_notify_observers(observable_transaction->observable);
 
