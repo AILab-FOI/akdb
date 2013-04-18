@@ -20,8 +20,6 @@
 
 #include "redo_log.h"
 
- #define SIZE 0
-
 /**
  * @author Krunoslav Bilić
  * @brief Function used to clean outdated redolog entries
