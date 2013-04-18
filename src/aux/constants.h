@@ -1,5 +1,5 @@
 /**
-@file constants.h Header file that provides global macros, constants and variables
+   @file constants.h Header file that provides global macros, constants and variables
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -53,7 +53,7 @@
   * @def MAX_OBSERVABLE_OBSERVERS
   * @brief Constant for declaring maximum number of observers objects for some observable type
  */
-#define MAX_OBSERVABLE_OBSERVERS 10
+#define MAX_OBSERVABLE_OBSERVERS 20
 /**
   * @def DATA_BLOCK_SIZE
   * @brief Constant declaring length of data block size (used in AK_block->data)
@@ -109,7 +109,7 @@
  * @def NUMBER_OF_KEYS
  * @brief Constant declaring number of buckets in hash table
 */
-#define NUMBER_OF_KEYS 512
+#define NUMBER_OF_KEYS 4096
 /**
   * @def EXIT_SUCCESS
   * @brief Constant declaring successfull exit

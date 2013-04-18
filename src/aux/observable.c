@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-#include "observable.h"
+#include "./observable.h"
 
 /******************** OBSERVABLE IMPLEMENTATION ********************/
 
@@ -58,7 +58,7 @@ static inline int AK_unregister_observer(AK_observable *self, AK_observer *obser
 {
     int i;
     for(i = 0; i < MAX_OBSERVABLE_OBSERVERS; ++i) {
-        if(observer == self->observers[i] && observer != NULL) {
+        if(observer == self->observers[i]) {
             free(self->observers[i]);
             self->observers[i] = NULL;
             Ak_dbg_messg(LOW, GLOBAL, "OBSERVER DELETED");

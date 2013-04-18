@@ -356,16 +356,11 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
 
     while (!lock->isWaiting) {
         printf("################\n# Lock Waiting		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n",(unsigned long) lock->TransactionId, lock->lock_type, memoryAddress);
-
         pthread_mutex_lock(&accessLockMutex);
         pthread_cond_wait(&cond_lock, &accessLockMutex);
         pthread_mutex_unlock(&accessLockMutex);
-        
-        /* if(counter == 10) return NOT_OK; */
-        /* sleep(1); */
-        /* counter++; */
     }
-
+    
     if (counter > 0) {
 
     	printf("################\n# Lock Granted after wait#\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long)lock->TransactionId, lock->lock_type, memoryAddress);
@@ -651,6 +646,7 @@ void AK_on_observable_notify(void *observer, void *observable, AK_ObservableType
  */
 void AK_on_transaction_end(pthread_t transaction_thread) {
     AK_remove_transaction_thread(transaction_thread);
+    pthread_cond_broadcast(&cond_lock);
     // unlock mutex -> after this new transaction can be executed if lock stops transaction execution
     pthread_mutex_unlock(&newTransactionLockMutex);
     transactionsCount--;
@@ -777,14 +773,10 @@ void AK_test_Transaction() {
     AK_transaction_manager(komande, 1);
     komande->id_command = UPDATE;
     AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
     AK_transaction_manager(komande,1);
     AK_transaction_manager(komande, 1);
     AK_transaction_manager(komande, 1);
     komande->id_command = SELECT;
-    AK_transaction_manager(komande, 1);
-    AK_transaction_manager(komande, 1);
-    komande->id_command = UPDATE;
     AK_transaction_manager(komande, 1);
     AK_transaction_manager(komande, 1);
 
