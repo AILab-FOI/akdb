@@ -21,6 +21,7 @@
 #define REL_EQ_COMUT
 
 #include "../file/table.h"
+#include "./rel_eq_selection.h"
 
 #endif
 

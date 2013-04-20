@@ -23,6 +23,7 @@
 #include "../trans/transaction.h"
 #include "../file/table.h"
 #include "../aux/auxiliary.h"
+#include "../opti/rel_eq_comut.h"
 
 /**
  * @author Luka Rajcevic

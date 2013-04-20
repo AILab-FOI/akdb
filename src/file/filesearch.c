@@ -278,7 +278,7 @@ void Ak_filesearch_test() {
             printf("Found:%f\n", *((double *) (mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 1].address)));
 
             szTmp = malloc(mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].size + 1);
-            mempcpy(szTmp, mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].address, mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].size);
+            memcpy(szTmp, mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].address, mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].size);
             szTmp[mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].size] = '\0';
             printf("Found:%s\n", szTmp);
             free(szTmp);
