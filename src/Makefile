@@ -22,7 +22,7 @@ kalashnikov-db: aux/auxiliary.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGE
 	$(CC) main.o $(OTHERTARGETS) $(CONSTRAINTTARGETS) $(OPTITARGETS) $(RELOPTARGETS) $(FILETARGETS) $(MEMORYTARGETS) $(DISKTARGETS) aux/auxiliary.o -o $(OUTDIR)/akdb
 
 clean:
-	rm -rf *~ *.o aux/*.o dm/*.o mm/*.o file/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/log.log ../doc/* ../bin/kalashnikov.db swig/build swig/*.pyc swig/*.so swig/*~ swig/kalashnikovDB_wrap.c
+	rm -rf *~ *.o aux/*.o dm/*.o mm/*.o file/*.o trans/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/log.log ../doc/* ../bin/kalashnikov.db swig/build swig/*.pyc swig/*.so swig/*~ swig/kalashnikovDB_wrap.c
 
 doc:
 	doxygen doxygen.config

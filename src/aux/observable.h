@@ -22,6 +22,7 @@
 
 #include "constants.h"
 #include "debug.h"
+#include <string.h>
 
 /**
  * @author Ivan Pusic
@@ -74,7 +75,6 @@ struct Observable {
     AK_observer* (*AK_get_observer_by_id) (struct Observable*, int id);
 };
 typedef struct Observable AK_observable;
-
 #endif
 
 extern AK_observer * AK_init_observer(void *observable_type, void (*observable_type_event_handler)(void*, void*, AK_ObservableType_Enum));

@@ -26,6 +26,7 @@
 #include "../sql/command.h"
 #include "../aux/observable.h"
 #include "../file/table.h"
+#include "../file/fileio.h"
 #include <string.h>
 
 /**
@@ -86,7 +87,6 @@ struct transaction_list_elem {
 	int address;
     int lock_type;
     int isWaiting;
-    pthread_t transactionId;
     struct transaction_locks_list_elem *DLLLocksHead;
     struct transaction_list_elem *nextBucket;
     struct transaction_list_elem *prevBucket;
