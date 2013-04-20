@@ -95,6 +95,7 @@ void AK_clean_redolog() {
  */
 
 int AK_add_to_redolog(char *srcTableName, AK_list *expr) {
+    return EXIT_FAILURE;
 	int element = 0;
 	int size = 0;
 	AK_mem_block* memBlock;
@@ -145,7 +146,7 @@ int AK_add_to_redolog(char *srcTableName, AK_list *expr) {
  * @return EXIT_SUCCESS if test is successful, otherwise EXIT_FAILURE
  */
 int AK_is_in_redolog(AK_list *expr) {
-
+    return EXIT_FAILURE;
 	int element = 0;
 
 	// ciscenje ukoliko je doslo do promjene stanja

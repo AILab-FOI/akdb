@@ -439,7 +439,6 @@ int Ak_update_row(AK_list *row_root) {
     if (AK_reference_check_if_update_needed(row_root, 0) == EXIT_SUCCESS) {
         AK_reference_update(row_root, 0);
     }
-
     Ak_delete_update_segment(row_root, 0);
     return EXIT_SUCCESS;
 }

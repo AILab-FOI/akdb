@@ -22,6 +22,9 @@
 
 
 #include "dbman.h"
+#include <pthread.h> //TRANSACTIONS
+
+pthread_mutex_t fileLockMutex = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * @author Markus Schatten
@@ -107,6 +110,7 @@ int AK_init_db_file(int size) {
  * @return pointer to block allocated in memory
  */
 AK_block * AK_read_block(int address) {
+    pthread_mutex_lock(&fileLockMutex);
     AK_block * block = (AK_block *) malloc(sizeof ( AK_block));
 
     if ((db = fopen(DB_FILE, "r")) == NULL) {
@@ -125,7 +129,7 @@ AK_block * AK_read_block(int address) {
     }
 
     fclose(db);
-
+    pthread_mutex_unlock(&fileLockMutex);
     return ( block);
 }
 
@@ -137,6 +141,7 @@ AK_block * AK_read_block(int address) {
  * @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
  */
 int AK_write_block(AK_block * block) {
+    pthread_mutex_lock(&fileLockMutex);
     if ((db = fopen(DB_FILE, "r+")) == NULL) {
         printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
         exit(EXIT_ERROR);
@@ -151,6 +156,7 @@ int AK_write_block(AK_block * block) {
     }
     fclose(db);
     Ak_dbg_messg(HIGH, DB_MAN, "AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
+    pthread_mutex_unlock(&fileLockMutex);
     return ( EXIT_SUCCESS);
 }
 

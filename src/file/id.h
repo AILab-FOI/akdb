@@ -20,6 +20,7 @@
 #ifndef ID
 #define ID
 
+#include "table.h"
 #include "fileio.h"
 /**
  * @def ID_START_VALUE

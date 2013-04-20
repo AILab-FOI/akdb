@@ -23,9 +23,11 @@
 
 AK_transaction_list LockTable[NUMBER_OF_KEYS];
 
-pthread_mutex_t accessLockMutex = PTHREAD_MUTEX_INITIALIZER;
+extern pthread_mutex_t accessLockMutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t newTransactionLockMutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t endTransationTestLockMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t acquireLockMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t getMemoryBlocksMutex = PTHREAD_MUTEX_INITIALIZER;
 
 pthread_cond_t cond_lock  = PTHREAD_COND_INITIALIZER;
 AK_observable_transaction *observable_transaction;
@@ -115,10 +117,13 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
         root->prevBucket = bucket;
     }
 
+    bucket->transactionId = pthread_self();
     bucket->address = blockAddress;
     bucket->lock_type = type;
     bucket->observer_lock = AK_init_observer_lock();
-    AK_transaction_register_observer(observable_transaction, bucket->observer_lock->observer);
+
+    // NOTE: Uncomment this if we need to register observer lock to observable_transaction
+    //AK_transaction_register_observer(observable_transaction, bucket->observer_lock->observer);
 
     return bucket;
 }
@@ -196,8 +201,6 @@ int AK_delete_lock_entry_list(int blockAddress, pthread_t id) {
     do {
         /* printf("##########################\n# Lock Released		 #\n#------------------------#\n# Lock	ID:%lu		 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long) elemDelete->TransactionId, elemListHolder->address); */
 
-
-
         (*elemDelete->prevLock).nextLock = elemDelete->nextLock;
         (*elemDelete->nextLock).prevLock = elemDelete->prevLock;
 
@@ -232,55 +235,31 @@ int AK_delete_lock_entry_list(int blockAddress, pthread_t id) {
  * @return int PASS_LOCK_QUEUE or WAIT_FOR_UNLOCK based on the rules described inside the function.
  */
 int AK_isLock_waiting(AK_transaction_elem_P lockHolder, int type, pthread_t transactionId, AK_transaction_lock_elem_P lock) {
-
     AK_transaction_lock_elem_P tmp = lockHolder->DLLLocksHead;
 
+    
 	if (tmp == lock) {
 		lockHolder->lock_type = type;
 		return PASS_LOCK_QUEUE;
 	} else if (tmp->lock_type == SHARED_LOCK) {
         //BEGIN SHARED LOCK
 		if (type == SHARED_LOCK) {
-			while (tmp->nextLock != lock) {
-				if (!pthread_equal(tmp->nextLock->TransactionId,transactionId)  && tmp->lock_type == EXCLUSIVE_LOCK) {
-					return WAIT_FOR_UNLOCK;
-				}
-				tmp = tmp->nextLock;
-			}
 			return PASS_LOCK_QUEUE;
 
 		} else if (type == EXCLUSIVE_LOCK) {
-			while (tmp->nextLock != lock) {
-
-				if ( !pthread_equal(tmp->nextLock->TransactionId,transactionId) ) {
-
-					return WAIT_FOR_UNLOCK;
-				}
-				tmp = tmp->nextLock;
-			}
-			lockHolder->lock_type = EXCLUSIVE_LOCK;
-			return PASS_LOCK_QUEUE;
-
+            return WAIT_FOR_UNLOCK;
 		}
         //END SHARED LOCK
 
-	}else if (tmp->lock_type == EXCLUSIVE_LOCK) {
-        //BEGIN EXCLUSIVE LOCK
-		while (tmp->nextLock != lock) {
-
-			if ( !pthread_equal(tmp->nextLock->TransactionId,transactionId) ) {
-
-				return WAIT_FOR_UNLOCK;
-			}
-			tmp = tmp->nextLock;
-		}
-		return PASS_LOCK_QUEUE;
-        //END EXCLUSIVE LOCK
-
+	} else if (tmp->lock_type == EXCLUSIVE_LOCK) {
+        if ( pthread_equal(tmp->TransactionId, transactionId) ) {
+            return PASS_LOCK_QUEUE;
+        }
 	}
 
 	return WAIT_FOR_UNLOCK;
 }
+
 
 
 /**
@@ -346,19 +325,22 @@ AK_transaction_lock_elem_P AK_create_lock(int blockAddress, int type, pthread_t 
  */
 
 int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
-    pthread_mutex_lock(&accessLockMutex);
+    pthread_mutex_lock(&acquireLockMutex);
     AK_transaction_lock_elem_P lock = AK_create_lock(memoryAddress, type, transactionId);
-    pthread_mutex_unlock(&accessLockMutex);
+    pthread_mutex_unlock(&acquireLockMutex);
     int counter = 0;
     if(!lock->isWaiting){
     	//TODO Add deadlock test, partial implementation of tarjan test available in auxiliary.c
     }
+    AK_transaction_lock_elem_P tmp = AK_search_existing_link_for_hook(memoryAddress);
 
     while (!lock->isWaiting) {
         /* printf("################\n# Lock Waiting		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n",(unsigned long) lock->TransactionId, lock->lock_type, memoryAddress); */
-        pthread_mutex_lock(&accessLockMutex);
-        pthread_cond_wait(&cond_lock, &accessLockMutex);
-        pthread_mutex_unlock(&accessLockMutex);
+        pthread_mutex_lock(&acquireLockMutex);
+        pthread_cond_wait(&cond_lock, &acquireLockMutex);
+        pthread_mutex_unlock(&acquireLockMutex);
+        
+        lock->isWaiting = AK_isLock_waiting(tmp, type, transactionId, lock);
     }
     
     if (counter > 0) {
@@ -384,12 +366,13 @@ void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactio
 
     while (addressesTmp->nextElement != NULL) {
 
+        // NOTE: Uncomment this if we need to unregister transaction lock from observable_transaction
         // Unregister observer and deallocate used memory (dealocating memory is in observable.c unregister_observer)
-        AK_observer *observer = AK_search_existing_link_for_hook(addressesTmp->adresa)->observer_lock->observer;
-        if(observer != NULL) {
-            AK_transaction_unregister_observer(observable_transaction, observer);
-            observer = NULL;
-        }
+        /* AK_observer *observer = AK_search_existing_link_for_hook(addressesTmp->adresa)->observer_lock->observer; */
+        /* if(observer != NULL) { */
+        /*     AK_transaction_unregister_observer(observable_transaction, observer); */
+        /*     observer = NULL; */
+        /* } */
          
         AK_delete_lock_entry_list(addressesTmp->adresa, transactionId);
 
@@ -399,16 +382,15 @@ void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactio
 
         if (tmp != NULL && tmp->nextLock != anchor && !pthread_equal(tmp->nextLock->TransactionId,transactionId)) {
             while (tmp->nextLock->isWaiting == WAIT_FOR_UNLOCK && tmp->nextLock != anchor) {
-
-                tmp->nextLock->isWaiting = AK_isLock_waiting(AK_search_existing_link_for_hook(addressesTmp->adresa),
-                                                             tmp->nextLock->lock_type, tmp->nextLock->TransactionId,
-                                                             tmp->nextLock);
+                
+                //tmp->nextLock->isWaiting = AK_isLock_waiting(anchor,
+                //                                             tmp->nextLock->lock_type, tmp->nextLock->TransactionId,
+                //                                             tmp->nextLock);
                 tmp = tmp->nextLock;
             };
         }
         // notify observable transaction about lock release
         observable_transaction->AK_lock_released();
-        
         addressesTmp = addressesTmp->nextElement;
     }
     pthread_mutex_unlock(&accessLockMutex);
@@ -422,9 +404,7 @@ void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactio
  * @return OK or NOT_OK based on the success of the function.
  */
 int AK_get_memory_blocks(char *tblName, AK_memoryAddresses_link addressList) {
-    pthread_mutex_lock(&accessLockMutex);
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    pthread_mutex_unlock(&accessLockMutex);
     if (addresses->address_from[0] == 0)
         return NOT_OK;
 
@@ -457,9 +437,7 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses_link addressList) {
 int AK_execute_commands(command * commandArray, int lengthOfArray) {
     int i = 0, status = 0;
     AK_memoryAddresses addresses;
-    AK_memoryAddresses_link address = (AK_memoryAddresses_link) malloc(sizeof(struct memoryAddresses));
-
-
+    AK_memoryAddresses_link address = (AK_memoryAddresses_link) malloc(sizeof(AK_memoryAddresses_link));
     for (i = 0; i < lengthOfArray; i++) {
 
         if (!AK_get_memory_blocks(commandArray[i].tblName, &addresses)) {
@@ -469,7 +447,6 @@ int AK_execute_commands(command * commandArray, int lengthOfArray) {
 
         address = &addresses;
         while (address->nextElement != NULL) {
-
             switch (commandArray[i].id_command) {
             case UPDATE:
                 status = AK_acquire_lock(address->adresa, EXCLUSIVE_LOCK, pthread_self());
@@ -494,9 +471,9 @@ int AK_execute_commands(command * commandArray, int lengthOfArray) {
             }
             address = address->nextElement;
         }
-        //AK_command(commandArray, 1);
-        //TODO dodat poziv prave funkcije koja vrši ove promjene
     }
+
+    AK_command(commandArray, lengthOfArray);
     AK_release_locks(&addresses, pthread_self());
     return COMMIT;
 }
@@ -647,7 +624,7 @@ void AK_on_observable_notify(void *observer, void *observable, AK_ObservableType
  */
 void AK_on_transaction_end(pthread_t transaction_thread) {
     AK_remove_transaction_thread(transaction_thread);
-    pthread_cond_broadcast(&cond_lock);
+    //pthread_cond_broadcast(&cond_lock);
     // unlock mutex -> after this new transaction can be executed if lock stops transaction execution
     pthread_mutex_unlock(&newTransactionLockMutex);
     transactionsCount--;
@@ -759,15 +736,91 @@ void AK_test_Transaction() {
     AK_init_observable_transaction();
     
     memset(LockTable, 0, NUMBER_OF_KEYS * sizeof (struct transaction_list_head));
-    command* komande = malloc(sizeof (command));
-    komande->id_command = INSERT;
-    komande->tblName = "student";
 
-    // Execute transactions
-    AK_transaction_manager(komande,1);
+    char *tblName = "student";
+    AK_list_elem row_root_insert = (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root_insert);
+    Ak_DeleteAll_L(row_root_insert);
+    int mbr, year;
+    float weight;
+    mbr = 38262;
+    year = 2012;
+    weight = 82.00;
+    Ak_DeleteAll_L(row_root_insert);
+    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root_insert);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "Ivan", tblName, "firstname", row_root_insert);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "Pusic", tblName, "lastname", row_root_insert);
+    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root_insert);
+    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root_insert);
+
+    AK_list_elem row_root_update = (AK_list_elem) malloc(sizeof (AK_list_elem));
+    Ak_Init_L(row_root_update);
+    Ak_DeleteAll_L(row_root_update);
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root_update, SEARCH_CONSTRAINT);
+    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "pppppppppp", tblName, "lastname", row_root_update, NEW_VALUE);
+
+    command* komande = malloc(sizeof (command) * 2);
+    komande[0].tblName = "student";
+    komande[0].id_command = INSERT;
+    komande[0].parameters = row_root_insert;
+
+    komande[1].tblName = "student";
+    komande[1].id_command = UPDATE;
+    komande[1].parameters = row_root_update;
+
+
+    
+    int id_prof;
+    id_prof = 35893;
+    AK_list_elem row_root_p_update = (AK_list_elem) malloc(sizeof (AK_list_elem));
+    Ak_Init_L(row_root_p_update);
+    Ak_DeleteAll_L(row_root_p_update);
+    
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &id_prof, "professor", "id_prof", row_root_p_update, 1);
+    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", "professor", "firstname", row_root_p_update, 0);
+
+    command* komande1 = malloc(sizeof (command) * 1);
+    komande1[0].tblName = "professor";
+    komande1[0].id_command = DELETE;
+    komande1[0].parameters = row_root_p_update;
+
+    /* command* komande2 = malloc(sizeof (command) * 2); */
+    /* komande2[0].tblName = "student"; */
+    /* komande2[0].id_command = INSERT; */
+    /* komande2[0].parameters = row_root_insert; */
+
+    /* komande2[1].tblName = "student"; */
+    /* komande2[1].id_command = UPDATE; */
+    /* komande2[1].parameters = row_root_update; */
+
+    // NOTE: This is the way on which we can broadcast notice to all observers
+    // observable_transaction->observable->AK_notify_observers(observable_transaction->observable);
+    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+	Ak_Init_L(expr);
+	char *srcTable = "student";
+	char *destTable = "selection_testt";
+	int num = 2010;
+    strcpy(expr->table,destTable);
+	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
+	Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), expr);
+	Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), expr);
+	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+	Ak_InsertAtEnd_L(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
+	Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), expr);
+	Ak_InsertAtEnd_L(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
+    
+    command* komande_select = malloc(sizeof(command) * 1);
+    komande_select[0].tblName = "student";
+    komande_select[0].id_command = SELECT;
+    komande_select[0].parameters = expr;
+
+    AK_transaction_manager(komande, 2);
+    //AK_transaction_manager(komande, 2);
+    //AK_transaction_manager(komande1, 1);
+    //AK_transaction_manager(komande_select, 1);
     
     pthread_mutex_lock(&endTransationTestLockMutex);
-
+    
     free(observable_transaction);
     observable_transaction = NULL;
     

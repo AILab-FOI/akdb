@@ -30,6 +30,7 @@
   * @param mem_block address of memmory block
   * @return EXIT_SUCCESS if the block has been successfully read into memory, EXIT_ERROR otherwise
  */
+
 int AK_cache_block(int num, AK_mem_block *mem_block) {
     unsigned long timestamp;
 
@@ -336,17 +337,16 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
 
     //memset(addresses->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
     //memset(addresses->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
-
     for (freeVar = 0; freeVar < MAX_EXTENTS_IN_SEGMENT; freeVar++) {
         addresses->address_from[freeVar] = 0;
         addresses->address_to[freeVar] = 0;
     }
 
+    
     char name[MAX_VARCHAR_LENGTH];
     int address_from;
     int address_to;
     int j = 0;
-
     for (i = 0; i < DATA_BLOCK_SIZE; i++) {
         if (mem_block->block->tuple_dict[i].type == FREE_INT)
             break;
@@ -357,7 +357,6 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
         memcpy(&address_from, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
         i++;
         memcpy(&address_to, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
-
         //if found the table that addresses we need
         if (strcmp(name, segmentName) == 0) {
             addresses->address_from[j] = address_from;

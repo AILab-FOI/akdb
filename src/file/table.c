@@ -235,8 +235,7 @@ AK_list *AK_get_column(int num, char *tblName) {
 AK_list * AK_get_row(int num, char * tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     AK_header *t_header = AK_get_header(tblName);
-
-    AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
+    AK_list *row_root = calloc(1, sizeof (AK_list));
     Ak_Init_L(row_root);
 
     int num_rows = AK_get_num_records(tblName);

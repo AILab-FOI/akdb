@@ -33,12 +33,10 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
 	int num_attr = AK_num_attr(srcTable);
 
-
 	if (AK_is_in_redolog(expr) == EXIT_SUCCESS) {
 		AK_print_table(dstTable);
 	} else {
 		int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
-
 		if (startAddress == EXIT_ERROR) {
 			return EXIT_ERROR;
 		}

@@ -199,7 +199,7 @@ void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_
  * @return No return value
  */
 void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L) {
-    AK_list_elem new_elem = (AK_list_elem) malloc(sizeof ( struct list_elem));
+    AK_list_elem new_elem = (AK_list_elem) calloc(1, sizeof ( struct list_elem));
     new_elem->size = size;
     new_elem->type = type;
     memcpy(new_elem->data, data, new_elem->size);
