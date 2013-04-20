@@ -1,12 +1,11 @@
-/**
- * @brief  Function command.
- * @author Mario Kolmacic
-
- */
 #include "command.h"
-#include <pthread.h>
 
-
+/** 
+ * @author Mario Kolmacic updated by Ivan Pusic
+ * @brief Function for executing given commands (SELECT, UPDATE, DELETE AND INSERT)
+ * @param komande Commands array to execute
+ * @param brojkomandi Number of commands in array
+ */
 void AK_command(command * komande, int brojkomandi) {
     int i;
     for (i = 0; i < brojkomandi; ++i) {
