@@ -24,8 +24,8 @@
 #include <string.h>  //ARCHIVE LOG
 #include <stdlib.h>
 // Global configuration
-#include "aux/constants.h"
-#include "aux/configuration.h"
+#include "auxi/constants.h"
+#include "auxi/configuration.h"
 
 // Disk management
 #include "dm/dbman.h"
@@ -72,11 +72,11 @@
 
 //Other
 #include "sql/trigger.h"
-#include "aux/iniparser.h"
+#include "auxi/iniparser.h"
 #include "sql/privileges.h"
 #include "trans/transaction.h"
 #include "rec/redo_log.h"
-#include "aux/observable.h"
+#include "auxi/observable.h"
 /**
 Main program function
 

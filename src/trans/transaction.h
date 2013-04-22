@@ -20,11 +20,11 @@
 #ifndef TRANSACTION_H_
 #define TRANSACTION_H_
 #include <pthread.h> //TRANSACTIONS
-#include "../aux/constants.h"
-#include "../aux/configuration.h"
+#include "../auxi/constants.h"
+#include "../auxi/configuration.h"
 #include "../mm/memoman.h"
 #include "../sql/command.h"
-#include "../aux/observable.h"
+#include "../auxi/observable.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include <string.h>

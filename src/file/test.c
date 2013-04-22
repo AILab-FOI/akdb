@@ -22,7 +22,7 @@
 #include "test.h"
 #include "../trans/transaction.h"
 #include "../file/table.h"
-#include "../aux/auxiliary.h"
+#include "../auxi/auxiliary.h"
 #include "../opti/rel_eq_comut.h"
 
 /**

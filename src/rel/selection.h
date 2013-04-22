@@ -22,8 +22,8 @@
 
 #include "expression_check.h"
 #include "../rec/redo_log.h"
-#include "../aux/constants.h"
-#include "../aux/configuration.h"
+#include "../auxi/constants.h"
+#include "../auxi/configuration.h"
 
 #endif
 

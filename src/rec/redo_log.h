@@ -8,11 +8,11 @@
 #ifndef REDOLOG
 #define REDOLOG
 
-#include "../aux/auxiliary.h"
+#include "../auxi/auxiliary.h"
 #include "../mm/memoman.h"
-#include "../aux/constants.h"
-#include "../aux/configuration.h"
-#include "../aux/debug.h"
+#include "../auxi/constants.h"
+#include "../auxi/configuration.h"
+#include "../auxi/debug.h"
 
 #endif /* REDOLOG */
 

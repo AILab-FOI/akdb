@@ -209,14 +209,14 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
   #define SWIG_FILE_WITH_INIT
 
 
-  #include "../aux/debug.h"
-  #include "../aux/debug.c"
+  #include "../auxi/debug.h"
+  #include "../auxi/debug.c"
 
-  #include "../aux/constants.h"
-  #include "../aux/configuration.h"
+  #include "../auxi/constants.h"
+  #include "../auxi/configuration.h"
 
-  #include "../aux/auxiliary.c"
-  #include "../aux/auxiliary.h"
+  #include "../auxi/auxiliary.c"
+  #include "../auxi/auxiliary.h"
 
   #include "../dm/dbman.h"
 
@@ -322,8 +322,8 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
   #include "../trans/transaction.h"
   #include "../trans/transaction.c"
 
-  #include "../aux/observable.c"
-  #include "../aux/observable.h"
+  #include "../auxi/observable.c"
+  #include "../auxi/observable.h"
 
   #include "../file/test.c"
   #include "../file/test.h"
@@ -339,11 +339,11 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
   #include "../sql/command.c"
   #include "../sql/command.h"
 
-  #include "../aux/iniparser.c"
-  #include "../aux/iniparser.h"
+  #include "../auxi/iniparser.c"
+  #include "../auxi/iniparser.h"
 
-  #include "../aux/dictionary.c"
-  #include "../aux/dictionary.h"
+  #include "../auxi/dictionary.c"
+  #include "../auxi/dictionary.h"
 
 
 
@@ -358,14 +358,14 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
 %}
 
 
-%include "../aux/debug.h"
-%include "../aux/debug.c"
+%include "../auxi/debug.h"
+%include "../auxi/debug.c"
 
-%include "../aux/constants.h"
-%include "../aux/configuration.h"
+%include "../auxi/constants.h"
+%include "../auxi/configuration.h"
 
-%include "../aux/auxiliary.c"
-%include "../aux/auxiliary.h"
+%include "../auxi/auxiliary.c"
+%include "../auxi/auxiliary.h"
 
 %include "../dm/dbman.h"
 
@@ -471,8 +471,8 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 %include "../trans/transaction.h"
 %include "../trans/transaction.c"
 
-%include "../aux/observable.c"
-%include "../aux/observable.h"
+%include "../auxi/observable.c"
+%include "../auxi/observable.h"
 
 %include "../file/test.c"
 %include "../file/test.h"
@@ -486,11 +486,11 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 %include "../sql/command.c"
 %include "../sql/command.h"
 
-%include "../aux/iniparser.c"
-%include "../aux/iniparser.h"
+%include "../auxi/iniparser.c"
+%include "../auxi/iniparser.h"
 
-%include "../aux/dictionary.c"
-%include "../aux/dictionary.h"
+%include "../auxi/dictionary.c"
+%include "../auxi/dictionary.h"
 
 %include "../sql/function.h"
 %include "../sql/function.c"

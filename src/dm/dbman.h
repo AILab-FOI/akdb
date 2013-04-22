@@ -21,7 +21,7 @@
 #ifndef DBMAN
 #define DBMAN
 
-#include "../aux/auxiliary.h"
+#include "../auxi/auxiliary.h"
 
 
 /**

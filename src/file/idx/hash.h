@@ -22,8 +22,8 @@
 
 #include "index.h"
 #include "../../file/table.h"
-#include "../../aux/constants.h"
-#include "../../aux/configuration.h"
+#include "../../auxi/constants.h"
+#include "../../auxi/configuration.h"
 
 /**
  * @author Unknown
