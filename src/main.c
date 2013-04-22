@@ -54,7 +54,6 @@
 #include "rel/nat_join.h"
 #include "rel/theta_join.h"
 #include "rel/projection.h"
-#include "sql/rename.h"
 #include "rel/selection.h"
 #include "rel/union.h"
 #include "rel/aggregation.h"
@@ -116,7 +115,7 @@ int main()
 //			op_intersect_test();
 //			op_union_test();
 //			op_difference_test();
-//			op_rename_test();
+			AK_op_rename_test();
 //			op_product_test();
 
 //			btree_test();

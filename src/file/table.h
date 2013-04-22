@@ -6,16 +6,21 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
+#ifndef RENAME
+#define RENAME
+
+#endif
 
 #ifndef TABLE
 #define TABLE
@@ -50,3 +55,6 @@ int AK_table_empty(char *tblName);
 int AK_get_table_obj_id(char *table);
 int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_temp_block, char *operator_name);
 void AK_table_test() ;
+
+int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr);
+void AK_op_rename_test() ;

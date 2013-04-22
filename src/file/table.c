@@ -644,6 +644,68 @@ int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_tem
 		
 		return num_att1;
 }
+
+/**
+ * @author Mislav Čakarić edited by Ljubo Barać
+ * @brief Function for renaming table and/or attribute in table (moved from rename.c)
+ * @param old_table_name old name of the table
+ * @param new_table_name new name of the table
+ * @param old_attr name of the attribute to rename
+ * @param new_attr new name for the attribute to rename
+ * @return EXIT_ERROR or EXIT_SUCCESS
+ */
+int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr) {
+    table_addresses *adresses = (table_addresses *)AK_get_table_addresses(old_table_name);
+    int tab_addresses[MAX_NUM_OF_BLOCKS];
+    int num_extents = 0, num_blocks = 0;
+    register int i, j;
+    AK_mem_block *mem_block;
+    AK_archive_log("AK_rename", old_table_name, old_attr, new_table_name, new_attr); //ARCHIVE_LOG
+	if(strcmp(old_attr, new_attr) != 0){
+		//SEARCH FOR ALL BLOCKS IN SEGMENT
+		i=0;
+		while(adresses->address_from[i]){
+			for (j = adresses->address_from[i]; j <= adresses->address_to[i]; j++) {
+				tab_addresses[num_blocks] = j;
+				num_blocks++;
+			}
+			num_extents++;
+			i++;
+		}
+
+		AK_header newHeader[MAX_ATTRIBUTES];
+		mem_block = (AK_mem_block *)AK_get_block(tab_addresses[0]);
+		memcpy(&newHeader, mem_block->block->header, sizeof (mem_block->block->header));
+
+		for (i = 0; i < MAX_ATTRIBUTES; i++) {
+			if (strcmp(newHeader[i].att_name, old_attr)==0) {
+				Ak_dbg_messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
+				memset(&newHeader[i].att_name, 0, MAX_ATT_NAME);
+				memcpy(&newHeader[i].att_name, new_attr, strlen(new_attr));
+				break;
+			} else if (strcmp(newHeader[i].att_name, "\0")==0) { //if there is no more attributes
+				Ak_dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: atribute: %s does not exist in this table\n", old_attr);
+				return (EXIT_ERROR);
+			}
+		}
+
+		//replacing old headers with new ones
+		for (i = 0; i < num_blocks; i++) {
+			mem_block = (AK_mem_block *)AK_get_block(tab_addresses[i]);
+			memcpy(&mem_block->block->header, newHeader, sizeof (AK_header) * MAX_ATTRIBUTES);
+			mem_block->dirty=BLOCK_DIRTY;
+		}
+	}
+
+    if(strcmp(old_table_name, new_table_name) != 0){//new name is different than old, and old needs to be replaced
+        AK_list *expr;
+	expr = 0;
+	AK_selection(old_table_name, new_table_name, expr);
+    	AK_delete_segment(old_table_name, SEGMENT_TYPE_TABLE);
+    }
+
+    return EXIT_SUCCESS;
+}
 /**
  * @author Unknown
  * @brief Function for testing table abstraction
@@ -688,4 +750,22 @@ void AK_table_test() {
 
     printf("Table \"student\": AK_get_tuple for row=0, column=1:");
     printf("%s\n", AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
+}
+
+
+/**
+  * @author Mislav Čakarić, edited by Ljubo Barać
+  * @brief Function for rename operator testing (moved from rename.c)
+  * @return No return value
+ */
+void AK_op_rename_test() {
+    //printf( "rename_test: Present!\n" );
+    printf("\n********** RENAME TEST **********\n\n");
+
+	AK_print_table("AK_relation");
+    AK_rename("student", "weight", "student2", "weight");
+    AK_print_table("student2");
+    //AK_print_table("student2");
+
+    AK_print_table("AK_relation");
 }
