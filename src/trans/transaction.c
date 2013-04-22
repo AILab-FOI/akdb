@@ -453,7 +453,9 @@ int AK_execute_commands(command * commandArray, int lengthOfArray) {
             address = address->nextElement;
         }
     }
-    AK_command(commandArray, lengthOfArray);
+    
+    if(AK_command(commandArray, lengthOfArray) == EXIT_ERROR)
+        return ABORT;
     
     AK_release_locks(&addresses, pthread_self());
     return COMMIT;

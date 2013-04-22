@@ -14,7 +14,7 @@ struct AK_command {
 typedef struct AK_command command;
 #endif
 
-void AK_command(command * komande, int brojkomandi);
+int AK_command(command * komande, int brojkomandi);
 void AK_test_command();
 
 

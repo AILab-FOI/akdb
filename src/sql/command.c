@@ -6,7 +6,7 @@
  * @param komande Commands array to execute
  * @param brojkomandi Number of commands in array
  */
-void AK_command(command * komande, int brojkomandi) {
+int AK_command(command * komande, int brojkomandi) {
     int i;
     for (i = 0; i < brojkomandi; ++i) {
         switch(komande[i].id_command){
@@ -16,34 +16,37 @@ void AK_command(command * komande, int brojkomandi) {
             char *dest_table = malloc(strlen(ext) + strlen(komande[i].tblName) + 1);
             strcat(dest_table, komande[i].tblName);
             strcat(dest_table, ext);
-            AK_selection(komande[i].tblName, dest_table, (AK_list*)komande[i].parameters);
+            if(AK_selection(komande[i].tblName, dest_table, (AK_list*)komande[i].parameters) == EXIT_ERROR)
+                return EXIT_ERROR;
             break;
             
         case UPDATE:
             printf("***UPDATE***\n");
-
-            Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
+            if(Ak_update_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR)
+                return EXIT_ERROR;
             AK_print_table(komande[i].tblName);
 
             break;
         case DELETE:
             printf("***DELETE***\n");        	 
-            Ak_update_row( ((AK_list_elem) (komande[i].parameters)));
-            Ak_delete_row( ((AK_list_elem) (komande[i].parameters)));
+            if(Ak_update_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR)
+                return EXIT_ERROR;
+            if(Ak_delete_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR)
+                return EXIT_ERROR;
             AK_print_table(komande[i].tblName);
             break;
            
         case INSERT:
             printf("***INSERT***\n");
-
-            Ak_insert_row( ((AK_list_elem) (komande[i].parameters)));
+            if(Ak_insert_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR)
+                return EXIT_ERROR;
             AK_print_table(komande[i].tblName);
-
             break;
         default:
             break;
         }
     }
+    return EXIT_SUCCESS;
 }
 
 void AK_test_command(){

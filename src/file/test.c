@@ -1025,7 +1025,7 @@ printf("\n\n----------------View test----------------\n\n");
 
     /* RUN TESTS FOR OBSERVABLE DESIGN PATTERN */
     //AK_observable_test();
-    //AK_test_Transaction();
+    AK_test_Transaction();
 }
 
 
