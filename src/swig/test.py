@@ -3,42 +3,10 @@
 import kalashnikovDB as ak47
 
 class Functions:
-    '''
-    def create_table(self, table, attributes, types):
-        parameters = []
-        t_header = []
-        if len(attributes) != len(types):
-            print "error"
-            return
-        for i in range(len(attributes)):
-            if types[i] == ak47.TYPE_INT:
-                parametar = ak47.AK_create_create_table_parameter(ak47.TYPE_INT, attributes[i])
-                parameters.append(parametar)
-            elif types[i] == ak47.TYPE_VARCHAR:
-                parametar = ak47.AK_create_create_table_parameter(ak47.TYPE_VARCHAR, attributes[i])
-                parameters.append(parametar)
-            elif types[i] == ak47.TYPE_FLOAT:
-                parametar = ak47.AK_create_create_table_parameter(ak47.TYPE_FLOAT, attributes[i])
-                parameters.append(parametar)
-        parametar = ak47.AK_create_create_table_parameter(ak47.TYPE_VARCHAR, "abcd")
-        parameters.append(parametar)
-        ak47.AK_create_table(table, parameters, len(attributes))
-        print "table created"	
-    '''
-    # @author: Luka Rajcevic
-    # @brief: Creates header of attributes for a table
-    # @param table - table name
-    # @param attr_name - list of attribute names
-    # @param attr_type - list of attribute types
+
     def create_table_header(self, table, attr_name, attr_type):
         return ak47.create_header_test(table, attr_name, attr_type)
 
-    
-    # @Brief: inserts data into specific table
-    # @param table - table name
-    # @param attr_name - list of attribute names
-    # @param attr_value - list of attribute values
-    # @param attr_type - list of attribute types
     def insert_data(self, table, attr_name, attr_value, attr_type):
         return ak47.insert_data_test(table, attr_name, attr_value, attr_type)
     
@@ -107,33 +75,7 @@ class Functions:
 
         element = ak47.AK_get_tuple(row, col, table)
         return ak47.AK_tuple_to_string(element)
-    '''
-    def selection(self, table, table_res, expr):
-        element = ak47.list_elem()
-        ak47.Ak_Init_L(element)
-        ak47.Ak_DeleteAll_L(element)
-        
-        operatori = ["<", ">", "=", "AND", "OR"]
 
-        c = 0        
-        for el in expr:
-            if operatori.count(el) == 1:
-                ak47.Ak_InsertAtEnd_L(ak47.TYPE_OPERATOR, el, len(el), element)
-                c = 0
-            elif c == 0:
-                ak47.Ak_InsertAtEnd_L(ak47.TYPE_ATTRIBS, el, len(el), element)
-                c = 1
-            else:
-                if type(el) == int:
-                    ak47.Ak_InsertAtEnd_L(ak47.TYPE_INT, el, 4, element)
-                elif type(el) == float:
-                    ak47.Ak_InsertAtEnd_L(ak47.TYPE_FLOAT, el, 4, element)
-                elif type(el) == str:
-                    ak47.Ak_InsertAtEnd_L(ak47.TYPE_VARCHAR, el, len(el), element)
-                c = 0
-        
-        return ak47.AK_selection(table, table_res, element)        
-    '''
     def theta_join(self, table1, table2, table_res, expr):
         table1_attributes = []
         table2_attributes = []
@@ -216,24 +158,7 @@ class Functions:
         
     def intersect(self, table1, table2, table_res):
         return ak47.AK_intersect(table1, table2, table_res)
-    
-    '''
-    #deprecated    
-    def insert_Row(self, table, row):
-        element = ak47.list_elem()
-        ak47.Ak_Init_L(element)
-        ak47.Ak_DeleteAll_L(element)
-        brojac = 0
-        for i in range(len(row)):
-            if type(row[i]) == int:
-                ak47.Ak_Insert_New_Element(ak47.TYPE_INT, row[i], table, ak47.AK_get_attr_name(table, brojac), element)
-            elif type(row[i]) == float:
-                ak47.Ak_Insert_New_Element(ak47.TYPE_FLOAT, row[i], table, ak47.AK_get_attr_name(table, brojac), element)
-            elif type(row[i]) == str:
-                ak47.Ak_Insert_New_Element(ak47.TYPE_VARCHAR, row[i], table, ak47.AK_get_attr_name(table, brojac), element)
-            brojac += 1
-        ak47.Ak_insert_row(element)
-    '''
+
 # call to main.c from python (invoking AK_create_test_tables) 
 #ak47.main()
 
@@ -482,6 +407,7 @@ def rel_algebra_test():
     0
     >>> ak47.AK_print_table("natural_join")
     '''
+
 # author: Luka Rajcevic
 # function for other tests implemented in project
 # ===>  ADD YOUR OWN TEST CALLS HERE
@@ -490,52 +416,3 @@ def other_tests():
     >>ak47.AK_observable_test();
 
     ''' 
-
-
-
-
-# old test method calls
-# not working because method implementation is changed
-'''
-print "\n\n"
-print "Python insert test:"
-f.insert_Row("student", [689, "A", "B", 2012, 130.53])
-f.insert_Row("student", [777, "A", "B", 2013, 90.53])
-#ak47.AK_print_table("student")
-
-
-print "\n\n"
-print "Python update test:"
-f.update_Row("student", "mbr", "lastname", 35916, "!!!!!!!!!!!!!")
-f.update_Row("student", "mbr", "year", 777, 476)
-ak47.AK_print_table("student")
-
-print "\n\n"
-print "Python delete test:"
-f.delete_Row("student", "mbr", 689)
-ak47.AK_print_table("student")
-
-print "\n\n"
-print "Python selection test:"
-f.selection("student", "s2", ["year", 1000, "<", "firstname", "Robert","=", "OR"])
-ak47.AK_print_table("s2")
-
-print "\n\n"
-print "Python theta join test:"
-f.theta_join("department", "professor", "s3", ["manager", "lastname", "="])
-ak47.AK_print_table("s3")
-
-print "\n\n"
-print "Python create table test:"
-f.create_table("create_test", ["mbr", "firstname", "lastname", "year", "weight"], [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT])
-ak47.AK_print_table("AK_relation")
-f.insert_Row("create_test", [689, "A", "B", 2012, 130.53])
-f.insert_Row("create_test", [777, "A", "B", 2013, 90.53])
-f.insert_Row("create_test", [111, "A", "B", 2013, 90.53])
-f.insert_Row("create_test", [222, "A", "B", 2013, 90.53])
-f.insert_Row("create_test", [333, "A", "B", 2013, 90.53])
-f.insert_Row("create_test", [444, "A", "B", 2013, 90.53])
-ak47.AK_print_table("create_test")
-
-#ak47.AK_flush_cache()
-'''
