@@ -314,9 +314,6 @@ def create_test():
     >>> f.insert_data("student", student_attr_name, student_attr_value_8, student_attr_type)
     0
     >>> ak47.AK_print_table("student")
-    >>> f.delete_Row("student", "id_student", 1)
-    0
-    >>> ak47.AK_print_table("student")
     '''
 
 # author: Luka Rajcevic
