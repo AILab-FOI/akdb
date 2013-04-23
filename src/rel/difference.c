@@ -51,8 +51,8 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 		}
 
 		int address, type, size;
-		int different, num_rows, temp_int;
-		different = num_rows = temp_int = 0;
+		int different, num_rows, temp_int,summ;
+		different = num_rows = temp_int = summ = 0;
 		
 		float temp_float = 0;
 		
@@ -140,17 +140,18 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 															memcpy(data2, &(tbl2_temp_block->block->data[address]), size);
 													}
 													
-													//if they are different
-													if (strcmp(data1, data2) != 0) { 
+													//if they are the same
+												    if(strcmp(data1,data2)==0){
 														different++;
-														//printf("%s != %s\n", data1, data2);
-														break;
-													}
+														}
+													if(different==(num_att-1)) summ=1;
+
 												}
-												num_rows++;
+												//if same rows are found don't keep searching
+												if(summ==1)break;
 											}
 											//if there is a difference between tuple_dicts
-											if (num_rows - different == 0) {
+											if (summ == 0) {
 												//printf("Num_rows: %i, Different_rows: %i\n", num_rows, different);
 												Ak_DeleteAll_L(row_root);
 
@@ -167,7 +168,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 
 												Ak_insert_row(row_root);
 											}
-											num_rows = different = 0;
+											num_rows = different = summ = 0;
 										}
 									}
 								}
@@ -199,3 +200,4 @@ void Ak_op_difference_test() {
     AK_difference("professor", "assistant", "difference_test");
     AK_print_table("difference_test");
 }
+
