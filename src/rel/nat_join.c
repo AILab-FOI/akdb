@@ -97,8 +97,6 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
     Ak_dbg_messg(HIGH, REL_OP, "\n MERGE NAT JOIN...");
 
     AK_list_elem some_element;
-    AK_list * row_root_insert2 = (AK_list *) malloc(sizeof (AK_list));
-    Ak_Init_L(row_root_insert2);
 
     int i; //counter of tuple_dicts
     int head; //counter of the headers
@@ -117,10 +115,6 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
         //make a copy of insert row list of the first table
         some_element = (AK_list_elem) Ak_First_L(row_root_insert);
 
-        while (some_element != NULL) {
-            Ak_Insert_New_Element_For_Update(some_element->type, some_element->data, new_table, some_element->attribute_name, row_root_insert2, 0);
-            some_element = some_element->next;
-        }
 
         //going through headers of the second table
         while (strcmp(temp_block->header[head].att_name, "") != 0) {
@@ -142,6 +136,7 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
                     if (strcmp(some_element->data, data) != 0) {
                         //dont copy these set of tuple_dicts
                         something_to_copy = 0;
+			break;
                     }
                     not_in_list = 0;
                 } else if ((size == 0) || (overflow > (temp_block->free_space + 1)) || (overflow < -1)) {
@@ -157,7 +152,7 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
                 //insert data from second table to insert_list
-                Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, row_root_insert2, 0);
+                Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, row_root_insert, 0);
             }
             not_in_list = 1;
             head++; //next header
@@ -166,11 +161,9 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
 
         //if these set is one that is passes merge then insert the list of data to join table
         if (something_to_copy) {
-            Ak_insert_row(row_root_insert2);
+            Ak_insert_row(row_root_insert);
         }
-        Ak_DeleteAll_L(row_root_insert2);
     }
-    free(row_root_insert2);
 }
 
 /**
@@ -225,7 +218,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, A
 
                     something_to_copy = 1;
                     not_in_list = 0;
-                    //break; //check for break here, to speed up execution
+                    break; //check for break here, to speed up execution  
                 }
                 list_elem = list_elem->next;
             }
@@ -351,3 +344,4 @@ void AK_op_join_test() {
 
     Ak_DeleteAll_L(att);
 }
+
