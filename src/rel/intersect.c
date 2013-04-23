@@ -46,7 +46,8 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         int num_att = AK_check_tables_scheme(tbl1_temp_block, tbl2_temp_block, "Intersect");
 
         int something_to_copy = 0, m, n, o;
-	int address, type, size;
+	int address, type, size,thesame;
+	thesame=0;
 		
         char data1[MAX_VARCHAR_LENGTH];
         char data2[MAX_VARCHAR_LENGTH];
@@ -108,13 +109,12 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                     memcpy(data2, &(tbl2_temp_block->block->data[address]), size);
                                                     data2[size] = '\0';
 
-                                                    //printf("%s == %s\n", data1, data2);
-                                                    if (strcmp(data1, data2) == 0) {
-                                                        something_to_copy++;
-                                                    }
+                                                    //if two attributes are different, stop searching that row
+													if(strcmp(data1,data2)!=0)break;
+													else if(strcmp(data1, data2) == 0 && n==(num_att-1)) thesame=1;
                                                 }
 
-                                                if (something_to_copy == num_att) {
+                                                if (thesame==1) {
                                                     for (n = 0; n < num_att; n++) {
                                                         type = tbl1_temp_block->block->tuple_dict[m + n].type;
                                                         size = tbl1_temp_block->block->tuple_dict[m + n].size;
@@ -127,6 +127,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                     }
                                                     Ak_insert_row(row_root);
                                                     Ak_DeleteAll_L(row_root);
+thesame=0;
                                                 }
                                             }
                                         }
@@ -164,3 +165,4 @@ void Ak_op_intersect_test() {
     AK_intersect("professor", "assistant", "intersect_test");
     AK_print_table("intersect_test");
 }
+
