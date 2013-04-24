@@ -100,7 +100,6 @@ int AK_view_rename(char *name, char *new_name){
         }
     }
    result = AK_view_remove_by_name(name);
-   char *tblName = "AK_view";
    result = AK_view_remove_by_name(name);
    result = AK_view_add(new_name, query, view_id);
    return result;

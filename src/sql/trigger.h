@@ -22,6 +22,10 @@
 
 #include "../file/table.h"
 #include "../file/fileio.h"
+#include "../file/id.h"
+#include "../sql/function.h"
+#include "../rec/archive_log.h"
+#include "../rel/selection.h"
 
 #endif
 

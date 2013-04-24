@@ -21,6 +21,8 @@
 #define SEQUENCE
 
 #include "../file/table.h"
+#include "../file/id.h"
+#include "../file/fileio.h"
 
 #endif
 

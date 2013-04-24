@@ -68,7 +68,6 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
  * @return trigger id or EXIT_ERROR
  */
 int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, char* function) {
-    int i;
     int funk_id = -1, table_id = -1, trigg_id;
 
     table_id = AK_get_table_obj_id(table);
@@ -78,7 +77,7 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
         return EXIT_ERROR;
     }
 
-    funk_id = AK_get_function_obj_id(function);
+    funk_id = AK_get_function_obj_id(function, NULL);
 
     if (funk_id == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_add: No such function to execute upon activation of trigger.\n");
@@ -208,8 +207,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, char* table, char* function) {
-    AK_list *row;
-    int id, i;
+    int id;
 
     if (obj_id == NULL && (name == NULL || table == NULL)) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Not enough data to identify the trigger.\n");
@@ -238,7 +236,7 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
         Ak_Insert_New_Element_For_Update(TYPE_INT, &id, "AK_trigger", "on", row_root, 1);
     }
     if (function != NULL && strcmp(function, "") != 0) {
-        id = AK_get_function_obj_id(function);
+        id = AK_get_function_obj_id(function, NULL);
         if (id == EXIT_ERROR) {
             Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Could not update trigger. Function does not exist.\n");
             return EXIT_ERROR;
@@ -325,9 +323,11 @@ void AK_trigger_test() {
 
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
     Ak_Init_L(expr);
-    int num = 2002;
+    //int num = 2002;
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", 4, expr);
-    Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), expr);
+    //Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), expr);
+    // ne može se umetnuti integer!!
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "2002", 4, expr);
     Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", 2, expr);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", 9, expr);
     Ak_InsertAtEnd_L(TYPE_VARCHAR, "Matija", 6, expr);
@@ -336,7 +336,7 @@ void AK_trigger_test() {
 
     AK_trigger_add("trigg1", "insert", expr, "AK_reference", "dummy_funk_1");
     AK_trigger_add("trigg2", "update", expr, "dummy_table", "dummy_funk_1");
-    AK_trigger_add("trigg3", "delete", "", "AK_reference", "dummy_funk");
+    //AK_trigger_add("trigg3", "delete", "", "AK_reference", "dummy_funk");
     AK_trigger_add("trigg4", "insert", NULL, "AK_reference", "dummy_funk_2");
     AK_print_table("AK_trigger");
     AK_print_table("AK_trigger_conditions");

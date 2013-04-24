@@ -169,7 +169,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right){
  * @param *right type of privilege which will be revoked from user on given table
  * @return EXIT_SUCCESS if privilege is revoked, EXIT_ERROR if it isn't
 */
-void AK_revoke_privilege_user(char *username, char *table, char *right){
+int AK_revoke_privilege_user(char *username, char *table, char *right){
 	printf("Revokanje: %s %s %s\n", username, table, right);
 	int table_id = AK_get_table_obj_id(table);
 	int user_id = AK_user_get_id(username);
@@ -277,7 +277,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right){
  * @param *right type of privilege which will be granted to group on given table
  * @return EXIT_SUCCESS if privilege is revoked, EXIT_ERROR if it isn't
 */
-void AK_revoke_privilege_group(char *groupname, char *table, char *right){
+int AK_revoke_privilege_group(char *groupname, char *table, char *right){
 	int table_id, group_id;
 	group_id = AK_group_get_id(groupname);
 	table_id = AK_get_table_obj_id(table);
@@ -336,7 +336,6 @@ int AK_add_user_to_group(char *user, char *group){
 	while ((row = (AK_list *)AK_get_row(i, "AK_user_group")) != NULL) {
 		// if user is already in group, return error
 		if (user_id == (int) *row->next->data) {
-			int id = (int) * row->next->data;
 			return EXIT_ERROR;
 		}
 		i++;

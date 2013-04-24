@@ -186,7 +186,7 @@ int Ak_insert_row(AK_list *row_root) {
 
 /**	
    * @author Matija Novak, updated by Dino Laktašić
-   * @brief Function updates or deletes row from table in given block. Given list of elements is firstly back-upped. According to given argument in function, 	          delete or update is peformed.
+   * @brief Function updates or deletes row from table in given block. Given list of elements is firstly back-upped. According to given argument in function, delete or update is peformed.
    * @param temp_block block to work with
    * @param row_list list of elements which contain data for delete or update
    * @param operation UPDATE or DELETE
@@ -214,9 +214,9 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
     for (i = 0; i < DATA_BLOCK_SIZE; i++) { //freeze point, if there is no i++
         head = 0;
 
-	address = temp_block->tuple_dict[i].address;
-	type = temp_block->tuple_dict[i].type;
-	size = temp_block->tuple_dict[i].size;
+        address = temp_block->tuple_dict[i].address;
+        type = temp_block->tuple_dict[i].type;
+        size = temp_block->tuple_dict[i].size;
         overflow = address + size;
 
         while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers
@@ -224,8 +224,7 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
 
                 while (some_element) {
 					//if we found header that is constraint in list
-                    if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) 
-						&& (some_element->constraint == 1)) {
+                    if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (some_element->constraint == SEARCH_CONSTRAINT)) {
                         
                         exists_equal_attrib = 1;
 						
@@ -243,9 +242,8 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
                     }
 
 					//update if there is varchar which we must change (when yes we delete old data and insert new one else only update data)
-                    if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && 
-						(some_element->constraint == 0) && (operation == UPDATE) && 
-						(diff_varchar_exist == 0) && (type == TYPE_VARCHAR)) {
+                    if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (some_element->constraint == NEW_VALUE) && 
+                        (operation == UPDATE) && (diff_varchar_exist == 0) && (type == TYPE_VARCHAR)) {
 
 						memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(entry_data, temp_block->data + address, size);
@@ -262,23 +260,24 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
        
         }
 
-	//i+=2;
-	//address = temp_block->tuple_dict[i].address;
-	//printf("ADR %d \n:", temp_block->tuple_dict[i++].address);
-	//printf("III %d\n", i);
-	//type = temp_block->tuple_dict[i++].type;
-	//size = temp_block->tuple_dict[i++].size;
+    	//i+=2;
+    	//address = temp_block->tuple_dict[i].address;
+    	//printf("ADR %d \n:", temp_block->tuple_dict[i++].address);
+    	//printf("III %d\n", i);
+    	//type = temp_block->tuple_dict[i++].type;
+    	//size = temp_block->tuple_dict[i++].size;
 
         if (operation == DELETE) {//delete
             if ((exists_equal_attrib == 1) && (del == 1)) {
                 int j, sd;
-		sd = head;
+                sd = head;
+                
                 for (j = i - head; j < i; j++) {//delete one row
 
-		    int k = temp_block->tuple_dict[j].address;
+                    int k = temp_block->tuple_dict[j].address;
                     int l = temp_block->tuple_dict[j].size;
-		    //printf("ADR %d \n:", temp_block->tuple_dict[j+sd].address);
-		    //printf(" SZ %d \n:", temp_block->tuple_dict[j+sd].size);
+                    //printf("ADR %d \n:", temp_block->tuple_dict[j+sd].address);
+                    //printf(" SZ %d \n:", temp_block->tuple_dict[j+sd].size);
 					memset(temp_block->data + k, '\0', l);
 					Ak_dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);
 					
@@ -286,12 +285,10 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
                     temp_block->tuple_dict[j].size = 0;
                     temp_block->tuple_dict[j].type = 0;
                     temp_block->tuple_dict[j].address = 0;
-		    }
-                
-
+                }
             }
-
-        } else {//update
+        } 
+        else {//update
             //is there an varchar to which has changed the size
             //when yes delete all insert new, else update data
             if ((exists_equal_attrib == 1) && (del == 1)) {
@@ -309,7 +306,7 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
 
                         while (some_element) {//going through list elements
                             if ((strcmp(some_element->attribute_name, temp_block->header[(j+ss) % head].att_name) == 0)
-								&& (some_element->constraint == 0)) {//if exist new data then we must not copy old one
+								&& (some_element->constraint == NEW_VALUE)) {//if exist new data then we must not copy old one
                                 exist_new_data = 1;
                             }
                             some_element = (AK_list_elem) Ak_Next_L(some_element);
@@ -322,14 +319,15 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
                             some_element = (AK_list_elem) Ak_First_L(row_root);
 
                             Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[j+ss].type, up_entry,
-								some_element->table, temp_block->header[j % head].att_name, some_element, 0);
+								some_element->table, temp_block->header[j % head].att_name, some_element, NEW_VALUE);
                         }
 						
 						memset(temp_block->data + k, '\0', l);
                         temp_block->tuple_dict[j+ss].size = 0;
                         temp_block->tuple_dict[j+ss].type = 0;
                         temp_block->tuple_dict[j+ss].address = 0;
-                    } else {//update row
+                    } 
+                    else {//update row
 						memset(up_entry, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(up_entry, temp_block->data + k, l);
 
@@ -337,7 +335,7 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
 
                         while (some_element) {//going throught elements
                             if ((strcmp(some_element->attribute_name, temp_block->header[j % head].att_name) == 0)
-								&& (some_element->constraint == 0)) {//update element
+								&& (some_element->constraint == NEW_VALUE)) {//update element
                                 if (strcmp(up_entry, some_element->data) != 0) {
                                     memcpy(temp_block->data + k, some_element->data, l);
                                 }
@@ -414,15 +412,15 @@ int Ak_delete_update_segment(AK_list *row_root, int del) {
         @returs EXIT_SUCCESS if success
  */
 int Ak_delete_row(AK_list *row_root) {
-    if (AK_reference_check_restricion(row_root, 1) == EXIT_ERROR) {
+    if (AK_reference_check_restricion(row_root, DELETE) == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FILE_MAN, "Could not delete row. Reference integrity violation (restricted).\n");
         return EXIT_ERROR;
     }
-    if (AK_reference_check_if_update_needed(row_root, 1) == EXIT_SUCCESS) {
-        AK_reference_update(row_root, 1);
+    if (AK_reference_check_if_update_needed(row_root, DELETE) == EXIT_SUCCESS) {
+        AK_reference_update(row_root, DELETE);
     }
 
-    Ak_delete_update_segment(row_root, 1);
+    Ak_delete_update_segment(row_root, DELETE);
     return EXIT_SUCCESS;
 }
 
@@ -432,18 +430,65 @@ int Ak_delete_row(AK_list *row_root) {
         @return EXIT_SUCCESS if success
  */
 int Ak_update_row(AK_list *row_root) {
-    if (AK_reference_check_restricion(row_root, 0) == EXIT_ERROR) {
+    if (AK_reference_check_restricion(row_root, UPDATE) == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FILE_MAN, "Could not update row. Reference integrity violation (restricted).\n");
         return EXIT_ERROR;
     }
-    if (AK_reference_check_if_update_needed(row_root, 0) == EXIT_SUCCESS) {
-        AK_reference_update(row_root, 0);
+    if (AK_reference_check_if_update_needed(row_root, UPDATE) == EXIT_SUCCESS) {
+        AK_reference_update(row_root, UPDATE);
     }
-    Ak_delete_update_segment(row_root, 0);
+    Ak_delete_update_segment(row_root, UPDATE);
     return EXIT_SUCCESS;
 }
 
+int get_id(){
+    int i = 0;
+    int exists = 0;
+    int seq_id = -1;
+    int current_value = 0;
+    AK_list *row;
+    
+    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root); 
+
+    while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+        if (strcmp(row->next->next->data, "objectID") == 0) {
+            memcpy(&seq_id, &row->next->data, sizeof (int));
+            memcpy(&current_value, &row->next->next->next->data, row->next->next->next->size);
+            exists = 1;
+        break;
+        }
+        i++;
+    }
+
+    if(exists){
+        current_value = current_value + 1;
+        Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, SEARCH_CONSTRAINT);
+        Ak_Insert_New_Element_For_Update(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root, NEW_VALUE);
+        int result = Ak_update_row(row_root);
+        Ak_DeleteAll_L(row_root);
+        free(row_root);
+
+        if(result != EXIT_SUCCESS){
+            return EXIT_ERROR;
+        }
+        return current_value;
+    }
+
+    int value = 0;
+    Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
+    value = 1;
+    Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "increment", row_root);
+    Ak_insert_row(row_root);
+    Ak_DeleteAll_L(row_root);
+    free(row_root);
+    return current_value;
+}
+
 void Ak_fileio_test() {
+    printf("\n\nThis is fileio test!\n");
     /*OVO JE UBITI SVE VEĆ SPREMNO*/
     //CREATE table testna
     /*AK_block * block = ( AK_block * ) malloc ( sizeof( AK_block ) );
@@ -511,7 +556,7 @@ void Ak_fileio_test() {
 
     free(block);
     */
-    AK_header t_header2[4] = {
+/*    AK_header t_header2[4] = {
         {TYPE_VARCHAR, "Adresa", 0, '\0', '\0',},
         {TYPE_VARCHAR, "Ime", 0, '\0', '\0',},
         {TYPE_VARCHAR, "Prezime", 0, '\0', '\0',},
@@ -521,7 +566,7 @@ void Ak_fileio_test() {
     int startAddress1 = AK_initialize_new_segment("testna_druga", SEGMENT_TYPE_TABLE, t_header2);
 
     if (startAddress1 != EXIT_ERROR)
-        printf("\nTABLE %s CREATED!\n", "testna_druga");
+        printf("\nTABLE %s CREATED!\n", "testna_druga");*/
     //END CREATING TABLE TESTNA_DRUGA
 
     //INSERT ENTRY TO SYSTEM_RELATION CATALOG
@@ -612,31 +657,40 @@ void Ak_fileio_test() {
         Ak_insert_row(row_root);
     }
 
-    //AK_print_table("testna");
-
+    AK_print_table("testna");
+/*
     Ak_DeleteAll_L(row_root);
     broj = 1;
     Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, 1);
     Ak_delete_row(row_root);
 
-    // AK_print_table("testna");
+    AK_print_table("testna");
+*/
+    Ak_DeleteAll_L(row_root);
+    broj = 3;
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
+    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Francina", "testna", "Ime", row_root, NEW_VALUE);
+    //Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root, 1);
+    Ak_update_row(row_root);
+    AK_print_table("testna");
+
 
     Ak_DeleteAll_L(row_root);
-    broj = 1;
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, 0);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Nikola", "testna", "Ime", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root, 1);
+    broj = 7;
+    // za broj = 1 ne radi!
+    //broj = 1;
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
+    //Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root, 1);
+    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "M", "testna", "Prezime", row_root, NEW_VALUE);
     Ak_update_row(row_root);
 
     AK_print_table("testna");
 
-    Ak_DeleteAll_L(row_root);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "", "testna", "Prezime", row_root, 0);
-    Ak_update_row(row_root);
 
-    AK_print_table("testna");
-
+    AK_print_table("AK_sequence");
+    get_id();
+    AK_print_table("AK_sequence");
+/*
     Ak_DeleteAll_L(row_root);
     broj = 3;
     Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, 1);
@@ -658,44 +712,7 @@ void Ak_fileio_test() {
     Ak_update_row(row_root);
 
     //AK_print_table("testna");
-    /*
-    DeleteAllElements(row_root);
-    InsertNewElement(TYPE_VARCHAR,"Brace Radica 13","testna_druga","Adresa",row_root);
-    InsertNewElementForUpdate(TYPE_VARCHAR,"Nikola","testna_durga","Ime",row_root,0);
-    InsertNewElement(TYPE_VARCHAR,"Bakoš","testna_druga","Prezime",row_root);
-    some_element=GetFirstElement(row_root);
-    insert_row(row_root);
-
-    DeleteAllElements(row_root);
-    InsertNewElement(TYPE_VARCHAR,"Kalnička 54","testna_druga","Adresa",row_root);
-    InsertNewElementForUpdate(TYPE_VARCHAR,"Mihi","testna_durga","Ime",row_root,0);
-    InsertNewElement(TYPE_VARCHAR,"Vacenovski","testna_druga","Prezime",row_root);
-    some_element=GetFirstElement(row_root);
-    insert_row(row_root);
-
-    DeleteAllElements(row_root);
-    InsertNewElement(TYPE_VARCHAR,"Neka","testna_druga","Adresa",row_root);
-    InsertNewElementForUpdate(TYPE_VARCHAR,"Maja","testna_durga","Ime",row_root,0);
-    InsertNewElement(TYPE_VARCHAR,"Vacenovski","testna_druga","Prezime",row_root);
-    some_element=GetFirstElement(row_root);
-    insert_row(row_root);
-
-    DeleteAllElements(row_root);
-    broj=133;
-    InsertNewElement(TYPE_INT,&broj,"testna","Redni_broj",row_root);
-    InsertNewElementForUpdate(TYPE_VARCHAR,"Maja","testna","Ime",row_root,0);
-    InsertNewElement(TYPE_VARCHAR,"Vacenovski","testna","Prezime",row_root);
-    some_element=GetFirstElement(row_root);
-    insert_row(row_root);
-
-    DeleteAllElements(row_root);
-    broj=1334;
-    InsertNewElement(TYPE_INT,&broj,"testna","Redni_broj",row_root);
-    InsertNewElementForUpdate(TYPE_VARCHAR,"Matija","testna","Ime",row_root,0);
-    InsertNewElement(TYPE_VARCHAR,"Novak","testna","Prezime",row_root);
-    some_element=GetFirstElement(row_root);
-    insert_row(row_root);
-    */
+*/
     Ak_DeleteAll_L(row_root);
     free(row_root);
 }

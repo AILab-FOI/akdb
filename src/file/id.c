@@ -66,6 +66,50 @@ int AK_get_id() {
     Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "increment", row_root);
     Ak_insert_row(row_root);
     return current_value;
+
+/*    int i;
+    int exists = 0;
+    int seq_id = -1;
+    int current_value = 100;
+
+    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root); 
+    AK_list *row;
+
+    while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+        if (strcmp(row->next->next->data, "objectID") == 0) {
+            memcpy(&seq_id, &row->next->data, sizeof (int));
+            memcpy(&current_value, &row->next->next->next->data, row->next->next->next->size);
+            exists = 1;
+        break;
+        }
+        i++;
+    }
+
+    if(exists){
+        current_value = current_value + 1;
+        Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, SEARCH_CONSTRAINT);
+        Ak_Insert_New_Element_For_Update(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root, NEW_VALUE);
+        int result = Ak_update_row(row_root);
+        Ak_DeleteAll_L(row_root);
+        free(row_root);
+
+        if(result != EXIT_SUCCESS){
+            return EXIT_ERROR;
+        }
+        return current_value;
+    }
+
+    int value = 0;
+    Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
+    value = 1;
+    Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "increment", row_root);
+    Ak_insert_row(row_root);
+    Ak_DeleteAll_L(row_root);
+    free(row_root);
+    return current_value;*/
 }
 
 /**

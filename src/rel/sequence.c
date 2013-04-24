@@ -75,6 +75,7 @@ int AK_sequence_remove(char *name){
     }
     Ak_DeleteAll_L(row_root);
     free(row_root);
+    return EXIT_SUCCESS;
 }
 
 

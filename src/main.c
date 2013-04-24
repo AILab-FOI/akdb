@@ -95,7 +95,7 @@ int main()
 			AK_create_test_tables();
 			
 //			files_test();
-//			fileio_test();
+			Ak_fileio_test();
 //			filesearch_test();
 //			filesort_test();
 
@@ -115,7 +115,7 @@ int main()
 //			op_intersect_test();
 //			op_union_test();
 //			op_difference_test();
-			AK_op_rename_test();
+//			AK_op_rename_test();
 //			op_product_test();
 
 //			btree_test();
@@ -131,7 +131,7 @@ int main()
 //			memoman_test();
 //
 //			constraint_between_test();
-//			id_test();
+//			Ak_id_test();
 //			null_test();
 //			privileges_test();
 //          AK_unique_test();
