@@ -16,8 +16,6 @@ OUTDIR = ../bin
 
 .PHONY: swig
 
--include $(OBJS:.o=.d)
-
 %.o: %.c
 	gcc -c $(CFLAGS) $*.c -o $*.o
 	gcc -MM $(CFLAGS) $*.c > $*.d
@@ -26,6 +24,8 @@ OUTDIR = ../bin
 	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | \
 	  sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
 	@rm -f $*.d.tmp
+
+-include $(OBJS:.o=.d)
 
 all: kalashnikov-db
 
@@ -50,3 +50,5 @@ doc:
 
 swig:
 	cd swig && swig -python kalashnikovDB.i && python setup.py build_ext --inplace && cd ..
+
+.DEFAULT_GOAL := all
