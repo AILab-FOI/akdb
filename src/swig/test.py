@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 import kalashnikovDB as ak47
+import test_strings as ts
+
 
 class Functions:
-
+ 
     def create_table_header(self, table, attr_name, attr_type):
         return ak47.create_header_test(table, attr_name, attr_type)
 
@@ -158,9 +160,44 @@ class Functions:
         
     def intersect(self, table1, table2, table_res):
         return ak47.AK_intersect(table1, table2, table_res)
+    
+    def clear_file(self, filename):
+        open(filename, 'w').close()
+        return 0;
+
+    ## prints table to txt file, and then verifies if it's updated
+    ## in the it should have been
+    ## parameters are table to print and string to verify the table
+    ## filename is table_test.txt
+    def verify_table(self, table, verifier, filename):
+        self.clear_file(filename)
+        ak47.AK_print_table_to_file(table)
+        f = open(filename, "r")
+        s = ""
+        for line in f:
+            s += line
+        #print s
+        if (s == verifier):
+            return 0
+        else:
+            return -1
+    def verify_row_or_column(self, verifier, filename):
+        f = open(filename, "r")
+        s = ""
+        for line in f:
+            s += line
+        #print s
+        if (s == verifier):
+            return 0
+        else:
+            return -1
 
 # call to main.c from python (invoking AK_create_test_tables) 
 #ak47.main()
+f = Functions()
+ak47.AK_inflate_config()
+ak47.AK_init_disk_manager()
+ak47.AK_memoman_init()
 
 
 # author: Luka Rajcevic
@@ -207,87 +244,7 @@ class_3_attr_value_2 = ["2", "Cognitive Studies", "2002", "English"]
 class_3_attr_value_3 = ["3", "Chemistry", "2011", "Croatian"]
 class_3_attr_value_4 = ["4", "Urban Design", "2000", "Spanish"]
 
-f = Functions()
 
-# author: Luka Rajcevic
-# this function tests methods from Functions class, more specifically its
-# create_table_header and insert_data methods.
-def create_test():
-    '''
-    >>> ak47.AK_inflate_config()
-
-    >>> ak47.AK_init_disk_manager()
-    0
-    >>> ak47.AK_memoman_init()
-    0
-    >>> f.create_table_header("student", student_attr_name, student_attr_type)
-    1
-    >>> f.insert_data("student", student_attr_name, student_attr_value_1, student_attr_type)
-    0
-    >>> f.insert_data("student", student_attr_name, student_attr_value_2, student_attr_type)
-    0
-    >>> f.insert_data("student", student_attr_name, student_attr_value_3, student_attr_type)
-    0
-    >>> f.insert_data("student", student_attr_name, student_attr_value_4, student_attr_type)
-    0
-    >>> f.insert_data("student", student_attr_name, student_attr_value_5, student_attr_type)
-    0
-    >>> f.insert_data("student", student_attr_name, student_attr_value_6, student_attr_type)
-    0
-    >>> f.insert_data("student", student_attr_name, student_attr_value_7, student_attr_type)
-    0
-    >>> f.insert_data("student", student_attr_name, student_attr_value_8, student_attr_type)
-    0
-    >>> ak47.AK_print_table("student")
-    '''
-
-# author: Luka Rajcevic
-# this function tests methods from Functions class,
-# it queries table for its properties (attribute count, record count etc.)
-# bugs:
-#   -> get_row_test() does not print number values
-#   -> rename_Table() does not work (segfault)
-def table_properties_test():
-    '''
-    >>> ak47.AK_inflate_config()
-
-    >>> ak47.AK_init_disk_manager()
-    0
-    >>> ak47.AK_memoman_init()
-    0
-    >>> f.create_table_header("class", class_attr_name, class_attr_type)
-    1
-    >>> f.insert_data("class", class_attr_name, class_attr_value_1, class_attr_type)
-    0
-    >>> f.insert_data("class", class_attr_name, class_attr_value_2, class_attr_type)
-    0
-    >>> f.insert_data("class", class_attr_name, class_attr_value_3, class_attr_type)
-    0
-    >>> f.insert_data("class", class_attr_name, class_attr_value_4, class_attr_type)
-    0
-    >>> f.attribute_count("class")
-    3
-    >>> f.records_count("class")
-    4
-    >>> f.get_column_test(1, "class")
-    1
-    >>> f.get_column_test(0, "class")
-    1
-    >>> f.get_row_test(1, "class")
-    1
-    >>> f.get_attr_name("class", 1)
-    'class_name'
-    >>> f.get_attr_name("class", 0)
-    'id_class'
-    >>> f.get_attr_index("class", "year")
-    2
-    >>> f.get_value(1, 2, "class")
-    '2011'
-    >>> f.rename_Attribute("class", "year", "anno")
-    0
-    >>> ak47.AK_print_table("class")
-
-    ''' 
 
 # author: Luka Rajcevic
 # creates test tables
@@ -296,9 +253,6 @@ def table_properties_test():
 
 def create_tables():
     #initialize memory
-    ak47.AK_inflate_config()
-    ak47.AK_init_disk_manager()
-    ak47.AK_memoman_init()
     
     #create student table and insert data
     ak47.create_header_test("student", student_attr_name, student_attr_type)
@@ -334,7 +288,7 @@ def create_tables():
     
     return 1
 
-
+create_tables()
 # author: Luka Rajcevic
 # Test data for selection
 # select * from student where year < 1990
@@ -346,6 +300,50 @@ selection_query_1_types = [ak47.TYPE_ATTRIBS, ak47.TYPE_INT, ak47.TYPE_OPERATOR]
 
 
 # author: Luka Rajcevic
+# this function tests methods from Functions class,
+# it queries table for its properties (attribute count, record count etc.)
+# bugs:
+#   -> get_row_test() does not print number values
+#   -> rename_Table() does not work (segfault)
+def table_properties_test():
+    '''
+    >>> f.attribute_count("class")
+    3
+    >>> f.records_count("class")
+    4
+    >>> f.clear_file("table_test.txt")
+    0
+    >>> f.get_column_test(1, "class")
+    1
+    >>> f.verify_row_or_column(ts.ct_5, "table_test.txt")
+    0
+    >>> f.clear_file("table_test.txt")
+    0
+    >>> f.get_column_test(0, "class")
+    1
+    >>> f.verify_row_or_column(ts.ct_4, "table_test.txt")
+    0
+    >>> f.clear_file("table_test.txt")
+    0
+    >>> f.get_row_test(1, "class")
+    1
+    >>> f.verify_row_or_column(ts.ct_3, "table_test.txt")
+    0
+    >>> f.get_attr_name("class", 1)
+    'class_name'
+    >>> f.get_attr_name("class", 0)
+    'id_class'
+    >>> f.get_attr_index("class", "year")
+    2
+    >>> f.get_value(1, 2, "class")
+    '2011'
+    >>> f.rename_Attribute("class", "year", "anno")
+    0
+    >>> f.verify_table("class", ts.ct_2, "table_test.txt")
+    0
+    ''' 
+
+# author: Luka Rajcevic
 # test functions for CRUD operations
 # current bugs:
 #   -> select works only on integers (floats and strings do not work)
@@ -353,66 +351,65 @@ selection_query_1_types = [ak47.TYPE_ATTRIBS, ak47.TYPE_INT, ak47.TYPE_OPERATOR]
 #   -> delete is removing the wrong row (eg. 3 instead of 4, or 7 instead of 8)
 def selection_test():
     '''
-    >>> create_tables()
-    1
     >>> f.sel("student", "s2", selection_query_1, selection_query_1_types)
     1
+    >>> f.verify_table("s2", ts.ra_10, "table_test.txt")
+    0
     >>> f.sel("student", "s3", selection_query_2, selection_query_1_types)
     1
-    >>> f.update_Row("student", "id_student", "year", 1, 50)
+    >>> f.verify_table("s3", ts.ra_11, "table_test.txt")
     0
-    >>> ak47.AK_print_table("student")
-
-    >>> f.delete_Row("student", "id_student", 3)
+    >>> f.update_Row("student", "id_student", "year", 2, 2020)
     0
-    >>> f.delete_Row("student", "id_student", 7)
+    >>> f.verify_table("student", ts.st_3, "table_test.txt")
     0
-    >>> ak47.AK_print_table("student")
-
+    >>> f.update_Row("student", "id_student", "year", 1, 200)
+    0
+    >>> f.verify_table("student", ts.st_4, "table_test.txt")
+    0
+    >>> f.delete_Row("student", "id_student", 2)
+    0
+    >>> f.delete_Row("student", "id_student", 6)
+    0
+    >>> f.verify_table("student", ts.st_2, "table_test.txt")
+    0
     '''
 
 def rel_algebra_test():
     '''
-    >>> create_tables() 
-    1
     >>> f.product("student", "class", "product")
     0
-    >>> ak47.AK_print_table("product")
-
+    >>> f.verify_table("product", ts.ra_1, "table_test.txt")
+    0
     >>> f.intersect("class_2", "class", "intersect")
     0
-    >>> ak47.AK_print_table("intersect")
-    
+    >>> f.verify_table("intersect", ts.ra_9, "table_test.txt")
+    0
     >>> f.difference("class_2", "class", "difference")
     0
-    >>> ak47.AK_print_table("difference")
-    
+    >>> f.verify_table("difference", ts.ra_8, "table_test.txt")
+    0
     >>> f.union("class_2", "class", "union")
     0
-    >>> ak47.AK_print_table("union")
-    
+    >>> f.verify_table("union", ts.ra_3, "table_test.txt")
+    0
     >>> f.projection("student", "projection", ["id_student", "year"])
     0
-    >>> ak47.AK_print_table("projection")
-
-    >>> f.projection("student", "projection", ["year"])
+    >>> f.verify_table("projection", ts.ra_4, "table_test.txt")
     0
-    >>> ak47.AK_print_table("projection")
-    
-    >>> f.projection("student", "projection", ["firstname", "year", "lastname"])
+    >>> f.projection("student", "projection2", ["year"])
     0
-    >>> ak47.AK_print_table("projection")
-    
-    >>> f.nat_Join("class_2", "class_3", "natural_join", ["id_class", "class_name"])
+    >>> f.verify_table("projection2", ts.ra_6, "table_test.txt")
     0
-    >>> ak47.AK_print_table("natural_join")
+    >>> f.projection("student", "projection3", ["firstname", "year", "lastname"])
+    0
+    >>> f.verify_table("projection3", ts.ra_7, "table_test.txt")
+    0
     '''
+#
+# Tests give 3 failures (after update, delete and intersect)
+#
 
-# author: Luka Rajcevic
-# function for other tests implemented in project
-# ===>  ADD YOUR OWN TEST CALLS HERE
-def other_tests():
-    '''
-    >>ak47.AK_observable_test();
-
-    ''' 
+if __name__ == "__main__":
+    import kalashnikovDB as ak47
+    import test_strings as ts

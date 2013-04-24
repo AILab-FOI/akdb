@@ -565,6 +565,205 @@ void AK_print_table(char *tblName) {
     }
 }
 
+char* FILEPATH = "table_test.txt";
+FILE *fp;
+
+
+/**
+ * @author Dino Laktašić. 
+ * @brief Function that prints row spacer 
+ * update by Luka Rajcevic
+ * @param col_len[] max lengths for each attribute cell 
+ * @param length total table width 
+ * @return printed row spacer
+ */
+void AK_print_row_spacer_to_file(int col_len[], int length) {
+    fp = fopen(FILEPATH,"a");
+    int i, j, col, temp;
+
+    j = col = temp = 0;
+
+    for (i = 0; i < length; i++) {
+        if (!i || i == temp + j) {
+            j += TBL_BOX_OFFSET + 1;
+            temp += col_len[col++] + 1;
+            fprintf(fp, "+");
+        } else {
+            fprintf(fp, "-");
+        }
+    }
+
+    fclose(fp);
+}
+
+/**
+ * @author Dino Laktašić
+ * @brief  Function that prints table row 
+ * update by Luka Rajcevic
+ * @param col_len[] array of max lengths for each attribute
+ * @param *row  list with row elements
+ * @return No return value
+ */
+void AK_print_row_to_file(int col_len[], AK_list *row) {
+    fp = fopen(FILEPATH,"a");
+    AK_list_elem el = (AK_list_elem) Ak_First_L(row);
+
+    int i = 0;
+    void *data = (void *) calloc(MAX_VARCHAR_LENGTH, sizeof (void));
+
+    fprintf(fp, "\n|");
+    while (el != NULL) {
+        memset(data, 0, MAX_VARCHAR_LENGTH);
+        switch (el->type) {
+            case FREE_CHAR:
+                //case FREE_INT:
+                fprintf(fp, " %-*s|", col_len[i] + TBL_BOX_OFFSET, "null");
+                break;
+            case TYPE_INT:
+                memcpy(data, el->data, sizeof (int));
+                fprintf(fp, "%*i |", col_len[i] + TBL_BOX_OFFSET, *((int *) data));
+                break;
+            case TYPE_FLOAT:
+                memcpy(data, el->data, sizeof (float));
+                fprintf(fp, "%*.3f |", col_len[i] + TBL_BOX_OFFSET, *((float *) data));
+                break;
+            case TYPE_VARCHAR:
+            default:
+                memcpy(data, el->data, el->size);
+                fprintf(fp, " %-*s|", col_len[i] + TBL_BOX_OFFSET, (const char *) data);
+                break;
+        }
+        el = el->next;
+        i++;
+    }
+    fprintf(fp, "\n");
+    fclose(fp);
+    free(data);
+}
+
+/**
+ * @author Dino Laktašić and Mislav Čakarić (replaced old print table function by new one)
+ * update by Luka Rajcevic
+ * @brief  Function for printing table
+ * @param *tblName table name
+ * @return No return value
+ */
+void AK_print_table_to_file(char *tblName) {
+    fp = fopen(FILEPATH,"a");
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
+    if (addresses->address_from[0] == 0) {
+        fprintf(fp, "Table %s does not exist!\n", tblName);
+        
+    } else {
+        AK_header *head = AK_get_header(tblName);
+
+        int i, j, k, l;
+        int num_attr = AK_num_attr(tblName);
+        int num_rows = AK_get_num_records(tblName);
+        int len[num_attr]; //max length for each attribute in row
+        int length = 0; //length of spacer
+        struct timeval  end_time, start_time;
+
+        //store lengths of header attributes
+        for (i = 0; i < num_attr; i++) {
+            len[i] = strlen((head + i)->att_name);
+        }
+
+        //for each header attribute iterate through all table rows and check if
+        //there is longer element than previously longest and store it in array
+        for (i = 0; i < num_attr; i++) {
+            for (j = 0; j < num_rows; j++) {
+                AK_list_elem el = AK_get_tuple(j, i, tblName);
+                switch (el->type) {
+                    case TYPE_INT:
+                        length = AK_chars_num_from_number(*((int *) (el)->data), 10);
+                        if (len[i] < length) {
+                            len[i] = length;
+                        }
+                        break;
+                    case TYPE_FLOAT:
+                        length = AK_chars_num_from_number(*((float *) (el)->data), 10);
+                        if (len[i] < length) {
+                            len[i] = length;
+                        }
+                        break;
+                    case TYPE_VARCHAR:
+                    default:
+                        if (len[i] < el->size) {
+                            len[i] = el->size;
+                        }
+                        break;
+                }
+            }
+        }
+        //num_attr is number of char | + space in printf
+        //set offset to change the box size
+        length = 0;
+        for (i = 0; i < num_attr; length += len[i++]);
+        length += num_attr * TBL_BOX_OFFSET + 2 * num_attr + 1;
+    
+        fprintf(fp, "Table: %s\n", tblName);
+
+        if (num_attr <= 0 || num_rows <= 0) {
+            fprintf(fp, "Table is empty.\n");
+        } else {
+            //print table header
+            fclose(fp);
+            AK_print_row_spacer_to_file(len, length);
+            fp = fopen(FILEPATH,"a");
+            fprintf(fp, "\n|");
+
+            for (i = 0; i < num_attr; i++) {
+                //print attributes center aligned inside box
+                k = (len[i] - strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
+                if (k % 2 == 0) {
+                    k /= 2;
+                    fprintf(fp, "%-*s%-*s|", k, " ", k + strlen((head + i)->att_name), (head + i)->att_name);
+                } else {
+                    k /= 2;
+                    fprintf(fp, "%-*s%-*s|", k, " ", k + strlen((head + i)->att_name) + 1, (head + i)->att_name);
+                }
+
+                //print attributes left aligned inside box
+                //printf(" %-*s|", len[i] + MAX_TABLE_BOX_OFFSET, (head + i)->att_name);
+            }
+            fprintf(fp, "\n");
+            fclose(fp);
+            AK_print_row_spacer_to_file(len, length);
+            AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
+            Ak_Init_L(row_root);
+
+            i = 0;
+            int type, size, address;
+            
+            while (addresses->address_from[i] != 0) {
+                for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
+                    AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
+                    if (temp->block->last_tuple_dict_id == 0)
+                        break;
+                    for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+                        if (temp->block->tuple_dict[k].size > 0) {
+                            for (l = 0; l < num_attr; l++) {
+                                type = temp->block->tuple_dict[k + l].type;
+                                size = temp->block->tuple_dict[k + l].size;
+                                address = temp->block->tuple_dict[k + l].address;
+                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
+                            }
+                            AK_print_row_to_file(len, row_root);
+                            AK_print_row_spacer_to_file(len, length);
+                            Ak_DeleteAll_L(row_root);
+                        }
+                    }
+                }
+                i++;
+            }
+            fp = fopen(FILEPATH,"a");
+            fprintf(fp, "\n");
+        }
+    }
+    fclose(fp);  
+}
+
 /**
  * @author Matija Šestak.
  * @brief  Function that check whether table is empty

@@ -5,9 +5,14 @@ The SWIG interface is compiled by using:
 2. python setup.py build_ext --inplace
 =========
 
+
 Afterwards you can use test.py to test the interface:
+IMPORTANT:
+tests are very unstable, you should probably try to start them a few times
+if they throw an error.
 =========
 3. python test.py
+gives segmentation fault (for unknown reason)
 =========
 OR 
 
@@ -15,3 +20,5 @@ to see doctest output, start it with:
 =========
 4. python -m doctest -v test.py
 =========
+
+table strings needed for table correction testing are in "table_test.txt" file

@@ -185,7 +185,7 @@ int AK_memoman_init() {
 
     printf("AK_memoman_init: Memory manager initialized...\n");
 
-    return ( EXIT_SUCCESS);
+    return EXIT_SUCCESS;
 }
 
 /**

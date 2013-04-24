@@ -115,11 +115,11 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
     for (i = 0; i < _num; i++){
         if (_type[i] == TYPE_INT){
             int val = atoi(sel_query[i]);
-            Ak_InsertAtEnd_L(_type[i], &val, sizeof(int), expr);    
+            Ak_InsertAtEnd_L(_type[i], (char*) &val, sizeof(int), expr);    
         }
         if (_type[i] == TYPE_FLOAT){
             float val = atof(sel_query[i]);
-            Ak_InsertAtEnd_L(_type[i], &val, sizeof(float), expr);
+            Ak_InsertAtEnd_L(_type[i], (char *) &val, sizeof(float), expr);
         }
         if (_type[i] == TYPE_OPERATOR || _type[i] == TYPE_ATTRIBS || _type[i] == TYPE_VARCHAR){
             Ak_InsertAtEnd_L(_type[i], sel_query[i], sizeof(sel_query[i]), expr);
@@ -143,7 +143,11 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
  * @param tbl - name of the table
  */
 
+char* FILEP = "table_test.txt";
+FILE *fp;
+
  int get_column_test(int num, char* tbl){
+    fp = fopen(FILEP,"a");
     int i;
 
     AK_list *row = AK_get_column(num, tbl);
@@ -151,17 +155,19 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
         while (row->next != NULL){
             row = row->next;
             if (row->type == TYPE_INT){
-                printf("|  %d    ", *((int *) (row)->data) );
+                fprintf(fp, "| %d ", *((int *) (row)->data) );
             }
             if (row->type == TYPE_FLOAT){
-                printf("|   %f   ", *((float *) (row)->data));
+                fprintf(fp, "| %f ", *((float *) (row)->data));
             }
             if (row->type == TYPE_VARCHAR){
-                printf("|   %s   ", row->data);
+                fprintf(fp, "| %s ", row->data);
             }
         }
+        fclose(fp);
         return 1;
     }
+    fclose(fp);
     return 0;
  }
 
@@ -174,6 +180,7 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
  */
 
  int get_row_test(int num, char* tbl){
+    fp = fopen(FILEP,"a");
     int i;
 
     AK_list *row = AK_get_row(num, tbl);
@@ -181,17 +188,19 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
         while (row->next != NULL){
             row = row->next;
             if (row->type == TYPE_INT){
-                printf("|   %d   ", *((int *) (row)->data) );
+                fprintf(fp, "| %d ", *((int *) (row)->data) );
             }
             if (row->type == TYPE_FLOAT){
-                printf("|   %f   ", *((float *) (row)->data));
+                fprintf(fp, "| %f ", *((float *) (row)->data));
             }
             if (row->type == TYPE_VARCHAR){
-                printf("|   %s   ", row->data);
+                fprintf(fp, "| %s ", row->data);
             }
         }
+        fclose(fp);
         return 1;
     }
+    fclose(fp);
     return 0;
  }
 

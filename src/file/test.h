@@ -22,6 +22,14 @@
 
 #include "files.h"
 
+
+
 #endif
 
+int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type);
+int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _num, int* _type);
+int selection_test(char* src_table, char* dest_table, char** sel_query, int _num, int* _type);
+int get_column_test(int num, char* tbl);
+int get_row_test(int num, char* tbl);
 void AK_create_test_tables();
+

@@ -1,7 +1,5 @@
-/**
-@file table.h Header file that provides data structures for table abstraction
- */
-/*
+/** @file table.h Header file that provides data structures for table abstraction
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -51,6 +49,9 @@ char * AK_tuple_to_string(AK_list *tuple);
 void AK_print_row_spacer(int col_len[], int length);
 void AK_print_row(int col_len[], AK_list *row);
 void AK_print_table(char *tblName);
+void AK_print_row_spacer_to_file(int col_len[], int length);
+void AK_print_row_to_file(int col_len[], AK_list *row);
+void AK_print_table_to_file(char *tblName);
 int AK_table_empty(char *tblName);
 int AK_get_table_obj_id(char *table);
 int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_temp_block, char *operator_name);

@@ -868,6 +868,18 @@ def AK_print_table(*args):
   return _kalashnikovDB.AK_print_table(*args)
 AK_print_table = _kalashnikovDB.AK_print_table
 
+def AK_print_row_spacer_to_file(*args):
+  return _kalashnikovDB.AK_print_row_spacer_to_file(*args)
+AK_print_row_spacer_to_file = _kalashnikovDB.AK_print_row_spacer_to_file
+
+def AK_print_row_to_file(*args):
+  return _kalashnikovDB.AK_print_row_to_file(*args)
+AK_print_row_to_file = _kalashnikovDB.AK_print_row_to_file
+
+def AK_print_table_to_file(*args):
+  return _kalashnikovDB.AK_print_table_to_file(*args)
+AK_print_table_to_file = _kalashnikovDB.AK_print_table_to_file
+
 def AK_table_empty(*args):
   return _kalashnikovDB.AK_table_empty(*args)
 AK_table_empty = _kalashnikovDB.AK_table_empty
