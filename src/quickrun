@@ -10,9 +10,9 @@ function createQuickStartFile() {
     sudo sh -c "echo -e '#!/usr/bin/env bash\n \
     CUR_DIR=\$(pwd)\n \
     if [ "\$1" == "-d" ]; then \n \
-        cd $SRC_DIR && make clean && make all && cd ../bin/ && gdb akdb && cd ../src && make clean && cd \$CUR_DIR \n \
+        cd $SRC_DIR && make dev && cd ../bin/ && gdb akdb && cd ../src && cd \$CUR_DIR \n \
     else \n \
-        cd $SRC_DIR && make clean && make all && cd ../bin/ && ./akdb && cd ../src && make clean && cd \$CUR_DIR \n \
+        cd $SRC_DIR && make dev && cd ../bin/ && ./akdb && cd ../src && cd \$CUR_DIR \n \
     fi' > /bin/kalashnikovDB_quickrun"
 
     bold=`tput bold`
