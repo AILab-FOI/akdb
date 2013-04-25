@@ -102,6 +102,7 @@ int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _n
  *
  */
 int selection_test(char* src_table, char* dest_table, char** sel_query, int _num, int* _type){
+	printf("==================== SELECTION_TEST =====================\n");
 
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
     Ak_Init_L(expr);
@@ -122,7 +123,7 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
             Ak_InsertAtEnd_L(_type[i], (char *) &val, sizeof(float), expr);
         }
         if (_type[i] == TYPE_OPERATOR || _type[i] == TYPE_ATTRIBS || _type[i] == TYPE_VARCHAR){
-            Ak_InsertAtEnd_L(_type[i], sel_query[i], sizeof(sel_query[i]), expr);
+            Ak_InsertAtEnd_L(_type[i], sel_query[i], strlen(sel_query[i]), expr);
         }
     }
 
