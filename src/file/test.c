@@ -1036,7 +1036,7 @@ void AK_create_test_tables() {
     /* RUN TESTS FOR OBSERVABLE DESIGN PATTERN */
     //AK_observable_test();
     /* RUN TESTS FOR TRANSACTIONS */
-   // AK_test_Transaction();
+    AK_test_Transaction();
 }
 
 

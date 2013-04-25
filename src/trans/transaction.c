@@ -783,7 +783,6 @@ void AK_test_Transaction() {
 	Ak_InsertAtEnd_L(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
 	Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), expr);
 	Ak_InsertAtEnd_L(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
-
     
     /**************** SELECT COMMAND TEST ******************/
     command* commands_select = malloc(sizeof(command) * 1);
@@ -791,11 +790,10 @@ void AK_test_Transaction() {
     commands_select[0].id_command = SELECT;
     commands_select[0].parameters = expr;
 
-
     /**************** EXECUTE TRANSACTIONS ******************/
-    //AK_transaction_manager(commands_ins_up, 2);
-    //AK_transaction_manager(commands_ins_up, 2);
-    //AK_transaction_manager(commands_delete, 1);
+    AK_transaction_manager(commands_ins_up, 2);
+    AK_transaction_manager(commands_ins_up, 2);
+    AK_transaction_manager(commands_delete, 1);
     AK_transaction_manager(commands_select, 1);
     
     pthread_mutex_lock(&endTransationTestLockMutex);
