@@ -47,7 +47,6 @@ void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int a
 		}
 	}
 	memset(t_header + attribute_count, 0, MAX_ATTRIBUTES - attribute_count);
-	int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header);
 }
 
 /**
@@ -216,7 +215,7 @@ AK_list *AK_get_column(int num, char *tblName) {
                     int address = temp->block->tuple_dict[k].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, &data, size, row_root);
+                    Ak_InsertAtEnd_L(type, data, size, row_root);
                 }
             }
         }
@@ -234,11 +233,9 @@ AK_list *AK_get_column(int num, char *tblName) {
  */
 AK_list * AK_get_row(int num, char * tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    AK_header *t_header = AK_get_header(tblName);
     AK_list *row_root = calloc(1, sizeof (AK_list));
     Ak_Init_L(row_root);
 
-    int num_rows = AK_get_num_records(tblName);
     int num_attr = AK_num_attr(tblName);
     int i, j, k, l, counter;
     i = 0;
@@ -260,7 +257,7 @@ AK_list * AK_get_row(int num, char * tblName) {
                         int address = temp->block->tuple_dict[k + l].address;
                         memcpy(data, &(temp->block->data[address]), size);
                         data[size] = '\0';
-                        Ak_InsertAtEnd_L(type, &data, size, row_root);
+                        Ak_InsertAtEnd_L(type, data, size, row_root);
                     }
                     return row_root;
                 }
@@ -309,7 +306,7 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
                     int address = temp->block->tuple_dict[ k + column ].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, &data, size, row_root);
+                    Ak_InsertAtEnd_L(type, data, size, row_root);
                     return (AK_list_elem) Ak_First_L(row_root);
                 }
             }
@@ -500,13 +497,13 @@ void AK_print_table(char *tblName) {
 
             for (i = 0; i < num_attr; i++) {
                 //print attributes center aligned inside box
-                k = (len[i] - strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
+                k = (len[i] - (int)strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
                 if (k % 2 == 0) {
                     k /= 2;
-                    printf("%-*s%-*s|", k, " ", k + strlen((head + i)->att_name), (head + i)->att_name);
+                    printf("%-*s%-*s|", k, " ", k + (int)strlen((head + i)->att_name), (head + i)->att_name);
                 } else {
                     k /= 2;
-                    printf("%-*s%-*s|", k, " ", k + strlen((head + i)->att_name) + 1, (head + i)->att_name);
+                    printf("%-*s%-*s|", k, " ", k + (int)strlen((head + i)->att_name) + 1, (head + i)->att_name);
                 }
 
                 //print attributes left aligned inside box
@@ -662,7 +659,6 @@ void AK_print_table_to_file(char *tblName) {
         int num_rows = AK_get_num_records(tblName);
         int len[num_attr]; //max length for each attribute in row
         int length = 0; //length of spacer
-        struct timeval  end_time, start_time;
 
         //store lengths of header attributes
         for (i = 0; i < num_attr; i++) {
@@ -715,13 +711,13 @@ void AK_print_table_to_file(char *tblName) {
 
             for (i = 0; i < num_attr; i++) {
                 //print attributes center aligned inside box
-                k = (len[i] - strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
+                k = (len[i] - (int)strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
                 if (k % 2 == 0) {
                     k /= 2;
-                    fprintf(fp, "%-*s%-*s|", k, " ", k + strlen((head + i)->att_name), (head + i)->att_name);
+                    fprintf(fp, "%-*s%-*s|", k, " ", k + (int)strlen((head + i)->att_name), (head + i)->att_name);
                 } else {
                     k /= 2;
-                    fprintf(fp, "%-*s%-*s|", k, " ", k + strlen((head + i)->att_name) + 1, (head + i)->att_name);
+                    fprintf(fp, "%-*s%-*s|", k, " ", k + (int)strlen((head + i)->att_name) + 1, (head + i)->att_name);
                 }
 
                 //print attributes left aligned inside box
@@ -935,8 +931,6 @@ void AK_table_test() {
     printf("\n");
 
     printf("Table \"student\": AK_get_row: First row: \n");
-    AK_list * row = AK_get_row(0, "student");
-    //AK_print_row( row );
     printf("\n");
 
     printf("Table \"student\": AK_get_attr_name for index 3: ");
