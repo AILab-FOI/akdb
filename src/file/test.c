@@ -37,8 +37,7 @@
 int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type){
     
     int i;
-    float weight;
-
+    
     AK_header t_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
     for (i = 0; i < _num; i++){
@@ -149,7 +148,6 @@ FILE *fp;
 
  int get_column_test(int num, char* tbl){
     fp = fopen(FILEP,"a");
-    int i;
 
     AK_list *row = AK_get_column(num, tbl);
     if (!Ak_IsEmpty_L(row)){
@@ -182,8 +180,7 @@ FILE *fp;
 
  int get_row_test(int num, char* tbl){
     fp = fopen(FILEP,"a");
-    int i;
-
+    
     AK_list *row = AK_get_row(num, tbl);
     if (!Ak_IsEmpty_L(row)){
         while (row->next != NULL){
@@ -662,8 +659,7 @@ void AK_create_test_tables() {
 
 	//--------------------------------------> CREATE TABLE 'PROFESSOR2' <-------------------------------------
 	//create header
-	AK_header t_header7[ MAX_ATTRIBUTES ];
-
+	
 	temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
 	memcpy(t_header2, temp, sizeof ( AK_header));
 	temp = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
