@@ -149,50 +149,19 @@ void help()
 }
 void show_test()
 {
+    int i=0;
+    char func[][40] = {"Ak_aggregation_test()", "Ak_bitmap_test()", "Ak_btree_test()", "Ak_constraint_between_test()", "Ak_fileio_test()", "Ak_files_test()", "Ak_filesearch_test()", "Ak_filesort_test()", "Ak_hash_test()", "Ak_id_test()", "AK_memoman_test()", "AK_null_test()", "Ak_op_difference_test()", "Ak_op_intersect_test()", "AK_op_join_test()", "AK_op_product_test()", "AK_op_projection_test()", "AK_op_rename_test()", "AK_op_selection_test()", "AK_op_selection_test_redolog()", "AK_op_theta_join_test()", "AK_op_union_test()", "AK_privileges_test()", "AK_query_optimization_test()", "AK_reference_test()", "AK_rel_eq_assoc_test()", "AK_rel_eq_projection_test()", "AK_rel_eq_selection_test()", "AK_table_test()", "AK_trigger_test()", "AK_unique_test()", "rel_eq_comut_test()"};
+    
+    int m = sizeof(func)/sizeof(func[0]);
     
     printf("Choose test:\n\n");
-    printf(" 1. %-30s", "Ak_files_test()");
-    printf(" 2. %-30s", "Ak_fileio_test()");
-    printf(" 3. %-30s", "Ak_filesearch_test()");
-    printf("\n");
-    printf(" 4. %-30s", "Ak_filesort_test()");
-    printf(" 5. %-30s", "AK_rel_eq_projection_test()");
-    printf(" 6. %-30s", "AK_rel_eq_selection_test()");
-    printf("\n");
-    printf(" 7. %-30s", "AK_rel_eq_assoc_test()");
-    printf(" 8. %-30s", "rel_eq_comut_test()");
-    printf(" 9. %-30s", "AK_query_optimization_test()");
-    printf("\n");
-    printf("10. %-30s", "AK_table_test()");
-    printf("11. %-30s", "AK_op_selection_test()");
-    printf("12. %-30s", "AK_op_selection_test_redolog()");
-    printf("\n");
-    printf("13. %-30s", "AK_op_projection_test()");
-    printf("14. %-30s", "AK_op_join_test()");
-    printf("15. %-30s", "AK_op_theta_join_test()");
-    printf("\n");
-    printf("16. %-30s", "AK_op_intersect_test()");
-    printf("17. %-30s", "AK_op_union_test()");
-    printf("18. %-30s", "AK_op_difference_test()");
-    printf("\n");
-    printf("19. %-30s", "AK_op_rename_test()");
-    printf("20. %-30s", "AK_op_product_test()");
-    printf("21. %-30s", "Ak_btree_test()");
-    printf("\n");
-    printf("22. %-30s", "Ak_hash_test()");
-    printf("23. %-30s", "Ak_bitmap_test()");
-    printf("24. %-30s", "AK_reference_test()");
-    printf("\n");
-    printf("25. %-30s", "AK_trigger_test()");
-    printf("26. %-30s", "Ak_aggregatin_test()");
-    printf("27. %-30s", "AK_memoman_test()");
-    printf("\n");
-    printf("28. %-30s", "Ak_constraint_between_test()");
-    printf("29. %-30s", "Ak_id_test()");
-    printf("30. %-30s", "AK_null_test()");
-    printf("\n");
-    printf("31. %-30s", "AK_privileges_test()");
-    printf("32. %-30s", "AK_unique_test()");
+    while(i<m)
+    {
+        printf("%2d. %-32s", i+1, func[i]);
+        i++;
+        if(!(i%3))
+            printf("\n");
+    }
     printf("\n\n");
     printf(" 0. %-30s", "Exit");
     printf("\n\n");
@@ -230,102 +199,102 @@ void run_test(int ans)
         case 0:
             break;
         case 1:
-            Ak_files_test();
+            Ak_aggregation_test();
             break;
         case 2:
-            Ak_fileio_test();
+            Ak_bitmap_test();
             break;
         case 3:
-            Ak_filesearch_test();
+            Ak_btree_test();
             break;
         case 4:
-            Ak_filesort_test();
+            Ak_constraint_between_test();
             break;
         case 5:
-            AK_rel_eq_projection_test();
+            Ak_fileio_test();
             break;
         case 6:
-            AK_rel_eq_selection_test();
+            Ak_files_test();
             break;
         case 7:
-            AK_rel_eq_assoc_test();
+            Ak_filesearch_test();
             break;
         case 8:
-            rel_eq_comut_test();
+            Ak_filesort_test();
             break;
         case 9:
+            Ak_hash_test();
+            break;
+        case 10:
+            Ak_id_test();
+            break;
+        case 11:
+            AK_memoman_test();
+            break;
+        case 12:
+            AK_null_test();
+            break;
+        case 13:
+            Ak_op_difference_test();
+            break;
+        case 14:
+            Ak_op_intersect_test();
+            break;
+        case 15:
+            AK_op_join_test();
+            break;
+        case 16:
+            AK_op_product_test();
+            break;
+        case 17:
+            AK_op_projection_test();
+            break;
+        case 18:
+            AK_op_rename_test();
+            break;
+        case 19:
+            AK_op_selection_test();
+            break;
+        case 20:
+            AK_op_selection_test_redolog();
+            break;
+        case 21:
+            AK_op_theta_join_test();
+            break;
+        case 22:
+            AK_op_union_test();
+            break;
+        case 23:
+            AK_privileges_test();
+            break;
+        case 24:
             //AK_query_optimization_test();
             printf("Error with test!");
             break;
-        case 10:
-            AK_table_test();
-            break;
-        case 11:
-            AK_op_selection_test();
-            break;
-        case 12:
-            AK_op_selection_test_redolog();
-            break;
-        case 13:
-            AK_op_projection_test();
-            break;
-        case 14:
-            AK_op_join_test();
-            break;
-        case 15:
-            AK_op_theta_join_test();
-            break;
-        case 16:
-            Ak_op_intersect_test();
-            break;
-        case 17:
-            AK_op_union_test();
-            break;
-        case 18:
-            Ak_op_difference_test();
-            break;
-        case 19:
-            AK_op_rename_test();
-            break;
-        case 20:
-            AK_op_product_test();
-            break;
-        case 21:
-            Ak_btree_test();
-            break;
-        case 22:
-            Ak_hash_test();
-            break;
-        case 23:
-            Ak_bitmap_test();
-            break;
-        case 24:
+        case 25:
             AK_reference_test();
             break;
-        case 25:
-            AK_trigger_test();
-            break;
         case 26:
-            Ak_aggregation_test();
+            AK_rel_eq_assoc_test();
             break;
         case 27:
-            AK_memoman_test();
+            AK_rel_eq_projection_test();
             break;
         case 28:
-            Ak_constraint_between_test();
+            AK_rel_eq_selection_test();
             break;
         case 29:
-            Ak_id_test();
+            AK_table_test();
             break;
         case 30:
-            AK_null_test();
+            AK_trigger_test();
             break;
         case 31:
-            AK_privileges_test();
-            break;
-        case 32:
             AK_unique_test();
             break;
+        case 32:
+            rel_eq_comut_test();
+	break;
         default:
             break;
     }
