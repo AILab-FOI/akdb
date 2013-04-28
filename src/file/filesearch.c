@@ -107,7 +107,6 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
 
                         case SEARCH_RANGE:
                         {
-                            size_t iSearchAttributeValueSize = AK_type_size(mem_block->block->header[srResult.aiSearch_attributes[j]].type, (char *) aspParams[j].pData_lower);
 
                             switch (mem_block->block->tuple_dict[i + srResult.aiSearch_attributes[j]].type) {
                                 case TYPE_INT:
@@ -228,7 +227,7 @@ void Ak_filesearch_test() {
 
     row_root = malloc(sizeof (AK_list));
     if (row_root == NULL) {
-        printf("filesearch_test: ERROR. Cannot allocate row_root.\n", i);
+        printf("filesearch_test: ERROR. Cannot allocate row_root.\n");
         exit(EXIT_ERROR);
     }
 

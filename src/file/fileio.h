@@ -21,6 +21,7 @@
 
 #include "../sql/cs/reference.h"
 #include "../mm/memoman.h"
+#include "files.h"
 
 #endif
 

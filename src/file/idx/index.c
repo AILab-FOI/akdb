@@ -18,6 +18,7 @@
  17 */
 
 #include "index.h"
+#include <stdlib.h>
 
 /**
  * @author Unknown 
@@ -152,7 +153,7 @@ void Ak_Delete_All_elementsAd(list_ad *L) {
  * @return No return value
  * */
 void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore) {
-    list_ad *newelement_op = (list_ad *) malloc(sizeof (list_ad));
+    list_structure_ad *newelement_op = (list_structure_ad *) malloc(sizeof (list_structure_ad));
     newelement_op->add.addBlock = addBlock;
     newelement_op->add.indexTd = indexTd;
     newelement_op->attName = attName;

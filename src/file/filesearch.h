@@ -21,6 +21,7 @@
 #define FILESEARCH
 
 #include "../mm/memoman.h"
+#include "files.h"
 
 #define SEARCH_NULL       0
 #define SEARCH_ALL        1

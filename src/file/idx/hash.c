@@ -200,15 +200,15 @@ struct_add* Ak_get_nth_main_bucket_add(char *indexName, int n) {
   *  @param add address structure with data where the hash bucket is stored
   *  @return No return value
  */
-int AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
-    int i, j, address, size, hash_free_space = 0;
+void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
+    int i, address, size, hash_free_space = 0;
     struct_add *main_add = (struct_add*) malloc(sizeof (struct_add));
     struct_add *hash_add = (struct_add*) malloc(sizeof (struct_add));
     main_bucket *temp_main_bucket = (main_bucket*) malloc(sizeof (main_bucket));
     hash_bucket *temp_hash_bucket = (hash_bucket*) malloc(sizeof (hash_bucket));
 
     table_addresses *addresses = (table_addresses*) AK_get_index_addresses(indexName);
-    if (addresses->address_from[0] == NULL)
+    if (addresses->address_from[0] == 0)
         printf("Hash index does not exist!\n");
     else {
         char data[255];
@@ -336,7 +336,7 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
     struct_add *add = (struct_add*) malloc(sizeof (struct_add));
     memset(add, 0, sizeof (struct_add));
     table_addresses *addresses = (table_addresses*) AK_get_index_addresses(indexName);
-    if (addresses->address_from[0] == NULL) {
+    if (addresses->address_from[0] == 0) {
         printf("Hash index does not exist!\n");
         return add;
     } else {
@@ -523,7 +523,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
                     int address = temp->tuple_dict[ k + l ].address;
                     memcpy(data, &(temp->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, &data, size, row);
+                    Ak_InsertAtEnd_L(type, data, size, row);
                 }
                 /* *************** */
                 hashValue = 0;
@@ -553,7 +553,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
     return EXIT_SUCCESS;
 }
 
-int AK_delete_hash_index(char *indexName) {
+void AK_delete_hash_index(char *indexName) {
     AK_delete_segment(indexName, SEGMENT_TYPE_INDEX);
     printf("INDEX %s DELETED!\n", indexName);
 }

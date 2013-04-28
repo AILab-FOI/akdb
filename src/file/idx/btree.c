@@ -18,6 +18,7 @@
  */
 
 #include "btree.h"
+#include <stdio.h>
 
 void Ak_btree_test() {
     printf("btree_test: Present!\n");

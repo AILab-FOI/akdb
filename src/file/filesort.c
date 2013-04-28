@@ -89,7 +89,7 @@ AK_mem_block *get_next_block(int num) {
  */
 void AK_sort_segment(char *table_name, char *attr) {
     //initialize variables
-	register int i, j, n, q, k;
+        register int i, j, n, q;
     int blocks_addr[MAX_NUM_OF_BLOCKS]; 		//array with block addresses
     int temp_blocks_addr[MAX_NUM_OF_BLOCKS];	//array with temporary block addresse
     int num_blocks = 0;							//number of blocks in segment
@@ -117,7 +117,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 	strcat(temp_segment, "SORT_TEMP_HELP_");
     strcat(temp_segment, table_name);
 
-    AK_header *head = (AK_header *) AK_get_header(table_name);
+    AK_header *head = AK_get_header(table_name);
     AK_initialize_new_segment(temp_segment, SEGMENT_TYPE_TABLE, head);
 	
     //init new table extent
@@ -438,7 +438,7 @@ void AK_sort_segment(char *table_name, char *attr) {
  * @param block block to be resetted
  * @return No return value
  */
-int Ak_reset_block(AK_block * block) {
+void Ak_reset_block(AK_block * block) {
     register int i, j, k;
 
     AK_header empty_header[ MAX_ATTRIBUTES ];

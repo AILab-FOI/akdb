@@ -83,11 +83,10 @@ void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attrib
 int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     AK_list_elem some_element;
     int type; //type od entry data
-    int size; //size of entry data
     int id = 0; //id tuple dict in which is inserted next data
     int head = 0; //index of header which is curently inserted
     int search_elem; //serch for tuple dict id and searc for data in list
-    unsigned char entry_data[MAX_VARCHAR_LENGTH];
+    char entry_data[MAX_VARCHAR_LENGTH];
     
     while (strcmp(temp_block->header[head].att_name, "\0") != 0) {//inserting values of the list one by one
         while (temp_block->tuple_dict[id].size != FREE_INT) {//searches for free tuple dict, maybe it can be last_tuple_dict_id
@@ -117,7 +116,7 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
             }
         }
 
-        memcpy(temp_block->data + temp_block->free_space, entry_data, AK_type_size(type, entry_data));
+        memcpy(temp_block->data + temp_block->free_space, entry_data, (int)AK_type_size(type, entry_data));
         temp_block->tuple_dict[id].address = temp_block->free_space;
         temp_block->free_space += AK_type_size(type, entry_data);
         temp_block->tuple_dict[id].type = type;
@@ -161,7 +160,7 @@ int Ak_insert_row(AK_list *row_root) {
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
 
-    adr_to_write = (int) AK_find_free_space(AK_get_table_addresses(&table));
+    adr_to_write = (int) AK_find_free_space(AK_get_table_addresses(table));
     if (adr_to_write == -1)
         adr_to_write = (int) AK_init_new_extent(table, SEGMENT_TYPE_TABLE);
 
@@ -197,7 +196,7 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
     int del = 1; //if can delete gorup of tuple dicts which are in the same row of table
     int exists_equal_attrib = 0; //if we found at least one header in the list
     int diff_varchar_exist = 0; //to now on update if exist varchar that is not the same so that i must delete/insert the entry
-    unsigned char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
+    char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
     
     AK_list * row_root_backup = (AK_list *) malloc(sizeof (AK_list));
     Ak_Init_L(row_root_backup);
@@ -383,7 +382,7 @@ int Ak_delete_update_segment(AK_list *row_root, int del) {
     table[strlen(some_element->table)] = '\0';
     Ak_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: table to delete_update from: %s, source %s\n", table, some_element->table);
 
-    table_addresses * addresses = (table_addresses *) AK_get_table_addresses(&table);
+    table_addresses * addresses = (table_addresses *) AK_get_table_addresses(table);
 
     AK_mem_block *mem_block;
     int startAddress, j, i;
@@ -473,9 +472,9 @@ void Ak_fileio_test() {
     AK_write_block( block );
      */
     AK_header t_header[4] = {
-        {TYPE_INT, "Redni_broj", 0, '\0', '\0',},
-        {TYPE_VARCHAR, "Ime", 0, '\0', '\0',},
-        {TYPE_VARCHAR, "Prezime", 0, '\0', '\0',},
+        {TYPE_INT, "Redni_broj", 0, '\0', '\0'},
+        {TYPE_VARCHAR, "Ime", 0, '\0', '\0'},
+        {TYPE_VARCHAR, "Prezime", 0, '\0', '\0'},
         {0, '\0', 0, '\0', '\0'}
     };
 
@@ -567,8 +566,8 @@ void Ak_fileio_test() {
     free(header_red_br);
     free(header_name);
     free(header_surname);
-    free(block2);
-    /*OVO JE UBITI SVE VEĆ SPREMNO*/
+    free(block2);*/
+    //OVO JE UBITI SVE VEĆ SPREMNO
     //prepraing data and inserting data to list
 
     AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));

@@ -23,6 +23,8 @@
 #include "../../mm/memoman.h"
 #include "index.h"
 #include "../../file/table.h"
+#include "../../file/fileio.h"
+#include "../../file/files.h"
 
 #endif
 

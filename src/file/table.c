@@ -18,6 +18,7 @@
  */
 
 #include "../file/table.h"
+#include <time.h>
 
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name) {
 	AK_create_table_parameter* par = malloc(sizeof(AK_create_table_parameter));

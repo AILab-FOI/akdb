@@ -58,7 +58,6 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
     num_attr = AK_num_attr(tblName);
     num_rec = AK_get_num_records(tblName);
 
-    AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
     AK_header *temp_head = (AK_header *)AK_get_header(tblName);
     int temp_int;
     char temp_char[ MAX_VARCHAR_LENGTH ];
@@ -136,7 +135,7 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                 }
                 //dio gdje se obradjuje svaki od atributa
                 int brr;
-                int z, br;
+                int z;
                 char inde[50];
                 int startAddress;
                 switch ((temp_head + i)->type) {
@@ -216,7 +215,6 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
         }
     }
 
-    AK_list_elem ele = Ak_First_L(headerAtributes);
     //ispis liste za header TEST
     /*
             while(ele != 0)
@@ -267,14 +265,12 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
     AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
 
     //AK_header *t_header = AK_get_header( tblNameIndex );
-    int num_attrIndex = AK_num_attr(tblNameIndex);
 
     int i, j, k;
     int temp_int;
     int temp_indexTd;
     char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
-    int brojac, br;
     i = 0;
     AK_list_elem row_root;
 
@@ -375,7 +371,6 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
     num_attr = AK_num_attr(indexName);
     num_rec = AK_get_num_records(indexName);
 
-    AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
     AK_header *temp_head = (AK_header *)AK_get_header(indexName);
     int temp_int;
     char temp_char[ MAX_VARCHAR_LENGTH ];
@@ -503,7 +498,6 @@ list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeV
     // printf("Naziv indexa: %s",indexName);
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(indexName);
-    AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
     if (addresses->address_from[ 0 ] == 0) {
         printf("Ne postoji index za tablicu: %s nad atributom: %s", tableName, attributeName);
     } else {
@@ -561,7 +555,6 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
     }
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(indexName);
-    AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
     if (addresses->address_from[ 0 ] == 0) {
         printf("Ne postoji index za tablicu: %s nad atributom: %s", tableName, attributeName);
     } else {
