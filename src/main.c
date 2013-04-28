@@ -39,6 +39,7 @@
 #include "file/filesearch.h"
 #include "file/filesort.h"
 #include "file/table.h"
+#include "file/test.h"
 
 //Logging
 #include "rec/archive_log.h" //ARCHIVE LOG
@@ -57,6 +58,7 @@
 #include "rel/selection.h"
 #include "rel/union.h"
 #include "rel/aggregation.h"
+#include "rel/product.h"
 
 //Command
 #include "sql/command.h"
@@ -66,6 +68,9 @@
 
 // Constraints
 #include "sql/cs/reference.h"
+#include "sql/cs/between.h"
+#include "sql/cs/nnull.h"
+#include "sql/cs/unique.h"
 #include "rel/expression_check.h"
 
 
@@ -77,179 +82,10 @@
 #include "rec/redo_log.h"
 #include "auxi/observable.h"
 
-void test()
-{
-    int ans=-1;
-    AK_create_test_tables();
-    
-    while(ans)
-    {
-        system("clear");
-        printf("Choose test:\n\n");
-        printf(" 1. %-30s", "Ak_files_test()");
-        printf(" 2. %-30s", "Ak_fileio_test()");
-        printf(" 3. %-30s", "Ak_filesearch_test()");
-        printf("\n");
-        printf(" 4. %-30s", "Ak_filesort_test()");
-        printf(" 5. %-30s", "AK_rel_eq_projection_test()");
-        printf(" 6. %-30s", "AK_rel_eq_selection_test()");
-        printf("\n");
-        printf(" 7. %-30s", "AK_rel_eq_assoc_test()");
-        printf(" 8. %-30s", "rel_eq_comut_test()");
-        printf(" 9. %-30s", "AK_query_optimization_test()");
-        printf("\n");
-        printf("10. %-30s", "AK_table_test()");
-        printf("11. %-30s", "AK_op_selection_test()");
-        printf("12. %-30s", "AK_op_selection_test_redolog()");
-        printf("\n");
-        printf("13. %-30s", "AK_op_projection_test()");
-        printf("14. %-30s", "AK_op_join_test()");
-        printf("15. %-30s", "AK_op_theta_join_test()");
-        printf("\n");
-        printf("16. %-30s", "AK_op_intersect_test()");
-        printf("17. %-30s", "AK_op_union_test()");
-        printf("18. %-30s", "AK_op_difference_test()");
-        printf("\n");
-        printf("19. %-30s", "AK_op_rename_test()");
-        printf("20. %-30s", "AK_op_product_test()");
-        printf("21. %-30s", "Ak_btree_test()");
-        printf("\n");
-        printf("22. %-30s", "Ak_hash_test()");
-        printf("23. %-30s", "Ak_bitmap_test()");
-        printf("24. %-30s", "AK_reference_test()");
-        printf("\n");
-        printf("25. %-30s", "AK_trigger_test()");
-        printf("26. %-30s", "Ak_aggregatin_test()");
-        printf("27. %-30s", "AK_memoman_test()");
-        printf("\n");
-        printf("28. %-30s", "Ak_constraint_between_test()");
-        printf("29. %-30s", "Ak_id_test()");
-        printf("30. %-30s", "AK_null_test()");
-        printf("\n");
-        printf("31. %-30s", "AK_privileges_test()");
-        printf("32. %-30s", "AK_unique_test()");
-        printf("\n\n");
-        printf(" 0. %-30s", "Exit");
-        printf("\n\n");
-        printf("Test: ");
-        scanf("%d", &ans);
-        while(ans<0 && ans>32)
-        {
-            printf("\nTest: ");
-            scanf("%d", &ans);
-        }
-        switch (ans) {
-            case 0:
-                break;
-            case 1:
-                Ak_files_test();
-                break;
-            case 2:
-                Ak_fileio_test();
-                break;
-            case 3:
-                Ak_filesearch_test();
-                break;
-            case 4:
-                Ak_filesort_test();
-                break;
-            case 5:
-                AK_rel_eq_projection_test();
-                break;
-            case 6:
-                AK_rel_eq_selection_test();
-                break;
-            case 7:
-                AK_rel_eq_assoc_test();
-                break;
-            case 8:
-                rel_eq_comut_test();
-                break;
-            case 9:
-                //AK_query_optimization_test();
-                printf("Error with test!");
-                break;
-            case 10:
-                AK_table_test();
-                break;
-            case 11:
-                AK_op_selection_test();
-                break;
-            case 12:
-                AK_op_selection_test_redolog();
-                break;
-            case 13:
-                AK_op_projection_test();
-                break;
-            case 14:
-                AK_op_join_test();
-                break;
-            case 15:
-                AK_op_theta_join_test();
-                break;
-            case 16:
-                Ak_op_intersect_test();
-                break;
-            case 17:
-                AK_op_union_test();
-                break;
-            case 18:
-                Ak_op_difference_test();
-                break;
-            case 19:
-                AK_op_rename_test();
-                break;
-            case 20:
-                AK_op_product_test();
-                break;
-            case 21:
-                Ak_btree_test();
-                break;
-            case 22:
-                Ak_hash_test();
-                break;
-            case 23:
-                Ak_bitmap_test();
-                break;
-            case 24:
-                AK_reference_test();
-                break;
-            case 25:
-                AK_trigger_test();
-                break;
-            case 26:
-                Ak_aggregation_test();
-                break;
-            case 27:
-                AK_memoman_test();
-                break;
-            case 28:
-                Ak_constraint_between_test();
-                break;
-            case 29:
-                Ak_id_test();
-                break;
-            case 30:
-                AK_null_test();
-                break;
-            case 31:
-                AK_privileges_test();
-                break;
-            case 32:
-                AK_unique_test();
-                break;
-            default:
-                break;
-        }
-        if(ans)
-        {
-            printf("\n\nPress Enter to continue:");
-            getchar();
-            getchar();
-        }
-    }
-
-}
+void help();
+void show_test();
+void choose_test();
+void run_test();
 
 /**
 Main program function
@@ -258,32 +94,239 @@ Main program function
 */
 int main(int argc, char * argv[])
 {
-	printf( "KALASHNIKOV DB - STARTING\n\n" );
-	AK_inflate_config();
-	printf("db_file: %s\n", DB_FILE);
+        if((argc == 2) && !strcmp(argv[1], "help"))
+            help();
+        else if((argc == 3) && !strcmp(argv[1], "test") && !strcmp(argv[2], "show"))
+            show_test();
+	else
+        {
+            printf( "KALASHNIKOV DB - STARTING\n\n" );
+            AK_inflate_config();
+            printf("db_file: %s\n", DB_FILE);
 
-	if( AK_init_disk_manager() == EXIT_SUCCESS )
-	{
-		if( AK_memoman_init() == EXIT_SUCCESS )
-		{
-            /* component test area --- begin */
-            if((argc == 2) && !strcmp(argv[1], "test"))
+            if( AK_init_disk_manager() == EXIT_SUCCESS )
             {
-                test();
+                    if( AK_memoman_init() == EXIT_SUCCESS )
+                    {
+                /* component test area --- begin */
+                if((argc == 2) && !strcmp(argv[1], "test"))
+                {
+                    choose_test();
+                }
+                else if((argc == 3) && !strcmp(argv[1], "test"))
+                {
+                    int ans;
+                    ans = (int)strtol(argv[2], NULL, 10);
+                    AK_create_test_tables();
+                    run_test(ans);
+                }
+
+                /*component test area --- end */
+
+                if ( AK_flush_cache() == EXIT_SUCCESS ){
+
+                    printf( "\nEverything was fine!\nBye =)\n" );
+                    //            pthread_exit(NULL);
+                    return ( EXIT_SUCCESS );
+                }
             }
-            /*component test area --- end */
-            
-            if ( AK_flush_cache() == EXIT_SUCCESS ){
-                
-                printf( "\nEverything was fine!\nBye =)\n" );
-                //            pthread_exit(NULL);
-                return ( EXIT_SUCCESS );
+                    printf( "ERROR. Failed to initialize memory manager\n" );
+                    return ( EXIT_ERROR );
             }
+            printf( "ERROR. Failed to initialize disk manager\n" );
+            return ( EXIT_ERROR );
         }
-		printf( "ERROR. Failed to initialize memory manager\n" );
-		return ( EXIT_ERROR );
-	}
-	printf( "ERROR. Failed to initialize disk manager\n" );
-	return ( EXIT_ERROR );
-        
+        return(EXIT_SUCCESS);
+}
+
+void help()
+{
+    printf("Usage: akdb [option]\n");
+    printf("Available commands:\n");
+    printf("help - displays help\n");
+    printf("test [test_id] - run akdb in testing mode\n");
+    printf("test show - displays available tests\n");
+}
+void show_test()
+{
+    
+    printf("Choose test:\n\n");
+    printf(" 1. %-30s", "Ak_files_test()");
+    printf(" 2. %-30s", "Ak_fileio_test()");
+    printf(" 3. %-30s", "Ak_filesearch_test()");
+    printf("\n");
+    printf(" 4. %-30s", "Ak_filesort_test()");
+    printf(" 5. %-30s", "AK_rel_eq_projection_test()");
+    printf(" 6. %-30s", "AK_rel_eq_selection_test()");
+    printf("\n");
+    printf(" 7. %-30s", "AK_rel_eq_assoc_test()");
+    printf(" 8. %-30s", "rel_eq_comut_test()");
+    printf(" 9. %-30s", "AK_query_optimization_test()");
+    printf("\n");
+    printf("10. %-30s", "AK_table_test()");
+    printf("11. %-30s", "AK_op_selection_test()");
+    printf("12. %-30s", "AK_op_selection_test_redolog()");
+    printf("\n");
+    printf("13. %-30s", "AK_op_projection_test()");
+    printf("14. %-30s", "AK_op_join_test()");
+    printf("15. %-30s", "AK_op_theta_join_test()");
+    printf("\n");
+    printf("16. %-30s", "AK_op_intersect_test()");
+    printf("17. %-30s", "AK_op_union_test()");
+    printf("18. %-30s", "AK_op_difference_test()");
+    printf("\n");
+    printf("19. %-30s", "AK_op_rename_test()");
+    printf("20. %-30s", "AK_op_product_test()");
+    printf("21. %-30s", "Ak_btree_test()");
+    printf("\n");
+    printf("22. %-30s", "Ak_hash_test()");
+    printf("23. %-30s", "Ak_bitmap_test()");
+    printf("24. %-30s", "AK_reference_test()");
+    printf("\n");
+    printf("25. %-30s", "AK_trigger_test()");
+    printf("26. %-30s", "Ak_aggregatin_test()");
+    printf("27. %-30s", "AK_memoman_test()");
+    printf("\n");
+    printf("28. %-30s", "Ak_constraint_between_test()");
+    printf("29. %-30s", "Ak_id_test()");
+    printf("30. %-30s", "AK_null_test()");
+    printf("\n");
+    printf("31. %-30s", "AK_privileges_test()");
+    printf("32. %-30s", "AK_unique_test()");
+    printf("\n\n");
+    printf(" 0. %-30s", "Exit");
+    printf("\n\n");
+}
+
+void choose_test()
+{
+    int ans=-1;
+    AK_create_test_tables();
+    while(ans)
+    {
+        printf("\n\n\n");
+        show_test();
+        printf("Test: ");
+        scanf("%d", &ans);
+        while(ans<0 && ans>32)
+        {
+
+            printf("\nTest: ");
+            scanf("%d", &ans);
+        }
+        if(ans)
+        {
+            run_test(ans);
+            printf("\n\nPress Enter to continue:");
+            getchar();
+            getchar();
+        }
+    }
+}
+
+void run_test(int ans)
+{
+    switch (ans) {
+        case 0:
+            break;
+        case 1:
+            Ak_files_test();
+            break;
+        case 2:
+            Ak_fileio_test();
+            break;
+        case 3:
+            Ak_filesearch_test();
+            break;
+        case 4:
+            Ak_filesort_test();
+            break;
+        case 5:
+            AK_rel_eq_projection_test();
+            break;
+        case 6:
+            AK_rel_eq_selection_test();
+            break;
+        case 7:
+            AK_rel_eq_assoc_test();
+            break;
+        case 8:
+            rel_eq_comut_test();
+            break;
+        case 9:
+            //AK_query_optimization_test();
+            printf("Error with test!");
+            break;
+        case 10:
+            AK_table_test();
+            break;
+        case 11:
+            AK_op_selection_test();
+            break;
+        case 12:
+            AK_op_selection_test_redolog();
+            break;
+        case 13:
+            AK_op_projection_test();
+            break;
+        case 14:
+            AK_op_join_test();
+            break;
+        case 15:
+            AK_op_theta_join_test();
+            break;
+        case 16:
+            Ak_op_intersect_test();
+            break;
+        case 17:
+            AK_op_union_test();
+            break;
+        case 18:
+            Ak_op_difference_test();
+            break;
+        case 19:
+            AK_op_rename_test();
+            break;
+        case 20:
+            AK_op_product_test();
+            break;
+        case 21:
+            Ak_btree_test();
+            break;
+        case 22:
+            Ak_hash_test();
+            break;
+        case 23:
+            Ak_bitmap_test();
+            break;
+        case 24:
+            AK_reference_test();
+            break;
+        case 25:
+            AK_trigger_test();
+            break;
+        case 26:
+            Ak_aggregation_test();
+            break;
+        case 27:
+            AK_memoman_test();
+            break;
+        case 28:
+            Ak_constraint_between_test();
+            break;
+        case 29:
+            Ak_id_test();
+            break;
+        case 30:
+            AK_null_test();
+            break;
+        case 31:
+            AK_privileges_test();
+            break;
+        case 32:
+            AK_unique_test();
+            break;
+        default:
+            break;
+    }
 }
