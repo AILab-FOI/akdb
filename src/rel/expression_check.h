@@ -24,5 +24,5 @@
 
 #endif /* CONSTRAINT_CHECKER_H_ */
 
-int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a, const void *b);
+int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a, const char *b);
 int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) ;
