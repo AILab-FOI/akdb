@@ -31,7 +31,9 @@
 
 #include "expression_check.h"
 
-int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a, const void *b) {
+int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a, const char *b) {
+    
+    char *numericStringEnd; //A pointer to the location where the numeric part of the string ends
 
 	if(strcmp(op, "<") == 0){
 
@@ -49,28 +51,43 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a
 		}
 	}else if(strcmp(op, ">") == 0){
 
+//		switch (el->type) {
+//
+//			case TYPE_INT:
+//				return *(int *) a > *(int *) b;
+//			case TYPE_FLOAT:
+//				return *((float *) a) > *((float *) b);
+//			case TYPE_NUMBER:
+//				return *((double *) a) > *((double *) b);
+//			case TYPE_VARCHAR:
+//				return strcmp((const char *) a, (const char *) b) > 0;
+//
+//		}
+            
 		switch (el->type) {
 
 			case TYPE_INT:
-				return *(int *) a > *(int *) b;
+				return strtol(a, numericStringEnd, 10)  > strtol(b, numericStringEnd, 10);
 			case TYPE_FLOAT:
-				return *((float *) a) > *((float *) b);
+				return strtod(a, numericStringEnd) > strtod(b, numericStringEnd);
 			case TYPE_NUMBER:
-				return *((double *) a) > *((double *) b);
+				return strtod(a, numericStringEnd) > strtod(b, numericStringEnd);
 			case TYPE_VARCHAR:
 				return strcmp((const char *) a, (const char *) b) > 0;
 
 		}
+            
+            
 	}else if(strcmp(op, "<=") == 0){
 
 		switch (el->type) {
 
 			case TYPE_INT:
-				return (*(int *) a <= *(int *) b);
+				return strtol(a, numericStringEnd, 10)  <= strtol(b, numericStringEnd, 10);
 			case TYPE_FLOAT:
-				return *((float *) a) <= *((float *) b);
+				return strtod(a, numericStringEnd) <= strtod(b, numericStringEnd);
 			case TYPE_NUMBER:
-				return *((double *) a) <= *((double *) b);
+				return strtod(a, numericStringEnd) <= strtod(b, numericStringEnd);
 			case TYPE_VARCHAR:
 				return strcmp((const char *) a, (const char *) b) <= 0;
 		}
@@ -79,11 +96,11 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a
 		switch (el->type) {
 
 			case TYPE_INT:
-				return (*(int *) a >= *(int *) b);
+				return strtol(a, numericStringEnd, 10)  >= strtol(b, numericStringEnd, 10);
 			case TYPE_FLOAT:
-				return *((float *) a) >= *((float *) b);
+				return strtod(a, numericStringEnd) >= strtod(b, numericStringEnd);
 			case TYPE_NUMBER:
-				return *((double *) a) >= *((double *) b);
+				return strtod(a, numericStringEnd) >= strtod(b, numericStringEnd);
 			case TYPE_VARCHAR:
 				return strcmp((const char *) a, (const char *) b) >= 0;
 		}
@@ -92,11 +109,11 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a
 		switch (el->type) {
 
 			case TYPE_INT:
-				return (*(int *) a + *(int *) b);
+				return strtol(a, numericStringEnd, 10) + strtol(b, numericStringEnd, 10);
 			case TYPE_FLOAT:
-				return *((float *) a) + *((float *) b);
+				return strtod(a, numericStringEnd) + strtod(b, numericStringEnd);
 			case TYPE_NUMBER:
-				return *((double *) a) + *((double *) b);
+				return strtod(a, numericStringEnd) + strtod(b, numericStringEnd);
 			case TYPE_VARCHAR:
 				return EXIT_ERROR;
 //				return (int)memcpy((char *)a + sizeof(a), b, sizeof(b));
@@ -106,11 +123,11 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a
 		switch (el->type) {
 
 			case TYPE_INT:
-				return (*(int *) a - *(int *) b);
+				return strtol(a, numericStringEnd, 10) - strtol(b, numericStringEnd, 10);
 			case TYPE_FLOAT:
-				return *((float *) a) - *((float *) b);
+				return strtod(a, numericStringEnd) - strtod(b, numericStringEnd);
 			case TYPE_NUMBER:
-				return *((double *) a) - *((double *) b);
+				return strtod(a, numericStringEnd) - strtod(b, numericStringEnd);
 			case TYPE_VARCHAR:
 				return EXIT_ERROR;
 		}
@@ -119,11 +136,11 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a
 		switch (el->type) {
 
 			case TYPE_INT:
-				return (*(int *) a) * (*(int *) b);
+				return strtol(a, numericStringEnd, 10) * strtol(b, numericStringEnd, 10);
 			case TYPE_FLOAT:
-				return (*(float *) a) * (*(float *) b);
+				return strtod(a, numericStringEnd) * strtod(b, numericStringEnd);
 			case TYPE_NUMBER:
-				return (*(double *) a) * (*(double *) b);
+				return strtod(a, numericStringEnd) * strtod(b, numericStringEnd);
 			case TYPE_VARCHAR:
 				return EXIT_ERROR;
 		}
@@ -132,11 +149,11 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a
 		switch (el->type) {
 
 			case TYPE_INT:
-				return (*(int *) a) / (*(int *) b);
+				return strtol(a, numericStringEnd, 10) / strtol(b, numericStringEnd, 10);
 			case TYPE_FLOAT:
-				return (*(float *) a) / (*(float *) b);
+				strtod(a, numericStringEnd) / strtod(b, numericStringEnd);
 			case TYPE_NUMBER:
-				return (*(double *) a) / (*(double *) b);
+				strtod(a, numericStringEnd) / strtod(b, numericStringEnd);
 			case TYPE_VARCHAR:
 				return EXIT_ERROR;
 		}
@@ -147,10 +164,10 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const void *a
  * @author Matija Šestak, updated by Dino Laktašić, abstracted by Tomislav Mikulček
  * @brief  Function evaluates whether one record (row) satisfies logical expression. It goes through
            given row. If it comes to logical operator, it evaluates by itself. For arithmetic operators
-           funcion AK_check_arithmetic_statement() is called.
- * @param row_root beggining of the row that is to be evaluated
- * @param *expr list with the logical expression in posfix notation
- * @result 0 if row does not satisfy, 1 if row satisfies expresson
+           function AK_check_arithmetic_statement() is called.
+ * @param row_root beginning of the row that is to be evaluated
+ * @param *expr list with the logical expression in postfix notation
+ * @result 0 if row does not satisfy, 1 if row satisfies expression
  */
 int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
     if (expr == 0) return 1;
@@ -252,4 +269,21 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
     free(temp);
 
     return result;
+}
+
+void Ak_expression_check_test()
+{
+    AK_list_elem elem = malloc(sizeof(AK_list_elem));
+    elem->type = TYPE_INT;
+    const char *op = "+";
+    const char *a = "800";
+    const char *b = "400";
+    int outcome;
+    
+    outcome = AK_check_arithmetic_statement(elem, op, a, b);
+    
+    printf("The outcome is: %d", outcome);
+    
+    free(elem);
+    
 }
