@@ -208,6 +208,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", new_table);
+    
+    
 
     // ovo bi bila neka optimizacija, da sort radi kak spada..
     //sort_segment(source_table,group_h_name);
@@ -516,7 +518,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 							Ak_Insert_New_Element_For_Update(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root, inttemp);
 						}
 
-						Ak_update_delete_row_from_block(mem_block->block, row_root, 0);
+						//Ak_update_delete_row_from_block(mem_block->block, row_root, 0);
 						mem_block->timestamp_last_change = clock();
 						mem_block->dirty = BLOCK_DIRTY;
 					}
@@ -619,7 +621,7 @@ void Ak_aggregation_test() {
 
     AK_agg_input aggregation;
     AK_agg_input_init(&aggregation);
-//    AK_agg_input_add(t_header[1], AGG_TASK_GROUP, &aggregation);
+    AK_agg_input_add(t_header[1], AGG_TASK_GROUP, &aggregation);
     AK_agg_input_add(t_header[4], AGG_TASK_AVG, &aggregation);
     AK_agg_input_add(t_header[2], AGG_TASK_COUNT, &aggregation);
     AK_agg_input_add(t_header[4], AGG_TASK_SUM, &aggregation);
