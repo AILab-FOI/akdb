@@ -263,7 +263,7 @@ void Ak_Delete_L(AK_list_elem current, AK_list *L) {
  */
 void Ak_DeleteAll_L(AK_list *L) {
     AK_list_elem current;
-    while (current = Ak_First_L(L)) {
+    while ( (current = Ak_First_L(L)) ) {
         L->next = current->next;
         free(current);
     }

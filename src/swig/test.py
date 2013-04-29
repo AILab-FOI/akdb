@@ -4,6 +4,7 @@ import kalashnikovDB as ak47
 import test_strings as ts
 
 
+
 class Functions:
  
     def create_table_header(self, table, attr_name, attr_type):

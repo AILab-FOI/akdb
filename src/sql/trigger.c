@@ -249,7 +249,7 @@ int AK_trigger_edit(int *obj_id, char *name, char* event, AK_list* condition, ch
     if (condition != NULL && Ak_IsEmpty_L(condition) == 0) {
         if (obj_id == NULL) {
             id = AK_trigger_get_id(name, table);
-        } else id = obj_id;
+        } else id = *obj_id;
         AK_trigger_save_conditions(id, condition);
     }
 
@@ -266,7 +266,9 @@ AK_list *AK_trigger_get_conditions(int trigger) {
     AK_list expr;
     Ak_Init_L(&expr);
     Ak_InsertAtEnd_L(TYPE_OPERAND, "trigger", strlen("trigger"), &expr);
-    Ak_InsertAtEnd_L(TYPE_INT, &trigger, sizeof (int), &expr);
+    char data[MAX_VARCHAR_LENGTH];
+    snprintf(data, 10,"%d",trigger);
+    Ak_InsertAtEnd_L(TYPE_INT,data, sizeof (int), &expr);
     Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", 1, &expr);
     AK_selection("AK_trigger_conditions", "AK_trigger_conditions_temp", &expr);
     printf("::::::::::: %d\n", trigger);

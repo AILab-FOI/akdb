@@ -792,6 +792,6 @@ int main(int argc, char *argv[]){
  	val = AK_config_get(AK_test,"general:db_file", NULL);
  	printf("DB_FILE: %s \n",val);
 	}
-+/
+*/
 
-/* vim: set ts=4 et sw=4 tw=75 */
+// vim: set ts=4 et sw=4 tw=75 
