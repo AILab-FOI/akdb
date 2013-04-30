@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 #include "files.h"
+#include <pthread.h>
+pthread_mutex_t fileMut = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * @author Tomislav Fotak, updated by Matija Šestak (function now uses caching)
@@ -30,11 +32,11 @@
 int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     int start_address = -1;
     int end_address = INITIAL_EXTENT_SIZE;
+    pthread_mutex_lock(&fileMut);
     int objectID = AK_get_id();
+    pthread_mutex_unlock(&fileMut);
     char *sys_table;
-
     AK_archive_log("AK_initialize_new_segment", name, type); //ARCHIVE_LOG
-    
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
         return EXIT_ERROR;

@@ -24,6 +24,7 @@
 #include "../rec/redo_log.h"
 #include "../auxi/constants.h"
 #include "../auxi/configuration.h"
+#include "../file/files.h"
 
 #endif
 
@@ -31,3 +32,4 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr);
 void AK_op_selection_test();
 void AK_op_selection_test2();
 void AK_op_selection_test_redolog();
+

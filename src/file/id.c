@@ -35,7 +35,6 @@ int AK_get_id() {
 	int i, num_rec = AK_get_num_records("AK_sequence");
     int exists = 0;
     int current_value = ID_START_VALUE;
-    
 	for (i = 0; i < num_rec; i++) {
         row = (AK_list *)AK_get_row(i, "AK_sequence");
         AK_list_elem value = Ak_GetNth_L(1, row);

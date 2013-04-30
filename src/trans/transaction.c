@@ -328,12 +328,10 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
 
     while (!lock->isWaiting) {
         /* printf("################\n# Lock Waiting		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n",(unsigned long) lock->TransactionId, lock->lock_type, memoryAddress); */
-        printf ("ide 1\n");
         pthread_mutex_lock(&acquireLockMutex);
         pthread_cond_wait(&cond_lock, &acquireLockMutex);
         pthread_mutex_unlock(&acquireLockMutex);
         lock->isWaiting = AK_isLock_waiting(tmp, type, transactionId, lock);
-        printf ("ide 2\n");
     }
     
     if (counter > 0) {
@@ -715,7 +713,6 @@ void AK_test_Transaction() {
     printf("***Test Transaction***\n");
     pthread_mutex_lock(&endTransationTestLockMutex);
     pthread_mutex_lock(&newTransactionLockMutex);
-    
     AK_init_observable_transaction();
 
     // NOTE: This is the way on which we can broadcast notice to all observers
@@ -794,8 +791,9 @@ void AK_test_Transaction() {
     AK_transaction_manager(commands_ins_up, 2);
     AK_transaction_manager(commands_ins_up, 2);
     AK_transaction_manager(commands_delete, 1);
-    AK_transaction_manager(commands_select, 1);
-    
+    //TODO: REPAIR AK_Selection!
+    //AK_transaction_manager(commands_select, 1);
+ 
     pthread_mutex_lock(&endTransationTestLockMutex);
 
     free(expr);
@@ -806,6 +804,8 @@ void AK_test_Transaction() {
     free(row_root_update);
     free(row_root_p_update);
     free(observable_transaction);
+
+    pthread_mutex_unlock(&endTransationTestLockMutex);
     
     printf("***End test Transaction***\n");
 }

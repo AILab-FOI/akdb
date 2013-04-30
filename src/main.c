@@ -135,7 +135,9 @@ function fun[] = {
         {"AK_sequence_test", &AK_sequence_test},
         {"AK_function_test", &AK_function_test},
         {"AK_view_test", &AK_view_test},
-        {"AK_check_constraint_test", &AK_check_constraint_test}
+        {"AK_check_constraint_test", &AK_check_constraint_test},
+        {"AK_transaction_test", &AK_test_Transaction},
+        {"AK_observable_pattern_test", &AK_observable_test}
     };
 
 /**

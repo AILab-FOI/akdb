@@ -1027,12 +1027,6 @@ void AK_create_test_tables() {
 //printf("\n\n----------------View test----------------\n\n");
 //	AK_view_test();
 /*******************************/
-
-
-    /* RUN TESTS FOR OBSERVABLE DESIGN PATTERN */
-    //AK_observable_test();
-    /* RUN TESTS FOR TRANSACTIONS */
-    AK_test_Transaction();
 }
 
 

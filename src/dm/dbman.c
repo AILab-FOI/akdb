@@ -22,10 +22,9 @@
 
 
 #include "dbman.h"
-#include <pthread.h> //TRANSACTIONS
 
 pthread_mutex_t fileLockMutex = PTHREAD_MUTEX_INITIALIZER;
-
+int k;
 /**
  * @author Markus Schatten
  * @brief  Function that initializes a new database file named DB_FILE. It opens database file. New block is allocated. In this
@@ -112,9 +111,11 @@ int AK_init_db_file(int size) {
 AK_block * AK_read_block(int address) {
     pthread_mutex_lock(&fileLockMutex);
     AK_block * block = (AK_block *) malloc(sizeof ( AK_block));
-
-    if ((db = fopen(DB_FILE, "r")) == NULL) {
+    db = fopen(DB_FILE, "r");
+    if (db == NULL) {
         printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+        perror ("The following error occurred");
+        printf( "Value of errno: %d\n", errno );
         exit(EXIT_ERROR);
     }
 
@@ -142,8 +143,11 @@ AK_block * AK_read_block(int address) {
  */
 int AK_write_block(AK_block * block) {
     pthread_mutex_lock(&fileLockMutex);
-    if ((db = fopen(DB_FILE, "r+")) == NULL) {
+    db = fopen(DB_FILE, "r+");
+    if (db == NULL) {
         printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+        perror ("The following error occurred");
+        printf( "Value of errno: %d\n", errno );        
         exit(EXIT_ERROR);
     }
     if (fseek(db, block->address * sizeof ( AK_block), SEEK_SET) != 0) {

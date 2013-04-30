@@ -22,7 +22,8 @@
 #define DBMAN
 
 #include "../auxi/auxiliary.h"
-
+#include <errno.h>
+#include <pthread.h> 
 
 /**
  * @author Markus Schatten

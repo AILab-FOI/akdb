@@ -40,9 +40,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 		if (startAddress == EXIT_ERROR) {
 			return EXIT_ERROR;
 		}
-
 		Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
-
 		table_addresses *src_addr = (table_addresses*) AK_get_table_addresses(srcTable);
 
 		AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
@@ -56,7 +54,6 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 			for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
 
 				AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
-
 				if (temp->block->last_tuple_dict_id == 0)
 					break;
 				for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
