@@ -36,7 +36,7 @@ typedef struct {
   * @struct list_structure_add
   * @brief Structure that defines linked list node for index
  */
-typedef struct {
+typedef struct list_structure_ad {
 	/// attribute name
     char *attName;
     /// addresses
