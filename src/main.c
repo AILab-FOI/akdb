@@ -147,7 +147,7 @@ Main program function
 */
 int main(int argc, char * argv[])
 {
-    qsort(fun, sizeof(fun)/sizeof(fun[0]), sizeof(fun[0]), strcasecmp);
+    qsort(fun, sizeof(fun)/sizeof(fun[0]), (int)sizeof(fun[0]), (void*)strcasecmp);
     if((argc == 2) && !strcmp(argv[1], "help"))
         help();
     else if((argc == 3) && !strcmp(argv[1], "test") && !strcmp(argv[2], "show"))

@@ -215,7 +215,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
   * @return No return value
 */
 
-Ak_constraint_between_test() {
+void Ak_constraint_between_test() {
     char* tableName = "studenti";
     char* attName = "ime";
     char* constraintName = "imeBetween";
