@@ -238,11 +238,12 @@ void choose_test()
         }
         if(ans)
         {
-            ans-=1;
+            ans--;
             fun[ans].func();
             printf("\n\nPress Enter to continue:");
             getchar();
             getchar();
+            ans++;
         }
     }
 }
