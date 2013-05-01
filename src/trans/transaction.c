@@ -791,8 +791,7 @@ void AK_test_Transaction() {
     AK_transaction_manager(commands_ins_up, 2);
     AK_transaction_manager(commands_ins_up, 2);
     AK_transaction_manager(commands_delete, 1);
-    //TODO: REPAIR AK_Selection!
-    //AK_transaction_manager(commands_select, 1);
+    AK_transaction_manager(commands_select, 1);
  
     pthread_mutex_lock(&endTransationTestLockMutex);
 

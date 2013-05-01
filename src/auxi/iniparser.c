@@ -14,6 +14,8 @@
 #define ASCIILINESZ         (1024)
 #define INI_INVALID_KEY     ((char*)-1)
 
+pthread_mutex_t iniParserMutex = PTHREAD_MUTEX_INITIALIZER;
+
 /*---------------------------------------------------------------------------
                         Private to this module
  ---------------------------------------------------------------------------*/
@@ -367,6 +369,7 @@ char ** iniparser_getseckeys(dictionary * d, char * s)
 /*--------------------------------------------------------------------------*/
 char * iniparser_getstring(dictionary * d, const char * key, char * def)
 {
+    pthread_mutex_lock(&iniParserMutex);
     char * lc_key ;
     char * sval ;
 
@@ -375,6 +378,7 @@ char * iniparser_getstring(dictionary * d, const char * key, char * def)
 
     lc_key = strlwc(key);
     sval = dictionary_get(d, lc_key, def);
+    pthread_mutex_unlock(&iniParserMutex);
     return sval ;
 }
 
