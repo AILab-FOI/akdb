@@ -472,10 +472,10 @@ void Ak_fileio_test() {
     AK_write_block( block );
      */
     AK_header t_header[4] = {
-        {TYPE_INT, "Redni_broj", 0, '\0', '\0'},
-        {TYPE_VARCHAR, "Ime", 0, '\0', '\0'},
-        {TYPE_VARCHAR, "Prezime", 0, '\0', '\0'},
-        {0, '\0', 0, '\0', '\0'}
+        {TYPE_INT, "Redni_broj", {0}, {{'\0'}}, {{'\0'}}},
+        {TYPE_VARCHAR, "Ime", {0}, {{'\0'}}, {{'\0'}}},
+        {TYPE_VARCHAR, "Prezime", {0}, {{'\0'}}, {{'\0'}}},
+        {0, {'\0'}, {0}, {{'\0'}}, {{'\0'}}}
     };
 
     int startAddress = AK_initialize_new_segment("testna", SEGMENT_TYPE_TABLE, t_header);

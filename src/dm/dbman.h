@@ -80,7 +80,7 @@ typedef struct {
     /// dictionary of data entries
     AK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
     /// actual data entries
-    unsigned char data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
+    char data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
 } AK_block;
 
 /**

@@ -18,7 +18,6 @@
  */
 
 #include "../file/table.h"
-#include <time.h>
 
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name) {
 	AK_create_table_parameter* par = malloc(sizeof(AK_create_table_parameter));
@@ -444,7 +443,7 @@ void AK_print_table(char *tblName) {
         int num_rows = AK_get_num_records(tblName);
         int len[num_attr]; //max length for each attribute in row
         int length = 0; //length of spacer
-        struct timeval  end_time, start_time;
+        clock_t t;
 
         //store lengths of header attributes
         for (i = 0; i < num_attr; i++) {
@@ -485,7 +484,7 @@ void AK_print_table(char *tblName) {
         length += num_attr * TBL_BOX_OFFSET + 2 * num_attr + 1;
 
         //start measuring time
-        gettimeofday(&start_time, NULL);
+        t = clock();
 
         printf("Table: %s\n", tblName);
 
@@ -552,12 +551,12 @@ void AK_print_table(char *tblName) {
             }
             printf("\n");*/
             //print table rows number and time spent to generate table
-            gettimeofday(&end_time, NULL);
+            t=clock()-t;
 
-            if ((double) (end_time.tv_sec - start_time.tv_sec) == 0){
-            	printf("%i rows found, duration: %f μs\n",num_rows, (double) (end_time.tv_usec - start_time.tv_usec));
+            if ((((double)t)/CLOCKS_PER_SEC) < 0.1){
+            	printf("%i rows found, duration: %f μs\n",num_rows, ((double)t)/CLOCKS_PER_SEC*1000);
             } else {
-            	printf("%i rows found, duration: %f s\n",num_rows, (double) (end_time.tv_usec - start_time.tv_usec)/1000000 + (double) (end_time.tv_sec - start_time.tv_sec));
+            	printf("%i rows found, duration: %f s\n",num_rows, ((double)t)/CLOCKS_PER_SEC);
             }
         }
     }

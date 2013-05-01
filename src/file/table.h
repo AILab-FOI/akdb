@@ -24,6 +24,8 @@
 #define TABLE
 
 #include "../mm/memoman.h"
+#include <time.h>
+
 
 struct AK_create_table {
 	char name[MAX_ATT_NAME];
