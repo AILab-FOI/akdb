@@ -1013,7 +1013,7 @@ void AK_create_test_tables() {
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
-    rel_eq_comut_test();	
+    //AK_rel_eq_comut_test();	
     Ak_DeleteAll_L(row_root);
     free(row_root);
     //------------------------------------------------------------------------------------------------------

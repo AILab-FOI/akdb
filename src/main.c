@@ -63,7 +63,6 @@
 
 //Command
 #include "sql/command.h"
-
 // Query processing
 #include "opti/query_optimization.h"
 
@@ -120,7 +119,7 @@ function fun[] = {
         {"AK_op_selection_test_redolog", &AK_op_selection_test_redolog},
         {"AK_op_theta_join_test", &AK_op_theta_join_test},
         {"AK_op_union_test", &AK_op_union_test},
-        {"rel_eq_comut_test", &rel_eq_comut_test},
+        {"AK_rel_eq_comut_test", &AK_rel_eq_comut_test},
         {"AK_privileges_test", &AK_privileges_test},
         {"AK_reference_test", &AK_reference_test},
         {"AK_rel_eq_assoc_test", &AK_rel_eq_assoc_test},
@@ -158,24 +157,36 @@ int main(int argc, char * argv[])
         AK_inflate_config();
         printf("db_file: %s\n", DB_FILE);
 
-        if( AK_init_disk_manager() == EXIT_SUCCESS )
-        {
-                if( AK_memoman_init() == EXIT_SUCCESS )
-                {
-            /* component test area --- begin */
-            if((argc == 2) && !strcmp(argv[1], "test"))
-            {
-                choose_test();
-            }
-            else if((argc == 3) && !strcmp(argv[1], "test"))
-            {
-                int ans;
-                ans = (int)strtol(argv[2], NULL, 10)-1;
-                AK_create_test_tables();
-                fun[ans].func();
-            }
+	if( AK_init_disk_manager() == EXIT_SUCCESS )
+	{
+		if( AK_memoman_init() == EXIT_SUCCESS )
+		{
+			/* component test area --- begin */
+			AK_create_test_tables();
+			
+//			files_test();
+//			Ak_fileio_test();
+//			filesearch_test();
+//			filesort_test();
 
-            /*component test area --- end */
+//			AK_rel_eq_projection_test();
+//			AK_rel_eq_selection_test();
+//			AK_rel_eq_assoc_test();
+//			AK_rel_eq_comut_test();
+//			AK_query_optimization_test();
+//
+//			table_test();
+//
+//			op_selection_test();
+//			AK_op_selection_test_redolog();
+//			op_projection_test();
+//			op_join_test();
+//			op_theta_join_test();
+//			op_intersect_test();
+//			op_union_test();
+//			op_difference_test();
+//			AK_op_rename_test();
+//			op_product_test();
 
             if ( AK_flush_cache() == EXIT_SUCCESS ){
 

@@ -96,7 +96,7 @@ AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *F
         switch (rel_eq) {
             case 'c':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_commute.\n");
-                //return (AK_list *)AK_rel_eq_comut(list_query);
+                return (AK_list *)AK_rel_eq_comut(list_query);
                 break;
 
             case 'a':
@@ -104,14 +104,14 @@ AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *F
                 return (AK_list *) AK_rel_eq_assoc(list_query);
                 break;
 
-            case 's':
-                Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_selection.\n");
-                return (AK_list *) AK_rel_eq_selection(list_query);
-                break;
-
             case 'p':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_projection.\n");
                 return (AK_list *) AK_rel_eq_projection(list_query);
+                break;
+
+            case 's':
+                Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_selection.\n");
+                return (AK_list *) AK_rel_eq_selection(list_query);
                 break;
 
             default:
@@ -201,7 +201,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
   * @param *list_query query to be optimized
   * @return No return value
   */
-void AK_query_optimization_test(AK_list *list_query) {
+void AK_query_optimization_test() { // (AK_list *list_query)
     printf("query_optimization.c: Present!\n");
     printf("\n********** QUERY OPTIMIZATION TEST by Dino Laktašić **********\n");
 
@@ -286,7 +286,7 @@ void AK_query_optimization_test(AK_list *list_query) {
     //*/
 
     time_t start = clock();
-    AK_print_optimized_query(AK_query_optimization(expr, "aps", 1));
+    AK_print_optimized_query(AK_query_optimization(expr, "caps", 1)); // FLAGS = "caps"
     time_t end = clock();
     printf("\n\nLOGIC PLAN GENERATED IN: %d μs, %d s\n", end - start, (end - start) / 1000000);
 

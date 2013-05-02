@@ -725,7 +725,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
     ////	Edit function to return collection of the AK_lists
     ////	Generate next RA expr. (new plan)
     ////	temp += remain from the list_rel_eq
-    //		AK_rel_eq_projection(temp);
+    //		AK_rel_eq_selection(temp);
     //	}
     //}
 

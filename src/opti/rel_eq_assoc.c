@@ -61,7 +61,7 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                 list_elem_next = (AK_list_elem) Ak_Next_L(list_elem);
 
                 switch (list_elem->data[0]) {
-                        //Associativity of set operations: Union and Intersection are associative but Set Difference is not
+                    //Associativity of set operations: Union and Intersection are associative but Set Difference is not
                     case RO_UNION:
                     case RO_INTERSECT:
                         if (temp_elem != NULL) {
