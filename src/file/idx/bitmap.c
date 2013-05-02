@@ -50,13 +50,12 @@ int Ak_If_ExistOp(AK_list *L, char *ele) {
  * @return No return value
  * */
 void AK_create_Index(char *tblName, AK_list *attributes) {
-    int num_attr, num_rec;
+    int num_attr;
     int i, j, k;
     //start and end addresses of segment's
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
     num_attr = AK_num_attr(tblName);
-    num_rec = AK_get_num_records(tblName);
 
     AK_header *temp_head = (AK_header *)AK_get_header(tblName);
     int temp_int;
@@ -363,13 +362,12 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
  * @return list of adresses
  **/
 list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
-    int num_attr, num_rec;
+    int num_attr;
     int i, j, k;
     //start and end addresses of segment's
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(indexName);
 
     num_attr = AK_num_attr(indexName);
-    num_rec = AK_get_num_records(indexName);
 
     AK_header *temp_head = (AK_header *)AK_get_header(indexName);
     int temp_int;

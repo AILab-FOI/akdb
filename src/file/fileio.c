@@ -268,15 +268,12 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
 
         if (operation == DELETE) {//delete
             if ((exists_equal_attrib == 1) && (del == 1)) {
-                int j, sd;
-                sd = head;
+                int j;
                 
                 for (j = i - head; j < i; j++) {//delete one row
 
                     int k = temp_block->tuple_dict[j].address;
                     int l = temp_block->tuple_dict[j].size;
-                    //printf("ADR %d \n:", temp_block->tuple_dict[j+sd].address);
-                    //printf(" SZ %d \n:", temp_block->tuple_dict[j+sd].size);
                     memset(temp_block->data + k, '\0', l);
                     Ak_dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);
                     
@@ -572,7 +569,6 @@ void Ak_fileio_test() {
 
     AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
-    AK_list_elem some_element;
     int broj;
 
     broj = 1;
@@ -588,7 +584,6 @@ void Ak_fileio_test() {
     Ak_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Nikola", "testna", "Ime", row_root, 0);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
-    some_element = Ak_First_L(row_root);
     Ak_insert_row(row_root);
 
     Ak_DeleteAll_L(row_root);
@@ -606,7 +601,6 @@ void Ak_fileio_test() {
         Ak_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
         Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, 0);
         Ak_Insert_New_Element(TYPE_VARCHAR, "Vacenovski", "testna", "Prezime", row_root);
-        some_element = Ak_First_L(row_root);
         Ak_insert_row(row_root);
     }
 

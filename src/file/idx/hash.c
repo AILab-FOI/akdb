@@ -54,7 +54,7 @@ int AK_elem_hash_value(AK_list_elem elem) {
   * @return address structure with data where the bucket is stored 
  */
 struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type) {
-    int id, size;
+    int size, id;
     struct_add *add = (struct_add*) malloc(sizeof (struct_add));
     add->addBlock = 0;
     add->indexTd = 0;
@@ -67,7 +67,7 @@ struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type) {
 
     AK_block *block = (AK_block*) AK_read_block(adr_to_write);
 
-    Ak_dbg_messg(HIGH, INDICES, "insert_bucket_to_block: Position to write (tuple_dict_index) %d\n", id);
+    Ak_dbg_messg(HIGH, INDICES, "insert_bucket_to_block: Position to write (tuple_dict_index) %d\n", adr_to_write);
 
     switch (type) {
         case MAIN_BUCKET:
