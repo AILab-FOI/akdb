@@ -890,10 +890,11 @@ int AK_init_system_catalog() {
         {0, '\0', 0, '\0', '\0'}
     };
 
-    AK_header hView[4] = {
+    AK_header hView[5] = {
         {TYPE_INT, "obj_id", 0, '\0', '\0',},
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_VARCHAR, "query", 0, '\0', '\0',},
+	{TYPE_VARCHAR, "rel_exp", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
 
