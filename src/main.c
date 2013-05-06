@@ -89,7 +89,7 @@
 void help();
 void show_test();
 void choose_test();
-void run_test();
+//void run_test();
 
 typedef struct {
     char name[40];

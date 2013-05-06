@@ -269,7 +269,6 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
   #include "../sql/drop.h"
   #include "../sql/view.c"
   #include "../sql/view.h"
-
   #include "../rel/projection.c"
   #include "../rel/projection.h"
 
@@ -316,6 +315,22 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
   #include "../sql/cs/between.h"
   #include "../sql/cs/reference.c"
   #include "../sql/cs/reference.h"
+  /*
+  PRIVILEGES
+  */
+  #include "../sql/privileges.c"
+  #include "../sql/privileges.h"
+
+  /*
+  UNIQUE
+  */
+  #include "../sql/cs/unique.c"
+  #include "../sql/cs/unique.h"
+  /*
+  CONSTRAINT
+  */
+  #include "../sql/cs/check_constraint.c"
+  #include "../sql/cs/check_constraint.h"
 
   #include "../trans/transaction.h"
   #include "../trans/transaction.c"

@@ -700,6 +700,7 @@ class sql_tokenizer:
         else:
           print "tokens = ", token.dump()
 
+'''
 test = sql_tokenizer()
 
 #testing grant statement
@@ -728,3 +729,4 @@ test.AK_parse_create_table_test()
 
 #testing insert into statement
 test.AK_parse_insert_into_test()
+'''
