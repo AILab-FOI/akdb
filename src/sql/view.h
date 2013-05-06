@@ -27,9 +27,9 @@
 #endif
 
 int AK_get_view_obj_id(char *name);
-int AK_view_add(char *name, char *query, int set_id);
+int AK_view_add(char *name, char *query, char *rel_exp, int set_id);
 int AK_view_remove_by_obj_id(int obj_id);
 int AK_view_remove_by_name(char *name);
 int AK_view_rename(char *name, char *new_name);
-int AK_view_change_query(char *name, char *query);
+int AK_view_change_query(char *name, char *query, char *rel_exp);
 void AK_view_test();
