@@ -144,6 +144,25 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
 
     AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
     Ak_Init_L(temp);
+    
+    //change view name for its rel_exp in list_query if exists
+    //@author Danko Sacer
+    AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_query);
+    list_elem = (AK_list_elem) Ak_First_L(list_query);
+    
+    while (list_elem != NULL) {
+ 	//suposed that views have name prefiks or sufics 'view' (viewname_view or view_viewname)
+    	if (list_elem->type == TYPE_OPERAND && strstr(list_elem->data,"view")!=NULL){
+		//list_elem->data change value from view name to view query
+		
+		char* record = AK_get_rel_exp(list_elem->data);
+		//printf("**if petlja**\n%s\n", list_elem->data);
+		strcpy(list_elem->data, record);
+		//printf("**if petlja**\n%s\n", list_elem->data);
+	}
+	
+    	list_elem = list_elem->next;
+    }
 
     temp = list_query;
 
@@ -335,4 +354,23 @@ void AK_query_optimization_test() { // (AK_list *list_query)
     }
 
     Ak_DeleteAll_L(expr);
+    
+    //testing a query representation of view in relation operators
+    printf("\n\n---------Integration of view query test by Danko Sacer-----------\n\n");
+    AK_view_add("view1", "SELECT firstname FROM student", "", 0);
+
+    char* query = AK_get_view_query("view1");
+    printf("View query: %s\n", query);
+
+    AK_list *mylist = (AK_list *) malloc(sizeof (AK_list));
+    Ak_Init_L(mylist);
+
+    //*Associativity of union and intersection
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), mylist);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "view1",strlen(query), mylist);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
+    Ak_InsertAtEnd_L(TYPE_OPERAND, "course", sizeof ("course"), mylist);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
+
+    AK_print_optimized_query(AK_query_optimization(mylist, "aps", 1));
 }
