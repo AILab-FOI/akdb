@@ -294,8 +294,8 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
                 int j,ss;
                 char up_entry[MAX_VARCHAR_LENGTH];
                 
-                for (j = i - head; j < i; j++) {//go through row
-                    ss = head;
+                for (j = i - attPlace; j < i + head-attPlace; j++) {//go through row
+                    ss = attPlace;
                     int k = temp_block->tuple_dict[j+ss].address;
                     int l = temp_block->tuple_dict[j+ss].size;
                     
@@ -611,6 +611,14 @@ void Ak_fileio_test() {
 
     Ak_DeleteAll_L(row_root);
     broj = 1;
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
+    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Mate", "testna", "Ime", row_root, NEW_VALUE);
+    Ak_update_row(row_root);
+
+    AK_print_table("testna");
+
+    Ak_DeleteAll_L(row_root);
+    broj = 1;
     Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, 1);
     Ak_delete_row(row_root);
 
@@ -620,17 +628,13 @@ void Ak_fileio_test() {
     broj = 3;
     Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Francina", "testna", "Ime", row_root, NEW_VALUE);
-    //Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root, 1);
     Ak_update_row(row_root);
     AK_print_table("testna");
 
 
     Ak_DeleteAll_L(row_root);
     broj = 7;
-    // za broj = 1 ne radi!
-    //broj = 1;
     Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
-    //Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "M", "testna", "Prezime", row_root, NEW_VALUE);
     Ak_update_row(row_root);
 
@@ -650,7 +654,7 @@ void Ak_fileio_test() {
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, 1);
     Ak_delete_row(row_root);
 
-     AK_print_table("testna");
+    AK_print_table("testna");
 
     Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, 1);
