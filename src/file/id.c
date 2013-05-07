@@ -20,69 +20,36 @@
 #include "id.h"
 
 /**
- * @author Saša Vukšić, updated by Mislav Čakarić.
+ * @author Saša Vukšić, updated by Mislav Čakarić, changed by Mario Peroković, now uses Ak_update_row
  * @brief Function for getting unique ID for any object, stored in sequence
  * @return objectID
  */
 int AK_get_id() {
-    char temp_data[MAX_VARCHAR_LENGTH];
-    
-	AK_list * row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
-    
-	AK_list *row = (AK_list*) malloc(sizeof (AK_list));
-    
-	int i, num_rec = AK_get_num_records("AK_sequence");
+    int i;
     int exists = 0;
+    int seq_id = -1;
     int current_value = ID_START_VALUE;
-	for (i = 0; i < num_rec; i++) {
+    char temp_data[MAX_VARCHAR_LENGTH];
+
+    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root); 
+    AK_list *row = (AK_list*) malloc(sizeof (AK_list));
+
+    int num_rec = AK_get_num_records("AK_sequence");
+    for (i = 0; i < num_rec; i++) {
         row = (AK_list *)AK_get_row(i, "AK_sequence");
         AK_list_elem value = Ak_GetNth_L(1, row);
         memcpy(temp_data, &value->data, value->size);
         temp_data[value->size] = 0; //terminate string
         
-		if (strcmp(temp_data, "objectID") == 0) {
+        if (strcmp(temp_data, "objectID") == 0) {
             exists = 1;
             value = Ak_GetNth_L(2, row);
             memcpy(&current_value, &value->data, value->size);
+            value = Ak_GetNth_L(0, row);
+            memcpy(&seq_id, &value->data, value->size);
             break;
         }
-    }
-    
-	if (exists) {
-        Ak_DeleteAll_L(row_root);
-        Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root, 1);
-        Ak_delete_row(row_root);
-        current_value++;
-    }
-	
-    Ak_DeleteAll_L(row_root);
-    int value = 0;
-    Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "obj_id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
-    value = 1;
-    Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "increment", row_root);
-    Ak_insert_row(row_root);
-    return current_value;
-
-/*    int i;
-    int exists = 0;
-    int seq_id = -1;
-    int current_value = 100;
-
-    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_Init_L(row_root); 
-    AK_list *row;
-
-    while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
-        if (strcmp(row->next->next->data, "objectID") == 0) {
-            memcpy(&seq_id, &row->next->data, sizeof (int));
-            memcpy(&current_value, &row->next->next->next->data, row->next->next->next->size);
-            exists = 1;
-        break;
-        }
-        i++;
     }
 
     if(exists){
@@ -108,7 +75,7 @@ int AK_get_id() {
     Ak_insert_row(row_root);
     Ak_DeleteAll_L(row_root);
     free(row_root);
-    return current_value;*/
+    return current_value;
 }
 
 /**
