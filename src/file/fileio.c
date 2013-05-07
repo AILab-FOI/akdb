@@ -85,6 +85,7 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     int type; //type od entry data
     int id = 0; //id tuple dict in which is inserted next data
     int head = 0; //index of header which is curently inserted
+
     int search_elem; //serch for tuple dict id and searc for data in list
     char entry_data[MAX_VARCHAR_LENGTH];
     
@@ -184,7 +185,7 @@ int Ak_insert_row(AK_list *row_root) {
 }
 
 /** 
-   * @author Matija Novak, updated by Dino Laktašić
+   * @author Matija Novak, updated by Dino Laktašić,changed by Davorin Vukelic
    * @brief Function updates or deletes row from table in given block. Given list of elements is firstly back-upped. According to given argument in function, delete or update is peformed.
    * @param temp_block block to work with
    * @param row_list list of elements which contain data for delete or update
@@ -193,6 +194,7 @@ int Ak_insert_row(AK_list *row_root) {
  */
 void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, int operation) {
     int head = 0; //counting headers
+    int attPlace=0;//place of attribute which are same
     int del = 1; //if can delete gorup of tuple dicts which are in the same row of table
     int exists_equal_attrib = 0; //if we found at least one header in the list
     int diff_varchar_exist = 0; //to now on update if exist varchar that is not the same so that i must delete/insert the entry
@@ -212,7 +214,7 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
     
     for (i = 0; i < DATA_BLOCK_SIZE; i++) { //freeze point, if there is no i++
         head = 0;
-
+        attPlace=0;
         address = temp_block->tuple_dict[i].address;
         type = temp_block->tuple_dict[i].type;
         size = temp_block->tuple_dict[i].size;
@@ -226,6 +228,7 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
                     if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (some_element->constraint == SEARCH_CONSTRAINT)) {
                         
                         exists_equal_attrib = 1;
+                        attPlace=head;
                         
                         if ((overflow < (temp_block->free_space + 1)) && (overflow > -1)) {
                             //before there was for loop to clear (check if memset works correct)
@@ -270,7 +273,7 @@ void Ak_update_delete_row_from_block(AK_block *temp_block, AK_list *row_root, in
             if ((exists_equal_attrib == 1) && (del == 1)) {
                 int j;
                 
-                for (j = i - head; j < i; j++) {//delete one row
+                for (j = i -attPlace; j < i+head-attPlace; j++) {//delete one row
 
                     int k = temp_block->tuple_dict[j].address;
                     int l = temp_block->tuple_dict[j].size;
@@ -605,14 +608,14 @@ void Ak_fileio_test() {
     }
 
     AK_print_table("testna");
-/*
+
     Ak_DeleteAll_L(row_root);
     broj = 1;
     Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, 1);
     Ak_delete_row(row_root);
 
     AK_print_table("testna");
-*/
+
     Ak_DeleteAll_L(row_root);
     broj = 3;
     Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
@@ -644,10 +647,10 @@ void Ak_fileio_test() {
     //AK_print_table("testna");
 
     Ak_DeleteAll_L(row_root);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Slonic", "testna", "Ime", row_root, 1);
+    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, 1);
     Ak_delete_row(row_root);
 
-    //AK_print_table("testna");
+     AK_print_table("testna");
 
     Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, 1);
