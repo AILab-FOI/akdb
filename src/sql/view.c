@@ -54,7 +54,7 @@ char* AK_get_view_query(char *name){
         }
     }
     
-    return EXIT_ERROR;
+    return (char*)(EXIT_ERROR);
 }
 
 /**
@@ -74,7 +74,7 @@ char* AK_get_rel_exp(char *name){
         }
     }
     
-    return EXIT_ERROR;
+    return (char*)(EXIT_ERROR);
 }
 
 /**

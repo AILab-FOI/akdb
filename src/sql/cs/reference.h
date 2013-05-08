@@ -21,6 +21,7 @@
 #define REFERENCE
 
 #include "../../dm/dbman.h"
+#include "../../file/table.h"
 /**
  * @def REF_TYPE_NONE
  * @brief Constant declaring none reference type 
@@ -87,4 +88,10 @@ int AK_reference_check_restricion(AK_list *lista, int action) ;
 int AK_reference_update(AK_list *lista, int action) ;
 int AK_reference_check_entry(AK_list *lista) ;
 void AK_reference_test();
-
+void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore);
+int Ak_insert_row(AK_list *row_root);
+int AK_selection(char *srcTable, char *dstTable, AK_list *expr);
+void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint);
+int Ak_delete_row(AK_list *row_root) ;
+int Ak_update_row(AK_list *row_root);
+int AK_initialize_new_segment(char *name, int type, AK_header *header);

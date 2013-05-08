@@ -121,7 +121,6 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
     char value[50];
     char att[50];
 
-    double nValue;
 
     while (freeSpaceFound == 0) {
         tupleDictID += 1;

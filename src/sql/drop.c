@@ -74,7 +74,7 @@ void AK_drop(int type, AK_drop_arguments* drop_arguments)
     int freeVar = 0;
     int data_adr = 0;
     int data_size = 0;
-    int data_type = 0;
+    //int data_type = 0;
     int address_sys;
     char name_sys[MAX_ATT_NAME];
     char *sys_table;
@@ -100,13 +100,13 @@ void AK_drop(int type, AK_drop_arguments* drop_arguments)
 
         data_adr = mem_block->block->tuple_dict[i].address;
         data_size = mem_block->block->tuple_dict[i].size;
-        data_type = mem_block->block->tuple_dict[i].type;
+        //data_type = mem_block->block->tuple_dict[i].type;
         memcpy(name_sys, mem_block->block->data + data_adr, data_size);
 
         i++;
         data_adr = mem_block->block->tuple_dict[i].address;
         data_size = mem_block->block->tuple_dict[i].size;
-        data_type = mem_block->block->tuple_dict[i].type;
+        //data_type = mem_block->block->tuple_dict[i].type;
         memcpy(&address_sys, mem_block->block->data + data_adr, data_size);
 
         if (strcmp(name_sys, sys_table) == 0) {

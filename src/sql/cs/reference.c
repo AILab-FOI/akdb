@@ -120,7 +120,7 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
  */
 int AK_reference_check_if_update_needed(AK_list *lista, int action) {
     AK_list_elem temp;
-    int i = 0, j, con_num = 0;
+    int i = 0;
     AK_list *row;
 
     while ((row = AK_get_row(i, "AK_reference")) != NULL) {
@@ -149,7 +149,7 @@ int AK_reference_check_if_update_needed(AK_list *lista, int action) {
  */
 int AK_reference_check_restricion(AK_list *lista, int action) {
     AK_list_elem temp;
-    int i = 0, j, con_num = 0;
+    int i = 0;
     AK_list *row;
 
     while ((row = AK_get_row(i, "AK_reference")) != NULL) {
@@ -254,7 +254,7 @@ int AK_reference_update(AK_list *lista, int action) {
                             while (temp != NULL) {
                                 if (strcmp(temp->attribute_name, reference.parent_attributes[j]) == 0 && temp->constraint == 0) {
                                     memcpy(tempData, tempcell->data, tempcell->size);
-                                    tempData[tempcell->size] == '\0';
+                                    //tempData[tempcell->size] == '\0';
                                     Ak_Insert_New_Element_For_Update(tempcell->type, tempData, reference.table, reference.attributes[j], row_root, 0);
                                     break;
                                 }
