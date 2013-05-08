@@ -489,7 +489,6 @@ class sql_tokenizer:
         tokens = insertStmt.parseString(string)
       except ParseException, err:
         return " "*err.loc + "^\n" + err.msg
-      print
       return tokens
       
 
