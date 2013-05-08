@@ -54,13 +54,13 @@ void AK_check_constraint_test() {
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
     Ak_Init_L(expr);
 
-    int num = 0;
+    char *num = "0";
     //float weight = 83.750;
     //InsertAtEndL( TYPE_ATTRIBS, "weight", sizeof("weight"), expr );
     //InsertAtEndL( TYPE_FLOAT, &weight, sizeof(float), expr );
     //InsertAtEndL( TYPE_OPERATOR, "<", sizeof("<"), expr );
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
-    Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), expr);
+    Ak_InsertAtEnd_L(TYPE_INT, num, sizeof (int), expr);
     Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", sizeof ("<"), expr);
   /*  Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
     Ak_InsertAtEnd_L(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);

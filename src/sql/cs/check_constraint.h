@@ -21,6 +21,8 @@
 #define CHECK_CONSTRAINT
 
 #include "../../file/table.h"
+#include "../../file/fileio.h"
+#include "../../rel/expression_check.h"
 
 #endif
 

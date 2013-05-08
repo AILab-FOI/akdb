@@ -33,7 +33,7 @@
 
 int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a, const char *b) {
     
-    char *numericStringEnd; //A pointer to the location where the numeric part of the string ends
+    char **numericStringEnd; //A pointer to the location where the numeric part of the string ends
 
 	if(strcmp(op, "<") == 0){
 

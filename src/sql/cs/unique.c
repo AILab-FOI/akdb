@@ -86,7 +86,6 @@ int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar)
     int systemTableAddress;
     int j, i = 0;
     AK_block *tempBlock;
-    AK_block *tempBlock1;
     int freeSpaceFound = 0;
     int TupleDictID = -1;
     int flag = EXIT_SUCCESS;

@@ -11,6 +11,7 @@
 #define UNIQUE
 
 #include "../../mm/memoman.h"
+#include "../../file/id.h"
 
 
 #endif
