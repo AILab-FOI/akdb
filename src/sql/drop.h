@@ -21,6 +21,7 @@
 #define DROP
 
 #include "../file/table.h"
+#include "../file/fileio.h"
 struct drop_arguments {
   void* value;
   void* next;

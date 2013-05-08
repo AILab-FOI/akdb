@@ -68,7 +68,7 @@ void AK_drop(int type, AK_drop_arguments* drop_arguments)
     
 
 
-int segmentType = SEGMENT_TYPE_TABLE;
+
 
    int i = 0;
     int freeVar = 0;
@@ -127,9 +127,6 @@ int segmentType = SEGMENT_TYPE_TABLE;
     }
 
     char name[MAX_VARCHAR_LENGTH];
-    int address_from;
-    int address_to;
-    int j = 0;
 
     for (i = 0; i < DATA_BLOCK_SIZE; i++) {
         if (mem_block->block->tuple_dict[i].type == FREE_INT)

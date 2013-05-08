@@ -58,8 +58,6 @@ int AK_check_function_arguments(int function_id, AK_list *arguments_list){
   
   AK_list *row;
   int i=0;
-  char *podaci;
-  int func_id;
   int fid;
   AK_list_elem arguments_list_current = arguments_list->next;
   while ((row = (AK_list *)AK_get_row(i, "AK_function_arguments")) != NULL) {
@@ -114,10 +112,10 @@ int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
     Ak_Insert_New_Element(TYPE_INT, &return_type, "AK_function", "return_type", row_root);
     Ak_insert_row(row_root);
     
-    int i=1;
+    int i;
     AK_list_elem current_elem = Ak_First_L(arguments_list); //set current_elem to first element in a list
     //add arguments list to arguments system table
-    for(i; i<=num_args; i++){
+    for(i=1; i<=num_args; i++){
       char* argname = Ak_Retrieve_L(current_elem, arguments_list); 
       current_elem = Ak_Next_L(current_elem);
       char* argtype = Ak_Retrieve_L(current_elem, arguments_list);
@@ -230,7 +228,7 @@ int AK_function_remove_by_obj_id(int obj_id) {
  * @param obj_id obj_id of the function
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
-int AK_function_arguments_remove_by_obj_id(int obj_id) {
+int AK_function_arguments_remove_by_obj_id(int *obj_id) {
     printf("***Remove function arguments***\n");
     int oid;
     memcpy(&oid, obj_id, sizeof(int));
