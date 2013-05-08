@@ -261,11 +261,12 @@ int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, ch
  * @return list of conditions for the trigger
  */
 AK_list *AK_trigger_get_conditions(int trigger) {
+    char *endPtr;
     printf("\nid triggera: %d\n", trigger);
     AK_list expr;
     Ak_Init_L(&expr);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "trigger", strlen("trigger"), &expr);
-    Ak_InsertAtEnd_L(TYPE_INT, &trigger, sizeof (int), &expr);
+    Ak_InsertAtEnd_L(TYPE_INT, (char*)(&trigger), sizeof (int), &expr);
     Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", 1, &expr);
     AK_selection("AK_trigger_conditions", "AK_trigger_conditions_temp", &expr);
 
@@ -274,7 +275,7 @@ AK_list *AK_trigger_get_conditions(int trigger) {
     int i = 0;
     AK_list *row;
     while((row = (AK_list *)AK_get_row(i, "AK_trigger_conditions_temp")) != NULL){
-        Ak_InsertAtEnd_L(row->next->next->next->next->data, row->next->next->next->data, row->next->next->next->size, result);
+        Ak_InsertAtEnd_L(strtol(row->next->next->next->next->data, &endPtr, 10), row->next->next->next->data, row->next->next->next->size, result);
         i++;
     }
 
@@ -308,10 +309,12 @@ void AK_trigger_test() {
     AK_print_table("AK_function");
 
     AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *dummyExpression = (AK_list *) malloc(sizeof(AK_list));
+    strcpy(dummyExpression->data, "");
     Ak_Init_L(expr);
-    int num = 2002;
+    char *num = "2002";
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", 4, expr);
-    Ak_InsertAtEnd_L(TYPE_INT, &num, 4, expr);
+    Ak_InsertAtEnd_L(TYPE_INT, num, 4, expr);
     Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", 2, expr);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", 9, expr);
     Ak_InsertAtEnd_L(TYPE_VARCHAR, "Matija", 6, expr);
@@ -320,7 +323,7 @@ void AK_trigger_test() {
 
     AK_trigger_add("trigg1", "insert", expr, "AK_reference", "dummy_funk_1");
     AK_trigger_add("trigg2", "update", expr, "dummy_table", "dummy_funk_1");
-    AK_trigger_add("trigg3", "delete", "", "AK_reference", "dummy_funk");
+    AK_trigger_add("trigg3", "delete", dummyExpression, "AK_reference", "dummy_funk");
     AK_trigger_add("trigg4", "insert", NULL, "AK_reference", "dummy_funk_2");
     AK_print_table("AK_trigger");
     AK_print_table("AK_trigger_conditions");
@@ -341,4 +344,7 @@ void AK_trigger_test() {
     AK_trigger_remove_by_name("trigg1", "AK_reference");
     AK_print_table("AK_trigger");
     AK_print_table("AK_trigger_conditions");
+    
+    free(dummyExpression);
+    free(expr);
 }
