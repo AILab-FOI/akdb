@@ -20,33 +20,33 @@
 #include "../file/table.h"
 
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name) {
-	AK_create_table_parameter* par = malloc(sizeof(AK_create_table_parameter));
-	par->type = type;
-	strcpy(par->name, name);
-	return par;
+    AK_create_table_parameter* par = malloc(sizeof (AK_create_table_parameter));
+    par->type = type;
+    strcpy(par->name, name);
+    return par;
 }
 
 void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) {
-	int i;
-  AK_header t_header[ MAX_ATTRIBUTES ];
-  AK_header* temp;
-	for (i = 0; i < attribute_count; i++) {
-		switch (parameters[i].type) {
-			case TYPE_INT:
-				temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-				memcpy(t_header + i, temp, sizeof ( AK_header));
-				break;
-			case TYPE_VARCHAR:
-				temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
-				memcpy(t_header + i, temp, sizeof ( AK_header));
-				break;
-			case TYPE_FLOAT:
-				temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
-				memcpy(t_header + i, temp, sizeof ( AK_header));
-				break;
-		}
-	}
-	memset(t_header + attribute_count, 0, MAX_ATTRIBUTES - attribute_count);
+    int i;
+    AK_header t_header[ MAX_ATTRIBUTES ];
+    AK_header* temp;
+    for (i = 0; i < attribute_count; i++) {
+        switch (parameters[i].type) {
+            case TYPE_INT:
+                temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                memcpy(t_header + i, temp, sizeof ( AK_header));
+                break;
+            case TYPE_VARCHAR:
+                temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
+                memcpy(t_header + i, temp, sizeof ( AK_header));
+                break;
+            case TYPE_FLOAT:
+                temp = (AK_header*) AK_create_header(parameters[i].name, TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
+                memcpy(t_header + i, temp, sizeof ( AK_header));
+                break;
+        }
+    }
+    memset(t_header + attribute_count, 0, MAX_ATTRIBUTES - attribute_count);
 }
 
 /**
@@ -329,8 +329,8 @@ char * AK_tuple_to_string(AK_list *tuple) {
 
     char *buff = (char*) malloc(MAX_VARCHAR_LENGTH);
 
-	//assert(tuple->type);
-	
+    //assert(tuple->type);
+
     switch (tuple->type) {
         case TYPE_INT:
             memcpy(&temp_int, tuple->data, tuple->size);
@@ -426,6 +426,29 @@ void AK_print_row(int col_len[], AK_list *row) {
 }
 
 /**
+ * @author Jurica Hlevnjak
+ * @brief Function examines whether there is a table with the name "tblName" in the system catalog (AK_relation)
+ * @param tblName table name
+ * @return returns 1 if table exist or returns 0 if table does not exist
+ */
+int AK_table_exist(char *tblName) {
+    char *sys_table = "AK_relation";
+    int num_rows = AK_get_num_records(sys_table);
+    int a;
+    int exist = 0;
+
+    for (a = 0; a < num_rows; a++) {
+        AK_list_elem el;
+        el = AK_get_tuple(a, 1, sys_table);
+        // printf("  Element %s !", el->data);
+        if (!strcmp(tblName, el->data)) {
+            exist = 1;
+        }
+    }
+    return exist;
+}
+
+/**
  * @author Dino Laktašić and Mislav Čakarić (replaced old print table function by new one)
  * @brief  Function for printing table
  * @param *tblName table name
@@ -433,7 +456,8 @@ void AK_print_row(int col_len[], AK_list *row) {
  */
 void AK_print_table(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    if (addresses->address_from[0] == 0) {
+
+    if ((addresses->address_from[0] == 0) || (AK_table_exist(tblName) == 0)) {
         printf("Table %s does not exist!\n", tblName);
     } else {
         AK_header *head = AK_get_header(tblName);
@@ -497,13 +521,13 @@ void AK_print_table(char *tblName) {
 
             for (i = 0; i < num_attr; i++) {
                 //print attributes center aligned inside box
-                k = (len[i] - (int)strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
+                k = (len[i] - (int) strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
                 if (k % 2 == 0) {
                     k /= 2;
-                    printf("%-*s%-*s|", k, " ", k + (int)strlen((head + i)->att_name), (head + i)->att_name);
+                    printf("%-*s%-*s|", k, " ", k + (int) strlen((head + i)->att_name), (head + i)->att_name);
                 } else {
                     k /= 2;
-                    printf("%-*s%-*s|", k, " ", k + (int)strlen((head + i)->att_name) + 1, (head + i)->att_name);
+                    printf("%-*s%-*s|", k, " ", k + (int) strlen((head + i)->att_name) + 1, (head + i)->att_name);
                 }
 
                 //print attributes left aligned inside box
@@ -516,8 +540,8 @@ void AK_print_table(char *tblName) {
             Ak_Init_L(row_root);
 
             i = 0;
-			int type, size, address;
-			
+            int type, size, address;
+
             while (addresses->address_from[i] != 0) {
                 for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
                     AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
@@ -526,7 +550,7 @@ void AK_print_table(char *tblName) {
                     for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
                         if (temp->block->tuple_dict[k].size > 0) {
                             for (l = 0; l < num_attr; l++) {
-								type = temp->block->tuple_dict[k + l].type;
+                                type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
                                 Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
@@ -551,12 +575,12 @@ void AK_print_table(char *tblName) {
             }
             printf("\n");*/
             //print table rows number and time spent to generate table
-            t=clock()-t;
+            t = clock() - t;
 
-            if ((((double)t)/CLOCKS_PER_SEC) < 0.1){
-            	printf("%i rows found, duration: %f μs\n",num_rows, ((double)t)/CLOCKS_PER_SEC*1000);
+            if ((((double) t) / CLOCKS_PER_SEC) < 0.1) {
+                printf("%i rows found, duration: %f μs\n", num_rows, ((double) t) / CLOCKS_PER_SEC * 1000);
             } else {
-            	printf("%i rows found, duration: %f s\n",num_rows, ((double)t)/CLOCKS_PER_SEC);
+                printf("%i rows found, duration: %f s\n", num_rows, ((double) t) / CLOCKS_PER_SEC);
             }
         }
     }
@@ -564,7 +588,6 @@ void AK_print_table(char *tblName) {
 
 char* FILEPATH = "table_test.txt";
 FILE *fp;
-
 
 /**
  * @author Dino Laktašić. 
@@ -575,7 +598,7 @@ FILE *fp;
  * @return printed row spacer
  */
 void AK_print_row_spacer_to_file(int col_len[], int length) {
-    fp = fopen(FILEPATH,"a");
+    fp = fopen(FILEPATH, "a");
     int i, j, col, temp;
 
     j = col = temp = 0;
@@ -601,8 +624,8 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
  * @param *row  list with row elements
  * @return No return value
  */
-void AK_print_row_to_file(int col_len[], AK_list *row) {
-    fp = fopen(FILEPATH,"a");
+void AK_print_row_to_file(int col_len[], AK_list * row) {
+    fp = fopen(FILEPATH, "a");
     AK_list_elem el = (AK_list_elem) Ak_First_L(row);
 
     int i = 0;
@@ -646,11 +669,11 @@ void AK_print_row_to_file(int col_len[], AK_list *row) {
  * @return No return value
  */
 void AK_print_table_to_file(char *tblName) {
-    fp = fopen(FILEPATH,"a");
+    fp = fopen(FILEPATH, "a");
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0) {
         fprintf(fp, "Table %s does not exist!\n", tblName);
-        
+
     } else {
         AK_header *head = AK_get_header(tblName);
 
@@ -697,7 +720,7 @@ void AK_print_table_to_file(char *tblName) {
         length = 0;
         for (i = 0; i < num_attr; length += len[i++]);
         length += num_attr * TBL_BOX_OFFSET + 2 * num_attr + 1;
-    
+
         fprintf(fp, "Table: %s\n", tblName);
 
         if (num_attr <= 0 || num_rows <= 0) {
@@ -706,18 +729,18 @@ void AK_print_table_to_file(char *tblName) {
             //print table header
             fclose(fp);
             AK_print_row_spacer_to_file(len, length);
-            fp = fopen(FILEPATH,"a");
+            fp = fopen(FILEPATH, "a");
             fprintf(fp, "\n|");
 
             for (i = 0; i < num_attr; i++) {
                 //print attributes center aligned inside box
-                k = (len[i] - (int)strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
+                k = (len[i] - (int) strlen((head + i)->att_name) + TBL_BOX_OFFSET + 1);
                 if (k % 2 == 0) {
                     k /= 2;
-                    fprintf(fp, "%-*s%-*s|", k, " ", k + (int)strlen((head + i)->att_name), (head + i)->att_name);
+                    fprintf(fp, "%-*s%-*s|", k, " ", k + (int) strlen((head + i)->att_name), (head + i)->att_name);
                 } else {
                     k /= 2;
-                    fprintf(fp, "%-*s%-*s|", k, " ", k + (int)strlen((head + i)->att_name) + 1, (head + i)->att_name);
+                    fprintf(fp, "%-*s%-*s|", k, " ", k + (int) strlen((head + i)->att_name) + 1, (head + i)->att_name);
                 }
 
                 //print attributes left aligned inside box
@@ -731,7 +754,7 @@ void AK_print_table_to_file(char *tblName) {
 
             i = 0;
             int type, size, address;
-            
+
             while (addresses->address_from[i] != 0) {
                 for (j = addresses->address_from[i]; j < addresses->address_to[i]; j++) {
                     AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
@@ -753,11 +776,11 @@ void AK_print_table_to_file(char *tblName) {
                 }
                 i++;
             }
-            fp = fopen(FILEPATH,"a");
+            fp = fopen(FILEPATH, "a");
             fprintf(fp, "\n");
         }
     }
-    fclose(fp);  
+    fclose(fp);
 }
 
 /**
@@ -804,40 +827,40 @@ int AK_get_table_obj_id(char *table) {
  * @return if success returns num of attributes in schema, else returns EXIT_ERROR
  */
 int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_temp_block, char *operator_name) {
-	int i;
-	int num_att1 = 0;
-	int num_att2 = 0;
-	
-	for (i = 0; i < MAX_ATTRIBUTES; i++) {
-            if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
-                num_att1++;
-            } else {
-                break;
-            }
+    int i;
+    int num_att1 = 0;
+    int num_att2 = 0;
 
-            if (strcmp(tbl2_temp_block->block->header[i].att_name, "\0") != 0) {
-                num_att2++;
-            } else {
-                break;
-            }
-
-            if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
-                printf("%s ERROR: Relation shemas are not the same! \n", operator_name);
-                return EXIT_ERROR;
-            }
-
-            if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
-                printf("%s ERROR: Attributes are not of the same type!", operator_name);
-                return EXIT_ERROR;
-            }
+    for (i = 0; i < MAX_ATTRIBUTES; i++) {
+        if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
+            num_att1++;
+        } else {
+            break;
         }
 
-        if (num_att1 != num_att2) {
-            printf("%s ERROR: Not same number of the attributes! \n", operator_name);
-			return EXIT_ERROR;
+        if (strcmp(tbl2_temp_block->block->header[i].att_name, "\0") != 0) {
+            num_att2++;
+        } else {
+            break;
         }
-		
-		return num_att1;
+
+        if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
+            printf("%s ERROR: Relation shemas are not the same! \n", operator_name);
+            return EXIT_ERROR;
+        }
+
+        if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
+            printf("%s ERROR: Attributes are not of the same type!", operator_name);
+            return EXIT_ERROR;
+        }
+    }
+
+    if (num_att1 != num_att2) {
+        printf("%s ERROR: Not same number of the attributes! \n", operator_name);
+        return EXIT_ERROR;
+    }
+
+    return num_att1;
 }
 
 /**
@@ -850,57 +873,58 @@ int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_tem
  * @return EXIT_ERROR or EXIT_SUCCESS
  */
 int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr) {
-    table_addresses *adresses = (table_addresses *)AK_get_table_addresses(old_table_name);
+    table_addresses *adresses = (table_addresses *) AK_get_table_addresses(old_table_name);
     int tab_addresses[MAX_NUM_OF_BLOCKS];
     int num_extents = 0, num_blocks = 0;
     register int i, j;
     AK_mem_block *mem_block;
     AK_archive_log("AK_rename", old_table_name, old_attr, new_table_name, new_attr); //ARCHIVE_LOG
-	if(strcmp(old_attr, new_attr) != 0){
-		//SEARCH FOR ALL BLOCKS IN SEGMENT
-		i=0;
-		while(adresses->address_from[i]){
-			for (j = adresses->address_from[i]; j <= adresses->address_to[i]; j++) {
-				tab_addresses[num_blocks] = j;
-				num_blocks++;
-			}
-			num_extents++;
-			i++;
-		}
+    if (strcmp(old_attr, new_attr) != 0) {
+        //SEARCH FOR ALL BLOCKS IN SEGMENT
+        i = 0;
+        while (adresses->address_from[i]) {
+            for (j = adresses->address_from[i]; j <= adresses->address_to[i]; j++) {
+                tab_addresses[num_blocks] = j;
+                num_blocks++;
+            }
+            num_extents++;
+            i++;
+        }
 
-		AK_header newHeader[MAX_ATTRIBUTES];
-		mem_block = (AK_mem_block *)AK_get_block(tab_addresses[0]);
-		memcpy(&newHeader, mem_block->block->header, sizeof (mem_block->block->header));
+        AK_header newHeader[MAX_ATTRIBUTES];
+        mem_block = (AK_mem_block *) AK_get_block(tab_addresses[0]);
+        memcpy(&newHeader, mem_block->block->header, sizeof (mem_block->block->header));
 
-		for (i = 0; i < MAX_ATTRIBUTES; i++) {
-			if (strcmp(newHeader[i].att_name, old_attr)==0) {
-				Ak_dbg_messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
-				memset(&newHeader[i].att_name, 0, MAX_ATT_NAME);
-				memcpy(&newHeader[i].att_name, new_attr, strlen(new_attr));
-				break;
-			} else if (strcmp(newHeader[i].att_name, "\0")==0) { //if there is no more attributes
-				Ak_dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: atribute: %s does not exist in this table\n", old_attr);
-				return (EXIT_ERROR);
-			}
-		}
+        for (i = 0; i < MAX_ATTRIBUTES; i++) {
+            if (strcmp(newHeader[i].att_name, old_attr) == 0) {
+                Ak_dbg_messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
+                memset(&newHeader[i].att_name, 0, MAX_ATT_NAME);
+                memcpy(&newHeader[i].att_name, new_attr, strlen(new_attr));
+                break;
+            } else if (strcmp(newHeader[i].att_name, "\0") == 0) { //if there is no more attributes
+                Ak_dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: atribute: %s does not exist in this table\n", old_attr);
+                return (EXIT_ERROR);
+            }
+        }
 
-		//replacing old headers with new ones
-		for (i = 0; i < num_blocks; i++) {
-			mem_block = (AK_mem_block *)AK_get_block(tab_addresses[i]);
-			memcpy(&mem_block->block->header, newHeader, sizeof (AK_header) * MAX_ATTRIBUTES);
-			mem_block->dirty=BLOCK_DIRTY;
-		}
-	}
+        //replacing old headers with new ones
+        for (i = 0; i < num_blocks; i++) {
+            mem_block = (AK_mem_block *) AK_get_block(tab_addresses[i]);
+            memcpy(&mem_block->block->header, newHeader, sizeof (AK_header) * MAX_ATTRIBUTES);
+            mem_block->dirty = BLOCK_DIRTY;
+        }
+    }
 
-    if(strcmp(old_table_name, new_table_name) != 0){//new name is different than old, and old needs to be replaced
+    if (strcmp(old_table_name, new_table_name) != 0) {//new name is different than old, and old needs to be replaced
         AK_list *expr;
-	expr = 0;
-	AK_selection(old_table_name, new_table_name, expr);
-    	AK_delete_segment(old_table_name, SEGMENT_TYPE_TABLE);
+        expr = 0;
+        AK_selection(old_table_name, new_table_name, expr);
+        AK_delete_segment(old_table_name, SEGMENT_TYPE_TABLE);
     }
 
     return EXIT_SUCCESS;
 }
+
 /**
  * @author Unknown
  * @brief Function for testing table abstraction
@@ -945,17 +969,16 @@ void AK_table_test() {
     printf("%s\n", AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
 }
 
-
 /**
-  * @author Mislav Čakarić, edited by Ljubo Barać
-  * @brief Function for rename operator testing (moved from rename.c)
-  * @return No return value
+ * @author Mislav Čakarić, edited by Ljubo Barać
+ * @brief Function for rename operator testing (moved from rename.c)
+ * @return No return value
  */
 void AK_op_rename_test() {
     //printf( "rename_test: Present!\n" );
     printf("\n********** RENAME TEST **********\n\n");
 
-	AK_print_table("AK_relation");
+    AK_print_table("AK_relation");
     AK_rename("student", "weight", "student2", "weight");
     AK_print_table("student2");
     //AK_print_table("student2");
