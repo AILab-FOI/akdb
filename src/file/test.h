@@ -26,6 +26,7 @@
 
 #endif
 
+char* AK_get_table_atribute_types(char* tblName);
 int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type);
 int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _num, int* _type);
 int selection_test(char* src_table, char* dest_table, char** sel_query, int _num, int* _type);

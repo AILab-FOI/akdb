@@ -864,6 +864,10 @@ def AK_print_row(*args):
   return _kalashnikovDB.AK_print_row(*args)
 AK_print_row = _kalashnikovDB.AK_print_row
 
+def AK_table_exist(*args):
+  return _kalashnikovDB.AK_table_exist(*args)
+AK_table_exist = _kalashnikovDB.AK_table_exist
+
 def AK_print_table(*args):
   return _kalashnikovDB.AK_print_table(*args)
 AK_print_table = _kalashnikovDB.AK_print_table
@@ -2425,6 +2429,10 @@ class Observable(_object):
 Observable_swigregister = _kalashnikovDB.Observable_swigregister
 Observable_swigregister(Observable)
 
+
+def AK_get_table_atribute_types(*args):
+  return _kalashnikovDB.AK_get_table_atribute_types(*args)
+AK_get_table_atribute_types = _kalashnikovDB.AK_get_table_atribute_types
 
 def create_header_test(*args):
   return _kalashnikovDB.create_header_test(*args)

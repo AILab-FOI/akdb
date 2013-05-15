@@ -109,52 +109,65 @@ def get_attr_type(value):
 class sql_executor:
 
 	# Insert sa testovima bez unosa
-	def insert_test(self,expr):
-		parser = sql_tokenizer()
-		token = parser.AK_parse_insert_into(expr)
-		insert_attr_values = map(lambda x: x.replace("'",""),list(token.columnValues[0]))
-		insert_attr_types = map(lambda x: get_attr_type(x.replace("'","")),list(token.columnValues[0]))
-		#Dohvatiti listu atributa tablice
-		table_attr_names = ["id_student", "firstname", "lastname", "year", "weight"]
-		#Dohvatiti tipove atributa tablice
-		table_attr_types = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT]
-		errors = dict()
-		# provjera naziva atributa
-		if(token.columns):
-			for index,col in enumerate(list(token.columns[0])):
-				if col not in table_attr_names:
-					errors['nameError' + str(index)] = "table has no attribute " + str(col)
-		#provjera tipova atributa
-		for index,tip in enumerate(insert_attr_types):
-			if insert_attr_types[index] != table_attr_types[index]:
-				errors['typeError' + str(index)] = "type error at index " + str(index)
-		if(len(errors) == 0):
-			# Sve je ok, unesi redak u tablicu
-			print "OK"
-		else:
-			# Ispis errora
-			for k,v in errors.iteritems():
-				print k + ": " + v
-
-	# Insert sa unosom bze testova
 	def insert(self,expr):
 		parser = sql_tokenizer()
 		token = parser.AK_parse_insert_into(expr)
-		attr_values = map(lambda x: x.replace("'",""),list(token.columnValues[0]))
-		attr_types = map(lambda x: get_attr_type(x.replace("'","")),list(token.columnValues[0]))
+		# vrijednosti podataka za unos
+		insert_attr_values = map(lambda x: x.replace("'",""),list(token.columnValues[0]))
+		# tipovi podataka za unos
+		insert_attr_types = map(lambda x: get_attr_type(x.replace("'","")),list(token.columnValues[0]))
+		#Dohvatiti listu atributa tablice
+		table_attr_names = str(ak47.AK_rel_eq_get_atrributes_char(str(token.tableName))).split(";")
+		#Dohvatiti tipove atributa tablice
+		table_attr_types = str(ak47.AK_get_table_atribute_types(str(token.tableName))).split(";")
+		# imena atributa za unos
+		insert_attr_names = table_attr_names
+		# navedeni su atributi za unos
 		if(token.columns):
-			attr_names = list(token.columns[0])
+			insert_attr_names = []
+			table_types_temp = table_attr_types
+			table_attr_types = []
+			insert_columns = list(token.columns[0])
+			for index,col in enumerate(insert_columns):
+				if col not in table_attr_names:
+					print "Error: table has no attribute " + str(col)
+					return False
+			#provjera atributa za unos
+			for ic,col in enumerate(insert_columns):
+				for ia,tab in enumerate(table_attr_names):
+					if col == tab:
+						insert_attr_names.append(tab)
+						table_attr_types.append(int(table_types_temp[ia]))
+			
+			if (len(insert_columns) == len(insert_attr_values)):
+				for index,tip in enumerate(insert_attr_types):
+					if int(insert_attr_types[index]) != int(table_attr_types[index]):
+						print "Error: type error at index " + str(index)
+						return False
+			else:
+				print "Error: attribute names number not matching attribute values number"
+				return False
+		# navedene su samo vrijednosti za unsot
+		elif (len(table_attr_names) < len(insert_attr_values)):
+			print "Error: too many attibutes, table has " + str(len(table_attr_names)) 
+			return False
+		elif (len(table_attr_names) > len(insert_attr_values)):
+			print "Error: too few attibutes, table has " + str(len(table_attr_names))
+			return False
 		else:
-			attr_names = str(ak47.AK_rel_eq_get_atrributes_char("student")).split(";")
-		ak47.insert_data_test(str(token.tableName),attr_names,attr_values,attr_types)
+			for index,tip in enumerate(insert_attr_types):
+				if insert_attr_types[index] != int(table_attr_types[index]):
+					print "Error: type error at index " + str(index)
+					return False
+		if(ak47.insert_data_test(str(token.tableName),insert_attr_names,insert_attr_values,insert_attr_types) == ak47.EXIT_SUCCESS):
+			return True
+		else:
+			return False
+		return False
 
-# Testiranje insert_test
+# Testiranje insertcd 
 
 bulbasaur = sql_executor()
-bulbasaur.insert_test("INSERT INTO student VALUES ('2', 'Pero', 'Peric','1991','100.2')")
-bulbasaur.insert_test("INSERT INTO student(id_student, firstname, lastname, year, weight) VALUES ('2', 'Ivo', 'Ivic','2002','90.2')")
-
-# Testiranje insert
 
 ak47.AK_inflate_config()
 ak47.AK_init_disk_manager()
@@ -165,10 +178,10 @@ student_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.T
 
 ak47.create_header_test("student", student_attr_name, student_attr_type)
 
-charizard = sql_executor()
-charizard.insert("INSERT INTO student VALUES ('2', 'Pero', 'Peric','1991','100.2')")
-charizard.insert("INSERT INTO student(id_student, firstname, lastname, year, weight) VALUES ('3', 'Ivo', 'Ivic','2002','90.2')")
-charizard.insert("INSERT INTO student VALUES ('4', 'Marko', 'Maric','1986','80.2')")
-charizard.insert("INSERT INTO student VALUES ('5', 'Josip', 'Josic','1989','102.2')")
-
+print "pero: " + str(bulbasaur.insert("INSERT INTO student VALUES ('2','Pero','Peric','1991','100.2')"))
+print "ivo: " + str(bulbasaur.insert("INSERT INTO student(id_student,firstname,lastname, year, weight) VALUES ( '3','Ivo','Ivic','2002','90.2')"))
+print "marko: " + str(bulbasaur.insert("INSERT INTO student VALUES ('4','Marko','2','1998','80.3')"))
+print "luka: " + str(bulbasaur.insert("INSERT INTO student(id_student,firstname,lastname, yearz, weight) VALUES ( '5','Luka','Lukic','1989','80.2')"))
 ak47.AK_print_table("student")
+
+

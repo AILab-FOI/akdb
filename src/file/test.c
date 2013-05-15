@@ -18,12 +18,62 @@
  17 */
 
 #include <pthread.h>
-
+#include <stdio.h>
 #include "test.h"
 #include "../trans/transaction.h"
 #include "../file/table.h"
 #include "../auxi/auxiliary.h"
 #include "../opti/rel_eq_comut.h"
+
+
+/**
+ * @author Goran Štrok
+ * \brief Function for getting table attribute types
+ *
+ */
+
+char* AK_get_table_atribute_types(char* tblName){
+    int len_attr, num_attr, next_attr, attr_type;
+    int next_address = 0;
+    char attr_name[4];
+
+    num_attr = AK_num_attr(tblName);
+
+    if (num_attr == -1) {
+        return NULL;
+    }
+
+    char *attr = (char *) calloc(1, sizeof (char));
+    AK_header *table_header = (AK_header *) AK_get_header(tblName);
+
+    for (next_attr = 0; next_attr < num_attr; next_attr++) {
+        
+        attr_type = (table_header + next_attr)->type;
+        
+        len_attr = sprintf(attr_name,"%d",attr_type);
+
+        attr = (char *) realloc(attr, len_attr + next_address + 1);
+        memcpy(attr + next_address, attr_name, len_attr);
+        next_address += len_attr;
+
+        if (next_attr < num_attr - 1) {
+            memcpy(attr + next_address, ATTR_DELIMITER, 1);
+            next_address++;
+        } else {
+            memcpy(attr + next_address, "\0", 1);
+        }
+       
+    }
+
+    free(table_header);
+    
+    if (next_address > 0) {
+        return attr;
+    } else {
+        free(attr);
+        return NULL;
+    }
+}
 
 /**
  * @author Luka Rajcevic
