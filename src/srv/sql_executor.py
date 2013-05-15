@@ -108,7 +108,7 @@ def get_attr_type(value):
 
 class sql_executor:
 
-	# Insert sa testovima bez unosa
+	# Insert
 	def insert(self,expr):
 		parser = sql_tokenizer()
 		token = parser.AK_parse_insert_into(expr)
