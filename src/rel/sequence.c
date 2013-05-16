@@ -174,6 +174,27 @@ int AK_sequence_next_value(char *name){
     return next_value;
 }
 
+/**
+ * @author Ljubo Barać
+ * @brief Function gets sequence id
+ * @param name Name of the sequence
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
+int AK_sequence_get_id(char *name){
+    int i = 0;
+    AK_list *row;
+	while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL) {
+		if (strcmp(row->next->next->data, name) == 0) {
+			i = (int) * row->next->data;
+			free(row);
+			return i;
+		}
+		i++;
+	}
+	free(row);
+	return EXIT_ERROR;
+}
+
 
 /**
  * @author Boris Kišić
@@ -186,17 +207,12 @@ int AK_sequence_rename(char *old_name, char *new_name){
     printf("\n***Rename sequence***");
     int i = 0;
     int seq_id = -1;
-    AK_list *row;
-    while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
-        if (strcmp(row->next->next->data, old_name) == 0) {
-            memcpy(&seq_id, row->next->data, sizeof (int));
-	    break;
-        }
-        i++;
-    }
     
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+    int seq_id = AK_sequence_get_id(old_name);
+    
+    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root); 
+
     Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_sequence", "name", row_root, 0);
     int result =  Ak_update_row(row_root); 
@@ -212,7 +228,7 @@ int AK_sequence_rename(char *old_name, char *new_name){
 }
 
 /**
- * @author Boris Kišić
+ * @author Boris Kišić fixed by Ljubo Barać
  * @brief Function for modifying sequence
  * @param name Name of the sequence
  * @param start_value start value of the sequence
@@ -257,7 +273,7 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
 }
 
 /**
- * @author Boris Kišić
+ * @author Boris Kišić fixed by Ljubo Barać
  * @brief Function for sequences testing.
  * @return No return value
  */

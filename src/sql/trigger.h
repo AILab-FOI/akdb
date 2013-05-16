@@ -36,4 +36,5 @@ int AK_trigger_remove_by_name(char *name, char *table) ;
 int AK_trigger_remove_by_obj_id(int obj_id);
 int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, char* function);
 AK_list *AK_trigger_get_conditions(int trigger);
+int AK_trigger_rename(char *old_name, char *new_name, char *table);
 void AK_trigger_test();

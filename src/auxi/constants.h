@@ -380,6 +380,12 @@
 */
 #define ABORT 0
 
+/**
+ * @def NEW_ID
+ * @brief Constant declaring if new obj_id should be created
+*/
+#define NEW_ID 0
+
 
 #endif
 

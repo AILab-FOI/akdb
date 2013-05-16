@@ -25,21 +25,18 @@
  * @param password password of user to be added
  * @return user_id
  */
-int AK_user_add(char *username, int password){	
-	int user_id;
+int AK_user_add(char *username, int password, int set_id){	
 
-	AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-	Ak_Init_L(row_root);
-	
-	user_id = AK_get_id();
-	Ak_Insert_New_Element(TYPE_INT, &user_id, "AK_user", "obj_id", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, username, "AK_user", "username", row_root);
-	Ak_Insert_New_Element(TYPE_INT, &password, "AK_user", "password", row_root);
-	Ak_insert_row(row_root);
-
-	free(row_root);
-	AK_archive_log("AK_user_add", username); //ARCHIVE_LOG
-	return user_id;
+    char *tblName = "AK_user";
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root);
+    int user_id = AK_get_id();
+    if(set_id!=0) user_id = set_id;
+    Ak_Insert_New_Element(TYPE_INT, &user_id, tblName, "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, username, tblName, "username", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &password, tblName, "password", row_root);
+    Ak_insert_row(row_root);
+    return user_id;
 }
 
 /**
@@ -63,26 +60,64 @@ int AK_user_get_id(char *username) {
 	return EXIT_ERROR;
 }
 
+
 /**
- * @author Kristina Takač.
+ * @author Ljubo Barać
+ * @brief Function removes the user.
+ * @param name Name of the user to be removed
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
+int AK_user_remove_by_name(char *name){
+   AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+   Ak_Init_L((AK_list_elem)row_root);
+   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_user", "username", row_root, 1);
+   int result = Ak_delete_row(row_root);
+   return result;
+}
+
+/**
+ * @author Ljubo Barać
+ * @brief Function renames the user.
+ * @param old_name Name of the user to be renamed
+ * @param new_name New name of the user
+ * @param password Password of the user to be renamed (should be provided)
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
+int AK_user_rename(char *old_name, char *new_name, int *password){
+ 
+	printf("\n***Rename group***");
+	   int result = 0, i = 0;
+	   int user_id = AK_user_get_id(old_name);
+	   char *query;
+	   AK_list *row;
+	   
+	   result = AK_user_remove_by_name(old_name);
+	   char *tblName = "AK_user";
+	   result = AK_user_remove_by_name(old_name);
+	   result = AK_user_add(new_name,password,user_id);
+	   return result;
+
+}
+
+
+/**
+ * @author Kristina Takač, edited by Ljubo Barać
  * @brief Function that inserts group in table AK_group
  * @param *name name of group to be added
+ * @param set_id non default id to be passed
  * @return id of group                                                      
 */
-int AK_group_add(char *name){	
-	int group_id;
+int AK_group_add(char *name, int set_id){	
 
-	AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-	Ak_Init_L(row_root);
-
-	group_id = AK_get_id();
-	Ak_Insert_New_Element(TYPE_INT, &group_id, "AK_group", "obj_id", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, name, "AK_group", "name", row_root);
-	Ak_insert_row(row_root);
-
-	free(row_root);
-	AK_archive_log("AK_group_add", name); //ARCHIVE_LOG
-	return group_id;
+    char *tblName = "AK_group";
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root);
+    int group_id = AK_get_id();
+    if(set_id!=0) group_id = set_id;
+    Ak_Insert_New_Element(TYPE_INT, &group_id, tblName, "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, name, tblName, "name", row_root);
+    Ak_insert_row(row_root);
+    return group_id;
 }
 
 /**
@@ -104,6 +139,41 @@ int AK_group_get_id(char *name) {
 	}
 	free(row);
 	return EXIT_ERROR;
+}
+
+/**
+ * @author Ljubo Barać
+ * @brief Function removes the group.
+ * @param name Name of the group to be removed
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
+int AK_group_remove_by_name(char *name){
+   AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+   Ak_Init_L((AK_list_elem)row_root);
+   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_group", "name", row_root, 1);
+   int result = Ak_delete_row(row_root);
+   return result;
+}
+
+/**
+ * @author Ljubo Barać
+ * @brief Function renames the group.
+ * @param old_name Name of the group to be renamed
+ * @param new_name New name of the group
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
+int AK_group_rename(char *old_name, char *new_name){
+    printf("\n***Rename group***");
+	   int result = 0, i = 0;
+	   int view_id = AK_group_get_id(old_name);
+	   char *query;
+	   AK_list *row;
+	   
+	   result = AK_group_remove_by_name(old_name);
+	   char *tblName = "AK_group";
+	   result = AK_group_remove_by_name(old_name);
+	   result = AK_group_add(new_name,view_id);
+	   return result;
 }
 
 /**

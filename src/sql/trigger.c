@@ -283,6 +283,39 @@ AK_list *AK_trigger_get_conditions(int trigger) {
     free(row);
     return result;
 }
+
+/**
+* @author Ljubo Barać
+* @brief Function renames the trigger
+* @param old_name Name of the trigger to be renamed
+* @param new_name New name of the trigger
+* @return EXIT_SUCCESS or EXIT_ERROR
+*/
+int AK_trigger_rename(char *old_name, char *new_name, char *table){
+	printf("\n***Rename trigger***\n");
+
+	int trig_id = AK_trigger_get_id(old_name, table);
+
+	AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+	Ak_Init_L(row_root); 
+
+	Ak_Insert_New_Element_For_Update(TYPE_INT, &trig_id, "AK_trigger", "obj_id", row_root, 1);
+	Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_trigger", "name", row_root, 0);
+
+	int result =  Ak_update_row(row_root); 
+	Ak_DeleteAll_L(row_root);
+	free(row_root);
+	    
+	if (result == EXIT_ERROR) {
+	   Ak_dbg_messg(HIGH, SEQUENCES, "AK_trigger_rename: Could not rename trigger.\n");
+	   return EXIT_ERROR;
+	   }
+
+	return EXIT_SUCCESS;
+}
+
+
+
 /**
  * @author Unknown
  * @brief Function for trigger testing
