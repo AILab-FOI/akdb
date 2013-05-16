@@ -99,7 +99,9 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
             tblName = (char*) drop_arguments->value;
             sys_table = "AK_view";
 
-            if (!AK_if_exist(tblName, sys_table) == 0) {
+            if ((AK_table_empty(sys_table)) || (AK_if_exist(tblName, sys_table) == 0)) {
+                printf("View %s does not exist!\n", tblName);
+            } else {
                 //AK_drop_helper_function(tblName, sys_table);
                 AK_view_remove_by_name(tblName);
                 printf("VIEW %s DROPPED!\n", tblName);
@@ -261,35 +263,37 @@ int AK_if_exist(char *tblName, char *sys_table) {
 }
 
 void AK_drop_test() {
-    printf("=============================================\n");
-    printf("==================DROP_TEST==================\n");
+    printf("=========================================================\n");
+    printf("========================DROP_TEST========================\n");
     AK_print_table("AK_relation");
     AK_drop_arguments *drop_arguments = malloc(sizeof (AK_drop_arguments));
+    // drop table
     drop_arguments->value = "department";
     AK_drop(DROP_TABLE, drop_arguments);
     AK_print_table("department");
     AK_print_table("AK_relation");
-    drop_arguments->value = "AK_index";
+    // drop system catalog
+    drop_arguments->value = "AK_attribute";
     AK_drop(DROP_TABLE, drop_arguments);
-    AK_print_table("AK_index");
+    AK_print_table("AK_attribute");
     AK_print_table("AK_relation");
+    // drop view
     AK_print_table("AK_view");
     drop_arguments->value = "view300";
-    //AK_drop(DROP_VIEW, drop_arguments);
-    printf("Obj_id za view300: %d\n", AK_get_view_obj_id("view300"));
-    printf("Query za view300: %s\n\n", AK_get_view_query("view300"));
-    printf("Rel_exp za view300: %s\n\n", AK_get_rel_exp("view300"));
     AK_drop(DROP_VIEW, drop_arguments);
-    //printf("Obj_id za view300: %d\n", AK_get_view_obj_id("view300"));
-    //printf("Query za view300: %s\n\n", AK_get_view_query("view300"));
-    //printf("Rel_exp za view300: %s\n\n", AK_get_rel_exp("view300"));
+    if (AK_if_exist("view300", "AK_view") != 0) {
+        printf("Obj_id za view300: %d\n", AK_get_view_obj_id("view300"));
+        printf("Query za view300: %s\n", AK_get_view_query("view300"));
+        printf("Rel_exp za view300: %s\n\n", AK_get_rel_exp("view300"));
+    }
+    AK_drop(DROP_VIEW, drop_arguments);
     AK_print_table("AK_view");
-    AK_print_table("AK_relation");
+    // drop index
     drop_arguments->value = "student_hash_index";
     AK_print_table("student_hash_index");
     AK_drop(DROP_INDEX, drop_arguments);
     AK_print_table("student_hash_index");
     AK_print_table("AK_index");
     AK_print_table("AK_relation");
-    printf("================END_DROP_TEST================\n");
+    printf("======================END_DROP_TEST======================\n");
 }
