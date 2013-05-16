@@ -8,6 +8,7 @@ ak47.AK_init_disk_manager()
 ak47.AK_memoman_init()
 
 
+
 bulbasaur = sql_executor()
 
 student_attr_name = ["id_student", "firstname", "lastname", "year", "weight"]
@@ -19,7 +20,9 @@ ak47.create_header_test("student", student_attr_name, student_attr_type)
 
 print "\n------------------------------------ INSERT INTO TEST ------------------------------------\n"
 
-print "pero: " + str(bulbasaur.insert("INSERT INTO student VALUES ('2','Pero','Peric','1991','100.2')"))
-print "ivo: " + str(bulbasaur.insert("INSERT INTO student(id_student,firstname,lastname, year, weight) VALUES ( '3','Ivo','Ivic','2002','90.2')"))
+print bulbasaur.insert("INSERT INTO student VALUES ('mbr','Pero','Peric','1991','100.2')")
+print bulbasaur.insert("INSERT INTO student(id_student, firstname, lastname, year, weight) VALUES ( '2','Ivo','3','2002','90.2')")
+
+print "\n------------------------------------ PRINT TABLE STUDENT ------------------------------------\n"
 
 ak47.AK_print_table("student")

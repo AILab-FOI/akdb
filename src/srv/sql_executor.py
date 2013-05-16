@@ -9,14 +9,17 @@ import kalashnikovDB as ak47
 import test
 import re
 
+
+
 def main_test():
 	ak47.AK_inflate_config()
 	ak47.AK_init_disk_manager()
 	ak47.AK_memoman_init()
 
 
-# Helper function to determine number type
-
+## is_numeric
+# returns int or float value based on input type
+# @param lit the value to be checked
 def is_numeric(lit):
     # Handle '0'
     if lit == '0': return 0
@@ -42,8 +45,9 @@ def is_numeric(lit):
     except ValueError:
         pass
 
-# Helper function to determine if the string of DATE type
-
+## is_date
+# returns true if the input value is in date format
+# @param lit the value to be checked
 def is_date(lit):
 	try:
 	  time.strptime(lit, '%Y-%m-%d')
@@ -51,8 +55,9 @@ def is_date(lit):
 	except ValueError:
 	  return False
 
-# Helper function to determine if the string of DATETIME type
-
+## is_datetime
+# returns true if the input value is in datetime format
+# @param lit the value to be checked
 def is_datetime(lit):
 	returnVal = 2
 	try:
@@ -70,8 +75,9 @@ def is_datetime(lit):
 	else:
 		return False
 
-# Helper function to determine if the string of TIME type
-
+## is_time
+# returns true if the input value is in time format
+# @param lit the value to be checked
 def is_time(lit):
 	try:
 		time.strptime(lit, '%H:%M:%S')
@@ -79,13 +85,15 @@ def is_time(lit):
 	except ValueError:
 		return False
 
-# Helper function to determine if the string of BOOL type
-
+## is_bool
+# returns true if the input value is boolean
+# @param lit the value to be checked
 def is_bool(lit):
 	return lit.lower() in ("true","false")
 
-# Return attribute type
-
+## get_attr_type
+# returns value type code in ak47 notation defined in constants.c
+# @param value the value to be checked
 def get_attr_type(value):
 
 	integer = type(is_numeric(value)) == int
@@ -112,6 +120,36 @@ def get_attr_type(value):
 		return ak47.TYPE_VARCHAR
 	else:
 		print "UNDEFINED"
+
+## get_type_name
+# returns type name for supplied type code in ak47 notation defined in constants.c
+# @param code the type code to be checked
+def get_type_name(code):
+
+	if code == ak47.TYPE_INT:
+		return "int"
+	elif code == ak47.TYPE_FLOAT:
+		return "float"
+	elif code == ak47.TYPE_DATE:
+		return "date"
+	elif code == ak47.TYPE_DATETIME:
+		return "datetime"
+	elif code == ak47.TYPE_TIME:
+		return "time"
+	elif code == ak47.TYPE_BOOL:
+		return "boolean"
+	elif code == ak47.TYPE_VARCHAR:
+		return "varchar"
+	else:
+		return "UNDEFINED"
+
+## akdbError
+# prints expression expr and a pointer at the position of error item
+# @param expr the expression to be printed
+# @param item item where the error occured
+def akdbError(expr,item):
+	print expr
+	print " " * expr.index(item) + "^"
 
 class Print_table_command:
 
@@ -144,7 +182,8 @@ class Table_details_command:
 		result = "Number of attributes: " + str(ak47.AK_num_attr(self.matcher.group(1)))
 		result += "\nNumber od records: " + str(ak47.AK_get_num_records(self.matcher.group(1)))
 		return result
-
+## sql_executor
+# contaions methods for sql operations
 class sql_executor:
 
 	print_command =  Print_table_command()
@@ -161,7 +200,10 @@ class sql_executor:
 	def execute(self, command):
 		return self.commands_for_input(command)
 
-	# Insert
+	## insert
+	# executes the insert expression
+	# @param self object pointer
+	# @parama expr the expression to be executed 
 	def insert(self,expr):
 		parser = sql_tokenizer()
 		token = parser.AK_parse_insert_into(expr)
@@ -183,34 +225,45 @@ class sql_executor:
 			insert_columns = list(token.columns[0])
 			for index,col in enumerate(insert_columns):
 				if col not in table_attr_names:
-					print "Error: table has no attribute " + str(col)
+					print "\nError: table has no attribute " + str(col) + ":"
+					akdbError(expr,col)
 					return False
 			#provjera atributa za unos
 			for ic,col in enumerate(insert_columns):
 				for ia,tab in enumerate(table_attr_names):
 					if col == tab:
-						insert_attr_names.append(tab)
-						table_attr_types.append(int(table_types_temp[ia]))
+						if tab not in insert_attr_names:
+							insert_attr_names.append(tab)
+							table_attr_types.append(int(table_types_temp[ia]))
+						else:
+							print "\nError: duplicate attribute " + tab + ":"
+							akdbError(expr,tab)
+							return False
 
 			if (len(insert_columns) == len(insert_attr_values)):
 				for index,tip in enumerate(insert_attr_types):
 					if int(insert_attr_types[index]) != int(table_attr_types[index]):
-						print "Error: type error at index " + str(index)
+						type_name = get_type_name(int(table_attr_types[index]))
+						print "\nError: type error for attribute " + insert_attr_names[index] + ", " + type_name + " expected:"
+						akdbError(expr,insert_attr_values[index])
 						return False
 			else:
-				print "Error: attribute names number not matching attribute values number"
+				print "\nError: attribute names number not matching attribute values number supplied for table " + str(token.tableName) + ":"
+				akdbError(expr,insert_columns[0])
 				return False
 		# navedene su samo vrijednosti za unos
 		elif (len(table_attr_names) < len(insert_attr_values)):
-			print "Error: too many attibutes, table has " + str(len(table_attr_names)) 
+			print "\nError: too many attibutes, table " + str(token.tableName) + " has " + str(len(table_attr_names)) 
 			return False
 		elif (len(table_attr_names) > len(insert_attr_values)):
-			print "Error: too few attibutes, table has " + str(len(table_attr_names))
+			print "\nError: too few attibutes, table " + str(token.tableName) + " has " + str(len(table_attr_names))
 			return False
 		else:
 			for index,tip in enumerate(insert_attr_types):
 				if insert_attr_types[index] != int(table_attr_types[index]):
-					print "Error: type error at index " + str(index)
+					type_name = get_type_name(int(table_attr_types[index]))
+					print "\nError: type error for attribute " + insert_attr_names[index] + ", " + type_name + " expected:"
+					akdbError(expr,insert_attr_values[index])
 					return False
 		if(ak47.insert_data_test(str(token.tableName),insert_attr_names,insert_attr_values,insert_attr_types) == ak47.EXIT_SUCCESS):
 			return True

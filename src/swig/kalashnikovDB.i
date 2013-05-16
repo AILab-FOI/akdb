@@ -351,6 +351,8 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
 
   #include "../sql/command.c"
   #include "../sql/command.h"
+  #include "../sql/select.c"
+  #include "../sql/select.h"
 
   #include "../auxi/iniparser.c"
   #include "../auxi/iniparser.h"

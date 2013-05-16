@@ -28,14 +28,14 @@
 
 /**
  * @author Goran Štrok
- * \brief Function for getting table attribute types
- *
+ * @brief returns a string containing attribute types for supplied table name, seperated by ATTR_DELIMITER
+ * @param tblName name of the table for which the attribute types will be returned
  */
 
 char* AK_get_table_atribute_types(char* tblName){
     int len_attr, num_attr, next_attr, attr_type;
     int next_address = 0;
-    char attr_name[4];
+    char attr_buffer[4];
 
     num_attr = AK_num_attr(tblName);
 
@@ -50,10 +50,10 @@ char* AK_get_table_atribute_types(char* tblName){
         
         attr_type = (table_header + next_attr)->type;
         
-        len_attr = sprintf(attr_name,"%d",attr_type);
+        len_attr = sprintf(attr_buffer,"%d",attr_type);
 
         attr = (char *) realloc(attr, len_attr + next_address + 1);
-        memcpy(attr + next_address, attr_name, len_attr);
+        memcpy(attr + next_address, attr_buffer, len_attr);
         next_address += len_attr;
 
         if (next_attr < num_attr - 1) {
