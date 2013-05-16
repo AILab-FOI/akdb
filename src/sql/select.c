@@ -118,7 +118,7 @@ Ak_Init_L(atributi);
 AK_list *uvjet = (AK_list *) malloc(sizeof (AK_list));
 Ak_Init_L(uvjet);
 
-int num = 2023;
+int num = 2005;
 
 char *srcTable="student";
 char *destTable="select_result";
@@ -129,9 +129,9 @@ Ak_InsertAtEnd_L(TYPE_ATTRIBS, "weight", sizeof ("weight"), atributi);
 
 Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), uvjet);
 Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), uvjet);
-Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", sizeof (">"), uvjet);
+Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), uvjet);
 
-printf("\n SELECT firstname,year,weight FROM student WHERE year>2023;\n\n");
+printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
 
 AK_select(srcTable,destTable,atributi,uvjet);
 Ak_DeleteAll_L(atributi);
