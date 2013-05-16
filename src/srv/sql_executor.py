@@ -147,7 +147,7 @@ class sql_executor:
 			else:
 				print "Error: attribute names number not matching attribute values number"
 				return False
-		# navedene su samo vrijednosti za unsot
+		# navedene su samo vrijednosti za unos
 		elif (len(table_attr_names) < len(insert_attr_values)):
 			print "Error: too many attibutes, table has " + str(len(table_attr_names)) 
 			return False
@@ -164,24 +164,3 @@ class sql_executor:
 		else:
 			return False
 		return False
-
-# Testiranje insertcd 
-
-bulbasaur = sql_executor()
-
-ak47.AK_inflate_config()
-ak47.AK_init_disk_manager()
-ak47.AK_memoman_init()
-
-student_attr_name = ["id_student", "firstname", "lastname", "year", "weight"]
-student_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT]
-
-ak47.create_header_test("student", student_attr_name, student_attr_type)
-
-print "pero: " + str(bulbasaur.insert("INSERT INTO student VALUES ('2','Pero','Peric','1991','100.2')"))
-print "ivo: " + str(bulbasaur.insert("INSERT INTO student(id_student,firstname,lastname, year, weight) VALUES ( '3','Ivo','Ivic','2002','90.2')"))
-print "marko: " + str(bulbasaur.insert("INSERT INTO student VALUES ('4','Marko','2','1998','80.3')"))
-print "luka: " + str(bulbasaur.insert("INSERT INTO student(id_student,firstname,lastname, yearz, weight) VALUES ( '5','Luka','Lukic','1989','80.2')"))
-ak47.AK_print_table("student")
-
-
