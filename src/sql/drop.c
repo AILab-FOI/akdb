@@ -272,7 +272,7 @@ void AK_drop_test() {
     AK_drop(DROP_TABLE, drop_arguments);
     AK_print_table("department");
     AK_print_table("AK_relation");
-    // drop system catalog
+    // drop system catalog table
     drop_arguments->value = "AK_attribute";
     AK_drop(DROP_TABLE, drop_arguments);
     AK_print_table("AK_attribute");
@@ -281,19 +281,19 @@ void AK_drop_test() {
     AK_print_table("AK_view");
     drop_arguments->value = "view300";
     AK_drop(DROP_VIEW, drop_arguments);
-    if (AK_if_exist("view300", "AK_view") != 0) {
-        printf("Obj_id za view300: %d\n", AK_get_view_obj_id("view300"));
-        printf("Query za view300: %s\n", AK_get_view_query("view300"));
-        printf("Rel_exp za view300: %s\n\n", AK_get_rel_exp("view300"));
-    }
-    AK_drop(DROP_VIEW, drop_arguments);
     AK_print_table("AK_view");
-    // drop index
+    // drop hash index
     drop_arguments->value = "student_hash_index";
-    AK_print_table("student_hash_index");
+    AK_print_table("AK_index");
+    // AK_print_table("student_hash_index");
     AK_drop(DROP_INDEX, drop_arguments);
     AK_print_table("student_hash_index");
+    // drop hash index
+    drop_arguments->value = "assistantfirstname_bmapIndex";
     AK_print_table("AK_index");
-    AK_print_table("AK_relation");
+    // AK_print_table("assistantfirstname_bmapIndex");
+    AK_drop(DROP_INDEX, drop_arguments);
+    AK_print_table("assistantfirstname_bmapIndex");
+    AK_print_table("AK_index");
     printf("======================END_DROP_TEST======================\n");
 }
