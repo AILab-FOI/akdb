@@ -4,9 +4,11 @@
 # and it runs indefinitely
 # currently it needs to be turned off manually ctrl+c
 
-
+import sys
+sys.path.append('../swig/')
 import SocketServer
 import time
+import kalashnikovDB as ak47
 import sql_executor as sqle
 
 class AK_server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
@@ -53,8 +55,6 @@ class AK_server_request_handler(SocketServer.BaseRequestHandler):
             return command
         else:
             return self.executor.execute(command)
-        
-
 
 if __name__ == "__main__":
     ip = "localhost"

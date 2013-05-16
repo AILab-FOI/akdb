@@ -1455,10 +1455,20 @@ def AK_op_selection_test_redolog():
   return _kalashnikovDB.AK_op_selection_test_redolog()
 AK_op_selection_test_redolog = _kalashnikovDB.AK_op_selection_test_redolog
 DROP_TABLE = _kalashnikovDB.DROP_TABLE
+DROP_INDEX = _kalashnikovDB.DROP_INDEX
+DROP_VIEW = _kalashnikovDB.DROP_VIEW
 
 def AK_drop(*args):
   return _kalashnikovDB.AK_drop(*args)
 AK_drop = _kalashnikovDB.AK_drop
+
+def AK_drop_helper_function(*args):
+  return _kalashnikovDB.AK_drop_helper_function(*args)
+AK_drop_helper_function = _kalashnikovDB.AK_drop_helper_function
+
+def AK_if_exist(*args):
+  return _kalashnikovDB.AK_if_exist(*args)
+AK_if_exist = _kalashnikovDB.AK_if_exist
 
 def AK_drop_test():
   return _kalashnikovDB.AK_drop_test()

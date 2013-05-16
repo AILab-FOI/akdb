@@ -9,6 +9,12 @@ import kalashnikovDB as ak47
 import test
 import re
 
+def main_test():
+	ak47.AK_inflate_config()
+	ak47.AK_init_disk_manager()
+	ak47.AK_memoman_init()
+
+
 # Helper function to determine number type
 
 def is_numeric(lit):
@@ -115,18 +121,36 @@ class Print_table_command:
 
 	def matches(self, input):
 		self.pattern = re.compile(self.print_regex)
-		print self.pattern
 		self.matcher = self.pattern.match(input)
-		print self.matcher
 		return self.matcher != None
 
 	def execute(self):
-		return ak47.AK_print_table_to_file(self.matcher.group(1))
+		ak47.AK_print_table(self.matcher.group(1))
+		return "OK"
+
+class Table_details_command:
+
+	table_details_regex = r"^\\d\s+([a-zA-Z0-9_]+)\s*$"
+	pattern = None
+	matcher = None
+
+	def matches(self, input):
+		self.pattern = re.compile(self.table_details_regex)
+		self.matcher = self.pattern.match(input)
+		return self.matcher != None
+
+	def execute(self):
+		print "Printing out: "
+		result = "Number of attributes: " + str(ak47.AK_num_attr(self.matcher.group(1)))
+		result += "\nNumber od records: " + str(ak47.AK_get_num_records(self.matcher.group(1)))
+		return result
 
 class sql_executor:
 
 	print_command =  Print_table_command()
-	commands = [print_command]
+	table_details_command = Table_details_command()
+
+	commands = [print_command, table_details_command]
 
 	def commands_for_input(self, command):
 		for elem in self.commands:
@@ -135,7 +159,6 @@ class sql_executor:
 		return "Wrong command."
 
 	def execute(self, command):
-		print command
 		return self.commands_for_input(command)
 
 	# Insert

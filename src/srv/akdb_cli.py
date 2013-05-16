@@ -4,10 +4,11 @@
 # and start sending the commands
 # you have an in-app help that you can raise up with \?,
 # and you can easily disconnect and exit with \q.
-
 import cmd
 import socket
 import colors
+import sql_executor as sqle
+from test import *
 
 welcome_note =  '''Welcome to the AKDB client. Enter your commands in the command line.
 
@@ -23,6 +24,8 @@ client_specific_commands = ["", "\?", "history"]
 #update this list when new commands are added
 command_list =  {'\q': 'Disconnect from the server and quit akdb client.',
 				 '\?': 'List all commands supported in akdb.',
+				 '\d <table_name>' : 'Prints out table details',
+				 '\p <table_name>' : 'Prints out table',
 				 'history': 'List all previously typed commands.'
 				}
 
@@ -162,5 +165,6 @@ class AK_client():
 cli = AK_client()
 
 if __name__ == "__main__":
+	sqle.main_test()
 	cli.AK_client_connect(ip, port, buffer_size)
 

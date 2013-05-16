@@ -12,7 +12,6 @@ class Functions:
 
     def insert_data(self, table, attr_name, attr_value, attr_type):
         return ak47.insert_data_test(table, attr_name, attr_value, attr_type)
-    
 
     def update_Row(self, table, column1, column2, key, new_value):
         element = ak47.list_elem()
@@ -193,7 +192,7 @@ class Functions:
         else:
             return -1
 
-# call to main.c from python (invoking AK_create_test_tables) 
+# call to main.c from python (invoking AK_create_test_tables)
 #ak47.main()
 f = Functions()
 ak47.AK_inflate_config()
@@ -253,8 +252,6 @@ class_3_attr_value_4 = ["4", "Urban Design", "2000", "Spanish"]
 # methods, so this function is made to be called on start of every test (except insert test))
 
 def create_tables():
-    #initialize memory
-    
     #create student table and insert data
     ak47.create_header_test("student", student_attr_name, student_attr_type)
     ak47.insert_data_test("student", student_attr_name, student_attr_value_1, student_attr_type)
@@ -279,14 +276,12 @@ def create_tables():
     ak47.insert_data_test("class_2", class_2_attr_name, class_2_attr_value_2, class_2_attr_type)
     ak47.insert_data_test("class_2", class_2_attr_name, class_2_attr_value_3, class_2_attr_type)
     ak47.insert_data_test("class_2", class_2_attr_name, class_2_attr_value_4, class_2_attr_type)
-    
     #create class_3 table and insert data
     ak47.create_header_test("class_3", class_3_attr_name, class_3_attr_type)
     ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_1, class_3_attr_type)
     ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_2, class_3_attr_type)
     ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_3, class_3_attr_type)
     ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_4, class_3_attr_type)
-    
     return 1
 
 create_tables()
@@ -410,6 +405,12 @@ def rel_algebra_test():
 #
 # Tests give 3 failures (after update, delete and intersect)
 #
+
+def test_main():
+    ak47.AK_inflate_config()
+    ak47.AK_init_disk_manager()
+    ak47.AK_memoman_init()
+    create_tables()
 
 if __name__ == "__main__":
     import kalashnikovDB as ak47

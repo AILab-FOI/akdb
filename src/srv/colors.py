@@ -13,6 +13,6 @@ class bcolors:
         self.HEADER = ''
         self.OKBLUE = ''
         self.OKGREEN = ''
-        self.WARNING = ''
+        self.YELLOW = ''
         self.FAIL = ''
         self.ENDC = ''
