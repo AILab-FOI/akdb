@@ -561,14 +561,20 @@ int AK_check_privilege(char *username, char *table, char *privilege){
 */
 void AK_privileges_test(){
 	printf("\nThis is PRIVILEGES test!\n\n");
-    AK_user_add("proba", 123);
-    AK_user_add("kritakac", 321);
+    AK_user_add("proba", 123,NEW_ID);
+    AK_user_add("kritakac", 321,NEW_ID);
+    AK_user_add("mrvasedam","nevaljapassnijehash",NEW_ID);
+    AK_print_table("AK_user");
+    AK_user_rename("proba","test", "123");
     AK_print_table("AK_user");
     
-    AK_group_add("grupa1");
-    AK_group_add("grupa2");
+    AK_group_add("grupa1",NEW_ID);
+    AK_group_add("grupa2",NEW_ID);
     AK_print_table("AK_group");
-
+    AK_group_rename("grupa1","grupa9");
+    AK_group_rename("grupa2","grupa4");
+    AK_print_table("AK_group");
+    /*
     AK_add_user_to_group("kritakac", "grupa1");
     AK_add_user_to_group("proba", "grupa2");
     AK_add_user_to_group("proba", "grupa2");
@@ -593,5 +599,5 @@ void AK_privileges_test(){
     AK_check_privilege("kritakac", "student", "ALL");
 
     printf("\nCheck if user proba has right UPDATE on table student!\n");
-    AK_check_privilege("proba", "student", "UPDATE");
+    AK_check_privilege("proba", "student", "UPDATE");*/
 }

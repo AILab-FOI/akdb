@@ -206,7 +206,6 @@ int AK_sequence_get_id(char *name){
 int AK_sequence_rename(char *old_name, char *new_name){
     printf("\n***Rename sequence***");
     int i = 0;
-    int seq_id = -1;
     
     int seq_id = AK_sequence_get_id(old_name);
     
