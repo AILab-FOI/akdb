@@ -456,8 +456,8 @@ int AK_table_exist(char *tblName) {
  */
 void AK_print_table(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-//  || (AK_table_exist(tblName) == 0)
-    if (addresses->address_from[0] == 0) {
+    //  || (AK_table_exist(tblName) == 0)
+    if ((addresses->address_from[0] == 0) || (AK_table_exist(tblName) == 0)) {
         printf("Table %s does not exist!\n", tblName);
     } else {
         AK_header *head = AK_get_header(tblName);
