@@ -7,6 +7,7 @@ import sys
 sys.path.append('../swig/')
 import kalashnikovDB as ak47
 import test
+import re
 
 # Helper function to determine number type
 
@@ -106,7 +107,36 @@ def get_attr_type(value):
 	else:
 		print "UNDEFINED"
 
+class Print_table_command:
+
+	print_regex = r"^\\p\s+([a-zA-Z0-9_]+)\s*$"
+	pattern = None
+	matcher = None
+
+	def matches(self, input):
+		self.pattern = re.compile(self.print_regex)
+		print self.pattern
+		self.matcher = self.pattern.match(input)
+		print self.matcher
+		return self.matcher != None
+
+	def execute(self):
+		return ak47.AK_print_table_to_file(self.matcher.group(1))
+
 class sql_executor:
+
+	print_command =  Print_table_command()
+	commands = [print_command]
+
+	def commands_for_input(self, command):
+		for elem in self.commands:
+			if elem.matches(command):
+				return elem.execute()
+		return "Wrong command."
+
+	def execute(self, command):
+		print command
+		return self.commands_for_input(command)
 
 	# Insert
 	def insert(self,expr):
@@ -138,7 +168,7 @@ class sql_executor:
 					if col == tab:
 						insert_attr_names.append(tab)
 						table_attr_types.append(int(table_types_temp[ia]))
-			
+
 			if (len(insert_columns) == len(insert_attr_values)):
 				for index,tip in enumerate(insert_attr_types):
 					if int(insert_attr_types[index]) != int(table_attr_types[index]):
