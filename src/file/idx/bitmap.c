@@ -19,12 +19,13 @@
 
 #include "bitmap.h"
 #include "../../auxi/iniparser.h"
+
 /**
   @brief Function examines whether list L contains operator ele
   @param L list of elements
   @param ele operator to be found in list
   @return 1 if operator ele is found in list, otherwise 0
-*/
+ */
 int Ak_If_ExistOp(AK_list *L, char *ele) {
     AK_list *Currentelement_op;
     Currentelement_op = L->next;
@@ -43,7 +44,7 @@ int Ak_If_ExistOp(AK_list *L, char *ele) {
  * @brief Function reads table on which we create index and call functions for creating index 
           (the function should be revised so it can initialize SEGMENT_TYPE_INDEX instead of SEGMENT_TYPE_TABLE :) ).
            Elements that will be in index are put in list indexLista and headerAttributes. According to those elements new indexes
-	   are created.
+           are created.
 	   
  * @param tblName name of table
  * @param attributes list of attributes on which we will create indexes
@@ -57,7 +58,7 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
 
     num_attr = AK_num_attr(tblName);
 
-    AK_header *temp_head = (AK_header *)AK_get_header(tblName);
+    AK_header *temp_head = (AK_header *) AK_get_header(tblName);
     int temp_int;
     char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
@@ -165,7 +166,7 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                         indexName = strcat(inde, (temp_head + i)->att_name);
                         indexName = strcat(indexName, "_bmapIndex");
 
-                        startAddress = AK_initialize_new_segment(indexName, SEGMENT_TYPE_TABLE, t_header);
+                        startAddress = AK_initialize_new_segment(indexName, SEGMENT_TYPE_INDEX, t_header);
                         if (startAddress != EXIT_ERROR)
                             printf("\nINDEX %s CREATED!\n", indexName);
 
@@ -202,7 +203,7 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
                         indexName = strcat(inde, (temp_head + i)->att_name);
                         indexName = strcat(indexName, "_bmapIndex");
 
-                        startAddress = AK_initialize_new_segment(indexName, SEGMENT_TYPE_TABLE, t_headerr);
+                        startAddress = AK_initialize_new_segment(indexName, SEGMENT_TYPE_INDEX, t_headerr);
                         if (startAddress != EXIT_ERROR)
                             printf("\nINDEX %s CREATED!\n", indexName);
                         Ak_create_Index(tblName, indexName, (temp_head + i)->att_name, i, num_attr, t_headerr);
@@ -355,8 +356,8 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
 /**
  * @author Saša Vukšić
  * @brief Function gets adresses of the particuliary attribute from bitmap index. It fetches addresses of indexes and header
-	  of index table.  Using while loop it goes through index and gets necessary data. Those data are put in list called
-	  add_root.
+          of index table.  Using while loop it goes through index and gets necessary data. Those data are put in list called
+          add_root.
  * @param indexName name of index
  * @param attribute name of attribute
  * @return list of adresses
@@ -369,7 +370,7 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
 
     num_attr = AK_num_attr(indexName);
 
-    AK_header *temp_head = (AK_header *)AK_get_header(indexName);
+    AK_header *temp_head = (AK_header *) AK_get_header(indexName);
     int temp_int;
     char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
@@ -608,7 +609,7 @@ int Ak_write_block(AK_block * block) {
         exit(EXIT_ERROR);
     }
     fclose(db);
-	Ak_dbg_messg(MIDDLE, INDICES, "AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
+    Ak_dbg_messg(MIDDLE, INDICES, "AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
     return ( EXIT_SUCCESS);
 }
 
@@ -636,5 +637,5 @@ void Ak_bitmap_test() {
     AK_print_table("assistantfirstname_bmapIndex");
     AK_print_table("assistanttel_bmapIndex");
 
-    AK_update(321, 58, tblName, "firstname", "Alen", "Markus");
+    //AK_update(321, 58, tblName, "firstname", "Alen", "Markus");
 }
