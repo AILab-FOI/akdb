@@ -32,4 +32,5 @@ int AK_sequence_current_value(char *name);
 int AK_sequence_next_value(char *name);
 int AK_sequence_rename(char *old_name, char *new_name);
 int AK_sequence_modify(char *name, int start_value, int increment, int max_value, int min_value, int cycle);
+int AK_sequence_get_id(char *name);
 void AK_sequence_test();
