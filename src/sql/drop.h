@@ -22,13 +22,14 @@
 
 #include "../file/table.h"
 #include "../file/fileio.h"
+
 struct drop_arguments {
-  void* value;
-  void* next;
+    void* value;
+    void* next;
 };
 
 typedef struct drop_arguments AK_drop_arguments;
 #endif
 
 void AK_drop_test();
- 
+
