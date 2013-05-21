@@ -510,7 +510,9 @@ class sql_tokenizer:
       for command in commands:
         token = test.AK_parse_grant(command)
         if isinstance(token, str):
-          print "Error: " + token
+          print "Error:"
+          print command
+          print token
           
         else:
           print "tokens = ", token
@@ -534,7 +536,9 @@ class sql_tokenizer:
      for command in commands:
        token = test.AK_parse_drop(command)
        if isinstance(token, str):
-         print "Error" + token
+         print "Error:"
+         print command
+         print token
        else:
           print "tokens = ", token
           print "tokens.opcija1 = ", token.opcija1
@@ -562,7 +566,9 @@ class sql_tokenizer:
         print "\n"+command
         token = test.AK_alter_table(command)
         if isinstance(token, str):
-          print "\nError: " + token
+          print "Error:"
+          print command
+          print token
         else:
           print "tokens =      ", token
           print "statement =   ", token.statement
@@ -610,7 +616,9 @@ class sql_tokenizer:
          print "\n"+command
          token = test.AK_create_sequence(command)
          if isinstance(token, str):
-             print "Error: " + token
+             print "Error:"
+             print command
+             print token
          else:
              print "tokens = ", token
              print "SekvencaIme = ", token.sekvenca
@@ -659,8 +667,9 @@ class sql_tokenizer:
       for command in commands:
         token = test.AK_parse_create_user(command)
         if isinstance(token, str):
-          print "Error: " + token
-          
+          print "Error:"
+          print command
+          print token
         else:
           print "tokens = ", token.dump()
 
@@ -676,8 +685,9 @@ class sql_tokenizer:
       for command in commands:
         token = test.AK_parse_create_table(command)
         if isinstance(token, str):
-          print "Error: " + token
-          
+          print "Error:"
+          print command
+          print token
         else:
           print "tokens = ", token.dump()
           
@@ -694,7 +704,9 @@ class sql_tokenizer:
       for command in commands:
         token = test.AK_parse_insert_into(command)
         if isinstance(token, str):
-          print "Error: " + token
+          print "Error:"
+          print command
+          print token
           
         else:
           print "tokens = ", token.dump()
