@@ -19,7 +19,7 @@ ak47.create_header_test("student", student_attr_name, student_attr_type)
 print "\n------------------------------------ INSERT INTO TEST ------------------------------------\n"
 
 print "1 - " + str(bulbasaur.insert("INSERT INTO students VALUES ('1s','Pero','Peric','1991','100.2')"))
-print "2 - " + str(bulbasaur.insert("INSERTS INTO student(id_student, firstnames, lastname, year, weight) VALUES ( '2','Ivo','Ivic','2002','90.2')"))
+print "2 - " + str(bulbasaur.insert("INSERT INTO student(id_student, firstnames, lastname, year, weight) VALUES ( '2','Ivo','Ivic','2002','90.2')"))
 
 print "\n------------------------------------ PRINT TABLE STUDENT ------------------------------------\n"
 

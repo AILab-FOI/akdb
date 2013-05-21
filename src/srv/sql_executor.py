@@ -213,6 +213,7 @@ class sql_executor:
 			print token
 			return False
 		table_name = str(token.tableName)
+		# postoji li tablica
 		if (ak47.AK_table_exist(table_name) == 0):
 			print "Error: table '"+ table_name +"' does not exist"
 			return False
