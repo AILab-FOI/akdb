@@ -4,6 +4,8 @@ from pyparsing import *
 
 class sql_tokenizer:
 
+
+
   def AK_parse_grant(self, string):
       '''
       @author Boris Kisic
@@ -491,6 +493,66 @@ class sql_tokenizer:
         return " "*err.loc + "^\n" + err.msg
       return tokens
       
+  def AK_parse_trigger(self, string):
+      '''
+      @author Davorin Vukelic
+      @brief sql parsing of TRIGGER command
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+  
+      createToken = Keyword("create trigger", caseless=True)
+      whenToken   = ( Keyword("after", caseless=True) | Keyword("before", caseless=True) )
+      actionToken   = ( Keyword("delete", caseless=True) | Keyword("insert", caseless=True) | Keyword("update", caseless=True) )
+      onToken   = Keyword("on", caseless=True)
+      forToken =  Keyword("for", caseless=True) 
+      eachToken = Keyword("each", caseless=True) 
+      whatToken =  (Keyword("row", caseless=True) | Keyword("statement", caseless=True) )
+      executeToken = Keyword("each", caseless=True)
+      procedureToken = Keyword("execute procedure", caseless=True)
+      orToken = Keyword("or", caseless=True)
+      eventToken = ( Keyword("insert", caseless=True) | Keyword("update", caseless=True) | Keyword("delete", caseless=True))
+      
+      tokens =Word( alphas, alphanums + "_$")
+      
+      trigName = tokens.copy().setResultsName("name")
+      event = tokens.copy().setResultsName("event")
+      table = tokens.copy().setResultsName("tableName")
+      function = tokens.copy().setResultsName("functionName")
+      ident=Word(nums,alphas)
+      param = delimitedList(ident, ",", combine=True)
+      paramList = Group(delimitedList(param))
+      lBracket = Suppress("(")
+      rBracket = Suppress(")")
+
+      #params
+      E = CaselessLiteral("e")
+      arithSign=Word("+-",exact=1)
+      realNum=Combine(Optional(arithSign)+(Word(nums)+"."+Optional( Word(nums))|("."+Word(nums)))+Optional(E+Optional(arithSign)+Word(nums)))
+      intNum=Combine(Optional(arithSign)+Word(nums)+Optional(E+Optional("+")+Word(nums)))
+      value=quotedString | realNum | intNum
+      valuesList=Group(delimitedList(value))
+      
+
+
+      triggerStmt = Forward()
+      triggerStmt << (createToken+trigName+whenToken.setResultsName("whenOption")+\
+                        eventToken.setResultsName("EventOption1")+Optional(orToken+\
+                              eventToken.setResultsName("EventOption2")+Optional(orToken+\
+                              eventToken.setResultsName("EventOption3")))+onToken+table+\
+                              Optional(forToken+Optional(eachToken)+whatToken.setResultsName("whatOption"))+\
+                              procedureToken+function+lBracket+Optional(valuesList.setResultsName("params"))+rBracket)
+
+     
+      try:
+          tokens = triggerStmt.parseString( string )
+          
+      except ParseException, err:
+          return " "*err.loc + "^\n" + err.msg
+      print  
+      return tokens
+
+
 
 
 #--------------------------------------------testne funkcije--------------------------------------------#  
@@ -711,6 +773,39 @@ class sql_tokenizer:
         else:
           print "tokens = ", token.dump()
 
+
+  def Ak_create_trigger_test(self):
+      '''
+      @author Davorin Vukelic
+      @brief testing of sql parsing command Ak_create_trigger_test
+      @return No return value
+      '''
+      print "\n---------------------------------TRIGGER test---------------------------------\n"
+
+      commands=["CREATE TRIGGER prihvat_veze AFTER INSERT ON veza FOR ROW EXECUTE PROCEDURE veza_prihvacena()",\
+                  "CREATE TRIGGER prihvat_veze BEFORE  DELETE OR INSERT ON veza EXECUTE PROCEDURE veza_prihvacena()",\
+                  "CREATE TRIGGER prihvat_veze BEFORE DELETE OR INSERT ON veza FOR EACH STATEMENT EXECUTE PROCEDURE veza_prihvacena(2,3,'data')",\
+                  "CREATE TRIGGER prihvat_veze AFTER DELETE OR INSERT OR UPDATE ON veza FOR EACH STATEMENT EXECUTE PROCEDURE veza_prihvacena(2,10.5,'data')"]
+      
+      
+      for command in commands:
+            token = test.AK_parse_trigger(command)
+            if isinstance(token, str):
+                  print "Error: " + token
+
+            else:
+                  print "tokens = ",token
+                  print "tokens.name = ",token.name
+                  print "tokens.whenOption = ",token.whenOption
+                  print "tokens.EventOption1 = ",token.EventOption1
+                  print "tokens.EventOption2 = ",token.EventOption2
+                  print "tokens.EventOption2 = ",token.EventOption3
+                  print "tokens.tableName = ",token.tableName
+                  print "tokens.whatOption = ",token.whatOption
+                  print "tokens.functionName = ",token.functionName
+                  print "tokens.paramList = ",token.params
+
+
 '''
 test = sql_tokenizer()
 
@@ -740,4 +835,7 @@ test.AK_parse_create_table_test()
 
 #testing insert into statement
 test.AK_parse_insert_into_test()
+
+#testing create trigger statement
+test.Ak_create_trigger_test()
 '''
