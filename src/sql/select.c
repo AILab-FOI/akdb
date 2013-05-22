@@ -54,9 +54,6 @@ AK_selection(srcTable,destTable,uvjet);
 			
 		
    // int head;
-    int something_to_copy = 0;
-    int overflow;
-    int not_in_list = 1;
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
 	AK_list_elem list_elem;
