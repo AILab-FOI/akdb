@@ -11,11 +11,10 @@ import re
 
 
 
-def main_test():
+def initialize():
 	ak47.AK_inflate_config()
 	ak47.AK_init_disk_manager()
 	ak47.AK_memoman_init()
-
 
 ## is_numeric
 # returns int or float value based on input type
@@ -151,52 +150,95 @@ def akdbError(expr,item):
 	print expr
 	print " " * expr.index(item) + "^"
 
+## print_table_command
+# defines the structure of print command and its execution
 class Print_table_command:
 
 	print_regex = r"^\\p\s+([a-zA-Z0-9_]+)\s*$"
 	pattern = None
 	matcher = None
 
+	## matches method
+	# checks whether given input matches print command syntax
 	def matches(self, input):
 		self.pattern = re.compile(self.print_regex)
 		self.matcher = self.pattern.match(input)
 		return self.matcher != None
 
+	## execute method
+	# defines what is called when print command is invoked
 	def execute(self):
 		ak47.AK_print_table(self.matcher.group(1))
 		return "OK"
 
+## table_derails_command
+# defines the structure of table details command and its execution
 class Table_details_command:
 
 	table_details_regex = r"^\\d\s+([a-zA-Z0-9_]+)\s*$"
 	pattern = None
 	matcher = None
 
+	## matches method
+	# checks whether given input matches table_details command syntax
 	def matches(self, input):
 		self.pattern = re.compile(self.table_details_regex)
 		self.matcher = self.pattern.match(input)
 		return self.matcher != None
 
+	## execute method
+	# defines what is called when table_details command is invoked
 	def execute(self):
 		print "Printing out: "
 		result = "Number of attributes: " + str(ak47.AK_num_attr(self.matcher.group(1)))
 		result += "\nNumber od records: " + str(ak47.AK_get_num_records(self.matcher.group(1)))
 		return result
+
+class Table_exists_command:
+
+	table_details_regex = r"^\\t\s+([a-zA-Z0-9_]+)\?\s*$"
+	pattern = None
+	matcher = None
+
+	## matches method
+	# checks whether given input matches table_exists command syntax
+	def matches(self, input):
+		self.pattern = re.compile(self.table_details_regex)
+		self.matcher = self.pattern.match(input)
+		return self.matcher != None
+
+	## execute method
+	# defines what is called when table_exists command is invoked
+	def execute(self):
+		if ak47.AK_table_exist(self.matcher.group(1)) == 0:
+			result = "Table does not exist."
+		else:
+			result = "Table exists. You can see it by typing \p <table_name>."
+		return result
+
 ## sql_executor
 # contaions methods for sql operations
 class sql_executor:
 
+	##initialize classes for the available commands
 	print_command =  Print_table_command()
 	table_details_command = Table_details_command()
+	table_exists_command = Table_exists_command()
 
-	commands = [print_command, table_details_command]
+	##add command instances to the commands array
+	commands = [print_command, table_details_command, table_exists_command]
 
+	## commands for input
+	# checks whether received command matches any of the defined commands for kalashnikovdb, 
+	# and call its execution if it matches
 	def commands_for_input(self, command):
 		for elem in self.commands:
 			if elem.matches(command):
 				return elem.execute()
 		return "Wrong command."
 
+	## execute method
+	# called when a new command is received (from client)
 	def execute(self, command):
 		return self.commands_for_input(command)
 

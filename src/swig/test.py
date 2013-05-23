@@ -3,7 +3,10 @@
 import kalashnikovDB as ak47
 import test_strings as ts
 
-
+## @package test
+#  Documentation for this module.
+#  This module is used for testing purposes
+#
 
 class Functions:
  

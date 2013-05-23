@@ -7,8 +7,6 @@
 import cmd
 import socket
 import colors
-import sql_executor as sqle
-from test import *
 
 welcome_note =  '''Welcome to the AKDB client. Enter your commands in the command line.
 
@@ -16,23 +14,24 @@ To see list of all commands, type '\?'
 To see list of entered comands, type 'history'.
 '''
 
-#List of commands that don't send request to server
+##List of commands that don't send request to server
 #You should add commands to this list when needed
 client_specific_commands = ["", "\?", "history"]
 
-#command list, used to print out the help
+##command list, used to print out the help
 #update this list when new commands are added
 command_list =  {'\q': 'Disconnect from the server and quit akdb client.',
 				 '\?': 'List all commands supported in akdb.',
 				 '\d <table_name>' : 'Prints out table details',
 				 '\p <table_name>' : 'Prints out table',
+				 '\\t <table_name>?': 'Check whether the given table exists in database or not.',
 				 'history': 'List all previously typed commands.'
 				}
 
-#instantiate the colours class
+##instantiate the colours class
 bcolors = colors.bcolors()
 
-#define data
+##define data
 ip = "localhost"
 port = 1998
 buffer_size = 1024
@@ -41,54 +40,40 @@ buffer_size = 1024
 class AK_Console(cmd.Cmd):
 	cli = None
 
+	##Initialization of the console. Sets up the prompt and
+	#a welcome note.
 	def __init__(self):
-		"""
-		Initialization of the console. Sets up the prompt and
-		a welcome note.
-		"""
 		cmd.Cmd.__init__(self)
 		self.prompt = "akdb>"
 		self.intro = welcome_note
 
+	##Setter for the AK_client class
 	def set_cli(self, cli):
-		"""
-		Setter for the AK_client class
-		"""
 		self.cli = cli
 
+	##When empty line is pressed, call default and ignore it
 	def emptyline(self):
-		"""
-		When empty line is pressed, call default and ignore it
-		"""
 		self.default("")
 
+	##Called when history command is called
 	def do_history(self, args):
-		"""
-		Called when history command is called
-		"""
 		print self._history
 
+	##Called before loop is started defines history list and local and
+	#global variables that are currently not used
 	def preloop(self):
-		"""
-		Called before loop is started defines history list and local and
-		global variables that are currently not used
-		"""
 		cmd.Cmd.preloop(self)
 		self._history = []
 		self._locals = {}
 		self._globals = {}
 
+	##Called before the command is executed
 	def precmd(self, line):
-		"""
-		Called before the command is executed
-		"""
 		self._history += [line.strip()]
 		return line
 
+	##Called after the command is eqecuted
 	def postcmd(self, stop, line):
-		"""
-		Called after the command is eqecuted
-		"""
 		if line in client_specific_commands:
 			return
 		response = self.cli.AK_check_response()
@@ -98,10 +83,8 @@ class AK_Console(cmd.Cmd):
 		else:
 			print response
 
+	##Called on default when the command is inserted
 	def default(self, line):
-		"""
-		Called on default when the command is inserted
-		"""
 		if line == "":
 			return
 		elif line == "\?":
@@ -110,25 +93,21 @@ class AK_Console(cmd.Cmd):
 		line = line.strip()
 		self.cli.AK_send_command(line)
 
+	##Prints the commands when the \? is inserted
 	def print_commands(self):
-		"""
-		Prints the commands when the \? is inserted
-		"""
 		print bcolors.YELLOW + "Commands:"
 		for k, v in command_list.iteritems():
 			print bcolors.OKBLUE +  k + " - " + bcolors.OKGREEN + v + bcolors.ENDC
 		print ""
 		return
 
-#client class
+##client class
 class AK_client():
 	sock = None
 	finished = False
 
+	##Connects to the server. runs a loop that holds the commands
 	def AK_client_connect(self, ip, port, buffer_size):
-		"""
-		Connects to the server. runs a loop that holds the commands
-		"""
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.sock.connect((ip, port))
 		self.AK_check_response()
@@ -138,33 +117,23 @@ class AK_client():
 			c.cmdloop()
 		print "\nAKDB now exiting."
 
+	##Sends a command to server
 	def AK_send_command(self, command):
-		"""
-		Sends a command to server
-		"""
 		self.sock.send(command.strip())
 
+	##Checks for a command from the server
 	def AK_check_response(self):
-		"""
-		Checks for a command from the server
-		"""
 		return self.sock.recv(buffer_size)
-
+	##Setter for finished vairable
 	def set_finished(self, val):
-		"""
-		Setter for finished vairable
-		"""
 		self.finished = val
 
+	##Getter for the finished variable
 	def get_finished(self):
-		"""
-		Getter for the finished variable
-		"""
 		return self.finished
 
 cli = AK_client()
 
 if __name__ == "__main__":
-	sqle.main_test()
 	cli.AK_client_connect(ip, port, buffer_size)
 

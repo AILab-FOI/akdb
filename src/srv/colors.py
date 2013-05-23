@@ -1,3 +1,6 @@
+
+## colors
+# Defines colors that can be used in terminal.
 class bcolors:
     HEADER = '\033[95m'
     #Blue
@@ -9,6 +12,7 @@ class bcolors:
     FAIL = '\033[91m'
     ENDC = '\033[0m'
 
+     ## disable method
     def disable(self):
         self.HEADER = ''
         self.OKBLUE = ''

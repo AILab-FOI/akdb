@@ -1,5 +1,5 @@
 #file server_test.py runs the server for testing
-
+#this file is deprecated use server.py instead
 from server import *
 
 ip="localhost"

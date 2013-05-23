@@ -1,5 +1,6 @@
 #client_test.py Tests comumnication with server
 
+#this file is deprecated, you shoud use akdb_cli.py instead
 import socket
 
 welcome_note =  '''Welcome to the AKDB client. Enter your commands in the command line.
