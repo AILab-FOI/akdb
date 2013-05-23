@@ -799,16 +799,16 @@ class sql_tokenizer:
                   print "tokens.whenOption = ",token.whenOption
                   print "tokens.EventOption1 = ",token.EventOption1
                   print "tokens.EventOption2 = ",token.EventOption2
-                  print "tokens.EventOption2 = ",token.EventOption3
+                  print "tokens.EventOption3 = ",token.EventOption3
                   print "tokens.tableName = ",token.tableName
                   print "tokens.whatOption = ",token.whatOption
                   print "tokens.functionName = ",token.functionName
                   print "tokens.paramList = ",token.params
 
 
-'''
-test = sql_tokenizer()
 
+test = sql_tokenizer()
+'''
 #testing grant statement
 test.AK_parse_grant_test()
 
@@ -835,7 +835,6 @@ test.AK_parse_create_table_test()
 
 #testing insert into statement
 test.AK_parse_insert_into_test()
-
+'''
 #testing create trigger statement
 test.Ak_create_trigger_test()
-'''
