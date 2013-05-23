@@ -7,7 +7,7 @@
 
 #endif
 
-int AK_user_add(char *username, int password, int set_id);
+int AK_user_add(char *username, int *password, int set_id);
 int AK_user_get_id(char *username);
 int AK_group_add(char *name,int set_id);
 int AK_group_get_id(char *name);

@@ -20,6 +20,9 @@
 #define INTERSECT
 
 #include "../file/table.h"
+#include "../file/fileio.h"
+#include "../rec/archive_log.h"
+
 /**
  * @author Dino Laktašić
  * @struct intersect_attr

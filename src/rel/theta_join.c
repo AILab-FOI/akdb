@@ -276,7 +276,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
         free(src_addr2);
 
 		Ak_dbg_messg(LOW, REL_OP, "THETA_JOIN_SUCCESS\n\n");
-		AK_archive_log("AK_theta_join", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
+		//AK_archive_log("AK_theta_join", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
         return EXIT_SUCCESS;
     } else {
 
@@ -334,7 +334,7 @@ void AK_op_theta_join_test() {
     Ak_DeleteAll_L(constraints);
 
     //test for addition and inequality
-    int num = 37895;
+    char num = 102;
     printf("SELECT * FROM student, professor2 WHERE year + id_prof > 37895;\n");
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), constraints);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);

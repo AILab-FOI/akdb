@@ -33,7 +33,7 @@
 
 int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a, const char *b) {
     
-    char **numericStringEnd; //A pointer to the location where the numeric part of the string ends
+    char **numericStringEnd=NULL; //A pointer to the location where the numeric part of the string ends
 
 	if(strcmp(op, "<") == 0){
 
@@ -151,13 +151,14 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a
 			case TYPE_INT:
 				return strtol(a, numericStringEnd, 10) / strtol(b, numericStringEnd, 10);
 			case TYPE_FLOAT:
-				strtod(a, numericStringEnd) / strtod(b, numericStringEnd);
+				//strtod(a, numericStringEnd) / strtod(b, numericStringEnd);
 			case TYPE_NUMBER:
-				strtod(a, numericStringEnd) / strtod(b, numericStringEnd);
+				//strtod(a, numericStringEnd) / strtod(b, numericStringEnd);
 			case TYPE_VARCHAR:
 				return EXIT_ERROR;
 		}
 	}
+	return 0;
 }
 
 /**
@@ -171,7 +172,7 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a
  */
 int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
     if (expr == 0) return 1;
-	int true = 1, false = 0;
+	char true = 1, false = 0;
     int found, result;
 
     AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
@@ -218,7 +219,7 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
 
             if (strcmp(el->data, "=") == 0) {
                 if (memcmp(a->data, b->data, sizeof(a->type)) == 0)
-                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (char), temp);
                 else
                 	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
 
@@ -250,7 +251,7 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
 
             } else {
 
-                int rs;
+                char rs;
                 rs = AK_check_arithmetic_statement(b, el->data, a->data, b->data);
                 Ak_InsertAtEnd_L(TYPE_INT, &rs, sizeof (int), temp);
             }

@@ -45,7 +45,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         
         int num_att = AK_check_tables_scheme(tbl1_temp_block, tbl2_temp_block, "Intersect");
 
-        int something_to_copy = 0, m, n, o;
+        int m, n, o;
 	int address, type, size,thesame;
 	thesame=0;
 		
@@ -72,7 +72,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                     if (tbl1_temp_block->block->free_space != 0) {
 
                         //TABLE2: for each extent in table2
-                        for (k = 0; k < src_addr2->address_from[k] != 0; k++) {
+                        for (k = 0; k < (src_addr2->address_from[k] != 0); k++) {
                             startAddress2 = src_addr2->address_from[k];
 
                             if (startAddress2 != 0) {
@@ -93,7 +93,6 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                 if (tbl2_temp_block->block->tuple_dict[o + 1].type == FREE_INT)
                                                     break;
 
-                                                something_to_copy = 0;
                                                 for (n = 0; n < num_att; n++) {
                                                     type = tbl1_temp_block->block->tuple_dict[m + n].type;
                                                     size = tbl1_temp_block->block->tuple_dict[m + n].size;
@@ -143,7 +142,7 @@ thesame=0;
         free(src_addr2);
 	Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
 	
-	AK_archive_log("AK_intersect", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
+	//AK_archive_log("AK_intersect", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
 	
         return EXIT_SUCCESS;
     } else {

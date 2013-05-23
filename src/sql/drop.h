@@ -32,4 +32,6 @@ typedef struct drop_arguments AK_drop_arguments;
 #endif
 
 void AK_drop_test();
+int AK_if_exist(char *tblName, char *sys_table);
+
 

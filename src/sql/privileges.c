@@ -25,7 +25,7 @@
  * @param password password of user to be added
  * @return user_id
  */
-int AK_user_add(char *username, int password, int set_id){	
+int AK_user_add(char *username, int *password, int set_id){	
 
     char *tblName = "AK_user";
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
@@ -86,13 +86,10 @@ int AK_user_remove_by_name(char *name){
 int AK_user_rename(char *old_name, char *new_name, int *password){
  
 	printf("\n***Rename group***");
-	   int result = 0, i = 0;
+	   int result = 0;
 	   int user_id = AK_user_get_id(old_name);
-	   char *query;
-	   AK_list *row;
 	   
 	   result = AK_user_remove_by_name(old_name);
-	   char *tblName = "AK_user";
 	   result = AK_user_remove_by_name(old_name);
 	   result = AK_user_add(new_name,password,user_id);
 	   return result;
@@ -164,13 +161,10 @@ int AK_group_remove_by_name(char *name){
  */
 int AK_group_rename(char *old_name, char *new_name){
     printf("\n***Rename group***");
-	   int result = 0, i = 0;
+	   int result = 0;
 	   int view_id = AK_group_get_id(old_name);
-	   char *query;
-	   AK_list *row;
 	   
 	   result = AK_group_remove_by_name(old_name);
-	   char *tblName = "AK_group";
 	   result = AK_group_remove_by_name(old_name);
 	   result = AK_group_add(new_name,view_id);
 	   return result;
@@ -336,7 +330,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right){
 		free(row_root);
 	}
 		
-	AK_archive_log("AK_grant_privilege_group", groupname, table, right); //ARCHIVE_LOG
+	//AK_archive_log("AK_grant_privilege_group", groupname, table, right); //ARCHIVE_LOG
 	return privilege_id;
 }
 /**
@@ -419,7 +413,7 @@ int AK_add_user_to_group(char *user, char *group){
 	Ak_insert_row(row_root);
 
 	free(row_root);
-	AK_archive_log("AK_add_user_to_group", user, group); //ARCHIVE_LOG
+	//AK_archive_log("AK_add_user_to_group", user, group); //ARCHIVE_LOG
 	return EXIT_SUCCESS;
 }
 /**
@@ -561,11 +555,11 @@ int AK_check_privilege(char *username, char *table, char *privilege){
 */
 void AK_privileges_test(){
 	printf("\nThis is PRIVILEGES test!\n\n");
-    AK_user_add("proba", 123,NEW_ID);
-    AK_user_add("kritakac", 321,NEW_ID);
-    AK_user_add("mrvasedam","nevaljapassnijehash",NEW_ID);
+    AK_user_add("proba", (int*)123,NEW_ID);
+    AK_user_add("kritakac", (int*)321,NEW_ID);
+    AK_user_add("mrvasedam",(int*)569,NEW_ID);
     AK_print_table("AK_user");
-    AK_user_rename("proba","test", "123");
+    AK_user_rename("proba","test", (int*)123);
     AK_print_table("AK_user");
     
     AK_group_add("grupa1",NEW_ID);

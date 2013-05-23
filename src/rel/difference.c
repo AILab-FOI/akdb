@@ -78,7 +78,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
                     if (tbl1_temp_block->block->free_space != 0) {
 						
 			//TABLE2: for each extent in table2
-                        for (k = 0; k < src_addr2->address_from[k] != 0; k++) {
+                        for (k = 0; k < (src_addr2->address_from[k] != 0); k++) {
                             startAddress2 = src_addr2->address_from[k];
 
                             if (startAddress2 != 0) {

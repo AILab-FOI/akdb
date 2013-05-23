@@ -21,6 +21,7 @@
 #define EXPRESSION_CHECK
 
 #include "../file/table.h"
+#include "../file/fileio.h"
 
 #endif /* CONSTRAINT_CHECKER_H_ */
 

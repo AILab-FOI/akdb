@@ -106,7 +106,7 @@ void AK_op_selection_test() {
 
 	char *srcTable = "student";
 	char *destTable = "selection_test";
-	int num = 2010;
+	char num = 22;
 	//float weight = 83.750;
 	//InsertAtEndL( TYPE_ATTRIBS, "weight", sizeof("weight"), expr );
 	//InsertAtEndL( TYPE_FLOAT, &weight, sizeof(float), expr );
@@ -144,7 +144,7 @@ void AK_op_selection_test2() {
 
 	char *srcTable = "student";
 	char *destTable = "selection_test2";
-	int num = 2023;
+	char num = 23;
 	//float weight = 83.750;
 	//InsertAtEndL( TYPE_ATTRIBS, "weight", sizeof("weight"), expr );
 	//InsertAtEndL( TYPE_FLOAT, &weight, sizeof(float), expr );

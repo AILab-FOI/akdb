@@ -22,6 +22,7 @@
 #define THETA_JOIN
 
 #include "expression_check.h"
+#include "../file/fileio.h"
 
 int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *constraints);
 

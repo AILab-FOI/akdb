@@ -275,7 +275,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
         i = j = k = l = 0;
 
         //for each extent in table1 that contains blocks needed for join
-        for (i = 0; i < src_addr1->address_from[i] != 0; i++) {
+        for (i = 0; i < (src_addr1->address_from[i] != 0); i++) {
             startAddress1 = src_addr1->address_from[i];
 
             if (startAddress1 != 0) {
@@ -290,7 +290,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
                     //if there is data in the block
                     if (tbl1_temp_block->block->free_space != 0) {
                         //for each extent in table2 that contains blocks needed for join
-                        for (k = 0; k < src_addr2->address_from[k] != 0; k++) {
+                        for (k = 0; k < (src_addr2->address_from[k] != 0); k++) {
                             startAddress2 = src_addr2->address_from[k];
 
                             if (startAddress2 != 0) {
@@ -316,7 +316,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
         free(src_addr1);
         free(src_addr2);
 		Ak_dbg_messg(LOW, REL_OP, "NAT_JOIN_TEST_SUCCESS\n\n");
-		AK_archive_log("AK_join", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
+		//AK_archive_log("AK_join", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\n AK_join: Table/s doesn't exist!");

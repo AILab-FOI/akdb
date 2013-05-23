@@ -224,7 +224,6 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     int num_attr = AK_num_attr(source_table);
 
     int k, l, m, n, o, counter;
-    char data[ MAX_VARCHAR_LENGTH ];
 
     AK_block *temp;
     AK_mem_block *mem_block;
@@ -235,7 +234,6 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     i = 0;
     counter = 0;
 
-    int tmpadr = 0, tmpadr1;
 
     while (addresses->address_from[ i ] != 0) {
         for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) {

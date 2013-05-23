@@ -21,6 +21,7 @@
 #define UNION
 
 #include "../file/table.h"
+#include "../file/fileio.h"
 
 #endif
 
