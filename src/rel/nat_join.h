@@ -21,6 +21,7 @@
 
 #include "../file/table.h"
 #include "../file/fileio.h"
+#include "../rel/projection.h"
 
 #endif
 
