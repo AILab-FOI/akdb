@@ -269,6 +269,8 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
   #include "../sql/drop.h"
   #include "../sql/view.c"
   #include "../sql/view.h"
+  #include "../sql/select.c"
+  #include "../sql/select.h"
   #include "../rel/projection.c"
   #include "../rel/projection.h"
 
