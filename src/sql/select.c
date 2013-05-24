@@ -1,9 +1,25 @@
+/**
+@file select.c Provides functions for SELECT relational operator
+ */
+
 #include "select.h"
 
+
+/** 
+ * @author Renata Mesaros
+ * @brief Function that implements SELECT relational operator
+ * @param srcTable - original table that is used for selection
+ * @param destTable - table that contains the result
+ * @param uvjet - condition for selection
+ */
 int AK_select(char *srcTable,char *destTable,AK_list *atributi,AK_list *uvjet){
 
-AK_selection(srcTable,destTable,uvjet);
+	///calling the relational operator for filtering according to given condition
 
+	AK_selection(srcTable,destTable,uvjet);
+
+
+	///help table for the final result
 	char *helptable="help_table";
 		
 	
@@ -21,16 +37,19 @@ AK_selection(srcTable,destTable,uvjet);
 	int brglave[6]={7,7,7,7,7,7};
 	int brjgl=0;
 	
-	//kreiranje zaglavlja nove tablice
+	///new header for the resulting table
 	int head;
+	
+	
+	///going through the header of the table of subscore
+	///making a new header for the final result from the selected ones from the subscore
 	while(strcmp(temp_block->header[head].att_name,"")!=0){
 			
 		attr_liste=(AK_list_elem) Ak_First_L(atributi);
 		int kreiraj=0;
 		while(attr_liste!=NULL){
 			if(strcmp(temp_block->header[head].att_name,attr_liste->data)==0){
-				//napravi zaglavlje
-				brglave[brjgl++]=head; //biljezi redni broj atributa
+				brglave[brjgl++]=head;  ///the ordinal number of the selected attribute
 				kreiraj=1;
 				break;
 			}
@@ -46,14 +65,10 @@ AK_selection(srcTable,destTable,uvjet);
 
 	free(temp_block);
 	
-	//////////////////////////////
-	//kopiranje potrebnih stupaca
+	
 	
 	AK_list* row_root = (AK_list *) malloc(sizeof (AK_list));
-	//	Ak_Init_L(row_root);
 			
-		
-   // int head;
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
 	AK_list_elem list_elem;
@@ -73,8 +88,10 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 						break;
 		
 			int gl=0;
+			
 			for(l=0;l<5;l++){
 				int upisi=0;
+				///if the attribute number is in the selected list, write it in the resulting table
 				while(brglave[b]!=7) {
 							if(brglave[b++]==l){upisi=1;break;}
 					}
@@ -97,7 +114,7 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 }}
   
   AK_print_table(helptable);
-	//}
+
 	free(temp_block);
 	return EXIT_SUCCESS;
 
@@ -105,15 +122,26 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 
 
 
-
+/**
+ * @author Renata Mesaros
+ * @brief Function for testing the implementation
+ * @return No return value
+ */
 void AK_select_test(){
 printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
+
+
+///list of attributes which will be in the result of selection
 
 AK_list *atributi = (AK_list *) malloc(sizeof (AK_list));
 Ak_Init_L(atributi);
 
+///list of elements which represent the condition for selection
+
 AK_list *uvjet = (AK_list *) malloc(sizeof (AK_list));
 Ak_Init_L(uvjet);
+
+
 
 int num = 2005;
 
