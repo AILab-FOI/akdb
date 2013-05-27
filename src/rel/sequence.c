@@ -205,6 +205,7 @@ int AK_sequence_get_id(char *name){
  */
 int AK_sequence_rename(char *old_name, char *new_name){
     printf("\n***Rename sequence***");
+    int i = 0;
     
     int seq_id = AK_sequence_get_id(old_name);
     
@@ -280,7 +281,7 @@ void AK_sequence_test() {
     AK_sequence_add("sekvenca1", 100, 5, 200, 100, 1);    
     AK_print_table("AK_sequence");
     AK_sequence_remove("sekvenca1");
-    AK_sequence_add("sekvenca2", 200, 10, 205, 100, 1);
+    //AK_sequence_add("sekvenca2", 200, 10, 205, 100, 1);
     AK_print_table("AK_sequence");
     int currval = AK_sequence_current_value("sekvenca2");
     printf("\nCurrent value of sequence sekvenca2: %d", currval);
