@@ -403,10 +403,10 @@ void AK_reference_test() {
     printf("reference.c: Present!\n");
 
     AK_header t_header[4] ={
-        {TYPE_INT, "FK", 0, '\0', '\0',},
-        {TYPE_VARCHAR, "Value", 0, '\0', '\0',},
-        {TYPE_VARCHAR, "Rnd", 0, '\0', '\0',},
-        {0, '\0', 0, '\0', '\0'}
+        {TYPE_INT, {"FK"}, {0}, {{'\0'}}, {{'\0'}}},
+        {TYPE_VARCHAR, {"Value"}, {0}, {{'\0'}}, {{'\0'}}},
+        {TYPE_VARCHAR, {"Rnd"}, {0}, {{'\0'}}, {{'\0'}}},
+        {0, {'\0'}, {0}, {{'\0'}}, {{'\0'}}}
     };
 
     int startAddress = AK_initialize_new_segment("ref_test", SEGMENT_TYPE_TABLE, t_header);

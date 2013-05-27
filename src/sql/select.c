@@ -71,7 +71,6 @@ int AK_select(char *srcTable,char *destTable,AK_list *atributi,AK_list *uvjet){
 			
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
-	AK_list_elem list_elem;
 	
 int b;	
 printf("\n\n\n");
@@ -143,7 +142,7 @@ Ak_Init_L(uvjet);
 
 
 
-int num = 2005;
+char *num = "2005";
 
 char *srcTable="student";
 char *destTable="select_result";
@@ -153,7 +152,7 @@ Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), atributi);
 Ak_InsertAtEnd_L(TYPE_ATTRIBS, "weight", sizeof ("weight"), atributi);
 
 Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), uvjet);
-Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), uvjet);
+Ak_InsertAtEnd_L(TYPE_INT, num, sizeof (int), uvjet);
 Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), uvjet);
 
 printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
