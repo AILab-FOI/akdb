@@ -10,13 +10,13 @@
  * @brief Function that implements SELECT relational operator
  * @param srcTable - original table that is used for selection
  * @param destTable - table that contains the result
- * @param uvjet - condition for selection
+ * @param condition - condition for selection
  */
-int AK_select(char *srcTable,char *destTable,AK_list *atributi,AK_list *uvjet){
+int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
 
 	///calling the relational operator for filtering according to given condition
 
-	AK_selection(srcTable,destTable,uvjet);
+	AK_selection(srcTable,destTable,condition);
 
 
 	///help table for the final result
@@ -29,13 +29,13 @@ int AK_select(char *srcTable,char *destTable,AK_list *atributi,AK_list *uvjet){
 	AK_block *temp_block = (AK_block *) AK_read_block(startAddress);
 	
 
-	AK_list_elem attr_liste;
+	AK_list_elem list_attributes;
 	AK_header header[MAX_ATTRIBUTES];
  	memset(header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
 
 	int new_head=0;
-	int brglave[6]={7,7,7,7,7,7};
-	int brjgl=0;
+	int head_num[6]={7,7,7,7,7,7};
+	int head_counter=0;
 	
 	///new header for the resulting table
 	int head;
@@ -45,17 +45,17 @@ int AK_select(char *srcTable,char *destTable,AK_list *atributi,AK_list *uvjet){
 	///making a new header for the final result from the selected ones from the subscore
 	while(strcmp(temp_block->header[head].att_name,"")!=0){
 			
-		attr_liste=(AK_list_elem) Ak_First_L(atributi);
-		int kreiraj=0;
-		while(attr_liste!=NULL){
-			if(strcmp(temp_block->header[head].att_name,attr_liste->data)==0){
-				brglave[brjgl++]=head;  ///the ordinal number of the selected attribute
-				kreiraj=1;
+		list_attributes=(AK_list_elem) Ak_First_L(attributes);
+		int create=0;
+		while(list_attributes!=NULL){
+			if(strcmp(temp_block->header[head].att_name,list_attributes->data)==0){
+				head_num[head_counter++]=head;  ///the ordinal number of the selected attribute
+				create=1;
 				break;
 			}
-			else attr_liste=attr_liste->next;
+			else list_attributes=list_attributes->next;
 		}
-		if(kreiraj){
+		if(create){
 			memcpy(&header[new_head], &temp_block->header[head], sizeof (temp_block->header[head]));
 			new_head++;
 		}
@@ -89,12 +89,12 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 			int gl=0;
 			
 			for(l=0;l<5;l++){
-				int upisi=0;
+				int write=0;
 				///if the attribute number is in the selected list, write it in the resulting table
-				while(brglave[b]!=7) {
-							if(brglave[b++]==l){upisi=1;break;}
+				while(head_num[b]!=7) {
+							if(head_num[b++]==l){write=1;break;}
 					}
-					if(upisi==1){
+					if(write==1){
 						type = temp->block->tuple_dict[l + k].type;
 						size = temp->block->tuple_dict[l + k].size;
 						
@@ -132,13 +132,13 @@ printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
 
 ///list of attributes which will be in the result of selection
 
-AK_list *atributi = (AK_list *) malloc(sizeof (AK_list));
-Ak_Init_L(atributi);
+AK_list *attributes = (AK_list *) malloc(sizeof (AK_list));
+Ak_Init_L(attributes);
 
 ///list of elements which represent the condition for selection
 
-AK_list *uvjet = (AK_list *) malloc(sizeof (AK_list));
-Ak_Init_L(uvjet);
+AK_list *condition = (AK_list *) malloc(sizeof (AK_list));
+Ak_Init_L(condition);
 
 
 
@@ -147,21 +147,21 @@ char *num = "2005";
 char *srcTable="student";
 char *destTable="select_result";
 
-Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), atributi);
-Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), atributi);
-Ak_InsertAtEnd_L(TYPE_ATTRIBS, "weight", sizeof ("weight"), atributi);
+Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
+Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
+Ak_InsertAtEnd_L(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
 
-Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), uvjet);
-Ak_InsertAtEnd_L(TYPE_INT, num, sizeof (int), uvjet);
-Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), uvjet);
+Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
+Ak_InsertAtEnd_L(TYPE_INT, num, sizeof (int), condition);
+Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), condition);
 
 printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
 
-AK_select(srcTable,destTable,atributi,uvjet);
-Ak_DeleteAll_L(atributi);
-free(atributi);
+AK_select(srcTable,destTable,attributes,condition);
+Ak_DeleteAll_L(attributes);
+free(attributes);
 
-Ak_DeleteAll_L(uvjet);
-free(uvjet);
+Ak_DeleteAll_L(condition);
+free(condition);
 
 }
