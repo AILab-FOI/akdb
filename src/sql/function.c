@@ -21,31 +21,44 @@
 #include "function.h"
 
 /**
- * @author Unknown
- * @brief Function that gets obj_id of a function by name and arguments list (transferred from trigger.c).
+ * @author Unknown, updated by Jurica Hlevnjak - check function arguments included for drop purpose
+ * @brief Function that gets obj_id of a function by name and arguments list (transferred from trigger.c/drop.c).
  * @param *function name of the function
  * @return obj_id of the function or EXIT_ERROR
  */
 int AK_get_function_obj_id(char* function, AK_list *arguments_list) {
     int i = 0;
     int id = -1;
+    int result;
+    int arg_num;
     AK_list *row;
-    while ((row = (AK_list *)AK_get_row(i, "AK_function")) != NULL) {
-        if (strcmp(row->next->next->data, function) == 0) {
+
+    int num_args;
+    num_args = Ak_Size_L(arguments_list);
+
+    while ((row = (AK_list *) AK_get_row(i, "AK_function")) != NULL) {
+        memcpy(&arg_num, row->next->next->next->data, sizeof (int));
+        if ((strcmp(row->next->next->data, function) == 0) && (arg_num == num_args)) {
+
             memcpy(&id, row->next->data, sizeof (int));
-            break;
+            
+            // check_type je za drop
+            result = AK_check_function_arguments_type(id, arguments_list);
+            if (result == EXIT_ERROR) {
+                // return EXIT_ERROR;
+            } else {
+                return id;
+            }
         }
         i++;
     }
-    if (id == -1)
+
+    if (result == EXIT_ERROR) {
         return EXIT_ERROR;
-    /*int result = AK_check_function_arguments(id, arguments_list);
-    if (result == EXIT_ERROR){
-	return EXIT_ERROR;
-    }*/
+    }
+    if (id == -1) return EXIT_ERROR;
     return id;
 }
-
 
 /**
  * @author Boris Kišić
@@ -54,40 +67,97 @@ int AK_get_function_obj_id(char* function, AK_list *arguments_list) {
  * @param *arguments_list list of arguments
  * @return EXIT_SUCCESS of the function or EXIT_ERROR
  */
-int AK_check_function_arguments(int function_id, AK_list *arguments_list){
-  
-  AK_list *row;
-  int i=0;
-  int fid;
-  AK_list_elem arguments_list_current = arguments_list->next;
-  while ((row = (AK_list *)AK_get_row(i, "AK_function_arguments")) != NULL) {
-    AK_list_elem current_elem = Ak_First_L(row); //set current_elem to first element in a list
-    memcpy(&fid, current_elem->data, sizeof (int));
-    printf("\n %d  %d function id: ", function_id, fid);
-    if (fid==function_id){
-      current_elem = Ak_Next_L(current_elem);
-      current_elem = Ak_Next_L(current_elem);
-      char *argtype_catalog = current_elem->data;
-      current_elem = Ak_Next_L(current_elem);
-      char *argname_catalog = current_elem->data;
-      
-      printf("\n %s %s", argtype_catalog, argname_catalog);
+int AK_check_function_arguments(int function_id, AK_list *arguments_list) {
 
-     char *arguments_list_argname = arguments_list_current->data;
-      arguments_list_current = arguments_list_current->next;
-      char *arguments_list_argtype = arguments_list_current->data;
-      arguments_list_current = arguments_list_current->next;
-      
-      printf("\n %s %s %s %s", argtype_catalog,arguments_list_argtype, argname_catalog,arguments_list_argname);
-      if(strcmp(argtype_catalog,arguments_list_argtype)!=0 || strcmp(argname_catalog,arguments_list_argname)!=0){
-	return EXIT_ERROR;
-      } 
+    AK_list *row;
+    int i = 0;
+    int fid;
+
+    AK_list_elem arguments_list_current = arguments_list->next;
+
+    char *argtype_catalog;
+    char *argname_catalog;
+    char *arguments_list_argname;
+    char *arguments_list_argtype;
+
+    while ((row = (AK_list *) AK_get_row(i, "AK_function_arguments")) != NULL) {
+        AK_list_elem current_elem = Ak_First_L(row); //set current_elem to first element in a list
+        memcpy(&fid, current_elem->data, sizeof (int));
+        printf("\n %d  %d function id: ", function_id, fid);
+
+        if (fid == function_id) {
+            current_elem = Ak_Next_L(current_elem);
+            current_elem = Ak_Next_L(current_elem);
+            argtype_catalog = current_elem->data;
+            current_elem = Ak_Next_L(current_elem);
+            argname_catalog = current_elem->data;
+
+            printf("\n %s %s", argtype_catalog, argname_catalog);
+
+            arguments_list_argname = arguments_list_current->data;
+            arguments_list_current = arguments_list_current->next;
+            arguments_list_argtype = arguments_list_current->data;
+            arguments_list_current = arguments_list_current->next;
+
+            printf("\n %s %s %s %s", argtype_catalog, arguments_list_argtype, argname_catalog, arguments_list_argname);
+
+            if (strcmp(argtype_catalog, arguments_list_argtype) != 0 || strcmp(argname_catalog, arguments_list_argname) != 0) {
+                return EXIT_ERROR;
+            }
+
+        }
+        i++;
     }
-    i++;
-  }
-  return EXIT_SUCCESS;
+
+    return EXIT_SUCCESS;
 }
 
+/**
+ * @author Jurica Hlevnjak
+ * @brief Function that checks whether arguments belong to function but only checks argument type (not name). Used for drop function.
+ * @param function_id id of the function
+ * @param args function arguments 
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
+int AK_check_function_arguments_type(int function_id, AK_list *args) {
+
+    AK_list *row;
+    int i = 0;
+    int fid;
+
+    AK_list_elem arguments_list_current = args->next;
+
+    char *argtype;
+    char *args_argtype;
+
+    while ((row = (AK_list *) AK_get_row(i, "AK_function_arguments")) != NULL) {
+        AK_list_elem current_elem = Ak_First_L(row);
+
+        memcpy(&fid, current_elem->data, sizeof (int));
+
+        // printf("Function id: %d  fid: %d \n", function_id, fid);
+
+        if (fid == function_id) {
+            current_elem = Ak_Next_L(current_elem);
+            current_elem = Ak_Next_L(current_elem);
+            argtype = current_elem->data;
+
+            // printf("Argtype: %s \n", argtype);
+
+            args_argtype = arguments_list_current->data;
+            arguments_list_current = arguments_list_current->next;
+
+            // printf("Argtype: %s  Args_argtype: %s \n", argtype, args_argtype);
+
+            if (strcmp(argtype, args_argtype) != 0) {
+                return EXIT_ERROR;
+            }
+        }
+        i++;
+    }
+
+    return EXIT_SUCCESS;
+}
 
 /**
  * @author Boris Kišić
@@ -98,32 +168,32 @@ int AK_check_function_arguments(int function_id, AK_list *arguments_list){
  * @return function id or EXIT_ERROR
  */
 int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
-    if (return_type<0 || return_type>13){
-	Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_add: Invalid parameter value for return type.\n");
+    if (return_type < 0 || return_type > 13) {
+        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_add: Invalid parameter value for return type.\n");
         return EXIT_ERROR;
     }
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     int function_id = AK_get_id(); //get function_id
-    int num_args = Ak_Size_L(arguments_list)/2; //get number of arguments
+    int num_args = Ak_Size_L(arguments_list) / 2; //get number of arguments
     Ak_Insert_New_Element(TYPE_INT, &function_id, "AK_function", "obj_id", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, name, "AK_function", "name", row_root);
     Ak_Insert_New_Element(TYPE_INT, &num_args, "AK_function", "arg_num", row_root);
     Ak_Insert_New_Element(TYPE_INT, &return_type, "AK_function", "return_type", row_root);
     Ak_insert_row(row_root);
-    
+
     int i;
     AK_list_elem current_elem = Ak_First_L(arguments_list); //set current_elem to first element in a list
     //add arguments list to arguments system table
-    for(i=1; i<=num_args; i++){
-      char* argname = Ak_Retrieve_L(current_elem, arguments_list); 
-      current_elem = Ak_Next_L(current_elem);
-      char* argtype = Ak_Retrieve_L(current_elem, arguments_list);
-      int argtype_int = atoi(argtype);
-      current_elem = Ak_Next_L(current_elem);
-      AK_function_arguments_add (function_id, i, argtype_int, argname);
+    for (i = 1; i <= num_args; i++) {
+        char* argname = Ak_Retrieve_L(current_elem, arguments_list);
+        current_elem = Ak_Next_L(current_elem);
+        char* argtype = Ak_Retrieve_L(current_elem, arguments_list);
+        int argtype_int = atoi(argtype);
+        current_elem = Ak_Next_L(current_elem);
+        AK_function_arguments_add(function_id, i, argtype_int, argname);
     }
-    
+
     return function_id;
 }
 
@@ -136,66 +206,65 @@ int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
  * @param *argname name of the argument
  * @return function argument id or EXIT_ERROR
  */
-int AK_function_arguments_add(int function_id, int arg_number, int arg_type, char *argname){
+int AK_function_arguments_add(int function_id, int arg_number, int arg_type, char *argname) {
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     char *arg_type_name;
-    switch(arg_type){
-      case 0:
-	 arg_type_name = "internal";
-	 break;
-      case 1:
-	 arg_type_name = "int";
-	 break;
-      case 2:
-	 arg_type_name = "float";
-	 break;
-      case 3:
-	 arg_type_name = "number";
-	 break;
-      case 4:
-	 arg_type_name = "varchar";
-	 break;
-      case 5:
-	 arg_type_name = "date";
-	 break;
-      case 6:
-	 arg_type_name = "datetime";
-	 break;
-      case 7:
-	 arg_type_name = "time";
-	 break;
-      case 8:
-	 arg_type_name = "blob";
-	 break;
-      case 9:
-	 arg_type_name = "bool";
-	 break;
-      case 10:
-	 arg_type_name = "operand";
-	 break;
-      case 11:
-	 arg_type_name = "operator";
-	 break;
-      case 12:
-	 arg_type_name = "attribs";
-	 break;
-      case 13:
-	 arg_type_name = "condition";
-	 break;
-      default:
-	 arg_type_name = "unknown"; 
-	 break;
+    switch (arg_type) {
+        case 0:
+            arg_type_name = "internal";
+            break;
+        case 1:
+            arg_type_name = "int";
+            break;
+        case 2:
+            arg_type_name = "float";
+            break;
+        case 3:
+            arg_type_name = "number";
+            break;
+        case 4:
+            arg_type_name = "varchar";
+            break;
+        case 5:
+            arg_type_name = "date";
+            break;
+        case 6:
+            arg_type_name = "datetime";
+            break;
+        case 7:
+            arg_type_name = "time";
+            break;
+        case 8:
+            arg_type_name = "blob";
+            break;
+        case 9:
+            arg_type_name = "bool";
+            break;
+        case 10:
+            arg_type_name = "operand";
+            break;
+        case 11:
+            arg_type_name = "operator";
+            break;
+        case 12:
+            arg_type_name = "attribs";
+            break;
+        case 13:
+            arg_type_name = "condition";
+            break;
+        default:
+            arg_type_name = "unknown";
+            break;
     }
     Ak_Insert_New_Element(TYPE_INT, &function_id, "AK_function_arguments", "func_id", row_root);
     Ak_Insert_New_Element(TYPE_INT, &arg_number, "AK_function_arguments", "att_num", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, arg_type_name, "AK_function_arguments", "att_type", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, argname, "AK_function_arguments", "att_name", row_root);
     Ak_insert_row(row_root);
-    
+
     return function_id;
 }
-
 
 /**
  * @author Boris Kišić
@@ -204,18 +273,18 @@ int AK_function_arguments_add(int function_id, int arg_number, int arg_type, cha
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_function_remove_by_obj_id(int obj_id) {
-    printf("***Remove function***\n");
+    // printf("***Remove function***\n");
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
-    
+
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_function", "obj_id", row_root, 1);
-  
+
     int result = Ak_delete_row(row_root);
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_remove_by_obj_id: Could not delete function.\n");
         return EXIT_ERROR;
     }
-   
+
     //delete function arguments
     Ak_DeleteAll_L(row_root);
     AK_function_arguments_remove_by_obj_id(&obj_id);
@@ -229,9 +298,9 @@ int AK_function_remove_by_obj_id(int obj_id) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_function_arguments_remove_by_obj_id(int *obj_id) {
-    printf("***Remove function arguments***\n");
+    // printf("***Remove function arguments***\n");
     int oid;
-    memcpy(&oid, obj_id, sizeof(int));
+    memcpy(&oid, obj_id, sizeof (int));
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &oid, "AK_function_arguments", "func_id", row_root, 1);
@@ -255,12 +324,12 @@ int AK_function_arguments_remove_by_obj_id(int *obj_id) {
 int AK_function_remove_by_name(char *name, AK_list *arguments_list) {
     int func_id = AK_get_function_obj_id(name, arguments_list);
     int result = AK_function_remove_by_obj_id(func_id);
-    
+
     if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_remove_by_name: Could not delete function.\n");
         return EXIT_ERROR;
     }
-   
+
     return EXIT_SUCCESS;
 }
 
@@ -272,26 +341,26 @@ int AK_function_remove_by_name(char *name, AK_list *arguments_list) {
  * @param *new_name new name of the function
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
-int AK_function_rename(char *name, AK_list *arguments_list, char *new_name){
-  printf("***Function rename***\n");
+int AK_function_rename(char *name, AK_list *arguments_list, char *new_name) {
+    printf("***Function rename***\n");
 
-  int func_id = AK_get_function_obj_id(name, arguments_list);
-  AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-  Ak_Init_L(row_root);
+    int func_id = AK_get_function_obj_id(name, arguments_list);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root);
 
-  Ak_Insert_New_Element_For_Update(TYPE_INT, &func_id, "AK_function", "obj_id", row_root, 1);
-  Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_function", "name", row_root, 0);
-  
-  int result = Ak_update_row(row_root);
-  
-  if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
-      Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_rename: Could not rename function.\n");
-      return EXIT_ERROR;
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &func_id, "AK_function", "obj_id", row_root, 1);
+    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_function", "name", row_root, 0);
+
+    int result = Ak_update_row(row_root);
+
+    if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
+        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_rename: Could not rename function.\n");
+        return EXIT_ERROR;
     }
-  
-  Ak_DeleteAll_L(row_root);
-  free(row_root); 
-  return EXIT_SUCCESS;
+
+    Ak_DeleteAll_L(row_root);
+    free(row_root);
+    return EXIT_SUCCESS;
 }
 
 /**
@@ -302,31 +371,29 @@ int AK_function_rename(char *name, AK_list *arguments_list, char *new_name){
  * @param *new_return_type new return type
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
-int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_return_type){
-  printf("***Change function return type***\n");
+int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_return_type) {
+    printf("***Change function return type***\n");
 
-  int func_id = AK_get_function_obj_id(name, arguments_list);
+    int func_id = AK_get_function_obj_id(name, arguments_list);
 
-  printf("%d %d", func_id, new_return_type);
-  AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
-  Ak_Init_L(row_root);
+    printf("%d %d", func_id, new_return_type);
+    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    Ak_Init_L(row_root);
 
-  Ak_Insert_New_Element_For_Update(TYPE_INT, &func_id, "AK_function", "obj_id", row_root, 1);
-  Ak_Insert_New_Element_For_Update(TYPE_INT, &new_return_type, "AK_function", "return_type", row_root, 0);
-  
-  int result = Ak_update_row(row_root);
-  
-  if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
-      Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_change_return_type: Could not change return type.\n");
-      return EXIT_ERROR;
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &func_id, "AK_function", "obj_id", row_root, 1);
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &new_return_type, "AK_function", "return_type", row_root, 0);
+
+    int result = Ak_update_row(row_root);
+
+    if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
+        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_change_return_type: Could not change return type.\n");
+        return EXIT_ERROR;
     }
-  
-  Ak_DeleteAll_L(row_root);
-  free(row_root); 
-  return EXIT_SUCCESS;
+
+    Ak_DeleteAll_L(row_root);
+    free(row_root);
+    return EXIT_SUCCESS;
 }
-
-
 
 /**
  * @author Boris Kišić
@@ -335,42 +402,91 @@ int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_
  */
 void AK_function_test() {
     printf("function.c: Present!\n");
-    
+
     AK_list *arguments_list1 = (AK_list *) malloc(sizeof (AK_list));
     Ak_Init_L(arguments_list1);
     Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list1);
     Ak_InsertAtEnd_L(TYPE_INT, "5", sizeof (int), arguments_list1);
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument2", sizeof ("argument1"), arguments_list1);
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list1);
     Ak_InsertAtEnd_L(TYPE_INT, "3", sizeof (int), arguments_list1);
     AK_function_add("test_funkcija", 1, arguments_list1);
     AK_function_add("test_funkcija2", 3, arguments_list1);
     AK_function_add("test_funkcija3", 4, arguments_list1);
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");
-    
+
     Ak_DeleteAll_L(arguments_list1);
     free(arguments_list1);
-    
+
     //int id=110;
     //AK_function_remove_by_obj_id(id);
-    
-    AK_list *arguments_list2 = (AK_list *) malloc(sizeof (AK_list));
-    Ak_Init_L(arguments_list2);
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list2);
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "date", sizeof ("date"), arguments_list2);
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list2);
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "number", sizeof ("number"), arguments_list2);
-    AK_function_remove_by_name("test_funkcija3", arguments_list2);
 
+    /*
+        AK_list *arguments_list2 = (AK_list *) malloc(sizeof (AK_list));
+        Ak_Init_L(arguments_list2);
+
+        Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list2);
+        Ak_InsertAtEnd_L(TYPE_VARCHAR, "date", sizeof ("date"), arguments_list2);
+        Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list2);
+        Ak_InsertAtEnd_L(TYPE_VARCHAR, "number", sizeof ("number"), arguments_list2);
+
+        AK_function_remove_by_name("test_funkcija3", arguments_list2);
+
+        AK_print_table("AK_function");
+        AK_print_table("AK_function_arguments");
+    
+        AK_function_rename("test_funkcija2", arguments_list2, "nova_funkcija");
+
+        AK_function_change_return_type("test_funkcija", arguments_list2, 5);
+        AK_print_table("AK_function");
+
+        Ak_DeleteAll_L(arguments_list2);
+        free(arguments_list2);
+     */
+
+    // dodano za test DROP FUNCTION
+
+    AK_list *arguments_list3 = (AK_list *) malloc(sizeof (AK_list));
+    Ak_Init_L(arguments_list3);
+
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list3);
+    Ak_InsertAtEnd_L(TYPE_INT, "5", sizeof (int), arguments_list3);
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list3);
+    Ak_InsertAtEnd_L(TYPE_INT, "3", sizeof (int), arguments_list3);
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument3", sizeof ("argument3"), arguments_list3);
+    Ak_InsertAtEnd_L(TYPE_INT, "1", sizeof (int), arguments_list3);
+
+    AK_function_add("test_funkcija", 1, arguments_list3);
+    AK_function_add("test_funkcija2", 2, arguments_list3);
+    AK_function_add("test_funkcija3", 1, arguments_list3);
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");
-    
-    //AK_function_rename("test_funkcija2", arguments_list2, "nova_funkcija");
-    AK_function_change_return_type("test_funkcija2", arguments_list2, 5);
-    AK_print_table("AK_function");
 
-    Ak_DeleteAll_L(arguments_list2);
-    free(arguments_list2);
+    Ak_DeleteAll_L(arguments_list3);
+    free(arguments_list3);
+
+
+    AK_list *arguments_list4 = (AK_list *) malloc(sizeof (AK_list));
+    Ak_Init_L(arguments_list4);
+
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list4);
+    Ak_InsertAtEnd_L(TYPE_INT, "5", sizeof (int), arguments_list4);
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list4);
+    Ak_InsertAtEnd_L(TYPE_INT, "3", sizeof (int), arguments_list4);
+    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument3", sizeof ("argument3"), arguments_list4);
+    Ak_InsertAtEnd_L(TYPE_INT, "2", sizeof (int), arguments_list4);
+    //Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument4", sizeof ("argument4"), arguments_list4);
+    //Ak_InsertAtEnd_L(TYPE_INT, "1", sizeof (int), arguments_list4);
+
+    AK_function_add("test_funkcija", 2, arguments_list4);
+    AK_function_add("test_funkcija2", 3, arguments_list4);
+    AK_function_add("test_funkcija3", 1, arguments_list4);
+    AK_print_table("AK_function");
+    AK_print_table("AK_function_arguments");
+
+    Ak_DeleteAll_L(arguments_list4);
+    free(arguments_list4);
+
 }
 
 

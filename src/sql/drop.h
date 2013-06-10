@@ -22,17 +22,23 @@
 
 #include "../file/table.h"
 #include "../file/fileio.h"
+#include "../rel/sequence.h"
+#include "view.h"
+#include "trigger.h"
+#include "function.h"
+#include "privileges.h"
 
 struct drop_arguments {
-    void* value;
-    void* next;
+    void *value;
+    struct drop_arguments *next;
 };
 
 typedef struct drop_arguments AK_drop_arguments;
 #endif
 
+void AK_drop(int type, AK_drop_arguments *drop_arguments);
 void AK_drop_test();
+void AK_drop_help_function(char *tblName, char *sys_table);
 int AK_if_exist(char *tblName, char *sys_table);
-void AK_drop_helper_function(char *tblName, char *sys_table);
 
 
