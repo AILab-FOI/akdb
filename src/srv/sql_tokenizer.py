@@ -128,7 +128,7 @@ class sql_tokenizer:
 
   def AK_parse_createIndex(self, string):
       '''
-      @autor Domagoj Tulicic
+      @autor Domagoj Tulicic 
       @brief sql parsing of CREATE INDEX command
       @param string sql command as string
       @return if command is successfully parsed returns list of tokens, else returns error message as string
@@ -160,40 +160,130 @@ class sql_tokenizer:
   def AK_create_sequence(self, string):
 
       '''
-      @autor Domagoj Tulicic
+      @autor Domagoj Tulicic modified by Danko Sacer
       @brief sql parsing of CREATE SEQUENCE command
       @param string sql command as string
       @return if command is successfully parsed returns list of tokens, else returns error message as string
       '''
 
       LPAR, RPAR, COMMA = map(Suppress,"(),")
-      (CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE ) =  map(CaselessKeyword, """CREATE,\
-         SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE""".replace(",","").split())
+      (CREATE, SEQUENCE, AS, START, WITH, INCREMENT, BY, MINVALUE, MAXVALUE,  CACHE ) =  map(CaselessKeyword, """CREATE, SEQUENCE, AS, START, WITH, INCREMENT, BY, MINVALUE, MAXVALUE, CACHE""".replace(",","").split())
       
-      keyword = MatchFirst((CREATE, SEQUENCE, MINVALUE, MAXVALUE, START, WITH, INCREMENT, BY, CACHE))
+      keyword = MatchFirst((CREATE, SEQUENCE, AS, START, WITH, INCREMENT, BY, MINVALUE, MAXVALUE, CACHE))
       cycleToken = Keyword("cycle", caseless=True).setResultsName("cycle")
-
+      
       identifier = ~keyword + Word(alphas, alphanums+"_")
       identifier2 = ~keyword + Word(nums)
 
       sequence_name = identifier.copy().setResultsName("sekvenca")
+      as_value = identifier.copy().setResultsName("as_value")
       min_value     = identifier2.copy().setResultsName("min_value")
       max_value     = identifier2.copy().setResultsName("max_value")
       start_with    = identifier2.copy().setResultsName("start_with")
       increment_by  = identifier2.copy().setResultsName("increment_by")
       cache_value   = identifier2.copy().setResultsName("cache")
-
+      	
       sequence_stmt = Forward()
-      sequence_stmt << (CREATE + SEQUENCE + sequence_name + MINVALUE + min_value +\
-                        (Optional((MAXVALUE),default=MAXVALUE) +\
-                        Optional((max_value),default="999999999999999999999999999")) + START +  WITH +\
-                        start_with + INCREMENT + BY + increment_by + CACHE + cache_value + Optional(cycleToken)) 
+      sequence_stmt << (CREATE + SEQUENCE + sequence_name +\
+      	(Optional((AS),default=AS) + Optional((as_value),default="bigint")) +\
+      	(Optional((START), default=START) + Optional((WITH),default=WITH) +\
+	 Optional((start_with),default="no start")) +\
+	(Optional((INCREMENT),default=INCREMENT) + Optional((BY),default=BY) +\
+	 Optional((increment_by),default="1")) +\
+      	(Optional((MINVALUE),default=MINVALUE) +\
+      	 Optional((min_value),default="no minvalue")) +\
+      	(Optional((MAXVALUE),default=MAXVALUE) +\
+	 Optional((max_value),default="no maxvalue")) +\
+	(Optional((CACHE),default=CACHE) +\
+	 Optional((cache_value),default="15")) +\
+	Optional((cycleToken),default="no cycle")) 
 
       try:
           tokens = sequence_stmt.parseString(string)
       except ParseException, err:
           return " "*err.loc + "^\n" + err.msg
       print
+      
+      #definiranje min, max i start default vrijednosti na temelju tipa sequence
+      if(tokens.as_value[0]=="smallint"):
+      	if(tokens.min_value=="no minvalue"):
+      		tokens.min_value = "-32768"
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	else:
+      		tokens.min_value = tokens.min_value[0]
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value[0]
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	if(tokens.max_value=="no maxvalue"):
+      		tokens.max_value = "32767"
+      	else:
+      		tokens.max_value = tokens.max_value[0]
+      
+      elif(tokens.as_value[0]=="int"):
+      	if(tokens.min_value=="no minvalue"):
+      		tokens.min_value = "-2147483648"
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	else:
+      		tokens.min_value = tokens.min_value[0]
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value[0]
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	if(tokens.max_value=="no maxvalue"):
+      		tokens.max_value = "2147483647"
+      	else:
+      		tokens.max_value = tokens.max_value[0]
+      
+      elif(tokens.as_value[0]=="bigint" or tokens.as_value=="bigint"):
+      	if(tokens.min_value=="no minvalue"):
+      		tokens.min_value = "-9223372036854775808"
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	else:
+      		tokens.min_value = tokens.min_value[0]
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value[0]
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	if(tokens.max_value=="no maxvalue"):
+      		tokens.max_value = "9223372036854775807"
+      	else:
+      		tokens.max_value = tokens.max_value[0]
+      
+      elif(tokens.as_value[0]=="tinyint" or tokens.as_value[0]=="numeric" or tokens.as_value[0]=="decimal"):
+      	if(tokens.min_value=="no minvalue"):
+      		tokens.min_value = "0"
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	else:
+      		tokens.min_value = tokens.min_value[0]
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value[0]
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	if(tokens.max_value=="no maxvalue"):
+      		tokens.max_value = "255"
+      	else:
+      		tokens.max_value = tokens.max_value[0]
+      
+      if(tokens.cache!="15"):
+      	tokens.cache = tokens.cache[0]
+      if(tokens.increment_by!="1"):
+      	tokens.increment_by = tokens.increment_by[0]
+      if(tokens.as_value!="bigint"):
+      	tokens.as_value = tokens.as_value[0]
+      
       return tokens
 
   def AK_parse_where(self, string):
@@ -671,8 +761,8 @@ class sql_tokenizer:
      @return No return value
      '''
      print "\n---------------------------------CREATE SEQUENCE test---------------------------------\n"
-     commands = ["create sequence sequenca minvalue 9 maxvalue 9999999 start with 1 increment by 2 cache 10 CYCLE",\
-              "create sequence sequenca minvalue 9 maxvalue 9999999 start with 1 increment by 2 cache 10"]
+     commands = ["create sequence sequenca start with 1 increment by 2 minvalue 9 maxvalue 9999999  cache 10 CYCLE",\
+              "create sequence sequenca start with 1 increment by 2 minvalue 9 maxvalue 9999999  cache 10"]
     
      for command in commands:
          print "\n"+command
@@ -689,6 +779,52 @@ class sql_tokenizer:
              print "increment by = ", token.increment_by
              print "cache = ", token.cache
              print "cycle = ", token.cycle
+             print "'AS' definition: ", token.as_value
+             print "'Start with' value: ", token.start_with
+     '''
+     @author Danko Sacer
+     @brief additional testing of sql parsing command CREATE SEQUENCE
+     @return No return value
+     '''
+     print "\n********CREATE SEQUENCE test by Danko Sacer***********"
+     
+     sql_1 = "create sequence brojac_1 as smallint start with 10 increment by 1 minvalue 5"
+     
+     print "\n"+sql_1
+     token = test.AK_create_sequence(sql_1)
+     if isinstance(token, str):
+     	print "Error: "
+     	print sql_1
+	print token
+     else:
+	print "Tokens: ", token
+	print "\nSequence name: ", token.sekvenca
+	print "'AS' definition: ", token.as_value
+	print "'Start with' value: ", token.start_with
+	print "'Increment by' value: ", token.increment_by
+	print "'MinValue' value: ", token.min_value
+	print "'MaxValue' value: ", token.max_value
+	print "'Cache' value: ", token.cache
+	print "'Cycle' value: ", token.cycle
+	     
+     sql_2 = "create sequence brojac_2"
+     
+     print "\n"+sql_2
+     token = test.AK_create_sequence(sql_2)
+     if isinstance(token, str):
+     	print "Error:"
+     	print sql_2
+     	print token
+     else:
+     	print "Tokens: ", token
+     	print "\nSequence name: ", token.sekvenca
+     	print "'AS' definition: ", token.as_value
+     	print "'Start with' value: ", token.start_with
+     	print "'Increment by' value: ", token.increment_by
+      	print "'MinValue' value: ", token.min_value
+     	print "'MaxValue' value: ", token.max_value
+     	print "'Cache' value: ", token.cache
+      	print "'Cycle' value: ", token.cycle
 
 
   def AK_parse_where_test(self):
@@ -835,6 +971,10 @@ test.AK_parse_create_table_test()
 
 #testing insert into statement
 test.AK_parse_insert_into_test()
-'''
+
 #testing create trigger statement
 test.Ak_create_trigger_test()
+'''
+
+#testing create sequence statement
+test.AK_create_sequence_test()
