@@ -32,7 +32,7 @@ void AK_clean_redolog() {
 	//redo_log = (struct redo_log *) realloc(redo_log, MAX_REDO_LOG_MEMORY);
 
 	printf("%ld velicina\n", sizeof(redo_log));
-
+//sdads
 	// poništavanje elemenata liste koji su outdated
 	for (element = 0; element < MAX_REDO_LOG_MEMORY; element++) {    	
 
