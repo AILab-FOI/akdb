@@ -643,10 +643,518 @@ class sql_tokenizer:
       return tokens
 
 
+  def AK_alter_group(self, string):
+      '''
+      @autor Zvonimir Kapes
+      @brief sql parsing of ALTER GROUP command
+      @source http://www.postgresql.org/docs/9.1/static/sql-altergroup.html
+      
+        ALTER GROUP group_name ADD USER user_name [, ... ]
+        ALTER GROUP group_name DROP USER user_name [, ... ]
+        ALTER GROUP group_name RENAME TO new_name 
+
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+      
+      #keywords
+      alterGroupToken   = Keyword("alter group",caseless=True).setResultsName("statement")
+      addUserToken      = Keyword("add user",caseless=True).setResultsName("operation")
+      dropUserToken     = Keyword("drop user",caseless=True).setResultsName("operation")
+      renameGroupToken  = Keyword("rename to",caseless=True).setResultsName("operation")
+
+      #values
+      wrd = Word(alphanums + "_:.-")
+      groupName = wrd.copy().setResultsName("groupname")
+      userName = wrd.copy().setResultsName("username")
+      groupNewName = wrd.copy().setResultsName("groupNewName")
+      
+      #list of usernames
+      users = Group( delimitedList( userName , ",", combine=False)).setResultsName("users")
+      
+      #keyword + value
+      addUserToken += users
+      dropUserToken += users
+      renameGroupToken += groupNewName
+      
+      alter_group_def = (addUserToken) | (dropUserToken) | (renameGroupToken)
+      
+      alterGroupStmt = alterGroupToken + groupName + alter_group_def + stringEnd
+
+      try:
+        tokens = alterGroupStmt.parseString(string)
+      except ParseException, err:
+          return " "*err.loc + "^\n" + err.msg
+      print  
+      return tokens
+      
+  def AK_alter_sequence(self, string):
+      '''
+      @autor Zvonimir Kapes
+      @brief sql parsing of ALTER SEQUENCE command
+      @source http://www.postgresql.org/docs/9.1/static/sql-altersequence.html
+      
+        ALTER SEQUENCE name [ INCREMENT [ BY ] increment ]
+            [ MINVALUE minvalue | NO MINVALUE ] [ MAXVALUE maxvalue | NO MAXVALUE ]
+            [ START [ WITH ] start ]
+            [ RESTART [ [ WITH ] restart ] ]
+            [ CACHE cache ] [ [ NO ] CYCLE ]
+            [ OWNED BY { table.column | NONE } ]
+        ALTER SEQUENCE name OWNER TO new_owner
+        ALTER SEQUENCE name RENAME TO new_name      
+      
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+      
+      #keywords
+      alterSeqToken = Keyword("alter sequence",caseless=True).setResultsName("statement")
+      
+      incrementToken= Keyword("increment", caseless=True).setResultsName("incOperation")
+      minvalueToken = Keyword("minvalue", caseless=True).setResultsName("minvOperation")
+      maxvalueToken = Keyword("maxvalue", caseless=True).setResultsName("maxvOperation")
+      startToken    = Keyword("start", caseless=True).setResultsName("startOperation")
+      restartToken  = Keyword("restart", caseless=True).setResultsName("restartOperation")
+      cacheToken    = Keyword("cache", caseless=True).setResultsName("cacheOperation")
+      renameToken   = Keyword("rename to", caseless=True).setResultsName("renameOperation")
+      ownerToken    = Keyword("owner to", caseless=True).setResultsName("ownerOperation")
+      #value keywords
+      noMin         = Keyword("NO MINVALUE", caseless=True).setResultsName("minvalue")
+      noMax         = Keyword("NO MAXVALUE", caseless=True).setResultsName("maxvalue")
+      cycle         = Keyword("CYCLE", caseless=True).setResultsName("cycle")
+      noCycle       = Keyword("NO CYCLE", caseless=True).setResultsName("cycle")
+      
+      #optional
+      byToken   = Keyword("by", caseless=True)
+      withToken = Keyword("with", caseless=True)
+
+      #values
+      identifier = Word(alphas, alphanums+"_")
+      identifier2= Word(nums)
+      sequence_name = identifier.copy().setResultsName("name")
+      increment  = identifier2.copy().setResultsName("increment")
+      minvalue   = identifier2.copy().setResultsName("minvalue")
+      maxvalue   = identifier2.copy().setResultsName("maxvalue")
+      start      = identifier2.copy().setResultsName("start")
+      restart    = identifier2.copy().setResultsName("restart")
+      cache      = identifier2.copy().setResultsName("cache")
+      new_name   = identifier.copy().setResultsName("newName")
+      new_owner  = identifier.copy().setResultsName("newOwner")         
+      
+      #keyword [optional] value
+      incrementToken= incrementToken + Optional(byToken) + increment
+      minvalueToken = (minvalueToken + minvalue) | (noMin)
+      maxvalueToken = (maxvalueToken + maxvalue) | (noMax)
+      startToken    = startToken + Optional(withToken) + start
+      restartToken  = restartToken + Optional(Optional(withToken) + restart)
+      cacheToken    = cacheToken + cache
+      cycleToken    = (cycle) | (noCycle)
+      renameToken   = renameToken + new_name
+      ownerToken    = ownerToken + new_owner
+      
+      attribs = ZeroOrMore(incrementToken | minvalueToken | maxvalueToken | startToken | restartToken | cacheToken | cycleToken)
+      
+      alterSequenceStmt = alterSeqToken + sequence_name + Or(ownerToken | renameToken | attribs) + stringEnd     
+      
+      
+      try:
+        tokens = alterSequenceStmt.parseString(string)
+      except ParseException, err:
+          return " "*err.loc + "^\n" + err.msg
+      
+      s = set()
+      print "TOKENSI : ",  tokens
+      for x in tokens:
+          if x in s: return "Error: redundant options"
+          s.add(x)
+      
+      return tokens
+      
+  def AK_alter_index(self, string):
+      '''
+      @autor Zvonimir Kapes
+      @brief sql parsing of ALTER INDEX command
+      @source http://www.postgresql.org/docs/9.1/static/sql-alterindex.html
+      
+          ALTER INDEX name RENAME TO new_name
+          ALTER INDEX name SET TABLESPACE tablespace_name
+          ALTER INDEX name SET ( storage_parameter = value [, ... ] )
+          ALTER INDEX name RESET ( storage_parameter [, ... ] )
+          
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+      
+      #keywords
+      alterIndexToken   = Keyword("alter index",caseless=True).setResultsName("statement")
+      renameToken       = Keyword("rename to",caseless=True).setResultsName("operation")
+      setTablespaceToken= Keyword("set tablespace",caseless=True).setResultsName("operation")
+      setToken          = Keyword("set",caseless=True).setResultsName("operation")
+      resetToken        = Keyword("reset",caseless=True).setResultsName("operation")
+
+      #values
+      wrd = Word(alphanums + "_:.-")
+      indexName         = wrd.copy().setResultsName("indexName")
+      indexNewName         = wrd.copy().setResultsName("indexNewName")
+      tableSpaceName    = wrd.copy().setResultsName("tableSpaceName")
+      storageParameter  = wrd.copy().setResultsName("storageParameter")
+      storageParameterValue = wrd.copy().setResultsName("storageParameterValue")
+      
+      #list of parameters
+      storageParametersValues = Group(storageParameter+ Suppress("=") +storageParameterValue)
+      storageParameters = Group( delimitedList( storageParametersValues , ",", combine=False)).setResultsName("storageParameters")
+      
+      #keyword + value
+      renameToken += indexNewName
+      setTablespaceToken += tableSpaceName
+      setToken += Suppress("(") + storageParameters + Suppress(")")
+      resetToken += storageParameters
+      
+      alter_index_def = (renameToken) | (setTablespaceToken) | (setToken) | (resetToken)
+      
+      alterIndexStmt = alterIndexToken + indexName + alter_index_def + stringEnd
+
+      try:
+        tokens = alterIndexStmt.parseString(string)
+      except ParseException, err:
+          return " "*err.loc + "^\n" + err.msg
+      print  
+      return tokens
+      
+  def AK_alter_user(self, string):
+      '''
+      @autor Zvonimir Kapes
+      @brief sql parsing of ALTER USER command 
+      @source http://www.postgresql.org/docs/8.4/static/sql-alteruser.html
+      
+        ALTER USER name [ [ WITH ] option [ ... ] ]
+        where option can be:
+              SUPERUSER | NOSUPERUSER
+            | CREATEDB | NOCREATEDB
+            | CREATEROLE | NOCREATEROLE
+            | CREATEUSER | NOCREATEUSER
+            | INHERIT | NOINHERIT
+            | LOGIN | NOLOGIN
+            | CONNECTION LIMIT connlimit
+            | [ ENCRYPTED | UNENCRYPTED ] PASSWORD 'password'
+            | VALID UNTIL 'timestamp' 
+
+        ALTER USER name RENAME TO newname
+        
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+      
+      #keywords
+      alterUserToken= Keyword("alter user",caseless=True).setResultsName("statement")
+      renameToken   = Keyword("rename to",caseless=True).setResultsName("operation")
+      withToken     = CaselessKeyword("with")
+      #option keywords
+      typeToken     = (CaselessKeyword("SUPERUSER") | CaselessKeyword("NOSUPERUSER")).setResultsName("typeOption")
+      dbToken       = (CaselessKeyword("CREATEDB") | CaselessKeyword("NOCREATEDB")).setResultsName("dbOption")
+      roleToken     = (CaselessKeyword("CREATEROLE") | CaselessKeyword("NOCREATEROLE")).setResultsName("roleOption")
+      userToken     = (CaselessKeyword("CREATEUSER") | CaselessKeyword("NOCREATEUSER")).setResultsName("userOption")
+      inheritToken  = (CaselessKeyword("INHERIT") | CaselessKeyword("NOINHERIT")).setResultsName("inheritOption")
+      loginToken    = (CaselessKeyword("LOGIN") | CaselessKeyword("NOLOGIN")).setResultsName("loginOption")
+      connectionLimitToken = CaselessKeyword("CONNECTION LIMIT").setResultsName("connectionLimitOption")
+      encryptToken= (CaselessKeyword("ENCRYPTED") | CaselessKeyword("UNENCRYPTED")).setResultsName("encryptOption")
+      passwordToken = Keyword("PASSWORD",caseless=True).setResultsName("passwordOption")
+      timestampToken =CaselessKeyword("VALID UNTIL").setResultsName("timestampOption")
+          
+      #values
+      wrd = Word(alphanums + "_:.-")
+      num = Word(nums)
+      username      = wrd.copy().setResultsName("username")
+      userNewName   = wrd.copy().setResultsName("userNewName")
+      connectionLimit = num.copy().setResultsName("connectionLimit")
+      password      = wrd.copy().setResultsName("password")
+      timestamp     = wrd.copy().setResultsName("timestamp")
+      
+      #keyword + value
+      renameToken = renameToken + userNewName
+      connectionLimitToken = connectionLimitToken + connectionLimit
+      passwordToken = passwordToken + Suppress("'") + password + Suppress("'")
+      timestampToken = timestampToken + Suppress("'") + timestamp + Suppress("'")
+      encryptToken = Optional(encryptToken) + passwordToken
+      
+      
+      options = ZeroOrMore(typeToken | dbToken | roleToken\
+          | userToken | inheritToken | loginToken\
+          | connectionLimitToken | encryptToken | timestampToken)
+      
+      alterUserStmt = alterUserToken + username + Optional(withToken) + Or(renameToken |\
+          options.setResultsName("options")) + stringEnd
+
+      try:
+        tokens = alterUserStmt.parseString(string)
+      except ParseException, err:
+          return " "*err.loc + "^\n" + err.msg
+      print  
+      
+      #noCheckValues - values that should not be checked for redundancy
+      noCheckValues = [tokens.connectionLimit, tokens.password, tokens.timestamp]
+    
+      s = set()
+      for x in tokens:
+          if x in s:
+              if x not in noCheckValues:
+                  return "Error: redundant options! "
+          s.add(x)
+      
+      return tokens
+      
+  def AK_create_group(self, string):
+      '''
+      @autor Zvonimir Kapes
+      @brief sql parsing of CREATE GROUP command
+      @source http://www.postgresql.org/docs/9.2/static/sql-creategroup.html
+      
+        CREATE GROUP name [ [ WITH ] option [ ... ] ]
+        where option can be:
+              SUPERUSER | NOSUPERUSER
+            | CREATEDB | NOCREATEDB
+            | CREATEROLE | NOCREATEROLE
+            | CREATEUSER | NOCREATEUSER
+            | INHERIT | NOINHERIT
+            | LOGIN | NOLOGIN
+            | [ ENCRYPTED | UNENCRYPTED ] PASSWORD 'password'
+            | VALID UNTIL 'timestamp'
+            | IN ROLE role_name [, ...]
+            | IN GROUP role_name [, ...]
+            | ROLE role_name [, ...]
+            | ADMIN role_name [, ...]
+            | USER role_name [, ...]
+            | SYSID uid
+            
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+      
+      #keywords
+      createGroupToken  = Keyword("CREATE GROUP",caseless=True).setResultsName("statement")
+      withToken     = CaselessKeyword("with")
+      #option keywords
+      userTypeToken     = (CaselessKeyword("SUPERUSER") | CaselessKeyword("NOSUPERUSER")).setResultsName("userTypeOption")
+      dbToken           = (CaselessKeyword("CREATEDB") | CaselessKeyword("NOCREATEDB")).setResultsName("dbOption")
+      createRoleToken   = (CaselessKeyword("CREATEROLE") | CaselessKeyword("NOCREATEROLE")).setResultsName("createRoleOption")
+      createUserToken   = (CaselessKeyword("CREATEUSER") | CaselessKeyword("NOCREATEUSER")).setResultsName("createUserOption")
+      inheritToken      = (CaselessKeyword("INHERIT") | CaselessKeyword("NOINHERIT")).setResultsName("inheritOption")
+      loginToken        = (CaselessKeyword("LOGIN") | CaselessKeyword("NOLOGIN")).setResultsName("loginOption")
+      encryptToken      = (CaselessKeyword("ENCRYPTED") | CaselessKeyword("UNENCRYPTED")).setResultsName("encryptOption")
+      passwordToken     = CaselessKeyword("PASSWORD").setResultsName("passwordOption")
+      timestampToken    = CaselessKeyword("VALID UNTIL").setResultsName("timestampOption")
+      inRoleToken   = CaselessKeyword("IN ROLE").setResultsName("inRoleOption")
+      inGroupToken  = CaselessKeyword("IN GROUP").setResultsName("inGroupOption")
+      roleToken     = CaselessKeyword("ROLE").setResultsName("roleOption")
+      adminToken    = CaselessKeyword("ADMIN").setResultsName("adminOption")
+      userToken     = CaselessKeyword("USER").setResultsName("userOption")
+      sysidToken    = CaselessKeyword("SYSID").setResultsName("sysidOption")
+          
+      #values
+      wrd = Word(alphanums + "_:.-")
+      groupname     = wrd.copy().setResultsName("groupname")
+      password      = wrd.copy().setResultsName("password")
+      timestamp     = wrd.copy().setResultsName("timestamp")
+      inRole        = wrd.copy().setResultsName("inRole")
+      inGroup       = wrd.copy().setResultsName("inGroup")
+      role          = wrd.copy().setResultsName("role")
+      admin         = wrd.copy().setResultsName("admin")
+      user          = wrd.copy().setResultsName("user")
+      sysid         = wrd.copy().setResultsName("sysid")
+      
+      #multiple values
+      inRoles  = Group( delimitedList( inRole , ",", combine=False)).setResultsName("inRoles")
+      inGroups = Group( delimitedList( inGroup , ",", combine=False)).setResultsName("inGroups")
+      roles    = Group( delimitedList( role , ",", combine=False)).setResultsName("roles")
+      admins   = Group( delimitedList( admin , ",", combine=False)).setResultsName("admins")
+      users    = Group( delimitedList( user , ",", combine=False)).setResultsName("users")
+      
+      #keyword + value
+      passwordToken = passwordToken + Suppress("'") + password + Suppress("'")
+      timestampToken= timestampToken + Suppress("'") + timestamp + Suppress("'")
+      encryptToken  = Optional(encryptToken) + passwordToken
+      inRoleToken   = inRoleToken + inRoles
+      inGroupToken  = inGroupToken + inGroups
+      roleToken     = roleToken + roles
+      adminToken    = adminToken + admins
+      userToken     = userToken + users
+      sysidToken    = sysidToken + sysid
+
+      options = ZeroOrMore(userTypeToken | dbToken | createRoleToken\
+          | createUserToken | inheritToken | loginToken\
+          | encryptToken | timestampToken | inRoleToken\
+          | inGroupToken | roleToken\
+          | adminToken | userToken | sysidToken)
+      
+      createGroupStmt = createGroupToken + groupname + Optional(withToken) + options.setResultsName("options") + stringEnd
+
+      try:
+        tokens = createGroupStmt.parseString(string)
+      except ParseException, err:
+          return " "*err.loc + "^\n" + err.msg
+      print  
+      
+      #noCheckValues - values that should not be checked for redundancy
+      noCheckValues = [tokens.password, tokens.timestamp]
+    
+      s = set()
+      for x in tokens:
+          if x in s:
+              if x not in noCheckValues:
+                  return "Error: redundant options! "
+          s.add(x)
+      
+      return tokens
+
+
 
 
 #--------------------------------------------testne funkcije--------------------------------------------#  
 
+
+  def Ak_alter_group_test(self):
+      '''
+      @author Zvonimir Kapes
+      @brief testing of sql parsing command ALTER GROUP
+      @return No return value
+      '''
+      print "\n---------------------------------ALTER GROUP test---------------------------------\n"
+      commands = ["ALTER GROUP grupa_rnm RENAME TO novoime",
+                  "ALTER GROUP grupa_rnm RENAME TO",
+                  "ALTER GROUP grupa_rnm RENAME TO novoime, drugoime",
+                  "ALTER GROUP grupa_rnm RENAME TO novoime ssdw",
+                "ALTER GROUP grupa_addus ADD USER pr_vi , dr.ugi, _treci",
+                "ALTER GROUP grupa_addus ADD USER  , ",
+                "ALTER GROUP grupa_addus ADD USER prvi drugi treci, chetrti",
+                "ALTER GROUP grupa_addus DROP USER jedini,f",
+                "ALTER GROUP grupa_drpus DROP USER prva, druga treci"]
+            
+      for command in commands:
+        token = test.AK_alter_group(command)
+        print "\n", command
+        if isinstance(token, str):
+          print "Error:"
+          print token
+          
+        else:
+          print "tokens = ", token
+          print "tokens.statement = ", token.statement
+          print "tokens.operation = ", token.operation
+          print "tokens.groupname = ", token.groupname
+          print "tokens.grouprename =", token.groupNewName
+          print "tokens.userList = ", token.users
+        
+  def Ak_alter_sequence_test(self):
+      '''
+      @author Zvonimir Kapes
+      @brief testing of sql parsing command ALTER SEQUENCE
+      @return No return value
+      '''
+      print "\n---------------------------------ALTER SEQUENCE test---------------------------------\n"
+      commands = ["ALTER SEQUENCE serial RESTART WITH 105",
+                "ALTER sequencE sek_ve1nca INCREMENT 2 MAXVALUE 232 No minvalue START WITH 55 RESTART 16 CACHE 8",
+                "ALTER sequencE sek_ve1nca INCREMENT 2 No minvalue NO MAXVALUE RESTART CACHE 8 no CYCLE start 343 RESTART",
+                "ALTER SEQUENCE sekv Owner TO new_owner rename to lalal",
+                "ALTER SEQUENCE sekv rename TO new_name"]
+            
+      for command in commands:
+        token = test.AK_alter_sequence(command)
+        print "\n", command
+        if isinstance(token, str):
+          print "Error:"
+          print token
+          
+        else:
+          print "tokens = ", token
+          print "tokens.statement = ", token.statement
+          print "tokens.name = ", token.name
+          print "tokens.increment = ", token.increment
+          print "tokens.minvalue = ", token.minvalue
+          print "tokens.maxvalue = ", token.maxvalue
+          print "tokens.start = ", token.start
+          print "tokens.restart = ", token.restart
+          print "tokens.cache = ", token.cache
+          print "tokens.cycle = ", token.cycle
+          print "tokens.newName = ", token.newName
+          print "tokens.newOwner = ", token.newOwner
+          
+  def Ak_alter_index_test(self):
+      '''
+      @author Zvonimir Kapes
+      @brief testing of sql parsing command ALTER INDEX
+      @return No return value
+      '''
+      print "\n---------------------------------ALTER INDEX test---------------------------------\n"
+      commands = ["ALTER INDEX distributors SET TABLESPACE fasttablespace",
+                  "ALTER INDEX distributors RENAME TO noviNaziv",
+                  "ALTER INDEX distributors SET (fillfactor = 75, opcija2=199)"]
+            
+      for command in commands:
+        token = test.AK_alter_index(command)
+        print "\n", command
+        if isinstance(token, str):
+          print "Error:"
+          print token
+          
+        else:
+          print "tokens = ", token
+          print "tokens.statement = ", token.statement
+          print "tokens.operation = ", token.operation
+          print "tokens.indexNewName = ", token.indexNewName
+          print "tokens.tableSpaceName =", token.tableSpaceName
+          print "tokens.storageParameters = ", token.storageParameters
+          
+  def Ak_alter_user_test(self):
+      '''
+      @author Zvonimir Kapes
+      @brief testing of sql parsing command ALTER USER
+      @return No return value
+      '''
+      print "\n---------------------------------ALTER USER test---------------------------------\n"
+      commands = ["ALTER USER username SUPERUSER CREATEDB password 'lozinka' Superuser CONNECTION limit 353 INHERIT valid until '12-06-2032'",
+                  "ALTER USER korisnik nosuperuser login connection limit 11 password 'PASS234'",
+                  "ALTER USER staroIme RENAME TO novoIme"]
+            
+      for command in commands:
+        token = test.AK_alter_user(command)
+        print "\n", command
+        if isinstance(token, str):
+          print "Error:"
+          print token
+          
+        else:
+          print "tokens = ", token
+          print "tokens.username = ", token.username
+          print "tokens.password = ", token.password
+          print "tokens.options = ", token.options
+          print "tokens.type = ", token.typeOption
+          print "tokens.connectionLimit = ", token.connectionLimit
+          
+  def Ak_create_group_test(self):
+      '''
+      @author Zvonimir Kapes
+      @brief testing of sql parsing command CREATE GROUP
+      @return No return value
+      '''
+      print "\n---------------------------------CREATE GROUP test---------------------------------\n"
+      commands = ["CREATE GROUP miriam valid until '12-06-2032' LOGIN PASSWORD 'jw8s0F4' VALID UNTIL '2005-01-01'",
+                  "CREATE GROUP admin WITH user kor1, kor2 CREATEROLE CREATEDB SUPERUSER",
+                  "CREATE GROUP grupa WITH CREATEDB CREATEROLE user kor1, kor2, kor3 valid until '12-06-2032'"]
+            
+      for command in commands:
+        token = test.AK_create_group(command)
+        print "\n", command
+        if isinstance(token, str):
+          print "Error:"
+          print token
+          
+        else:
+          print "tokens = ", token
+          print "tokens.groupname = ", token.groupname
+          print "tokens.dbOption = ", token.dbOption
+          print "tokens.options = ", token.options
+          print "tokens.users = ", token.users
+          print "tokens.timestamp = ", token.timestamp
 
   def AK_parse_grant_test(self):
       '''
@@ -978,3 +1486,18 @@ test.Ak_create_trigger_test()
 
 #testing create sequence statement
 test.AK_create_sequence_test()
+
+#testing alter group statement
+test.Ak_alter_group_test()
+
+#testing alter sequence statement
+test.Ak_alter_sequence_test()
+
+#testing alter index statement
+test.Ak_alter_index_test()
+
+#testing alter user statement
+test.Ak_alter_user_test()
+
+#testing create group statement
+test.Ak_create_group_test()
