@@ -175,7 +175,7 @@ class sql_tokenizer:
       identifier = ~keyword + Word(alphas, alphanums+"_")
       identifier2 = ~keyword + Word(nums)
 
-      sequence_name = identifier.copy().setResultsName("sekvenca")
+      sequence_name = identifier.copy().setResultsName("seq_name")
       as_value = identifier.copy().setResultsName("as_value")
       min_value     = identifier2.copy().setResultsName("min_value")
       max_value     = identifier2.copy().setResultsName("max_value")
@@ -196,7 +196,7 @@ class sql_tokenizer:
 	 Optional((max_value),default="no maxvalue")) +\
 	(Optional((CACHE),default=CACHE) +\
 	 Optional((cache_value),default="15")) +\
-	Optional((cycleToken),default="no cycle")) 
+	Optional((cycleToken),default="0")) 
 
       try:
           tokens = sequence_stmt.parseString(string)
@@ -283,6 +283,11 @@ class sql_tokenizer:
       	tokens.increment_by = tokens.increment_by[0]
       if(tokens.as_value!="bigint"):
       	tokens.as_value = tokens.as_value[0]
+      if(tokens.cycle!="0"):
+      	tokens.cycle="1"
+      if(tokens.seq_name!=" "):
+      	name = tokens.seq_name[0]
+      	tokens.seq_name = name
       
       return tokens
 
@@ -1281,7 +1286,7 @@ class sql_tokenizer:
              print token
          else:
              print "tokens = ", token
-             print "SekvencaIme = ", token.sekvenca
+             print "SekvencaIme = ", token.seq_name
              print "min value = ", token.min_value
              print "max value = ", token.max_value
              print "increment by = ", token.increment_by
@@ -1306,7 +1311,7 @@ class sql_tokenizer:
 	print token
      else:
 	print "Tokens: ", token
-	print "\nSequence name: ", token.sekvenca
+	print "\nSequence name: ", token.seq_name
 	print "'AS' definition: ", token.as_value
 	print "'Start with' value: ", token.start_with
 	print "'Increment by' value: ", token.increment_by
@@ -1325,7 +1330,7 @@ class sql_tokenizer:
      	print token
      else:
      	print "Tokens: ", token
-     	print "\nSequence name: ", token.sekvenca
+     	print "\nSequence name: ", token.seq_name
      	print "'AS' definition: ", token.as_value
      	print "'Start with' value: ", token.start_with
      	print "'Increment by' value: ", token.increment_by
@@ -1483,7 +1488,7 @@ test.AK_parse_insert_into_test()
 #testing create trigger statement
 test.Ak_create_trigger_test()
 '''
-
+'''
 #testing create sequence statement
 test.AK_create_sequence_test()
 
@@ -1501,3 +1506,4 @@ test.Ak_alter_user_test()
 
 #testing create group statement
 test.Ak_create_group_test()
+'''
