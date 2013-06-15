@@ -324,3 +324,49 @@ class sql_executor:
 		else:
 			return False
 		return False
+
+class sql_sequence():	
+	## create sequence
+	# developd by Danko Sacer
+	# executes the create sequence expression
+	# @param self object pointer
+	# @param expr the create expression to be executed 
+	def create_sequence(self, string):
+		pars = sql_tokenizer()
+		tok = pars.AK_create_sequence(string)
+		# isinstance needs revision for swig
+		'''
+		if isinstance(tok, str):
+			print "Error: syntax error in expression"
+			print string
+			print tok
+			return False
+		'''	
+		print "\nSequence name: ", tok.seq_name
+		print "'AS' definition: ", tok.as_value
+		print "'Start with' value: ", tok.start_with
+		print "'Increment by' value: ", tok.increment_by
+		print "'MinValue' value: ", tok.min_value
+		print "'MaxValue' value: ", tok.max_value
+		print "'Cache' value: ", tok.cache
+		print "'Cycle' value: ", tok.cycle
+		
+		# Check for sequence name, if already exists in database return false
+		# Needs more revision for swig after overflow buffer fault 
+		# is handled in sql_executor_test.py
+		'''
+		names = ak47.AK_get_column(1, "AK_sequence")
+		for name in set(names):
+			if(name==tok.seq_name):
+				print "ERROR the name is already used"
+				return False
+		'''
+		# executing create statement 
+		try:
+			ak47.AK_sequence_add(tok.seq_name, int(tok.start_with), int(tok.increment_by), int(tok.max_value), int(tok.min_value), int(tok.cycle))
+			return True
+		except:
+			print "Wrong input parameters"
+			return False
+		
+		return False
