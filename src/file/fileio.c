@@ -67,7 +67,6 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
    * @return No return value
  */
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore) {
-  AK_archive_log("Ak_Insert_New_Element", newtype, data, table, attribute_name); //ARCHIVE_LOG  
   Ak_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, NEW_VALUE);
 }
 
@@ -171,6 +170,8 @@ int Ak_insert_row(AK_list *row_root) {
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into block on adress: %d\n", adr_to_write);
 
     AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(adr_to_write);
+
+    AK_add_to_redolog("INSERT", row_root);
 
     int end = (int) Ak_insert_row_to_block(row_root, mem_block->block);
 
@@ -444,6 +445,32 @@ int Ak_delete_row(AK_list *row_root) {
     return EXIT_SUCCESS;
 }
 
+/**
+ *@author Dražen Bandić
+ *@brief Function deletes row by id
+ *@param id id of row
+ *@param tableName name of table to delete the row
+ */
+void Ak_delete_row_by_id(int id, char* tableName){
+    char* attributes = AK_rel_eq_get_atrributes_char(tableName);
+    char* nameID = malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    int index = 0;
+
+    do{
+        if ( *attributes == ';'){
+            nameID[index] = '\0';
+            break;
+        } else {
+            nameID[index++] = *attributes;
+        }
+        attributes++;
+    } while ( *attributes != '\0' || index < MAX_VARCHAR_LENGTH);
+
+    AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
+    Ak_Insert_New_Element_For_Update(TYPE_INT, &id, tableName, nameID, row_root, 1);
+    Ak_delete_row(row_root);
+}
+
 /** @author Matija Novak, Dejan Frankovic (added referential integrity)
         @brief Function updates rows of some table
         @param row_root elements of one row
@@ -555,6 +582,9 @@ void Ak_fileio_test() {
 
     AK_print_table("testna");
 
+    AK_recover_archive_log("log.log");
+
+    AK_print_table("testna");
 
     Ak_DeleteAll_L(row_root);
     free(row_root);

@@ -218,7 +218,6 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
         free(row_root);
     }
 
-    AK_archive_log("AK_grant_privilege_user", username, table, right); //ARCHIVE_LOG
     return privilege_id;
 }
 
@@ -352,7 +351,6 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right) {
         free(row_root);
     }
 
-    //AK_archive_log("AK_grant_privilege_group", groupname, table, right); //ARCHIVE_LOG
     return privilege_id;
 }
 
@@ -463,7 +461,7 @@ int AK_add_user_to_group(char *user, char *group) {
     Ak_insert_row(row_root);
 
     free(row_root);
-    //AK_archive_log("AK_add_user_to_group", user, group); //ARCHIVE_LOG
+
     return EXIT_SUCCESS;
 }
 

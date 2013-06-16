@@ -878,7 +878,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     int num_extents = 0, num_blocks = 0;
     register int i, j;
     AK_mem_block *mem_block;
-    AK_archive_log("AK_rename", old_table_name, old_attr, new_table_name, new_attr); //ARCHIVE_LOG
+
     if (strcmp(old_attr, new_attr) != 0) {
         //SEARCH FOR ALL BLOCKS IN SEGMENT
         i = 0;

@@ -13,10 +13,14 @@
 #include "../auxi/constants.h"
 #include "../auxi/configuration.h"
 #include "../auxi/debug.h"
+#include "../rec/archive_log.h"
+#include "../file/table.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
 
 #endif /* REDOLOG */
 
-void AK_clean_redolog();
-int AK_add_to_redolog(char *srcTableName, AK_list *expr);
-int AK_is_in_redolog(AK_list *expr);
+int AK_add_to_redolog(char command[6], AK_list *row_root);
 void AK_printout_redolog();
+char* AK_check_attributes(char *attributes);

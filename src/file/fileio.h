@@ -21,6 +21,8 @@
 
 #include "../sql/cs/reference.h"
 #include "../mm/memoman.h"
+#include "../rec/recovery.h"
+#include "../rec/redo_log.h"
 #include "files.h"
 
 #endif
@@ -35,3 +37,4 @@ int Ak_delete_update_segment(AK_list *row_root, int del);
 int Ak_delete_row(AK_list *row_root) ;
 int Ak_update_row(AK_list *row_root);
 void Ak_fileio_test();
+void Ak_delete_row_by_id(int id, char* tableName);

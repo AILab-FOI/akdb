@@ -36,7 +36,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     int objectID = AK_get_id();
     pthread_mutex_unlock(&fileMut);
     char *sys_table;
-    AK_archive_log("AK_initialize_new_segment", name, type); //ARCHIVE_LOG
+
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
         return EXIT_ERROR;
@@ -93,4 +93,6 @@ void Ak_files_test() {
     i1 = AK_initialize_new_segment(ime1, SEGMENT_TYPE_TABLE, header1);
     if (i1 != EXIT_ERROR)
         printf("AK_init_new_segment: Test1 succeded!\n");
+
+    AK_printout_redolog();
 }

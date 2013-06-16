@@ -156,7 +156,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
         free(src_addr1);
         free(src_addr2);
 		Ak_dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
-		//AK_archive_log("AK_product", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
+
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");

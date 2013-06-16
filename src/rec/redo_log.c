@@ -21,167 +21,127 @@
 #include "redo_log.h"
 
 /**
- * @author Krunoslav Bilić
- * @brief Function used to clean outdated redolog entries
- * @param no param.
- * @return No return value.
+ * @author @author Krunoslav Bilić updated by Dražen Bandić
+ * @brief Function adds new element to redolog
+ * @return EXIT_FAILURE if not allocated memory for ispis, otherwise EXIT_SUCCESS
  */
-void AK_clean_redolog() {
-	/*int element = 0;
+int AK_add_to_redolog(char command[6], AK_list *row_root){
 
-	//redo_log = (struct redo_log *) realloc(redo_log, MAX_REDO_LOG_MEMORY);
+    int n = redo_log->number;
 
-	printf("%ld velicina\n", sizeof(redo_log));
-//sdads
-	// poništavanje elemenata liste koji su outdated
-	for (element = 0; element < MAX_REDO_LOG_MEMORY; element++) {    	
+    if(n == MAX_REDO_LOG_ENTRIES){
+        AK_archive_log();
+        n = 0;
+    }
 
-		redo_log->redo_log_cache = (AK_mem_block *) malloc(sizeof (AK_mem_block));
-    	redo_log->expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list_elem el = (AK_list_elem) Ak_First_L(row_root);
+    
+    char* record;
+    if((record = (char*) calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
+    	return EXIT_FAILURE;
+    }
 
-		if (redo_log->redo_log_cache[element]->timestamp_read != 0) {
-			table_addresses *addresses = (table_addresses*) AK_get_table_addresses(redo_log->expr[element]->next->table);
-			AK_mem_block* memBlock = (AK_mem_block *) malloc(sizeof(AK_mem_block));
+    char* int_char = (char*) malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* float_char = (char*) malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* default_char = (char*) malloc(MAX_VARCHAR_LENGTH * sizeof(char));
 
-			memBlock = (AK_mem_block *) AK_get_block(addresses->address_from[0]);
+    char table[MAX_ATT_NAME];   
+    memset(table, '\0', MAX_ATT_NAME);
+    memcpy(&table, el->table, strlen(el->table));
 
-			if (memBlock->timestamp_last_change	> redo_log->redo_log_cache[element]->timestamp_last_change) {
-				if (memBlock->dirty == 1){
-					memcpy(redo_log->redo_log_cache[element], memBlock, sizeof(AK_mem_block));
-				}else{
-				redo_log->redo_log_cache[element] = NULL;
-				}
-			}
-		}
-	}
+    int max = AK_num_attr(table);
+    int numAttr = 1;
 
-	// popravljanje liste
-	for (element = 0; element < MAX_REDO_LOG_MEMORY; element++){
+    while (el != NULL) {
+        switch (el->type) {
 
-		if (redo_log->redo_log_cache[element] == NULL){
-			//kopiranje sljedeceg elementa na mjesto praznog elementa
-			redo_log->redo_log_cache[element] = (AK_mem_block *) malloc(sizeof(AK_mem_block));
-			redo_log->redo_log_cache[element]->block = (AK_block *) malloc (sizeof(AK_block));
-			redo_log->expr[element]->next = (AK_list_elem) malloc(sizeof(struct list_elem));
+            case FREE_CHAR:
+                strncat(record, "null", 4);
+                break;
+            case TYPE_INT:
+                sprintf (int_char, "%i", *((int *) el->data));
+                strncat(record, int_char, strlen(int_char));
+                break;
+            case TYPE_FLOAT:
+               	sprintf (float_char, "%.3f", *((float *) el->data));
+               	strncat(record, float_char, strlen(float_char));
+                break;
+            case TYPE_VARCHAR:
+            default:
+                default_char = AK_check_attributes(el->data);
+                strncat(record, default_char, strlen(el->data));
+                break;
+        }
+        if(numAttr < max){
+            strncat(record, "|", 1);
+        }
+        numAttr++;
+        el = el->next;
+    }
 
-			if (element < MAX_REDO_LOG_MEMORY){
-				memcpy(redo_log->redo_log_cache[element], redo_log->redo_log_cache[element+1], sizeof(AK_mem_block));
-				memcpy(redo_log->expr[element], redo_log->expr[element+1], sizeof(AK_list));
+    memcpy(redo_log->table_name[n], table, strlen(table));
+    memcpy(redo_log->attributes[n], record, strlen(record));
+    memcpy(redo_log->command[n], command, strlen(command));
+    
+    int x = n + 1;
 
-				//brisanje elementa poslje
-				redo_log->redo_log_cache[element+1] = (AK_mem_block *)  malloc(sizeof(AK_mem_block));
-				redo_log->redo_log_cache[element+1]->block = (AK_block *) malloc (sizeof(AK_block));
-				redo_log->redo_log_cache[element+1]->dirty = 0;
+    redo_log->number = x;
 
-				redo_log->expr[element+1] =  (AK_list *) malloc (sizeof (AK_list));
-				redo_log->expr[element+1]->next = (AK_list *) malloc (sizeof(AK_list));
+    free(record);
+    free(int_char);
+    free(float_char);
+    free(default_char);
 
-				//sljedeci za izbacivanje je
-				redo_log->next_replace = element-1;
-
-				element = element-1;
-			}
-
-		}
-
-	}*/
+    return EXIT_SUCCESS;
 }
 
-/**
- * @author Krunoslav Bilić
- * @brief Function used to add new element to redolog
- * @param memory block containing new element and affiliated expression
- * @return EXIT_SUCCESS if input is successful.
- */
 
-int AK_add_to_redolog(char *srcTableName, AK_list *expr) {
-    return EXIT_FAILURE;
-	int element = 0;
-	int size = 0;
-	AK_mem_block* memBlock;
-
-    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(srcTableName);
-
-    if((memBlock = (AK_mem_block *) malloc(sizeof ( AK_mem_block))) == NULL){
-     	return EXIT_FAILURE;
-     }
-
-    memBlock = (AK_mem_block *)AK_get_block(addresses->address_from[0]);
-
-    size = (redo_log->next_replace + 1)*sizeof(AK_mem_block) + (redo_log->next_replace + 1)*sizeof(AK_list) + sizeof(int);
-
-    if(redo_log->next_replace == MAX_REDO_LOG_ENTRIES || size > MAX_REDO_LOG_MEMORY){
-
-	    //pozvati archive
-	    //element = redo_log->next_replace;
-
-	    memcpy(redo_log->redo_log_cache[element], memBlock, sizeof(AK_mem_block));
-	    AK_copy_L(expr, redo_log->expr[element]);
-
-	    Ak_dbg_messg(LOW, REDO, "\nAK_add_to_redolog: RedoLog dump");
-	    if (REDO == 1) {AK_printout_redolog();}
-	    return EXIT_SUCCESS;
-
-    }else{
-	    // dodavanje na sljedece prazno mjesto
-	    for (element = 0; element < MAX_REDO_LOG_ENTRIES; element++){
-
-	    	if (redo_log->redo_log_cache[element]->timestamp_last_change == 0){
-	    		memcpy(redo_log->redo_log_cache[element], memBlock, sizeof(AK_mem_block));
-	    		AK_copy_L(expr, redo_log->expr[element]);
-
-	    		redo_log->next_replace = element + 1;
-	    		Ak_dbg_messg(LOW, REDO, "\nAK_add_to_redolog: RedoLog dump");
-	    		if (REDO == 1) {AK_printout_redolog();}
-	    		return EXIT_SUCCESS;
-	    	}
-	    }
-	}
-}
-
-/**
- * @author Krunoslav Bilić
- * @brief Function used to test whether redo log contains expression or not
- * @param expression to be tested
- * @return EXIT_SUCCESS if test is successful, otherwise EXIT_FAILURE
- */
-int AK_is_in_redolog(AK_list *expr) {
-    return EXIT_FAILURE;
-	int element = 0;
-
-	// ciscenje ukoliko je doslo do promjene stanja
-	AK_clean_redolog();
-
-
-	// provjerava da li trazeni upit postoji u redologu
-	for (element = 0; element < MAX_REDO_LOG_MEMORY; element++) {
-		if (AK_compare_L(redo_log->expr[element], expr) == EXIT_SUCCESS) {
-			return EXIT_SUCCESS;
-		}
-	}
-	return EXIT_FAILURE;
-}
-
-/**
- * @author Krunoslav Bilić
+/** 
+ * @author Krunoslav Bilić updated by Dražen Bandić
  * @brief Function prints out the content of redolog memory
  * @return No return value.
  */
 void AK_printout_redolog(){
-	int len[3200];
-	int element = 0;
-
-	for (element = 0; element != MAX_REDO_LOG_MEMORY; element++) {
-
-		if (redo_log->expr[element]->next->type != 0) {
-			printf("\n%d :", element);
-			AK_print_row(len, redo_log->expr[element]);
-			printf("table : %s",redo_log->expr[element]->next->table);
-			printf("\n\n");
-		}
-
-	}
+    int x = redo_log->number;
+    int i = 0;
+    for (i = 0; i < x; i++){
+        printf("%d. %s %s %s\n", i, redo_log->table_name[i], redo_log->command[i], redo_log->attributes[i]);
+    }
 }
 
+/** 
+ * @author Dražen Bandić
+ * @brief Checks if the attribute contains '|', and if it does it replaces it with "\|"
+ * @return new attribute
+ */
+char* AK_check_attributes(char *attributes){
 
-// Test redo_log is in selection.c
+    int n = strlen(attributes);
+
+    if( attributes[n-1] == '\\' ){
+        if( n == MAX_VARCHAR_LENGTH )
+            attributes[n-1] = ' ';
+        else
+            attributes[n] = ' ';
+    }
+
+    char* result = malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    int index = 0;
+    int att_index = 0;
+
+    do{
+        if ( attributes[att_index] == '|' ){
+            if ( index + 2 <= MAX_VARCHAR_LENGTH ){
+                result[index++] = '\\';
+                result[index++] = '|';
+            } else {
+                break;
+            }
+        } else {
+            result[index++] = attributes[att_index];
+        }
+        att_index++;
+    } while ( att_index < n || index < MAX_VARCHAR_LENGTH);
+
+    return result;
+}

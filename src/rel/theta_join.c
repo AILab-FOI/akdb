@@ -276,7 +276,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
         free(src_addr2);
 
 		Ak_dbg_messg(LOW, REL_OP, "THETA_JOIN_SUCCESS\n\n");
-		//AK_archive_log("AK_theta_join", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
+
         return EXIT_SUCCESS;
     } else {
 

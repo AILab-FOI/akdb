@@ -51,17 +51,16 @@ typedef struct {
 } AK_db_cache;
 
 /**
-  * @author Unkown
+  * @author Dražen Bandić
   * @struct AK_redo_log
   * @brief Structure that defines global redo log
  */
 typedef struct {
-    /// last recently changed blocks
-    AK_mem_block ** redo_log_cache;
-	/// expression used in select
-    AK_list ** expr;
-    /// next block to be replaced (LIFO)
-    int next_replace;
+
+  char ** table_name;
+  char ** command;
+  char ** attributes;
+  int number;
 
 } AK_redo_log;
 

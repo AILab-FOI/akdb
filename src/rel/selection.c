@@ -33,9 +33,6 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
 	int num_attr = AK_num_attr(srcTable);
 
-	if (AK_is_in_redolog(expr) == EXIT_SUCCESS) {
-		AK_print_table(dstTable);
-	} else {
 		int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
 		if (startAddress == EXIT_ERROR) {
 			return EXIT_ERROR;
@@ -78,15 +75,12 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 			}
 		}
 
-		// da li hvata mem block catch-a ili novog selecta ?
-		AK_add_to_redolog(dstTable, expr);
-
 		free(src_addr);
 		free(t_header);
 		free(row_root);
 
 		AK_print_table(dstTable);
-	}
+	
 
 	Ak_dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
 	return EXIT_SUCCESS;
@@ -176,7 +170,7 @@ void AK_op_selection_test2() {
  *
  */
 void AK_op_selection_test_redolog(){
-
+/*
 	int brojac = 0;
 	printf("\n********** REDO LOG TEST ************\n");
 	for (brojac = 0; brojac < 10; brojac ++){
@@ -210,5 +204,5 @@ void AK_op_selection_test_redolog(){
 		if (brojac%2==0) AK_op_selection_test();
 		else AK_op_selection_test2();
 
-	}
+	}*/
 }

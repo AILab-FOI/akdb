@@ -142,8 +142,6 @@ thesame=0;
         free(src_addr2);
 	Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
 	
-	//AK_archive_log("AK_intersect", srcTable1, srcTable2, dstTable); //ARCHIVE_LOG
-	
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");

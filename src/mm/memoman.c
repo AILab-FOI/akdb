@@ -76,28 +76,29 @@ int AK_cache_malloc() {
 }
 
 /**
-  * @author Dejan Sambolić
+  * @author Dejan Sambolić updated by Dražen Bandić
   * @brief Function initializes the global redo log memory (variable redo_log)
   * @return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_redo_log_malloc() {
-	register int i;
 
-	if ((redo_log = (AK_redo_log *) malloc(sizeof ( AK_redo_log))) == NULL) {
+    if ((redo_log = (AK_redo_log *) malloc(sizeof ( AK_redo_log))) == NULL) {
         return EXIT_ERROR;
     }
 
-    redo_log->next_replace = 0;
-    redo_log->redo_log_cache = (AK_mem_block *) malloc(sizeof (AK_mem_block *));
-    redo_log->expr =  (AK_list *) malloc (sizeof (AK_list *));
+    redo_log->number = 0;
+    redo_log->table_name = malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
+    redo_log->command = malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
+    redo_log->attributes = malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
 
-    for (i = 0; i < MAX_REDO_LOG_ENTRIES; i++) {
-    	redo_log->redo_log_cache[i] = (AK_mem_block *) malloc(sizeof (AK_mem_block));
-    	redo_log->redo_log_cache[i]->block = (AK_block *) malloc (sizeof(AK_block));
-
-    	redo_log->expr[i] =  (AK_list *) malloc (sizeof (AK_list));
-    	redo_log->expr[i]->next = (AK_list *) malloc (sizeof(AK_list));
+    int i = 0;
+    for (i = 0; i < MAX_REDO_LOG_ENTRIES; i++)
+    {
+        redo_log->table_name[i] = calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+        redo_log->command[i] = calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+        redo_log->attributes[i] = calloc(MAX_VARCHAR_LENGTH, sizeof(char));
     }
+
     return EXIT_SUCCESS;
 }
 

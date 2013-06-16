@@ -370,6 +370,9 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
 
   #include "../rec/redo_log.h"
   #include "../rec/redo_log.c"
+
+  #include "../rec/recovery.h"
+  #include "../rec/recovery.c"
 %}
 
 
@@ -513,3 +516,6 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 
 %include "../rec/redo_log.h"
 %include "../rec/redo_log.c"
+
+%include "../rec/recovery.h"
+%include "../rec/recovery.c"
