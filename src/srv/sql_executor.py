@@ -218,69 +218,69 @@ class Table_exists_command:
 
 ## create sequence
 # developd by Danko Sacer
-class Create_sequence_command:	
-	create_seq_regex = r"^(?i)create sequence(\s([a-zA-Z0-9_]+))+?$"
-	pattern = None
-	matcher = None
+class Create_sequence_command:  
+        create_seq_regex = r"^(?i)create sequence(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
 
-	## matches method
-	# checks whether given input matches table_exists command syntax
-	def matches(self, input):
-		print "matching regex"
-		self.pattern = re.compile(self.create_seq_regex)
-		self.matcher = self.pattern.match(input)
-		if (self.matcher != None):
-			message = self.matcher
-		else:
-			message = "None"
-		
-		return message 
+        ## matches method
+        # checks whether given input matches table_exists command syntax
+        def matches(self, input):
+                print "matching regex"
+                self.pattern = re.compile(self.create_seq_regex)
+                self.matcher = self.pattern.match(input)
+                if (self.matcher != None):
+                        message = self.matcher
+                else:
+                        message = "None"
+                
+                return message 
 
-	
-	# executes the create sequence expression
-	# neded revision in sequence.c in function AK_sequence_add which receives 
-	# only int values but posible is also bigint which is default for undefined values
-	def execute(self):
-		print "start parsing.."
-		print self.matcher.group(0)
-		print "after self"
-		pars = sql_tokenizer()
-		tok = pars.AK_create_sequence(self.matcher.group(0))
-		# isinstance needs revision for swig
-		'''
-		if isinstance(tok, str):
-			print "Error: syntax error in expression"
-			print string
-			print tok
-			return False
-		'''
-		print "\nSequence name: ", tok.seq_name
-		print "'AS' definition: ", tok.as_value
-		print "'Start with' value: ", tok.start_with
-		print "'Increment by' value: ", tok.increment_by
-		print "'MinValue' value: ", tok.min_value
-		print "'MaxValue' value: ", tok.max_value
-		print "'Cache' value: ", tok.cache
-		print "'Cycle' value: ", tok.cycle
-		
-		# Check for sequence name, if already exists in database return false
-		# Needs more revision for swig after buffer overflow is handled
-		'''
-		names = ak47.AK_get_column(1, "AK_sequence")
-		for name in set(names):
-			if(name==tok.seq_name):
-				error = "ERROR the name is already used"
-				return error
-		'''
-		# executing create statement 
-		try:
-			ak47.AK_sequence_add(str(tok.seq_name), int(tok.start_with), int(tok.increment_by), int(tok.max_value), int(tok.min_value), int(tok.cycle))
-			result = "Command succesfully executed"
-		except:
-			result = "ERROR creating sequence didn't pass"
-		
-		ak47.AK_print_table("AK_sequence")
-		return result
+        
+        # executes the create sequence expression
+        # neded revision in sequence.c in function AK_sequence_add which receives 
+        # only int values but posible is also bigint which is default for undefined values
+        def execute(self):
+                print "start parsing.."
+                print self.matcher.group(0)
+                print "after self"
+                pars = sql_tokenizer()
+                tok = pars.AK_create_sequence(self.matcher.group(0))
+                # isinstance needs revision for swig
+                '''
+                if isinstance(tok, str):
+                        print "Error: syntax error in expression"
+                        print string
+                        print tok
+                        return False
+                '''
+                print "\nSequence name: ", tok.seq_name
+                print "'AS' definition: ", tok.as_value
+                print "'Start with' value: ", tok.start_with
+                print "'Increment by' value: ", tok.increment_by
+                print "'MinValue' value: ", tok.min_value
+                print "'MaxValue' value: ", tok.max_value
+                print "'Cache' value: ", tok.cache
+                print "'Cycle' value: ", tok.cycle
+                
+                # Check for sequence name, if already exists in database return false
+                # Needs more revision for swig after buffer overflow is handled
+                '''
+                names = ak47.AK_get_column(1, "AK_sequence")
+                for name in set(names):
+                        if(name==tok.seq_name):
+                                error = "ERROR the name is already used"
+                                return error
+                '''
+                # executing create statement 
+                try:
+                        ak47.AK_sequence_add(str(tok.seq_name), int(tok.start_with), int(tok.increment_by), int(tok.max_value), int(tok.min_value), int(tok.cycle))
+                        result = "Command succesfully executed"
+                except:
+                        result = "ERROR creating sequence didn't pass"
+                
+                ak47.AK_print_table("AK_sequence")
+                return result
 
 
 ## sql_executor
@@ -426,12 +426,10 @@ class sql_executor:
                         create_table_attributes.append([{'name': str(attribute[0])}, {'type':get_attr_type(str(attribute[1]))}])
                 attribute_count = len(create_table_attributes)
                 # executing
-                '''
-                It seems like something's wrong, I can't make it work, it always fails.
-                '''
-                if(ak47.AK_create_table(table_name,create_table_attributes, attribute_count) == ak47.EXIT_SUCCESS):
+                try:
+                        ak47.AK_create_table(table_name, create_table_attributes, attribute_count)
                         return True
-                else:
+                except:
                         return False
                 return False
 
@@ -469,12 +467,12 @@ class sql_executor:
                 '''
                 Not working
                 TypeError: in method 'AK_create_Index', argument 2 of type 'AK_list *'
-                Second parameter should be AK_list. 
-                if(ak47.AK_create_Index(index, t) == ak47.EXIT_SUCCESS):
-                        return True
-                else:
-                        return False
                 '''
+                try:
+                        ak47.AK_create_Index(index, t)
+                        return True
+                except:
+                        return False
                 return False
         
         ## create trigger
@@ -510,10 +508,10 @@ class sql_executor:
                 '''
                 Not working
                 TypeError: in method 'AK_trigger_add', argument 3 of type 'AK_list *'
-                Third parameter should be AK_list. 
-                if(ak47.AK_trigger_add(trigger, token.whatOption, p, table_name, token.functionName) == ak47.EXIT_SUCCESS):
-                        return True
-                else:
-                        return False
                 '''
+                try:
+                        ak47.AK_trigger_add(trigger, token.whatOption, p, table_name, token.functionName)
+                        return True
+                except:
+                        return False
                 return False       
