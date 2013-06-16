@@ -25,6 +25,7 @@ command_list =  {'\q': 'Disconnect from the server and quit akdb client.',
 				 '\d <table_name>' : 'Prints out table details',
 				 '\p <table_name>' : 'Prints out table',
 				 '\\t <table_name>?': 'Check whether the given table exists in database or not.',
+				 'create sequence <sequence_name> <sql_expression>' : 'Creating sequence in AK_sequence table',
 				 'history': 'List all previously typed commands.'
 				}
 
@@ -123,7 +124,7 @@ class AK_client():
 
 	##Checks for a command from the server
 	def AK_check_response(self):
-		return self.sock.recv(buffer_size)
+		return #self.sock.recv(buffer_size)
 	##Setter for finished vairable
 	def set_finished(self, val):
 		self.finished = val
