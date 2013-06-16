@@ -1,0 +1,3 @@
+testna INSERT Novak|Matija|1
+testna INSERT DugackoPrezime|DugackoIme|5
+testna DELETE DugackoPrezime|DugackoIme|10
