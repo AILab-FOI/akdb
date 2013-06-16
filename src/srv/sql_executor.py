@@ -216,6 +216,73 @@ class Table_exists_command:
                         result = "Table exists. You can see it by typing \p <table_name>."
                 return result
 
+## create sequence
+# developd by Danko Sacer
+class Create_sequence_command:	
+	create_seq_regex = r"^(?i)create sequence(\s([a-zA-Z0-9_]+))+?$"
+	pattern = None
+	matcher = None
+
+	## matches method
+	# checks whether given input matches table_exists command syntax
+	def matches(self, input):
+		print "matching regex"
+		self.pattern = re.compile(self.create_seq_regex)
+		self.matcher = self.pattern.match(input)
+		if (self.matcher != None):
+			message = self.matcher
+		else:
+			message = "None"
+		
+		return message 
+
+	
+	# executes the create sequence expression
+	# neded revision in sequence.c in function AK_sequence_add which receives 
+	# only int values but posible is also bigint which is default for undefined values
+	def execute(self):
+		print "start parsing.."
+		print self.matcher.group(0)
+		print "after self"
+		pars = sql_tokenizer()
+		tok = pars.AK_create_sequence(self.matcher.group(0))
+		# isinstance needs revision for swig
+		'''
+		if isinstance(tok, str):
+			print "Error: syntax error in expression"
+			print string
+			print tok
+			return False
+		'''
+		print "\nSequence name: ", tok.seq_name
+		print "'AS' definition: ", tok.as_value
+		print "'Start with' value: ", tok.start_with
+		print "'Increment by' value: ", tok.increment_by
+		print "'MinValue' value: ", tok.min_value
+		print "'MaxValue' value: ", tok.max_value
+		print "'Cache' value: ", tok.cache
+		print "'Cycle' value: ", tok.cycle
+		
+		# Check for sequence name, if already exists in database return false
+		# Needs more revision for swig after buffer overflow is handled
+		'''
+		names = ak47.AK_get_column(1, "AK_sequence")
+		for name in set(names):
+			if(name==tok.seq_name):
+				error = "ERROR the name is already used"
+				return error
+		'''
+		# executing create statement 
+		try:
+			ak47.AK_sequence_add(str(tok.seq_name), int(tok.start_with), int(tok.increment_by), int(tok.max_value), int(tok.min_value), int(tok.cycle))
+			result = "Command succesfully executed"
+		except:
+			result = "ERROR creating sequence didn't pass"
+		
+		ak47.AK_print_table("AK_sequence")
+		return result
+
+
 ## sql_executor
 # contaions methods for sql operations
 class sql_executor:
@@ -224,9 +291,10 @@ class sql_executor:
         print_command =  Print_table_command()
         table_details_command = Table_details_command()
         table_exists_command = Table_exists_command()
+        create_sequence_command = Create_sequence_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 
@@ -449,49 +517,3 @@ class sql_executor:
                         return False
                 '''
                 return False       
-
-class sql_sequence():   
-        ## create sequence
-        # developd by Danko Sacer
-        # executes the create sequence expression
-        # @param self object pointer
-        # @param expr the create expression to be executed 
-        def create_sequence(self, string):
-                pars = sql_tokenizer()
-                tok = pars.AK_create_sequence(string)
-                # isinstance needs revision for swig
-                '''
-                if isinstance(tok, str):
-                        print "Error: syntax error in expression"
-                        print string
-                        print tok
-                        return False
-                '''     
-                print "\nSequence name: ", tok.seq_name
-                print "'AS' definition: ", tok.as_value
-                print "'Start with' value: ", tok.start_with
-                print "'Increment by' value: ", tok.increment_by
-                print "'MinValue' value: ", tok.min_value
-                print "'MaxValue' value: ", tok.max_value
-                print "'Cache' value: ", tok.cache
-                print "'Cycle' value: ", tok.cycle
-                
-                # Check for sequence name, if already exists in database return false
-                # Needs more revision for swig after overflow buffer fault 
-                # is handled in sql_executor_test.py
-                '''
-                names = ak47.AK_get_column(1, "AK_sequence")
-                for name in set(names):
-                        if(name==tok.seq_name):
-                                print "ERROR the name is already used"
-                                return False
-                '''
-                # executing create statement 
-                try:
-                        ak47.AK_sequence_add(tok.seq_name, int(tok.start_with), int(tok.increment_by), int(tok.max_value), int(tok.min_value), int(tok.cycle))
-                        return True
-                except:
-                        print "Wrong input parameters"
-                        return False
-                
-                return False
