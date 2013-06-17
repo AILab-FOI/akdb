@@ -9,7 +9,7 @@ class sql_tokenizer:
 
   def AK_parse_grant(self, string):
       '''
-      @author Boris Kisic
+      @author Boris Kisic, edited by Zvonimir Kapes
       @brief sql parsing of GRANT command
       @param string sql command as string
       @return if command is successfully parsed returns list of tokens, else returns error message as string 
@@ -25,11 +25,12 @@ class sql_tokenizer:
       tableList = Group(delimitedList(table))
       userName = delimitedList(ident, ",", combine=True)
       userNameList = Group(delimitedList(userName))
+      groupToken = Keyword("group", caseless=True).setResultsName("group")
 
       grantStmt = Forward()
       grantStmt << (grantToken + privilegeList.setResultsName("privileges") + 
                   onToken + tableList.setResultsName("tables") + 
-                  toToken + userNameList.setResultsName("users") +
+                  toToken + Optional(groupToken) + userNameList.setResultsName("users") +
                   Optional(withToken + restOfLine.setResultsName("grantOption")))
 
       try:
