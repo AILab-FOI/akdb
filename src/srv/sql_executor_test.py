@@ -24,7 +24,7 @@ print "\n------------------------------------ PRINT TABLE STUDENT --------------
 
 ak47.AK_print_table("student")
 '''
-
+'''
 
 #------------test executor for create sequence by Danko Sacer----------------
 print "\n------------Testing executor for create sequence by Danko Sacer----------------\n"
@@ -50,37 +50,29 @@ ak47.AK_print_table("AK_sequence")
 '''
 
 # create table test by Franjo Kovacic
-# test always fails, create_table() in sql_executor.py might not work properly
-test = sql_executor()
+test = Create_table_command()
 commands = ["CREATE TABLE tablica (var1 INT, var2 INT)", "CREATE TABLE tabla1 (v2 INT, v4 TEXT, v11 INT AUTO_INCREMENT)"]
 for command in commands:
-        if (test.create_table(command) == True):
-                print "ok"
-        else:
-                print "something went wrong"
-
+        test.expr = command
+        print test.execute()
 
 
 # create index test by Franjo Kovacic
-test = sql_executor()
+test = Create_index_command()
 commands = ["CREATE INDEX Pindex ON tablica ( stupac1, stupac2 ) USING Btree",\
                     "create index Pindex on tablica ( stupac1 ) USING Btree",\
                     "create index Pindex on tablica ( stupac1, stupac2 ) USING Hash"]
 for command in commands:
-        if (test.create_index(command) == True):
-                print "ok"
-        else:
-                print "something went wrong"
+        test.expr = command
+        print test.execute()
 
 # create trigger test by Franjo Kovacic
-test = sql_executor()
+test = Create_trigger_command()
 commands=["CREATE TRIGGER prihvat_veze AFTER INSERT ON veza FOR ROW EXECUTE PROCEDURE veza_prihvacena()",\
                   "CREATE TRIGGER prihvat_veze BEFORE  DELETE OR INSERT ON veza EXECUTE PROCEDURE veza_prihvacena()",\
                   "CREATE TRIGGER prihvat_veze BEFORE DELETE OR INSERT ON veza FOR EACH STATEMENT EXECUTE PROCEDURE veza_prihvacena(2,3,'data')",\
                   "CREATE TRIGGER prihvat_veze AFTER DELETE OR INSERT OR UPDATE ON veza FOR EACH STATEMENT EXECUTE PROCEDURE veza_prihvacena(2,10.5,'data')"]
 for command in commands:
-        if (test.create_trigger(command) == True):
-                print "ok"
-        else:
-                print "something went wrong"
-'''
+        test.expr = command
+        print test.execute()
+

@@ -1046,6 +1046,8 @@ test.Ak_create_trigger_test()
 
 #testing create sequence statement
 test.AK_create_sequence_test()
-'''
+
 test.AKTokenizeCreateFunctionTest()
 test.AK_parse_CreateView_test()
+
+'''

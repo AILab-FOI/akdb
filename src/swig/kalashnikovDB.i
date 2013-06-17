@@ -203,6 +203,41 @@ frees AK_create_table_parameter** datatype
 }
 
 /*
+handles AK_list * datatype in Python.
+*/
+%typemap(out) AK_list * {
+  AK_list* list = malloc(sizeof(AK_list));
+  memcpy(list, $1, sizeof(AK_list));
+  $result = list;
+}
+
+/*
+Converts python list to AK_list* datatype
+*/
+%typemap(in) AK_list * lists{
+  if (PyList_Check($input)) {
+    int size = PyList_Size($input);
+    int i = 0;
+    AK_list lists[ size ];
+    AK_list* list;
+
+    for (i = 0; i < size; i++) {
+      list = (AK_list *) PyList_GetItem($input, i);
+      memcpy(lists + i, list, sizeof ( AK_list));
+    }
+    $1 = lists;
+  }
+  else $1 = (AK_list*)$input;
+}
+
+/*
+frees AK_list** datatype
+*/
+%typemap(freearg) AK_list ** {
+  free($1);
+}
+
+/*
 Everything in the %{ ... %} block is simply copied verbatim to the resulting wrapper file created by SWIG.
 */
 %{

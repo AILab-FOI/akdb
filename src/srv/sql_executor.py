@@ -285,34 +285,31 @@ class Create_sequence_command:
 ## create table command
 # @author Franjo Kovacic
 class Create_table_command:
-	create_table_regex = r"^(?i)create table(\s([a-zA-Z0-9_]+))+?$"
+        create_table_regex = r"^(?i)create table(\s([a-zA-Z0-9_]+))+?$"
         pattern = None
         matcher = None
+        expr = None
 
         ## matches method
         # checks whether given input matches table_exists command syntax
         def matches(self, input):
-                print "matching regex"
                 self.pattern = re.compile(self.create_table_regex)
                 self.matcher = self.pattern.match(input)
+                self.expr = input
                 if (self.matcher is not None):
-                        message = self.matcher
+                        return self.matcher
                 else:
-                        message = None
-                
-                return message 
+                        return None
 
         
         # executes the create table expression
         def execute(self):
-                print "start parsing.."
-                print self.matcher.group(0)
                 parser = sql_tokenizer()
-                token = parser.AK_parse_create_table(expr)
+                token = parser.AK_parse_create_table(self.expr)
                 # checking syntax
                 if isinstance(token, str):
                         print "Error: syntax error in expression"
-                        print expr
+                        print self.expr
                         print token
                         return False
                 # get table name
@@ -340,38 +337,35 @@ class Create_table_command:
                 except:
                         result = "Error. Creating table failed."
                 return result
-
+                
 ## create index command
 # @author Franjo Kovacic
 class Create_index_command:
-	create_table_regex = r"^(?i)create index(\s([a-zA-Z0-9_]+))+?$"
+        create_table_regex = r"^(?i)create index(\s([a-zA-Z0-9_]+))+?$"
         pattern = None
         matcher = None
+        expr = None
 
         ## matches method
         # checks whether given input matches table_exists command syntax
         def matches(self, input):
-                print "matching regex"
                 self.pattern = re.compile(self.create_index_regex)
                 self.matcher = self.pattern.match(input)
+                self.expr = input
                 if (self.matcher is not None):
-                        message = self.matcher
+                        return self.matcher
                 else:
-                        message = None
-                
-                return message 
+                        return None
 
         
         # executes the create index expression
         def execute(self):
-                print "start parsing.."
-                print self.matcher.group(0)
                 parser = sql_tokenizer()
-                token = parser.AK_parse_createIndex(expr)
+                token = parser.AK_parse_createIndex(self.expr)
                 # checking syntax
                 if isinstance(token, str):
                         print "Error: syntax error in expression"
-                        print expr
+                        print self.expr
                         print token
                         return False
                 #get table name
@@ -394,7 +388,9 @@ class Create_index_command:
                 '''
                 Not working
                 TypeError: in method 'AK_create_Index', argument 2 of type 'AK_list *'
+                Uncomment the next line before testing to see the problem
                 '''
+                # print ak47.AK_create_Index(index, t)
                 try:
                         ak47.AK_create_Index(index, t)
                         result = "Index created"
@@ -405,9 +401,10 @@ class Create_index_command:
 ## create trigger command
 # @author Franjo Kovacic
 class Create_trigger_command:
-	create_trigger_regex = r"^(?i)create trigger(\s([a-zA-Z0-9_]+))+?$"
+        create_trigger_regex = r"^(?i)create trigger(\s([a-zA-Z0-9_]+))+?$"
         pattern = None
         matcher = None
+        expr = None
 
         ## matches method
         # checks whether given input matches table_exists command syntax
@@ -415,24 +412,21 @@ class Create_trigger_command:
                 print "matching regex"
                 self.pattern = re.compile(self.create_trigger_regex)
                 self.matcher = self.pattern.match(input)
+                self.expr = input
                 if (self.matcher is not None):
-                        message = self.matcher
+                        return self.matcher
                 else:
-                        message = None
-                
-                return message 
+                        return None
 
         
         # executes the create trigger expression
         def execute(self):
-                print "start parsing.."
-                print self.matcher.group(0)
                 parser = sql_tokenizer()
-                token = parser.AK_parse_trigger(expr)
+                token = parser.AK_parse_trigger(self.expr)
                 # checking syntax
                 if isinstance(token, str):
                         print "Error: syntax error in expression"
-                        print expr
+                        print self.expr
                         print token
                         return False
                 #get table name
@@ -769,63 +763,3 @@ class sql_executor:
                 else:
                         return False
                 return False
-                      
-                
-## create table command
-# @author Franjo Kovacic
-class Create_table_command:
-        create_table_regex = r"^(?i)create table(\s([a-zA-Z0-9_]+))+?$"
-        pattern = None
-        matcher = None
-
-        ## matches method
-        # checks whether given input matches table_exists command syntax
-        def matches(self, input):
-                print "matching regex"
-                self.pattern = re.compile(self.create_table_regex)
-                self.matcher = self.pattern.match(input)
-                if (self.matcher != None):
-                        message = self.matcher
-                else:
-                        message = "None"
-                
-                return message 
-
-        
-        # executes the create table expression
-        def execute(self):
-                print "start parsing.."
-                print self.matcher.group(0)
-                parser = sql_tokenizer()
-                token = parser.AK_parse_create_table(expr)
-                # checking syntax
-                if isinstance(token, str):
-                        print "Error: syntax error in expression"
-                        print expr
-                        print token
-                        return False
-                # get table name
-                table_name = str(token.tableName)
-                # table should not exist yet
-                '''
-                For some reason, AK_table_exist won't work, it always just exits here, so it's commented out
-                if (ak47.AK_table_exist(table_name) == 1):
-                        print "Error: table'" + table_name + "' already exist"
-                        return False
-                '''                
-                # get attributes
-                '''
-                Create table in table.c currently takes only name and type of attributes.
-                Parsing works for other attribute properties as well, so it should be added here when possible.
-                '''
-                create_table_attributes = []
-                for attribute in token.attributes:
-                        create_table_attributes.append([{'name': str(attribute[0])}, {'type':get_attr_type(str(attribute[1]))}])
-                attribute_count = len(create_table_attributes)
-                # executing
-                try:
-                        ak47.AK_create_table(table_name, create_table_attributes, attribute_count)
-                        result = "Table created"
-                except:
-                        result = "Error. Creating table failed."
-                return result
