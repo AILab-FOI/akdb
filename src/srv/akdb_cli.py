@@ -26,6 +26,9 @@ command_list =  {'\q': 'Disconnect from the server and quit akdb client.',
 				 '\p <table_name>' : 'Prints out table',
 				 '\\t <table_name>?': 'Check whether the given table exists in database or not.',
 				 'create sequence <sequence_name> <sql_expression>' : 'Creating sequence in AK_sequence table',
+				 'create table <table_name> <sql_expression>' : 'Create table',
+				 'create index <index_name> <sql_expression>' : 'Create index',
+				 'create trigger <trigger_name> <sql_expression>' : 'Create trigger',
 				 'history': 'List all previously typed commands.'
 				}
 

@@ -229,10 +229,10 @@ class Create_sequence_command:
                 print "matching regex"
                 self.pattern = re.compile(self.create_seq_regex)
                 self.matcher = self.pattern.match(input)
-                if (self.matcher != None):
+                if (self.matcher is not None):
                         message = self.matcher
                 else:
-                        message = "None"
+                        message = None
                 
                 return message 
 
@@ -281,7 +281,187 @@ class Create_sequence_command:
                 
                 ak47.AK_print_table("AK_sequence")
                 return result
+                
+## create table command
+# @author Franjo Kovacic
+class Create_table_command:
+	create_table_regex = r"^(?i)create table(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
 
+        ## matches method
+        # checks whether given input matches table_exists command syntax
+        def matches(self, input):
+                print "matching regex"
+                self.pattern = re.compile(self.create_table_regex)
+                self.matcher = self.pattern.match(input)
+                if (self.matcher is not None):
+                        message = self.matcher
+                else:
+                        message = None
+                
+                return message 
+
+        
+        # executes the create table expression
+        def execute(self):
+                print "start parsing.."
+                print self.matcher.group(0)
+                parser = sql_tokenizer()
+                token = parser.AK_parse_create_table(expr)
+                # checking syntax
+                if isinstance(token, str):
+                        print "Error: syntax error in expression"
+                        print expr
+                        print token
+                        return False
+                # get table name
+                table_name = str(token.tableName)
+                # table should not exist yet
+                '''
+                For some reason, AK_table_exist won't work, it always just exits here, so it's commented out
+                if (ak47.AK_table_exist(table_name) == 1):
+                        print "Error: table'" + table_name + "' already exist"
+                        return False
+                '''                
+                # get attributes
+                '''
+                Create table in table.c currently takes only name and type of attributes.
+                Parsing works for other attribute properties as well, so it should be added here when possible.
+                '''
+                create_table_attributes = []
+                for attribute in token.attributes:
+                        create_table_attributes.append([{'name': str(attribute[0])}, {'type':get_attr_type(str(attribute[1]))}])
+                attribute_count = len(create_table_attributes)
+                # executing
+                try:
+                        ak47.AK_create_table(table_name, create_table_attributes, attribute_count)
+                        result = "Table created"
+                except:
+                        result = "Error. Creating table failed."
+                return result
+
+## create index command
+# @author Franjo Kovacic
+class Create_index_command:
+	create_table_regex = r"^(?i)create index(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
+
+        ## matches method
+        # checks whether given input matches table_exists command syntax
+        def matches(self, input):
+                print "matching regex"
+                self.pattern = re.compile(self.create_index_regex)
+                self.matcher = self.pattern.match(input)
+                if (self.matcher is not None):
+                        message = self.matcher
+                else:
+                        message = None
+                
+                return message 
+
+        
+        # executes the create index expression
+        def execute(self):
+                print "start parsing.."
+                print self.matcher.group(0)
+                parser = sql_tokenizer()
+                token = parser.AK_parse_createIndex(expr)
+                # checking syntax
+                if isinstance(token, str):
+                        print "Error: syntax error in expression"
+                        print expr
+                        print token
+                        return False
+                #get table name
+                table_name = str(token.tablica)
+                # check if table exist
+                '''
+                For some reason, AK_table_exist won't work, it always just exits here, so it's commented out
+                if (ak47.AK_table_exist(table_name) == 0):
+                        print "Error: table '"+ table_name +"' does not exist"
+                        return False
+                '''
+                #get index name
+                index = str(token.IndexIme)
+                #get other expression tokens
+                t = list()
+                t.append(table_name)
+                t.append(token.stupci)
+                t.append(token.IndexVrsta)
+                #executing
+                '''
+                Not working
+                TypeError: in method 'AK_create_Index', argument 2 of type 'AK_list *'
+                '''
+                try:
+                        ak47.AK_create_Index(index, t)
+                        result = "Index created"
+                except:
+                        result = "Error. Creating index failed."
+                return result
+
+## create trigger command
+# @author Franjo Kovacic
+class Create_trigger_command:
+	create_trigger_regex = r"^(?i)create trigger(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
+
+        ## matches method
+        # checks whether given input matches table_exists command syntax
+        def matches(self, input):
+                print "matching regex"
+                self.pattern = re.compile(self.create_trigger_regex)
+                self.matcher = self.pattern.match(input)
+                if (self.matcher is not None):
+                        message = self.matcher
+                else:
+                        message = None
+                
+                return message 
+
+        
+        # executes the create trigger expression
+        def execute(self):
+                print "start parsing.."
+                print self.matcher.group(0)
+                parser = sql_tokenizer()
+                token = parser.AK_parse_trigger(expr)
+                # checking syntax
+                if isinstance(token, str):
+                        print "Error: syntax error in expression"
+                        print expr
+                        print token
+                        return False
+                #get table name
+                table_name = str(token.tableName)
+                # check if table exist
+                '''
+                For some reason, AK_table_exist won't work, it always just exits here, so it's commented out
+                if (ak47.AK_table_exist(table_name) == 0):
+                        print "Error: table '"+ table_name +"' does not exist"
+                        return False
+                '''
+                #get trigger name
+                trigger = str(token.name)
+                p = list()
+                p.append(token.EventOption1)
+                p.append(token.EventOption2)
+                p.append(token.EventOption3)
+                #executing
+                '''
+                Not working
+                TypeError: in method 'AK_trigger_add', argument 3 of type 'AK_list *'
+                '''
+                try:
+                        ak47.AK_trigger_add(trigger, token.whatOption, p, table_name, token.functionName)
+                        result = "Trigger created"
+                except:
+                        result = "Error. Creating trigger failed."
+                return result
+                
 
 ## sql_executor
 # contaions methods for sql operations
@@ -292,16 +472,19 @@ class sql_executor:
         table_details_command = Table_details_command()
         table_exists_command = Table_exists_command()
         create_sequence_command = Create_sequence_command()
+        create_table_command = Create_table_command()
+        create_index_command = Create_index_command()
+        create_trigger_command = Create_trigger_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command, create_sequence_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 
         # and call its execution if it matches
         def commands_for_input(self, command):
                 for elem in self.commands:
-                        if elem.matches(command):
+                        if (elem.matches(command) is not None):
                                 return elem.execute()
                 return "Wrong command."
 
@@ -392,13 +575,33 @@ class sql_executor:
                 else:
                         return False
                 return False
+                      
+                
+## create table command
+# @author Franjo Kovacic
+class Create_table_command:
+        create_table_regex = r"^(?i)create table(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
 
-        ## create_table
-        # @brief executes create table expression
-        # @author Franjo Kovacic
-        # @param self object pointer
-        # @param expr the expression to be executed
-        def create_table(self, expr):
+        ## matches method
+        # checks whether given input matches table_exists command syntax
+        def matches(self, input):
+                print "matching regex"
+                self.pattern = re.compile(self.create_table_regex)
+                self.matcher = self.pattern.match(input)
+                if (self.matcher != None):
+                        message = self.matcher
+                else:
+                        message = "None"
+                
+                return message 
+
+        
+        # executes the create table expression
+        def execute(self):
+                print "start parsing.."
+                print self.matcher.group(0)
                 parser = sql_tokenizer()
                 token = parser.AK_parse_create_table(expr)
                 # checking syntax
@@ -428,90 +631,7 @@ class sql_executor:
                 # executing
                 try:
                         ak47.AK_create_table(table_name, create_table_attributes, attribute_count)
-                        return True
+                        result = "Table created"
                 except:
-                        return False
-                return False
-
-        ## create index
-        # @brief executes the create index expression
-        # @author Franjo Kovacic
-        # @param self object pointer
-        # @param expr the expression to be executed
-        def create_index(self, expr):
-                parser = sql_tokenizer()
-                token = parser.AK_parse_createIndex(expr)
-                # checking syntax
-                if isinstance(token, str):
-                        print "Error: syntax error in expression"
-                        print expr
-                        print token
-                        return False
-                #get table name
-                table_name = str(token.tablica)
-                # check if table exist
-                '''
-                For some reason, AK_table_exist won't work, it always just exits here, so it's commented out
-                if (ak47.AK_table_exist(table_name) == 0):
-                        print "Error: table '"+ table_name +"' does not exist"
-                        return False
-                '''
-                #get index name
-                index = str(token.IndexIme)
-                #get other expression tokens
-                t = list()
-                t.append(table_name)
-                t.append(token.stupci)
-                t.append(token.IndexVrsta)
-                #executing
-                '''
-                Not working
-                TypeError: in method 'AK_create_Index', argument 2 of type 'AK_list *'
-                '''
-                try:
-                        ak47.AK_create_Index(index, t)
-                        return True
-                except:
-                        return False
-                return False
-        
-        ## create trigger
-        # @brief executes the create trigger expression
-        # @author Franjo Kovacic
-        # @param self object pointer
-        # @param expr the expression to be executed
-        def create_trigger(self, expr):
-                parser = sql_tokenizer()
-                token = parser.AK_parse_trigger(expr)
-                # checking syntax
-                if isinstance(token, str):
-                        print "Error: syntax error in expression"
-                        print expr
-                        print token
-                        return False
-                #get table name
-                table_name = str(token.tableName)
-                # check if table exist
-                '''
-                For some reason, AK_table_exist won't work, it always just exits here, so it's commented out
-                if (ak47.AK_table_exist(table_name) == 0):
-                        print "Error: table '"+ table_name +"' does not exist"
-                        return False
-                '''
-                #get trigger name
-                trigger = str(token.name)
-                p = list()
-                p.append(token.EventOption1)
-                p.append(token.EventOption2)
-                p.append(token.EventOption3)
-                #executing
-                '''
-                Not working
-                TypeError: in method 'AK_trigger_add', argument 3 of type 'AK_list *'
-                '''
-                try:
-                        ak47.AK_trigger_add(trigger, token.whatOption, p, table_name, token.functionName)
-                        return True
-                except:
-                        return False
-                return False       
+                        result = "Error. Creating table failed."
+                return result
