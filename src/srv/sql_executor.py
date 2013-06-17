@@ -462,6 +462,98 @@ class Create_trigger_command:
                         result = "Error. Creating trigger failed."
                 return result
                 
+## Insert into
+class Insert_into_command:
+
+    insert_into_regex = r"^(?i)insert into(\s([a-zA-Z0-9_\(\),'\.]+))+?$"
+    pattern = None
+    matcher = None
+
+    def matches(self,inp):
+        self.pattern = re.compile(self.insert_into_regex)
+        self.matcher = self.pattern.match(inp)
+        return self.matcher != None
+
+
+    def execute(self):
+        expr = self.matcher.group(0)
+        parser = sql_tokenizer()
+        token = parser.AK_parse_insert_into(expr)
+        if isinstance(token, str):
+                print "Error: syntax error in expression"
+                print expr
+                print token
+                return False
+        table_name = str(token.tableName)
+        # postoji li tablica
+        if (ak47.AK_table_exist(table_name) == 0):
+                print "Error: table '"+ table_name +"' does not exist"
+                return False
+        # vrijednosti podataka za unos
+        insert_attr_values = map(lambda x: x.replace("'",""),list(token.columnValues[0]))
+        # tipovi podataka za unos
+        insert_attr_types = map(lambda x: get_attr_type(x.replace("'","")),list(token.columnValues[0]))
+        #Dohvatiti listu atributa tablice
+        table_attr_names = str(ak47.AK_rel_eq_get_atrributes_char(table_name)).split(";")
+        #Dohvatiti tipove atributa tablice
+        table_attr_types = str(ak47.AK_get_table_atribute_types(table_name)).split(";")
+        # imena atributa za unos
+        insert_attr_names = table_attr_names
+        # navedeni su atributi za unos
+        if(token.columns):
+                insert_attr_names = []
+                table_types_temp = table_attr_types
+                table_attr_types = []
+                insert_columns = list(token.columns[0])
+                for index,col in enumerate(insert_columns):
+                        if col not in table_attr_names:
+                                print "\nError: table has no attribute '" + str(col) + "':"
+                                akdbError(expr,col)
+                                return False
+                #provjera atributa za unos
+                for ic,col in enumerate(insert_columns):
+                        for ia,tab in enumerate(table_attr_names):
+                                if col == tab:
+                                        if tab not in insert_attr_names:
+                                                insert_attr_names.append(tab)
+                                                table_attr_types.append(int(table_types_temp[ia]))
+                                        else:
+                                                print "\nError: duplicate attribute " + tab + ":"
+                                                akdbError(expr,tab)
+                                                return False
+
+                if (len(insert_columns) == len(insert_attr_values)):
+                        for index,tip in enumerate(insert_attr_types):
+                                if int(insert_attr_types[index]) != int(table_attr_types[index]):
+                                        type_name = get_type_name(int(table_attr_types[index]))
+                                        print "\nError: type error for attribute '" + insert_attr_names[index] + "':"
+                                        akdbError(expr,insert_attr_values[index])
+                                        print "Expected: " + type_name
+                                        return False
+                else:
+                        print "\nError: attribute names number not matching attribute values number supplied for table '" + table_name + "':"
+                        akdbError(expr,insert_columns[0])
+                        return False
+        # navedene su samo vrijednosti za unos
+        elif (len(table_attr_names) < len(insert_attr_values)):
+                print "\nError: too many attibutes, table " + str(token.tableName) + " has " + str(len(table_attr_names)) 
+                return False
+        elif (len(table_attr_names) > len(insert_attr_values)):
+                print "\nError: too few attibutes, table " + str(token.tableName) + " has " + str(len(table_attr_names))
+                return False
+        else:
+                for index,tip in enumerate(insert_attr_types):
+                        if insert_attr_types[index] != int(table_attr_types[index]):
+                                type_name = get_type_name(int(table_attr_types[index]))
+                                print "\nError: type error for attribute '" + insert_attr_names[index] + "':"
+                                akdbError(expr,insert_attr_values[index])
+                                print "Expected: " + type_name
+                                return False
+        if(ak47.insert_data_test(table_name,insert_attr_names,insert_attr_values,insert_attr_types) == ak47.EXIT_SUCCESS):
+                return True
+        else:
+                return False
+        return False
 
 ## sql_executor
 # contaions methods for sql operations
@@ -475,9 +567,10 @@ class sql_executor:
         create_table_command = Create_table_command()
         create_index_command = Create_index_command()
         create_trigger_command = Create_trigger_command()
+        insert_into_command = Insert_into_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 
