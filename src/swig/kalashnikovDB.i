@@ -522,6 +522,9 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 %include "../trans/transaction.h"
 %include "../trans/transaction.c"
 
+%include "../sql/privileges.c"
+%include "../sql/privileges.h"
+
 %include "../auxi/observable.c"
 %include "../auxi/observable.h"
 
