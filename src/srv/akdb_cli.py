@@ -29,6 +29,8 @@ command_list =  {'\q': 'Disconnect from the server and quit akdb client.',
 				 'create table <table_name> <sql_expression>' : 'Create table',
 				 'create index <index_name> <sql_expression>' : 'Create index',
 				 'create trigger <trigger_name> <sql_expression>' : 'Create trigger',
+				 'select <sql_expression>' : 'Select data from table',
+				 'update <sql_expression>' : 'Update table',
 				 'history': 'List all previously typed commands.'
 				}
 

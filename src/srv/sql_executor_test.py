@@ -20,6 +20,14 @@ print "\n------------------------------------ INSERT INTO TEST -----------------
 print "1 - " + str(bulbasaur.insert("INSERT INTO students VALUES ('1s','Pero','Peric','1991','100.2')"))
 print "2 - " + str(bulbasaur.insert("INSERT INTO student(id_student, firstnames, lastname, year, weight) VALUES ( '2','Ivo','Ivic','2002','90.2')"))
 
+print "\n------------------------------------ SELECT TEST ------------------------------------\n"
+
+print "1 - " + str(select("SELECT * FROM student WHERE id_student = 1"))
+
+print "\n------------------------------------ UPDATE TEST ------------------------------------\n"
+
+print "1 - " + str(update("UPDATE student SET weight = 80 WHERE id_student = 1"))
+
 print "\n------------------------------------ PRINT TABLE STUDENT ------------------------------------\n"
 
 ak47.AK_print_table("student")

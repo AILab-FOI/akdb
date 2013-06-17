@@ -290,8 +290,8 @@ class sql_tokenizer:
 
   def AK_parse_where(self, string):
       '''
-      @author Kresimir Ivkovic
-      @brief parser for select, delete and any function containing the "WHERE" clause (automatically detects statement type)
+      @author Kresimir Ivkovic, updated by Davor Tomala
+      @brief parser for select, update, delete and any function containing the "WHERE" clause (automatically detects statement type)
       @param string: sql query as string
       @return tokenized query
       '''      
@@ -300,9 +300,11 @@ class sql_tokenizer:
       #literals
       deleteLit=CaselessKeyword("DELETE")
       selectLit=CaselessKeyword("SELECT")
+      updateLit=CaselessKeyword("UPDATE")
       fromLit=CaselessKeyword("FROM")
       usingLit=CaselessKeyword("USING")
       whereLit=CaselessKeyword("WHERE")
+      setLit=CaselessKeyword("SET")
       lBracket=Suppress(Literal("("))
       rBracket=Suppress(Literal(")"))
       valuesLiteral=Suppress(CaselessLiteral("VALUES"))
@@ -407,7 +409,18 @@ class sql_tokenizer:
         Optional(usingLit.setResultsName("using")+tableName.setResultsName("usingTable"))+\
         Optional(where.setResultsName("condition"))+stringEnd
       
-      sqlGrammar= select | deleteFrom
+      update = Forward()
+      updateStatement = updateLit.setResultsName("commandName")+\
+            tableName.setResultsName("tableName")+\
+            setLit.setResultsName("set")+\
+            columnNameList.setResultsName("columnNames")+\
+            binrelop.setResultsName("operator")+\
+            valuesList.setResultsName("columnValues")
+      updatePair = Literal(",") + columnNameList.setResultsName("columnNames") + binrelop.setResultsName("operator") + valuesList.setResultsName("columnValues")
+
+      update << updateStatement + ZeroOrMore(updatePair) + Optional(where.setResultsName("condition")) + stringEnd
+
+      sqlGrammar= select | deleteFrom | update
       
       try: 
           tokens = sqlGrammar.parseString(string)
@@ -883,6 +896,8 @@ class sql_tokenizer:
       
       query = ["select * from t1 inner join t2 on t1.at1 = t2.at1 left outer join t3 on t2.at2 = t3.at2 where t3.at3 > 0 and t2.at1 in (select count(*) from t3) order by t1.at1 desc limit 100 offset 10",
       "select at1, avg(at2) from t1 cross join t2 on t1.at1 > t2.at1 group by at1 having avg(at2) > 100 order by at1 asc union select count(*) from t3 where t3 in (select distinct on(a) a, b, c from t4)",
+      "update t1 set at1 = 1 where at2 = 2 and at3 = 3",
+      "update t2 set at1 = 1, at2 = 2, at3 = 3 where at4 = 4",
       "delete from t1 using t2 where t1.at1 = t2.at2",
       "delete from t1 where t1.at1 in (select * from t2 where at2 > 0 and at3 < 0 or at4 = 0) or t1.at2 in (select * from at3)"
       ]
@@ -893,12 +908,18 @@ class sql_tokenizer:
       print '\n'
       print query[1]
       print test.AK_parse_where(query[1])      
-      print "\n---------------------------------DELETE test---------------------------------\n"
+      print "\n---------------------------------UPDATE test---------------------------------\n"
       print query[2]
       print test.AK_parse_where(query[2])
       print '\n'
       print query[3]
-      print test.AK_parse_where(query[3])
+      print test.AK_parse_where(query[3])      
+      print "\n---------------------------------DELETE test---------------------------------\n"
+      print query[4]
+      print test.AK_parse_where(query[4])
+      print '\n'
+      print query[5]
+      print test.AK_parse_where(query[5])
 
   def AK_parse_create_user_test(self):
       '''
