@@ -916,7 +916,7 @@ class sql_executor:
         update_command = Update_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, create_group_command, grant_command. select_command, update_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, create_group_command, grant_command, select_command, update_command]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 
