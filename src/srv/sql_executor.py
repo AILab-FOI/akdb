@@ -552,100 +552,91 @@ class Insert_into_command:
 
 ## create group command
 # @author Zvonimir Kapes
-class Create_group_command:    
-    
-    table_details_regex = r"^create group\s+"
-    pattern = None
-    matcher = None
-    command = None
- 
-    def matches(self, input):
-        self.pattern = re.compile(self.table_details_regex, re.IGNORECASE)
-        self.matcher = self.pattern.match(input)
-        self.command = input
-        return self.matcher != None
+class Create_group_command:
+	table_details_regex = r"^create group\s+"
+	pattern = None
+	matcher = None
+	command = None
 
-    def execute(self):
-         print "Printing out: "
-         result = "CREATE GROUP "
-         
-         pars = sql_tokenizer()
-         tokens = pars.AK_create_group(self.command)
-         
-         
-         if isinstance(tokens, basestring):
-             result = "Wrong command!"
-         else:
-             print "group id: ", ak47.AK_group_get_id(tokens.groupname)
-             
-             if ak47.AK_group_get_id(tokens.groupname) != -1:
-                 result += "ERROR: Group " + str(tokens.groupname) +" already exists"
-                 return result
-                 
-             result += str(ak47.AK_group_add(tokens.groupname, ak47.NEW_ID))
-             
-             if tokens.users:
-                 for user in tokens.users:
-                     print "...added user: ", user
-                     # User insert does not work. Password needs to be inserted in hash format.
-                     #result += str(ak47.AK_user_add(user, password, ak47.NEW_ID))
-                     #result += str(ak47.AK_add_user_to_group(user, tokens.groupname))
-                 
-         return result
+	def matches(self, input):
+		self.pattern = re.compile(self.table_details_regex, re.IGNORECASE)
+		self.matcher = self.pattern.match(input)
+		self.command = input
+		return self.matcher != None
+
+	def execute(self):
+		print "Printing out: "
+		result = "CREATE GROUP "
+		
+		pars = sql_tokenizer()
+		tokens = pars.AK_create_group(self.command)
+		         
+		if isinstance(tokens, basestring):
+			result = "Wrong command!"
+		else:
+			print "group id: ", ak47.AK_group_get_id(tokens.groupname)
+
+		if ak47.AK_group_get_id(tokens.groupname) != -1:
+			result += "ERROR: Group " + str(tokens.groupname) +" already exists"
+			return result
+
+		result += str(ak47.AK_group_add(tokens.groupname, ak47.NEW_ID))
+		if tokens.users:
+			for user in tokens.users:
+				print "...added user: ", user
+				# User insert does not work. Password needs to be inserted in hash format.
+				#result += str(ak47.AK_user_add(user, password, ak47.NEW_ID))
+				#result += str(ak47.AK_add_user_to_group(user, tokens.groupname))
+		return result
 
 ## grant command
 # @author Zvonimir Kapes
-class Grant_command:    
-    
-    table_details_regex = r"^grant\s+"
-    pattern = None
-    matcher = None
-    command = None
+class Grant_command: 
+	table_details_regex = r"^grant\s+"
+	pattern = None
+	matcher = None
+	command = None
  
-    def matches(self, input):
-        self.pattern = re.compile(self.table_details_regex, re.IGNORECASE)
-        self.matcher = self.pattern.match(input)
-        self.command = input
-        return self.matcher != None
+	def matches(self, input):
+		self.pattern = re.compile(self.table_details_regex, re.IGNORECASE)
+		self.matcher = self.pattern.match(input)
+		self.command = input
+		return self.matcher != None
 
-    def execute(self):
-         print "Printing out: "
-         result = "GRANT "
-         
-         pars = sql_tokenizer()
-         tokens = pars.AK_parse_grant(self.command)
-         
-         
-         if isinstance(tokens, basestring):
-             result = "Wrong command!"
-         else:
-             for user in tokens.users:
-                 msg = "...grant to: " + user + "\n"
-                 for privilege in tokens.privileges:
-                     msg += "...granted privilege: " + privilege + "\n"
-                     for table in tokens.tables:
-                         msg += "...on table: " + table + "\n"
-                         if tokens.group:
-                             res = ak47.AK_grant_privilege_group(user, table, privilege)
-                             result += str(res)
+	def execute(self):
+		print "Printing out: "
+		result = "GRANT "
+      
+		pars = sql_tokenizer()
+		tokens = pars.AK_parse_grant(self.command)
+		if isinstance(tokens, basestring):
+			result = "Wrong command!"
+		else:
+			for user in tokens.users:
+				msg = "...grant to: " + user + "\n"
+				for privilege in tokens.privileges:
+					msg += "...granted privilege: " + privilege + "\n"
+					for table in tokens.tables:
+						msg += "...on table: " + table + "\n"
+						if tokens.group:
+							res = ak47.AK_grant_privilege_group(user, table, privilege)
+							result += str(res)
                              
-                             if res != -1:
-                                 print msg
-                                 msg = ""
-                             else:
-                                 print "ERROR: Group or table does not exsist: " + str(user) + str(table)
-                         else:
-                             res = ak47.AK_grant_privilege_user(user, table, privilege)
-                             result += str(res)
+							if res != -1:
+								print msg
+								msg = ""
+							else:
+								print "ERROR: Group or table does not exsist: " + str(user) + str(table)
+						else:
+							res = ak47.AK_grant_privilege_user(user, table, privilege)
+							result += str(res)
                              
-                             if res != -1:
-                                 print msg
-                                 msg = ""
-                             else:
-                                 print "ERROR: User or table does not exsist: " + str(user) + str(table)
-                                 
-                 
-         return result
+							if res != -1:
+								print msg
+								msg = ""
+							else:
+								print "ERROR: User or table does not exsist: " + str(user) + str(table)
+		return result
 
 
 ## select
@@ -910,9 +901,9 @@ class sql_executor:
         create_index_command = Create_index_command()
         create_trigger_command = Create_trigger_command()
         insert_into_command = Insert_into_command()
-        create_group_command = Create_group_command()
-	    grant_command = Grant_command()
-        select_command = Select_command()
+	create_group_command = Create_group_command()
+	grant_command = Grant_command()
+	select_command = Select_command()
         update_command = Update_command()
 
         ##add command instances to the commands array
