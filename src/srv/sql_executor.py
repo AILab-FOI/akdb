@@ -886,6 +886,116 @@ class Update_command:
                 else:
                     return False
                 return False
+            
+            
+## Drop
+#@author Filip Sostarec
+class Drop_command:
+
+    drop_regex = r"^(?i)drop(\s([a-zA-Z0-9_\(\),'\.]+))+?$"
+    pattern = None
+    matcher = None
+    expr = None
+
+    def matches(self,inp):
+        self.pattern = re.compile(self.drop_regex)
+        self.matcher = self.pattern.match(inp)
+        self.expr = inp
+        if (self.matcher is not None):
+            return self.matcher
+        else:
+            return None
+
+
+    def execute(self):
+            parser = sql_tokenizer()
+            token = parser.AK_parse_drop(self.expr)
+            if isinstance(token, str):
+                print "Error: syntax error in expression"
+                print token
+                return False
+            objekt = str(token.objekt)
+            if(objekt == "table"):
+                # izvlacimo ime tablice
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li tablica
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: table '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(0, table_name)
+            elif(objekt == "index"):
+                # izvlacimo ime indexa
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li index
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: index '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(1, table_name)
+            elif(objekt == "view"):
+                # izvlacimo ime view-a
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li view
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: table '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(2, table_name)
+            elif(objekt == "sequence"):
+                # izvlacimo ime sequence-a
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li sequence
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: sequence '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(3, table_name)
+            elif(objekt == "trigger"):
+                # izvlacimo ime triggera
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li trigger
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: trigger '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(4, table_name)
+            elif(objekt == "function"):
+                # izvlacimo ime funkcije
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li funkcija
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: funkcija '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(5, table_name)
+            elif(objekt == "user"):
+                # izvlacimo ime usera
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li user
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: user '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(6, table_name)
+            elif(objekt == "group"):
+                # izvlacimo ime grupe
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li grupa
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: group '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(7, table_name)
+            elif(objekt == "constraint"):
+                # izvlacimo ime constrainta
+                table_name = str(token.ime_objekta)
+                table_name = table_name.translate(None, "'[]")
+                # postoji li constraint
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: constraint '" + table_name + "' does not exist"
+                    return False
+                ak47.AK_drop_test_helper(8, table_name)
 
 
 ## sql_executor
@@ -901,13 +1011,14 @@ class sql_executor:
         create_index_command = Create_index_command()
         create_trigger_command = Create_trigger_command()
         insert_into_command = Insert_into_command()
-	create_group_command = Create_group_command()
-	grant_command = Grant_command()
-	select_command = Select_command()
+        create_group_command = Create_group_command()
+        grant_command = Grant_command()
+        select_command = Select_command()
         update_command = Update_command()
+        drop_command = Drop_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, create_group_command, grant_command, select_command, update_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, create_group_command, grant_command, select_command, update_command,drop_command]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 

@@ -60,7 +60,7 @@ class sql_tokenizer:
       optionalToken1= Keyword("temporary", caseless=True)
       optionalToken2= Keyword("if", caseless=True) + Keyword("exists", caseless=True)
       optionalToken3= Keyword("cascade", caseless=True) | Keyword("restrict", caseless=True)
-      objectName      = Upcase( delimitedList( ident, ",", combine=True ) )
+      objectName      = delimitedList( ident, ",", combine=True )
       objectNameList  = Group( delimitedList( objectName ) )
       objectName2      = Upcase( delimitedList( ident, ",", combine=True ) )
       objectNameList2  = Group( delimitedList( objectName ) )

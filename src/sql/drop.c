@@ -539,3 +539,35 @@ void AK_drop_test() {
 
     printf("======================END_DROP_TEST======================\n");
 }
+
+void AK_drop_test_helper(int type,char* dropargs){
+    AK_drop_arguments *drop_arguments = malloc(sizeof (AK_drop_arguments));
+    drop_arguments->value = dropargs;
+    if (type == 0) {
+        AK_drop(DROP_TABLE, drop_arguments);
+    }
+	else if (type == 1) {
+        AK_drop(DROP_INDEX, drop_arguments);
+    }
+	else if (type == 2) {
+        AK_drop(DROP_VIEW, drop_arguments);
+    }
+	else if (type == 3) {
+        AK_drop(DROP_SEQUENCE, drop_arguments);
+    }
+	else if (type == 4) {
+        AK_drop(DROP_TRIGGER, drop_arguments);
+    }
+	else if (type == 5) {
+        AK_drop(DROP_FUNCTION, drop_arguments);
+    }
+	else if (type == 6) {
+        AK_drop(DROP_USER, drop_arguments);
+    }
+	else if (type == 7) {
+        AK_drop(DROP_GROUP, drop_arguments);
+    }
+	else if (type == 8) {
+        AK_drop(DROP_CONSTRAINT, drop_arguments);
+    }
+}

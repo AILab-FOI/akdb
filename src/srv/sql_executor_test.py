@@ -2,23 +2,22 @@
 #sys.path.append('../swig/')
 #import kalashnikovDB as ak47
 from sql_executor import *
+
+initialize()
+
 '''
-ak47.AK_inflate_config()
-ak47.AK_init_disk_manager()
-ak47.AK_memoman_init()
-
 bulbasaur = sql_executor()
-
+'''
 student_attr_name = ["id_student", "firstname", "lastname", "year", "weight"]
 student_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT]
 student_attr_values = ['2','Pero','Peric','1991','100.2']
 
 ak47.create_header_test("student", student_attr_name, student_attr_type)
-
+'''
 print "\n------------------------------------ INSERT INTO TEST ------------------------------------\n"
 
-print "1 - " + str(bulbasaur.insert("INSERT INTO students VALUES ('1s','Pero','Peric','1991','100.2')"))
-print "2 - " + str(bulbasaur.insert("INSERT INTO student(id_student, firstnames, lastname, year, weight) VALUES ( '2','Ivo','Ivic','2002','90.2')"))
+print "1 - " + str(bulbasaur.insert("INSERT INTO student VALUES ('1','Pero','Peric','1991','100.2')"))
+print "2 - " + str(bulbasaur.insert("INSERT INTO student(id_student, firstname, lastname, year, weight) VALUES ( '2','Ivo','Ivic','2002','90.2')"))
 
 print "\n------------------------------------ SELECT TEST ------------------------------------\n"
 
@@ -55,8 +54,8 @@ ak47.AK_print_table("AK_sequence")
 #test.create_sequence("Create sequence brojac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
 #ak47.AK_print_table("AK_sequence")
 
-'''
 
+'''
 # create table test by Franjo Kovacic
 test = Create_table_command()
 commands = ["CREATE TABLE tablica (var1 INT, var2 INT)", "CREATE TABLE tabla1 (v2 INT, v4 TEXT, v11 INT AUTO_INCREMENT)"]
@@ -64,7 +63,7 @@ for command in commands:
         test.expr = command
         print test.execute()
 
-
+'''
 # create index test by Franjo Kovacic
 test = Create_index_command()
 commands = ["CREATE INDEX Pindex ON tablica ( stupac1, stupac2 ) USING Btree",\
@@ -84,3 +83,15 @@ for command in commands:
         test.expr = command
         print test.execute()
 
+'''
+
+# drop test by Filip Sostarec
+test = Drop_command()
+commands=["DROP TABLE student"]
+print "\n------------------------------------ DROP TEST ------------------------------------\n"
+ak47.AK_print_table("student")
+for command in commands:
+        test.expr = command
+        print test.execute()
+ak47.AK_print_table("student")
+print "\n------------------------------------ END DROP TEST ------------------------------------\n"
