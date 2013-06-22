@@ -656,6 +656,41 @@ class sql_tokenizer:
           return " "*err.loc + "^\n" + err.msg
       print  
       return tokens
+  
+  
+  def AK_parse_trans(self, string):
+      '''
+      @author Filip Sostarec
+      @brief sql parsing of BEGIN TRANS command
+      @param string sql command as string
+      @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+  
+      beginToken = Keyword("begin", caseless=True)
+      transToken   = ( Keyword("work", caseless=True) | Keyword("transaction", caseless=True))
+      isolationToken  = Keyword("isolation level", caseless=True)
+      transmodeToken = (Keyword("serializable",caseless=True) | Keyword("repeatable read",caseless=True) |\
+                        Keyword("read commited",caseless=True) | Keyword("read uncommited",caseless=True))
+      commitToken = (Keyword("commit",caseless=True) | Keyword("rollback",caseless=True) )
+      
+      
+      
+      tokens =Word( alphas, alphanums + "_$")
+      
+      tijelo = tokens.copy().setResultsName("tijelo")
+      
+
+      transStmt = Forward()
+      transStmt << (beginToken+Optional(transToken)+Optional(isolationToken+transmodeToken)+tijelo+commitToken)
+
+     
+      try:
+          tokens = transStmt.parseString( string )
+          
+      except ParseException, err:
+          return " "*err.loc + "^\n" + err.msg
+      print  
+      return tokens
     
   def AKTokenizeCreateFunction(self, sql, types):
       
@@ -788,6 +823,29 @@ class sql_tokenizer:
           print "table_name =  ", token.table_name
           print "column_name = ", token.column_name
           print "data_type =   ", token.data_type
+          
+  def AK_trans_test(self):
+    
+     '''
+     @author Filip Sostarec
+     @brief testing of transaction
+     '''
+     print "\n---------------------------------TRANSACTION test---------------------------------\n"
+     commands = ["begin tijelo commit",\
+                 "begin tijelo rollback",\
+                 "begin work tijelo commit",\
+                 "begin transaction isolation level serializable tijelo rollback"]
+        
+     for command in commands:
+        print "\n"+command
+        token = test.AK_parse_trans(command)
+        if isinstance(token, str):
+          print "Error:"
+          print command
+          print token
+        else:
+          print "tokens =      ", token
+          print "tijelo =      ", token.tijelo
 
   def AK_parse_createIndex_test(self):
 
@@ -1072,3 +1130,4 @@ test.AKTokenizeCreateFunctionTest()
 test.AK_parse_CreateView_test()
 
 '''
+test.AK_trans_test()
