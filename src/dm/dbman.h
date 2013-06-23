@@ -7,12 +7,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -23,7 +23,20 @@
 
 #include "../auxi/auxiliary.h"
 #include <errno.h>
-#include <pthread.h> 
+#include <pthread.h>
+
+
+#include <sys/stat.h>   /* for stat structure*/
+#include <limits.h>		/* for CHAR_BIT */
+
+#define BITMASK(b) (1 << ((b) % CHAR_BIT))
+#define BITSLOT(b) ((int)((b) / CHAR_BIT))
+#define BITSET(a, b) ((a)[BITSLOT(b)] |= BITMASK(b))
+#define BITCLEAR(a, b) ((a)[BITSLOT(b)] &= ~BITMASK(b))
+#define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
+#define BITNSLOTS(nb) ((nb + CHAR_BIT - 1) / CHAR_BIT)
+#define SEGMENTLENGTH() (BITNSLOTS(DB_FILE_BLOCKS_NUM) + 2*sizeof(int))
+
 
 /**
  * @author Markus Schatten
@@ -80,7 +93,7 @@ typedef struct {
     /// dictionary of data entries
     AK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
     /// actual data entries
-    char data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
+    unsigned char data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
 } AK_block;
 
 /**
@@ -108,9 +121,87 @@ typedef struct {
     int address_to[ MAX_EXTENTS_IN_SEGMENT ]; //end adress of the extent
 } table_addresses;
 
+#define DB_FILE_SIZE_EX 40
+#define DB_FILE_BLOCKS_NUM_EX (1024 * 1024 * DB_FILE_SIZE_EX / sizeof(AK_block))
+
+
+/**
+  * @author dv
+  * @struct blocktable
+  * @brief Structure that defines bit status of blocks, last initialized and last allocated index
+  */
+ typedef struct {
+unsigned int allocationtable[DB_FILE_BLOCKS_NUM_EX];
+unsigned char bittable[BITNSLOTS(DB_FILE_BLOCKS_NUM_EX)];
+ int last_allocated;
+ int last_initialized;
+ int prepared;
+ time_t ltime;
+}AK_blocktable;
+
+/**
+ * @author dv
+ * @var AK_allocationbit
+ * @brief Global variable that holds allocation bit-vector
+ */
+AK_blocktable * AK_allocationbit;
+
+
+
+
+/**
+ * @author dv
+ * @brief Holds size of allocation table
+ */
+#define AK_ALLOCATION_TABLE_SIZE sizeof(AK_blocktable)
+
+
+/**
+ * @author dv
+ * @brief How many characters could line contain
+ */
+#define CHAR_IN_LINE 80
+
+
+/**
+ * @author dv
+ * @brief How many blocks would be initially allocated
+ */
+#define MAX_BLOCK_INIT_NUM 20
+
+/**
+ * @author dv
+ * @brief Different modes to obtain allocation indexes:
+ * SEQUENCE - first found set of sequence indexes
+ * UPPER - set tries to place itself to upper part od allocation table
+ * LOWER - set tries to place itself to lower part od allocation table
+ * AROUND - set tries to place itself around targeted index
+ */
+typedef enum{
+allocationSEQUENCE=10001,
+allocationUPPER,
+allocationLOWER,
+allocationAROUND,
+allocationNOMODE
+}AK_allocation_set_mode;
+
+
+
 
 #endif
 
+int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl);
+int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl);
+int * AK_get_allocation_set(int* bitsetbs,  int fromWhere,int gaplength, int num, AK_allocation_set_mode mode, int target);
+int AK_copy_header(AK_header *header,  int * blocknum, int num);
+int  AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany);
+AK_block *  AK_init_block();
+void AK_allocationtable_dump(int zz);
+void AK_blocktable_dump(int zz);
+int AK_blocktable_flush();
+int AK_blocktable_get();
+int fsize(FILE *fp);
+int AK_init_allocation_table();
 int AK_init_db_file(int size);
 AK_block * AK_read_block(int address);
 int AK_write_block(AK_block * block);
