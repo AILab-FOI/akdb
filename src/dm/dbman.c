@@ -22,35 +22,462 @@
 
 
 #include "dbman.h"
-
 pthread_mutex_t fileLockMutex = PTHREAD_MUTEX_INITIALIZER;
 int k;
+
+
 /**
  * @author Markus Schatten
  * @brief  Function that initializes a new database file named DB_FILE. It opens database file. New block is allocated. In this
-           block type of header is set to FREE_INT, attribute names are set to FREE_CHAR, integrities are set to FREE_INT,       	    constraint names are set to FREE_CHAR, constraint names and codes are set to FREE_CHAR. Type, address and size of tuples 		   are set to FREE_INT. Data in block is set to FREE_CHAR. Type of block is BLOCK_TYPE_FREE, it is not chained and id of 		   last tuple is 0.          
+           block type of header is set to FREE_INT, attribute names are set to FREE_CHAR, integrities are set to FREE_INT,
+ constraint names are set to FREE_CHAR, constraint names and codes are set to FREE_CHAR. Type, address and size of tuples
+  * are set to FREE_INT. Data in block is set to FREE_CHAR. Type of block is BLOCK_TYPE_FREE, it is not chained and id of
+  * last tuple is 0.
  * @param size size of new file in in blocks
  * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
  */
 int AK_init_db_file(int size) {
-	Ak_dbg_messg(HIGH, DB_MAN, "AK_block: %i, AK_header: %i, AK_tuple_dict: %i , char: %i, int: %i\n", 
+	Ak_dbg_messg(HIGH, DB_MAN, "AK_block: %i, AK_header: %i, AK_tuple_dict: %i , char: %i, int: %i\n",
 	sizeof(AK_block), sizeof(AK_header), sizeof(AK_tuple_dict), sizeof(char), sizeof(int));
-    register int i = 0, j, k;
-	
-    AK_block * block = NULL;
+
+	int sz;
 
     db_file_size = size;
 
-    if ((db = fopen(DB_FILE, "wb")) == NULL) {
+
+    if ((db = fopen(DB_FILE, "rb+")) == NULL) {
         printf("AK_init_db_file: ERROR. Cannot open db file %s.\n", DB_FILE);
         exit(EXIT_ERROR);
     }
+
+
+    sz=fsize(db);
+	printf("AK_init_db_file: size db file %d. --- %d ---- %d\n", sz, AK_ALLOCATION_TABLE_SIZE, AK_allocationbit->last_initialized);
+
+
+	if(sz>AK_ALLOCATION_TABLE_SIZE){
+		    printf("AK_init_db_file: Already initialized.\n");
+            fclose(db);
+		return ( EXIT_SUCCESS);
+	}
 
     printf("AK_init_db_file: Initializing DB file..."
             "\nPlease be patient, this can take several minutes depending "
             "on disk performance.\n");
 
-    if ((block = (AK_block *) malloc(sizeof ( AK_block))) == NULL) {
+
+
+	if(AK_allocate_blocks(db, AK_init_block(), 0, MAX_BLOCK_INIT_NUM)!=EXIT_SUCCESS){
+		printf("AK_init_db_file: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
+        exit(EXIT_ERROR);
+		}
+
+
+    printf("AK_init_db_file: Done!\n");
+
+    return ( EXIT_SUCCESS);
+}
+
+
+
+
+/**
+ * @author dv
+ * @param bitset int pointer, cointainer for bit set
+ * @param fromWhere has meaning just in SEQUENCE case. It describes from which address searching have to start.
+ * @param gaplength tells how many used blocks could be tolerated in bitset
+ * @param num Tells how many free blocks has been needed
+ * @param mode Defines how to obtain set of indexes to free addresses
+ * @param target has meaning just in case mode=AROUND: set must be as much as possible close to target
+ * from both sides
+ * @brief  Function prepare demanded sets from allocation table
+ * @return pointer to integer indexes field with prepared set. If it , for any reason, is not possible
+ * set has FREE_INT fullfilment.
+ */
+int * AK_get_allocation_set(int* bitsetbs, int fromWhere, int gaplength, int num, AK_allocation_set_mode mode, int target){
+	register int i=0, j=0, k=0;
+    int numfree=0, tmp=0, tmpb=0;
+	int uu=AK_allocationbit->last_initialized;
+	int freebe[uu];
+
+if(gaplength<1)gaplength=1;
+if(fromWhere!=0)fromWhere=AK_allocationbit->last_allocated;
+
+	for(i=0;i<num;i++)bitsetbs[i]=FREE_INT;
+	for(i=0;i<uu;i++)freebe[i]=FREE_INT;
+
+	for(i=0;i<uu;i++)
+    if(!BITTEST(AK_allocationbit->bittable, i))freebe[k++]=i;
+
+	numfree=k;
+printf("numfree\t  uu\t num\t gaplength\t lastallocated: %d. --- %d --- %d --- %d --- %d\n",numfree, uu,num, gaplength, AK_allocationbit->last_allocated);
+	if(numfree<num){
+		//no more room to place new allocations
+		return bitsetbs;
+		}
+
+	switch(mode){
+
+		case allocationSEQUENCE:
+        //no gaps allowed
+        //sequentialy from last allocated or from fromWhere
+        if(fromWhere){
+                if(num>(uu-AK_allocationbit->last_allocated))return bitsetbs;
+        for(i=0;i<numfree;i++)if(freebe[i]==AK_allocationbit->last_allocated)break;
+        }
+        else i=0;
+printf("SEQUENCE AK_allocationbitseq f-1 f0 f1 i lastall: %d. --- %d --- %d --- %d --- %d\n", freebe[i-1], freebe[i], freebe[i+1], i, AK_allocationbit->last_allocated);
+        k=1;
+		for( ;i<numfree-num+1;i++){
+		for(j=i; j<i+num;j++)
+		if( ((freebe[j+1]-freebe[j])==1)  ||   ((j>0) && ((freebe[j-1]+1)==freebe[j]) && ((j-i+1)==num ) ) ){
+			printf("AK_allocationbit f-1 f0 f1 i j: %d. --- %d --- %d --- %d --- %d\n", freebe[j-1], freebe[j], freebe[j+1], i, j);
+			continue;}
+		else k=0;
+		if(k){
+			k=0;
+			for(j=i; j<i+num;j++)bitsetbs[k++]=freebe[j];
+			//printf("AK_allocationbit->last_initializedvvvv: %d. --- %d --- %d\n", k,freebe[j], freebe[i]);
+			return bitsetbs;
+			break;
+			}
+			k=1;
+		}
+		return bitsetbs;
+		break;
+
+
+		case allocationUPPER:
+            k=0;j=0;i=0;
+            tmp=freebe[0];
+
+		while(i<numfree){
+
+        printf("UPPER AK_allocationbit f i num: %d. --- %d --- %d \n", freebe[i], i, num);
+                if(freebe[i]!=FREE_INT && (gaplength>=abs(freebe[i]-tmp)) ){
+                        printf("AK_allocationbit1 f i k: %d. --- %d --- %d \n", freebe[i], i, k);
+                  tmp=freebe[i];
+			bitsetbs[k++]=freebe[i++];}
+            else i++;
+
+			if(i==(numfree-1) || k==num)break;
+
+			if(k && (gaplength<abs(freebe[i]-bitsetbs[k-1]) )){
+                printf("AK_allocationbit2 f i bt k: %d. --- %d --- %d ----%d\n", freebe[i], i, bitsetbs[k-1], k);
+               k=0;
+               for(j=0;j<num;j++)bitsetbs[j]=FREE_INT;
+               tmp=freebe[i];
+              }
+			}
+			if(num!=k){
+                    printf("AK_allocationbit3 f i num  k: %d. --- %d --- %d ----%d \n", freebe[i], i, num, k);
+			for(i=0;i<num;i++)bitsetbs[i]=FREE_INT;
+	         return bitsetbs;
+			 break;
+			}
+			return bitsetbs;
+			break;
+
+
+
+
+		case allocationLOWER:
+		k=0;j=0;
+			i=numfree-1;
+			if(numfree<num){
+				return bitsetbs;
+				break;
+				}
+
+				tmp=freebe[i];
+
+		while(i>-1){
+
+        printf("LOWER AK_allocationbit f i num: %d. --- %d --- %d \n", freebe[i], i, num);
+                if(freebe[i]!=FREE_INT && (gaplength>=abs(freebe[i]-tmp)) ){
+                        printf("AK_allocationbit1 f i k: %d. --- %d --- %d \n", freebe[i], i, k);
+                  tmp=freebe[i];
+			bitsetbs[k++]=freebe[i--];}
+            else i--;
+
+			if(i==-1 || k==num)break;
+
+			if(k && (gaplength<abs(freebe[i]-bitsetbs[k-1]) )){
+                printf("AK_allocationbit2 f i bt k: %d. --- %d --- %d ----%d\n", freebe[i], i, bitsetbs[k-1], k);
+               k=0;
+               for(j=0;j<num;j++)bitsetbs[j]=FREE_INT;
+               tmp=freebe[i];
+              }
+			}
+			if(num!=k){
+                    printf("AK_allocationbit3 f i num  k: %d. --- %d --- %d ----%d \n", freebe[i], i, num, k);
+			for(i=0;i<num;i++)bitsetbs[i]=FREE_INT;
+	         return bitsetbs;
+			 break;
+			}
+			return bitsetbs;
+			break;
+
+
+		case allocationAROUND:
+
+		for(i=0;i<numfree;i++)if(freebe[i]==target)break;
+			if((i+1)==numfree){
+		//no target
+		return bitsetbs;
+		}
+		k=0;j=i-1;
+		tmp=freebe[i];
+		tmpb=freebe[j];
+
+		printf("AROUND AK_allocationbit around f i num  k gap: %d. --- %d --- %d ----%d  ---%d\n", freebe[i], i, num, k,gaplength);
+		while(num){
+			if((i<numfree) && (freebe[i]!=FREE_INT)  && (gaplength>=abs(freebe[i]-tmp)) ){
+			bitsetbs[k++]=freebe[i];
+			num--;
+			tmp=freebe[i];
+			i++;
+			}
+			else i=numfree;
+
+
+			if((j>=0) && (freebe[j]!=FREE_INT)  && (gaplength>=abs(freebe[j]-tmpb)) ){
+			bitsetbs[k++]=freebe[j];
+			num--;
+			tmpb=freebe[j];
+			j--;
+			}
+			else j=-1;
+
+			if((i>=numfree) && j<0 && num>0){
+				for(i=0;i<num;i++)bitsetbs[i]=FREE_INT;
+	            return bitsetbs;
+				break;
+				}
+
+			}
+
+			if(num!=0){
+			for(i=0;i<num;i++)bitsetbs[i]=FREE_INT;
+	         return bitsetbs;
+			 break;
+			}
+
+			return bitsetbs;
+			break;
+
+
+        case allocationNOMODE:
+            return bitsetbs;
+			break;
+
+		}
+
+
+	return bitsetbs;
+
+	}
+
+
+/**
+ * @author dv
+ * @brief  Function dumpes allocation table
+ * @return nothing
+ */
+void AK_allocationtable_dump(int zz){
+int i;
+printf("Dump of allocation table\n");
+if(zz){
+for(i=0;i<DB_FILE_BLOCKS_NUM;i++){
+if(AK_allocationbit->allocationtable[i]!=0xFFFFFFFF){
+	printf("(%u) ", AK_allocationbit->allocationtable[i]);
+	if((i%(CHAR_IN_LINE/8)==0))printf(" [%d]\n", i);
+	continue;
+	}
+else printf("(%d) ", 0);
+	        if((i%(CHAR_IN_LINE/8)==0))printf(" [%d]\n", i);
+
+	}
+}
+
+
+printf("\n - - - - - -\n\n");
+}
+
+
+/**
+ * @author dv
+ * @brief  Function dumpes allocation table
+ * @return nothing
+ */
+void AK_blocktable_dump(int zz){
+int i;
+printf("Dump of allocation table\n");
+if(zz){
+for(i=0;i<DB_FILE_BLOCKS_NUM;i++){
+if(AK_allocationbit->last_initialized<i){
+	printf("(%d-U) ", i);
+	if((i%(CHAR_IN_LINE/8)==0))printf("\n");
+	continue;
+	}
+if(BITTEST(AK_allocationbit->bittable, i))
+			printf("(%d-X) ", i);
+else printf("(%d-O) ", i);
+	        if((i%(CHAR_IN_LINE/8)==0))printf("\n");
+
+	}
+}
+else
+{
+for(i=0;i<DB_FILE_BLOCKS_NUM;i++){
+	if(AK_allocationbit->last_initialized<i){
+	printf("U ");
+	if((i%(CHAR_IN_LINE/2)==0))printf("\n");
+	continue;
+	}
+if(BITTEST(AK_allocationbit->bittable, i))
+			printf("X ");
+else printf("O ");
+	        if((i%(CHAR_IN_LINE/2)==0))printf("\n");
+
+	}
+}
+
+printf("\n - - - - - -\n\n");
+}
+
+/**
+ * @author dv
+ * @brief  Function flushes bitmask table to disk
+ * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+ */
+int AK_blocktable_flush(){
+
+if ((db = fopen(DB_FILE, "rb+")) == NULL) {
+        printf("AK_allocationbit: ERROR. Cannot open db file %s.\n", DB_FILE);
+        exit(EXIT_ERROR);
+    }
+
+if (fwrite(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) != 1) {
+            printf("AK_allocationbit: ERROR. Cannot write bit vector \n");
+            exit(EXIT_ERROR);
+        }
+
+	rewind(db);
+	fclose(db);
+return ( EXIT_SUCCESS);
+	}
+
+
+/**
+ * @author dv
+ * @brief  Function gets allocation table from disk
+ * @return EXIT_SUCCESS if the file has been taken from disk, EXIT_ERROR otherwise
+ */
+int AK_blocktable_get(){
+
+if ((db = fopen(DB_FILE, "rb+")) == NULL) {
+        printf("AK_allocationbit: ERROR. Cannot open db file %s.\n", DB_FILE);
+        exit(EXIT_ERROR);
+    }
+
+if(fread(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) == 0) {
+        printf("AK_allocationbit:  Cannot read bit-vector %d.\n",AK_ALLOCATION_TABLE_SIZE);
+		exit(EXIT_ERROR);
+   }
+
+	rewind(db);
+	fclose(db);
+return ( EXIT_SUCCESS);
+	}
+
+
+
+/**
+ * @brief  Helper function to determine file size
+ * @return file size
+ */
+int fsize(FILE *fp){
+	int sz=1;
+	struct stat st;
+    stat(DB_FILE, &st);
+    sz = st.st_size;
+    if(sz!=1)return sz;
+
+    int prev=ftell(fp);
+    fseek(fp, 0L, SEEK_END);
+    sz=ftell(fp);
+    fseek(fp,prev,SEEK_SET);
+    return sz;
+}
+
+
+
+/**
+ * @author dv
+ * @brief  Function that initializes allocation table, write it to disk and cache in memory
+ * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+ */
+int AK_init_allocation_table(){
+int i,sz;
+
+if ((AK_allocationbit = (AK_blocktable *) malloc(sizeof(AK_blocktable))) == NULL) {
+        printf("AK_allocationbit: ERROR. Cannot allocate  bit vector \n");
+        exit(EXIT_ERROR);
+    }
+
+
+
+if ((db = fopen(DB_FILE, "rb+")) == NULL) {
+	    if ((db = fopen(DB_FILE, "wb+")) == NULL) {
+        printf("AK_allocationbit: ERROR. Cannot open db file %s.\n", DB_FILE);
+        exit(EXIT_ERROR);
+		}
+    }
+
+sz=fsize(db);
+
+
+  //if this is very first time
+  if(sz ==0){
+	  for(i=0; i<DB_FILE_BLOCKS_NUM;i++ )
+BITCLEAR(AK_allocationbit->bittable,i);
+AK_allocationbit->last_allocated=(int)0;
+AK_allocationbit->last_initialized=(int)0;
+AK_allocationbit->prepared=(int)0;
+
+ memset(AK_allocationbit->allocationtable, 0xFFFFFFFF, sizeof(AK_allocationbit->allocationtable));
+
+if (fwrite(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) != 1) {
+            printf("AK_allocationbit: ERROR. Cannot write bit vector \n");
+            exit(EXIT_ERROR);
+        }
+
+
+  }
+  else if (fread(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) == 0) {
+        printf("AK_allocationbit:  Cannot read bit-vector %d.\n",AK_ALLOCATION_TABLE_SIZE);
+		exit(EXIT_ERROR);
+   }
+	  	printf("\nAllocation table size:%d bytes \nLast allocated:%d. block \nLast initialized:%d. block\n\n", AK_ALLOCATION_TABLE_SIZE, AK_allocationbit->last_allocated,AK_allocationbit->last_initialized);
+
+fclose(db);
+return ( EXIT_SUCCESS);
+
+
+	}
+
+
+/**
+ * @author Markus Schatten , rearranged by dv
+ * @brief  Function that initializes new block
+ * @return pointer to block allocated in memory
+ */
+AK_block *  AK_init_block(){
+	register int i = 0, j, k;
+	AK_block * block = NULL;
+
+  if ((block = (AK_block *) malloc(sizeof ( AK_block))) == NULL) {
         printf("AK_init_db_file: ERROR. Cannot allocate block %d\n", i);
         exit(EXIT_ERROR);
     }
@@ -76,7 +503,7 @@ int AK_init_db_file(int size) {
         block->tuple_dict[ i ].address = FREE_INT;
         block->tuple_dict[ i ].size = FREE_INT;
     }
-	
+
     for (i = 0; i < DATA_BLOCK_SIZE * DATA_ENTRY_SIZE; i++) {
         block->data[ i ] = FREE_CHAR;
     }
@@ -86,87 +513,327 @@ int AK_init_db_file(int size) {
     block->free_space = DATA_BLOCK_SIZE * DATA_ENTRY_SIZE * sizeof ( int);
     block->last_tuple_dict_id = 0;
 
-    for (i = 0; i < db_file_size; i++) {
+	return block;
+	}
+
+
+/**
+ * @author Markus Schatten , rearranged by dv
+ * @brief  Function that allocates new blocks by placing them to appropriate place
+ * and then update last initialized index
+ * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+ */
+int  AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
+register int i = 0;
+
+if(db==NULL){
+    if ((db = fopen(DB_FILE, "rb+")) == NULL) {
+        printf("AK_init_db_file: ERROR. Cannot open db file %s.\n", DB_FILE);
+        return EXIT_ERROR;
+    }
+
+
+	}
+
+	if (fseek(db, AK_ALLOCATION_TABLE_SIZE + FromWhere * sizeof(AK_block), SEEK_SET) != 0) {
+        printf("AK_allocationbit: ERROR. Cannot set position to move for AK_blocktable \n");
+        return EXIT_ERROR;
+
+    }
+
+
+    for (i = FromWhere; i < FromWhere+HowMany; i++) {
         block->address = i;
         if (fwrite(block, sizeof ( *block), 1, db) != 1) {
             printf("AK_init_db_file: ERROR. Cannot write block %d\n", i);
-            exit(EXIT_ERROR);
+            return EXIT_ERROR;
         }
+
     }
-    free(block);
+
 
     fclose(db);
 
-    printf("AK_init_db_file: Done!\n");
+	AK_allocationbit->last_initialized=i;
+	AK_blocktable_flush();
+	printf("AK_allocationbit->last_initialized %d\n", AK_allocationbit->last_initialized);
 
-    return ( EXIT_SUCCESS);
+	return ( EXIT_SUCCESS);
+
 }
 
+
+
+
+
 /**
- * @author Markus Schatten
- * @brief  Function that reads a block at a given address (block number less than db_file_size). New block is allocated. Database 		   file is opened. Position is set to provided address block. At the end function reads file from that position.
+ * @author Markus Schatten, updated dv
+ * @brief  Function that reads a block at a given address (block number less than db_file_size).
+ * New block is allocated. Database file is opened. Position is set to provided address block.
+ * At the end function reads file from that position.
  * @param address block number (address)
  * @return pointer to block allocated in memory
  */
 AK_block * AK_read_block(int address) {
-    pthread_mutex_lock(&fileLockMutex);
-    AK_block * block = (AK_block *) malloc(sizeof ( AK_block));
-    db = fopen(DB_FILE, "r");
-    if (db == NULL) {
+	if(DB_FILE_BLOCKS_NUM<address  || 0>address){
+		printf("AK_read_block: ERROR. Out of range %s  address:%d  DB_FILE_BLOCKS_NUM:%d\n", DB_FILE, address,DB_FILE_BLOCKS_NUM);
+        exit(EXIT_ERROR);
+		}
+
+pthread_mutex_lock(&fileLockMutex);
+
+AK_block * blockr =malloc(sizeof(AK_block));
+
+    if ((db = fopen(DB_FILE, "rb")) == NULL) {
         printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
-        perror ("The following error occurred");
-        printf( "Value of errno: %d\n", errno );
+pthread_mutex_unlock(&fileLockMutex);
         exit(EXIT_ERROR);
     }
 
-    if (fseek(db, address * sizeof ( AK_block), SEEK_SET) != 0) {
+
+    if (fseek(db, address * sizeof(AK_block) + AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
         printf("AK_read_block: ERROR. Cannot set position to provided address block %d.\n", address);
+pthread_mutex_unlock(&fileLockMutex);
         exit(EXIT_ERROR);
 
     }
-    if (fread(block, sizeof ( AK_block), 1, db) == 0) {
+
+    if (fread(blockr, sizeof(AK_block), 1, db) == 0) {
         printf("AK_read_block: ERROR. Cannot read block %d.\n", address);
+pthread_mutex_unlock(&fileLockMutex);
         exit(EXIT_ERROR);
     }
 
     fclose(db);
-    pthread_mutex_unlock(&fileLockMutex);
-    return ( block);
+pthread_mutex_unlock(&fileLockMutex);
+    return ( blockr);
 }
 
 /**
  * @author Markus Schatten
- * @brief  Function writes a block to DB file. Database file is opened. Position is set to provided address block. Block is 
+ * @brief  Function writes a block to DB file. Database file is opened. Position is set to provided address block. Block is
            written to provided address.
  * @param block poiner to block allocated in memory to write
  * @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
  */
 int AK_write_block(AK_block * block) {
-    pthread_mutex_lock(&fileLockMutex);
-    db = fopen(DB_FILE, "r+");
-    if (db == NULL) {
+    if ((db = fopen(DB_FILE, "rb+")) == NULL) {
         printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
-        perror ("The following error occurred");
-        printf( "Value of errno: %d\n", errno );        
         exit(EXIT_ERROR);
     }
-    if (fseek(db, block->address * sizeof ( AK_block), SEEK_SET) != 0) {
+    if (fseek(db, block->address * sizeof(AK_block) + AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
         printf("AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address);
         exit(EXIT_ERROR);
     }
+pthread_mutex_lock(&fileLockMutex);
     if (fwrite(block, sizeof ( *block), 1, db) != 1) {
         printf("AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address);
+pthread_mutex_unlock(&fileLockMutex);
         exit(EXIT_ERROR);
     }
+
+
     fclose(db);
-    Ak_dbg_messg(HIGH, DB_MAN, "AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
-    pthread_mutex_unlock(&fileLockMutex);
+    Ak_dbg_messg(HIGH, DB_MAN, "AK_write_block: Written block at address %d\n", block->address*sizeof(AK_block)+ AK_ALLOCATION_TABLE_SIZE);
+pthread_mutex_unlock(&fileLockMutex);
     return ( EXIT_SUCCESS);
 }
 
+
+
+
 /**
- * @author Nikola BakoÅ¡, updated by Dino LaktaÅ¡iÄ‡ (fixed header BUG)
- * @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE.Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is 
+ * @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
+ * @brief  Function copy header to blocks.
+ * @param header pointer to header provided for copy
+ * @param blocknum pointer to addresses of blocks that header needs to be copied
+ * @param num number of blocks waiting for its header
+ * @return number of performed header copy
+ */
+int AK_copy_header(AK_header *header, int * blocknum, int num)
+{
+int j=0;
+int num_blocks = 0; /// var to check the number of written blocks
+int header_att_id = 0;
+AK_block *block;
+// for (j = 0; j < num; j++)
+//	printf("AK_copy_header %d. -- %d.\n", num, blocknum[j]);
+
+	//Addresses DO NOT NEED to be sequential !!
+    for (j = 0; j < num; j++) {
+        block = AK_read_block(blocknum[j]);
+		printf("AK_copy_header %d.\n", j);
+		for (header_att_id = 0; header_att_id < MAX_ATTRIBUTES; header_att_id++) {
+			//memcpy(&block->header[ header_att_id], &header[ header_att_id ], sizeof( *header));
+			 memcpy(& block->header[header_att_id], header, sizeof ( * header));
+		}
+/*
+        //@TODO the check fails second time around if the table has MAX_ATTRIBUTES
+        while(((h_id = header_att_id - num_blocks * MAX_ATTRIBUTES) < MAX_ATTRIBUTES) && (header[ header_att_id ].type != 0)) {
+			if (h_id >= 0) {
+				memcpy(&block->header[ h_id ], &header[ header_att_id++ ], sizeof(*header));
+				printf("Block count: %d, Header ID: %d, %s\n", num_blocks, header_att_id - 1, block->header[ h_id ].att_name);
+			}
+        }
+*/
+        block->type = BLOCK_TYPE_NORMAL;
+        block->free_space = 0;
+        block->last_tuple_dict_id = 0;
+
+        /// if write of block succeded increase var num_blocks, else nothing
+		if (AK_write_block(block) == EXIT_SUCCESS) {
+            num_blocks++;
+		}
+
+        free(block);
+    }
+
+
+return num_blocks;
+}
+
+
+/**
+ * @author dv
+ * @brief  Function alocates new extent of blocks. Number of blocks is not ordered as well as a way of search for them.
+ * @param start_address address (block number) to start searching for sufficient space
+ * @param desired_size number of desired blocks
+ * @param AK_allocation_set_mode a way of trying to fing free space. Can be one of:
+        allocationSEQUENCE,
+        allocationUPPER,
+        allocationLOWER,
+        allocationAROUND
+ * @param border number of allocated blocks gap
+ * @param target block address around which other blocks have to be searched
+ * @param header pointer to header that should be written to the new extent (all blocks)
+ * @param int gl gap size
+ * @return pointer to set of alocated block addresses
+ */
+int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl) {
+    register int i; /// vars for loop [for]
+	int num_blocks=0;
+
+
+
+int * blocknum=(int*)malloc(sizeof(int)*(desired_size+1));
+
+for(i=0; i<4;i++){
+
+        if(allocationNOMODE==mode[i]){
+                blocknum[0]=FREE_INT;
+                return blocknum;
+        }
+   //get set - addresses of allocated free blocks
+   blocknum=AK_get_allocation_set(blocknum, border, gl, desired_size, mode[i], target);
+   printf("AK_get_extent: block %d. mode %d\n", blocknum[0],mode[i]);
+
+   if(blocknum[0]==FREE_INT && mode[i]==allocationSEQUENCE){
+	   //there is no space at current boundaries - try to get more
+	   	if(AK_allocate_blocks(NULL, AK_init_block(), AK_allocationbit->last_initialized, desired_size)!=EXIT_SUCCESS){
+		printf("AK_new_extent E1: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
+        return blocknum;
+		}
+
+	   blocknum=AK_get_allocation_set(blocknum, start_address, gl, desired_size, allocationSEQUENCE, 6);
+	   if(blocknum[0]==FREE_INT){
+		printf("AK_new_extent E2: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
+        return blocknum;
+		   }
+
+	   }
+if(blocknum[0]!=FREE_INT )break;
+}
+
+if(blocknum[0]==FREE_INT)
+return blocknum;
+
+    num_blocks = AK_copy_header(header, blocknum, desired_size);
+
+
+	printf("AK_get_extent: num_blocks %d.\n", num_blocks);
+    Ak_dbg_messg(HIGH, DB_MAN, "AK_get_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, num_blocks= %i\n", blocknum[0], desired_size, blocknum[desired_size-1], num_blocks);
+
+	/// if some blocks are not succesfully allocated, which means that the extend allocation has FAILED
+    if (num_blocks != desired_size) {
+        Ak_dbg_messg(LOW, DB_MAN ,"AK_get_extent: ERROR. Cannot allocate extent %d\n", blocknum[0]);
+        blocknum[0]=FREE_INT;
+        return blocknum;
+    }
+
+	//still hawen't saved what happened to allocation table
+	for(i=0; i<desired_size; i++){
+		BITSET(AK_allocationbit->bittable,blocknum[i]);
+	if(i<(desired_size-1))AK_allocationbit->allocationtable[blocknum[i]]=blocknum[i+1];
+	}
+        AK_allocationbit->allocationtable[blocknum[i-1]]=blocknum[0];
+		AK_allocationbit->last_allocated+=i;
+
+AK_blocktable_flush();
+//now we have
+
+
+    return blocknum;
+
+
+
+}
+
+
+/**
+ * @author dv
+ * @brief  Function alocates new blocks for increasing extent size.
+ * @param start_address first address of extent that is subject of increasing
+ * @param add_size number how many new blocks is to be added to existing extent
+ * @param AK_allocation_set_mode a way of trying to fing free space. Can be one of:
+        allocationSEQUENCE,
+        allocationUPPER,
+        allocationLOWER,
+        allocationAROUND
+ * @param border number of allocated blocks gap
+ * @param target block address around which other blocks have to be searched
+ * @param header pointer to header that should be written to the new extent (all blocks)
+ * @param int gl gap size
+ * @return pointer to set of alocated block addresses
+ */
+int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl){
+register int i; /// vars for loop [for]
+unsigned int last_address=0;
+int * blocknum=(int*)malloc(sizeof(int)*(add_size+1));
+blocknum[0]=FREE_INT;
+
+for(i=0;i<DB_FILE_BLOCKS_NUM;i++){
+if(AK_allocationbit->allocationtable[i]==start_address){
+    last_address=AK_allocationbit->allocationtable[i];
+    break;
+}
+
+       }
+
+//there is no start_address in extent's blocks allocation table
+if(!last_address)return blocknum;
+
+
+//TODO maybe some situations will ask for start address. Zero covers all situationa.
+blocknum=AK_get_extent(0, add_size, mode, border, target, header, gl);
+
+//problem with obtaining new blocks
+if(blocknum[0]==FREE_INT)return blocknum;
+
+AK_allocationbit->allocationtable[last_address]=blocknum[0];
+for(i=1;i<add_size;i++){
+ AK_allocationbit->allocationtable[blocknum[i-1]]=blocknum[i];
+}
+AK_allocationbit->allocationtable[blocknum[add_size-1]]=start_address;
+
+return blocknum;
+}
+
+
+
+/**
+ * @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
+ * @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE.
+ * Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is
  *         incremented.
  * @param start_address address (block number) to start searching for sufficient space
  * @param old_size size of previous extent in same segment (in blocks)
@@ -181,10 +848,10 @@ int AK_write_block(AK_block * block) {
  */
 int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *header) {
     int req_free_space; /// var - How much of space is required for extent
-    int first_addr_of_extent = -1; /// var - Start address for extent
-    int nAlocated_blocks = 0; /// var - Number of blocks to be alocated for extent
-    register int i, j; /// vars for loop [for]
-    AK_block *block;
+    register int i; /// vars for loop [for]
+	int num_blocks=0;
+	int firstAddress=0;
+
 
     /// if the old_size is 0 then the size of new extent is INITIAL_EXTENT_SIZE
     if (old_size == 0) {
@@ -210,86 +877,67 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
         req_free_space = old_size + old_size * RESIZE_FACTOR;
     }
 
-    for (i = start_address; i <= (db_file_size - req_free_space); i++) {
-        if (((int) (req_free_space) > (db_file_size - i - 1))) {
-            printf("AK_new_extent: ERROR. Not enought space for the new extent. Requested space was: %d\n", req_free_space);
-            return (EXIT_ERROR);
-        }
+int * blocknum=(int*)malloc(sizeof(int)*(req_free_space+1));
 
-        /// check the block is free
-        block = AK_read_block(i); /// read block
+   //get set - addresses of allocated free blocks
+   blocknum=AK_get_allocation_set(blocknum,0,0, req_free_space,allocationSEQUENCE, 6);
+   firstAddress=blocknum[0];
+   printf("AK_new_extent: block %d.\n", firstAddress);
 
-        if ((block->type) != BLOCK_TYPE_FREE) /// if the block is used
-        {
-            nAlocated_blocks = 0;
-            first_addr_of_extent = -1;
-            continue; /// goto next iteration of for loop
-        } else {
-            if (nAlocated_blocks == 0)
-                first_addr_of_extent = i; /// if it is a first free block
-
-            nAlocated_blocks++; /// increase the number of block by 1
-
-            if (nAlocated_blocks != 0 && (req_free_space == nAlocated_blocks)) /// if requested space for extent is OK
-            {
-                break; /// exit loop
-            }
-        }
-    }
-	
-    int num_blocks = 0; /// var to check the number of written blocks
-	int header_att_id = 0;
-	int h_id = 0; /// calculate header attribute ID for N-th block
-	
-    for (j = first_addr_of_extent; j < (first_addr_of_extent + nAlocated_blocks); j++) {
-        block = AK_read_block(j);
-		
-		/*for (header_att_id = 0; header_att_id < MAX_ATTRIBUTES; header_att_id++) {
-			if (header[header_att_id].type == 0) {
-				break;
-			}
-			memcpy(&block->header[ header_att_id], &header[ header_att_id ], sizeof( *header));
-		}*/
-
-        //@TODO the check fails second time around if the table has MAX_ATTRIBUTES
-        while(((h_id = header_att_id - num_blocks * MAX_ATTRIBUTES) < MAX_ATTRIBUTES) && (header[ header_att_id ].type != 0)) {
-			if (h_id >= 0) {
-				memcpy(&block->header[ h_id ], &header[ header_att_id++ ], sizeof(*header));
-				//printf("Block count: %d, Header ID: %d, %s\n", num_blocks, header_att_id - 1, block->header[ h_id ].att_name);
-			}
-        }
-		
-        block->type = BLOCK_TYPE_NORMAL; 
-        block->free_space = 0;
-        block->last_tuple_dict_id = 0;
-		
-        /// if write of block succeded increase var num_blocks, else nothing
-		if (AK_write_block(block) == EXIT_SUCCESS) {
-            num_blocks++;
+   if(blocknum[0]==FREE_INT){
+	   //there is no space at current boundaries - try to get more
+	   	if(AK_allocate_blocks(NULL, AK_init_block(), AK_allocationbit->last_initialized, req_free_space)!=EXIT_SUCCESS){
+		printf("AK_new_extent: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
+        return(EXIT_ERROR);
 		}
 
-        free(block);
-    }
-	
-    Ak_dbg_messg(HIGH, DB_MAN, "AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, num_blocks= %i\n", first_addr_of_extent, nAlocated_blocks, j, num_blocks);
-	
+	   blocknum=AK_get_allocation_set(blocknum,0,0, req_free_space,allocationSEQUENCE, 6);
+	   if(blocknum[0]==FREE_INT){
+		printf("AK_new_extent: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
+        return(EXIT_ERROR);
+		   }
+
+	   }
+
+    num_blocks = AK_copy_header(header, blocknum, req_free_space);
+
+
+
+
+	printf("AK_new_extent: num_blocks %d.\n", num_blocks);
+    Ak_dbg_messg(HIGH, DB_MAN, "AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, num_blocks= %i\n", blocknum[0], req_free_space, blocknum[req_free_space-1], num_blocks);
+
 	/// if some blocks are not succesfully allocated, which means that the extend allocation has FAILED
-    if (num_blocks != nAlocated_blocks) {
-        Ak_dbg_messg(LOW, DB_MAN ,"AK_new_extent: ERROR. Cannot allocate extent %d\n", first_addr_of_extent);
+    if (num_blocks != req_free_space) {
+        Ak_dbg_messg(LOW, DB_MAN ,"AK_new_extent: ERROR. Cannot allocate extent %d\n", blocknum[0]);
         return (EXIT_ERROR);
     }
-	
-    return (first_addr_of_extent);
+
+	//still hawen't saved what happened to allocation table
+	for(i=0; i<req_free_space; i++){
+		BITSET(AK_allocationbit->bittable,blocknum[i]);
+	if(i<(req_free_space-1))AK_allocationbit->allocationtable[blocknum[i]]=blocknum[i+1];
+	}
+        AK_allocationbit->allocationtable[blocknum[i-1]]=blocknum[0];
+		AK_allocationbit->last_allocated+=i;
+
+AK_blocktable_flush();
+//now we have
+
+free(blocknum);
+
+    return (firstAddress);
 }
 
+
 /**
- * @author Tomislav Fotak
+ * @author Tomislav Fotak, refurbished by dv
  * @brief  Function that allocates new segment of extents. In this phase of implementation, only extents
  	   containing INITIAL_EXTENT_SIZE blocks can be allocated. If extent is successfully allocated,
-           number of allocated extents is incremented and function goes to next block after allocated extent. 
+           number of allocated extents is incremented and function goes to next block after allocated extent.
            Otherwise, function moves to INITIAL_EXTENT_SIZE blocks. In that way function gets either first block of
            new extent or some block in that extent which will not be free.
- 
+
  * @param name (character pointer) name of segment
  * @param type segment type (possible values:
         SEGMENT_TYPE_SYSTEM_TABLE,
@@ -301,30 +949,14 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
  * @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
  */
 int AK_new_segment(char * name, int type, AK_header *header) {
-	int i; /// counter
     int segment_start_addr = 1; /// start address for segment because we can not allocate segment in block 0
-    int current_extent_start_addr;
     int first_allocated_block = -1;
 
-	AK_block *block;
+    Ak_dbg_messg(HIGH, DB_MAN, "AK_new_segment: %d, %s.\n", type, name);
 
-    for (i = segment_start_addr; i <= db_file_size; i++) {
-		Ak_dbg_messg(HIGH, DB_MAN, "AK_new_segment: Reading block %d, %s.\n", i, name);
-        /// check if the block is free
-        block = AK_read_block(i);
 
-        if (block->type == BLOCK_TYPE_FREE) {
-            current_extent_start_addr = AK_new_extent(i, 0, type, header); /// allocate new extent
-            if (current_extent_start_addr != EXIT_ERROR) {
-                if (first_allocated_block == -1)
-                    first_allocated_block = current_extent_start_addr;
+	first_allocated_block=AK_new_extent(segment_start_addr, 0, type, header);
 
-                break;
-            } else {
-                i += INITIAL_EXTENT_SIZE - 1;
-            }
-        }
-    }
     if (first_allocated_block == -1) {
         return ( EXIT_ERROR);
     }
@@ -346,21 +978,23 @@ int AK_new_segment(char * name, int type, AK_header *header) {
 AK_header * AK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code) {
     AK_header * catalog_header = (AK_header *) malloc(sizeof ( AK_header));
     memset(catalog_header, 0, sizeof (AK_header));
-    
+
+    AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
+
 	Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", name, strlen(name));
     catalog_header->type = type;
     memcpy(catalog_header->att_name, name, strlen(name));
-    
+
 	register int i, j, k;
-	
+
     /// initialize catalog_header->integrity and catalog_header->constr_name[][] and catalog_header->constr_code[][] with data given as functions parameters
     for (i = 0; i < MAX_CONSTRAINTS; i++) {
         catalog_header->integrity[ i ] = integrity;
         for (j = 0; j < MAX_CONSTR_NAME; j++) {
-            catalog_header->constr_name[ i ][ j ] = constr_name;
+            catalog_header->constr_name[ i ][ j ] = (int)constr_name;
         }
         for (k = 0; k < MAX_CONSTR_CODE; k++) {
-            catalog_header->constr_code[ i ][ k ] = contr_code;
+            catalog_header->constr_code[ i ][ k ] = (int) contr_code;
         }
     }
 
@@ -369,7 +1003,7 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
 
 /**
  * @author Matija Novak
- * @brief  Function for inserting entry in tuple_dict and data of a block. Address, type and size of 
+ * @brief  Function for inserting entry in tuple_dict and data of a block. Address, type and size of
            catalog_tuple_dict are set.  Free space of block is also set.
  * @param block_adress adress of a block in which we want insert data
  * @param type type of entry_data
@@ -438,7 +1072,7 @@ void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int 
 int AK_init_system_tables_catalog(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
         int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull,int constraintUnique, int reference) {
     Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_tables_catalog: Initializing system tables catalog\n");
-    
+
 	AK_block * catalog_block = (AK_block *) malloc(sizeof ( AK_block));
     /// first header attribute of catalog_block
     AK_header * catalog_header_name = (AK_header *) malloc(sizeof ( AK_header));
@@ -588,7 +1222,7 @@ void AK_memset_int(void *block, int value, size_t num) {
   * @param constraint constraint in database
   * @param constraintNull Null constraint in database
   * @param reference reference database
-  * @return EXIT_SUCCESS 
+  * @return EXIT_SUCCESS
 */
 int AK_register_system_tables(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
         int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference) {
@@ -749,7 +1383,7 @@ int AK_register_system_tables(int relation, int attribute, int index, int view, 
     AK_insert_entry(relationTable, TYPE_INT, &end, j);
     j++;
     i++;
-    
+
     AK_insert_entry(relationTable, TYPE_INT, &i, j);
     j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_user_right", j);
@@ -760,7 +1394,7 @@ int AK_register_system_tables(int relation, int attribute, int index, int view, 
     AK_insert_entry(relationTable, TYPE_INT, &end, j);
     j++;
     i++;
-    
+
     AK_insert_entry(relationTable, TYPE_INT, &i, j);
     j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_group_right", j);
@@ -835,15 +1469,15 @@ int AK_init_system_catalog() {
     Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: System catalog initialization started...\n");
 
     AK_header hConstraintNotNull[5] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0'},
-        {TYPE_VARCHAR, "tableName", 0, '\0', '\0'},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
+        {TYPE_VARCHAR, "tableName", {0}, {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "constraintName", 0, '\0', '\0'},
         {TYPE_VARCHAR, "attributeName", 0, '\0', '\0'},
         {0, '\0', 0, '\0', '\0'}
     };
 
     AK_header hConstraintUnique[5] = { /*DODAO U VEZI UNIQUE*/
-        {TYPE_INT, "obj_id", 0, '\0', '\0'},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "tableName", 0, '\0', '\0'},
         {TYPE_VARCHAR, "constraintName", 0, '\0', '\0'},
         {TYPE_VARCHAR, "attributeName", 0, '\0', '\0'},
@@ -852,7 +1486,7 @@ int AK_init_system_catalog() {
 
 
     AK_header hConstraintBetween[7] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0'},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "tableName", 0, '\0', '\0'},
         {TYPE_VARCHAR, "constraintName", 0, '\0', '\0'},
         {TYPE_VARCHAR, "attributeName", 0, '\0', '\0'},
@@ -863,7 +1497,7 @@ int AK_init_system_catalog() {
 
 
     AK_header hRelation[5] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0'},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0'},
         {TYPE_INT, "start_address", 0, '\0', '\0'},
         {TYPE_INT, "end_address", 0, '\0', '\0'},
@@ -871,7 +1505,7 @@ int AK_init_system_catalog() {
     };
 
     AK_header hAttribute[5] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_INT, "type", 0, '\0', '\0',},
         {TYPE_INT, "table_id", 0, '\0', '\0',},
@@ -879,7 +1513,7 @@ int AK_init_system_catalog() {
     };
 
     AK_header hIndex[7] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_INT, "start_address", 0, '\0', '\0',},
         {TYPE_INT, "end_address", 0, '\0', '\0'},
@@ -888,16 +1522,15 @@ int AK_init_system_catalog() {
         {0, '\0', 0, '\0', '\0'}
     };
 
-    AK_header hView[5] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+    AK_header hView[4] = {
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_VARCHAR, "query", 0, '\0', '\0',},
-	{TYPE_VARCHAR, "rel_exp", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
 
     AK_header hSequence[8] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_INT, "current_value", 0, '\0', '\0',},
         {TYPE_INT, "increment", 0, '\0', '\0',},
@@ -908,7 +1541,7 @@ int AK_init_system_catalog() {
     };
 
     AK_header hFunction[5] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_INT, "arg_num", 0, '\0', '\0',},
         {TYPE_INT, "return_type", 0, '\0', '\0',},
@@ -924,7 +1557,7 @@ int AK_init_system_catalog() {
     };
 
     AK_header hTrigger[7] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_VARCHAR, "event", 0, '\0', '\0',},
         {TYPE_VARCHAR, "condition", 0, '\0', '\0',},
@@ -943,7 +1576,7 @@ int AK_init_system_catalog() {
 
 
     AK_header hDb[3] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
@@ -956,14 +1589,14 @@ int AK_init_system_catalog() {
 
 
     AK_header hUser[4] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "username", 0, '\0', '\0',},
         {TYPE_INT, "password", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
 
     AK_header hGroup[3] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
@@ -975,15 +1608,15 @@ int AK_init_system_catalog() {
     };
 
     AK_header hUserRight[5] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
-        {TYPE_INT, "user_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
+        {TYPE_VARCHAR, "name", 0, '\0', '\0',},
         {TYPE_INT, "artifact_id", 0, '\0', '\0',},
         {TYPE_VARCHAR, "right_type", 0, '\0', '\0',},
         {0, '\0', 0, '\0', '\0'}
     };
-    
+
     AK_header hGroupRight[5] = {
-        {TYPE_INT, "obj_id", 0, '\0', '\0',},
+        {TYPE_INT, "obj_id" ,  {0}  ,  {{'\0'}}, {{'\0'}} },
         {TYPE_INT, "group_id", 0, '\0', '\0',},
         {TYPE_INT, "artifact_id", 0, '\0', '\0',},
         {TYPE_VARCHAR, "right_type", 0, '\0', '\0',},
@@ -1095,7 +1728,7 @@ int AK_init_system_catalog() {
         memset(hGroup[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
         memset(hGroup[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
     }
-    
+
     for (i = 0; i < 2; i++) {
         AK_memset_int(hUserGroup[i].integrity, FREE_INT, MAX_CONSTRAINTS);
         memset(hUserGroup[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
@@ -1120,6 +1753,8 @@ int AK_init_system_catalog() {
         memset(hReference[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
     }
 	Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: Creating new segments...\n");
+
+
 
     relation = AK_new_segment("AK_relation", SEGMENT_TYPE_SYSTEM_TABLE, hRelation);
     attribute = AK_new_segment("AK_attribute", SEGMENT_TYPE_SYSTEM_TABLE, hAttribute);
@@ -1157,7 +1792,7 @@ int AK_init_system_catalog() {
 /**
  * @author Markus Schatten
  * @brief  Function deletes a block by a given block address (resets the header and data). Types, integrities, constraint names,
-           constraint codes are set to "free" values. In tuple dictionary type, address and size are set to FREE_INT values. Data 		   of block is set to FREE_CHAR. 
+           constraint codes are set to "free" values. In tuple dictionary type, address and size are set to FREE_INT values. Data 		   of block is set to FREE_CHAR.
  * @param address address of the block to be deleted
  * @return returns EXIT_SUCCESS if deletion successful, else EXIT_ERROR
  */
@@ -1201,6 +1836,12 @@ int AK_delete_block(int address) {
     memcpy(block->tuple_dict, tuple_dict, sizeof ( *tuple_dict));
     memcpy(block->data, data, sizeof ( *data));
 
+    //remove its status from allocation table
+	BITCLEAR(AK_allocationbit->bittable,address);
+	if(address==AK_allocationbit->last_allocated )AK_allocationbit->last_allocated=address-1;
+AK_blocktable_flush();
+AK_blocktable_get();
+
     if (AK_write_block(block) == EXIT_SUCCESS) {
         return EXIT_SUCCESS;
     }
@@ -1208,7 +1849,7 @@ int AK_delete_block(int address) {
 }
 
 /**
- * @author Dejan SamboliÄ‡
+ * @author Dejan Samboliæ
  * @brief  Function deletes an extent between begin and end blocks
  * @param begin address of extent's first block
  * @param end address of extent's last block
@@ -1220,12 +1861,13 @@ int AK_delete_extent(int begin, int end) {
         if (AK_delete_block(address) == EXIT_ERROR) {
             return EXIT_ERROR;
         }
+        AK_allocationbit->allocationtable[address]=0xFFFFFFFF;
     }
     return ( EXIT_SUCCESS);
 }
 
 /**
- * @author Mislav ÄŒakariÄ‡
+ * @author Mislav Èakariæ
  * @param name name of the segment
  * @param type type of the segment
  * @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
@@ -1276,13 +1918,88 @@ int AK_init_disk_manager() {
     //int size_in_mb = DB_FILE_SIZE;
     float size = DB_FILE_BLOCKS_NUM; //1024 * 1024 * size_in_mb / sizeof ( AK_block);
 
+		if(AK_init_allocation_table() == EXIT_ERROR)
+		exit(EXIT_ERROR);
+
+  if(AK_allocationbit->prepared==31){
+
+    printf("\n\tDisk manager has been initialized at %s\n\n",asctime( localtime(&AK_allocationbit->ltime) ));
+    Ak_dbg_messg(LOW, DB_MAN, "Block size is: %d\n", sizeof (AK_block));
+    Ak_dbg_messg(LOW, DB_MAN, "%d blocks for %d MiB\n", (int) size, DB_FILE_SIZE);
+
+
+//Examples for AROUND and SEQUENCE bitsets
+AK_blocktable_dump(0);
+AK_allocationtable_dump(1);
+
+/*
+BITSET(AK_allocationbit->bittable, AK_allocationbit->last_initialized-2);
+BITCLEAR(AK_allocationbit->bittable, 302);
+BITCLEAR(AK_allocationbit->bittable, 300);
+BITCLEAR(AK_allocationbit->bittable, 299);
+BITCLEAR(AK_allocationbit->bittable, 298);
+BITCLEAR(AK_allocationbit->bittable, 304);
+BITCLEAR(AK_allocationbit->bittable, 305);
+
+BITCLEAR(AK_allocationbit->bittable, 32);
+BITCLEAR(AK_allocationbit->bittable, 30);
+BITCLEAR(AK_allocationbit->bittable, 29);
+BITCLEAR(AK_allocationbit->bittable, 29);
+BITCLEAR(AK_allocationbit->bittable, 34);
+BITCLEAR(AK_allocationbit->bittable, 35);
+
+AK_blocktable_dump(0);
+*/
+
+
+
+printf("UPPER Example \n");
+int i=0;
+//	int * inti=(int*)malloc(10*sizeof(int));
+int* inti;
+	AK_allocation_set_mode mode[4];
+	mode[0]=allocationUPPER;
+    mode[1]=allocationLOWER;
+    mode[2]=allocationAROUND;
+	mode[3]=allocationSEQUENCE;
+
+	AK_header *headerd=(AK_header *) malloc(sizeof(AK_header));
+	headerd=AK_create_header("Address", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+//inti= AK_get_allocation_set( inti,0, 4, AROUND, AK_allocationbit->last_allocated+1);
+inti=AK_get_extent(0, 10, mode, 6, 302, headerd, 3);
+for(i=0;i<10;i++)printf("AK_inti %d. \n", inti[i]);
+
+AK_allocationtable_dump(1);
+i=inti[0];
+
+inti=AK_increase_extent(i, 4, mode, 6, 0, headerd,3);
+for(i=0;i<4;i++)printf("AK_inti %d. \n", inti[i]);
+
+free(inti);
+
+AK_allocationtable_dump(1);
+
+printf("Find more about examples at accompanying documentation...\n\n  \n");
+
+int vari;
+scanf("%d",&vari);
+
+    return EXIT_SUCCESS;
+
+  }
+
     printf("AK_init_disk_manager: Initializing disk manager...\n\n");
     Ak_dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: Block size is: %d\n", sizeof (AK_block));
     Ak_dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: We need %d blocks for %d MiB\n", (int) size, DB_FILE_SIZE);
 
     if (AK_init_db_file((int) size) == EXIT_SUCCESS) {
-        if (AK_init_system_catalog() == EXIT_SUCCESS) {
+        if ( AK_init_system_catalog() == EXIT_SUCCESS) {
             printf("AK_init_disk_manager: Disk manager initialized!\n\n");
+            AK_allocationbit->prepared=31;
+            AK_allocationbit->ltime=time(NULL);
+            AK_blocktable_flush();
+            int vari;
+scanf("%d",&vari);
             return EXIT_SUCCESS;
         }
         printf("AK_init_disk_manager: ERROR. System catalog initialization failed!\n");
@@ -1291,4 +2008,3 @@ int AK_init_disk_manager() {
     printf("AK_init_disk_manager: ERROR. DB file initialization failed!");
     return EXIT_ERROR;
 }
-
