@@ -991,10 +991,10 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
     for (i = 0; i < MAX_CONSTRAINTS; i++) {
         catalog_header->integrity[ i ] = integrity;
         for (j = 0; j < MAX_CONSTR_NAME; j++) {
-            catalog_header->constr_name[ i ][ j ] = (int)constr_name;
+            catalog_header->constr_name[ i ][ j ] = constr_name;
         }
         for (k = 0; k < MAX_CONSTR_CODE; k++) {
-            catalog_header->constr_code[ i ][ k ] = (int) contr_code;
+            catalog_header->constr_code[ i ][ k ] = contr_code;
         }
     }
 
