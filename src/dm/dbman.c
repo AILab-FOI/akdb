@@ -901,7 +901,7 @@ int * blocknum=(int*)malloc(sizeof(int)*(req_free_space+1));
 
     num_blocks = AK_copy_header(header, blocknum, req_free_space);
 
-
+firstAddress=blocknum[0];
 
 
 	printf("AK_new_extent: num_blocks %d.\n", num_blocks);
@@ -926,7 +926,7 @@ AK_blocktable_flush();
 
 free(blocknum);
 
-    return (firstAddress);
+    return firstAddress;
 }
 
 
