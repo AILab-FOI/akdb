@@ -979,7 +979,7 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
     AK_header * catalog_header = (AK_header *) malloc(sizeof ( AK_header));
     memset(catalog_header, 0, sizeof (AK_header));
 
-    AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
+   // AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
 
 	Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", name, strlen(name));
     catalog_header->type = type;
