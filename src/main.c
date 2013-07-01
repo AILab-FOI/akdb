@@ -98,7 +98,7 @@ typedef struct {
 } function;
 
 function fun[] = {
-        
+
         {"Ak_bitmap_test", &Ak_bitmap_test},
         {"Ak_btree_test", &Ak_btree_test},
         {"Ak_constraint_between_test", &Ak_constraint_between_test},
@@ -139,6 +139,8 @@ function fun[] = {
         {"AK_check_constraint_test", &AK_check_constraint_test},
         {"AK_transaction_test", &AK_test_Transaction},
         {"AK_observable_pattern_test", &AK_observable_test},
+        {"AK_allocationbit_test", &AK_allocationbit_test},
+        {"AK_allocationtable_test", &AK_allocationtable_test},
 	{"AK_select_test", &AK_select_test}
     };
 
@@ -206,9 +208,9 @@ void help()
 void show_test()
 {
     int i=0;
-    
+
     int m = sizeof(fun)/sizeof(fun[0]);
-    
+
     printf("Choose test:\n\n");
     while(i<m)
     {
