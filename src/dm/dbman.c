@@ -639,7 +639,7 @@ pthread_mutex_unlock(&fileLockMutex);
 
 
 /**
- * @author Nikola Bakoö, updated by Dino LaktaöiÊ (fixed header BUG), refurbished by dv
+ * @author Nikola Bako≈°, updated by Dino Lakta≈°i√¶ (fixed header BUG), refurbished by dv
  * @brief  Function copy header to blocks.
  * @param header pointer to header provided for copy
  * @param blocknum pointer to addresses of blocks that header needs to be copied
@@ -824,7 +824,7 @@ return blocknum;
 
 
 /**
- * @author Nikola Bakoö, updated by Dino LaktaöiÊ (fixed header BUG), refurbished by dv
+ * @author Nikola Bako≈°, updated by Dino Lakta≈°i√¶ (fixed header BUG), refurbished by dv
  * @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE.
  * Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is
  *         incremented.
@@ -1841,7 +1841,7 @@ AK_blocktable_get();
 }
 
 /**
- * @author Dejan SamboliÊ
+ * @author Dejan Samboli√¶
  * @brief  Function deletes an extent between begin and end blocks
  * @param begin address of extent's first block
  * @param end address of extent's last block
@@ -1859,7 +1859,7 @@ int AK_delete_extent(int begin, int end) {
 }
 
 /**
- * @author Mislav »akariÊ
+ * @author Mislav √àakari√¶
  * @param name name of the segment
  * @param type type of the segment
  * @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
@@ -1944,3 +1944,16 @@ scanf("%d",&vari);
     printf("AK_init_disk_manager: ERROR. DB file initialization failed!");
     return EXIT_ERROR;
 }
+
+void AK_allocationbit_test () {
+
+AK_blocktable_dump(0);
+
+  }
+
+    void AK_allocationtable_test () {
+
+AK_allocationtable_dump(1);
+
+
+  }
