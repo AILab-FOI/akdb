@@ -189,7 +189,8 @@ allocationNOMODE
 
 
 #endif
-
+void AK_allocationbit_test ();
+void AK_allocationtable_test ();
 int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl);
 int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl);
 int * AK_get_allocation_set(int* bitsetbs,  int fromWhere,int gaplength, int num, AK_allocation_set_mode mode, int target);
