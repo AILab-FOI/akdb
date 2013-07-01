@@ -110,7 +110,7 @@ if(fromWhere!=0)fromWhere=AK_allocationbit->last_allocated;
     if(!BITTEST(AK_allocationbit->bittable, i))freebe[k++]=i;
 
 	numfree=k;
-printf("numfree\t  uu\t num\t gaplength\t lastallocated: %d. --- %d --- %d --- %d --- %d\n",numfree, uu,num, gaplength, AK_allocationbit->last_allocated);
+
 	if(numfree<num){
 		//no more room to place new allocations
 		return bitsetbs;
@@ -126,18 +126,18 @@ printf("numfree\t  uu\t num\t gaplength\t lastallocated: %d. --- %d --- %d --- %
         for(i=0;i<numfree;i++)if(freebe[i]==AK_allocationbit->last_allocated)break;
         }
         else i=0;
-printf("SEQUENCE AK_allocationbitseq f-1 f0 f1 i lastall: %d. --- %d --- %d --- %d --- %d\n", freebe[i-1], freebe[i], freebe[i+1], i, AK_allocationbit->last_allocated);
+
         k=1;
 		for( ;i<numfree-num+1;i++){
 		for(j=i; j<i+num;j++)
 		if( ((freebe[j+1]-freebe[j])==1)  ||   ((j>0) && ((freebe[j-1]+1)==freebe[j]) && ((j-i+1)==num ) ) ){
-			printf("AK_allocationbit f-1 f0 f1 i j: %d. --- %d --- %d --- %d --- %d\n", freebe[j-1], freebe[j], freebe[j+1], i, j);
+
 			continue;}
 		else k=0;
 		if(k){
 			k=0;
 			for(j=i; j<i+num;j++)bitsetbs[k++]=freebe[j];
-			//printf("AK_allocationbit->last_initializedvvvv: %d. --- %d --- %d\n", k,freebe[j], freebe[i]);
+
 			return bitsetbs;
 			break;
 			}
@@ -153,9 +153,9 @@ printf("SEQUENCE AK_allocationbitseq f-1 f0 f1 i lastall: %d. --- %d --- %d --- 
 
 		while(i<numfree){
 
-        printf("UPPER AK_allocationbit f i num: %d. --- %d --- %d \n", freebe[i], i, num);
+
                 if(freebe[i]!=FREE_INT && (gaplength>=abs(freebe[i]-tmp)) ){
-                        printf("AK_allocationbit1 f i k: %d. --- %d --- %d \n", freebe[i], i, k);
+
                   tmp=freebe[i];
 			bitsetbs[k++]=freebe[i++];}
             else i++;
@@ -163,14 +163,14 @@ printf("SEQUENCE AK_allocationbitseq f-1 f0 f1 i lastall: %d. --- %d --- %d --- 
 			if(i==(numfree-1) || k==num)break;
 
 			if(k && (gaplength<abs(freebe[i]-bitsetbs[k-1]) )){
-                printf("AK_allocationbit2 f i bt k: %d. --- %d --- %d ----%d\n", freebe[i], i, bitsetbs[k-1], k);
+
                k=0;
                for(j=0;j<num;j++)bitsetbs[j]=FREE_INT;
                tmp=freebe[i];
               }
 			}
 			if(num!=k){
-                    printf("AK_allocationbit3 f i num  k: %d. --- %d --- %d ----%d \n", freebe[i], i, num, k);
+
 			for(i=0;i<num;i++)bitsetbs[i]=FREE_INT;
 	         return bitsetbs;
 			 break;
@@ -193,9 +193,7 @@ printf("SEQUENCE AK_allocationbitseq f-1 f0 f1 i lastall: %d. --- %d --- %d --- 
 
 		while(i>-1){
 
-        printf("LOWER AK_allocationbit f i num: %d. --- %d --- %d \n", freebe[i], i, num);
                 if(freebe[i]!=FREE_INT && (gaplength>=abs(freebe[i]-tmp)) ){
-                        printf("AK_allocationbit1 f i k: %d. --- %d --- %d \n", freebe[i], i, k);
                   tmp=freebe[i];
 			bitsetbs[k++]=freebe[i--];}
             else i--;
@@ -203,14 +201,14 @@ printf("SEQUENCE AK_allocationbitseq f-1 f0 f1 i lastall: %d. --- %d --- %d --- 
 			if(i==-1 || k==num)break;
 
 			if(k && (gaplength<abs(freebe[i]-bitsetbs[k-1]) )){
-                printf("AK_allocationbit2 f i bt k: %d. --- %d --- %d ----%d\n", freebe[i], i, bitsetbs[k-1], k);
+
                k=0;
                for(j=0;j<num;j++)bitsetbs[j]=FREE_INT;
                tmp=freebe[i];
               }
 			}
 			if(num!=k){
-                    printf("AK_allocationbit3 f i num  k: %d. --- %d --- %d ----%d \n", freebe[i], i, num, k);
+
 			for(i=0;i<num;i++)bitsetbs[i]=FREE_INT;
 	         return bitsetbs;
 			 break;
@@ -230,7 +228,6 @@ printf("SEQUENCE AK_allocationbitseq f-1 f0 f1 i lastall: %d. --- %d --- %d --- 
 		tmp=freebe[i];
 		tmpb=freebe[j];
 
-		printf("AROUND AK_allocationbit around f i num  k gap: %d. --- %d --- %d ----%d  ---%d\n", freebe[i], i, num, k,gaplength);
 		while(num){
 			if((i<numfree) && (freebe[i]!=FREE_INT)  && (gaplength>=abs(freebe[i]-tmp)) ){
 			bitsetbs[k++]=freebe[i];
@@ -459,7 +456,6 @@ if (fwrite(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) != 1) {
         printf("AK_allocationbit:  Cannot read bit-vector %d.\n",AK_ALLOCATION_TABLE_SIZE);
 		exit(EXIT_ERROR);
    }
-	  	printf("\nAllocation table size:%d bytes \nLast allocated:%d. block \nLast initialized:%d. block\n\n", AK_ALLOCATION_TABLE_SIZE, AK_allocationbit->last_allocated,AK_allocationbit->last_initialized);
 
 fclose(db);
 return ( EXIT_SUCCESS);
@@ -662,7 +658,6 @@ AK_block *block;
 	//Addresses DO NOT NEED to be sequential !!
     for (j = 0; j < num; j++) {
         block = AK_read_block(blocknum[j]);
-		printf("AK_copy_header %d.\n", j);
 		for (header_att_id = 0; header_att_id < MAX_ATTRIBUTES; header_att_id++) {
 			//memcpy(&block->header[ header_att_id], &header[ header_att_id ], sizeof( *header));
 			 memcpy(& block->header[header_att_id], header, sizeof ( * header));
@@ -725,7 +720,6 @@ for(i=0; i<4;i++){
         }
    //get set - addresses of allocated free blocks
    blocknum=AK_get_allocation_set(blocknum, border, gl, desired_size, mode[i], target);
-   printf("AK_get_extent: block %d. mode %d\n", blocknum[0],mode[i]);
 
    if(blocknum[0]==FREE_INT && mode[i]==allocationSEQUENCE){
 	   //there is no space at current boundaries - try to get more
@@ -750,7 +744,6 @@ return blocknum;
     num_blocks = AK_copy_header(header, blocknum, desired_size);
 
 
-	printf("AK_get_extent: num_blocks %d.\n", num_blocks);
     Ak_dbg_messg(HIGH, DB_MAN, "AK_get_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, num_blocks= %i\n", blocknum[0], desired_size, blocknum[desired_size-1], num_blocks);
 
 	/// if some blocks are not succesfully allocated, which means that the extend allocation has FAILED
@@ -882,7 +875,7 @@ int * blocknum=(int*)malloc(sizeof(int)*(req_free_space+1));
    //get set - addresses of allocated free blocks
    blocknum=AK_get_allocation_set(blocknum,0,0, req_free_space,allocationSEQUENCE, 6);
    firstAddress=blocknum[0];
-   printf("AK_new_extent: block %d.\n", firstAddress);
+
 
    if(blocknum[0]==FREE_INT){
 	   //there is no space at current boundaries - try to get more
@@ -901,10 +894,9 @@ int * blocknum=(int*)malloc(sizeof(int)*(req_free_space+1));
 
     num_blocks = AK_copy_header(header, blocknum, req_free_space);
 
+
 firstAddress=blocknum[0];
 
-
-	printf("AK_new_extent: num_blocks %d.\n", num_blocks);
     Ak_dbg_messg(HIGH, DB_MAN, "AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, num_blocks= %i\n", blocknum[0], req_free_space, blocknum[req_free_space-1], num_blocks);
 
 	/// if some blocks are not succesfully allocated, which means that the extend allocation has FAILED
@@ -926,7 +918,7 @@ AK_blocktable_flush();
 
 free(blocknum);
 
-    return firstAddress;
+    return (firstAddress);
 }
 
 
@@ -979,7 +971,7 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
     AK_header * catalog_header = (AK_header *) malloc(sizeof ( AK_header));
     memset(catalog_header, 0, sizeof (AK_header));
 
-   // AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
+    //AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
 
 	Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", name, strlen(name));
     catalog_header->type = type;
@@ -1927,62 +1919,6 @@ int AK_init_disk_manager() {
     Ak_dbg_messg(LOW, DB_MAN, "Block size is: %d\n", sizeof (AK_block));
     Ak_dbg_messg(LOW, DB_MAN, "%d blocks for %d MiB\n", (int) size, DB_FILE_SIZE);
 
-
-//Examples for AROUND and SEQUENCE bitsets
-AK_blocktable_dump(0);
-AK_allocationtable_dump(1);
-
-/*
-BITSET(AK_allocationbit->bittable, AK_allocationbit->last_initialized-2);
-BITCLEAR(AK_allocationbit->bittable, 302);
-BITCLEAR(AK_allocationbit->bittable, 300);
-BITCLEAR(AK_allocationbit->bittable, 299);
-BITCLEAR(AK_allocationbit->bittable, 298);
-BITCLEAR(AK_allocationbit->bittable, 304);
-BITCLEAR(AK_allocationbit->bittable, 305);
-
-BITCLEAR(AK_allocationbit->bittable, 32);
-BITCLEAR(AK_allocationbit->bittable, 30);
-BITCLEAR(AK_allocationbit->bittable, 29);
-BITCLEAR(AK_allocationbit->bittable, 29);
-BITCLEAR(AK_allocationbit->bittable, 34);
-BITCLEAR(AK_allocationbit->bittable, 35);
-
-AK_blocktable_dump(0);
-*/
-
-
-
-printf("UPPER Example \n");
-int i=0;
-//	int * inti=(int*)malloc(10*sizeof(int));
-int* inti;
-	AK_allocation_set_mode mode[4];
-	mode[0]=allocationUPPER;
-    mode[1]=allocationLOWER;
-    mode[2]=allocationAROUND;
-	mode[3]=allocationSEQUENCE;
-
-	AK_header *headerd=(AK_header *) malloc(sizeof(AK_header));
-	headerd=AK_create_header("Address", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-//inti= AK_get_allocation_set( inti,0, 4, AROUND, AK_allocationbit->last_allocated+1);
-inti=AK_get_extent(0, 10, mode, 6, 302, headerd, 3);
-for(i=0;i<10;i++)printf("AK_inti %d. \n", inti[i]);
-
-AK_allocationtable_dump(1);
-i=inti[0];
-
-inti=AK_increase_extent(i, 4, mode, 6, 0, headerd,3);
-for(i=0;i<4;i++)printf("AK_inti %d. \n", inti[i]);
-
-free(inti);
-
-AK_allocationtable_dump(1);
-
-printf("Find more about examples at accompanying documentation...\n\n  \n");
-
-int vari;
-scanf("%d",&vari);
 
     return EXIT_SUCCESS;
 
