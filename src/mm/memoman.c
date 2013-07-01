@@ -108,7 +108,7 @@ int AK_redo_log_malloc() {
   *  @return EXIT_SUCCESS if the query memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_query_mem_malloc() {
-	
+
 	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_malloc: Start query_mem_malloc\n");
 
     /// allocate memory for global variable query_mem
@@ -157,13 +157,13 @@ int AK_query_mem_malloc() {
             memcpy(query_mem->result,query_mem_result,sizeof(* query_mem_result));*/
 
 	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_malloc: Success!\n");
-	
+
     return EXIT_SUCCESS;
 }
 
 /**
  * @author Miroslav Policki
- * @brief  Function initializes memory manager (cache, redo log and query memory) 
+ * @brief  Function initializes memory manager (cache, redo log and query memory)
  * @return EXIT_SUCCESS if the query memory manager has been initialized, EXIT_ERROR otherwise
  */
 int AK_memoman_init() {
@@ -191,7 +191,7 @@ int AK_memoman_init() {
 
 /**
   * @author Tomislav Fotak, updated by Matija Šestak
-  * @brief Function reads a block from memory. If the block is cached returns the cached block. Else uses AK_cache_block to read the block 
+  * @brief Function reads a block from memory. If the block is cached returns the cached block. Else uses AK_cache_block to read the block
 		to cache and then returns it.
   * @param num block number (address)
   * @return segment start address
@@ -281,11 +281,11 @@ int AK_refresh_cache() {
     return EXIT_SUCCESS;
 }
 
-/** 	
+/**
   * @author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić
   * @brief Function for geting addresses of some table
   * @param table table name that you search for
-  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses       
+  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
  */
 table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     int i = 0;
@@ -325,7 +325,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
         data_adr = mem_block->block->tuple_dict[i].address;
         data_size = mem_block->block->tuple_dict[i].size;
         data_type = mem_block->block->tuple_dict[i].type;
-        memcpy(&address_sys, mem_block->block->data + data_adr, data_size);
+        memcpy(&address_sys, mem_block->block->data + data_adr, 4);
 
         if (strcmp(name_sys, sys_table) == 0) {
 			Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses: Found the address of the %s table: %d \n", sys_table, address_sys);
@@ -343,7 +343,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
         addresses->address_to[freeVar] = 0;
     }
 
-    
+
     char name[MAX_VARCHAR_LENGTH];
     int address_from;
     int address_to;
@@ -372,27 +372,27 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     return addresses;
 }
 
-/** 	
+/**
   * @author Mislav Čakarić
   * @brief function for geting addresses of some table
   * @param table table name that you search for
-  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses      
+  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
  */
 table_addresses *AK_get_table_addresses(char *table) {
     return AK_get_segment_addresses(table, SEGMENT_TYPE_TABLE);
 }
 
-/** 	
+/**
   * @author Mislav Čakarić
   * @brief Function for geting addresses of some index
   * @param index index name that you search for
-  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses       
+  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
  */
 table_addresses *AK_get_index_addresses(char * index) {
     return AK_get_segment_addresses(index, SEGMENT_TYPE_INDEX);
 }
 
-/** 	
+/**
   * @author Matija Novak, updated by Matija Šestak( function now uses caching)
   * @brief Function to find free space in some block betwen block addresses. It's made for insert_row()
   * @param address addresses of extents
@@ -413,7 +413,7 @@ int AK_find_free_space(table_addresses * addresses) {
             for (i = from; i <= to; i++) {
                 mem_block = (AK_mem_block *) AK_get_block(i);
                 int free_space_on = mem_block->block->free_space;
-				
+
 				Ak_dbg_messg(HIGH, MEMO_MAN, "find_free_space: FREE SPACE %d\n", mem_block->block->free_space);
 
                 if ((free_space_on < MAX_FREE_SPACE_SIZE) &&
@@ -446,21 +446,21 @@ int AK_find_free_space(table_addresses * addresses) {
  */
 int AK_init_new_extent(char *table_name, int extent_type) {
 	char *sys_table;
-	
+
 	int old_size = 0;
 	int new_size = 0;
 
 	table_addresses *addresses = (table_addresses *) AK_get_segment_addresses(table_name, SEGMENT_TYPE_TABLE);
     int block_address = addresses->address_from[0]; //before 1
     int block_written;
-	
+
     AK_mem_block *mem_block = (AK_mem_block *)AK_get_block(block_address);
 
 	//!!! to correct header BUG iterate through header from 0 to N-th block while there is
 	//header attributes. Than create header and pass it to function for extent creation below.
 	//Current implementation works only with tables with max MAX_ATTRIBUTES.
 	register int i = 0;
-		
+
     for (i = 0; i < MAX_EXTENTS_IN_SEGMENT; i++) {
         if (addresses->address_from[i] == 0)
             break;
@@ -471,7 +471,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
 
     old_size++;
     int start_address = 0;
-	
+
     if ((start_address = AK_new_extent(1, old_size, extent_type, mem_block->block->header)) == EXIT_ERROR) {
         printf("AK_init_new_extent: Could not allocate the new extent\n");
         return EXIT_ERROR;
@@ -524,7 +524,7 @@ int AK_flush_cache() {
     int i = 0;
 	int block_written;
     AK_block *data_block;
-    
+
 	while (i < MAX_CACHE_MEMORY) {
         if (db_cache->cache[i]->dirty == BLOCK_DIRTY) {
             data_block = (AK_block *) db_cache->cache[i]->block;
