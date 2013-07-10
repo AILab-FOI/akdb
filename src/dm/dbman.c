@@ -72,8 +72,12 @@ int AK_init_db_file(int size) {
         exit(EXIT_ERROR);
 		}
 
+        AK_allocationbit->allocationtable[0]=0;
+		AK_allocationbit->last_allocated=1;
 
-    printf("AK_init_db_file: Done!\n");
+AK_blocktable_flush();
+
+    printf("AK_init_db_file: Donex!\n");
 
     return ( EXIT_SUCCESS);
 }
@@ -437,13 +441,16 @@ sz=fsize(db);
 
   //if this is very first time
   if(sz ==0){
-	  for(i=0; i<DB_FILE_BLOCKS_NUM;i++ )
+	  for(i=0; i<DB_FILE_BLOCKS_NUM;i++ ){
 BITCLEAR(AK_allocationbit->bittable,i);
+AK_allocationbit->allocationtable[i]=0xFFFFFFFF;
+
+	  }
 AK_allocationbit->last_allocated=(int)0;
 AK_allocationbit->last_initialized=(int)0;
 AK_allocationbit->prepared=(int)0;
-
- memset(AK_allocationbit->allocationtable, 0xFFFFFFFF, sizeof(AK_allocationbit->allocationtable));
+AK_allocationbit->ltime=time(NULL);
+// memset(AK_allocationbit->allocationtable, 0xFFFFFFFF, sizeof(AK_allocationbit->allocationtable));
 
 if (fwrite(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) != 1) {
             printf("AK_allocationbit: ERROR. Cannot write bit vector \n");
@@ -511,6 +518,212 @@ AK_block *  AK_init_block(){
 
 	return block;
 	}
+
+
+/**
+ * @author  dv
+ * @brief  Function that dumps block
+ * @return nothing
+ */
+int  AK_print_block(AK_block * block, int num, char* gg,FILE *fpp){
+	register int i = 0, j, k;
+	int tmp=0, tmp1=0, tmp2=0, tmp3=0, tmp4=0, kk=0;
+	 struct timeval tv;
+    struct timezone tz;
+    struct tm *tm;
+    gettimeofday(&tv, &tz);
+    tm=localtime(&tv.tv_sec);
+ FILE *fp;
+
+    if(fpp==NULL){
+
+
+    char log_name[60];
+
+    sprintf(log_name, "log/%d%d%d%d%02d%02d%lu_%s.txt", tm->tm_mday, tm->tm_mon+1, tm->tm_year+1900, tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec,gg);
+
+    fp = fopen(log_name, "a+");
+
+if(fp==NULL){
+    printf("Logging cannot open file %s\n",log_name);
+    exit(EXIT_ERROR);
+}
+}
+else fp=fpp;
+
+	if( block == NULL){
+
+  if ((block = (AK_block *) malloc(sizeof ( AK_block))) == NULL) {
+        printf("AK_init_db_file: ERROR. Cannot allocate block %d\n", i);
+        exit(EXIT_ERROR);
+    }
+
+block =AK_read_block(num);
+kk=1;
+
+}
+
+fprintf(fp, "\n %d.%d.%d-%d:%02d:%02d.%lu \tcalling from:%s \n log address:%d \t memory address:%d \n\n", tm->tm_mday, tm->tm_mon+1, tm->tm_year+1900, tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec,gg,num, &block );
+
+
+   if( block->type == BLOCK_TYPE_FREE)
+    fprintf(fp, "block->type = BLOCK_TYPE_FREE\n");
+   else fprintf(fp, "block->type = %d\n",block->type);
+
+   if( block->chained_with == NOT_CHAINED)
+    fprintf(fp, "block->chained_with = NOT_CHAINED\n");
+   else fprintf(fp, "block->chained_with = %d\n",block->chained_with);
+
+    fprintf(fp, "block->free_space =%d\n", DATA_BLOCK_SIZE * DATA_ENTRY_SIZE * sizeof ( int));
+    fprintf(fp, "block->last_tuple_dict_id = %d\n",block->last_tuple_dict_id);
+
+
+ fprintf(fp, "\n\n\t\tHEADER\n\n");
+    for (i = 0; i < MAX_ATTRIBUTES; i++) {
+        if(block->header[ i ].type == FREE_INT){
+            if(tmp<5)
+            fprintf(fp, "block->header[ %d ].type = FREE_INT;\n",i);
+            tmp++;
+            }
+        else{
+            if(tmp>=5)fprintf(fp, "block->header[ ].type = Repeated %d times\n", tmp);
+            tmp=0;
+            fprintf(fp, "block->header[ %d ].type = %d\n",i,block->header[i].type);
+            }
+
+        for (j = 0; j < MAX_ATT_NAME; j++) {
+            if(block->header[ i ].att_name[ j ] == FREE_CHAR){
+            if(tmp1<5)
+            fprintf(fp, "block->header[ %d ].att_name[ %d ] = FREE_CHAR\n",i,j);
+            tmp1++;
+            }
+        else{
+             if(tmp1>=5)fprintf(fp, "header[].att_name[] = Repeated %d times\n", tmp1);
+            tmp1=0;
+            fprintf(fp, "block->header[ %d ].att_name[ %d ] = %c\n",i,j,block->header[ i ].att_name[ j ] );
+        }
+        }
+
+
+        for (j = 0; j < MAX_CONSTRAINTS; j++) {
+
+            if(block->header[ i ].integrity[ j ] == FREE_INT){
+                    if(tmp2<5)
+            fprintf(fp, "block->header[ %d ].integrity[ %d ] = FREE_INT\n",i,j);
+            tmp2++;
+        }
+        else{
+            if(tmp2>=5)fprintf(fp, "block->header[].integrity[] = Repeated %d times\n", tmp2);
+            tmp2=0;
+            fprintf(fp, "block->header[ %d ].integrity[ %d ] = %d\n",i,j,block->header[ i ].integrity[ j ]);
+        }
+
+
+            for (k = 0; k < MAX_CONSTR_NAME; k++) {
+               if( block->header[ i ].constr_name[ j ][ k ] == FREE_CHAR){
+                if(tmp3<5)
+                fprintf(fp, "block->header[ %d ].constr_name[%d][%d] = FREE_CHAR\n", i,j,k);
+                tmp3++;
+                }
+               else{
+                if(tmp3>=5)fprintf(fp, "block->header[].constr_name[][]  = Repeated %d times\n", tmp3);
+                tmp3=0;
+                fprintf(fp, "block->header[%d].constr_name[%d][%d] = %c\n", i,j,k,block->header[ i ].constr_name[ j ][ k ]);
+               }
+            }
+
+            for (k = 0; k < MAX_CONSTR_CODE; k++) {
+                if( block->header[i].constr_code[j][k] == FREE_CHAR){
+                if(tmp4<5)
+                fprintf(fp, "block->header[ %d ].constr_code[%d][%d] = FREE_CHAR\n", i,j,k);
+                tmp4++;
+                }
+               else{
+                    if(tmp4>=5)fprintf(fp, "block->header[].constr_code[][]  = Repeated %d times\n", tmp4);
+               tmp4=0;
+                    fprintf(fp, "block->header[%d].constr_code[%d][%d] = %c\n", i,j,k,block->header[ i ].constr_code[ j ][ k ]);
+               }
+            }
+        }
+    }
+          if(tmp>=4)fprintf(fp, "block->header[ ].type = Repeated %d times\n", tmp);
+          if(tmp1>=4)fprintf(fp, "header[].att_name[] = Repeated %d times\n", tmp1);
+          if(tmp2>=4)fprintf(fp, "block->header[].integrity[] = Repeated %d times\n", tmp2);
+          if(tmp3>=4)fprintf(fp, "block->header[].constr_name[][]  = Repeated %d times\n", tmp3);
+          if(tmp4>=4)fprintf(fp, "block->header[].constr_code[][]  = Repeated %d times\n", tmp4);
+
+          tmp=0;
+           tmp1=0;
+            tmp2=0;
+             tmp3=0;
+              tmp4=0;
+
+fprintf(fp, "\n\n\n\t\t tuple_dict\n\n");
+
+    for (i = 0; i < DATA_BLOCK_SIZE; i++) {
+        if(block->tuple_dict[ i ].type == FREE_INT){
+            if(tmp<5)
+            fprintf(fp, "block->tuple_dict[ %d ].type = FREE_INT\n",i);
+            tmp++;
+            }
+        else{
+            if(tmp>=5)fprintf(fp, "block->tuple_dict[].type = Repeated %d times\n", tmp);
+            tmp=0;
+            fprintf(fp, "block->tuple_dict[ %d ].type = %d\n",i,block->tuple_dict[ i ].type);
+        }
+
+                if(block->tuple_dict[ i ].address == FREE_INT){
+                        if(tmp1<5)
+            fprintf(fp, "block->tuple_dict[ %d ].address = FREE_INT\n",i);
+            tmp1++;
+            }
+        else{
+         if(tmp1>=5)fprintf(fp, "block->tuple_dict[].address = Repeated %d times\n", tmp1);
+         tmp1=0;
+                fprintf(fp, "block->tuple_dict[ %d ].address = %d\n",i,block->tuple_dict[ i ].address);
+        }
+
+                if(block->tuple_dict[ i ].size  == FREE_INT){
+            if(tmp2<5)
+            fprintf(fp, "block->tuple_dict[ %d ].size  = FREE_INT\n",i);
+            tmp2++;
+            }
+        else{
+         if(tmp2>=5)fprintf(fp, "block->tuple_dict[].size = Repeated %d times\n", tmp2);
+         tmp2=0;
+                fprintf(fp, "block->tuple_dict[ %d ].size  = %d\n",i,block->tuple_dict[ i ].size );
+        }
+
+    }
+
+              if(tmp>=4)fprintf(fp, "block->tuple_dict[].type = Repeated %d times\n", tmp);
+          if(tmp1>=4)fprintf(fp, "block->tuple_dict[].address = Repeated %d times\n", tmp1);
+          if(tmp2>=4)fprintf(fp, "block->tuple_dict[].size = Repeated %d times\n", tmp2);
+
+fprintf(fp, "\n\n\n\t\t data\n\n");
+
+    for (i = 0; i < DATA_BLOCK_SIZE * DATA_ENTRY_SIZE; i++) {
+       if( block->data[ i ] == FREE_CHAR){
+        if(tmp3<5)
+        fprintf(fp, "block->data[ %d ]=FREE_CHAR\n",i);
+        tmp3++;
+       }
+       else{
+                 if(tmp3>=5)fprintf(fp, "block->data[] = Repeated %d times\n", tmp3);
+         tmp3=0;
+            fprintf(fp, "block->data[ %d ]=%c\n",i,block->data[i]);
+       }
+    }
+if(tmp3>=5)fprintf(fp, "block->data[] = Repeated %d times\n", tmp3);
+
+if(kk)free(block);
+
+if(fpp==NULL)fclose(fp);
+
+ return ( EXIT_SUCCESS);
+	}
+
+
 
 
 /**
@@ -651,6 +864,7 @@ int AK_copy_header(AK_header *header, int * blocknum, int num)
 int j=0;
 int num_blocks = 0; /// var to check the number of written blocks
 int header_att_id = 0;
+int h_id=0;
 AK_block *block;
 // for (j = 0; j < num; j++)
 //	printf("AK_copy_header %d. -- %d.\n", num, blocknum[j]);
@@ -658,19 +872,21 @@ AK_block *block;
 	//Addresses DO NOT NEED to be sequential !!
     for (j = 0; j < num; j++) {
         block = AK_read_block(blocknum[j]);
-		for (header_att_id = 0; header_att_id < MAX_ATTRIBUTES; header_att_id++) {
+	//	for (header_att_id = 0; header_att_id < MAX_ATTRIBUTES; header_att_id++) {
 			//memcpy(&block->header[ header_att_id], &header[ header_att_id ], sizeof( *header));
-			 memcpy(& block->header[header_att_id], header, sizeof ( * header));
-		}
-/*
+			 //memcpy(& block->header[header_att_id], header, sizeof ( * header));
+		//}
+        header_att_id=0;
         //@TODO the check fails second time around if the table has MAX_ATTRIBUTES
-        while(((h_id = header_att_id - num_blocks * MAX_ATTRIBUTES) < MAX_ATTRIBUTES) && (header[ header_att_id ].type != 0)) {
+        while(((h_id = header_att_id ) < MAX_ATTRIBUTES) && (header[ header_att_id ].type != 0)) {
 			if (h_id >= 0) {
 				memcpy(&block->header[ h_id ], &header[ header_att_id++ ], sizeof(*header));
-				printf("Block count: %d, Header ID: %d, %s\n", num_blocks, header_att_id - 1, block->header[ h_id ].att_name);
+				//printf("Block count: %d, Header ID: %d, %s\n", num_blocks, header_att_id - 1, block->header[ h_id ].att_name);
 			}
         }
-*/
+/**/
+
+//}
         block->type = BLOCK_TYPE_NORMAL;
         block->free_space = 0;
         block->last_tuple_dict_id = 0;
@@ -873,7 +1089,7 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
 int * blocknum=(int*)malloc(sizeof(int)*(req_free_space+1));
 
    //get set - addresses of allocated free blocks
-   blocknum=AK_get_allocation_set(blocknum,0,0, req_free_space,allocationSEQUENCE, 6);
+   blocknum=AK_get_allocation_set(blocknum,1,0, req_free_space,allocationSEQUENCE, 6);
    firstAddress=blocknum[0];
 
 
@@ -884,7 +1100,7 @@ int * blocknum=(int*)malloc(sizeof(int)*(req_free_space+1));
         return(EXIT_ERROR);
 		}
 
-	   blocknum=AK_get_allocation_set(blocknum,0,0, req_free_space,allocationSEQUENCE, 6);
+	   blocknum=AK_get_allocation_set(blocknum,1,0, req_free_space,allocationSEQUENCE, 6);
 	   if(blocknum[0]==FREE_INT){
 		printf("AK_new_extent: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
         return(EXIT_ERROR);
@@ -894,6 +1110,7 @@ int * blocknum=(int*)malloc(sizeof(int)*(req_free_space+1));
 
     num_blocks = AK_copy_header(header, blocknum, req_free_space);
 
+   printf("AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, num_blocks= %i\n", blocknum[0], req_free_space, blocknum[req_free_space-1], num_blocks);
 
 firstAddress=blocknum[0];
 
@@ -1084,8 +1301,8 @@ int AK_init_system_tables_catalog(int relation, int attribute, int index, int vi
     memcpy(& catalog_block->header[0], catalog_header_name, sizeof ( * catalog_header_name));
     memcpy(& catalog_block->header[1], catalog_header_address, sizeof ( * catalog_header_address));
 
-    AK_tuple_dict tuple_dict[25];
-    memcpy(catalog_block->tuple_dict, tuple_dict, sizeof ( *tuple_dict));
+   // AK_tuple_dict tuple_dict[DATA_BLOCK_SIZE];
+    // memcpy(catalog_block->tuple_dict, tuple_dict, sizeof (tuple_dict));
 
     int i = 0;
     /// insert data and tuple_dict in block
@@ -1168,7 +1385,9 @@ int AK_init_system_tables_catalog(int relation, int attribute, int index, int vi
     AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_reference", i);
     i++;
     AK_insert_entry(catalog_block, TYPE_INT, &reference, i);
-    i++;
+
+
+catalog_block->last_tuple_dict_id=i;
 
     /// call function for writing the block on the first place in the file (ie. first block is on position zero)
     if (AK_write_block(catalog_block) == EXIT_SUCCESS) {

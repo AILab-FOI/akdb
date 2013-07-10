@@ -68,12 +68,12 @@ int AK_num_attr(char * tblName) {
     if (addresses->address_from[0] == 0)
         num_attr = -1;
     else {
-        AK_block *temp_block = (AK_block*) AK_read_block(addresses->address_from[0]);
+        AK_mem_block *temp_block = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
 
-        while (strcmp(temp_block->header[num_attr].att_name, "\0") != 0) {
+        while (strcmp(temp_block->block->header[num_attr].att_name, "\0") != 0) {
             num_attr++;
         }
-        free(temp_block);
+
     }
     free(addresses);
 
@@ -117,6 +117,7 @@ int AK_get_num_records(char *tblName) {
         i++;
     }
 
+free(addresses);
     int num_head = AK_num_attr(tblName);
     return num_rec / num_head;
 }
@@ -259,12 +260,14 @@ AK_list * AK_get_row(int num, char * tblName) {
                         data[size] = '\0';
                         Ak_InsertAtEnd_L(type, data, size, row_root);
                     }
+                    free(addresses);
                     return row_root;
                 }
             }
         }
         i++;
     }
+    free(addresses);
     return NULL;
 }
 
@@ -307,12 +310,14 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
                     Ak_InsertAtEnd_L(type, data, size, row_root);
+                    free(addresses);
                     return (AK_list_elem) Ak_First_L(row_root);
                 }
             }
         }
         i++;
     }
+    free(addresses);
     return NULL;
 }
 
@@ -443,6 +448,7 @@ int AK_table_exist(char *tblName) {
         // printf("  Element %s !", el->data);
         if (!strcmp(tblName, el->data)) {
             exist = 1;
+            break;
         }
     }
     return exist;
@@ -459,6 +465,7 @@ void AK_print_table(char *tblName) {
     //  || (AK_table_exist(tblName) == 0)
     if ((addresses->address_from[0] == 0) || (AK_table_exist(tblName) == 0)) {
         printf("Table %s does not exist!\n", tblName);
+        free(addresses);
     } else {
         AK_header *head = AK_get_header(tblName);
 
@@ -582,7 +589,11 @@ void AK_print_table(char *tblName) {
             } else {
                 printf("%i rows found, duration: %f s\n", num_rows, ((double) t) / CLOCKS_PER_SEC);
             }
+        free(row_root);
         }
+
+free(addresses);
+
     }
 }
 
@@ -792,6 +803,7 @@ void AK_print_table_to_file(char *tblName) {
 int AK_table_empty(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
+    free(addresses);
     return (temp->block->last_tuple_dict_id == 0) ? 1 : 0;
 }
 

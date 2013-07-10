@@ -184,7 +184,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
                     printf("Function does not exist!\n"); // vraćen je EXIT_ERROR jer funkcija s danim argumentima nije pronađena
                 }
             }
-
+          free(args);
             break;
 
         case DROP_USER:
@@ -415,6 +415,8 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, tblName, sys_table, "name", row_root, 1);
 
     Ak_delete_row(row_root);
+    free(addresses);
+    free(addresses2);
 }
 
 /**
@@ -446,7 +448,17 @@ int AK_if_exist(char *tblName, char *sys_table) {
 void AK_drop_test() {
     printf("=========================================================\n");
     printf("========================DROP_TEST========================\n");
-    AK_drop_arguments *drop_arguments = malloc(10 * sizeof (AK_drop_arguments));
+    AK_drop_arguments *drop_arguments = (AK_drop_arguments *)malloc(sizeof (AK_drop_arguments));
+    drop_arguments->next = (AK_drop_arguments *)malloc(sizeof (AK_drop_arguments));
+    drop_arguments->value=(char*)"\0";
+
+drop_arguments->next->next = (AK_drop_arguments *)malloc(sizeof (AK_drop_arguments));
+drop_arguments->next->value=(char*)"\0";
+
+drop_arguments->next->next->next = (AK_drop_arguments *)malloc(sizeof (AK_drop_arguments));
+drop_arguments->next->next->value=(char*)"\0";
+
+drop_arguments->next->next->next->next =NULL;
 
     printf("\n-----DROP TABLE-----\n");
     AK_print_table("AK_relation");
@@ -487,7 +499,8 @@ void AK_drop_test() {
     AK_print_table("AK_sequence");
     AK_drop(DROP_SEQUENCE, drop_arguments);
     AK_print_table("AK_sequence");
-    free(drop_arguments);
+    //free(drop_arguments);
+
 
     printf("\n-----DROP TRIGGER-----\n");
     AK_print_table("AK_trigger");
@@ -536,7 +549,7 @@ void AK_drop_test() {
     AK_print_table("AK_group_right");
 
     // printf("\n-----DROP CONSTRAINT-----\n");
-
+ free(drop_arguments );
     printf("======================END_DROP_TEST======================\n");
 }
 
@@ -570,4 +583,6 @@ void AK_drop_test_helper(int type,char* dropargs){
 	else if (type == 8) {
         AK_drop(DROP_CONSTRAINT, drop_arguments);
     }
+
+    free(drop_arguments );
 }

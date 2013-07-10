@@ -26,6 +26,12 @@
 #include <pthread.h>
 
 
+#include "sys/time.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
 #include <sys/stat.h>   /* for stat structure*/
 #include <limits.h>		/* for CHAR_BIT */
 
@@ -34,7 +40,7 @@
 #define BITSET(a, b) ((a)[BITSLOT(b)] |= BITMASK(b))
 #define BITCLEAR(a, b) ((a)[BITSLOT(b)] &= ~BITMASK(b))
 #define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
-#define BITNSLOTS(nb) ((nb + CHAR_BIT - 1) / CHAR_BIT)
+#define BITNSLOTS(nb) ((int)(nb + CHAR_BIT - 1) / CHAR_BIT)
 #define SEGMENTLENGTH() (BITNSLOTS(DB_FILE_BLOCKS_NUM) + 2*sizeof(int))
 
 
@@ -122,7 +128,7 @@ typedef struct {
 } table_addresses;
 
 #define DB_FILE_SIZE_EX 40
-#define DB_FILE_BLOCKS_NUM_EX (1024 * 1024 * DB_FILE_SIZE_EX / sizeof(AK_block))
+#define DB_FILE_BLOCKS_NUM_EX (int)(1024 * 1024 * DB_FILE_SIZE_EX / sizeof(AK_block))
 
 
 /**
@@ -167,7 +173,7 @@ AK_blocktable * AK_allocationbit;
  * @author dv
  * @brief How many blocks would be initially allocated
  */
-#define MAX_BLOCK_INIT_NUM 20
+#define MAX_BLOCK_INIT_NUM MAX_CACHE_MEMORY
 
 /**
  * @author dv
@@ -189,6 +195,7 @@ allocationNOMODE
 
 
 #endif
+int AK_print_block(AK_block * block, int num, char* gg,FILE *fpp;);
 void AK_allocationbit_test ();
 void AK_allocationtable_test ();
 int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl);

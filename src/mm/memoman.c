@@ -184,6 +184,21 @@ int AK_memoman_init() {
         return EXIT_ERROR;
     }
 
+
+//AK_memoman_test();
+//AK_print_block(NULL, 0, "Memoman_75_cached");
+//AK_print_block(NULL, 1, "Memoman_78_cached");
+//AK_print_block(db_cache->cache[ 200 ]->block, 200, "Memoman_79_cached");
+//AK_print_block(db_cache->cache[ 1]->block, 1, "Memoman_80_cached");
+//AK_print_block(db_cache->cache[ 61]->block, 61, "Memoman_80_cached");
+//AK_print_block(db_cache->cache[2]->block, 2, "Memoman_80_cached");
+//AK_print_block(db_cache->cache[3]->block, 3, "Memoman_80_cached");
+//AK_print_block(db_cache->cache[4]->block, 4, "Memoman_80_cached");
+//AK_print_block(db_cache->cache[5]->block, 5, "Memoman_80_cached");
+//AK_print_block(db_cache->cache[6]->block, 6, "Memoman_80_cached",stdout);
+//AK_print_block(NULL, 5, "Memoman_77_cached");
+//AK_print_block(NULL, 61, "Memoman_78_cached");
+
     printf("AK_memoman_init: Memory manager initialized...\n");
 
     return EXIT_SUCCESS;
@@ -351,6 +366,8 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     for (i = 0; i < DATA_BLOCK_SIZE; i++) {
         if (mem_block->block->tuple_dict[i].type == FREE_INT)
             break;
+            if ( (mem_block->block->last_tuple_dict_id) <= i )
+            break;
         i++;
         memcpy(name, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
         name[ mem_block->block->tuple_dict[i].size] = '\0';
@@ -500,7 +517,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     }
 
     int end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
-    mem_block = (AK_mem_block *) AK_get_block(0);
+    //mem_block = (AK_mem_block *) AK_get_block(0);
 
     AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
@@ -540,5 +557,25 @@ int AK_flush_cache() {
 }
 
 void AK_memoman_test() {
+    register int i;
 
+
+    for (i = 0; i < MAX_CACHE_MEMORY; i++)
+        printf("Block: %d \t l_address: %d \t c_address: %x\n",i,db_cache->cache[i]->block->address, &db_cache->cache[i]->block );
+}
+
+void AK_memoman_test2() {
+    register int i;
+    int aa=0;
+
+printf("\tPick up block from 0 to: %d \n",AK_allocationbit->last_allocated );
+
+ scanf("%d", &aa);
+ if(aa>=0 && aa<AK_allocationbit->last_allocated){
+ printf("\n\tFirst goes dump of block from HDD:\n");
+ AK_print_block(NULL, aa, "Memoman_test2_HDD",stdout);
+ printf("\n\n\n");
+ printf("\n\n\t Then dump of block from cache:\n");
+ AK_print_block(db_cache->cache[aa]->block, aa, "Memoman_test2_Cache",stdout);
+   }
 }

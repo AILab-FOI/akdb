@@ -147,3 +147,4 @@ int AK_find_free_space(table_addresses * addresses);
 int AK_init_new_extent(char *table_name, int extent_type);
 int AK_flush_cache();
 void AK_memoman_test();
+void AK_memoman_test2();
