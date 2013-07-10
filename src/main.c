@@ -141,6 +141,7 @@ function fun[] = {
         {"AK_observable_pattern_test", &AK_observable_test},
         {"AK_allocationbit_test", &AK_allocationbit_test},
         {"AK_allocationtable_test", &AK_allocationtable_test},
+        {"AK_block_test", &AK_memoman_test2},
 	{"AK_select_test", &AK_select_test}
     };
 
