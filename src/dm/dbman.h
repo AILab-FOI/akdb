@@ -195,7 +195,7 @@ allocationNOMODE
 
 
 #endif
-int AK_print_block(AK_block * block, int num, char* gg,FILE *fpp;);
+int AK_print_block(AK_block * block, int num, char* gg,FILE *fpp);
 void AK_allocationbit_test ();
 void AK_allocationtable_test ();
 int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl);
