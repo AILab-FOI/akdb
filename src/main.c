@@ -127,6 +127,7 @@ function fun[] = {
         {"AK_rel_eq_assoc_test", &AK_rel_eq_assoc_test},
         {"AK_rel_eq_projection_test", &AK_rel_eq_projection_test},
         {"AK_rel_eq_selection_test", &AK_rel_eq_selection_test},
+        {"AK_query_optimization_test", &AK_query_optimization_test},
         {"AK_table_test", &AK_table_test},
         {"AK_trigger_test", &AK_trigger_test},
         {"AK_unique_test", &AK_unique_test},
