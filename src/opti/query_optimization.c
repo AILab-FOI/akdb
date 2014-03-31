@@ -362,15 +362,15 @@ void AK_query_optimization_test() { // (AK_list *list_query)
     char* query = AK_get_view_query("view1");
     printf("View query: %s\n", query);
 
-    AK_list *mylist = (AK_list *) malloc(sizeof (AK_list));
-    Ak_Init_L(mylist);
+    //AK_list *mylist = (AK_list *) malloc(sizeof (AK_list));
+    //Ak_Init_L(mylist);
 
     //*Associativity of union and intersection
-    Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), mylist);
-    Ak_InsertAtEnd_L(TYPE_OPERAND, "view1",strlen(query), mylist);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
-    Ak_InsertAtEnd_L(TYPE_OPERAND, "course", sizeof ("course"), mylist);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
+   // Ak_InsertAtEnd_L(TYPE_OPERAND, "professor", sizeof ("professor"), mylist);
+    //Ak_InsertAtEnd_L(TYPE_OPERAND, "view1",strlen(query), mylist);
+    //Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
+    //Ak_InsertAtEnd_L(TYPE_OPERAND, "course", sizeof ("course"), mylist);
+    //Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
 
-    AK_print_optimized_query(AK_query_optimization(mylist, "aps", 1));
+    //AK_print_optimized_query(AK_query_optimization(mylist, "aps", 1));
 }
