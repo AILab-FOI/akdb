@@ -224,7 +224,7 @@ int div;
   * @param *list_query query to be optimized
   * @return No return value
   */
-void AK_query_optimization_test(AK_list *list_query) { 
+void AK_query_optimization_test() { 
 
     printf("query_optimization.c: Present!\n");
     printf("\n********** QUERY OPTIMIZATION TEST by Dino Laktašić **********\n");
@@ -405,7 +405,7 @@ AK_list *mylist10 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_InsertAtEnd_L(TYPE_CONDITION, "`id_course` 7 < `mbr` 35891 > AND", sizeof ("`id_course` 7 < `mbr` 35891 > AND"), mylist10);
     //*/
 
- time_t start = clock();
+ //time_t start = clock();
 
    AK_print_optimized_query(AK_query_optimization(mylist, "a", 1));
  AK_print_optimized_query(AK_query_optimization(mylist2, "c", 1));
@@ -418,9 +418,9 @@ AK_list *mylist10 = (AK_list *) AK_malloc(sizeof (AK_list));
    AK_print_optimized_query(AK_query_optimization(mylist9, "a", 1));
   AK_print_optimized_query(AK_query_optimization(mylist10, "a", 1));
 
-    time_t end = clock();
+//    time_t end = clock();
   
 
-  printf("\n\nLOGIC PLAN GENERATED IN: %d μs, %d s\n", end - start, (end - start) / 1000000);
+  //printf("\n\nLOGIC PLAN GENERATED IN: %d μs, %d s\n", end - start, (end - start) / 1000000);
 
 }
