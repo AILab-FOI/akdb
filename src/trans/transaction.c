@@ -74,7 +74,7 @@ AK_transaction_elem_P AK_search_empty_link_for_hook(int blockAddress){
 
 	if(!LockTable[hash].DLLHead){
 
-		LockTable[hash].DLLHead = (AK_transaction_elem_P) malloc(sizeof (AK_transaction_elem));
+		LockTable[hash].DLLHead = (AK_transaction_elem_P) AK_malloc(sizeof (AK_transaction_elem));
 		memset(LockTable[hash].DLLHead, 0, sizeof (AK_transaction_elem));
 
 		return LockTable[hash].DLLHead;
@@ -105,7 +105,7 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
     	root->prevBucket = root;
     }else{
 
-    	bucket = (AK_transaction_elem_P) malloc(sizeof (AK_transaction_elem));
+    	bucket = (AK_transaction_elem_P) AK_malloc(sizeof (AK_transaction_elem));
         memset(bucket, 0, sizeof (AK_transaction_elem));
         bucket->nextBucket = root;
         bucket->prevBucket = root->prevBucket;
@@ -264,7 +264,7 @@ int AK_isLock_waiting(AK_transaction_elem_P lockHolder, int type, pthread_t tran
 AK_transaction_lock_elem_P AK_add_lock(AK_transaction_elem_P HashList, int type, pthread_t transactionId) {
 
     AK_transaction_lock_elem_P root = HashList->DLLLocksHead;
-    AK_transaction_lock_elem_P lock = (AK_transaction_lock_elem_P) malloc(sizeof (AK_transaction_lock_elem));
+    AK_transaction_lock_elem_P lock = (AK_transaction_lock_elem_P) AK_malloc(sizeof (AK_transaction_lock_elem));
     memset(lock, 0, sizeof (AK_transaction_lock_elem));
 
     if (!root) {
@@ -394,7 +394,7 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses_link addressList) {
 
     for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) {
         tmp->adresa = j;
-        tmp->nextElement = (AK_memoryAddresses_link) malloc(sizeof(struct memoryAddresses));
+        tmp->nextElement = (AK_memoryAddresses_link) AK_malloc(sizeof(struct memoryAddresses));
         memset(tmp->nextElement, 0, sizeof (struct memoryAddresses));
         tmp = tmp->nextElement;
 
@@ -414,7 +414,7 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses_link addressList) {
 int AK_execute_commands(command * commandArray, int lengthOfArray) {
     int i = 0, status = 0;
     AK_memoryAddresses addresses;
-    AK_memoryAddresses_link address = (AK_memoryAddresses_link) malloc(sizeof(struct memoryAddresses));
+    AK_memoryAddresses_link address = (AK_memoryAddresses_link) AK_malloc(sizeof(struct memoryAddresses));
 
     for (i = 0; i < lengthOfArray; i++) {
 
@@ -529,8 +529,8 @@ int AK_create_new_transaction_thread(AK_transaction_data *transaction_data) {
  * @param lengthOfArray length of commandArray
  */
 void AK_transaction_manager(command * commandArray, int lengthOfArray) {
-    AK_transaction_data* params = malloc(sizeof(AK_transaction_data));
-    params->array = malloc(sizeof(command));
+    AK_transaction_data* params = AK_malloc(sizeof(AK_transaction_data));
+    params->array = AK_malloc(sizeof(command));
     params->array = commandArray;
     params->lengthOfArray = lengthOfArray;
     transactionsCount++;
@@ -685,7 +685,7 @@ void AK_all_transactions_finished() {
  * @return Pointer to new AK_observable_transaction instance
  */
 AK_observable_transaction * AK_init_observable_transaction() {
-    observable_transaction = calloc(1, sizeof(AK_observable_transaction));
+    observable_transaction = AK_calloc(1, sizeof(AK_observable_transaction));
     observable_transaction->AK_transaction_register_observer = &AK_transaction_register_observer;
     observable_transaction->AK_transaction_unregister_observer = &AK_transaction_unregister_observer;
     observable_transaction->AK_lock_released = &AK_lock_released;
@@ -704,7 +704,7 @@ AK_observable_transaction * AK_init_observable_transaction() {
  */
 AK_observer_lock * AK_init_observer_lock() {
     AK_observer_lock *self;
-    self = calloc(1, sizeof(AK_observer_lock));
+    self = AK_calloc(1, sizeof(AK_observer_lock));
     self->observer = AK_init_observer(self, &AK_on_observable_notify);
     return self;
 }
@@ -722,7 +722,7 @@ void AK_test_Transaction() {
 
     /**************** INSERT AND UPDATE COMMAND TEST ******************/
     char *tblName = "student";
-    AK_list_elem row_root_insert = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root_insert = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root_insert);
     Ak_DeleteAll_L(row_root_insert);
     int mbr, year;
@@ -737,13 +737,13 @@ void AK_test_Transaction() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root_insert);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root_insert);
 
-    AK_list_elem row_root_update = (AK_list_elem) malloc(sizeof (AK_list_elem));
+    AK_list_elem row_root_update = (AK_list_elem) AK_malloc(sizeof (AK_list_elem));
     Ak_Init_L(row_root_update);
     Ak_DeleteAll_L(row_root_update);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root_update, SEARCH_CONSTRAINT);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "pppppppppp", tblName, "lastname", row_root_update, NEW_VALUE);
 
-    command* commands_ins_up = malloc(sizeof (command) * 2);
+    command* commands_ins_up = AK_malloc(sizeof (command) * 2);
     commands_ins_up[0].tblName = "student";
     commands_ins_up[0].id_command = INSERT;
     commands_ins_up[0].parameters = row_root_insert;
@@ -754,7 +754,7 @@ void AK_test_Transaction() {
 
     int id_prof;
     id_prof = 35893;
-    AK_list_elem row_root_p_update = (AK_list_elem) malloc(sizeof (AK_list_elem));
+    AK_list_elem row_root_p_update = (AK_list_elem) AK_malloc(sizeof (AK_list_elem));
     Ak_Init_L(row_root_p_update);
     Ak_DeleteAll_L(row_root_p_update);
     
@@ -763,13 +763,13 @@ void AK_test_Transaction() {
 
 
     /**************** DELETE COMMAND TEST ******************/
-    command* commands_delete = malloc(sizeof (command) * 1);
+    command* commands_delete = AK_malloc(sizeof (command) * 1);
     commands_delete[0].tblName = "professor";
     commands_delete[0].id_command = DELETE;
     commands_delete[0].parameters = row_root_p_update;
 
 
-    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(expr);
 	int num = 2010;
 
@@ -782,7 +782,7 @@ void AK_test_Transaction() {
 	Ak_InsertAtEnd_L(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
     
     /**************** SELECT COMMAND TEST ******************/
-    command* commands_select = malloc(sizeof(command) * 1);
+    command* commands_select = AK_malloc(sizeof(command) * 1);
     commands_select[0].tblName = "student";
     commands_select[0].id_command = SELECT;
     commands_select[0].parameters = expr;
@@ -795,14 +795,14 @@ void AK_test_Transaction() {
  
     pthread_mutex_lock(&endTransationTestLockMutex);
 
-    free(expr);
-    free(commands_delete);
-    free(commands_select);
-    free(commands_ins_up);
-    free(row_root_insert);
-    free(row_root_update);
-    free(row_root_p_update);
-    free(observable_transaction);
+    AK_free(expr);
+    AK_free(commands_delete);
+    AK_free(commands_select);
+    AK_free(commands_ins_up);
+    AK_free(row_root_insert);
+    AK_free(row_root_update);
+    AK_free(row_root_p_update);
+    AK_free(observable_transaction);
 
     pthread_mutex_unlock(&endTransationTestLockMutex);
     

@@ -13,7 +13,7 @@ int AK_command(command * komande, int brojkomandi) {
         case SELECT:
             printf("***SELECT***\n");
             char *ext = "_selection_tmp_table";
-            char *dest_table = malloc(strlen(ext) + strlen(komande[i].tblName) + 1);
+            char *dest_table = AK_malloc(strlen(ext) + strlen(komande[i].tblName) + 1);
             strcat(dest_table, komande[i].tblName);
             strcat(dest_table, ext);
             if(AK_selection(komande[i].tblName, dest_table, (AK_list*)komande[i].parameters) == EXIT_ERROR)
@@ -53,7 +53,7 @@ void AK_test_command(){
     printf("***Test Command***\n");
     int brojkomandi;
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     char *tblName = "student";
    
@@ -68,13 +68,13 @@ void AK_test_command(){
     Ak_Insert_New_Element(TYPE_VARCHAR, "Kolmacic", tblName, "lastname", row_root);
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
-    command *komande = malloc(sizeof(command)*4);
+    command *komande = AK_malloc(sizeof(command)*4);
     komande[0].id_command = 2;
     komande[0].tblName = "student";
     komande[0].parameters = row_root;
 
     mbr = 35900;
-    row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     Ak_DeleteAll_L(row_root);
 
@@ -87,7 +87,7 @@ void AK_test_command(){
 
     int id_prof;
     id_prof = 35893;
-    row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     Ak_DeleteAll_L(row_root);
 
@@ -121,7 +121,7 @@ void AK_test_command(){
 /*
 
   mbr = 35915;
-  row_root = (AK_list_elem) malloc(sizeof (AK_list));
+  row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
   Ak_Init_L(row_root);
   Ak_DeleteAll_L(row_root);
 

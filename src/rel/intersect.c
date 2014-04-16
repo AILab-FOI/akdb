@@ -53,12 +53,12 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         char data2[MAX_VARCHAR_LENGTH];
 
         //initialize new segment
-        AK_header *header = (AK_header *) malloc(num_att * sizeof (AK_header));
+        AK_header *header = (AK_header *) AK_malloc(num_att * sizeof (AK_header));
         memcpy(header, tbl1_temp_block->block->header, num_att * sizeof (AK_header));
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
-        free(header);
+        AK_free(header);
 
-        AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
+        AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
 
         //TABLE1: for each extent in table1
         for (i = 0; src_addr1->address_from[i] != 0; i++) {
@@ -69,7 +69,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
                     //if there is data in the block
-                    if (tbl1_temp_block->block->free_space != 0) {
+                    if (tbl1_temp_block->block->AK_free_space != 0) {
 
                         //TABLE2: for each extent in table2
                         for (k = 0; k < (src_addr2->address_from[k] != 0); k++) {
@@ -82,7 +82,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                     tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 
                                     //if there is data in the block
-                                    if (tbl2_temp_block->block->free_space != 0) {
+                                    if (tbl2_temp_block->block->AK_free_space != 0) {
 										
                                         //TUPLE_DICTS: for each tuple_dict in the block
                                         for (m = 0; m < DATA_BLOCK_SIZE; m += num_att) {
@@ -138,15 +138,15 @@ thesame=0;
                 }
         }
 
-        free(src_addr1);
-        free(src_addr2);
+        AK_free(src_addr1);
+        AK_free(src_addr2);
 	Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
 	
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
-        free(src_addr1);
-        free(src_addr2);
+        AK_free(src_addr1);
+        AK_free(src_addr2);
 	return EXIT_ERROR;
     }
 }

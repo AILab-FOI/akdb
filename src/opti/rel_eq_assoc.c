@@ -41,7 +41,7 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
     int next_cost, i;
 
     //Initialize temporary linked list
-    AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
 
     AK_list_elem tmp, temp_elem, temp_elem_prev, temp_elem_next;
@@ -270,10 +270,10 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
                                     next_cost++;
                                 }
 
-                                free(cond_attr_first);
-                                free(tbl_attr_first);
-                                free(tbl_attr_second);
-                                free(tbl_attr_third);
+                                AK_free(cond_attr_first);
+                                AK_free(tbl_attr_first);
+                                AK_free(tbl_attr_second);
+                                AK_free(tbl_attr_third);
 
                             } //end of check for NULLs
 
@@ -443,7 +443,7 @@ void AK_rel_eq_assoc_test() {
 
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     int id = 35890, year = 1999;
@@ -544,7 +544,7 @@ void AK_rel_eq_assoc_test() {
 
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName2));
 
-    AK_list_elem row_root2 = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root2 = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root2);
 
     int mbr = 35890;
@@ -643,7 +643,7 @@ void AK_rel_eq_assoc_test() {
     printf("rel_eq_associativity_test: After data insertion: %d\n", AK_num_attr(tblName2));
     //-----------------------------------------------------------------------------------------
 
-    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(expr);
 
     Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);

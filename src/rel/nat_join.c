@@ -66,7 +66,7 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
         head++;
     }
 
-    free(temp_block);
+    AK_free(temp_block);
     temp_block = (AK_block *) AK_read_block(table_address2);
     head = 0;
 
@@ -81,7 +81,7 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
     }
 
     AK_temp_create_table(new_table, header, SEGMENT_TYPE_TABLE);
-    free(temp_block);
+    AK_free(temp_block);
 }
 
 /**
@@ -127,7 +127,7 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
 
                 //if isn't element in the list, and if data is correct, and size is not null
                 if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (size != 0)
-                        && (overflow < (temp_block->free_space + 1)) && (overflow > -1)) {
+                        && (overflow < (temp_block->AK_free_space + 1)) && (overflow > -1)) {
                     memset(data, '\0', MAX_VARCHAR_LENGTH);
                     //data[MAX_VARCHAR_LENGHT] = '\0';
                     memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
@@ -139,7 +139,7 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
 			break;
                     }
                     not_in_list = 0;
-                } else if ((size == 0) || (overflow > (temp_block->free_space + 1)) || (overflow < -1)) {
+                } else if ((size == 0) || (overflow > (temp_block->AK_free_space + 1)) || (overflow < -1)) {
                     something_to_copy = 0;
                 }
                 //if there are more elements to compare for merge
@@ -147,7 +147,7 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
             }
 
             //if it isn't header which is in compare list then I can copy these tuple dicts becouse it not exist in the insert_row_list2
-            if ((not_in_list == 1) && (size != 0) && (overflow < temp_block->free_space + 1) && (overflow > -1)) {
+            if ((not_in_list == 1) && (size != 0) && (overflow < temp_block->AK_free_space + 1) && (overflow > -1)) {
                 memset(data, '\0', MAX_VARCHAR_LENGTH);
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
@@ -179,8 +179,8 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
 void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING NAT JOIN");
 
-    AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
-    AK_list *row_root_insert = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
+    AK_list *row_root_insert = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     Ak_Init_L(row_root_insert);
     AK_list_elem list_elem;
@@ -207,7 +207,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, A
 
                 //if there is an element that we need, and it's correct we copy it
                 if ((strcmp(list_elem->data, tbl1_temp_block->header[head].att_name) == 0) && (size != 0)
-                        && (overflow < (tbl1_temp_block->free_space + 1)) && (overflow > -1)) {
+                        && (overflow < (tbl1_temp_block->AK_free_space + 1)) && (overflow > -1)) {
                     memset(data, '\0', MAX_VARCHAR_LENGTH);
                     //data[MAX_VARCHAR_LENGHT] = '\0';
                     memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
@@ -224,7 +224,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, A
             }
 
             //copy element which is not for merge only for insert
-            if ((not_in_list == 1) && (size != 0) && (overflow < tbl1_temp_block->free_space + 1) && (overflow > -1)) {
+            if ((not_in_list == 1) && (size != 0) && (overflow < tbl1_temp_block->AK_free_space + 1) && (overflow > -1)) {
                 memset(data, '\0', MAX_VARCHAR_LENGTH);
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
@@ -243,8 +243,8 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, A
             Ak_DeleteAll_L(row_root_insert);
         }
     }
-    free(row_root);
-    free(row_root_insert);
+    AK_free(row_root);
+    AK_free(row_root_insert);
 }
 
 /**
@@ -288,7 +288,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
                     //if there is data in the block
-                    if (tbl1_temp_block->block->free_space != 0) {
+                    if (tbl1_temp_block->block->AK_free_space != 0) {
                         //for each extent in table2 that contains blocks needed for join
                         for (k = 0; k < (src_addr2->address_from[k] != 0); k++) {
                             startAddress2 = src_addr2->address_from[k];
@@ -303,7 +303,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
                                     tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 
                                     //if there is data in the block
-                                    if (tbl2_temp_block->block->free_space != 0) {
+                                    if (tbl2_temp_block->block->AK_free_space != 0) {
                                         AK_copy_blocks_join(tbl1_temp_block->block, tbl2_temp_block->block, att, dstTable);
                                     }
                                 }
@@ -313,15 +313,15 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
                 }
             } else break;
         }
-        free(src_addr1);
-        free(src_addr2);
+        AK_free(src_addr1);
+        AK_free(src_addr2);
 		Ak_dbg_messg(LOW, REL_OP, "NAT_JOIN_TEST_SUCCESS\n\n");
 
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\n AK_join: Table/s doesn't exist!");
-        free(src_addr1);
-        free(src_addr2);
+        AK_free(src_addr1);
+        AK_free(src_addr2);
         return EXIT_ERROR;
     }
 }
@@ -333,7 +333,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
 void AK_op_join_test() {
     printf("\n********** NAT JOIN TEST **********\n\n");
 
-    AK_list *att = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *att = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(att);
 
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);

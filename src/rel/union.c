@@ -48,12 +48,12 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
         char data[MAX_VARCHAR_LENGTH];
 
 		//initialize new segment
-        AK_header *header = (AK_header *) malloc(num_att * sizeof (AK_header));
+        AK_header *header = (AK_header *) AK_malloc(num_att * sizeof (AK_header));
         memcpy(header, tbl1_temp_block->block->header, num_att * sizeof (AK_header));
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
-        free(header);
+        AK_free(header);
 
-        AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
+        AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
 		
 	//writing first block or table to new segment
 	for (i = 0; src_addr1->address_from[i] != 0; i++) {
@@ -64,7 +64,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j); //read block from first table
 
                     //if there is data in the block
-                    if (tbl1_temp_block->block->free_space != 0) {
+                    if (tbl1_temp_block->block->AK_free_space != 0) {
 
 						for (k = 0; k < DATA_BLOCK_SIZE; k++) {
 							if (tbl1_temp_block->block->tuple_dict[k].type == FREE_INT)
@@ -97,7 +97,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
                     tbl2_temp_block = (AK_mem_block *) AK_get_block(j); //read block from second table
 
                     //if there is data in the block
-                    if (tbl2_temp_block->block->free_space != 0) {
+                    if (tbl2_temp_block->block->AK_free_space != 0) {
 				
 						for (k = 0; k < DATA_BLOCK_SIZE; k++) {
 							if (tbl2_temp_block->block->tuple_dict[k].type == FREE_INT)
@@ -121,14 +121,14 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 				}
 		}
 		
-	    free(src_addr1);
-	    free(src_addr2);
+	    AK_free(src_addr1);
+	    AK_free(src_addr2);
 	    Ak_dbg_messg(LOW, REL_OP, "UNION_TEST_SUCCESS\n\n");
 	    return EXIT_SUCCESS;
 	} else {
 		Ak_dbg_messg(LOW, REL_OP, "\nAK_union: Table/s doesn't exist!");
-		free(src_addr1);
-		free(src_addr2);
+		AK_free(src_addr1);
+		AK_free(src_addr2);
 		return EXIT_ERROR;
 	}
 }

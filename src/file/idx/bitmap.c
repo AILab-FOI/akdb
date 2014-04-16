@@ -65,7 +65,7 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
 
     AK_list_elem some_element;
     AK_list_elem e, ee;
-    AK_list *headerAtributes = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *headerAtributes = (AK_list *) AK_malloc(sizeof (AK_list));
 
     int br;
     char * indexName;
@@ -224,9 +224,9 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
             }
      * */
     Ak_DeleteAll_L(headerAtributes);
-    free(headerAtributes);
-    free(tempHeader);
-    free(temp_head);
+    AK_free(headerAtributes);
+    AK_free(tempHeader);
+    AK_free(temp_head);
 
 }
 
@@ -246,7 +246,7 @@ void Ak_print_Header_Test(char* tblName) {
     for (i = 0; i < num_attr; i++)
         printf("%-10s", (temp_head + i)->att_name);
     printf("\n----------------------------------------------\n");
-    free(temp_head);
+    AK_free(temp_head);
 }
 
 /*
@@ -285,7 +285,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
                             memcpy(&temp_int, &(temp->data[ temp->tuple_dict[ k ].address]),
                                     temp->tuple_dict[k].size);
                             temp_int = sprintf(temp_char, "%d", temp_int);
-                            row_root = (AK_list_elem) malloc(sizeof (AK_list));
+                            row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
                             Ak_Init_L(row_root);
                             temp_indexTd = k - positionTbl;
                             Ak_Insert_New_Element(TYPE_INT, &(temp->address), tblNameIndex, "addBlock", row_root);
@@ -304,7 +304,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
                             //       }
                             Ak_insert_row(row_root);
                             Ak_DeleteAll_L(row_root);
-                            free(row_root);
+                            AK_free(row_root);
                             //printf( "%-10d", temp_int );
                             break;
                         case TYPE_FLOAT:
@@ -320,7 +320,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
                             //printf( "%s: %i \n", temp_char,temp->tuple_dict[ k ].address );
                             //printf("Pozicija u headeru: %i \n",posOfAttr(tblNameIndex,temp_char));
                             //prolazi kroz header i dodaje nule na sve pozicije osim na onu na kojoj se nalazi unutar headera ovaj atribut
-                            row_root = (AK_list_elem) malloc(sizeof (AK_list));
+                            row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
                             Ak_Init_L(row_root);
                             temp_indexTd = k - positionTbl;
                             Ak_Insert_New_Element(TYPE_INT, &(temp->address), tblNameIndex, "addBlock", row_root);
@@ -339,7 +339,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
                             //       }
                             Ak_insert_row(row_root);
                             Ak_DeleteAll_L(row_root);
-                            free(row_root);
+                            AK_free(row_root);
                             break;
                     }
                 }
@@ -348,9 +348,9 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
         i++;
     }
 
-    free(addresses);
-    free(temp);
-    // free(t_header);
+    AK_free(addresses);
+    AK_free(temp);
+    // AK_free(t_header);
 }
 
 /**
@@ -377,7 +377,7 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
     int b, br = 0;
     int addBlock, indexTd;
 
-    list_ad *add_root = (list_ad *) malloc(sizeof (list_ad));
+    list_ad *add_root = (list_ad *) AK_malloc(sizeof (list_ad));
     Ak_InitializelistAd(add_root);
 
     printf("\n");
@@ -387,7 +387,7 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
             //printf("XXXXXXXXXXXXXXXXXXXXXXXXXX%i",br);
         }
     }
-    free(temp_head);
+    AK_free(temp_head);
     //printf("XXXXXXXXXXXXXXXXXXXXXXXXXX%i",br);
     i = 0;
     while (addresses->address_from[ i ] != 0) {
@@ -430,7 +430,7 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
         i++;
     }
     return add_root;
-    free(add_root);
+    AK_free(add_root);
 }
 
 /**
@@ -439,7 +439,7 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
  * @return No return value
  **/
 void Ak_create_List_Address_Test() {
-    list_ad *add_root = (list_ad *) malloc(sizeof (list_ad));
+    list_ad *add_root = (list_ad *) AK_malloc(sizeof (list_ad));
     Ak_InitializelistAd(add_root);
     Ak_Insert_NewelementAd(1, 1, "prvi", add_root);
     element_ad some_element;
@@ -483,7 +483,7 @@ void Ak_print_Att_Test(list_ad *list) {
  * @return list of adresses
  **/
 list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeValue) {
-    list_ad *list = (list_ad *) malloc(sizeof (list_ad));
+    list_ad *list = (list_ad *) AK_malloc(sizeof (list_ad));
     Ak_InitializelistAd(list);
     char inde[50];
     char *indexName;
@@ -604,7 +604,7 @@ int Ak_write_block(AK_block * block) {
         printf("AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address);
         exit(EXIT_ERROR);
     }
-    if (fwrite(block, sizeof ( *block), 1, db) != 1) {
+    if (AK_fwrite(block, sizeof ( *block), 1, db) != 1) {
         printf("AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address);
         exit(EXIT_ERROR);
     }
@@ -623,7 +623,7 @@ void Ak_bitmap_test() {
 
     char *tblName = "assistant";
 
-    AK_list *att_root = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *att_root = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(att_root);
 
     Ak_Insert_New_Element(TYPE_VARCHAR, "firstname", tblName, "firstname", att_root);

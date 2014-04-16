@@ -34,7 +34,7 @@
 int AK_sequence_add(char *name, int start_value, int increment, int max_value, int min_value, int cycle){
     printf("\n***Add sequence***");
    
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     int sequence_id = AK_get_id(); //get sequence_id
     Ak_Insert_New_Element(TYPE_INT, &sequence_id, "AK_sequence", "obj_id", row_root);
@@ -51,7 +51,7 @@ int AK_sequence_add(char *name, int start_value, int increment, int max_value, i
       return EXIT_ERROR;
     }
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     return sequence_id;
 }
 
@@ -63,7 +63,7 @@ int AK_sequence_add(char *name, int start_value, int increment, int max_value, i
  */
 int AK_sequence_remove(char *name){
     printf("\n***Remove sequence***");
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_sequence", "name", row_root, 1);
@@ -74,7 +74,7 @@ int AK_sequence_remove(char *name){
       return EXIT_ERROR;
     }
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     return EXIT_SUCCESS;
 }
 
@@ -157,14 +157,14 @@ int AK_sequence_next_value(char *name){
 	} 
     }
     
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &next_value, "AK_sequence", "current_value", row_root, 0);
     int result =  Ak_update_row(row_root); 
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
    
     if (result == EXIT_ERROR) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_next_value: Could not retrieve next value.\n");
@@ -186,12 +186,12 @@ int AK_sequence_get_id(char *name){
 	while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL) {
 		if (strcmp(row->next->next->data, name) == 0) {
 			i = (int) * row->next->data;
-			free(row);
+			AK_free(row);
 			return i;
 		}
 		i++;
 	}
-	free(row);
+	AK_free(row);
 	return EXIT_ERROR;
 }
 
@@ -209,14 +209,14 @@ int AK_sequence_rename(char *old_name, char *new_name){
     
     int seq_id = AK_sequence_get_id(old_name);
     
-    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root); 
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_sequence", "name", row_root, 0);
     int result =  Ak_update_row(row_root); 
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     
     if (result == EXIT_ERROR || seq_id == -1) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_rename: Could not rename sequence.\n");
@@ -250,7 +250,7 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
         i++;
     }
     
-    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root); 
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, 1);
@@ -261,7 +261,7 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
     Ak_Insert_New_Element_For_Update(TYPE_INT, &cycle, "AK_sequence", "cycle", row_root, 0);
     int result =  Ak_update_row(row_root); 
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     
     if (result == EXIT_ERROR || seq_id == -1) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_modify: Could not modify sequence.\n");

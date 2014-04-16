@@ -129,7 +129,7 @@
 #define EXIT_ERROR -1
 /**
   * @def BLOCK_TYPE_FREE
-  * @brief Constant declaring free block type (used in AK_block->type)
+  * @brief Constant declaring AK_free block type (used in AK_block->type)
  */
 #define BLOCK_TYPE_FREE -1
 /**
@@ -356,7 +356,7 @@
 #define WAIT_FOR_UNLOCK 0
 /**
  * @def PASS_LOCK_QUEUE
- * @brief Constant declaring that a lock can acquire the resource freely
+ * @brief Constant declaring that a lock can acquire the resource AK_freely
 */
 #define PASS_LOCK_QUEUE 1
 /**

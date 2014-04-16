@@ -31,9 +31,9 @@ int AK_get_id() {
     int current_value = ID_START_VALUE;
     char temp_data[MAX_VARCHAR_LENGTH];
 
-    AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root); 
-    AK_list *row = (AK_list*) malloc(sizeof (AK_list));
+    AK_list *row = (AK_list*) AK_malloc(sizeof (AK_list));
 
     int num_rec = AK_get_num_records("AK_sequence");
     for (i = 0; i < num_rec; i++) {
@@ -58,7 +58,7 @@ int AK_get_id() {
         Ak_Insert_New_Element_For_Update(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root, NEW_VALUE);
         int result = Ak_update_row(row_root);
         Ak_DeleteAll_L(row_root);
-        free(row_root);
+        AK_free(row_root);
 
         if(result != EXIT_SUCCESS){
             return EXIT_ERROR;
@@ -74,7 +74,7 @@ int AK_get_id() {
     Ak_Insert_New_Element(TYPE_INT, &value, "AK_sequence", "increment", row_root);
     Ak_insert_row(row_root);
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     return current_value;
 }
 

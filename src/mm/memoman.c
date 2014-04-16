@@ -44,7 +44,7 @@ int AK_cache_block(int num, AK_mem_block *mem_block) {
     mem_block->timestamp_read = timestamp; /// set timestamp_read
     mem_block->timestamp_last_change = timestamp; /// set timestamp_last_change
 
-    free(block_cache);
+    AK_free(block_cache);
 
     return EXIT_SUCCESS;
 }
@@ -54,17 +54,17 @@ int AK_cache_block(int num, AK_mem_block *mem_block) {
   * @brief Function initializes the global cache memory (variable db_cache)
   * @return EXIT_SUCCESS if the cache memory has been initialized, EXIT_ERROR otherwise
  */
-int AK_cache_malloc() {
+int AK_cache_AK_malloc() {
     register int i;
 
-    if ((db_cache = (AK_db_cache *) malloc(sizeof ( AK_db_cache))) == NULL) {
+    if ((db_cache = (AK_db_cache *) AK_malloc(sizeof ( AK_db_cache))) == NULL) {
         return EXIT_ERROR;
     }
 
     db_cache->next_replace = 0;
     for (i = 0; i < MAX_CACHE_MEMORY; i++) {
-        db_cache->cache[ i ] = (AK_mem_block *) malloc(sizeof ( AK_mem_block));
-        db_cache->cache[ i ]->block = (AK_block *) malloc(sizeof ( AK_block));
+        db_cache->cache[ i ] = (AK_mem_block *) AK_malloc(sizeof ( AK_mem_block));
+        db_cache->cache[ i ]->block = (AK_block *) AK_malloc(sizeof ( AK_block));
 
         if ((AK_cache_block(i, db_cache->cache[ i ])) == EXIT_ERROR) {
             return EXIT_ERROR;
@@ -80,23 +80,23 @@ int AK_cache_malloc() {
   * @brief Function initializes the global redo log memory (variable redo_log)
   * @return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
  */
-int AK_redo_log_malloc() {
+int AK_redo_log_AK_malloc() {
 
-    if ((redo_log = (AK_redo_log *) malloc(sizeof ( AK_redo_log))) == NULL) {
+    if ((redo_log = (AK_redo_log *) AK_malloc(sizeof ( AK_redo_log))) == NULL) {
         return EXIT_ERROR;
     }
 
     redo_log->number = 0;
-    redo_log->table_name = malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
-    redo_log->command = malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
-    redo_log->attributes = malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
+    redo_log->table_name = AK_malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
+    redo_log->command = AK_malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
+    redo_log->attributes = AK_malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
 
     int i = 0;
     for (i = 0; i < MAX_REDO_LOG_ENTRIES; i++)
     {
-        redo_log->table_name[i] = calloc(MAX_VARCHAR_LENGTH, sizeof(char));
-        redo_log->command[i] = calloc(MAX_VARCHAR_LENGTH, sizeof(char));
-        redo_log->attributes[i] = calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+        redo_log->table_name[i] = AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+        redo_log->command[i] = AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+        redo_log->attributes[i] = AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
     }
 
     return EXIT_SUCCESS;
@@ -107,41 +107,41 @@ int AK_redo_log_malloc() {
   *  @brief Function initializes the global query memory (variable query_mem)
   *  @return EXIT_SUCCESS if the query memory has been initialized, EXIT_ERROR otherwise
  */
-int AK_query_mem_malloc() {
+int AK_query_mem_AK_malloc() {
 
-	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_malloc: Start query_mem_malloc\n");
+	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Start query_mem_AK_malloc\n");
 
     /// allocate memory for global variable query_mem
-    if ((query_mem = (AK_query_mem *) malloc(sizeof ( AK_query_mem))) == NULL) {
-        printf("AK_query_mem_malloc: ERROR. Cannot allocate query memory \n");
+    if ((query_mem = (AK_query_mem *) AK_malloc(sizeof ( AK_query_mem))) == NULL) {
+        printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query memory \n");
         exit(EXIT_ERROR);
     }
 
     /// allocate memory for variable query_mem_lib which is used in query_mem->parsed
     AK_query_mem_lib * query_mem_lib;
-    if ((query_mem_lib = (AK_query_mem_lib *) malloc(sizeof (AK_query_mem_lib))) == NULL) {
-        printf("AK_query_mem_malloc: ERROR. Cannot allocate query library memory \n");
+    if ((query_mem_lib = (AK_query_mem_lib *) AK_malloc(sizeof (AK_query_mem_lib))) == NULL) {
+        printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query library memory \n");
         exit(EXIT_ERROR);
     }
 
     /// allocate memory for variable query_mem_dict which is used in query_mem->dictionary
     AK_query_mem_dict * query_mem_dict;
-    if ((query_mem_dict = (AK_query_mem_dict *) malloc(sizeof (AK_query_mem_dict))) == NULL) {
-        printf("AK_query_mem_malloc: ERROR. Cannot allocate query dictionary memory \n");
+    if ((query_mem_dict = (AK_query_mem_dict *) AK_malloc(sizeof (AK_query_mem_dict))) == NULL) {
+        printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query dictionary memory \n");
         exit(EXIT_ERROR);
     }
 
     /// allocate memory for variable query_mem_result which is used in query_mem->result
     AK_query_mem_result * query_mem_result;
-    if ((query_mem_result = (AK_query_mem_result *) malloc(sizeof (AK_query_mem_result))) == NULL) {
-        printf("  AK_query_mem_malloc: ERROR. Cannot allocate query result memory \n");
+    if ((query_mem_result = (AK_query_mem_result *) AK_malloc(sizeof (AK_query_mem_result))) == NULL) {
+        printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate query result memory \n");
         exit(EXIT_ERROR);
     }
 
     /// allocate memory for variable tuple_dict which is used in query_mem->dictionary->dictionary[]
-    AK_tuple_dict * tuple_dict = (AK_tuple_dict *) malloc(sizeof (AK_tuple_dict));
-    if ((tuple_dict = (AK_tuple_dict *) malloc(sizeof (AK_tuple_dict))) == NULL) {
-        printf("  AK_query_mem_malloc: ERROR. Cannot allocate tuple dictionary memory \n");
+    AK_tuple_dict * tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict));
+    if ((tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))) == NULL) {
+        printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple dictionary memory \n");
         exit(EXIT_ERROR);
     }
 
@@ -156,7 +156,7 @@ int AK_query_mem_malloc() {
             memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));
             memcpy(query_mem->result,query_mem_result,sizeof(* query_mem_result));*/
 
-	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_malloc: Success!\n");
+	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Success!\n");
 
     return EXIT_SUCCESS;
 }
@@ -169,18 +169,18 @@ int AK_query_mem_malloc() {
 int AK_memoman_init() {
     printf("AK_memoman_init: Initializing memory manager...\n");
 
-    if (AK_cache_malloc() == EXIT_ERROR) {
-        printf("AK_memoman_init: ERROR. AK_cache_malloc() failed.\n");
+    if (AK_cache_AK_malloc() == EXIT_ERROR) {
+        printf("AK_memoman_init: ERROR. AK_cache_AK_malloc() failed.\n");
         return EXIT_ERROR;
     }
 
-    if (AK_redo_log_malloc() == EXIT_ERROR) {
-        printf("AK_memoman_init: ERROR. AK_redo_log_malloc() failed.\n");
+    if (AK_redo_log_AK_malloc() == EXIT_ERROR) {
+        printf("AK_memoman_init: ERROR. AK_redo_log_AK_malloc() failed.\n");
         return EXIT_ERROR;
     }
 
-    if (AK_query_mem_malloc() == EXIT_ERROR) {
-        printf("AK_memoman_init: ERROR. AK_query_mem_malloc() failed.\n");
+    if (AK_query_mem_AK_malloc() == EXIT_ERROR) {
+        printf("AK_memoman_init: ERROR. AK_query_mem_AK_malloc() failed.\n");
         return EXIT_ERROR;
     }
 
@@ -217,7 +217,7 @@ AK_mem_block *AK_get_block(int num) {
     int oldest_block = db_cache->next_replace;
     int second_oldest = 0;
     int found_in_cache = 0;
-    int first_free_mem_block = -1;
+    int first_AK_free_mem_block = -1;
     int block_written = 0;
 
     AK_mem_block *cached_block;
@@ -225,7 +225,7 @@ AK_mem_block *AK_get_block(int num) {
 
     while (i < MAX_CACHE_MEMORY) {
         if (db_cache->cache[i]->timestamp_read == -1) {
-            first_free_mem_block = i;
+            first_AK_free_mem_block = i;
             break;
         }
 
@@ -238,9 +238,9 @@ AK_mem_block *AK_get_block(int num) {
         i++;
     }
     if (!found_in_cache) {
-        if (first_free_mem_block != -1) {
-            if (AK_cache_block(num, db_cache->cache[ first_free_mem_block ]) == EXIT_SUCCESS) {
-                cached_block = db_cache->cache[first_free_mem_block];
+        if (first_AK_free_mem_block != -1) {
+            if (AK_cache_block(num, db_cache->cache[ first_AK_free_mem_block ]) == EXIT_SUCCESS) {
+                cached_block = db_cache->cache[first_AK_free_mem_block];
             }
         } else {
             if (db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY) {
@@ -304,7 +304,7 @@ int AK_refresh_cache() {
  */
 table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     int i = 0;
-    int freeVar = 0;
+    int AK_freeVar = 0;
     int data_adr = 0;
     int data_size = 0;
     int data_type = 0;
@@ -349,13 +349,13 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     }
 
     mem_block = (AK_mem_block *) AK_get_block(address_sys);
-    table_addresses * addresses = (table_addresses *) malloc(sizeof (table_addresses));
+    table_addresses * addresses = (table_addresses *) AK_malloc(sizeof (table_addresses));
 
     //memset(addresses->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
     //memset(addresses->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
-    for (freeVar = 0; freeVar < MAX_EXTENTS_IN_SEGMENT; freeVar++) {
-        addresses->address_from[freeVar] = 0;
-        addresses->address_to[freeVar] = 0;
+    for (AK_freeVar = 0; AK_freeVar < MAX_EXTENTS_IN_SEGMENT; AK_freeVar++) {
+        addresses->address_from[AK_freeVar] = 0;
+        addresses->address_to[AK_freeVar] = 0;
     }
 
 
@@ -411,15 +411,15 @@ table_addresses *AK_get_index_addresses(char * index) {
 
 /**
   * @author Matija Novak, updated by Matija Šestak( function now uses caching)
-  * @brief Function to find free space in some block betwen block addresses. It's made for insert_row()
+  * @brief Function to find AK_free space in some block betwen block addresses. It's made for insert_row()
   * @param address addresses of extents
   * @return address of the block to write in
  */
-int AK_find_free_space(table_addresses * addresses) {
+int AK_find_AK_free_space(table_addresses * addresses) {
     AK_mem_block *mem_block;
     int from = 0, to = 0, j = 0, i = 0;
 
-	Ak_dbg_messg(HIGH, MEMO_MAN, "find_free_space: Searching for block that has free space < 500 \n");
+	Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: Searching for block that has AK_free space < 500 \n");
 
     for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++) {
         if (addresses->address_from != 0) {
@@ -429,12 +429,12 @@ int AK_find_free_space(table_addresses * addresses) {
             //searching block
             for (i = from; i <= to; i++) {
                 mem_block = (AK_mem_block *) AK_get_block(i);
-                int free_space_on = mem_block->block->free_space;
+                int AK_free_space_on = mem_block->block->AK_free_space;
 
-				Ak_dbg_messg(HIGH, MEMO_MAN, "find_free_space: FREE SPACE %d\n", mem_block->block->free_space);
+				Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: FREE SPACE %d\n", mem_block->block->AK_free_space);
 
-                if ((free_space_on < MAX_FREE_SPACE_SIZE) &&
-                        (mem_block->block->last_tuple_dict_id < MAX_LAST_TUPLE_DICT_SIZE_TO_USE)) {//found free block to write
+                if ((AK_free_space_on < MAX_FREE_SPACE_SIZE) &&
+                        (mem_block->block->last_tuple_dict_id < MAX_LAST_TUPLE_DICT_SIZE_TO_USE)) {//found AK_free block to write
                     return i;
                 }
             }
@@ -519,7 +519,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     int end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
     //mem_block = (AK_mem_block *) AK_get_block(0);
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     //DeleteAllElements(row_root);
     int obj_id = 0;

@@ -45,7 +45,7 @@ AK_list *AK_rel_eq_comut(AK_list *list_rel_eq) {
     int step; // exit_cond[5] = {0};
 
     //Initialize temporary linked list
-    AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
 
     AK_list_elem tmp, temp_elem, temp_elem_prev, temp_elem_next;
@@ -203,11 +203,11 @@ AK_list *AK_rel_eq_comut(AK_list *list_rel_eq) {
                                             } else {
                                                 AK_list_elem temp_elem_prevprev = (AK_list_elem) Ak_Previous_L(temp_elem_prev, temp);
                                                 temp_elem_prevprev->next = temp_elem;
-                                                free(temp_elem_prev);
+                                                AK_free(temp_elem_prev);
                                                 AK_list_elem temp_elem_prev = temp_elem_prevprev;
 
                                                 temp_elem_prev->next = temp_elem_next;
-                                                free(temp_elem);
+                                                AK_free(temp_elem);
                                                 AK_list_elem temp_elem = temp_elem_next;
                                                 temp_elem_next = temp_elem->next;
                                                 tmp = temp_elem;
@@ -225,10 +225,10 @@ AK_list *AK_rel_eq_comut(AK_list *list_rel_eq) {
                                             }
                                         }
 
-                                        free(data1);
-                                        free(data2);
-                                        free(cond_attr1);
-                                        free(cond_attr2);
+                                        AK_free(data1);
+                                        AK_free(data2);
+                                        AK_free(cond_attr1);
+                                        AK_free(cond_attr2);
                                         break;
                                     }
                                 }
@@ -317,8 +317,8 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
     int next_cond = 0;
 
     char *token_cond, *save_token_cond;
-    char *ret_attributes = (char *) calloc(MAX_VARCHAR_LENGTH, sizeof (char));
-    char *temp_cond = (char *) calloc(strlen(cond) + 1, sizeof (char));
+    char *ret_attributes = (char *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (char));
+    char *temp_cond = (char *) AK_calloc(strlen(cond) + 1, sizeof (char));
 
     memcpy(temp_cond, cond, strlen(cond));
     memcpy(temp_cond + strlen(cond) + 1, "\0", 1);
@@ -339,8 +339,8 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
                         id = 0;
                     }
                 }
-                free(tbl);
-                free(attr);
+                AK_free(tbl);
+                AK_free(attr);
             }
             //`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR
             if ((strcmp(token_cond, "AND") != 0 && strcmp(token_cond, "OR") != 0) && id > 0) {
@@ -361,7 +361,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
         return ret_attributes;
     } else {
         Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
-        free(ret_attributes);
+        AK_free(ret_attributes);
         return NULL;
     }
 }
@@ -404,7 +404,7 @@ void AK_rel_eq_comut_test() {
 
     printf("rel_eq_comut_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
-    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(expr);
 
     Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);

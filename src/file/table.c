@@ -20,7 +20,7 @@
 #include "../file/table.h"
 
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name) {
-    AK_create_table_parameter* par = malloc(sizeof (AK_create_table_parameter));
+    AK_create_table_parameter* par = AK_malloc(sizeof (AK_create_table_parameter));
     par->type = type;
     strcpy(par->name, name);
     return par;
@@ -75,7 +75,7 @@ int AK_num_attr(char * tblName) {
         }
 
     }
-    free(addresses);
+    AK_free(addresses);
 
     return num_attr;
 }
@@ -117,7 +117,7 @@ int AK_get_num_records(char *tblName) {
         i++;
     }
 
-free(addresses);
+AK_free(addresses);
     int num_head = AK_num_attr(tblName);
     return num_rec / num_head;
 }
@@ -142,7 +142,7 @@ AK_header *AK_get_header(char *tblName) {
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
 
     int num_attr = AK_num_attr(tblName);
-    AK_header *head = (AK_header*) calloc(num_attr, sizeof (AK_header));
+    AK_header *head = (AK_header*) AK_calloc(num_attr, sizeof (AK_header));
     memcpy(head, temp->block->header, num_attr * sizeof (AK_header));
 
     return head;
@@ -197,7 +197,7 @@ AK_list *AK_get_column(int num, char *tblName) {
     int num_attr = AK_num_attr(tblName);
     if (num >= num_attr || num < 0)
         return NULL;
-    AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
+    AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
@@ -234,7 +234,7 @@ AK_list *AK_get_column(int num, char *tblName) {
  */
 AK_list * AK_get_row(int num, char * tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    AK_list *row_root = calloc(1, sizeof (AK_list));
+    AK_list *row_root = AK_calloc(1, sizeof (AK_list));
     Ak_Init_L(row_root);
 
     int num_attr = AK_num_attr(tblName);
@@ -260,14 +260,14 @@ AK_list * AK_get_row(int num, char * tblName) {
                         data[size] = '\0';
                         Ak_InsertAtEnd_L(type, data, size, row_root);
                     }
-                    free(addresses);
+                    AK_free(addresses);
                     return row_root;
                 }
             }
         }
         i++;
     }
-    free(addresses);
+    AK_free(addresses);
     return NULL;
 }
 
@@ -288,7 +288,7 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
-    AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
+    AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     int i, j, k, counter;
@@ -310,14 +310,14 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
                     Ak_InsertAtEnd_L(type, data, size, row_root);
-                    free(addresses);
+                    AK_free(addresses);
                     return (AK_list_elem) Ak_First_L(row_root);
                 }
             }
         }
         i++;
     }
-    free(addresses);
+    AK_free(addresses);
     return NULL;
 }
 
@@ -332,7 +332,7 @@ char * AK_tuple_to_string(AK_list *tuple) {
     float temp_float;
     char temp_char[ MAX_VARCHAR_LENGTH ];
 
-    char *buff = (char*) malloc(MAX_VARCHAR_LENGTH);
+    char *buff = (char*) AK_malloc(MAX_VARCHAR_LENGTH);
 
     //assert(tuple->type);
 
@@ -391,7 +391,7 @@ void AK_print_row(int col_len[], AK_list *row) {
     AK_list_elem el = (AK_list_elem) Ak_First_L(row);
 
     int i = 0;
-    void *data = (void *) calloc(MAX_VARCHAR_LENGTH, sizeof (void));
+    void *data = (void *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (void));
 
     printf("\n|");
     while (el != NULL) {
@@ -427,7 +427,7 @@ void AK_print_row(int col_len[], AK_list *row) {
         i++;
     }
     printf("\n");
-    free(data);
+    AK_free(data);
 }
 
 /**
@@ -465,7 +465,7 @@ void AK_print_table(char *tblName) {
     //  || (AK_table_exist(tblName) == 0)
     if ((addresses->address_from[0] == 0) || (AK_table_exist(tblName) == 0)) {
         printf("Table %s does not exist!\n", tblName);
-        free(addresses);
+        AK_free(addresses);
     } else {
         AK_header *head = AK_get_header(tblName);
 
@@ -543,7 +543,7 @@ void AK_print_table(char *tblName) {
             printf("\n");
             AK_print_row_spacer(len, length);
 
-            AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
+            AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
             Ak_Init_L(row_root);
 
             i = 0;
@@ -589,10 +589,10 @@ void AK_print_table(char *tblName) {
             } else {
                 printf("%i rows found, duration: %f s\n", num_rows, ((double) t) / CLOCKS_PER_SEC);
             }
-        free(row_root);
+        AK_free(row_root);
         }
 
-free(addresses);
+AK_free(addresses);
 
     }
 }
@@ -640,7 +640,7 @@ void AK_print_row_to_file(int col_len[], AK_list * row) {
     AK_list_elem el = (AK_list_elem) Ak_First_L(row);
 
     int i = 0;
-    void *data = (void *) calloc(MAX_VARCHAR_LENGTH, sizeof (void));
+    void *data = (void *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (void));
 
     fprintf(fp, "\n|");
     while (el != NULL) {
@@ -669,7 +669,7 @@ void AK_print_row_to_file(int col_len[], AK_list * row) {
     }
     fprintf(fp, "\n");
     fclose(fp);
-    free(data);
+    AK_free(data);
 }
 
 /**
@@ -760,7 +760,7 @@ void AK_print_table_to_file(char *tblName) {
             fprintf(fp, "\n");
             fclose(fp);
             AK_print_row_spacer_to_file(len, length);
-            AK_list *row_root = (AK_list*) malloc(sizeof (AK_list));
+            AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
             Ak_Init_L(row_root);
 
             i = 0;
@@ -803,7 +803,7 @@ void AK_print_table_to_file(char *tblName) {
 int AK_table_empty(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
-    free(addresses);
+    AK_free(addresses);
     return (temp->block->last_tuple_dict_id == 0) ? 1 : 0;
 }
 

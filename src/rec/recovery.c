@@ -81,7 +81,7 @@ void AK_recover_line(char* line){
  * @return table name
  */
 char* AK_get_recovery_line_table(char* command){
-    char* result = malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* result = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
     int index = 0;
 
     do{
@@ -107,7 +107,7 @@ int AK_recovery_get_id(char *command){
 
     int i = 0;
     int j= 0;
-    char* result = (char*) calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+    char* result = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
 
     for(i = length-1, j = 0; i >= 0, j < length; i--, j++){
         if( command[i] == '|' ){
@@ -116,7 +116,7 @@ int AK_recovery_get_id(char *command){
         result[j] = command[i];
     }
 
-    char* result2 = (char*) calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+    char* result2 = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
 
     length = strlen(result);
 
@@ -138,7 +138,7 @@ int AK_recovery_get_id(char *command){
  */
 void AK_recovery_insert_row(char* table, char* attributes){
 
-    char* result = (char*) calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+    char* result = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
     int i = 0;
     int index = 0;
     do{
@@ -182,7 +182,7 @@ void AK_recovery_insert_row(char* table, char* attributes){
  */
 char* AK_check_redolog_attributes(char* attributes){
 
-    char* result = malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* result = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
     int index = 0;
 
     do{
@@ -208,7 +208,7 @@ char* AK_check_redolog_attributes(char* attributes){
 char** AK_recovery_tokenize(const char* input, char* delimiter, int valuesOrNot){
     char* str = strdup(input);
     int count = 0;
-    char** result = malloc(MAX_ATTRIBUTES*sizeof(*result));
+    char** result = AK_malloc(MAX_ATTRIBUTES*sizeof(*result));
 
     char* tok=strtok(str, delimiter); 
 
@@ -219,17 +219,17 @@ char** AK_recovery_tokenize(const char* input, char* delimiter, int valuesOrNot)
 
         tok = strtok(NULL, delimiter);
     } 
-    free(str);
+    AK_free(str);
 
     int i = 0;
     int j = 0;
 
-    char** values = malloc(MAX_ATTRIBUTES*sizeof(*result));
+    char** values = AK_malloc(MAX_ATTRIBUTES*sizeof(*result));
     if(valuesOrNot == 1){
         for(i = count - 2, j = 0; i >= 0, j < count - 1; i--, j++){
             values[j] = result[i];
         }
-        free(result);
+        AK_free(result);
         return values;
     } else{
         return result;

@@ -60,7 +60,7 @@ static inline int AK_unregister_observer(AK_observable *self, AK_observer *obser
     int i;
     for(i = 0; i < MAX_OBSERVABLE_OBSERVERS; ++i) {
         if(observer == self->observers[i]) {
-            free(self->observers[i]);
+            AK_free(self->observers[i]);
             self->observers[i] = NULL;
             Ak_dbg_messg(LOW, GLOBAL, "OBSERVER DELETED");
             return OK;
@@ -145,7 +145,7 @@ static inline AK_observer *AK_get_observer_by_id(AK_observable *self, int id)
 AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_Enum AK_ObservableType_Def, void * AK_custom_action)
 {
     AK_observable *self;
-    self = (AK_observable*) calloc(1, sizeof(*self));
+    self = (AK_observable*) AK_calloc(1, sizeof(*self));
     self->AK_register_observer = &AK_register_observer;
     self->AK_unregister_observer = &AK_unregister_observer;
     self->AK_notify_observer = &AK_notify_observer;
@@ -174,7 +174,7 @@ AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_E
 static inline int AK_destroy_observer(AK_observer *self)
 {
     if(self != NULL) {
-        free(self);
+        AK_free(self);
         self = NULL;
         Ak_dbg_messg(LOW, GLOBAL, "OBSERVER DESTROYED!");        
         return OK;
@@ -207,7 +207,7 @@ static inline int AK_notify(AK_observer *observer, void *observable_type, AK_Obs
 AK_observer *AK_init_observer(void *observer_type, void (*observer_type_event_handler)(void*, void*, AK_ObservableType_Enum))
 {
     AK_observer *self;
-    self = calloc(1, sizeof(*self));
+    self = AK_calloc(1, sizeof(*self));
     self->AK_destroy_observer = &AK_destroy_observer;
     self->AK_observer_type = observer_type;
     self->AK_observer_type_event_handler = observer_type_event_handler;
@@ -269,7 +269,7 @@ int AK_custom_unregister_observer(AK_TypeObservable * self, AK_observer* observe
 void AK_set_notify_info_details(AK_TypeObservable *self, NotifyType type, char *message) {
     // Info about notify
     NotifyDetails *notifyDetails;
-    notifyDetails = calloc(1, sizeof(NotifyDetails));
+    notifyDetails = AK_calloc(1, sizeof(NotifyDetails));
     notifyDetails->message = message;
     notifyDetails->type = type;
     self->notifyDetails = notifyDetails;
@@ -284,7 +284,7 @@ int AK_custom_action(void *data) {
 // You should have some kind of method for initializing observable type
 AK_TypeObservable * init_observable_type() {
     AK_TypeObservable *self;
-    self = calloc(1, sizeof(AK_TypeObservable));
+    self = AK_calloc(1, sizeof(AK_TypeObservable));
     self->AK_get_message = AK_get_message;
     self->AK_custom_register_observer = &AK_custom_register_observer;
     self->AK_custom_unregister_observer = &AK_custom_unregister_observer;
@@ -350,7 +350,7 @@ void custom_observer_event_handler(void *observer, void *observable, AK_Observab
 // Define some method for init observer type
 AK_TypeObserver * init_observer_type(void *observable) {
     AK_TypeObserver *self;
-    self = calloc(1, sizeof(AK_TypeObserver));
+    self = AK_calloc(1, sizeof(AK_TypeObserver));
     self->observable = observable;
     // Init AK_Observer type. This is very important!!! Pass custom type observer instance as first parameter, and
     // pointer to event handler function of custom observer type
@@ -362,7 +362,7 @@ AK_TypeObserver * init_observer_type(void *observable) {
 // This is also correct, if you don't want to have instance of custom observable type in custom observer type
 AK_TypeObserver * init_observer_type_second() {
     AK_TypeObserver_Second *self;
-    self = calloc(1, sizeof(AK_TypeObserver_Second));
+    self = AK_calloc(1, sizeof(AK_TypeObserver_Second));
     // Init AK_Observer type. This is very important!!! Pass custom type observer instance as first parameter, and
     // pointer to event handler function of custom observer type
     self->observer = AK_init_observer(self, custom_observer_event_handler);

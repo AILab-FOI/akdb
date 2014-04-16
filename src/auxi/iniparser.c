@@ -38,7 +38,7 @@ typedef enum _line_status_ {
   @return   ptr to statically allocated string.
 
   This function returns a pointer to a statically allocated string
-  containing a lowercased version of the input string. Do not free
+  containing a lowercased version of the input string. Do not AK_free
   or modify the returned string! Since the returned string is statically
   allocated, it will be modified at each function call (not re-entrant).
  */
@@ -68,7 +68,7 @@ static char * strlwc(const char * s)
   This function returns a pointer to a statically allocated string,
   which is identical to the input string, except that all blank
   characters at the end and the beg. of the string have been removed.
-  Do not free or modify the returned string! Since the returned string
+  Do not AK_free or modify the returned string! Since the returned string
   is statically allocated, it will be modified at each function call
   (not re-entrant).
  */
@@ -137,7 +137,7 @@ int iniparser_getnsec(dictionary * d)
 
   This function locates the n-th section in a dictionary and returns
   its name as a pointer to a string statically allocated inside the
-  dictionary. Do not free or modify the returned string!
+  dictionary. Do not AK_free or modify the returned string!
 
   This function returns NULL in case of error.
  */
@@ -311,7 +311,7 @@ int iniparser_getsecnkeys(dictionary * d, char * s)
 
   This function queries a dictionary and finds all keys in a given section.
   Each pointer in the returned char pointer-to-pointer is pointing to
-  a string allocated in the dictionary; do not free or modify them.
+  a string allocated in the dictionary; do not AK_free or modify them.
   
   This function returns NULL in case of error.
  */
@@ -332,7 +332,7 @@ char ** iniparser_getseckeys(dictionary * d, char * s)
 
     nkeys = iniparser_getsecnkeys(d, s);
 
-    keys = (char**) malloc(nkeys*sizeof(char*));
+    keys = (char**) AK_malloc(nkeys*sizeof(char*));
 
     seclen  = (int)strlen(s);
     sprintf(keym, "%s:", s);
@@ -364,7 +364,7 @@ char ** iniparser_getseckeys(dictionary * d, char * s)
   ini file is given as "section:key". If the key cannot be found,
   the pointer passed as 'def' is returned.
   The returned char pointer is pointing to a string allocated in
-  the dictionary, do not free or modify it.
+  the dictionary, do not AK_free or modify it.
  */
 /*--------------------------------------------------------------------------*/
 char * iniparser_getstring(dictionary * d, const char * key, char * def)
@@ -627,7 +627,7 @@ static line_status iniparser_line(
   should not be accessed directly, but through accessor functions
   instead.
 
-  The returned dictionary must be freed using iniparser_freedict().
+  The returned dictionary must be AK_freed using iniparser_AK_freedict().
  */
 /*--------------------------------------------------------------------------*/
 dictionary * iniparser_load(const char * ininame)
@@ -739,7 +739,7 @@ dictionary * iniparser_load(const char * ininame)
 /*-------------------------------------------------------------------------*/
 /**
   @brief    Free all memory associated to an ini dictionary
-  @param    d Dictionary to free
+  @param    d Dictionary to AK_free
   @return   void
 
   Free all memory associated to an ini dictionary.
@@ -747,7 +747,7 @@ dictionary * iniparser_load(const char * ininame)
   gets out of the current context.
  */
 /*--------------------------------------------------------------------------*/
-void iniparser_freedict(dictionary * d)
+void iniparser_AK_freedict(dictionary * d)
 {
     dictionary_del(d);
 }

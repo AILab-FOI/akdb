@@ -88,7 +88,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
 
     		Ak_dbg_messg(HIGH, REL_OP, "Theta join: renaming attribute: %s", temp_block_tbl2->header[head2].att_name);
 
-    		renamed_att = malloc(length_tbl1 + strlen(temp_block_tbl1->header[head1].att_name) + 2);
+    		renamed_att = AK_malloc(length_tbl1 + strlen(temp_block_tbl1->header[head1].att_name) + 2);
     		memcpy(renamed_att, srcTable1, length_tbl1);
     		memcpy(renamed_att + length_tbl1, ".", strlen("."));
     		memcpy(renamed_att + length_tbl1 + 1, temp_block_tbl1->header[head1].att_name, strlen(temp_block_tbl1->header[head1].att_name) + 1);
@@ -100,9 +100,9 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
     		else
     			memcpy(header[head1].att_name, renamed_att, strlen(renamed_att) + 1);
 
-    		free(renamed_att);
+    		AK_free(renamed_att);
 
-    		renamed_att = malloc(length_tbl2 + strlen(temp_block_tbl2->header[head2].att_name) + 2);
+    		renamed_att = AK_malloc(length_tbl2 + strlen(temp_block_tbl2->header[head2].att_name) + 2);
     		memcpy(renamed_att, srcTable2, length_tbl2);
 			memcpy(renamed_att + length_tbl2, ".", strlen("."));
 			memcpy(renamed_att + length_tbl2 + 1, temp_block_tbl2->header[head2].att_name, strlen(temp_block_tbl2->header[head2].att_name) + 1);
@@ -114,7 +114,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
 			else
 				memcpy(header[new_head].att_name, renamed_att, strlen(renamed_att) + 1);
 
-			free(renamed_att);
+			AK_free(renamed_att);
 			rename = 0;
     	}
 
@@ -122,8 +122,8 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
 		head2++;
     }
 
-    free(temp_block_tbl1);
-    free(temp_block_tbl2);
+    AK_free(temp_block_tbl1);
+    AK_free(temp_block_tbl2);
 
     AK_temp_create_table(new_table, header, SEGMENT_TYPE_TABLE);
 
@@ -148,7 +148,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
     int address, size, type;
     char data[MAX_VARCHAR_LENGTH];
 
-    AK_list_elem row_root_init = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root_init = (AK_list_elem) AK_malloc(sizeof (AK_list));
     AK_list_elem row_root_full;
     AK_header *t_header = (AK_header *) AK_get_header(new_table);
 
@@ -193,7 +193,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
     	Ak_DeleteAll_L(row_root_init);
     }
 
-    free(row_root_init);
+    AK_free(row_root_init);
 }
 
 /**
@@ -244,7 +244,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
                     //if there is data in the block
-                    if (tbl1_temp_block->block->free_space != 0) {
+                    if (tbl1_temp_block->block->AK_free_space != 0) {
 
                         //for each extent in table2 that contains blocks needed for join
                         for (k = 0; (k < src_addr2->address_from[k]) != 0; k++) {
@@ -260,7 +260,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
                                     tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 
                                     //if there is data in the block
-                                    if (tbl2_temp_block->block->free_space != 0) {
+                                    if (tbl2_temp_block->block->AK_free_space != 0) {
 
                                     		AK_check_constraints(tbl1_temp_block->block, tbl2_temp_block->block, tbl1_num_att, tbl2_num_att, constraints, dstTable);
                                     }
@@ -272,8 +272,8 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
             } else break;
         }
 
-        free(src_addr1);
-        free(src_addr2);
+        AK_free(src_addr1);
+        AK_free(src_addr2);
 
 		Ak_dbg_messg(LOW, REL_OP, "THETA_JOIN_SUCCESS\n\n");
 
@@ -282,8 +282,8 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
 
         Ak_dbg_messg(LOW, REL_OP, "\n AK_theta_join: Table doesn't exist!");
 
-        free(src_addr1);
-        free(src_addr2);
+        AK_free(src_addr1);
+        AK_free(src_addr2);
 
         return EXIT_ERROR;
     }
@@ -297,7 +297,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
 void AK_op_theta_join_test() {
     printf("\n********** THETA JOIN TEST **********\n\n");
 
-    AK_list *constraints = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *constraints = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(constraints);
 
     //test where no column names overlap
@@ -347,6 +347,6 @@ void AK_op_theta_join_test() {
 
     Ak_DeleteAll_L(constraints);
 
-    free(constraints);
+    AK_free(constraints);
 }
 

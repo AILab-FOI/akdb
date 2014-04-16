@@ -30,7 +30,7 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
     int i = 0;
     char tempData[MAX_VARCHAR_LENGTH];
     AK_list_elem temp = (AK_list_elem)Ak_First_L(condition);
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &trigger, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
@@ -50,14 +50,14 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
         }
         Ak_Insert_New_Element(TYPE_INT, &temp->type, "AK_trigger_conditions", "type", row_root);
         if (Ak_insert_row(row_root) == EXIT_ERROR) {
-            free(row_root);
+            AK_free(row_root);
             return EXIT_ERROR;
         }
         temp = (AK_list_elem)Ak_Next_L(temp);
         i++;
     }
 
-    free(row_root);
+    AK_free(row_root);
     return EXIT_SUCCESS;
 }
 
@@ -88,7 +88,7 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
         return EXIT_ERROR;
     }
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     trigg_id = AK_get_id();
@@ -103,7 +103,7 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
     Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_trigger", "on", row_root);
     Ak_insert_row(row_root);
 
-    free(row_root);
+    AK_free(row_root);
     
     if (condition != NULL && Ak_IsEmpty_L(condition) == 0)
         AK_trigger_save_conditions(trigg_id, condition);
@@ -129,13 +129,13 @@ int AK_trigger_get_id(char *name, char *table) {
     while ((row = (AK_list *)AK_get_row(i, "AK_trigger")) != NULL) {
         if (strcmp(row->next->next->data, name) == 0 && table_id == (int) * row->next->next->next->next->next->next->data) {
             i = (int) * row->next->data;
-            free(row);
+            AK_free(row);
             return i;
         }
         i++;
     }
 
-    free(row);
+    AK_free(row);
     return EXIT_ERROR;
 }
 
@@ -149,7 +149,7 @@ int AK_trigger_get_id(char *name, char *table) {
 int AK_trigger_remove_by_name(char *name, char *table) {
     int trigg_id = AK_trigger_get_id(name, table);
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_trigger", "name", row_root, SEARCH_CONSTRAINT);
@@ -174,7 +174,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_remove_by_obj_id(int obj_id) {
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_trigger", "obj_id", row_root, SEARCH_CONSTRAINT);
@@ -224,7 +224,7 @@ int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, ch
         return EXIT_ERROR;
     }
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &trigger_id, "AK_trigger", "obj_id", row_root, SEARCH_CONSTRAINT);
@@ -241,7 +241,7 @@ int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, ch
         Ak_Insert_New_Element_For_Update(TYPE_INT, &function_id, "AK_trigger", "action", row_root, NEW_VALUE);
 
     int result = Ak_update_row(row_root);
-    free(row_root);
+    AK_free(row_root);
 
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Could not update trigger.\n");
@@ -267,7 +267,7 @@ AK_list *AK_trigger_get_conditions(int trigger) {
     Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", 1, &expr);
     AK_selection("AK_trigger_conditions", "AK_trigger_conditions_temp", &expr);
 
-    AK_list *result = malloc(sizeof(AK_list));
+    AK_list *result = AK_malloc(sizeof(AK_list));
     Ak_Init_L(result);
     int i = 0;
     AK_list *row;
@@ -277,7 +277,7 @@ AK_list *AK_trigger_get_conditions(int trigger) {
     }
 
     AK_delete_segment("AK_trigger_conditions_temp", SEGMENT_TYPE_TABLE);
-    free(row);
+    AK_free(row);
     return result;
 }
 
@@ -293,7 +293,7 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 
 	int trig_id = AK_trigger_get_id(old_name, table);
 
-	AK_list_elem row_root= (AK_list_elem) malloc(sizeof (AK_list));
+	AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(row_root); 
 
 	Ak_Insert_New_Element_For_Update(TYPE_INT, &trig_id, "AK_trigger", "obj_id", row_root, 1);
@@ -301,7 +301,7 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 
 	int result =  Ak_update_row(row_root); 
 	Ak_DeleteAll_L(row_root);
-	free(row_root);
+	AK_free(row_root);
 	    
 	if (result == EXIT_ERROR) {
 	   Ak_dbg_messg(HIGH, SEQUENCES, "AK_trigger_rename: Could not rename trigger.\n");
@@ -321,7 +321,7 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 void AK_trigger_test() {
     printf("trigger.c: Present!\n");
 
-    AK_list *arguments_list1 = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *arguments_list1 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(arguments_list1);
     Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list1);
     Ak_InsertAtEnd_L(TYPE_INT, "5", sizeof (int), arguments_list1);
@@ -335,11 +335,11 @@ void AK_trigger_test() {
     AK_function_add("dummy_funk_2", 1, arguments_list1);
 
     Ak_DeleteAll_L(arguments_list1);
-    free(arguments_list1);
+    AK_free(arguments_list1);
     AK_print_table("AK_function");
 
-    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
-    AK_list *dummyExpression = (AK_list *) malloc(sizeof(AK_list));
+    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
+    AK_list *dummyExpression = (AK_list *) AK_malloc(sizeof(AK_list));
     strcpy(dummyExpression->data, "");
     Ak_Init_L(expr);
     char *num = "2002";
@@ -375,6 +375,6 @@ void AK_trigger_test() {
     AK_print_table("AK_trigger");
     AK_print_table("AK_trigger_conditions");
     
-    free(dummyExpression);
-    free(expr);
+    AK_free(dummyExpression);
+    AK_free(expr);
 }

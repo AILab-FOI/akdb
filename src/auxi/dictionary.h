@@ -34,7 +34,7 @@
 
   This object contains a list of string/string associations. Each
   association is identified by a unique string key. Looking up values
-  in the dictionary is speeded up by the use of a (hopefully collision-free)
+  in the dictionary is speeded up by the use of a (hopefully collision-AK_free)
   hash function.
  */
 /*-------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ typedef struct _dictionary_ {
   @return   1 unsigned int on at least 32 bits.
 
   This hash function has been taken from an Article in Dr Dobbs Journal.
-  This is normally a collision-free function, distributing keys evenly.
+  This is normally a collision-AK_free function, distributing keys evenly.
   The key is stored anyway in the struct so that collision can be avoided
   by comparing the key itself in last resort.
  */
@@ -100,7 +100,7 @@ void dictionary_del(dictionary * vd);
   This function locates a key in a dictionary and returns a pointer to its
   value, or the passed 'def' pointer if no such key can be found in
   dictionary. The returned character pointer points to data internal to the
-  dictionary object, you should not try to free it or modify it.
+  dictionary object, you should not try to AK_free it or modify it.
  */
 /*--------------------------------------------------------------------------*/
 char * dictionary_get(dictionary * d, const char * key, char * def);

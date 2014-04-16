@@ -175,7 +175,7 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
 	char true = 1, false = 0;
     int found, result;
 
-    AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
 
     AK_list_elem el = (AK_list_elem) Ak_First_L(expr);
@@ -267,14 +267,14 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
 
     memcpy(&result, ((AK_list_elem) Ak_First_L(temp))->data, sizeof (int));
     Ak_DeleteAll_L(temp);
-    free(temp);
+    AK_free(temp);
 
     return result;
 }
 
 void Ak_expression_check_test()
 {
-    AK_list_elem elem = malloc(sizeof(AK_list_elem));
+    AK_list_elem elem = AK_malloc(sizeof(AK_list_elem));
     elem->type = TYPE_INT;
     const char *op = "+";
     const char *a = "800";
@@ -285,6 +285,6 @@ void Ak_expression_check_test()
     
     printf("The outcome is: %d", outcome);
     
-    free(elem);
+    AK_free(elem);
     
 }

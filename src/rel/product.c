@@ -73,7 +73,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
         Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
 		Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_product: start copying data\n");
 
-        AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
+        AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
 
         //for each extent in table1 that contains blocks needed for join
         for (i = 0; i < (src_addr1->address_from[i] != 0); i++) {
@@ -89,7 +89,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
                     //if there is data in the block
-                    if (tbl1_temp_block->block->free_space != 0) {
+                    if (tbl1_temp_block->block->AK_free_space != 0) {
                         //for each extent in table2 that contains blocks needed for join
                         for (k = 0; k < (src_addr2->address_from[k] != 0); k++) {
                             startAddress2 = src_addr2->address_from[k];
@@ -104,7 +104,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
                                     tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 
                                     //if there is data in the block
-                                    if (tbl2_temp_block->block->free_space != 0) {
+                                    if (tbl2_temp_block->block->AK_free_space != 0) {
 										
 										//TUPLE_DICTS: for each tuple_dict in the block
                                         for (m = 0; m < DATA_BLOCK_SIZE; m += num_att1) {
@@ -153,15 +153,15 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
             } else break;
         }
 		
-        free(src_addr1);
-        free(src_addr2);
+        AK_free(src_addr1);
+        AK_free(src_addr2);
 		Ak_dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
 
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");
-        free(src_addr1);
-        free(src_addr2);
+        AK_free(src_addr1);
+        AK_free(src_addr2);
         return EXIT_ERROR;
     }
 }

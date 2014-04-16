@@ -6,7 +6,7 @@ int AK_check_constraint(char *srcTable, AK_list *expr) {
 
     table_addresses *src_addr = (table_addresses*) AK_get_table_addresses(srcTable);
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     int i, j, k, l, type, size, address;
@@ -41,9 +41,9 @@ int AK_check_constraint(char *srcTable, AK_list *expr) {
         }
     }
 
-    free(src_addr);
-    free(t_header);
-    free(row_root);
+    AK_free(src_addr);
+    AK_free(t_header);
+    AK_free(row_root);
     return 1;
 }
 
@@ -51,7 +51,7 @@ int AK_check_constraint(char *srcTable, AK_list *expr) {
 void AK_check_constraint_test() {
     printf("\n********** CHECK CONSTRAINT TEST **********\n");
 
-    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(expr);
 
     char *num = "0";
@@ -78,5 +78,5 @@ void AK_check_constraint_test() {
    //AK_print_table("selection_test");
 
     Ak_DeleteAll_L(expr);
-    free(expr);
+    AK_free(expr);
 }

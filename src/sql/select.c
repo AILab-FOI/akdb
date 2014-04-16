@@ -63,11 +63,11 @@ int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condit
 	}
 	AK_initialize_new_segment(helptable, SEGMENT_TYPE_TABLE, header);
 
-	free(temp_block);
+	AK_free(temp_block);
 	
 	
 	
-	AK_list* row_root = (AK_list *) malloc(sizeof (AK_list));
+	AK_list* row_root = (AK_list *) AK_malloc(sizeof (AK_list));
 			
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
@@ -114,7 +114,7 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
   
   AK_print_table(helptable);
 
-	free(temp_block);
+	AK_free(temp_block);
 	return EXIT_SUCCESS;
 
 }
@@ -132,12 +132,12 @@ printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
 
 ///list of attributes which will be in the result of selection
 
-AK_list *attributes = (AK_list *) malloc(sizeof (AK_list));
+AK_list *attributes = (AK_list *) AK_malloc(sizeof (AK_list));
 Ak_Init_L(attributes);
 
 ///list of elements which represent the condition for selection
 
-AK_list *condition = (AK_list *) malloc(sizeof (AK_list));
+AK_list *condition = (AK_list *) AK_malloc(sizeof (AK_list));
 Ak_Init_L(condition);
 
 
@@ -159,9 +159,9 @@ printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
 
 AK_select(srcTable,destTable,attributes,condition);
 Ak_DeleteAll_L(attributes);
-free(attributes);
+AK_free(attributes);
 
 Ak_DeleteAll_L(condition);
-free(condition);
+AK_free(condition);
 
 }

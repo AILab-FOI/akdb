@@ -124,7 +124,7 @@ void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
     } else {
         L->next = Deletedelement_op->next;
     }
-    free(Deletedelement_op);
+    AK_free(Deletedelement_op);
 }
 
 /**
@@ -138,7 +138,7 @@ void Ak_Delete_All_elementsAd(list_ad *L) {
     list_ad *Deletedelement_op = (list_ad *) L->next;
     while (Currentelement_op->next != 0) {
         Currentelement_op->next = Deletedelement_op->next;
-        free(Deletedelement_op);
+        AK_free(Deletedelement_op);
         Deletedelement_op = (list_ad *) Currentelement_op->next;
     }
 }
@@ -153,7 +153,7 @@ void Ak_Delete_All_elementsAd(list_ad *L) {
  * @return No return value
  * */
 void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore) {
-    list_structure_ad* newelement_op = (list_structure_ad*)malloc(sizeof (list_structure_ad));
+    list_structure_ad* newelement_op = (list_structure_ad*)AK_malloc(sizeof (list_structure_ad));
     newelement_op->add.addBlock = addBlock;
     newelement_op->add.indexTd = indexTd;
     newelement_op->attName = attName;

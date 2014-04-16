@@ -84,7 +84,7 @@ char* AK_get_rel_exp(char *name){
  */
 int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
     char *tblName = "AK_view";
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     int view_id = AK_get_id();
     if(set_id!=0) view_id = set_id;
@@ -107,7 +107,7 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
  */
 int AK_view_remove_by_obj_id(int obj_id) {
     obj_id+=1;
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L((AK_list_elem)row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root, 1);
     int result = Ak_delete_row((AK_list_elem)row_root);  
@@ -121,7 +121,7 @@ int AK_view_remove_by_obj_id(int obj_id) {
  * @return Result of AK_view_remove_by_obj_id or EXIT_ERROR if no id is found
  */
 int AK_view_remove_by_name(char *name) {
-   AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+   AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
    Ak_Init_L((AK_list_elem)row_root);
    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_view", "name", row_root, 1);
    int result = Ak_delete_row(row_root);

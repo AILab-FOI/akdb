@@ -172,7 +172,7 @@ int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_add: Invalid parameter value for return type.\n");
         return EXIT_ERROR;
     }
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     int function_id = AK_get_id(); //get function_id
     int num_args = Ak_Size_L(arguments_list) / 2; //get number of arguments
@@ -207,7 +207,7 @@ int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
  * @return function argument id or EXIT_ERROR
  */
 int AK_function_arguments_add(int function_id, int arg_number, int arg_type, char *argname) {
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     char *arg_type_name;
     switch (arg_type) {
@@ -274,7 +274,7 @@ int AK_function_arguments_add(int function_id, int arg_number, int arg_type, cha
  */
 int AK_function_remove_by_obj_id(int obj_id) {
     // printf("***Remove function***\n");
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_function", "obj_id", row_root, 1);
@@ -301,7 +301,7 @@ int AK_function_arguments_remove_by_obj_id(int *obj_id) {
     // printf("***Remove function arguments***\n");
     int oid;
     memcpy(&oid, obj_id, sizeof (int));
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &oid, "AK_function_arguments", "func_id", row_root, 1);
     int result = Ak_delete_row(row_root);
@@ -310,7 +310,7 @@ int AK_function_arguments_remove_by_obj_id(int *obj_id) {
         return EXIT_ERROR;
     }
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     return EXIT_SUCCESS;
 }
 
@@ -345,7 +345,7 @@ int AK_function_rename(char *name, AK_list *arguments_list, char *new_name) {
     printf("***Function rename***\n");
 
     int func_id = AK_get_function_obj_id(name, arguments_list);
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &func_id, "AK_function", "obj_id", row_root, 1);
@@ -359,7 +359,7 @@ int AK_function_rename(char *name, AK_list *arguments_list, char *new_name) {
     }
 
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     return EXIT_SUCCESS;
 }
 
@@ -377,7 +377,7 @@ int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_
     int func_id = AK_get_function_obj_id(name, arguments_list);
 
     printf("%d %d", func_id, new_return_type);
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &func_id, "AK_function", "obj_id", row_root, 1);
@@ -391,7 +391,7 @@ int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_
     }
 
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     return EXIT_SUCCESS;
 }
 
@@ -403,7 +403,7 @@ int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_
 void AK_function_test() {
     printf("function.c: Present!\n");
 
-    AK_list *arguments_list1 = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *arguments_list1 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(arguments_list1);
     Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list1);
     Ak_InsertAtEnd_L(TYPE_INT, "5", sizeof (int), arguments_list1);
@@ -416,13 +416,13 @@ void AK_function_test() {
     AK_print_table("AK_function_arguments");
 
     Ak_DeleteAll_L(arguments_list1);
-    free(arguments_list1);
+    AK_free(arguments_list1);
 
     //int id=110;
     //AK_function_remove_by_obj_id(id);
 
     /*
-        AK_list *arguments_list2 = (AK_list *) malloc(sizeof (AK_list));
+        AK_list *arguments_list2 = (AK_list *) AK_malloc(sizeof (AK_list));
         Ak_Init_L(arguments_list2);
 
         Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list2);
@@ -441,12 +441,12 @@ void AK_function_test() {
         AK_print_table("AK_function");
 
         Ak_DeleteAll_L(arguments_list2);
-        free(arguments_list2);
+        AK_free(arguments_list2);
      */
 
     // dodano za test DROP FUNCTION
 
-    AK_list *arguments_list3 = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *arguments_list3 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(arguments_list3);
 
     Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list3);
@@ -463,10 +463,10 @@ void AK_function_test() {
     AK_print_table("AK_function_arguments");
 
     Ak_DeleteAll_L(arguments_list3);
-    free(arguments_list3);
+    AK_free(arguments_list3);
 
 
-    AK_list *arguments_list4 = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *arguments_list4 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(arguments_list4);
 
     Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list4);
@@ -485,7 +485,7 @@ void AK_function_test() {
     AK_print_table("AK_function_arguments");
 
     Ak_DeleteAll_L(arguments_list4);
-    free(arguments_list4);
+    AK_free(arguments_list4);
 
 }
 

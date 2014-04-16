@@ -52,8 +52,8 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 
     len_set = len_subset = 0;
 
-    temp_set = (char *) calloc(strlen(set), sizeof (char));
-    temp_subset = (char *) calloc(strlen(subset), sizeof (char));
+    temp_set = (char *) AK_calloc(strlen(set), sizeof (char));
+    temp_subset = (char *) AK_calloc(strlen(subset), sizeof (char));
 
     memcpy(temp_set, set, strlen(set));
     memcpy(temp_subset, subset, strlen(subset));
@@ -99,8 +99,8 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
         return EXIT_FAILURE;
     }
 
-    free(temp_set);
-    free(temp_subset);
+    AK_free(temp_set);
+    AK_free(temp_subset);
 
     Ak_dbg_messg(HIGH, REL_EQ, "RULE - succeed (%s) is subset of set (%s).\n", subset, set);
     return EXIT_SUCCESS;
@@ -132,14 +132,14 @@ char *AK_rel_eq_get_atrributes_char(char *tblName) {
         return NULL;
     }
 
-    char *attr = (char *) calloc(1, sizeof (char));
+    char *attr = (char *) AK_calloc(1, sizeof (char));
     AK_header *table_header = (AK_header *) AK_get_header(tblName);
 
     for (next_attr = 0; next_attr < num_attr; next_attr++) {
         attr_name = (table_header + next_attr)->att_name;
         len_attr = strlen(attr_name);
 
-        attr = (char *) realloc(attr, len_attr + next_address + 1);
+        attr = (char *) AK_realloc(attr, len_attr + next_address + 1);
         memcpy(attr + next_address, attr_name, len_attr);
         next_address += len_attr;
 
@@ -151,12 +151,12 @@ char *AK_rel_eq_get_atrributes_char(char *tblName) {
         }
     }
 
-    free(table_header);
+    AK_free(table_header);
 
     if (next_address > 0) {
         return attr;
     } else {
-        free(attr);
+        AK_free(attr);
         return NULL;
     }
 }
@@ -176,9 +176,9 @@ char *AK_rel_eq_cond_attributes(char *cond) {
         return NULL;
     }
 
-    char *temp_cond = (char *) malloc(strlen(cond));
+    char *temp_cond = (char *) AK_malloc(strlen(cond));
     memcpy(temp_cond, cond, strlen(cond));
-    char *attr = (char *) malloc(sizeof (char));
+    char *attr = (char *) AK_malloc(sizeof (char));
 
     while (next_chr < strlen(cond)) {
         if (temp_cond[next_chr] == ATTR_ESCAPE) {
@@ -188,25 +188,25 @@ char *AK_rel_eq_cond_attributes(char *cond) {
             } else {
                 if (next_address > 0) {
                     memcpy(attr + next_address++, ATTR_DELIMITER, 1);
-                    attr = (char *) realloc(attr, next_address + 1);
+                    attr = (char *) AK_realloc(attr, next_address + 1);
                 }
             }
         }
 
         if (!attr_end) {
             memcpy(attr + next_address++, &temp_cond[next_chr], 1);
-            attr = (char *) realloc(attr, next_address + 1);
+            attr = (char *) AK_realloc(attr, next_address + 1);
         }
         next_chr++;
     }
 
-    free(temp_cond);
+    AK_free(temp_cond);
 
     if (next_address > 0) {
         memcpy(attr + next_address, "\0", 1);
         return attr;
     } else {
-        free(attr);
+        AK_free(attr);
         return NULL;
     }
 }
@@ -233,9 +233,9 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
     char *token_set, *token_subset;
     char *save_token_set, *save_token_subset;
 
-    temp = (char *) calloc(strlen(subset), sizeof (char));
-    temp_set = (char *) calloc(strlen(set), sizeof (char));
-    temp_subset = (char *) calloc(strlen(subset), sizeof (char));
+    temp = (char *) AK_calloc(strlen(subset), sizeof (char));
+    temp_set = (char *) AK_calloc(strlen(set), sizeof (char));
+    temp_subset = (char *) AK_calloc(strlen(subset), sizeof (char));
 
     memcpy(temp, subset, strlen(subset));
     memcpy(temp_set, set, strlen(set));
@@ -246,14 +246,14 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
         for ((token_subset = strtok_r(temp_subset, ATTR_DELIMITER, &save_token_subset)); token_subset;
                 (token_subset = strtok_r(NULL, ATTR_DELIMITER, &save_token_subset))) {
             if (memcmp(token_set, token_subset, strlen(token_set)) == 0) {
-                free(temp);
+                AK_free(temp);
                 return EXIT_SUCCESS;
             }
         }
         temp_subset = temp;
     }
 
-    free(temp);
+    AK_free(temp);
 
     return EXIT_FAILURE;
 }
@@ -286,9 +286,9 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
        int len_token;
 	
        char *token_cond, *save_token_cond;
-       char *temp_attr = (char *)calloc(1, sizeof(char));
-       char *ret_attributes = (char *)calloc(MAX_VARCHAR_LENGHT, sizeof(char));
-       char *temp_cond = (char *)calloc(strlen(cond) + 1, sizeof(char));
+       char *temp_attr = (char *)AK_calloc(1, sizeof(char));
+       char *ret_attributes = (char *)AK_calloc(MAX_VARCHAR_LENGHT, sizeof(char));
+       char *temp_cond = (char *)AK_calloc(strlen(cond) + 1, sizeof(char));
 	
        memcpy(temp_cond, cond, strlen(cond));
        memcpy(temp_cond + strlen(cond) + 1, "\0", 1);
@@ -311,8 +311,8 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
                                                //}
                                        }
                                }
-                               free(tbl);
-                               free(attr);
+                               AK_free(tbl);
+                               AK_free(attr);
                        }
 			
                        len_token = strlen(token_cond);
@@ -321,31 +321,31 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
                                memcpy(ret_attributes + ret_address, temp_attr, attr_address);
                                ret_address += attr_address;
                                memset(ret_attributes + ret_address, '\0', 1);
-                               free(temp_attr);
-                               temp_attr = (char *)calloc(len_token + 1, sizeof(char));
+                               AK_free(temp_attr);
+                               temp_attr = (char *)AK_calloc(len_token + 1, sizeof(char));
                                attr_address  = 1;
                                memcpy(temp_attr, " ", 1);
                                memcpy(temp_attr + attr_address, token_cond, len_token);
                                attr_address += len_token;
                        } else if (strcmp(token_cond, "AND") == 0 && id == 0) {
                                if (ret_address > 0) {
-                                       free(temp_attr);
-                                       temp_attr = (char *)calloc(len_token + 1, sizeof(char));
+                                       AK_free(temp_attr);
+                                       temp_attr = (char *)AK_calloc(len_token + 1, sizeof(char));
                                        attr_address  = 1;
                                        memcpy(temp_attr, " ", 1);
                                        memcpy(temp_attr + attr_address, token_cond, len_token);
                                        attr_address += len_token;
                                } else {
-                                       free(temp_attr);
-                                       temp_attr = (char *)calloc(1, sizeof(char));
+                                       AK_free(temp_attr);
+                                       temp_attr = (char *)AK_calloc(1, sizeof(char));
                                        attr_address = 0;
                                }
                        } else {
                                if (attr_address > 0) {
-                                       temp_attr = (char *)realloc(temp_attr, attr_address + len_token + 1);
+                                       temp_attr = (char *)AK_realloc(temp_attr, attr_address + len_token + 1);
                                        memcpy(temp_attr + attr_address++, " ", 1);
                                } else {
-                                       temp_attr = (char *)realloc(temp_attr, attr_address + len_token);
+                                       temp_attr = (char *)AK_realloc(temp_attr, attr_address + len_token);
                                }
 				
                                memcpy(temp_attr + attr_address, token_cond, len_token);
@@ -360,14 +360,14 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
                memcpy(ret_attributes + ret_address, "\0", 1);
        }
 	
-       free(temp_attr);
+       AK_free(temp_attr);
 
        if (ret_attributes > 0) {
                dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join succeed.\n");
                return ret_attributes;
        } else {
                dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
-               //free(ret_attributes);
+               //AK_free(ret_attributes);
                return NULL;
        }
 }*/
@@ -384,7 +384,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
  * @result conditions list
  */
 AK_list *AK_rel_eq_split_condition(char *cond) {
-    AK_list *list_attr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *list_attr = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(list_attr);
 
     int token_id = 0;
@@ -392,11 +392,11 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
     int len_token;
     char *token_cond, *save_token_cond;
 
-    //it's much safe to allocate MAX_VARCHAR_LENGHT, and remove all realloc from function
-    char *temp_attr = (char *) calloc(1, sizeof (char));
+    //it's much safe to allocate MAX_VARCHAR_LENGHT, and remove all AK_realloc from function
+    char *temp_attr = (char *) AK_calloc(1, sizeof (char));
     //memset(temp_attr, '\0', MAX_VARCHAR_LENGHT);
 
-    char *temp_cond = (char *) calloc(strlen(cond), sizeof (char));
+    char *temp_cond = (char *) AK_calloc(strlen(cond), sizeof (char));
     memcpy(temp_cond, cond, strlen(cond));
 
     for ((token_cond = strtok_r(temp_cond, " ", &save_token_cond)); token_cond;
@@ -408,17 +408,17 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
             	Ak_InsertAtEnd_L(TYPE_CONDITION, temp_attr, strlen(temp_attr), list_attr);
 
                 attr_address = 0;
-                free(temp_attr);
-                temp_attr = (char *) calloc(1, sizeof (char));
+                AK_free(temp_attr);
+                temp_attr = (char *) AK_calloc(1, sizeof (char));
             } else {
                 if (attr_address > 0) {
-                    temp_attr = (char *) realloc(temp_attr, attr_address + len_token + 2);
+                    temp_attr = (char *) AK_realloc(temp_attr, attr_address + len_token + 2);
                     //memcpy(temp_attr + attr_address, " ", 1);
                     strcpy(temp_attr + attr_address, " ");
                     //memcpy(temp_attr + ++attr_address, "\0", 1);
                     attr_address++;
                 } else {
-                    temp_attr = (char *) realloc(temp_attr, attr_address + len_token + 1);
+                    temp_attr = (char *) AK_realloc(temp_attr, attr_address + len_token + 1);
                 }
 
                 strcpy(temp_attr + attr_address, token_cond);
@@ -431,8 +431,8 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
     //memcpy(temp_attr + attr_address, "\0", 1);
     Ak_InsertAtEnd_L(TYPE_CONDITION, temp_attr, strlen(temp_attr), list_attr);
 
-    free(temp_cond);
-    free(temp_attr);
+    AK_free(temp_cond);
+    AK_free(temp_attr);
 
     return list_attr;
 }
@@ -447,7 +447,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
     int step; //, exit_cond[5] = {0};
 
     //Initialize temporary linked list
-    AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
 
     AK_list *list_split_sel;
@@ -641,11 +641,11 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                                             } else {
                                                 AK_list_elem temp_elem_prevprev = (AK_list_elem) Ak_Previous_L(temp_elem_prev, temp);
                                                 temp_elem_prevprev->next = temp_elem;
-                                                free(temp_elem_prev);
+                                                AK_free(temp_elem_prev);
                                                 AK_list_elem temp_elem_prev = temp_elem_prevprev;
 
                                                 temp_elem_prev->next = temp_elem_next;
-                                                free(temp_elem);
+                                                AK_free(temp_elem);
                                                 AK_list_elem temp_elem = temp_elem_next;
                                                 temp_elem_next = temp_elem->next;
                                                 tmp = temp_elem;
@@ -663,10 +663,10 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
                                             }
                                         }
 
-                                        free(data1);
-                                        free(data2);
-                                        free(cond_attr1);
-                                        free(cond_attr2);
+                                        AK_free(data1);
+                                        AK_free(data2);
+                                        AK_free(cond_attr1);
+                                        AK_free(cond_attr2);
                                         break;
                                     }
                                 }
@@ -812,7 +812,7 @@ void AK_rel_eq_selection_test() {
     //-----------------------------------------------------------------------------------------
 
     //Init list and insert elements (Query parser output)
-    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(expr);
 
     //Commutativity of Selection and Projection

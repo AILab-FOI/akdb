@@ -16,7 +16,7 @@ void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attNa
     char systemTableName[50];
     int systemTableAddress;
     int j, i = 0;
-    int freeSpaceFound = 0;
+    int AK_freeSpaceFound = 0;
     int tupleDictID = -1;
     AK_block *tempBlock;
     int itis = 1;
@@ -38,17 +38,17 @@ void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attNa
 
             tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
-            while (freeSpaceFound == 0) {
+            while (AK_freeSpaceFound == 0) {
                 tupleDictID += 1;
                 if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT)
-                    freeSpaceFound = 1;
+                    AK_freeSpaceFound = 1;
             }
 
          //  printf("ddddddddddd %i",tupleDictID);
             //printf("%d\n",tempBlock->last_tuple_dict_id);
             //printf("%d\n",tempBlock->tuple_dict[2]);
 
-            if (freeSpaceFound == 1) {
+            if (AK_freeSpaceFound == 1) {
                 id = AK_get_id();
                 AK_insert_entry(tempBlock, TYPE_INT, &id, tupleDictID);
                 AK_insert_entry(tempBlock, TYPE_VARCHAR, tableName, tupleDictID + 1);
@@ -68,7 +68,7 @@ void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attNa
     }
     //printf("///////////////////%d\n", i);
    // printf("%d", tempBlock->address);
-    free(tempBlock);
+    AK_free(tempBlock);
 }
 
 /**
@@ -86,7 +86,7 @@ int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar)
     int systemTableAddress;
     int j, i = 0;
     AK_block *tempBlock;
-    int freeSpaceFound = 0;
+    int AK_freeSpaceFound = 0;
     int TupleDictID = -1;
     int flag = EXIT_SUCCESS;
     int itis = 1;
@@ -118,10 +118,10 @@ int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar)
     ////////////////////////////////////////////////////////
      
 
-    while (freeSpaceFound == 0) {
+    while (AK_freeSpaceFound == 0) {
         TupleDictID += 1;
         if (tempBlock->tuple_dict[TupleDictID].size == FREE_INT) {
-            freeSpaceFound = 1;
+            AK_freeSpaceFound = 1;
         } else {
             for (j = 0; j < 50; j++){
                 value[j] = FREE_CHAR;
@@ -147,7 +147,7 @@ int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar)
         }
     }
 
-    free(tempBlock);
+    AK_free(tempBlock);
     return flag;
 }
  

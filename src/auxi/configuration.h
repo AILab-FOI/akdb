@@ -19,9 +19,9 @@
 #define MAX_EXTENTS_IN_SEGMENT 200
 /**
   * @def MAX_FREE_SPACE_SIZE
-  * @brief Constant declaring maximum free space in block
+  * @brief Constant declaring maximum AK_free space in block
 */
-#define MAX_FREE_SPACE_SIZE (iniparser_getint(AK_config,"blocks:max_free_space_size",4000)) 
+#define MAX_FREE_SPACE_SIZE (iniparser_getint(AK_config,"blocks:max_AK_free_space_size",4000)) 
 /**
   * @def MAX_LAST_TUPLE_DICT_SIZE_TO_USE
   * @brief Constant declaring maximum size od last tuple in dictionary

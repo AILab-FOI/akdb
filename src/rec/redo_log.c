@@ -37,13 +37,13 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
     AK_list_elem el = (AK_list_elem) Ak_First_L(row_root);
     
     char* record;
-    if((record = (char*) calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
+    if((record = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
     	return EXIT_FAILURE;
     }
 
-    char* int_char = (char*) malloc(MAX_VARCHAR_LENGTH * sizeof(char));
-    char* float_char = (char*) malloc(MAX_VARCHAR_LENGTH * sizeof(char));
-    char* default_char = (char*) malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* int_char = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* float_char = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* default_char = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
 
     char table[MAX_ATT_NAME];   
     memset(table, '\0', MAX_ATT_NAME);
@@ -87,10 +87,10 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
 
     redo_log->number = x;
 
-    free(record);
-    free(int_char);
-    free(float_char);
-    free(default_char);
+    AK_free(record);
+    AK_free(int_char);
+    AK_free(float_char);
+    AK_free(default_char);
 
     return EXIT_SUCCESS;
 }
@@ -125,7 +125,7 @@ char* AK_check_attributes(char *attributes){
             attributes[n] = ' ';
     }
 
-    char* result = malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* result = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
     int index = 0;
     int att_index = 0;
 

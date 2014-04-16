@@ -23,7 +23,7 @@
 /**
  * @author Saša Vukšić
  * @brief Function sets between constraints on particulary attribute, string constraint should be writen in lowercase.
-	  It searches for free space. Then it inserts id, name of table, name of constraint, name of attribute, start and
+	  It searches for AK_free space. Then it inserts id, name of table, name of constraint, name of attribute, start and
 	   end value in temporary block.	  
  * @param tableName table name
  * @param constraintName name of constraint
@@ -36,7 +36,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
     char systemTableName[50];
     int systemTableAddress;
     int j, i = 0;
-    int freeSpaceFound = 0;
+    int AK_freeSpaceFound = 0;
     int tupleDictID = -1;
     AK_block *tempBlock;
     int itis = 1;
@@ -55,15 +55,15 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
 
             tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
-            while (freeSpaceFound == 0) {
+            while (AK_freeSpaceFound == 0) {
                 tupleDictID += 1;
                 if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT)
-                    freeSpaceFound = 1;
+                    AK_freeSpaceFound = 1;
             }
 
             //printf("ddddddddddd %i",tupleDictID);
 
-            if (freeSpaceFound == 1) {
+            if (AK_freeSpaceFound == 1) {
                 id = AK_get_id();
                 AK_insert_entry(tempBlock, TYPE_INT, &id, tupleDictID);
                 AK_insert_entry(tempBlock, TYPE_VARCHAR, tableName, tupleDictID + 1);
@@ -83,7 +83,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
         }
         i++;
     }
-    free(tempBlock);
+    AK_free(tempBlock);
 }
 
 
@@ -104,7 +104,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     int j, i = 0;
     AK_block *tempBlock;
     int itis = 1;
-    int freeSpaceFound = 0;
+    int AK_freeSpaceFound = 0;
     int tupleDictID = -1;
     int flag = EXIT_SUCCESS;
 
@@ -141,10 +141,10 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     double startValue;
     double endValue;
 
-    while (freeSpaceFound == 0) {
+    while (AK_freeSpaceFound == 0) {
         tupleDictID += 1;
         if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT) {
-            freeSpaceFound = 1;
+            AK_freeSpaceFound = 1;
         } else {
             for (j = 0; j < 50; j++)
                 value[j] = FREE_CHAR;
@@ -206,7 +206,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
         }
     }
 
-    free(tempBlock);
+    AK_free(tempBlock);
     return flag;
 }
 /**

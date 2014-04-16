@@ -66,7 +66,7 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
                 srResult.iNum_tuple_attributes++;
             }
 
-            srResult.aiSearch_attributes = (int *) malloc(iNum_search_params * sizeof (int));
+            srResult.aiSearch_attributes = (int *) AK_malloc(iNum_search_params * sizeof (int));
             if (srResult.aiSearch_attributes == NULL) {
                 printf("AK_search_unsorted: ERROR. Cannot allocate srResult.aiAttributes_searched.\n");
                 exit(EXIT_ERROR);
@@ -157,23 +157,23 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
 
                 if (iTupleMatches) {
                     /*if(DEBUG) {
-                        printf("realloc(srResult.aiTuple_addresses = %p, srResult.iNum_tuple_addresses++ * sizeof(int) = %d)\n", srResult.aiTuple_addresses, (srResult.iNum_tuple_addresses + 1) * sizeof(int));
+                        printf("AK_realloc(srResult.aiTuple_addresses = %p, srResult.iNum_tuple_addresses++ * sizeof(int) = %d)\n", srResult.aiTuple_addresses, (srResult.iNum_tuple_addresses + 1) * sizeof(int));
                         if(srResult.iNum_tuple_addresses == 7)
                             puts("8");
                     }*/
                     srResult.iNum_tuple_addresses++;
-                    srResult.aiTuple_addresses = (int *) realloc(srResult.aiTuple_addresses, srResult.iNum_tuple_addresses * sizeof (int));
+                    srResult.aiTuple_addresses = (int *) AK_realloc(srResult.aiTuple_addresses, srResult.iNum_tuple_addresses * sizeof (int));
 
                     if (srResult.aiTuple_addresses == NULL) {
-                        printf("AK_search_unsorted: ERROR. Cannot reallocate srResult.aiTuple_addresses, iteration %d.\n", i);
+                        printf("AK_search_unsorted: ERROR. Cannot AK_reallocate srResult.aiTuple_addresses, iteration %d.\n", i);
                         exit(EXIT_ERROR);
                     }
 
                     /*if(DEBUG)
-                        puts("realloc srResult.aiBlocks");*/
-                    srResult.aiBlocks = (int *) realloc(srResult.aiBlocks, srResult.iNum_tuple_addresses * sizeof (int));
+                        puts("AK_realloc srResult.aiBlocks");*/
+                    srResult.aiBlocks = (int *) AK_realloc(srResult.aiBlocks, srResult.iNum_tuple_addresses * sizeof (int));
                     if (srResult.aiBlocks == NULL) {
-                        printf("AK_search_unsorted: ERROR. Cannot reallocate srResult.aiBlocks, iteration %d.\n", i);
+                        printf("AK_search_unsorted: ERROR. Cannot AK_reallocate srResult.aiBlocks, iteration %d.\n", i);
                         exit(EXIT_ERROR);
                     }
 
@@ -195,9 +195,9 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
  */
 
 void AK_deallocate_search_result(search_result srResult) {
-    free(srResult.aiTuple_addresses);
-    free(srResult.aiSearch_attributes);
-    free(srResult.aiBlocks);
+    AK_free(srResult.aiTuple_addresses);
+    AK_free(srResult.aiSearch_attributes);
+    AK_free(srResult.aiBlocks);
 }
 /**
   * @author Miroslav Policki
@@ -225,7 +225,7 @@ void Ak_filesearch_test() {
         exit(EXIT_ERROR);
     }
 
-    row_root = malloc(sizeof (AK_list));
+    row_root = AK_malloc(sizeof (AK_list));
     if (row_root == NULL) {
         printf("filesearch_test: ERROR. Cannot allocate row_root.\n");
         exit(EXIT_ERROR);
@@ -240,7 +240,7 @@ void Ak_filesearch_test() {
         Ak_DeleteAll_L(row_root);
     }
 
-    free(row_root);
+    AK_free(row_root);
 
     // filesearch usage example starts here
     {
@@ -276,11 +276,11 @@ void Ak_filesearch_test() {
             printf("Found:%d\n", *((int *) (mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 0].address)));
             printf("Found:%f\n", *((double *) (mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 1].address)));
 
-            szTmp = malloc(mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].size + 1);
+            szTmp = AK_malloc(mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].size + 1);
             memcpy(szTmp, mem_block->block->data + mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].address, mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].size);
             szTmp[mem_block->block->tuple_dict[sr.aiTuple_addresses[i] + 2].size] = '\0';
             printf("Found:%s\n", szTmp);
-            free(szTmp);
+            AK_free(szTmp);
         }
 
         AK_deallocate_search_result(sr);

@@ -143,7 +143,7 @@ int div;
     int next_perm,sum, next_flag;
     int len_flags = strlen(FLAGS);
 
-    AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
     
     //change view name for its rel_exp in list_query if exists
@@ -178,7 +178,7 @@ int div;
     }
 
     for (next_perm = 0; next_perm < num_perms; next_perm++) {
-        char *perm = (char *) calloc(len_flags, sizeof (char));
+        char *perm = (char *) AK_calloc(len_flags, sizeof (char));
         memcpy(perm, FLAGS, len_flags);
 
         Ak_dbg_messg(LOW, REL_EQ, "\n\t==============================\n\t\t%i. LOGIC PLAN\n\t==============================\n", next_perm + 1 );
@@ -187,7 +187,7 @@ int div;
             int index = (next_perm / div) % next_flag;
 
             if (DIFF_PLANS) {
-            temps[next_perm] = (AK_list *)malloc(sizeof(AK_list));
+            temps[next_perm] = (AK_list *)AK_malloc(sizeof(AK_list));
             Ak_Init_L(temps[next_perm]);
             temps[next_perm] = AK_execute_rel_eq(temp, perm[index], FLAGS);
             AK_print_optimized_query(temps[next_perm]);
@@ -204,13 +204,13 @@ int div;
             break;
         }
 
-     //   free(perm);
+     //   AK_free(perm);
     }
 
     if (DIFF_PLANS) {
         Ak_dbg_messg(LOW, REL_EQ, "\nTOTAL REL_EQ OPTIMIZED PLANS: %i\n", num_perms);
 	
-        temp = (AK_list *)realloc(temp, num_perms * sizeof(temps));
+        temp = (AK_list *)AK_realloc(temp, num_perms * sizeof(temps));
 	sum=num_perms * sizeof(temps);
         memcpy(temp,temps,sum);
     }
@@ -283,35 +283,35 @@ void AK_query_optimization_test(AK_list *list_query) {
     printf("View query: %s\n", query);
 
 
-    AK_list *mylist = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *mylist = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist);
 
   
-    AK_list *mylist2 = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *mylist2 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist2);
 
-AK_list *mylist3 = (AK_list *) malloc(sizeof (AK_list));
+AK_list *mylist3 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist3);
 
-AK_list *mylist4 = (AK_list *) malloc(sizeof (AK_list));
+AK_list *mylist4 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist4);
 
-AK_list *mylist5 = (AK_list *) malloc(sizeof (AK_list));
+AK_list *mylist5 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist5);
 
-AK_list *mylist6 = (AK_list *) malloc(sizeof (AK_list));
+AK_list *mylist6 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist6);
 
-AK_list *mylist7 = (AK_list *) malloc(sizeof (AK_list));
+AK_list *mylist7 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist7);
 
-AK_list *mylist8 = (AK_list *) malloc(sizeof (AK_list));
+AK_list *mylist8 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist8);
 
-AK_list *mylist9 = (AK_list *) malloc(sizeof (AK_list));
+AK_list *mylist9 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist9);
 
-AK_list *mylist10 = (AK_list *) malloc(sizeof (AK_list));
+AK_list *mylist10 = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(mylist10);
 
 

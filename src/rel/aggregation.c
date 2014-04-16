@@ -150,7 +150,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     int agg_h_type;
     char group_h_name[MAX_ATT_NAME];
 
-    AK_agg_value *needed_values = malloc(sizeof (AK_agg_value) * header_size);
+    AK_agg_value *needed_values = AK_malloc(sizeof (AK_agg_value) * header_size);
 
     char new_table[MAX_ATT_NAME];
     sprintf(new_table, "_%s", agg_table);
@@ -228,7 +228,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_block *temp;
     AK_mem_block *mem_block;
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     i = 0;
@@ -344,7 +344,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 								if (needed_values[m].agg_task == AGG_TASK_GROUP) {
 									search_parameters[n].iSearchType = SEARCH_PARTICULAR;
-									search_parameters[n].pData_lower = malloc(temp->tuple_dict[k + l].size);
+									search_parameters[n].pData_lower = AK_malloc(temp->tuple_dict[k + l].size);
 									memcpy(search_parameters[n].pData_lower, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
 									search_parameters[n].szAttribute = (temp->header[l].att_name);
 									n++;
@@ -581,7 +581,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     }
     else{
 
-    	AK_list *projection_att = (AK_list *) malloc(sizeof (AK_list));
+    	AK_list *projection_att = (AK_list *) AK_malloc(sizeof (AK_list));
 		Ak_Init_L(projection_att);
 
 		for (i = 0; i < header_size; i++) {
@@ -593,7 +593,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		AK_projection(new_table, agg_table, projection_att);
 
 		Ak_DeleteAll_L(projection_att);
-		free(projection_att);
+		AK_free(projection_att);
     }
 
     //@TODO zamijeniti ovaj segment sa AK_drop_table() jednom kad ga netko napravi
@@ -604,9 +604,9 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		i++;
 	}
 
-    free(needed_values);
-    free(row_root);
-    free(temp);
+    AK_free(needed_values);
+    AK_free(row_root);
+    AK_free(temp);
 
     return EXIT_SUCCESS;
 }
@@ -625,7 +625,7 @@ void Ak_aggregation_test() {
     AK_agg_input_add(t_header[4], AGG_TASK_SUM, &aggregation);
     AK_agg_input_add(t_header[4], AGG_TASK_MAX, &aggregation);
     AK_agg_input_add(t_header[4], AGG_TASK_MIN, &aggregation);
-    free(t_header);
+    AK_free(t_header);
 
     AK_aggregation(&aggregation, tblName, "agg");
     AK_print_table("agg");

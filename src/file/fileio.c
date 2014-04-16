@@ -34,7 +34,7 @@
    * @return No return value
  */
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint) {
-    AK_list *newElement = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *newElement = (AK_list *) AK_malloc(sizeof (AK_list));
     newElement->type = newtype;
 
     memcpy(newElement->data, data, AK_type_size(newtype, data));
@@ -89,7 +89,7 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     char entry_data[MAX_VARCHAR_LENGTH];
     
     while (strcmp(temp_block->header[head].att_name, "\0") != 0) {//inserting values of the list one by one
-        while (temp_block->tuple_dict[id].size != FREE_INT) {//searches for free tuple dict, maybe it can be last_tuple_dict_id
+        while (temp_block->tuple_dict[id].size != FREE_INT) {//searches for AK_free tuple dict, maybe it can be last_tuple_dict_id
             id++;
         }
         Ak_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
@@ -116,9 +116,9 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
             }
         }
 
-        memcpy(temp_block->data + temp_block->free_space, entry_data, (int)AK_type_size(type, entry_data));
-        temp_block->tuple_dict[id].address = temp_block->free_space;
-        temp_block->free_space += AK_type_size(type, entry_data);
+        memcpy(temp_block->data + temp_block->AK_free_space, entry_data, (int)AK_type_size(type, entry_data));
+        temp_block->tuple_dict[id].address = temp_block->AK_free_space;
+        temp_block->AK_free_space += AK_type_size(type, entry_data);
         temp_block->tuple_dict[id].type = type;
         temp_block->tuple_dict[id].size = AK_type_size(type, entry_data);
 
@@ -134,9 +134,9 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     return EXIT_SUCCESS;
 }
 
-/** @author Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference check), updated by Dino         Laktašić (removed variable free, variable table initialized using memset)
+/** @author Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference check), updated by Dino         Laktašić (removed variable AK_free, variable table initialized using memset)
         @brief Function inserts a one row into table. Firstly it is checked whether inserted row would violite reference integrity. 
-        Then it is checked in which table should row be inserted. If there is no free space for new table, new extent is allocated. New block is            allocated on given address. Row is inserted in this block and dirty flag is set to BLOCK_DIRTY. 
+        Then it is checked in which table should row be inserted. If there is no AK_free space for new table, new extent is allocated. New block is            allocated on given address. Row is inserted in this block and dirty flag is set to BLOCK_DIRTY. 
         @param row_root list of elements which contain data of one row
         @return EXIT_SUCCESS if success else EXIT_ERROR
 
@@ -160,7 +160,7 @@ int Ak_insert_row(AK_list *row_root) {
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
 
-    adr_to_write = (int) AK_find_free_space(AK_get_table_addresses(table));
+    adr_to_write = (int) AK_find_AK_free_space(AK_get_table_addresses(table));
     if (adr_to_write == -1)
         adr_to_write = (int) AK_init_new_extent(table, SEGMENT_TYPE_TABLE);
 
@@ -199,7 +199,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
     int exists_equal_attrib = 0; //if we found at least one header in the list
     char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
 
-    AK_list * new_data = (AK_list *) malloc(sizeof (AK_list));
+    AK_list * new_data = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(new_data);
 
     AK_list_elem some_element = (AK_list_elem) Ak_First_L(row_root);
@@ -223,7 +223,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
                     exists_equal_attrib = 1;
                     attPlace = head;
 
-                    if (overflow < (temp_block->free_space + 1) && overflow > -1)
+                    if (overflow < (temp_block->AK_free_space + 1) && overflow > -1)
                     {
                         memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(entry_data, temp_block->data + address, size);
@@ -296,7 +296,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
         del = 1;
     }
 
-    free(new_data);
+    AK_free(new_data);
 }
 
 /** 
@@ -313,7 +313,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
     int exists_equal_attrib = 0; //if we found at least one header in the list
     char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
     
-    AK_list * row_root_backup = (AK_list *) malloc(sizeof (AK_list));
+    AK_list * row_root_backup = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root_backup);
 
     AK_list_elem some_element = (AK_list_elem) Ak_First_L(row_root);
@@ -325,7 +325,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
 
     int i, overflow, address, size;
 
-    for (i = 0; i < DATA_BLOCK_SIZE; i++) { //freeze point, if there is no i++
+    for (i = 0; i < DATA_BLOCK_SIZE; i++) { //AK_freeze point, if there is no i++
         head = 0;
         attPlace=0;
         address = temp_block->tuple_dict[i].address;
@@ -342,7 +342,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
                     exists_equal_attrib = 1;
                     attPlace = head;
                     
-                    if ((overflow < (temp_block->free_space + 1)) && (overflow > -1)) {
+                    if ((overflow < (temp_block->AK_free_space + 1)) && (overflow > -1)) {
                         //before there was for loop to clear (check if memset works correct)
                         memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(entry_data, temp_block->data + address, size);
@@ -377,7 +377,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
         del = 1;
         exists_equal_attrib = 0;
     }
-    free(row_root_backup);
+    AK_free(row_root_backup);
 }
 
 
@@ -453,7 +453,7 @@ int Ak_delete_row(AK_list *row_root) {
  */
 void Ak_delete_row_by_id(int id, char* tableName){
     char* attributes = AK_rel_eq_get_atrributes_char(tableName);
-    char* nameID = malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+    char* nameID = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
     int index = 0;
 
     do{
@@ -466,7 +466,7 @@ void Ak_delete_row_by_id(int id, char* tableName){
         attributes++;
     } while ( *attributes != '\0' || index < MAX_VARCHAR_LENGTH);
 
-    AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Insert_New_Element_For_Update(TYPE_INT, &id, tableName, nameID, row_root, 1);
     Ak_delete_row(row_root);
 }
@@ -505,7 +505,7 @@ void Ak_fileio_test() {
         printf("\nTABLE %s CREATED!\n", "testna");
 
 
-    AK_list *row_root = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     int broj;
 
@@ -587,5 +587,5 @@ void Ak_fileio_test() {
     AK_print_table("testna");
 
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
 }

@@ -28,7 +28,7 @@
  * @return No return value
  */
 void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
-    AK_block *sys_block = (AK_block *) malloc(sizeof (AK_block));
+    AK_block *sys_block = (AK_block *) AK_malloc(sizeof (AK_block));
     sys_block = (AK_block *) AK_read_block(1);
 
     int startAddress = AK_initialize_new_segment(table, type_segment, header);
@@ -46,7 +46,7 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
     AK_insert_entry(sys_block, TYPE_INT, &broj, 11);
 
     AK_write_block(sys_block);
-    free(sys_block);
+    AK_free(sys_block);
 }
 
 /**
@@ -58,7 +58,7 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
  * @return No return value
  */
 void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
-    AK_block *temp_block = (AK_block *) malloc(sizeof (AK_block));
+    AK_block *temp_block = (AK_block *) AK_malloc(sizeof (AK_block));
     temp_block = (AK_block *) AK_read_block(old_block);
 
     AK_list_elem list_elem;
@@ -87,7 +87,7 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
 
     memset(header + new_head, '\0', MAX_ATTRIBUTES - new_head);
 
-    free(temp_block);
+    AK_free(temp_block);
     AK_temp_create_table(dstTable, header, SEGMENT_TYPE_TABLE);
 }
 
@@ -100,7 +100,7 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
   * @retrun No return value
  */
 void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable) {
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     AK_list_elem list_elem;
@@ -126,7 +126,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
 
                 //if the data is what we need, if the size is not null, and data is correct
                 if ((strcmp(list_elem->data, old_block->header[head].att_name) == 0) && (size != 0)
-                        && (overflow < old_block->free_space + 1) && (overflow > -1)) {
+                        && (overflow < old_block->AK_free_space + 1) && (overflow > -1)) {
 
                     memset(data, 0, MAX_VARCHAR_LENGTH);
                     memcpy(data, old_block->data + old_block->tuple_dict[i].address, old_block->tuple_dict[i].size);
@@ -150,7 +150,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
         }
     }
 
-    free(row_root);
+    AK_free(row_root);
 }
 
 /**
@@ -197,12 +197,12 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
             } else break;
         }
 		
-        free(src_addr);
+        AK_free(src_addr);
         Ak_dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n\n");
 
         return EXIT_SUCCESS;
     } else {
-		free(src_addr);
+		AK_free(src_addr);
         Ak_dbg_messg(LOW, REL_OP, "\n AK_projection: Table doesn't exist!");
         return EXIT_ERROR;
     }
@@ -216,7 +216,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
 void AK_op_projection_test() {
     printf("\n********** PROJECTION TEST **********\n\n");
 
-    AK_list *att = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *att = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(att);
 
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);

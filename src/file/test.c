@@ -43,7 +43,7 @@ char* AK_get_table_atribute_types(char* tblName){
         return NULL;
     }
 
-    char *attr = (char *) calloc(1, sizeof (char));
+    char *attr = (char *) AK_calloc(1, sizeof (char));
     AK_header *table_header = (AK_header *) AK_get_header(tblName);
 
     for (next_attr = 0; next_attr < num_attr; next_attr++) {
@@ -52,7 +52,7 @@ char* AK_get_table_atribute_types(char* tblName){
         
         len_attr = sprintf(attr_buffer,"%d",attr_type);
 
-        attr = (char *) realloc(attr, len_attr + next_address + 1);
+        attr = (char *) AK_realloc(attr, len_attr + next_address + 1);
         memcpy(attr + next_address, attr_buffer, len_attr);
         next_address += len_attr;
 
@@ -65,12 +65,12 @@ char* AK_get_table_atribute_types(char* tblName){
        
     }
 
-    free(table_header);
+    AK_free(table_header);
     
     if (next_address > 0) {
         return attr;
     } else {
-        free(attr);
+        AK_free(attr);
         return NULL;
     }
 }
@@ -119,7 +119,7 @@ int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _n
 
     int i;
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_DeleteAll_L(row_root);
@@ -153,7 +153,7 @@ int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _n
 int selection_test(char* src_table, char* dest_table, char** sel_query, int _num, int* _type){
 	printf("==================== SELECTION_TEST =====================\n");
 
-    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(expr);
 
     // TYPE_OPERAND 10
@@ -178,7 +178,7 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
 
     if (AK_selection(src_table, dest_table, expr) == EXIT_SUCCESS){
         Ak_DeleteAll_L(expr);
-        free(expr);    
+        AK_free(expr);    
         return 1;
     }
     return 0;
@@ -286,7 +286,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     mbr = 35890;
@@ -609,7 +609,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    //row_root = (element) malloc(sizeof (list));
+    //row_root = (element) AK_malloc(sizeof (list));
     Ak_Init_L(row_root);
 
     id_prof = 35890;
@@ -727,7 +727,7 @@ void AK_create_test_tables() {
 	if (startAddress != EXIT_ERROR)
 		printf("\nTABLE %s CREATED!\n", tblName);
 
-	//row_root = (element) malloc(sizeof (list));
+	//row_root = (element) AK_malloc(sizeof (list));
 	Ak_Init_L(row_root);
 
 	id_prof = 35890;
@@ -831,7 +831,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    //row_root = (element) malloc(sizeof (list));
+    //row_root = (element) AK_malloc(sizeof (list));
     Ak_Init_L(row_root);
 
     id_prof = 35892;
@@ -895,7 +895,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    //row_root = (element) malloc(sizeof (list));
+    //row_root = (element) AK_malloc(sizeof (list));
     Ak_Init_L(row_root);
 
     id_prof = 35890;
@@ -979,7 +979,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     id_department = 1;
@@ -1065,7 +1065,7 @@ void AK_create_test_tables() {
         printf("\nTABLE %s CREATED!\n", tblName);
     //AK_rel_eq_comut_test();	
     Ak_DeleteAll_L(row_root);
-    free(row_root);
+    AK_free(row_root);
     //------------------------------------------------------------------------------------------------------
     //AK_op_rename_test();
     

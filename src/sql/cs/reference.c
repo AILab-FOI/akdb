@@ -35,7 +35,7 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
     int i;
     if (type != REF_TYPE_CASCADE && type != REF_TYPE_NO_ACTION && type != REF_TYPE_RESTRICT && type != REF_TYPE_SET_DEFAULT && type != REF_TYPE_SET_NULL) return 0;
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     for (i = 0; i < attNum; i++) {
@@ -49,7 +49,7 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
         Ak_insert_row(row_root);
     }
 
-    free(row_root);
+    AK_free(row_root);
     return EXIT_SUCCESS;
 }
 
@@ -188,7 +188,7 @@ int AK_reference_update(AK_list *lista, int action) {
 
     char tempData[MAX_VARCHAR_LENGTH];
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     while ((ref_row = AK_get_row(ref_i, "AK_reference")) != NULL) {
@@ -333,7 +333,7 @@ int AK_reference_check_entry(AK_list *lista) {
                 }
             }
             if (j == con_num) {
-                //constraints[con_num] = malloc(sizeof(char)*MAX_VARCHAR_LENGHT);
+                //constraints[con_num] = AK_malloc(sizeof(char)*MAX_VARCHAR_LENGHT);
                 strcpy(constraints[con_num], row->next->next->data);
                 con_num++;
             }
@@ -348,7 +348,7 @@ int AK_reference_check_entry(AK_list *lista) {
         reference = AK_get_reference(lista->next->table, constraints[i]);
 
         // fetching relevant attributes from entry list...
-        // attributes = malloc(sizeof(char)*MAX_VARCHAR_LENGHT*reference.attributes_number);
+        // attributes = AK_malloc(sizeof(char)*MAX_VARCHAR_LENGHT*reference.attributes_number);
         for (j = 0; j < reference.attributes_number; j++) {
             temp = lista->next;
             while (temp != NULL) {
@@ -383,12 +383,12 @@ int AK_reference_check_entry(AK_list *lista) {
                 }
             }
             if (success == 1) {
-                //free(attributes);
+                //AK_free(attributes);
                 return EXIT_SUCCESS;
             }
             j++;
         }
-        // free(attributes);
+        // AK_free(attributes);
     }
 
     return EXIT_ERROR;
@@ -417,16 +417,16 @@ void AK_reference_test() {
     int a;
 
     char *att[2];
-    att[0] = malloc(sizeof (char) *20);
+    att[0] = AK_malloc(sizeof (char) *20);
     strcpy(att[0], "FK");
-    att[1] = malloc(sizeof (char) *20);
+    att[1] = AK_malloc(sizeof (char) *20);
     strcpy(att[1], "Value");
 
 
     char *patt[2];
-    patt[0] = malloc(sizeof (char) *20);
+    patt[0] = AK_malloc(sizeof (char) *20);
     strcpy(patt[0], "mbr");
-    patt[1] = malloc(sizeof (char) *20);
+    patt[1] = AK_malloc(sizeof (char) *20);
     strcpy(patt[1], "firstname");
 
     //AK_create_reference_table();
@@ -435,7 +435,7 @@ void AK_reference_test() {
     AK_print_table("student");
 
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     a = 35891;
     Ak_Init_L(row_root);
     Ak_DeleteAll_L(row_root);

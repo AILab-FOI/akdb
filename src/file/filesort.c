@@ -75,7 +75,7 @@ int Ak_get_num_of_tuples(AK_block *iBlock) {
 }
 /*
 AK_mem_block *get_next_block(int num) {
-    AK_mem_block *mem_block = (AK_mem_block *) malloc(sizeof (AK_mem_block));
+    AK_mem_block *mem_block = (AK_mem_block *) AK_malloc(sizeof (AK_mem_block));
     mem_block = (AK_mem_block *) AK_get_block(num);
 
     //AK_block *temp_block = AK_read_block(num); // tu poslije komentirati
@@ -155,7 +155,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 	id = id2 = id_temp = cache1_pos = cache2_pos = cacheTemp_pos = 0;
     
 	AK_mem_block * cache1 = (AK_mem_block*) AK_get_block(blocks_addr[id]);
-	AK_mem_block * cache2 = (AK_mem_block*) malloc(sizeof(AK_mem_block));//AK_get_block(blocks_addr[id2]); //or malloc as before
+	AK_mem_block * cache2 = (AK_mem_block*) AK_malloc(sizeof(AK_mem_block));//AK_get_block(blocks_addr[id2]); //or AK_malloc as before
 	AK_mem_block * cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
 	
     int num_tuples_cache1 = Ak_get_num_of_tuples(cache1->block);
@@ -230,7 +230,7 @@ void AK_sort_segment(char *table_name, char *attr) {
                         cacheTemp_size += cache1->block->tuple_dict[i + (cache1_pos * num_headers)].size;
                     }
 
-                    if ((cacheTemp->block->free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
+                    if ((cacheTemp->block->AK_free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
 						id_temp++;
 						cacheTemp->dirty = BLOCK_DIRTY;
                         cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
@@ -272,7 +272,7 @@ void AK_sort_segment(char *table_name, char *attr) {
                         cacheTemp_size += cache2->block->tuple_dict[i + (cache2_pos * num_headers)].size;
                     }
 
-                    if ((cacheTemp->block->free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
+                    if ((cacheTemp->block->AK_free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
 						id_temp++;
 						cacheTemp->dirty = BLOCK_DIRTY;
                         cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
@@ -317,7 +317,7 @@ void AK_sort_segment(char *table_name, char *attr) {
                         cacheTemp_size += cache2->block->tuple_dict[i + (cache2_pos * num_headers)].size;
                     }
 
-                    if ((cacheTemp->block->free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) { // ako je veća od zadane veličine onda treba učitati novi temp blok
+                    if ((cacheTemp->block->AK_free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) { // ako je veća od zadane veličine onda treba učitati novi temp blok
 						id_temp++;
 						cacheTemp->dirty = BLOCK_DIRTY;
                         cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
@@ -362,7 +362,7 @@ void AK_sort_segment(char *table_name, char *attr) {
                         cacheTemp_size += cache1->block->tuple_dict[i + (cache1_pos * num_headers)].size;
                     }
 
-                    if ((cacheTemp->block->free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
+                    if ((cacheTemp->block->AK_free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
 						id_temp++;
 						cacheTemp->dirty = BLOCK_DIRTY;
                         cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
@@ -473,7 +473,7 @@ void Ak_reset_block(AK_block * block) {
 
     block->type = BLOCK_TYPE_FREE;
     block->chained_with = NOT_CHAINED;
-    block->free_space = 0;
+    block->AK_free_space = 0;
 
     memcpy(block->header, empty_header, sizeof (*empty_header));
     memcpy(block->tuple_dict, empty_tuple_dict, sizeof ( *empty_tuple_dict));
@@ -493,16 +493,16 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
     char x[DATA_ROW_SIZE]; //bas podatak koji nas zanima
     char y[DATA_ROW_SIZE]; //bas podatak s kojim se uspoređuje
 
-    AK_block * cTemp1 = (AK_block*) malloc(sizeof (AK_block));
+    AK_block * cTemp1 = (AK_block*) AK_malloc(sizeof (AK_block));
     cTemp1 = (AK_block *) AK_read_block(15);
 
     int tip = 0;
     int broj_td;
 
-    AK_block *cTemp2 = (AK_block*) malloc(sizeof (AK_block));
+    AK_block *cTemp2 = (AK_block*) AK_malloc(sizeof (AK_block));
     cTemp2 = (AK_block *) AK_read_block(16);
 
-    AK_header *block_header = (AK_header *) malloc(sizeof (AK_header));
+    AK_header *block_header = (AK_header *) AK_malloc(sizeof (AK_header));
     memcpy(block_header, iBlock->header, sizeof (AK_header));
 
     int num_sort_header = Ak_get_header_number(iBlock, atr_name); //broj headera po kojem se sortira
@@ -575,7 +575,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
         //Start sorting
         Ak_reset_block(iBlock);
 
-        Ak_dbg_messg(HIGH, FILE_MAN, "                      , size: %i\n", iBlock->free_space);
+        Ak_dbg_messg(HIGH, FILE_MAN, "                      , size: %i\n", iBlock->AK_free_space);
 
         memcpy(iBlock->header, block_header, sizeof (AK_header));
 

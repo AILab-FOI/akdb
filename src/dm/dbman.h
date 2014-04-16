@@ -81,7 +81,7 @@ typedef struct {
 /**
   * @author Markus Schatten
   * @struct AK_block
-  * @brief Structure that defines a block of data inside a DB file. It contains address, type, chained_with, free space,
+  * @brief Structure that defines a block of data inside a DB file. It contains address, type, chained_with, AK_free space,
            last_tuple_dict_id, header and tuple_dict and data.
  */
 typedef struct {
@@ -91,8 +91,8 @@ typedef struct {
     int type;
     /// address of chained block; NOT_CHAINED otherwise
     int chained_with;
-    /// free space in block
-    int free_space;
+    /// AK_free space in block
+    int AK_free_space;
     int last_tuple_dict_id;
     /// attribute definitions
     AK_header header[ MAX_ATTRIBUTES ];

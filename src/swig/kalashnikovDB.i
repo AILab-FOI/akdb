@@ -62,11 +62,11 @@ int* (elements in int array), list is split into int (representing list size) an
     return NULL;
   }
   $1 = PyList_Size($input);
-  $2 = (int *) malloc(($1)*sizeof(int));
+  $2 = (int *) AK_malloc(($1)*sizeof(int));
   for (i = 0; i < $1; i++) {
     PyObject *s = PyList_GetItem($input,i);
     if (!PyInt_Check(s)) {
-        free($2);
+        AK_free($2);
         PyErr_SetString(PyExc_ValueError, "List items must be integers");
         return NULL;
     }
@@ -75,12 +75,12 @@ int* (elements in int array), list is split into int (representing list size) an
 }
 
 /*
-The "freearg" typemap is used to cleanup argument data. It is only used when an argument might have 
-allocated resources that need to be cleaned up when the wrapper function exits. The "freearg" 
+The "AK_freearg" typemap is used to cleanup argument data. It is only used when an argument might have 
+allocated resources that need to be cleaned up when the wrapper function exits. The "AK_freearg" 
 typemap usually cleans up argument resources allocated by the "in" typemap.
 */
-%typemap(freearg) (int _num, int* _type) {
-   if ($2) free($2);
+%typemap(AK_freearg) (int _num, int* _type) {
+   if ($2) AK_free($2);
 }
 
 /*
@@ -130,7 +130,7 @@ converts C int* datatype into Pythons list of integers
 handles C AK_block datatypes in Python
 */
 %typemap(in) AK_block * block{
-  AK_block *bl = malloc(sizeof(AK_block));
+  AK_block *bl = AK_malloc(sizeof(AK_block));
   memcpy(bl, $input, sizeof(AK_block));
   $1 = bl;
 }
@@ -142,14 +142,14 @@ converts Python list into char** type.
   if (PyList_Check($input)) {
     int size = PyList_Size($input);
     int i = 0;
-    $1 = (char **) malloc((size+1)*sizeof(char *));
+    $1 = (char **) AK_malloc((size+1)*sizeof(char *));
     for (i = 0; i < size; i++) {
       PyObject *o = PyList_GetItem($input,i);
       if (PyString_Check(o))
   $1[i] = PyString_AsString(PyList_GetItem($input,i));
       else {
   PyErr_SetString(PyExc_TypeError,"list must contain strings");
-  free($1);
+  AK_free($1);
   return NULL;
       }
     }
@@ -161,17 +161,17 @@ converts Python list into char** type.
 }
 
 /*
-frees char** allocated memory
+AK_frees char** allocated memory
 */
-%typemap(freearg) char ** {
-  free((char *) $1);
+%typemap(AK_freearg) char ** {
+  AK_free((char *) $1);
 }
 
 /*
 handles AK_create_table_parameter * datatype in Python.
 */
 %typemap(out) AK_create_table_parameter * {
-  AK_create_table_parameter* parametar = malloc(sizeof(AK_create_table_parameter));
+  AK_create_table_parameter* parametar = AK_malloc(sizeof(AK_create_table_parameter));
   memcpy(parametar, $1, sizeof(AK_create_table_parameter));
   $result = parametar;
 }
@@ -196,17 +196,17 @@ Converts python list to AK_create_table_parameter* datatype
 }
 
 /*
-frees AK_create_table_parameter** datatype
+AK_frees AK_create_table_parameter** datatype
 */
-%typemap(freearg) AK_create_table_parameter ** {
-  free($1);
+%typemap(AK_freearg) AK_create_table_parameter ** {
+  AK_free($1);
 }
 
 /*
 handles AK_list * datatype in Python.
 */
 %typemap(out) AK_list * {
-  AK_list* list = malloc(sizeof(AK_list));
+  AK_list* list = AK_malloc(sizeof(AK_list));
   memcpy(list, $1, sizeof(AK_list));
   $result = list;
 }
@@ -231,10 +231,10 @@ Converts python list to AK_list* datatype
 }
 
 /*
-frees AK_list** datatype
+AK_frees AK_list** datatype
 */
-%typemap(freearg) AK_list ** {
-  free($1);
+%typemap(AK_freearg) AK_list ** {
+  AK_free($1);
 }
 
 /*

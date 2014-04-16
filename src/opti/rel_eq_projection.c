@@ -63,8 +63,8 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 
     len_set = len_subset = 0;
 
-    temp_set = (char *) calloc(list_elem_set->size, sizeof (char));
-    temp_subset = (char *) calloc(list_elem_subset->size, sizeof (char));
+    temp_set = (char *) AK_calloc(list_elem_set->size, sizeof (char));
+    temp_subset = (char *) AK_calloc(list_elem_subset->size, sizeof (char));
 
     memcpy(temp_set, list_elem_set->data, list_elem_set->size);
     memcpy(temp_subset, list_elem_subset->data, list_elem_subset->size);
@@ -112,8 +112,8 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
     }
 
     //May cause troubles
-    free(temp_set);
-    free(temp_subset);
+    AK_free(temp_set);
+    AK_free(temp_subset);
 
     Ak_dbg_messg(HIGH, REL_EQ, "RULE - succeed (%s) is subset of set (%s).\n", list_elem_subset->data, list_elem_set->data);
     return EXIT_SUCCESS;
@@ -141,9 +141,9 @@ int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem
 
     Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute condition (%s) with projection (%s)\n", list_elem_conds->data, list_elem_attribs->data);
 
-    temp = (char *) calloc(list_elem_conds->size, sizeof (char));
-    temp_cond = (char *) calloc(list_elem_conds->size, sizeof (char));
-    temp_attr = (char *) calloc(list_elem_attribs->size, sizeof (char));
+    temp = (char *) AK_calloc(list_elem_conds->size, sizeof (char));
+    temp_cond = (char *) AK_calloc(list_elem_conds->size, sizeof (char));
+    temp_attr = (char *) AK_calloc(list_elem_attribs->size, sizeof (char));
 
     memcpy(temp_attr, list_elem_attribs->data, list_elem_attribs->size);
 
@@ -182,7 +182,7 @@ int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem
         }
     }
 
-    free(temp);
+    AK_free(temp);
     Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute condition with projection succeed.\n");
     return EXIT_SUCCESS;
 }
@@ -205,10 +205,10 @@ AK_list *AK_rel_eq_get_attributes(char *tblName) {
     int num_attr = AK_num_attr(tblName);
     char *attr_name;
 
-    //AK_header *table_header = (AK_header*)calloc(num_attr, sizeof(AK_header));
+    //AK_header *table_header = (AK_header*)AK_calloc(num_attr, sizeof(AK_header));
     AK_header *table_header = (AK_header *) AK_get_header(tblName);
 
-    AK_list *list_attr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *list_attr = (AK_list *) AK_malloc(sizeof (AK_list));
     AK_list_elem list_el;
     Ak_Init_L(list_attr);
 
@@ -218,7 +218,7 @@ AK_list *AK_rel_eq_get_attributes(char *tblName) {
     }
 
     attr_name = NULL;
-    free(table_header);
+    AK_free(table_header);
 
     return list_attr;
 }
@@ -227,9 +227,9 @@ AK_list *AK_rel_eq_get_attributes(char *tblName) {
 const char *AK_rel_eq_get_attributes(char *tblName) {
         int next_attr, num_attr = AK_num_attr(tblName);
     char *attributes[MAX_ATTRIBUTES] = {NULL};
-        //char *attributes = (char *)malloc(sizeof(MAX_ATTRIBUTES));
+        //char *attributes = (char *)AK_malloc(sizeof(MAX_ATTRIBUTES));
 	
-        //AK_header *table_header = (AK_header*)calloc(num_attr, sizeof(AK_header));
+        //AK_header *table_header = (AK_header*)AK_calloc(num_attr, sizeof(AK_header));
         AK_header *table_header = (AK_header *)AK_get_header(tblName);
 
         for (next_attr = 0; next_attr < num_attr; next_attr++) {
@@ -237,7 +237,7 @@ const char *AK_rel_eq_get_attributes(char *tblName) {
                 //printf("attribute: %s\n", attributes[next_attr]);
         }
 	
-        char *save_attributes = (char *)malloc(strlen(*attributes) + 1);
+        char *save_attributes = (char *)AK_malloc(strlen(*attributes) + 1);
 	
         memcpy(save_attributes, attributes, sizeof(attributes));
         return save_attributes;
@@ -272,10 +272,10 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
     char *token_attr, *save_token_attribs;
     char *tokens_attribs[MAX_TOKENS] = {NULL};
 
-    char *ret_attributes = (char *) calloc(MAX_VARCHAR_LENGTH, sizeof (char));
+    char *ret_attributes = (char *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (char));
     memset(ret_attributes, '\0', MAX_VARCHAR_LENGTH);
 
-    char *temp_attribs = (char *) calloc(strlen(attribs), sizeof (char));
+    char *temp_attribs = (char *) AK_calloc(strlen(attribs), sizeof (char));
 
     strcpy(temp_attribs, attribs);
 
@@ -294,7 +294,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
 
         while (list_el) {
             if (strcmp(list_el->data, tokens_attribs[token_id]) == 0) {
-                //ret_attributes = (char *)realloc(ret_attributes, (strlen(list_el->data) + strlen(ret_attributes)));
+                //ret_attributes = (char *)AK_realloc(ret_attributes, (strlen(list_el->data) + strlen(ret_attributes)));
                 if (strlen(ret_attributes) > 0) {
                     strcat(ret_attributes, ATTR_DELIMITER);
                 }
@@ -305,7 +305,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
     }
 
     Ak_DeleteAll_L(list_attr);
-    free(temp_attribs);
+    AK_free(temp_attribs);
 
     Ak_dbg_messg(HIGH, REL_EQ, "RETURN - attributes for new projection (%s)\n", ret_attributes);
     return ret_attributes;
@@ -322,10 +322,10 @@ char *AK_rel_eq_collect_cond_attributes(AK_list_elem list_elem) {
     int next_address = 0;
     int attr_end = -1;
 
-    char *temp_cond = (char *) malloc(list_elem->size);
+    char *temp_cond = (char *) AK_malloc(list_elem->size);
     strcpy(temp_cond, list_elem->data);
 
-    char *attr = (char *) calloc(MAX_VARCHAR_LENGTH, sizeof (char));
+    char *attr = (char *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (char));
     //memset(attr, '\0', MAX_VARCHAR_LENGHT);
 
     while (next_chr < list_elem->size) {
@@ -337,7 +337,7 @@ char *AK_rel_eq_collect_cond_attributes(AK_list_elem list_elem) {
                 if (next_address > 0) {
                     strcpy(attr + next_address++, ATTR_DELIMITER);
                     //memcpy(attr + next_address++, ATTR_DELIMITER, 1);
-                    //attr = (char *)realloc(attr, next_address + 1);
+                    //attr = (char *)AK_realloc(attr, next_address + 1);
                 }
             }
         }
@@ -345,12 +345,12 @@ char *AK_rel_eq_collect_cond_attributes(AK_list_elem list_elem) {
         if (!attr_end) {
             strcpy(attr + next_address++, &temp_cond[next_chr]);
             //memcpy(attr + next_address++, &temp_cond[next_chr], 1);
-            //attr = (char *)realloc(attr, next_address + 1);
+            //attr = (char *)AK_realloc(attr, next_address + 1);
         }
         next_chr++;
     }
 
-    free(temp_cond);
+    AK_free(temp_cond);
     strcpy(attr + next_address, "\0");
 
     return attr;
@@ -370,10 +370,10 @@ char *AK_rel_eq_remove_duplicates(char *attribs) {
 
     char *temp_attribs, *token_attr, *save_token_attribs;
     char *tokens_attribs[MAX_TOKENS] = {NULL};
-    char *attr = (char *) calloc(MAX_VARCHAR_LENGTH, sizeof (char));
+    char *attr = (char *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (char));
     memset(attr, '\0', MAX_VARCHAR_LENGTH);
 
-    temp_attribs = (char *) calloc(strlen(attribs) + 1, sizeof (char));
+    temp_attribs = (char *) AK_calloc(strlen(attribs) + 1, sizeof (char));
     memcpy(temp_attribs, attribs, strlen(attribs));
     memcpy(temp_attribs + strlen(attribs) + 1, "\0", 1);
 
@@ -411,7 +411,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
     int step; //, exit_cond[5] = {0};
 
     //Initialize temporary linked list
-    AK_list *temp = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
 
     AK_list_elem tmp, temp_elem, temp_elem_prev, temp_elem_next;
@@ -577,7 +577,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                                                 Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data1);
                                             }
 
-                                            free(data1);
+                                            AK_free(data1);
 
                                             while (tmp->type != TYPE_OPERAND) {
                                                 tmp = tmp->next;
@@ -594,7 +594,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                                             Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data2);
                                         }
 
-                                        free(data2);
+                                        AK_free(data2);
                                     }
                                     break;
                                 }
@@ -724,7 +724,7 @@ void AK_rel_eq_projection_test() {
 
     printf("rel_eq_projection_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
-    AK_list *expr = (AK_list *) malloc(sizeof (AK_list));
+    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(expr);
 
     Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);

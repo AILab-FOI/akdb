@@ -32,7 +32,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
     char systemTableName[50];
     int systemTableAddress;
     int j, i = 0;
-    int freeSpaceFound = 0;
+    int AK_freeSpaceFound = 0;
     int tupleDictID = -1;
     AK_block *tempBlock;
     int itis = 1;
@@ -51,15 +51,15 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
 
             tempBlock = (AK_block *)AK_read_block(systemTableAddress);
 
-            while (freeSpaceFound == 0) {
+            while (AK_freeSpaceFound == 0) {
                 tupleDictID += 1;
                 if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT)
-                    freeSpaceFound = 1;
+                    AK_freeSpaceFound = 1;
             }
 
             //printf("ddddddddddd %i",tupleDictID);
 
-            if (freeSpaceFound == 1) {
+            if (AK_freeSpaceFound == 1) {
                 id = AK_get_id();
                 AK_insert_entry(tempBlock, TYPE_INT, &id, tupleDictID);
                 AK_insert_entry(tempBlock, TYPE_VARCHAR, tableName, tupleDictID + 1);
@@ -77,7 +77,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
         }
         i++;
     }
-    free(tempBlock);
+    AK_free(tempBlock);
 }
 
 //
@@ -97,7 +97,7 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
     int j, i = 0;
     AK_block *tempBlock;
     int itis = 1;
-    int freeSpaceFound = 0;
+    int AK_freeSpaceFound = 0;
     int tupleDictID = -1;
     int flag = EXIT_SUCCESS;
 
@@ -122,10 +122,10 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
     char att[50];
 
 
-    while (freeSpaceFound == 0) {
+    while (AK_freeSpaceFound == 0) {
         tupleDictID += 1;
         if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT) {
-            freeSpaceFound = 1;
+            AK_freeSpaceFound = 1;
         } else {
             for (j = 0; j < 50; j++) {
                 value[j] = FREE_CHAR;

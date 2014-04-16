@@ -162,7 +162,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
             sys_table = "AK_function";
             name = (char*) drop_arguments->value;
 
-            AK_list *args = (AK_list *) malloc(sizeof (AK_list));
+            AK_list *args = (AK_list *) AK_malloc(sizeof (AK_list));
             Ak_Init_L(args);
 
             if (drop_arguments != NULL) {
@@ -184,7 +184,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
                     printf("Function does not exist!\n"); // vraćen je EXIT_ERROR jer funkcija s danim argumentima nije pronađena
                 }
             }
-          free(args);
+          AK_free(args);
             break;
 
         case DROP_USER:
@@ -381,7 +381,7 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
     mem_block2 = (AK_mem_block *) AK_get_block(address_sys);
     table_addresses *addresses2;
 
-    //addresses2 = (table_addresses *) malloc(sizeof (table_addresses));
+    //addresses2 = (table_addresses *) AK_malloc(sizeof (table_addresses));
     addresses2 = (table_addresses*) AK_get_table_addresses(tblName);
 
     //memset(addresses2->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
@@ -408,15 +408,15 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
         }
     }
 
-    AK_list_elem row_root = (AK_list_elem) malloc(sizeof (AK_list_elem));
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list_elem));
     Ak_Init_L(row_root);
     Ak_DeleteAll_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, tblName, sys_table, "name", row_root, 1);
 
     Ak_delete_row(row_root);
-    free(addresses);
-    free(addresses2);
+    AK_free(addresses);
+    AK_free(addresses2);
 }
 
 /**
@@ -448,14 +448,14 @@ int AK_if_exist(char *tblName, char *sys_table) {
 void AK_drop_test() {
     printf("=========================================================\n");
     printf("========================DROP_TEST========================\n");
-    AK_drop_arguments *drop_arguments = (AK_drop_arguments *)malloc(sizeof (AK_drop_arguments));
-    drop_arguments->next = (AK_drop_arguments *)malloc(sizeof (AK_drop_arguments));
+    AK_drop_arguments *drop_arguments = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
+    drop_arguments->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
     drop_arguments->value=(char*)"\0";
 
-drop_arguments->next->next = (AK_drop_arguments *)malloc(sizeof (AK_drop_arguments));
+drop_arguments->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
 drop_arguments->next->value=(char*)"\0";
 
-drop_arguments->next->next->next = (AK_drop_arguments *)malloc(sizeof (AK_drop_arguments));
+drop_arguments->next->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
 drop_arguments->next->next->value=(char*)"\0";
 
 drop_arguments->next->next->next->next =NULL;
@@ -499,7 +499,7 @@ drop_arguments->next->next->next->next =NULL;
     AK_print_table("AK_sequence");
     AK_drop(DROP_SEQUENCE, drop_arguments);
     AK_print_table("AK_sequence");
-    //free(drop_arguments);
+    //AK_free(drop_arguments);
 
 
     printf("\n-----DROP TRIGGER-----\n");
@@ -549,12 +549,12 @@ drop_arguments->next->next->next->next =NULL;
     AK_print_table("AK_group_right");
 
     // printf("\n-----DROP CONSTRAINT-----\n");
- free(drop_arguments );
+ AK_free(drop_arguments );
     printf("======================END_DROP_TEST======================\n");
 }
 
 void AK_drop_test_helper(int type,char* dropargs){
-    AK_drop_arguments *drop_arguments = malloc(sizeof (AK_drop_arguments));
+    AK_drop_arguments *drop_arguments = AK_malloc(sizeof (AK_drop_arguments));
     drop_arguments->value = dropargs;
     if (type == 0) {
         AK_drop(DROP_TABLE, drop_arguments);
@@ -584,5 +584,5 @@ void AK_drop_test_helper(int type,char* dropargs){
         AK_drop(DROP_CONSTRAINT, drop_arguments);
     }
 
-    free(drop_arguments );
+    AK_free(drop_arguments );
 }

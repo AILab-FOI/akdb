@@ -174,7 +174,7 @@ int Ak_IsEmpty_L(AK_list *L) {
  * @return No return value
  */
 void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_list *L) {
-    AK_list_elem new_elem = (AK_list_elem) malloc(sizeof ( struct list_elem));
+    AK_list_elem new_elem = (AK_list_elem) AK_malloc(sizeof ( struct list_elem));
     new_elem->size = size;
     new_elem->type = type;
     memcpy(new_elem->data, data, new_elem->size);
@@ -199,7 +199,7 @@ void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_
  * @return No return value
  */
 void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L) {
-    AK_list_elem new_elem = (AK_list_elem) calloc(1, sizeof ( struct list_elem));
+    AK_list_elem new_elem = (AK_list_elem) AK_calloc(1, sizeof ( struct list_elem));
     new_elem->size = size;
     new_elem->type = type;
     memcpy(new_elem->data, data, new_elem->size);
@@ -252,7 +252,7 @@ void Ak_Delete_L(AK_list_elem current, AK_list *L) {
     AK_list_elem next = current->next; //NextL( current, L );
 
     previous->next = next;
-    free(current);
+    AK_free(current);
 }
 
 /**
@@ -265,7 +265,7 @@ void Ak_DeleteAll_L(AK_list *L) {
     AK_list_elem current;
     while ( (current = Ak_First_L(L)) ) {
         L->next = current->next;
-        free(current);
+        AK_free(current);
     }
 }
 
@@ -295,7 +295,7 @@ int Ak_Size_L(AK_list *L) {
 char* Ak_Retrieve_L(AK_list_elem current, AK_list *L) {
     if (current == NULL)
         return NULL;
-    char *data = (char*) malloc(current->size);
+    char *data = (char*) AK_malloc(current->size);
     memcpy(data, current->data, current->size);
     return data;
 }
@@ -379,10 +379,10 @@ char *AK_get_array_perms(char *arr) {
     char *res_perm, *perms[num_perms];
 
     for (next_perm = 0; next_perm < num_perms; next_perm++) {
-        char *perm = (char *) calloc(len_arr, sizeof (char));
+        char *perm = (char *) AK_calloc(len_arr, sizeof (char));
         memcpy(perm, arr, len_arr);
 
-        res_perm = (char *) calloc(len_arr, sizeof (char));
+        res_perm = (char *) AK_calloc(len_arr, sizeof (char));
 
         for (next_chr = len_arr, div = num_perms; next_chr > 0; next_chr--) {
             div /= next_chr;
@@ -397,11 +397,11 @@ char *AK_get_array_perms(char *arr) {
         perms[next_perm] = res_perm;
         //printf("%s\n", perms[next_perm]);
 
-        free(perm);
+        AK_free(perm);
         //perm = NULL;
     }
 
-    res_perm = (char *) calloc(num_perms, sizeof (char*));
+    res_perm = (char *) AK_calloc(num_perms, sizeof (char*));
     memcpy(res_perm, perms, sizeof (perms));
 
     return res_perm;
@@ -451,7 +451,7 @@ AK_vertex AK_search_empty_link() {
  */
 AK_vertex AK_add_vertex(int id) {
 
-    AK_vertex node = (AK_vertex) malloc(sizeof (struct Vertex));
+    AK_vertex node = (AK_vertex) AK_malloc(sizeof (struct Vertex));
     memset(node, 0, sizeof (struct Vertex));
 
     AK_search_empty_link(&G)->nextVertex = node;
@@ -469,7 +469,7 @@ AK_vertex AK_add_vertex(int id) {
  */
 AK_succesor AK_add_succesor(int succesorId, int succesorOf) {
 
-    AK_succesor edge = (AK_succesor) malloc(sizeof (struct Succesor));
+    AK_succesor edge = (AK_succesor) AK_malloc(sizeof (struct Succesor));
     memset(edge, 0, sizeof (struct Succesor));
     AK_vertex root = AK_search_vertex(succesorOf);
     AK_succesor suc = root->nextSuccesor;
@@ -511,7 +511,7 @@ AK_stack AK_search_empty_stack_link(AK_stack stackRoot) {
  */
 AK_stack AK_push_to_stack(int id) {
 
-    AK_stack node = (AK_stack) malloc(sizeof (struct Stack));
+    AK_stack node = (AK_stack) AK_malloc(sizeof (struct Stack));
     memset(node, 0, sizeof (struct Stack));
 
     AK_search_empty_stack_link(&S)->nextElement = node;
@@ -646,7 +646,7 @@ void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem) {
  */
 void AK_copy_L(AK_list *src, AK_list *dest) {
 
-	AK_list_elem srcElem = (AK_list_elem) malloc(sizeof(struct list_elem));
+	AK_list_elem srcElem = (AK_list_elem) AK_malloc(sizeof(struct list_elem));
 	AK_list_elem destElem;
 	srcElem = (AK_list_elem) Ak_First_L(src);
 	destElem = (AK_list_elem) Ak_First_L(dest);
@@ -657,7 +657,7 @@ void AK_copy_L(AK_list *src, AK_list *dest) {
 		srcElem = (AK_list_elem) Ak_Next_L(srcElem);
 
 		if (destElem->next == NULL && srcElem != NULL) {
-			destElem->next = (AK_list_elem) malloc(sizeof(struct list_elem));
+			destElem->next = (AK_list_elem) AK_malloc(sizeof(struct list_elem));
 			destElem = (AK_list_elem) Ak_Next_L(destElem);
 			destElem->next = NULL;
 		}

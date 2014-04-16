@@ -42,12 +42,12 @@ static void * mem_double(void * ptr, int size)
 {
     void * newptr ;
  
-    newptr = calloc(2*size, 1);
+    newptr = AK_calloc(2*size, 1);
     if (newptr==NULL) {
         return NULL ;
     }
     memcpy(newptr, ptr, size);
-    free(ptr);
+    AK_free(ptr);
     return newptr ;
 }
 
@@ -55,7 +55,7 @@ static void * mem_double(void * ptr, int size)
 /**
   @brief    Duplicate a string
   @param    s String to duplicate
-  @return   Pointer to a newly allocated string, to be freed with free()
+  @return   Pointer to a newly allocated string, to be AK_freed with AK_free()
 
   This is a replacement for strdup(). This implementation is provided
   for systems that do not have it.
@@ -66,7 +66,7 @@ static char * xstrdup(const char * s)
     char * t ;
     if (!s)
         return NULL ;
-    t = (char*)malloc(strlen(s)+1) ;
+    t = (char*)AK_malloc(strlen(s)+1) ;
     if (t) {
         strcpy(t,s);
     }
@@ -83,7 +83,7 @@ static char * xstrdup(const char * s)
   @return   1 unsigned int on at least 32 bits.
 
   This hash function has been taken from an Article in Dr Dobbs Journal.
-  This is normally a collision-free function, distributing keys evenly.
+  This is normally a collision-AK_free function, distributing keys evenly.
   The key is stored anyway in the struct so that collision can be avoided
   by comparing the key itself in last resort.
  */
@@ -124,13 +124,13 @@ dictionary * dictionary_new(int size)
     /* If no size was specified, allocate space for DICTMINSZ */
     if (size<DICTMINSZ) size=DICTMINSZ ;
 
-    if (!(d = (dictionary *)calloc(1, sizeof(dictionary)))) {
+    if (!(d = (dictionary *)AK_calloc(1, sizeof(dictionary)))) {
         return NULL;
     }
     d->size = size ;
-    d->val  = (char **)calloc(size, sizeof(char*));
-    d->key  = (char **)calloc(size, sizeof(char*));
-    d->hash = (unsigned int *)calloc(size, sizeof(unsigned));
+    d->val  = (char **)AK_calloc(size, sizeof(char*));
+    d->key  = (char **)AK_calloc(size, sizeof(char*));
+    d->hash = (unsigned int *)AK_calloc(size, sizeof(unsigned));
     return d ;
 }
 
@@ -150,14 +150,14 @@ void dictionary_del(dictionary * d)
     if (d==NULL) return ;
     for (i=0 ; i<d->size ; i++) {
         if (d->key[i]!=NULL)
-            free(d->key[i]);
+            AK_free(d->key[i]);
         if (d->val[i]!=NULL)
-            free(d->val[i]);
+            AK_free(d->val[i]);
     }
-    free(d->val);
-    free(d->key);
-    free(d->hash);
-    free(d);
+    AK_free(d->val);
+    AK_free(d->key);
+    AK_free(d->hash);
+    AK_free(d);
     return ;
 }
 
@@ -172,7 +172,7 @@ void dictionary_del(dictionary * d)
   This function locates a key in a dictionary and returns a pointer to its
   value, or the passed 'def' pointer if no such key can be found in
   dictionary. The returned character pointer points to data internal to the
-  dictionary object, you should not try to free it or modify it.
+  dictionary object, you should not try to AK_free it or modify it.
  */
 /*--------------------------------------------------------------------------*/
 char * dictionary_get(dictionary * d, const char * key, char * def)
@@ -239,7 +239,7 @@ int dictionary_set(dictionary * d, const char * key, const char * val)
                 if (!strcmp(key, d->key[i])) {   /* Same key */
                     /* Found a value: modify and return */
                     if (d->val[i]!=NULL)
-                        free(d->val[i]);
+                        AK_free(d->val[i]);
                     d->val[i] = val ? xstrdup(val) : NULL ;
                     /* Value has been modified: return */
                     return 0 ;
@@ -251,7 +251,7 @@ int dictionary_set(dictionary * d, const char * key, const char * val)
     /* See if dictionary needs to grow */
     if (d->n==d->size) {
 
-        /* Reached maximum size: reallocate dictionary */
+        /* Reached maximum size: AK_reallocate dictionary */
         d->val  = (char **)mem_double(d->val,  d->size * sizeof(char*)) ;
         d->key  = (char **)mem_double(d->key,  d->size * sizeof(char*)) ;
         d->hash = (unsigned int *)mem_double(d->hash, d->size * sizeof(unsigned)) ;
@@ -314,10 +314,10 @@ void dictionary_unset(dictionary * d, const char * key)
         /* Key not found */
         return ;
 
-    free(d->key[i]);
+    AK_free(d->key[i]);
     d->key[i] = NULL ;
     if (d->val[i]!=NULL) {
-        free(d->val[i]);
+        AK_free(d->val[i]);
         d->val[i] = NULL ;
     }
     d->hash[i] = 0 ;
