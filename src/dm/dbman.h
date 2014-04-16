@@ -1,7 +1,7 @@
 /**
 @file dbman.h Header file that defines includes and datastructures for the disk manager
- of Kalashnikov DB
- */
+of Kalashnikov DB
+*/
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,58 +48,58 @@
  * @author Markus Schatten
  * @struct AK_header
  * @brief Structure that represents header structure of blocks (describes an attribute inside an object). It contains
-          type, attribute name, integrity, constraint name and constraint code.
+ type, attribute name, integrity, constraint name and constraint code.
  */
 typedef struct {
-    /// type of attribute
-    int type;
-    /// attribute name
-    char att_name[ MAX_ATT_NAME ];
-    /// standard integrity costraints
-    int integrity[ MAX_CONSTRAINTS ];
-    /// extra integrity constraint names
-    char constr_name[ MAX_CONSTRAINTS ][ MAX_CONSTR_NAME ];
-    /// extra integrity costraint codes
-    char constr_code[ MAX_CONSTRAINTS ][ MAX_CONSTR_CODE ];
+	/// type of attribute
+	int type;
+	/// attribute name
+	char att_name[MAX_ATT_NAME];
+	/// standard integrity costraints
+	int integrity[MAX_CONSTRAINTS];
+	/// extra integrity constraint names
+	char constr_name[MAX_CONSTRAINTS][MAX_CONSTR_NAME];
+	/// extra integrity costraint codes
+	char constr_code[MAX_CONSTRAINTS][MAX_CONSTR_CODE];
 } AK_header;
 
 /**
  * @author Markus Schatten
  * @struct AK_tuple_dict
  * @brief Structure that defines a mapping in a header of an object to the actual entries (data). It contains type, address
-          and size.
+ and size.
  */
 typedef struct {
-    /// data entry type
-    int type;
-    /// data entry address (in AK_block->data)
-    int address;
-    /// data entry size (using sizeof( *** ) )
-    int size;
+	/// data entry type
+	int type;
+	/// data entry address (in AK_block->data)
+	int address;
+	/// data entry size (using sizeof( *** ) )
+	int size;
 } AK_tuple_dict;
 
 /**
   * @author Markus Schatten
   * @struct AK_block
   * @brief Structure that defines a block of data inside a DB file. It contains address, type, chained_with, AK_free space,
-           last_tuple_dict_id, header and tuple_dict and data.
- */
+  last_tuple_dict_id, header and tuple_dict and data.
+  */
 typedef struct {
-    /// block number (address) in DB file
-    int address;
-    /// block type (can be BLOCK_TYPE_FREE, BLOCK_TYPE_NORMAL or BLOCK_TYPE_CHAINED)
-    int type;
-    /// address of chained block; NOT_CHAINED otherwise
-    int chained_with;
-    /// AK_free space in block
-    int AK_free_space;
-    int last_tuple_dict_id;
-    /// attribute definitions
-    AK_header header[ MAX_ATTRIBUTES ];
-    /// dictionary of data entries
-    AK_tuple_dict tuple_dict[ DATA_BLOCK_SIZE ];
-    /// actual data entries
-    unsigned char data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
+	/// block number (address) in DB file
+	int address;
+	/// block type (can be BLOCK_TYPE_FREE, BLOCK_TYPE_NORMAL or BLOCK_TYPE_CHAINED)
+	int type;
+	/// address of chained block; NOT_CHAINED otherwise
+	int chained_with;
+	/// AK_free space in block
+	int AK_free_space;
+	int last_tuple_dict_id;
+	/// attribute definitions
+	AK_header header[MAX_ATTRIBUTES];
+	/// dictionary of data entries
+	AK_tuple_dict tuple_dict[DATA_BLOCK_SIZE];
+	/// actual data entries
+	unsigned char data[DATA_BLOCK_SIZE * DATA_ENTRY_SIZE];
 } AK_block;
 
 /**
@@ -122,9 +122,9 @@ unsigned int db_file_size;
   * @brief Structure that defines start and end address of extent
   */
 typedef struct {
-    ///sturcture for extents start end stop adresses
-    int address_from[ MAX_EXTENTS_IN_SEGMENT ]; //start adress of the extent
-    int address_to[ MAX_EXTENTS_IN_SEGMENT ]; //end adress of the extent
+	///sturcture for extents start end stop adresses
+	int address_from[MAX_EXTENTS_IN_SEGMENT]; //start adress of the extent
+	int address_to[MAX_EXTENTS_IN_SEGMENT]; //end adress of the extent
 } table_addresses;
 
 #define DB_FILE_SIZE_EX 40
@@ -136,13 +136,13 @@ typedef struct {
   * @struct blocktable
   * @brief Structure that defines bit status of blocks, last initialized and last allocated index
   */
- typedef struct {
-unsigned int allocationtable[DB_FILE_BLOCKS_NUM_EX];
-unsigned char bittable[BITNSLOTS(DB_FILE_BLOCKS_NUM_EX)];
- int last_allocated;
- int last_initialized;
- int prepared;
- time_t ltime;
+typedef struct {
+	unsigned int allocationtable[DB_FILE_BLOCKS_NUM_EX];
+	unsigned char bittable[BITNSLOTS(DB_FILE_BLOCKS_NUM_EX)];
+	int last_allocated;
+	int last_initialized;
+	int prepared;
+	time_t ltime;
 }AK_blocktable;
 
 /**
@@ -184,24 +184,24 @@ AK_blocktable * AK_allocationbit;
  * AROUND - set tries to place itself around targeted index
  */
 typedef enum{
-allocationSEQUENCE=10001,
-allocationUPPER,
-allocationLOWER,
-allocationAROUND,
-allocationNOMODE
+	allocationSEQUENCE = 10001,
+	allocationUPPER,
+	allocationLOWER,
+	allocationAROUND,
+	allocationNOMODE
 }AK_allocation_set_mode;
 
 
 
 
 #endif
-int AK_print_block(AK_block * block, int num, char* gg,FILE *fpp);
-void AK_allocationbit_test ();
-void AK_allocationtable_test ();
-int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl);
-int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header,int gl);
-int * AK_get_allocation_set(int* bitsetbs,  int fromWhere,int gaplength, int num, AK_allocation_set_mode mode, int target);
-int AK_copy_header(AK_header *header,  int * blocknum, int num);
+int AK_print_block(AK_block * block, int num, char* gg, FILE *fpp);
+void AK_allocationbit_test();
+void AK_allocationtable_test();
+int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header, int gl);
+int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header, int gl);
+int * AK_get_allocation_set(int* bitsetbs, int fromWhere, int gaplength, int num, AK_allocation_set_mode mode, int target);
+int AK_copy_header(AK_header *header, int * blocknum, int num);
 int  AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany);
 AK_block *  AK_init_block();
 void AK_allocationtable_dump(int zz);
@@ -218,10 +218,10 @@ int AK_new_segment(char * name, int type, AK_header *header);
 AK_header * AK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code);
 void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int i);
 int AK_init_system_tables_catalog(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-        int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull,int constraintUnique, int reference);
+	int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference);
 void AK_memset_int(void *block, int value, size_t num);
 int AK_register_system_tables(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-		int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference);
+	int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference);
 int AK_init_system_catalog();
 int AK_delete_block(int address);
 int AK_delete_extent(int begin, int end);
