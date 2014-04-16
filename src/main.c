@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 // Memory wrappers and debug mode
-#include "auxi/mempro.h"
+//#include "auxi/mempro.h"
 
 // Global configuration
 #include "auxi/constants.h"
