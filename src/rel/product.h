@@ -23,8 +23,9 @@
 #include "../file/table.h"
 #include "../file/files.h"
 
-#endif
 
 int AK_product(char *srcTable1, char * srcTable2, char * dstTable);
 void AK_op_product_test();
+
+#endif
 

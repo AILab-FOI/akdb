@@ -192,9 +192,6 @@ typedef enum{
 }AK_allocation_set_mode;
 
 
-
-
-#endif
 int AK_print_block(AK_block * block, int num, char* gg, FILE *fpp);
 void AK_allocationbit_test();
 void AK_allocationtable_test();
@@ -227,3 +224,5 @@ int AK_delete_block(int address);
 int AK_delete_extent(int begin, int end);
 int AK_delete_segment(char * name, int type);
 int AK_init_disk_manager();
+
+#endif

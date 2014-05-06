@@ -25,8 +25,6 @@
 #include "../rec/redo_log.h"
 #include "files.h"
 
-#endif
-
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint);
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore);
 int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block);
@@ -38,3 +36,5 @@ int Ak_delete_row(AK_list *row_root) ;
 int Ak_update_row(AK_list *row_root);
 void Ak_fileio_test();
 void Ak_delete_row_by_id(int id, char* tableName);
+
+#endif

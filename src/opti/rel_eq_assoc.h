@@ -35,10 +35,10 @@ struct cost_eval_t {
 
 typedef struct cost_eval_t cost_eval;
 
-#endif
-
 
 int AK_compare(const void *a, const void *b) ;
 AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) ;
 void AK_print_rel_eq_assoc(AK_list *list_rel_eq) ;
-void AK_rel_eq_assoc_test() ;
+void AK_rel_eq_assoc_test();
+
+#endif

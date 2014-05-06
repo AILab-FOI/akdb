@@ -1,34 +1,34 @@
 /* File: kalashnikovDB.i */
 /*
-The interface file contains ANSI C function prototypes and variable declarations. 
-The %module directive defines the name of the module that will be created by SWIG. 
-The %{ %} block provides a location for inserting additional code, such as C header 
+The interface file contains ANSI C function prototypes and variable declarations.
+The %module directive defines the name of the module that will be created by SWIG.
+The %{ %} block provides a location for inserting additional code, such as C header
 files or additional C declarations, into the generated C wrapper code.
 */
 %module kalashnikovDB
 
 
 /*
-@brief used for conversion or marshalling of datatypes between programming languages. 
-Specifically, for every C/C++ declaration, SWIG must somehow generate wrapper code that 
-allows values to be passed back and forth between languages. Since every programming 
-language represents data differently, this is not a simple of matter of simply linking code 
-together with the C linker. Instead, SWIG has to know something about how data is 
-represented in each language and how it can be manipulated. 
+@brief used for conversion or marshalling of datatypes between programming languages.
+Specifically, for every C/C++ declaration, SWIG must somehow generate wrapper code that
+allows values to be passed back and forth between languages. Since every programming
+language represents data differently, this is not a simple of matter of simply linking code
+together with the C linker. Instead, SWIG has to know something about how data is
+represented in each language and how it can be manipulated.
 
 Documentation for typemaps:
   http://www.swig.org/Doc2.0/Typemaps.html#Typemaps
 
-Convert from Python --> C 
-  %typemap(in) 
+Convert from Python --> C
+  %typemap(in)
 
-Convert from C --> Python 
-  %typemap(out) 
+Convert from C --> Python
+  %typemap(out)
 
 */
 
 /*
-Convert python data type to C void* 
+Convert python data type to C void*
 check if data is of type int, string, long or float, and then cast it to (void*)
 */
 %typemap(in) void* {
@@ -47,12 +47,12 @@ check if data is of type int, string, long or float, and then cast it to (void*)
     float c =  PyFloat_AsDouble($input);
     $1 = (void*)&c;
   }
-    
+
 }
 
 /*
 Convert python list to C int and int *
-given a python list, eg. ["a", "b", "c"], passed to C function that takes int (number of elements) and 
+given a python list, eg. ["a", "b", "c"], passed to C function that takes int (number of elements) and
 int* (elements in int array), list is split into int (representing list size) and int* (representing int array)
 */
 %typemap(in) (int _num, int* _type) {
@@ -75,8 +75,8 @@ int* (elements in int array), list is split into int (representing list size) an
 }
 
 /*
-The "AK_freearg" typemap is used to cleanup argument data. It is only used when an argument might have 
-allocated resources that need to be cleaned up when the wrapper function exits. The "AK_freearg" 
+The "AK_freearg" typemap is used to cleanup argument data. It is only used when an argument might have
+allocated resources that need to be cleaned up when the wrapper function exits. The "AK_freearg"
 typemap usually cleans up argument resources allocated by the "in" typemap.
 */
 %typemap(AK_freearg) (int _num, int* _type) {
@@ -94,7 +94,7 @@ converts C char* into Python string
 converts Python datatypes (string, int or float) into C char* data type
 */
 %typemap(in) char* data {
-   
+
   if (PyString_Check($input))
    {
     char* b =  PyString_AsString($input);
@@ -242,172 +242,7 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
 */
 %{
   #define SWIG_FILE_WITH_INIT
-
-
-  #include "../auxi/debug.h"
-  #include "../auxi/debug.c"
-
-  #include "../auxi/constants.h"
-  #include "../auxi/configuration.h"
-
-  #include "../auxi/auxiliary.c"
-  #include "../auxi/auxiliary.h"
-
-  #include "../dm/dbman.h"
-
-  extern table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType);
-
-  #include "../dm/dbman.c"
-
-  #include "../mm/memoman.c"
-  #include "../mm/memoman.h"
-
-  #include "../file/table.c"
-  #include "../file/table.h"
-
-  #include "../file/idx/index.h"
-
-  extern element_ad Ak_Get_First_elementAd(list_ad *L);
-  extern element_ad Ak_Get_Last_elementAd(list_ad *L);
-  extern element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op);
-  extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore);
-
-  #include "../file/idx/bitmap.c"
-
-  #include "../file/idx/hash.c"
-  #include "../file/idx/hash.h"
-
-  #include "../file/idx/btree.c"
-  #include "../file/idx/btree.h"
-  #include "../file/idx/index.c"
-
-  #include "../file/filesort.c"
-  #include "../file/filesort.h"
-  #include "../file/filesearch.c"
-  #include "../file/filesearch.h"
-  #include "../file/fileio.c"
-  #include "../file/fileio.h"
-  #include "../file/files.c"
-  #include "../file/files.h"
-
-  #include "../rel/theta_join.c"
-  #include "../rel/theta_join.h"
-  #include "../rel/product.c"
-  #include "../rel/product.h"
-  #include "../rel/aggregation.c"
-  #include "../rel/aggregation.h"
-  #include "../rel/union.c"
-  #include "../rel/union.h"
-  #include "../rel/selection.c"
-  #include "../rel/selection.h"
-  #include "../sql/drop.c"
-  #include "../sql/drop.h"
-  #include "../sql/view.c"
-  #include "../sql/view.h"
-  #include "../sql/select.c"
-  #include "../sql/select.h"
-  #include "../rel/projection.c"
-  #include "../rel/projection.h"
-
-  #include "../rel/nat_join.c"
-  #include "../rel/nat_join.h"
-  #include "../rel/intersect.c"
-  #include "../rel/intersect.h"
-  #include "../rel/difference.c"
-  #include "../rel/difference.h"
-
-  extern AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq);
-
-  extern char *AK_rel_eq_get_atrributes_char(char *tblName);
-  extern char *AK_rel_eq_cond_attributes(char *cond);
-  extern int AK_rel_eq_share_attributes(char *set, char *subset);
-  extern char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName);
-  extern AK_list *AK_rel_eq_split_condition(char *cond) ;
-  extern AK_list *AK_rel_eq_selection(AK_list *list_rel_eq);
-
-  extern char *AK_rel_eq_projection_attributes(char *attribs, char *tblName);
-  extern AK_list *AK_rel_eq_projection(AK_list *list_rel_eq);
-  extern AK_list *AK_rel_eq_get_attributes(char *tblName);
-
-  #include "../opti/query_optimization.c"
-  #include "../opti/query_optimization.h"
-
-  #include "../opti/rel_eq_comut.c"
-  #include "../opti/rel_eq_comut.h"
-  #include "../opti/rel_eq_assoc.c"
-  #include "../opti/rel_eq_assoc.h"
-
-  #include "../opti/rel_eq_selection.c"
-  #include "../opti/rel_eq_selection.h"
-  #include "../opti/rel_eq_projection.c"
-  #include "../opti/rel_eq_projection.h"
-
-  #include "../rel/expression_check.c"
-  #include "../rel/expression_check.h"
-  #include "../file/id.c"
-  #include "../file/id.h"
-  #include "../sql/cs/nnull.c"
-  #include "../sql/cs/nnull.h"
-  #include "../sql/cs/between.c"
-  #include "../sql/cs/between.h"
-  #include "../sql/cs/reference.c"
-  #include "../sql/cs/reference.h"
-  /*
-  PRIVILEGES
-  */
-  #include "../sql/privileges.c"
-  #include "../sql/privileges.h"
-
-  /*
-  UNIQUE
-  */
-  #include "../sql/cs/unique.c"
-  #include "../sql/cs/unique.h"
-  /*
-  CONSTRAINT
-  */
-  #include "../sql/cs/check_constraint.c"
-  #include "../sql/cs/check_constraint.h"
-
-  #include "../trans/transaction.h"
-  #include "../trans/transaction.c"
-
-  #include "../auxi/observable.c"
-  #include "../auxi/observable.h"
-
-  #include "../file/test.c"
-  #include "../file/test.h"
-
-
-  #include "../sql/trigger.c"
-  #include "../sql/trigger.h"
-  #include "../main.c"
-
-  #include "../rec/archive_log.c"
-  #include "../rec/archive_log.h"
-
-  #include "../sql/command.c"
-  #include "../sql/command.h"
-
-  #include "../auxi/iniparser.c"
-  #include "../auxi/iniparser.h"
-
-  #include "../auxi/dictionary.c"
-  #include "../auxi/dictionary.h"
-
-
-
-  #include "../sql/function.h"
-  #include "../sql/function.c"
-
-  #include "../rel/sequence.h"
-  #include "../rel/sequence.c"
-
-  #include "../rec/redo_log.h"
-  #include "../rec/redo_log.c"
-
-  #include "../rec/recovery.h"
-  #include "../rec/recovery.c"
+  #include "implementation.h"
 %}
 
 
@@ -532,7 +367,7 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 %include "../file/test.h"
 %include "../sql/trigger.c"
 %include "../sql/trigger.h"
-%include "../main.c"
+
 
 %include "../rec/archive_log.c"
 %include "../rec/archive_log.h"

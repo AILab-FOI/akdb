@@ -22,7 +22,7 @@
 #include "stdlib.h"
 #include "string.h"
 
-#endif /* RECOVERY */
+
 
 void AK_recover_archive_log(char* fileName);
 void AK_recover_line(char* line);
@@ -31,3 +31,5 @@ int AK_recovery_get_id(char *command);
 void AK_recovery_insert_row(char* table, char* attributes);
 char* AK_check_redolog_attributes(char* attributes);
 char** AK_recovery_tokenize(const char* input, char* delimiter, int valuesOrNot);
+
+#endif /* RECOVERY */

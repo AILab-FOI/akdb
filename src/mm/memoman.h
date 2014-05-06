@@ -130,8 +130,6 @@ AK_redo_log * redo_log;
  */
 AK_query_mem * query_mem;
 
-#endif
-
 
 int AK_cache_block(int num, AK_mem_block *mem_block);
 int AK_cache_AK_malloc();
@@ -148,3 +146,5 @@ int AK_init_new_extent(char *table_name, int extent_type);
 int AK_flush_cache();
 void AK_memoman_test();
 void AK_memoman_test2();
+
+#endif

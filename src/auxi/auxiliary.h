@@ -112,8 +112,6 @@ typedef struct Stack *AK_stack;
 typedef struct Stack AK_stackHead;
 
 
-#endif
-
 int AK_chars_num_from_number(int number, int base);
 size_t AK_type_size(int iDB_type, char *szVarchar);
 int AK_strcmp(const void *a, const void *b);
@@ -150,3 +148,5 @@ void AK_tarjan_test();
 void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem);
 void AK_copy_L(AK_list *src, AK_list *dest) ;
 int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal);
+
+#endif

@@ -24,7 +24,7 @@
 #include "../../file/fileio.h"
 #include "../../rel/expression_check.h"
 
-#endif
-
 int AK_check_constraint(char *srcTable, AK_list *expr);
 void AK_check_constraint_test();
+
+#endif

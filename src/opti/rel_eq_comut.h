@@ -23,10 +23,10 @@
 #include "../file/table.h"
 #include "./rel_eq_selection.h"
 
-#endif
-
 void AK_print_rel_eq_comut(AK_list *list_rel_eq);
 AK_list *AK_rel_eq_comut(AK_list *list_rel_eq);
 char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName);
 void AK_rel_eq_comut_test();
+
+#endif
 

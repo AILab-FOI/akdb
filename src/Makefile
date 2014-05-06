@@ -17,8 +17,8 @@ OUTDIR = ../bin
 .PHONY: swig
 
 %.o: %.c
-	gcc -c $(CFLAGS) $*.c -o $*.o
-	gcc -MM $(CFLAGS) $*.c > $*.d
+	$(CC) -c $(CFLAGS) $*.c -o $*.o
+	$(CC) -MM $(CFLAGS) $*.c > $*.d
 	@mv -f $*.d $*.d.tmp
 	@sed -e 's|.*:|$*.o:|' < $*.d.tmp > $*.d
 	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | \

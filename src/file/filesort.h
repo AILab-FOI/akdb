@@ -37,7 +37,6 @@
 #define DATA_TUPLE_SIZE 500
 
 
-#endif
 
 int Ak_get_total_headers(AK_block *iBlock);
 int Ak_get_header_number(AK_block *iBlock, char *attribute_name);
@@ -46,3 +45,6 @@ void AK_sort_segment(char *table_name, char *attr);
 void Ak_reset_block(AK_block * block);
 void AK_block_sort(AK_block * iBlock, char * atr_name);
 void Ak_filesort_test();
+
+#endif
+

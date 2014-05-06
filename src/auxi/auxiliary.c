@@ -19,9 +19,6 @@
 
 #include "auxiliary.h"
 
-
- 
-
 AK_graph G;
 AK_stackHead S;
 int indexCounter = 0;

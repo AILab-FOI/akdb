@@ -15,12 +15,17 @@
 #include "../auxi/debug.h"
 #include "../rec/archive_log.h"
 #include "../file/table.h"
+
+#include "../auxi/mempro.h"
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 
-#endif /* REDOLOG */
+
 
 int AK_add_to_redolog(char command[6], AK_list *row_root);
 void AK_printout_redolog();
 char* AK_check_attributes(char *attributes);
+
+#endif /* REDOLOG */

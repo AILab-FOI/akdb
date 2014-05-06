@@ -19,6 +19,7 @@
 
 #include "query_optimization.h"
 
+
 /**
  * @author Dino Laktašić.
  * @brief Print optimization table for testing purposes

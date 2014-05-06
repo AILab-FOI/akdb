@@ -78,8 +78,6 @@ typedef struct {
     int type;
 } AK_ref_item;
 
-#endif
-
 int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable, char *parentAttNames[], int attNum, char *constraintName, int type) ;
 AK_ref_item AK_get_reference(char *tableName, char *constraintName) ;
 int AK_reference_check_attribute(char *tableName, char *attribute, char *value) ;
@@ -95,3 +93,5 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
 int Ak_delete_row(AK_list *row_root) ;
 int Ak_update_row(AK_list *row_root);
 int AK_initialize_new_segment(char *name, int type, AK_header *header);
+
+#endif

@@ -150,7 +150,7 @@ void AK_debmod_sample_state(AK_debmod_state* ds) {
 * @brief Reserves ds for use [private function]
 * @return void
 */
-AK_INLINE void AK_debmod_enter_critical_sec(AK_debmod_state* ds){
+void AK_debmod_enter_critical_sec(AK_debmod_state* ds){
     assert(ds != NULL && ds->init == 1);
 #ifdef _WIN32
     EnterCriticalSection(&ds->critical_section);
@@ -174,7 +174,7 @@ AK_INLINE void AK_debmod_enter_critical_sec(AK_debmod_state* ds){
 * @brief Makes ds available [private function]
 * @return void
 */
-AK_INLINE void AK_debmod_leave_critical_sec(AK_debmod_state* ds){
+void AK_debmod_leave_critical_sec(AK_debmod_state* ds){
     ds->ready = 1; /* AK_DEBMOD_STATE can be used again */
 }
 

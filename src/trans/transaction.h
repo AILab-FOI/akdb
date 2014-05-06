@@ -148,7 +148,7 @@ typedef struct transaction_locks_list_elem AK_transaction_lock_elem;
  typedef struct threadContainer *AK_thread_elem;     
  typedef struct threadContainer AK_thread_Container;
 
-#endif /* TRANSACTION_H_ */
+
 int AK_memory_block_hash(int) ;
 AK_transaction_elem_P AK_search_existing_link_for_hook(int);
 AK_transaction_elem_P AK_search_empty_link_for_hook(int);
@@ -181,3 +181,5 @@ int AK_transaction_register_observer(AK_observable_transaction*, AK_observer*);
 int AK_transaction_unregister_observer(AK_observable_transaction*, AK_observer*);
 AK_observable_transaction * AK_init_observable_transaction();
 AK_observer_lock * AK_init_observer_lock();
+
+#endif /* TRANSACTION_H_ */

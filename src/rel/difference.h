@@ -22,7 +22,7 @@
 #include "../file/table.h"
 #include "../file/fileio.h"
 
-#endif
-
 int AK_difference(char *srcTable1, char *srcTable2, char *dstTable);
-void Ak_op_difference_test() ;
+void Ak_op_difference_test();
+
+#endif

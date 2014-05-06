@@ -23,8 +23,6 @@
 #include "../file/table.h"
 #include "../file/fileio.h"
 
-#endif
-
 int AK_get_function_obj_id(char* function, AK_list *arguments_list);
 int AK_check_function_arguments(int function_id, AK_list *arguments_list);
 int AK_check_function_arguments_type(int function_id, AK_list *args);
@@ -36,3 +34,5 @@ int AK_function_remove_by_name(char *name, AK_list *arguments_list);
 int AK_function_rename(char *name, AK_list *arguments_list, char *new_name);
 int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_return_type);
 void AK_function_test();
+
+#endif

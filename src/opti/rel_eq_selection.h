@@ -22,7 +22,6 @@
 
 #include "../file/table.h"
 
-#endif
 
 int AK_rel_eq_is_attr_subset(char *set, char *subset) ;
 char *AK_rel_eq_get_atrributes_char(char *tblName) ;
@@ -31,5 +30,7 @@ int AK_rel_eq_share_attributes(char *set, char *subset) ;
 AK_list *AK_rel_eq_split_condition(char *cond) ;
 AK_list *AK_rel_eq_selection(AK_list *list_rel_eq);
 void AK_print_rel_eq_selection(AK_list *list_rel_eq) ;
-void AK_rel_eq_selection_test() ;
+void AK_rel_eq_selection_test();
+
+#endif
 

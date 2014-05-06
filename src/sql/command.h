@@ -12,9 +12,9 @@ struct AK_command {
 };
 
 typedef struct AK_command command;
-#endif
 
 int AK_command(command * komande, int brojkomandi);
 void AK_test_command();
 
+#endif
 

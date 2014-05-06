@@ -169,12 +169,10 @@ typedef struct {
 
 AK_debmod_state* AK_DEBMOD_STATE;
 
-#endif
-
 void AK_debmod_d(AK_debmod_state*, const char *);
 void AK_debmod_dv(AK_debmod_state*, const char *, ...);
-AK_INLINE void AK_debmod_enter_critical_sec(AK_debmod_state*);
-AK_INLINE void AK_debmod_leave_critical_sec(AK_debmod_state*);
+void AK_debmod_enter_critical_sec(AK_debmod_state*);
+void AK_debmod_leave_critical_sec(AK_debmod_state*);
 AK_debmod_state* AK_debmod_init(void);
 void AK_debmod_die(AK_debmod_state*);
 void* AK_debmod_calloc(AK_debmod_state*, uint32_t);
@@ -206,3 +204,5 @@ void AK_debmod_print_function_use(const char *, uint8_t);
 void AK_print_function_use(const char *);
 void AK_print_function_uses();
 void AK_print_active_functions();
+
+#endif

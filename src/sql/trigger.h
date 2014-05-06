@@ -27,8 +27,6 @@
 #include "../sql/function.h"
 #include "../rel/selection.h"
 
-#endif
-
 int AK_trigger_save_conditions(int trigger, AK_list* condition);
 int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, char* function);
 int AK_trigger_get_id(char *name, char *table);
@@ -38,3 +36,5 @@ int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, ch
 AK_list *AK_trigger_get_conditions(int trigger);
 int AK_trigger_rename(char *old_name, char *new_name, char *table);
 void AK_trigger_test();
+
+#endif

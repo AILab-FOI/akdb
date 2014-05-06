@@ -26,9 +26,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#endif
-
 void AK_archive_log();
 
+#endif
 
 

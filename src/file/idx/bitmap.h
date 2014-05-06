@@ -26,7 +26,6 @@
 #include "../../file/fileio.h"
 #include "../../file/files.h"
 
-#endif
 
 int Ak_If_ExistOp(AK_list *L, char *ele);
 void AK_create_Index(char *tblName, AK_list *attributes);
@@ -39,3 +38,5 @@ list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeV
 void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue);
 int Ak_write_block(AK_block * block);
 void Ak_bitmap_test();
+
+#endif

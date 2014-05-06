@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 // Memory wrappers and debug mode
-//#include "auxi/mempro.h"
+#include "auxi/mempro.h"
 
 // Global configuration
 #include "auxi/constants.h"
@@ -102,7 +102,6 @@ typedef struct {
 } function;
 
 function fun[] = {
-
         {"Ak_bitmap_test", &Ak_bitmap_test},
         {"Ak_btree_test", &Ak_btree_test},
         {"Ak_constraint_between_test", &Ak_constraint_between_test},
@@ -147,7 +146,7 @@ function fun[] = {
         {"AK_allocationbit_test", &AK_allocationbit_test},
         {"AK_allocationtable_test", &AK_allocationtable_test},
         {"AK_block_test", &AK_memoman_test2},
-	{"AK_select_test", &AK_select_test}
+	    {"AK_select_test", &AK_select_test}
     };
 
 /**

@@ -35,7 +35,6 @@ struct AK_create_table {
 typedef struct AK_create_table AK_create_table_parameter;
 
 
-#endif
 
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name);
 void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) ;
@@ -61,3 +60,5 @@ void AK_table_test() ;
 
 int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr);
 void AK_op_rename_test() ;
+
+#endif
