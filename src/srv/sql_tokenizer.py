@@ -737,6 +737,138 @@ class sql_tokenizer:
           return ""*err.loc + "^\n" + err.msg
       print
       return parsedCommand
+      
+  def AK_parse_alter_user(self, string):
+    '''
+    @author Marinko Radic
+    @brief sql parsing of ALTER USER command
+    @param string sql command as string
+    @return if command is successfully parsed returns list of tokens, else returns error message as string 
+      '''
+    alterUserToken    = Keyword("ALTER USER", caseless=True)
+    passwordToken     = Keyword("WITH PASSWORD", caseless=True)
+    createDB          = Keyword("CREATEDB", caseless=True)
+    createUshortToken = Keyword("CREATEUSER", caseless=True)
+    validToken        = Keyword("VALID UNTIL", caseless=True)
+    renameToToken     = Keyword("RENAME TO", caseless=True)
+    
+    
+    tokens    = Word(alphanums+"_:.-")
+    
+    user      = tokens.copy().setResultsName("username")
+    password  = tokens.copy().setResultsName("password")
+    valid     = tokens.copy().setResultsName("validUntil")
+    newName   = tokens.copy().setResultsName("newname")
+    
+    constraints = passwordToken + password.setResultsName("password") | createUshortToken + createDB| validToken + valid.setResultsName("validUntil") | renameToToken + newName.setResultsName("newname")
+   
+    alterUserCmd = alterUserToken.setResultsName("commandName") + user.setResultsName("username") + Optional(constraints)
+ 
+    
+    
+    try:
+      tokens=alterUserCmd.parseString(string)
+    except ParseException, err:
+      return " "*err.loc + "^\n" + err.msg
+    print
+    return tokens 
+   
+  def AK_parse_alter_view(self, string):
+    '''
+    @author Marinko Radic
+    @brief sql parsing of ALTER VIEW command
+    @param string sql command as string
+    @return if command is successfully parsed returns list of tokens, else returns error message as string 
+    '''    
+    alterViewToken    = Keyword("ALTER VIEW", caseless=True)
+    setShemaToken     = Keyword("SET SHEMA", caseless=True)
+    renameToToken     = Keyword("RENAME TO",caseless=True)
+    ownerToToken      = Keyword("OWNER TO", caseless=True)
+    setDefaultToken   = Keyword("SET DEFAULT", caseless=True)
+    dropDefaultToken  = Keyword("DROP DEFAULT", caseless=True)
+    alterColumnToken  = Keyword("ALTER COLUMN",caseless= True)
+    tokens            = Word(alphanums+"_:.-")
+    
+    name              = tokens.copy().setResultsName("name")
+    columnName        = tokens.copy().setResultsName("columnName")
+    expression        = tokens.copy().setResultsName("expression")
+    newName           = tokens.copy().setResultsName("newName")
+    alterViewCmd      = alterViewToken + name.setResultsName("name") + alterColumnToken + columnName.setResultsName("columnName")+ setDefaultToken + expression.setResultsName("expression")| alterViewToken + name.setResultsName("name") + alterColumnToken + columnName.setResultsName("columnName")+ dropDefaultToken | alterViewToken + name.setResultsName("name") + ownerToToken+ newName.setResultsName("newName")|  alterViewToken + name.setResultsName("name") + setShemaToken+ newName.setResultsName("newName")|alterViewToken + name.setResultsName("name") + renameToToken+ newName.setResultsName("newName")
+         
+    try:
+      tokens=alterViewCmd.parseString(string)
+    except ParseException, err:
+      return " "*err.loc + "^\n" + err.msg
+    print
+    return tokens 
+    
+  def AK_parse_alter_index(self, string):
+    '''
+    @author Marinko Radic
+    @brief sql parsing of ALTER INDEX command
+    @param string sql command as string
+    @return if command is successfully parsed returns list of tokens, else returns error message as string 
+    '''  
+    alterIndexToken  = Keyword("ALTER INDEX", caseless=True)
+    renameToToken    = Keyword("RENAME TO",caseless=True)
+    
+    tokens  = Word(alphanums+"_:.-")
+    name    = tokens.copy().setResultsName("name")
+    newName = tokens.copy().setResultsName("newName")
+    
+    alterIndexCmd = alterIndexToken + name.setResultsName("name") + renameToToken + newName.setResultsName("newName")
+
+    try:
+      tokens=alterIndexCmd.parseString(string)
+    except ParseException, err:
+      return " "*err.loc + "^\n" + err.msg
+    print
+    return tokens 
+    
+  
+   
+  def AK_parse_alter_sequence(self, string):
+    '''
+    @author Marinko Radic
+    @brief sql parsing of ALTER SEQUNCE command
+    @param string sql command as string
+    @return if command is successfully parsed returns list of tokens, else returns error message as string 
+    '''     
+    alterSequenceToken  = Keyword("ALTER SEQUENCE", caseless=True)
+    incrementByToken    = Keyword("INCREMENT BY", caseless=True)
+    minValueToken       = Keyword("MINVALUE",caseless=True)
+    NoMinValueToken     = Keyword("NO MINVALUE",caseless=True)
+    maxValueToken       = Keyword("MAXVALUE",caseless=True)
+    noMaxValueToken     = Keyword("NO MAXVALUE",caseless=True)
+    restartWithToken    = Keyword("RESTART WITH",caseless=True)
+    cacheToken          = Keyword("CACHE",caseless=True)
+    noCacheToken        = Keyword("NO CACHE",caseless=True)
+    cycleToken          = Keyword("CYCLE",caseless=True)
+    noCycleToken        = Keyword("NO CYCLE",caseless=True)
+    setShemaToken       = Keyword("SET SHEMA", caseless=True)
+  
+    
+    tokens         = Word(alphanums+"_")
+    tokens2        = Word(nums)
+    sequenceName   = tokens.copy().setResultsName("sequenceName")
+    increment      = tokens2.copy().setResultsName("increment")
+    minValue       = tokens2.copy().setResultsName("minvalue")
+    maxValue       = tokens2.copy().setResultsName("maxvalue")
+    cache          = tokens.copy().setResultsName("cache")
+    newName        = tokens.copy().setResultsName("newName")
+    restartValue   = tokens2.copy().setResultsName("restartValue")
+    constraints    = ZeroOrMore( restartWithToken + restartValue.setResultsName("restartValue") |
+    incrementByToken + increment.setResultsName("increment")|
+    minValueToken + minValue.setResultsName("minvalue")| NoMinValueToken| maxValueToken + maxValue.setResultsName("maxvalue") | noMaxValueToken |
+    cacheToken + cache.setResultsName("cache") |cycleToken | noCycleToken )
+    
+    alterSequenceCmd = alterSequenceToken.setResultsName("commandName") + sequenceName.setResultsName("sequenceName") + Optional(constraints)
+    try:
+      tokens=alterSequenceCmd.parseString(string)
+    except ParseException, err:
+      return " "*err.loc + "^\n" + err.msg
+    print
+    return tokens 
 
 
 
@@ -1085,7 +1217,85 @@ class sql_tokenizer:
       print "tokens.name = ", tmp.name
       print "tokens.mode = ", tmp.mode
       print "tokens.query = ", tmp.query
-
+  def AK_alter_sequence_test(self):
+    '''
+    @author Marinko Radic
+    @brief testing of sql parsing command ALTER SEQUENCE
+    @no return value
+    
+    '''
+    print "\n----------------------------ALTER SEQUENCE test-------------------------------\n"
+    commands = ["ALTER SEQUENCE sequenca INCREMENT BY 2 MINVALUE 9 MAXVALUE 9999999  cache 10 CYCLE",\
+              "ALTER sequence sequenca increment by 2 minvalue 9 maxvalue 9999999  cache 10",\
+              
+              "ALTER SEQUENCE serial RESTART WITH 105"]
+    
+    for command in commands:
+        token = test.AK_parse_alter_sequence(command)
+        if isinstance(token, str):
+          print "Error:"
+          print command
+          print token
+        else:
+          print "tokens = ", token.dump()
+          
+  def AK_alter_view_test(self):
+    '''
+    @author Marinko Radic
+    @brief testing of sql parsing command ALTER VIEW
+    @no return value
+    
+    '''
+    print "\n----------------------------ALTER VIEW test-------------------------------\n"
+    commands = ["ALTER VIEW foo RENAME TO bar", "ALTER VIEW nek ALTER COLUMN mag SET DEFAULT neke"]
+    
+    for command in commands:
+        token = test.AK_parse_alter_view(command)
+        if isinstance(token, str):
+          print "Error:"
+          print command
+          print token
+        else:
+          print "tokens = ", token.dump()  
+          
+  def AK_alter_index_test(self):
+    '''
+     @author Marinko Radic
+     @brief testing of sql parsing command ALTER INDEX
+     @no return value
+    
+    '''
+    print "\n----------------------------ALTER INDEX test-------------------------------\n"
+    commands = ["ALTER INDEX distributors RENAME TO suppliers"]
+    
+    for command in commands:
+        token = test.AK_parse_alter_index(command)
+        if isinstance(token, str):
+          print "Error:"
+          print command
+          print token
+        else:
+          print "tokens = ", token.dump()             
+ 
+  def AK_alter_user_test(self):
+    '''
+     @author Marinko Radic
+     @brief testing of sql parsing command ALTER USER
+     @no return value
+    
+    '''
+    print "\n----------------------------ALTER USER test-------------------------------\n"
+    
+    commands = ["ALTer USEr davide WITH PASSWORD hu8jmn3", "ALTER USER manuel VALID UNTIL 2013-22-02",
+    "ALTER USER miriam CREATEUSER CREATEDB", "ALTER USER marinac RENAME TO marinac666", "ALTER USER dd VALID UNTIL 1","ALTER USER marinac RENAME TO marinac666 "]     
+    for command in commands:
+      token = test.AK_parse_alter_user(command)
+      if isinstance(token, str):
+	print "Error:"
+        print command
+        print token
+      else:
+        print "tokens = ", token.dump()  
 
 
 
@@ -1129,5 +1339,20 @@ test.AK_create_sequence_test()
 test.AKTokenizeCreateFunctionTest()
 test.AK_parse_CreateView_test()
 
+#testing alter user statment
+test.AK_alter_user_test()
+
+#testing alter sequnce statment
+test.AK_alter_sequence_test()
+
+#testing alter index statment
+test.AK_alter_index_test()
+
+#testing alter view statment
+test.AK_alter_view_test()
 '''
-test.AK_trans_test()
+
+test.AK_alter_user_test()
+test.AK_alter_sequence_test()
+test.AK_alter_index_test()
+test.AK_alter_view_test()
