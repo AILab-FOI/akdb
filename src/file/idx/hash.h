@@ -25,6 +25,7 @@
 #include "../../auxi/constants.h"
 #include "../../auxi/configuration.h"
 #include "../files.h"
+#include "../../auxi/mempro.h"
 
 /**
  * @author Unknown

@@ -30,6 +30,7 @@
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
+    AK_PRO;
     table_addresses *src_addr1 = (table_addresses*) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses*) AK_get_table_addresses(srcTable2);
 
@@ -141,14 +142,16 @@ thesame=0;
         AK_free(src_addr1);
         AK_free(src_addr2);
 	Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
-	
+	AK_EPI;
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
         AK_free(src_addr1);
         AK_free(src_addr2);
+	AK_EPI;
 	return EXIT_ERROR;
     }
+    AK_EPI;
 }
 
 /**
@@ -157,9 +160,11 @@ thesame=0;
  * @return No return value
  */
 void Ak_op_intersect_test() {
+    AK_PRO;
     printf("\n********** INTERSECT TEST **********\n\n");
 
     AK_intersect("professor", "assistant", "intersect_test");
     AK_print_table("intersect_test");
+    AK_EPI;
 }
 

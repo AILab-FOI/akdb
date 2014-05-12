@@ -32,8 +32,10 @@ int Ak_dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...) {
 	/*if (DEBUG_NONE) {
 		return 0;
 	}*/
+        AK_PRO;
 	
 	if ((level == 0 || type == 0 || format == NULL) && !DEBUG_ALL) {
+                AK_EPI;
 		return 0;
 	}
 	
@@ -41,5 +43,6 @@ int Ak_dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...) {
 	va_start(args, format);
 	vprintf(format, args);
 	va_end(args);
+        AK_EPI;
 	return 1;
 }

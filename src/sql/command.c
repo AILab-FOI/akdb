@@ -8,6 +8,7 @@
  */
 int AK_command(command * komande, int brojkomandi) {
     int i;
+    AK_PRO;
     for (i = 0; i < brojkomandi; ++i) {
         switch(komande[i].id_command){
         case SELECT:
@@ -16,40 +17,52 @@ int AK_command(command * komande, int brojkomandi) {
             char *dest_table = AK_malloc(strlen(ext) + strlen(komande[i].tblName) + 1);
             strcat(dest_table, komande[i].tblName);
             strcat(dest_table, ext);
-            if(AK_selection(komande[i].tblName, dest_table, (AK_list*)komande[i].parameters) == EXIT_ERROR)
+            if(AK_selection(komande[i].tblName, dest_table, (AK_list*)komande[i].parameters) == EXIT_ERROR){
+		AK_EPI;
                 return EXIT_ERROR;
+	    }
             break;
             
         case UPDATE:
             printf("***UPDATE***\n");
-            if(Ak_update_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR)
+            if(Ak_update_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR){
+                AK_EPI;
                 return EXIT_ERROR;
+            }
             AK_print_table(komande[i].tblName);
 
             break;
         case DELETE:
             printf("***DELETE***\n");        	 
-            if(Ak_update_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR)
+            if(Ak_update_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR){
+		AK_EPI;
                 return EXIT_ERROR;
-            if(Ak_delete_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR)
+	    }
+            if(Ak_delete_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR){
+		AK_EPI;
                 return EXIT_ERROR;
+	    }
             AK_print_table(komande[i].tblName);
             break;
            
         case INSERT:
             printf("***INSERT***\n");
-            if(Ak_insert_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR)
+            if(Ak_insert_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR){
+		AK_EPI;
                 return EXIT_ERROR;
+	    }
             AK_print_table(komande[i].tblName);
             break;
         default:
             break;
         }
     }
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
 void AK_test_command(){
+    AK_PRO;
     printf("***Test Command***\n");
     int brojkomandi;
 
@@ -101,6 +114,7 @@ void AK_test_command(){
     brojkomandi = 3;
 
     AK_command(komande, brojkomandi);
+    AK_EPI;
 }
 
 /*

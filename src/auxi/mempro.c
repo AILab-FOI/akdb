@@ -116,7 +116,20 @@ static void AK_debmod_signal_callback(int sig, siginfo_t* si, void* unused) {
         
         /* end program execution if the sigsegv was caused by non-protected
         memory access */
-        assert(mprotect_sigsegv);
+	if(mprotect_sigsegv == 0){
+		printf("************* Real SIGSEGV occured *************\n");
+                printf("This means a memory address which is not under\n");
+		printf("our control has been accessed somewhere in your\n");
+		printf("code. Please use AK_calloc, AK_free, etc.\n");
+		printf("You've got some bugfixing to do :(\n");
+                AK_print_active_functions();
+		AK_print_function_uses();
+		printf("Probable current function: %s\n",
+        		AK_debmod_func_get_name(AK_DEBMOD_STATE, 
+			AK_DEBMOD_STATE->fstack_items[
+			AK_DEBMOD_STATE->fstack_size - 1]));
+        	assert(mprotect_sigsegv);
+        }
     }
 }
 

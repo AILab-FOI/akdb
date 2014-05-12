@@ -4,6 +4,7 @@
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rel/selection.h"
+#include "../auxi/mempro.h"
 
 struct AK_command {
   int id_command;

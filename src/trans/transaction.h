@@ -28,6 +28,7 @@
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include <string.h>
+#include "../auxi/mempro.h"
 
 /**
  * @author Ivan Pusic

@@ -156,6 +156,7 @@ Main program function
 */
 int main(int argc, char * argv[])
 {
+    AK_PRO;
     qsort(fun, sizeof(fun)/sizeof(fun[0]), (int)sizeof(fun[0]), (void*)strcasecmp);
     if((argc == 2) && !strcmp(argv[1], "help"))
         help();
@@ -190,28 +191,35 @@ int main(int argc, char * argv[])
 
                 printf( "\nEverything was fine!\nBye =)\n" );
                 //            pthread_exit(NULL);
+		AK_EPI;
                 return ( EXIT_SUCCESS );
             }
         }
                 printf( "ERROR. Failed to initialize memory manager\n" );
+		AK_EPI;
                 return ( EXIT_ERROR );
         }
         printf( "ERROR. Failed to initialize disk manager\n" );
+	AK_EPI;
         return ( EXIT_ERROR );
     }
+    AK_EPI;
     return(EXIT_SUCCESS);
 }
 
 void help()
 {
+    AK_PRO;
     printf("Usage: akdb [option]\n");
     printf("Available commands:\n");
     printf("help - displays help\n");
     printf("test [test_id] - run akdb in testing mode\n");
     printf("test show - displays available tests\n");
+    AK_EPI;
 }
 void show_test()
 {
+    AK_PRO;
     int i=0;
 
     int m = sizeof(fun)/sizeof(fun[0]);
@@ -227,10 +235,12 @@ void show_test()
     printf("\n\n");
     printf(" 0. %-30s", "Exit");
     printf("\n\n");
+    AK_EPI;
 }
 
 void choose_test()
 {
+    AK_PRO;
     int ans=-1;
     AK_create_test_tables();
     while(ans)
@@ -255,4 +265,5 @@ void choose_test()
             ans++;
         }
     }
+    AK_EPI;
 }

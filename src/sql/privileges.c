@@ -28,6 +28,7 @@
 int AK_user_add(char *username, int *password, int set_id) {
 
     char *tblName = "AK_user";
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     int user_id = AK_get_id();
@@ -36,6 +37,7 @@ int AK_user_add(char *username, int *password, int set_id) {
     Ak_Insert_New_Element(TYPE_VARCHAR, username, tblName, "username", row_root);
     Ak_Insert_New_Element(TYPE_INT, &password, tblName, "password", row_root);
     Ak_insert_row(row_root);
+    AK_EPI;
     return user_id;
 }
 
@@ -48,15 +50,18 @@ int AK_user_add(char *username, int *password, int set_id) {
 int AK_user_get_id(char *username) {
     int i = 0;
     AK_list *row;
+    AK_PRO;
     while ((row = (AK_list *) AK_get_row(i, "AK_user")) != NULL) {
         if (strcmp(row->next->next->data, username) == 0) {
             i = (int) * row->next->data;
             AK_free(row);
+            AK_EPI;
             return i;
         }
         i++;
     }
     AK_free(row);
+    AK_EPI;
     return EXIT_ERROR;
 }
 
@@ -67,10 +72,12 @@ int AK_user_get_id(char *username) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_user_remove_by_name(char *name) {
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L((AK_list_elem) row_root);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_user", "username", row_root, 1);
     int result = Ak_delete_row(row_root);
+    AK_EPI;
     return result;
 }
 
@@ -83,7 +90,7 @@ int AK_user_remove_by_name(char *name) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_user_rename(char *old_name, char *new_name, int *password) {
-
+    AK_PRO;
     printf("\n***Rename group***");
     int result = 0;
     int user_id = AK_user_get_id(old_name);
@@ -91,6 +98,7 @@ int AK_user_rename(char *old_name, char *new_name, int *password) {
     result = AK_user_remove_by_name(old_name);
     result = AK_user_remove_by_name(old_name);
     result = AK_user_add(new_name, password, user_id);
+    AK_EPI;
     return result;
 
 }
@@ -103,8 +111,8 @@ int AK_user_rename(char *old_name, char *new_name, int *password) {
  * @return id of group                                                      
  */
 int AK_group_add(char *name, int set_id) {
-
     char *tblName = "AK_group";
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     int group_id = AK_get_id();
@@ -112,6 +120,7 @@ int AK_group_add(char *name, int set_id) {
     Ak_Insert_New_Element(TYPE_INT, &group_id, tblName, "obj_id", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, name, tblName, "name", row_root);
     Ak_insert_row(row_root);
+    AK_EPI;
     return group_id;
 }
 
@@ -124,6 +133,7 @@ int AK_group_add(char *name, int set_id) {
 int AK_group_get_id(char *name) {
     int i = 0;
     AK_list *row;
+    AK_PRO;
     while ((row = (AK_list *) AK_get_row(i, "AK_group")) != NULL) {
         if (strcmp(row->next->next->data, name) == 0) {
             i = (int) * row->next->data;
@@ -133,6 +143,7 @@ int AK_group_get_id(char *name) {
         i++;
     }
     AK_free(row);
+    AK_EPI;
     return EXIT_ERROR;
 }
 
@@ -143,10 +154,12 @@ int AK_group_get_id(char *name) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_group_remove_by_name(char *name) {
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L((AK_list_elem) row_root);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_group", "name", row_root, 1);
     int result = Ak_delete_row(row_root);
+    AK_EPI;
     return result;
 }
 
@@ -158,6 +171,7 @@ int AK_group_remove_by_name(char *name) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_group_rename(char *old_name, char *new_name) {
+    AK_PRO;
     printf("\n***Rename group***");
     int result = 0;
     int view_id = AK_group_get_id(old_name);
@@ -165,6 +179,7 @@ int AK_group_rename(char *old_name, char *new_name) {
     result = AK_group_remove_by_name(old_name);
     result = AK_group_remove_by_name(old_name);
     result = AK_group_add(new_name, view_id);
+    AK_EPI;
     return result;
 }
 
@@ -178,10 +193,12 @@ int AK_group_rename(char *old_name, char *new_name) {
  */
 int AK_grant_privilege_user(char *username, char *table, char *right) {
     int privilege_id, table_id;
+    AK_PRO;
     table_id = AK_get_table_obj_id(table);
     int user_id = AK_user_get_id(username);
 
     if (table_id == -1 || user_id == -1) {
+	AK_EPI;
         return EXIT_ERROR;
     }
 
@@ -217,7 +234,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
         Ak_insert_row(row_root);
         AK_free(row_root);
     }
-
+    AK_EPI;
     return privilege_id;
 }
 
@@ -230,6 +247,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
  * @return EXIT_SUCCESS if privilege is revoked, EXIT_ERROR if it isn't
  */
 int AK_revoke_privilege_user(char *username, char *table, char *right) {
+    AK_PRO;
     printf("Revokanje: %s %s %s\n", username, table, right);
     int table_id = AK_get_table_obj_id(table);
     int user_id = AK_user_get_id(username);
@@ -268,8 +286,11 @@ int AK_revoke_privilege_user(char *username, char *table, char *right) {
         }//while 
     }//else
 
-    if (result == EXIT_ERROR) return EXIT_ERROR;
-
+    if (result == EXIT_ERROR){
+	AK_EPI;
+	return EXIT_ERROR;
+    }
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -280,6 +301,7 @@ int AK_revoke_privilege_user(char *username, char *table, char *right) {
  * @return EXIT_SUCCESS if privilege is revoked, EXIT_ERROR if it isn't
  */
 int AK_revoke_all_privileges_user(char *username) {
+    AK_PRO;
     int user_id = AK_user_get_id(username);
     int result;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
@@ -296,7 +318,11 @@ int AK_revoke_all_privileges_user(char *username) {
         AK_free(row);
     }
 
-    if (result == EXIT_ERROR) return EXIT_ERROR;
+    if (result == EXIT_ERROR){
+	AK_EPI;
+	return EXIT_ERROR;
+    }
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -310,10 +336,12 @@ int AK_revoke_all_privileges_user(char *username) {
  */
 int AK_grant_privilege_group(char *groupname, char *table, char *right) {
     int privilege_id, table_id, group_id;
+    AK_PRO;
     table_id = AK_get_table_obj_id(table);
     group_id = AK_group_get_id(groupname);
 
     if (table_id == -1 || group_id == -1) {
+	AK_EPI;
         return EXIT_ERROR;
     }
 
@@ -351,6 +379,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right) {
         AK_free(row_root);
     }
 
+    AK_EPI;
     return privilege_id;
 }
 
@@ -364,6 +393,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right) {
  */
 int AK_revoke_privilege_group(char *groupname, char *table, char *right) {
     int table_id, group_id;
+    AK_PRO;
     group_id = AK_group_get_id(groupname);
     table_id = AK_get_table_obj_id(table);
     int result;
@@ -400,7 +430,11 @@ int AK_revoke_privilege_group(char *groupname, char *table, char *right) {
         }
     }
 
-    if (result == EXIT_ERROR) return EXIT_ERROR;
+    if (result == EXIT_ERROR){
+	AK_EPI;
+	return EXIT_ERROR;
+    }
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -411,6 +445,7 @@ int AK_revoke_privilege_group(char *groupname, char *table, char *right) {
  * @return EXIT_SUCCESS if privilege is revoked, EXIT_ERROR if it isn't
  */
 int AK_revoke_all_privileges_group(char *groupname) {
+    AK_PRO;
     int group_id = AK_group_get_id(groupname);
     int result;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
@@ -427,7 +462,11 @@ int AK_revoke_all_privileges_group(char *groupname) {
         AK_free(row);
     }
 
-    if (result == EXIT_ERROR) return EXIT_ERROR;
+    if (result == EXIT_ERROR){
+	AK_EPI;
+	return EXIT_ERROR;
+    }
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -439,6 +478,7 @@ int AK_revoke_all_privileges_group(char *groupname) {
  * @return EXIT_SUCCESS or EXIT_ERROR if user is already in the group
  */
 int AK_add_user_to_group(char *user, char *group) {
+    AK_PRO;
     int user_id = AK_user_get_id(user);
     int group_id = AK_group_get_id(group);
 
@@ -448,6 +488,7 @@ int AK_add_user_to_group(char *user, char *group) {
         // if user is already in group, return error
         // ovo nije dobro--provjerava samo korinika ne i grupu
         if (user_id == (int) *row->next->data) {
+	    AK_EPI;
             return EXIT_ERROR;
         }
         i++;
@@ -462,6 +503,7 @@ int AK_add_user_to_group(char *user, char *group) {
 
     AK_free(row_root);
 
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -472,6 +514,7 @@ int AK_add_user_to_group(char *user, char *group) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_remove_user_from_all_groups(char *user) {
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
@@ -483,7 +526,10 @@ int AK_remove_user_from_all_groups(char *user) {
         if (user_id == (int) *row->next->data) {
             Ak_Insert_New_Element_For_Update(TYPE_INT, &user_id, "AK_user_group", "user_id", row_root, 1);
             result = Ak_delete_row(row_root);
-            if (result == EXIT_ERROR) return EXIT_ERROR;
+            if (result == EXIT_ERROR){
+		AK_EPI;
+		return EXIT_ERROR;
+	    }
         }
         i++;
         Ak_DeleteAll_L(row_root);
@@ -491,6 +537,7 @@ int AK_remove_user_from_all_groups(char *user) {
     }
 
     //if (result == EXIT_ERROR) return EXIT_ERROR;
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -501,6 +548,7 @@ int AK_remove_user_from_all_groups(char *user) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_remove_all_users_from_group(char *group) {
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
@@ -512,7 +560,10 @@ int AK_remove_all_users_from_group(char *group) {
         if (group_id == (int) *row->next->next->data) {
             Ak_Insert_New_Element_For_Update(TYPE_INT, &group_id, "AK_user_group", "group_id", row_root, 1);
             result = Ak_delete_row(row_root);
-            if (result == EXIT_ERROR) return EXIT_ERROR;
+            if (result == EXIT_ERROR){
+		AK_EPI;
+		return EXIT_ERROR;
+	    }
         }
         i++;
         Ak_DeleteAll_L(row_root);
@@ -520,6 +571,7 @@ int AK_remove_all_users_from_group(char *group) {
     }
 
     // if (result == EXIT_ERROR) return EXIT_ERROR;
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -532,6 +584,7 @@ int AK_remove_all_users_from_group(char *group) {
  * @return EXIT_SUCCESS if user has right, EXIT_ERROR if user has no right
  */
 int AK_check_privilege(char *username, char *table, char *privilege) {
+    AK_PRO;
     int user_id = AK_user_get_id(username);
     int table_id = AK_get_table_obj_id(table);
     int i = 0;
@@ -568,6 +621,7 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
         }
         if (has_right == 1) {
             printf("User %s has right to %s on %s", username, privilege, table);
+	    AK_EPI;
             return EXIT_SUCCESS;
         }
         i = 0;
@@ -612,6 +666,7 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
         }
         if (has_right == 1) {
             printf("User %s has right to %s on %s", username, privilege, table);
+	    AK_EPI;
             return EXIT_SUCCESS;
         }
     }// if privilege is not ALL
@@ -620,6 +675,7 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
             if ((strcmp(row->next->next->data, username) == 0) && (table_id == (int) * row->next->next->next->data) && (strcmp(row->next->next->next->next->data, privilege) == 0)) {
                 has_right = 1;
                 printf("User %s has right to %s on %s", username, privilege, table);
+                AK_EPI;
                 return EXIT_SUCCESS;
             }
             i++;
@@ -640,6 +696,7 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
                 if ((groups[i] == (int) * row->next->next->data) && (table_id == (int) * row->next->next->next->data) && (strcmp(row->next->next->next->next->data, privilege) == 0)) {
                     has_right = 1;
                     printf("User %s has right to %s on %s", username, privilege, table);
+		    AK_EPI;
                     return EXIT_SUCCESS;
                 }
                 j++;
@@ -649,6 +706,7 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
     }
 
     printf("User %s has no right to %s on %s", username, privilege, table);
+    AK_EPI;
     return EXIT_ERROR;
 }
 
@@ -659,6 +717,7 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
  * @return EXIT_ERROR or EXIT_SUCCESS
  */
 int AK_check_user_privilege(char *user) {
+    AK_PRO;
     int user_id = AK_user_get_id(user);
     int i = 0;
     AK_list *row;
@@ -667,6 +726,7 @@ int AK_check_user_privilege(char *user) {
     while ((row = (AK_list *) AK_get_row(i, "AK_user_right")) != NULL) {
         if ((int) *row->next->next->data == user_id) {
             privilege = 1;
+	    AK_EPI;
             return EXIT_SUCCESS;
         }
         i++;
@@ -676,15 +736,17 @@ int AK_check_user_privilege(char *user) {
     while ((row = (AK_list *) AK_get_row(j, "AK_user_group")) != NULL) {
         if ((int) *row->next->data == user_id) {
             privilege = 1;
+	    AK_EPI;
             return EXIT_SUCCESS;
         }
         j++;
         AK_free(row);
     }
     if (privilege == 0) {
+  	AK_EPI;
         return EXIT_ERROR;
     }
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -695,6 +757,7 @@ int AK_check_user_privilege(char *user) {
  * @return EXIT_ERROR or EXIT_SUCCESS
  */
 int AK_check_group_privilege(char *group) {
+    AK_PRO;
     int group_id = AK_group_get_id(group);
     int i = 0;
     AK_list *row;
@@ -703,6 +766,7 @@ int AK_check_group_privilege(char *group) {
     while ((row = (AK_list *) AK_get_row(i, "AK_group_right")) != NULL) {
         if ((int) *row->next->next->data == group_id) {
             privilege = 1;
+	    AK_EPI;
             return EXIT_SUCCESS;
         }
         i++;
@@ -712,15 +776,17 @@ int AK_check_group_privilege(char *group) {
     while ((row = (AK_list *) AK_get_row(j, "AK_user_group")) != NULL) {
         if ((int) *row->next->next->data == group_id) {
             privilege = 1;
+	    AK_EPI;
             return EXIT_SUCCESS;
         }
         j++;
         AK_free(row);
     }
     if (privilege == 0) {
+	AK_EPI;
         return EXIT_ERROR;
     }
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -730,6 +796,7 @@ int AK_check_group_privilege(char *group) {
  * @return no return value                                                     
  */
 void AK_privileges_test() {
+    AK_PRO;
     printf("\nThis is PRIVILEGES test!\n\n");
     AK_user_add("proba", (int*) 123, NEW_ID);
     AK_user_add("kritakac", (int*) 321, NEW_ID);
@@ -774,4 +841,5 @@ void AK_privileges_test() {
         printf("\nCheck if user proba has right UPDATE on table student!\n");
         AK_check_privilege("proba", "student", "UPDATE");
      */
+    AK_EPI;
 }

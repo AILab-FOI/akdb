@@ -20,9 +20,11 @@
 #include "../file/table.h"
 
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name) {
+    AK_PRO;
     AK_create_table_parameter* par = AK_malloc(sizeof (AK_create_table_parameter));
     par->type = type;
     strcpy(par->name, name);
+    AK_EPI;
     return par;
 }
 
@@ -30,6 +32,7 @@ void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int a
     int i;
     AK_header t_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
+    AK_PRO;
     for (i = 0; i < attribute_count; i++) {
         switch (parameters[i].type) {
             case TYPE_INT:
@@ -47,6 +50,7 @@ void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int a
         }
     }
     memset(t_header + attribute_count, 0, MAX_ATTRIBUTES - attribute_count);
+    AK_EPI;
 }
 
 /**
@@ -63,7 +67,7 @@ void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int a
  */
 int AK_num_attr(char * tblName) {
     int num_attr = 0;
-
+    AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0)
         num_attr = -1;
@@ -76,7 +80,7 @@ int AK_num_attr(char * tblName) {
 
     }
     AK_free(addresses);
-
+    AK_EPI;
     return num_attr;
 }
 
@@ -98,9 +102,12 @@ int AK_num_attr(char * tblName) {
  */
 int AK_get_num_records(char *tblName) {
     int num_rec = 0;
+    AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    if (addresses->address_from[0] == 0)
+    if (addresses->address_from[0] == 0){
+        AK_EPI;
         return -1;
+    }
     int i = 0, j, k;
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
     while (addresses->address_from[ i ] != 0) {
@@ -119,6 +126,7 @@ int AK_get_num_records(char *tblName) {
 
 AK_free(addresses);
     int num_head = AK_num_attr(tblName);
+    AK_EPI;
     return num_rec / num_head;
 }
 
@@ -136,15 +144,19 @@ AK_free(addresses);
  * @result array of table header
  */
 AK_header *AK_get_header(char *tblName) {
+    AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    if (addresses->address_from[0] == 0)
+    if (addresses->address_from[0] == 0){
+        AK_EPI;
         return 0;
+    }
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
 
     int num_attr = AK_num_attr(tblName);
     AK_header *head = (AK_header*) AK_calloc(num_attr, sizeof (AK_header));
     memcpy(head, temp->block->header, num_attr * sizeof (AK_header));
 
+    AK_EPI;
     return head;
 }
 
@@ -156,13 +168,18 @@ AK_header *AK_get_header(char *tblName) {
  * @return attribute name
  */
 char *AK_get_attr_name(char *tblName, int index) {
+    AK_PRO;
     int num_attr = AK_num_attr(tblName);
-    if (index >= num_attr)
+    if (index >= num_attr){
+        AK_EPI;
         return NULL;
+    }
     else {
         AK_header *header = AK_get_header(tblName);
+        AK_EPI;
         return (header + index)->att_name;
     }
+    AK_EPI;
 }
 
 /**
@@ -173,16 +190,22 @@ char *AK_get_attr_name(char *tblName, int index) {
  * @return zero-based index
  */
 int AK_get_attr_index(char *tblName, char *attrName) {
-    if (tblName == NULL || attrName == NULL)
+    AK_PRO;
+    if (tblName == NULL || attrName == NULL){
+        AK_EPI;
         return -1;
+    }
     int num_attr = AK_num_attr(tblName);
     AK_header *header = AK_get_header(tblName);
     int index = 0;
     while (index < num_attr) {
-        if (strcmp(attrName, (header + index)->att_name) == 0)
+        if (strcmp(attrName, (header + index)->att_name) == 0){
+            AK_EPI;
             return index;
+        }
         index++;
     }
+    AK_EPI;
     return -1;
 }
 
@@ -194,9 +217,12 @@ int AK_get_attr_index(char *tblName, char *attrName) {
  * @return column values list
  */
 AK_list *AK_get_column(int num, char *tblName) {
+    AK_PRO;
     int num_attr = AK_num_attr(tblName);
-    if (num >= num_attr || num < 0)
+    if (num >= num_attr || num < 0){
+        AK_EPI;
         return NULL;
+    }
     AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
@@ -216,12 +242,13 @@ AK_list *AK_get_column(int num, char *tblName) {
                     int address = temp->block->tuple_dict[k].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, data, size, row_root);
+                    Ak_InsertAtEnd_L(type, data, size, &row_root);
                 }
             }
         }
         i++;
     }
+    AK_EPI;
     return row_root;
 }
 
@@ -233,8 +260,9 @@ AK_list *AK_get_column(int num, char *tblName) {
  * @return row values list
  */
 AK_list * AK_get_row(int num, char * tblName) {
+    AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    AK_list *row_root = AK_calloc(1, sizeof (AK_list));
+    AK_list *row_root = (AK_list *)AK_calloc(1, sizeof (AK_list));
     Ak_Init_L(row_root);
 
     int num_attr = AK_num_attr(tblName);
@@ -258,9 +286,10 @@ AK_list * AK_get_row(int num, char * tblName) {
                         int address = temp->block->tuple_dict[k + l].address;
                         memcpy(data, &(temp->block->data[address]), size);
                         data[size] = '\0';
-                        Ak_InsertAtEnd_L(type, data, size, row_root);
+                        Ak_InsertAtEnd_L(type, data, size, &row_root);
                     }
                     AK_free(addresses);
+                    AK_EPI;
                     return row_root;
                 }
             }
@@ -268,6 +297,7 @@ AK_list * AK_get_row(int num, char * tblName) {
         i++;
     }
     AK_free(addresses);
+    AK_EPI;
     return NULL;
 }
 
@@ -280,11 +310,14 @@ AK_list * AK_get_row(int num, char * tblName) {
  * @return value in the list
  */
 AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
+    AK_PRO;
     int num_rows = AK_get_num_records(tblName);
     int num_attr = AK_num_attr(tblName);
 
-    if (row >= num_rows || column >= num_attr)
+    if (row >= num_rows || column >= num_attr){
+        AK_EPI;
         return NULL;
+    }
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
@@ -309,8 +342,9 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
                     int address = temp->block->tuple_dict[ k + column ].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, data, size, row_root);
+                    Ak_InsertAtEnd_L(type, data, size, &row_root);
                     AK_free(addresses);
+                    AK_EPI;
                     return (AK_list_elem) Ak_First_L(row_root);
                 }
             }
@@ -318,6 +352,7 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
         i++;
     }
     AK_free(addresses);
+    AK_EPI;
     return NULL;
 }
 
@@ -331,7 +366,7 @@ char * AK_tuple_to_string(AK_list *tuple) {
     int temp_int;
     float temp_float;
     char temp_char[ MAX_VARCHAR_LENGTH ];
-
+    AK_PRO;
     char *buff = (char*) AK_malloc(MAX_VARCHAR_LENGTH);
 
     //assert(tuple->type);
@@ -340,20 +375,24 @@ char * AK_tuple_to_string(AK_list *tuple) {
         case TYPE_INT:
             memcpy(&temp_int, tuple->data, tuple->size);
             sprintf(buff, "%d", temp_int);
+            AK_EPI;
             return buff;
             break;
         case TYPE_FLOAT:
             memcpy(&temp_float, tuple->data, tuple->size);
             sprintf(buff, "%f", temp_float);
+            AK_EPI;
             return buff;
             break;
         case TYPE_VARCHAR:
             memcpy(temp_char, tuple->data, tuple->size);
             temp_char[ tuple->size ] = '\0';
             sprintf(buff, "%s", temp_char);
+            AK_EPI;
             return buff;
             break;
     }
+    AK_EPI;
     return NULL;
 }
 
@@ -366,7 +405,7 @@ char * AK_tuple_to_string(AK_list *tuple) {
  */
 void AK_print_row_spacer(int col_len[], int length) {
     int i, j, col, temp;
-
+    AK_PRO;
     j = col = temp = 0;
 
     for (i = 0; i < length; i++) {
@@ -378,6 +417,7 @@ void AK_print_row_spacer(int col_len[], int length) {
             printf("-");
         }
     }
+    AK_EPI;
 }
 
 /**
@@ -388,6 +428,7 @@ void AK_print_row_spacer(int col_len[], int length) {
  * @return No return value
  */
 void AK_print_row(int col_len[], AK_list *row) {
+    AK_PRO;
     AK_list_elem el = (AK_list_elem) Ak_First_L(row);
 
     int i = 0;
@@ -428,6 +469,7 @@ void AK_print_row(int col_len[], AK_list *row) {
     }
     printf("\n");
     AK_free(data);
+    AK_EPI;
 }
 
 /**
@@ -437,6 +479,7 @@ void AK_print_row(int col_len[], AK_list *row) {
  * @return returns 1 if table exist or returns 0 if table does not exist
  */
 int AK_table_exist(char *tblName) {
+    AK_PRO;
     char *sys_table = "AK_relation";
     int num_rows = AK_get_num_records(sys_table);
     int a;
@@ -451,6 +494,7 @@ int AK_table_exist(char *tblName) {
             break;
         }
     }
+    AK_EPI;
     return exist;
 }
 
@@ -461,6 +505,7 @@ int AK_table_exist(char *tblName) {
  * @return No return value
  */
 void AK_print_table(char *tblName) {
+    AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     //  || (AK_table_exist(tblName) == 0)
     if ((addresses->address_from[0] == 0) || (AK_table_exist(tblName) == 0)) {
@@ -560,7 +605,7 @@ void AK_print_table(char *tblName) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
-                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
+                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, &row_root);
                             }
                             AK_print_row(len, row_root);
                             AK_print_row_spacer(len, length);
@@ -595,6 +640,7 @@ void AK_print_table(char *tblName) {
 AK_free(addresses);
 
     }
+    AK_EPI;
 }
 
 char* FILEPATH = "table_test.txt";
@@ -609,6 +655,7 @@ FILE *fp;
  * @return printed row spacer
  */
 void AK_print_row_spacer_to_file(int col_len[], int length) {
+    AK_PRO;
     fp = fopen(FILEPATH, "a");
     int i, j, col, temp;
 
@@ -625,6 +672,7 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
     }
 
     fclose(fp);
+    AK_EPI;
 }
 
 /**
@@ -636,6 +684,7 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
  * @return No return value
  */
 void AK_print_row_to_file(int col_len[], AK_list * row) {
+    AK_PRO;
     fp = fopen(FILEPATH, "a");
     AK_list_elem el = (AK_list_elem) Ak_First_L(row);
 
@@ -670,6 +719,7 @@ void AK_print_row_to_file(int col_len[], AK_list * row) {
     fprintf(fp, "\n");
     fclose(fp);
     AK_free(data);
+    AK_EPI;
 }
 
 /**
@@ -680,6 +730,7 @@ void AK_print_row_to_file(int col_len[], AK_list * row) {
  * @return No return value
  */
 void AK_print_table_to_file(char *tblName) {
+    AK_PRO;
     fp = fopen(FILEPATH, "a");
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0) {
@@ -777,7 +828,7 @@ void AK_print_table_to_file(char *tblName) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
-                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
+                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, &row_root);
                             }
                             AK_print_row_to_file(len, row_root);
                             AK_print_row_spacer_to_file(len, length);
@@ -792,6 +843,7 @@ void AK_print_table_to_file(char *tblName) {
         }
     }
     fclose(fp);
+    AK_EPI;
 }
 
 /**
@@ -801,9 +853,11 @@ void AK_print_table_to_file(char *tblName) {
  * @return true/false
  */
 int AK_table_empty(char *tblName) {
+    AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
     AK_free(addresses);
+    AK_EPI;
     return (temp->block->last_tuple_dict_id == 0) ? 1 : 0;
 }
 
@@ -818,6 +872,7 @@ int AK_get_table_obj_id(char *table) {
     AK_list *row;
 
     i = 0;
+    AK_PRO;
     while ((row = AK_get_row(i, "AK_relation")) != NULL) {
         if (strcmp(row->next->next->data, table) == 0) {
             memcpy(&table_id, row->next->data, sizeof (int));
@@ -825,8 +880,11 @@ int AK_get_table_obj_id(char *table) {
         }
         i++;
     }
-    if (table_id == -1)
+    if (table_id == -1){
+        AK_EPI;
         return EXIT_ERROR;
+    }
+    AK_EPI;
     return table_id;
 }
 
@@ -842,7 +900,7 @@ int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_tem
     int i;
     int num_att1 = 0;
     int num_att2 = 0;
-
+    AK_PRO;
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
         if (strcmp(tbl1_temp_block->block->header[i].att_name, "\0") != 0) {
             num_att1++;
@@ -858,20 +916,23 @@ int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_tem
 
         if (strcmp(tbl1_temp_block->block->header[i].att_name, tbl2_temp_block->block->header[i].att_name) != 0) {
             printf("%s ERROR: Relation shemas are not the same! \n", operator_name);
+	    AK_EPI;
             return EXIT_ERROR;
         }
 
         if (tbl1_temp_block->block->header[i].type != tbl2_temp_block->block->header[i].type) {
             printf("%s ERROR: Attributes are not of the same type!", operator_name);
+            AK_EPI;
             return EXIT_ERROR;
         }
     }
 
     if (num_att1 != num_att2) {
         printf("%s ERROR: Not same number of the attributes! \n", operator_name);
+        AK_EPI;
         return EXIT_ERROR;
     }
-
+    AK_EPI;
     return num_att1;
 }
 
@@ -885,6 +946,7 @@ int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_tem
  * @return EXIT_ERROR or EXIT_SUCCESS
  */
 int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr) {
+    AK_PRO;
     table_addresses *adresses = (table_addresses *) AK_get_table_addresses(old_table_name);
     int tab_addresses[MAX_NUM_OF_BLOCKS];
     int num_extents = 0, num_blocks = 0;
@@ -915,6 +977,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
                 break;
             } else if (strcmp(newHeader[i].att_name, "\0") == 0) { //if there is no more attributes
                 Ak_dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: atribute: %s does not exist in this table\n", old_attr);
+                AK_EPI;
                 return (EXIT_ERROR);
             }
         }
@@ -933,7 +996,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
         AK_selection(old_table_name, new_table_name, expr);
         AK_delete_segment(old_table_name, SEGMENT_TYPE_TABLE);
     }
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -943,6 +1006,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
  * @return No return value
  */
 void AK_table_test() {
+    AK_PRO;
     printf("table.c: Present!\n");
 
     printf("\n********** TABLE ABSTRACTION TEST by Matija Šestak **********\n\n");
@@ -979,6 +1043,7 @@ void AK_table_test() {
 
     printf("Table \"student\": AK_get_tuple for row=0, column=1:");
     printf("%s\n", AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
+    AK_EPI;
 }
 
 /**
@@ -987,6 +1052,7 @@ void AK_table_test() {
  * @return No return value
  */
 void AK_op_rename_test() {
+    AK_PRO;
     //printf( "rename_test: Present!\n" );
     printf("\n********** RENAME TEST **********\n\n");
 
@@ -996,4 +1062,5 @@ void AK_op_rename_test() {
     //AK_print_table("student2");
 
     AK_print_table("AK_relation");
+    AK_EPI;
 }

@@ -28,7 +28,7 @@
  * @return EXIT_SUCCESS if the header was successfully created and EXIT_ERROR if the renamed headers are too long
  */
 int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_table) {
-
+	AK_PRO;
 	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
 	table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
 
@@ -95,6 +95,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
 
     		if (strlen(renamed_att) > MAX_ATT_NAME){
     			Ak_dbg_messg(HIGH, REL_OP, "Theta join: renaming failed for attribute: %s (name is too long)", renamed_att);
+			AK_EPI;
     			return EXIT_ERROR;
     		}
     		else
@@ -109,6 +110,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
 
 			if (strlen(renamed_att) > MAX_ATT_NAME){
 				Ak_dbg_messg(HIGH, REL_OP, "Theta join: renaming failed for attribute: %s (name is too long)", renamed_att);
+				AK_EPI;
 				return EXIT_ERROR;
 			}
 			else
@@ -126,7 +128,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
     AK_free(temp_block_tbl2);
 
     AK_temp_create_table(new_table, header, SEGMENT_TYPE_TABLE);
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -142,6 +144,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
  * @return No return value
  */
 void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
+    AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
 
     int tbl1_att, tbl2_att, tbl1_row, tbl2_row;
@@ -194,6 +197,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
     }
 
     AK_free(row_root_init);
+    AK_EPI;
 }
 
 /**
@@ -209,7 +213,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
  *   
  */
 int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *constraints) {
-
+	AK_PRO;
 	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
 
@@ -219,8 +223,10 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
     int tbl2_num_att = AK_num_attr(srcTable2);
 
     if ((startAddress1 != 0) && (startAddress2 != 0)) {
-        if (AK_create_theta_join_header(srcTable1, srcTable2, dstTable) == EXIT_ERROR)
+        if (AK_create_theta_join_header(srcTable1, srcTable2, dstTable) == EXIT_ERROR){
+		AK_EPI;
         	return EXIT_ERROR;
+	}
 
         Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
 		Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_theta_join: start copying data\n");
@@ -276,7 +282,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
         AK_free(src_addr2);
 
 		Ak_dbg_messg(LOW, REL_OP, "THETA_JOIN_SUCCESS\n\n");
-
+	AK_EPI;
         return EXIT_SUCCESS;
     } else {
 
@@ -284,7 +290,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
 
         AK_free(src_addr1);
         AK_free(src_addr2);
-
+	AK_EPI;
         return EXIT_ERROR;
     }
 }
@@ -295,6 +301,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
  * @return No return value
  */
 void AK_op_theta_join_test() {
+    AK_PRO;
     printf("\n********** THETA JOIN TEST **********\n\n");
 
     AK_list *constraints = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -348,5 +355,6 @@ void AK_op_theta_join_test() {
     Ak_DeleteAll_L(constraints);
 
     AK_free(constraints);
+    AK_EPI;
 }
 

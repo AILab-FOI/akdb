@@ -1,6 +1,7 @@
 #include "check_constraint.h"
 
 int AK_check_constraint(char *srcTable, AK_list *expr) {
+    AK_PRO;
     AK_header *t_header = (AK_header *) AK_get_header(srcTable);
     int num_attr = AK_num_attr(srcTable);
 
@@ -34,7 +35,10 @@ int AK_check_constraint(char *srcTable, AK_list *expr) {
 					Ak_Insert_New_Element(type, data, srcTable, t_header[l].att_name, row_root);
 				}
 
-				if (!AK_check_if_row_satisfies_expression(row_root, expr)) return 0;
+				if (!AK_check_if_row_satisfies_expression(row_root, expr)){
+					AK_EPI;
+					return 0;
+				}
 
 				Ak_DeleteAll_L(row_root);
             }
@@ -44,11 +48,13 @@ int AK_check_constraint(char *srcTable, AK_list *expr) {
     AK_free(src_addr);
     AK_free(t_header);
     AK_free(row_root);
+    AK_EPI;
     return 1;
 }
 
 
 void AK_check_constraint_test() {
+    AK_PRO;
     printf("\n********** CHECK CONSTRAINT TEST **********\n");
 
     AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -79,4 +85,5 @@ void AK_check_constraint_test() {
 
     Ak_DeleteAll_L(expr);
     AK_free(expr);
+    AK_EPI;
 }

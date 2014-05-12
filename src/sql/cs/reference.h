@@ -22,6 +22,7 @@
 
 #include "../../dm/dbman.h"
 #include "../../file/table.h"
+#include "../../auxi/mempro.h"
 /**
  * @def REF_TYPE_NONE
  * @brief Constant declaring none reference type 

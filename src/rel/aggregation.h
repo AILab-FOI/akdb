@@ -23,6 +23,7 @@
 #include "selection.h"
 #include "projection.h"
 #include "../file/filesearch.h"
+#include "../auxi/mempro.h"
 
 #define AGG_TASK_GROUP 1
 #define AGG_TASK_COUNT 2

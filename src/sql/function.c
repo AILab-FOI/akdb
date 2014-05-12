@@ -34,6 +34,7 @@ int AK_get_function_obj_id(char* function, AK_list *arguments_list) {
     AK_list *row;
 
     int num_args;
+    AK_PRO;
     num_args = Ak_Size_L(arguments_list);
 
     while ((row = (AK_list *) AK_get_row(i, "AK_function")) != NULL) {
@@ -47,6 +48,7 @@ int AK_get_function_obj_id(char* function, AK_list *arguments_list) {
             if (result == EXIT_ERROR) {
                 // return EXIT_ERROR;
             } else {
+                AK_EPI;
                 return id;
             }
         }
@@ -54,9 +56,14 @@ int AK_get_function_obj_id(char* function, AK_list *arguments_list) {
     }
 
     if (result == EXIT_ERROR) {
+	AK_EPI;
         return EXIT_ERROR;
     }
-    if (id == -1) return EXIT_ERROR;
+    if (id == -1){
+	AK_EPI;
+	return EXIT_ERROR;
+    }
+    AK_EPI;
     return id;
 }
 
@@ -72,7 +79,7 @@ int AK_check_function_arguments(int function_id, AK_list *arguments_list) {
     AK_list *row;
     int i = 0;
     int fid;
-
+    AK_PRO;
     AK_list_elem arguments_list_current = arguments_list->next;
 
     char *argtype_catalog;
@@ -102,13 +109,14 @@ int AK_check_function_arguments(int function_id, AK_list *arguments_list) {
             printf("\n %s %s %s %s", argtype_catalog, arguments_list_argtype, argname_catalog, arguments_list_argname);
 
             if (strcmp(argtype_catalog, arguments_list_argtype) != 0 || strcmp(argname_catalog, arguments_list_argname) != 0) {
+		AK_EPI;
                 return EXIT_ERROR;
             }
 
         }
         i++;
     }
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -124,7 +132,7 @@ int AK_check_function_arguments_type(int function_id, AK_list *args) {
     AK_list *row;
     int i = 0;
     int fid;
-
+    AK_PRO;
     AK_list_elem arguments_list_current = args->next;
 
     char *argtype;
@@ -150,12 +158,13 @@ int AK_check_function_arguments_type(int function_id, AK_list *args) {
             // printf("Argtype: %s  Args_argtype: %s \n", argtype, args_argtype);
 
             if (strcmp(argtype, args_argtype) != 0) {
+		AK_EPI;
                 return EXIT_ERROR;
             }
         }
         i++;
     }
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -168,8 +177,10 @@ int AK_check_function_arguments_type(int function_id, AK_list *args) {
  * @return function id or EXIT_ERROR
  */
 int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
+    AK_PRO;
     if (return_type < 0 || return_type > 13) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_add: Invalid parameter value for return type.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
@@ -193,7 +204,7 @@ int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
         current_elem = Ak_Next_L(current_elem);
         AK_function_arguments_add(function_id, i, argtype_int, argname);
     }
-
+    AK_EPI;
     return function_id;
 }
 
@@ -207,6 +218,7 @@ int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
  * @return function argument id or EXIT_ERROR
  */
 int AK_function_arguments_add(int function_id, int arg_number, int arg_type, char *argname) {
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     char *arg_type_name;
@@ -262,7 +274,8 @@ int AK_function_arguments_add(int function_id, int arg_number, int arg_type, cha
     Ak_Insert_New_Element(TYPE_VARCHAR, arg_type_name, "AK_function_arguments", "att_type", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, argname, "AK_function_arguments", "att_name", row_root);
     Ak_insert_row(row_root);
-
+    
+    AK_EPI;
     return function_id;
 }
 
@@ -273,6 +286,7 @@ int AK_function_arguments_add(int function_id, int arg_number, int arg_type, cha
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_function_remove_by_obj_id(int obj_id) {
+    AK_PRO;
     // printf("***Remove function***\n");
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
@@ -282,12 +296,14 @@ int AK_function_remove_by_obj_id(int obj_id) {
     int result = Ak_delete_row(row_root);
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_remove_by_obj_id: Could not delete function.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
 
     //delete function arguments
     Ak_DeleteAll_L(row_root);
     AK_function_arguments_remove_by_obj_id(&obj_id);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -300,6 +316,7 @@ int AK_function_remove_by_obj_id(int obj_id) {
 int AK_function_arguments_remove_by_obj_id(int *obj_id) {
     // printf("***Remove function arguments***\n");
     int oid;
+    AK_PRO;
     memcpy(&oid, obj_id, sizeof (int));
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
@@ -307,10 +324,12 @@ int AK_function_arguments_remove_by_obj_id(int *obj_id) {
     int result = Ak_delete_row(row_root);
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_arguments_remove_by_obj_id: Could not delete arguments.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
     Ak_DeleteAll_L(row_root);
     AK_free(row_root);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -322,14 +341,16 @@ int AK_function_arguments_remove_by_obj_id(int *obj_id) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_function_remove_by_name(char *name, AK_list *arguments_list) {
+    AK_PRO;
     int func_id = AK_get_function_obj_id(name, arguments_list);
     int result = AK_function_remove_by_obj_id(func_id);
 
     if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_remove_by_name: Could not delete function.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -342,6 +363,7 @@ int AK_function_remove_by_name(char *name, AK_list *arguments_list) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_function_rename(char *name, AK_list *arguments_list, char *new_name) {
+    AK_PRO;
     printf("***Function rename***\n");
 
     int func_id = AK_get_function_obj_id(name, arguments_list);
@@ -355,11 +377,13 @@ int AK_function_rename(char *name, AK_list *arguments_list, char *new_name) {
 
     if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_rename: Could not rename function.\n");
+        AK_EPI;
         return EXIT_ERROR;
     }
 
     Ak_DeleteAll_L(row_root);
     AK_free(row_root);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -372,6 +396,7 @@ int AK_function_rename(char *name, AK_list *arguments_list, char *new_name) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_return_type) {
+    AK_PRO;
     printf("***Change function return type***\n");
 
     int func_id = AK_get_function_obj_id(name, arguments_list);
@@ -387,11 +412,13 @@ int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_
 
     if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_change_return_type: Could not change return type.\n");
+        AK_EPI;
         return EXIT_ERROR;
     }
 
     Ak_DeleteAll_L(row_root);
     AK_free(row_root);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -401,6 +428,7 @@ int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_
  * @return No return value
  */
 void AK_function_test() {
+    AK_PRO;
     printf("function.c: Present!\n");
 
     AK_list *arguments_list1 = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -486,7 +514,7 @@ void AK_function_test() {
 
     Ak_DeleteAll_L(arguments_list4);
     AK_free(arguments_list4);
-
+    AK_EPI;
 }
 
 

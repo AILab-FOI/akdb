@@ -28,6 +28,7 @@
  * @return No return value
  */
 void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
+    AK_PRO;
     AK_block *sys_block = (AK_block *) AK_malloc(sizeof (AK_block));
     sys_block = (AK_block *) AK_read_block(1);
 
@@ -47,6 +48,7 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
 
     AK_write_block(sys_block);
     AK_free(sys_block);
+    AK_EPI;
 }
 
 /**
@@ -58,6 +60,7 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
  * @return No return value
  */
 void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
+    AK_PRO;
     AK_block *temp_block = (AK_block *) AK_malloc(sizeof (AK_block));
     temp_block = (AK_block *) AK_read_block(old_block);
 
@@ -89,6 +92,7 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
 
     AK_free(temp_block);
     AK_temp_create_table(dstTable, header, SEGMENT_TYPE_TABLE);
+    AK_EPI;
 }
 
 /** 
@@ -100,6 +104,7 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
   * @retrun No return value
  */
 void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable) {
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
@@ -149,7 +154,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
             Ak_DeleteAll_L(row_root);
         }
     }
-
+    AK_EPI;
     AK_free(row_root);
 }
 
@@ -162,6 +167,7 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
  */
 int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
     //geting the table addresses from table on which we make projection
+    AK_PRO;
     table_addresses *src_addr = (table_addresses *) AK_get_table_addresses(srcTable);
 
     if (src_addr->address_from[0] != 0) {
@@ -199,13 +205,15 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
 		
         AK_free(src_addr);
         Ak_dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n\n");
-
+	AK_EPI;
         return EXIT_SUCCESS;
     } else {
 		AK_free(src_addr);
         Ak_dbg_messg(LOW, REL_OP, "\n AK_projection: Table doesn't exist!");
+        AK_EPI;
         return EXIT_ERROR;
     }
+    AK_EPI;
 }
 
 /**
@@ -214,6 +222,7 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
  * @return No return value
  */
 void AK_op_projection_test() {
+    AK_PRO;
     printf("\n********** PROJECTION TEST **********\n\n");
 
     AK_list *att = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -226,4 +235,5 @@ void AK_op_projection_test() {
     AK_print_table("projection_test");
 
     Ak_DeleteAll_L(att);
+    AK_EPI;
 }

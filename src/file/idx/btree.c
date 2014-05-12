@@ -33,8 +33,12 @@ That file had some errors, so I couldn't test it. 2.working with multiple blocks
 */
 int AK_btree_create(char *tblName, AK_list *attributes, char *indexName){
 	int i,n,exist;
-	table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-	int num_attr = AK_num_attr(tblName);
+	table_addresses *addresses;
+	int num_attr;
+	AK_PRO;
+	addresses = (table_addresses*) AK_get_table_addresses(tblName);
+	num_attr = AK_num_attr(tblName);
+
 	while(addresses->address_from[ i ]){
 		printf("\nAddress of the TABLE is from %u to %u \n",(addresses->address_from[ i ]),(addresses->address_to[ i ]));
 		i++;
@@ -56,12 +60,14 @@ int AK_btree_create(char *tblName, AK_list *attributes, char *indexName){
 			n++;
 			if ((table_header)->type != TYPE_INT) {
 			    printf("Unsupported data type for bree index! Only int!");
+			    AK_EPI;
 			    return EXIT_ERROR;
 			}
 		    }
 		}
 		if (!exist) {
 		    printf("Attribute %s does not exists in table", attribute->data);
+		    AK_EPI;
 		    return EXIT_ERROR;
 		}
 		attribute = attribute->next;
@@ -207,12 +213,15 @@ int AK_btree_create(char *tblName, AK_list *attributes, char *indexName){
 		v++;
 	}
 	printf("B tree created succesfully.");
+	AK_EPI;
 	return EXIT_SUCCESS;
 }
 
 int AK_btree_delete(char *indexName){
+    AK_PRO;
     AK_delete_segment(indexName, SEGMENT_TYPE_INDEX);
     printf("INDEX %s DELETED!\n", indexName);
+    AK_EPI;
 }
 
 /**
@@ -225,6 +234,7 @@ int AK_btree_delete(char *indexName){
  */
 void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *toDo){
 	int contin = 1;
+        AK_PRO;
 	if((searchValue == endRange) || (endRange <= 0)){
 		endRange = 0;
 		contin = 0;
@@ -300,9 +310,11 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 		AK_write_block(block);
 		}
 	}
+	AK_EPI;
 }
 
 int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insertBlock){
+	AK_PRO;
 	int adr_to_read = (int) AK_find_AK_free_space(AK_get_index_addresses(indexName));
 	AK_block *block = (AK_block*) AK_read_block(adr_to_read);
 	root_info *root = (root_info*) AK_malloc(sizeof (root_info));
@@ -697,13 +709,14 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 				printf("\nNew value is added and tree is updated!");
 		}
 	}
+	AK_EPI;
 	return EXIT_SUCCESS;
 }
 
 void Ak_btree_test() {
 	char *tblName = "student";
 	char *indexName = "student_btree_index";
-
+	AK_PRO;
 	AK_list *att_list = (AK_list *) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(att_list);
 	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr\0", 4, att_list);
@@ -726,6 +739,6 @@ void Ak_btree_test() {
 	//int *endRange = 0;
 	int *toDo = 0;//0 search, 1 delete
 	AK_btree_search_delete(indexName, searchValue, endRange, toDo);
-
+	AK_EPI;
 }
 

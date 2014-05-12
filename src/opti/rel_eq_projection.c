@@ -58,6 +58,7 @@
 int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subset) {
     int len_set, len_subset, token_id = 0, set_id, subset_id;
     char *temp_set, *temp_subset, *token_set, *token_subset, *save_token_set, *save_token_subset;
+    AK_PRO;
     char *tokens_set[MAX_TOKENS] = {NULL};
     char *tokens_subset[MAX_TOKENS] = {NULL};
 
@@ -90,6 +91,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 
     if (len_set < len_subset) {
         Ak_dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", list_elem_subset->data, list_elem_set->data);
+        AK_EPI;
         return EXIT_FAILURE;
     }
 
@@ -108,6 +110,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 
     if (token_id != len_subset) {
         Ak_dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", list_elem_set->data, list_elem_subset->data);
+        AK_EPI;
         return EXIT_FAILURE;
     }
 
@@ -116,6 +119,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
     AK_free(temp_subset);
 
     Ak_dbg_messg(HIGH, REL_EQ, "RULE - succeed (%s) is subset of set (%s).\n", list_elem_subset->data, list_elem_set->data);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -137,6 +141,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
 int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem_conds) {
     int next_chr, valid_cond_attribs, token_id = 0;
     char *token_attr, *save_token_attr, *temp_attr, *temp_cond, *temp;
+    AK_PRO;
     char *tokens[MAX_TOKENS] = {NULL};
 
     Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute condition (%s) with projection (%s)\n", list_elem_conds->data, list_elem_attribs->data);
@@ -177,6 +182,7 @@ int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem
 
             if (valid_cond_attribs == 0) {
                 Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute condition with projection failed!\n");
+                AK_EPI;
                 return EXIT_FAILURE;
             }
         }
@@ -184,6 +190,7 @@ int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem
 
     AK_free(temp);
     Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute condition with projection succeed.\n");
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -204,7 +211,7 @@ AK_list *AK_rel_eq_get_attributes(char *tblName) {
     int next_attr;
     int num_attr = AK_num_attr(tblName);
     char *attr_name;
-
+    AK_PRO;
     //AK_header *table_header = (AK_header*)AK_calloc(num_attr, sizeof(AK_header));
     AK_header *table_header = (AK_header *) AK_get_header(tblName);
 
@@ -219,7 +226,7 @@ AK_list *AK_rel_eq_get_attributes(char *tblName) {
 
     attr_name = NULL;
     AK_free(table_header);
-
+    AK_EPI;
     return list_attr;
 }
 
@@ -260,12 +267,13 @@ const char *AK_rel_eq_get_attributes(char *tblName) {
 char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
     int len_tokens = 0;
     int token_id = 0;
-
+    AK_PRO;
     AK_list *list_attr = AK_rel_eq_get_attributes(tblName);
     AK_list_elem list_el;
 
     if (Ak_Size_L(list_attr) <= 0) {
         printf("ERROR - table (%s) doesn't exists!\n", tblName);
+        AK_EPI;
         return NULL;
     }
 
@@ -308,6 +316,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
     AK_free(temp_attribs);
 
     Ak_dbg_messg(HIGH, REL_EQ, "RETURN - attributes for new projection (%s)\n", ret_attributes);
+    AK_EPI;
     return ret_attributes;
 }
 
@@ -321,7 +330,7 @@ char *AK_rel_eq_collect_cond_attributes(AK_list_elem list_elem) {
     int next_chr = 0;
     int next_address = 0;
     int attr_end = -1;
-
+    AK_PRO;
     char *temp_cond = (char *) AK_malloc(list_elem->size);
     strcpy(temp_cond, list_elem->data);
 
@@ -352,7 +361,7 @@ char *AK_rel_eq_collect_cond_attributes(AK_list_elem list_elem) {
 
     AK_free(temp_cond);
     strcpy(attr + next_address, "\0");
-
+    AK_EPI;
     return attr;
 }
 
@@ -367,7 +376,7 @@ char *AK_rel_eq_remove_duplicates(char *attribs) {
     int next_address = 0;
     int token_id = 0;
     int exist_attr;
-
+    AK_PRO;
     char *temp_attribs, *token_attr, *save_token_attribs;
     char *tokens_attribs[MAX_TOKENS] = {NULL};
     char *attr = (char *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (char));
@@ -398,6 +407,7 @@ char *AK_rel_eq_remove_duplicates(char *attribs) {
         }
     }
 
+    AK_EPI;
     return attr;
 }
 
@@ -409,7 +419,7 @@ char *AK_rel_eq_remove_duplicates(char *attribs) {
  */
 AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
     int step; //, exit_cond[5] = {0};
-
+    AK_PRO;
     //Initialize temporary linked list
     AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
@@ -663,6 +673,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
     //}
 
     Ak_DeleteAll_L(list_rel_eq);
+    AK_EPI;
     return temp;
 }
 
@@ -673,6 +684,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
  * @return No return value
  */
 void AK_print_rel_eq_projection(AK_list *list_rel_eq) {
+    AK_PRO;
     AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_rel_eq);
 
     printf("\n");
@@ -687,6 +699,7 @@ void AK_print_rel_eq_projection(AK_list *list_rel_eq) {
         printf("Type: %i, size: %i, data: %s\n", list_elem->type, list_elem->size, list_elem->data);
         list_elem = list_elem->next;
     }
+    AK_EPI;
 }
 
 /**
@@ -695,6 +708,7 @@ void AK_print_rel_eq_projection(AK_list *list_rel_eq) {
  * @return No return value 
  */
 void AK_rel_eq_projection_test() {
+    AK_PRO;
     printf("rel_eq_projection.c: Present!\n");
     printf("\n********** REL_EQ_PROJECTION TEST by Dino Laktašić **********\n");
 
@@ -794,4 +808,5 @@ InsertAtEndL( TYPE_OPERAND, "S", sizeof("S"), &expr );
 
     Ak_DeleteAll_L(expr);
     //dealocate variables ;)
+    AK_EPI;
 }

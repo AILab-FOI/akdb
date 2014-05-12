@@ -22,6 +22,7 @@
 
 #include "../file/table.h"
 #include "../file/fileio.h"
+#include "../auxi/mempro.h"
 
 void AK_temp_create_table(char *table, AK_header *header, int type_segment);
 void AK_create_block_header(int old_block, char *dstTable, AK_list *att);

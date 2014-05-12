@@ -21,6 +21,7 @@
 #define MEMOMAN
 
 #include "../dm/dbman.h"
+#include "../auxi/mempro.h"
 
 /**
   * @author Unknown

@@ -37,7 +37,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
     AK_block *tempBlock;
     int itis = 1;
     int id;
-
+    AK_PRO;
     tempBlock = (AK_block *)AK_read_block(0);
 
     while (itis) {
@@ -71,6 +71,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
             } else {
                 //if (DEBUG)
                     //printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
+		    AK_EPI;
                     exit (EXIT_ERROR);
             }
             itis = 0;
@@ -78,6 +79,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
         i++;
     }
     AK_free(tempBlock);
+    AK_EPI;
 }
 
 //
@@ -100,7 +102,7 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
     int AK_freeSpaceFound = 0;
     int tupleDictID = -1;
     int flag = EXIT_SUCCESS;
-
+    AK_PRO;
     tempBlock = (AK_block *)AK_read_block(0);
 
     while (itis) {
@@ -170,6 +172,7 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
             }
         }
     }
+    AK_EPI;
     return flag;
 }
 /**
@@ -180,10 +183,14 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
   */
 int AK_is_number(char* s) {
     int i;
+    AK_PRO;
     for (i = 0; i < strlen(s); i++) {
-        if (isdigit(s[i]) == 0)
+        if (isdigit(s[i]) == 0){
+	    AK_EPI;
             return 0;
+	}
     }
+    AK_EPI;
     return 1;
 }
 /**
@@ -196,8 +203,9 @@ void AK_null_test() {
     char* constraintName = "studentiNotNull";
     char* attName = "ime";
     char* newValue = NULLL;
-
+    AK_PRO;
     AK_set_constraint_not_null(tableName, constraintName, attName);
     AK_read_constraint_not_null(tableName, newValue, attName);
+    AK_EPI;
 
 }

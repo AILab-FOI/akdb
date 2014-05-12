@@ -27,7 +27,9 @@
  * @return No return value
  * */
 void Ak_InitializelistAd(list_ad *L) {
+    AK_PRO;
     L->next = 0;
+    AK_EPI;
 }
 
 /**
@@ -37,7 +39,11 @@ void Ak_InitializelistAd(list_ad *L) {
  * @return Address of first node
  * */
 element_ad Ak_Get_First_elementAd(list_ad *L) {
-    return (element_ad) L->next;
+    AK_PRO;
+    element_ad ret;
+    ret = (element_ad) L->next;
+    AK_EPI;
+    return ret;
 }
 
 /**
@@ -48,13 +54,19 @@ element_ad Ak_Get_First_elementAd(list_ad *L) {
  * */
 element_ad Ak_Get_Last_elementAd(list_ad *L) {
     list_ad *Currentelement_op;
+    AK_PRO;
     Currentelement_op = L;
     while (Currentelement_op->next)
         Currentelement_op = (element_ad) Currentelement_op->next;
-    if (Currentelement_op != L)
+    if (Currentelement_op != L){
+        AK_EPI;
         return (element_ad) Currentelement_op;
-    else
+    }
+    else{
+        AK_EPI;
         return 0;
+    }
+    AK_EPI;
 }
 
 /**
@@ -64,13 +76,17 @@ element_ad Ak_Get_Last_elementAd(list_ad *L) {
  * @return Address of next node or 0 if current node is last in list
  * */
 element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op) {
+    AK_PRO;
     if (Currentelement_op->next == 0) {
+        AK_EPI;
         return 0;
     } else {
         list_ad *Nextelement_op;
         Nextelement_op = (element_ad) Currentelement_op->next;
+        AK_EPI;
         return (element_ad) Nextelement_op;
     }
+    AK_EPI;
 }
 
 /**
@@ -82,14 +98,18 @@ element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op) {
  * */
 element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L) {
     element_ad Previouselement_op;
+    AK_PRO;
     Previouselement_op = L;
     while ((Previouselement_op->next != 0) && ((element_ad) Previouselement_op->next != Currentelement_op))
         Previouselement_op = (element_ad) Previouselement_op->next;
     if (Previouselement_op->next != 0 && Previouselement_op != L) {
+        AK_EPI;
         return (element_ad) Previouselement_op;
     } else {
+        AK_EPI;
         return 0;
     }
+    AK_EPI;
 }
 
 /**
@@ -102,11 +122,13 @@ element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L)
 int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
     list_ad *Currentelement_op;
     int i = 0;
+    AK_PRO;
     Currentelement_op = L;
     while (Currentelement_op->next != 0 && Currentelement_op != Searchedelement_op) {
         Currentelement_op = (list_ad *) Currentelement_op->next;
         i++;
     }
+    AK_EPI;
     return i;
 }
 
@@ -118,6 +140,7 @@ int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
  * @return No return value
  * */
 void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
+    AK_PRO;
     element_ad Previouselement_op = (element_ad) Ak_Get_Previous_elementAd(Deletedelement_op, L);
     if (Previouselement_op != 0) {
         Previouselement_op->next = Deletedelement_op->next;
@@ -125,6 +148,7 @@ void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
         L->next = Deletedelement_op->next;
     }
     AK_free(Deletedelement_op);
+    AK_EPI;
 }
 
 /**
@@ -134,6 +158,7 @@ void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
  * @return No return value
  * */
 void Ak_Delete_All_elementsAd(list_ad *L) {
+    AK_PRO;
     list_ad *Currentelement_op = L;
     list_ad *Deletedelement_op = (list_ad *) L->next;
     while (Currentelement_op->next != 0) {
@@ -141,6 +166,7 @@ void Ak_Delete_All_elementsAd(list_ad *L) {
         AK_free(Deletedelement_op);
         Deletedelement_op = (list_ad *) Currentelement_op->next;
     }
+    AK_EPI;
 }
 
 /**
@@ -153,11 +179,13 @@ void Ak_Delete_All_elementsAd(list_ad *L) {
  * @return No return value
  * */
 void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore) {
+    AK_PRO;
     list_structure_ad* newelement_op = (list_structure_ad*)AK_malloc(sizeof (list_structure_ad));
     newelement_op->add.addBlock = addBlock;
     newelement_op->add.indexTd = indexTd;
     newelement_op->attName = attName;
     newelement_op->next = elementBefore->next;
     elementBefore->next = (list_structure_ad*)newelement_op;
+    AK_EPI;
 }
 

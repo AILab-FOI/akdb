@@ -22,6 +22,7 @@
 
 #include "../file/table.h"
 #include "./rel_eq_selection.h"
+#include "../auxi/mempro.h"
 
 void AK_print_rel_eq_comut(AK_list *list_rel_eq);
 AK_list *AK_rel_eq_comut(AK_list *list_rel_eq);

@@ -32,6 +32,7 @@
  * @return sequence_id or EXIT_ERROR
  */
 int AK_sequence_add(char *name, int start_value, int increment, int max_value, int min_value, int cycle){
+    AK_PRO;
     printf("\n***Add sequence***");
    
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
@@ -48,10 +49,12 @@ int AK_sequence_add(char *name, int start_value, int increment, int max_value, i
     
     if (result == EXIT_ERROR || sequence_id == EXIT_ERROR) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_add: Could not add sequence.\n");
+      AK_EPI;
       return EXIT_ERROR;
     }
     Ak_DeleteAll_L(row_root);
     AK_free(row_root);
+    AK_EPI;
     return sequence_id;
 }
 
@@ -62,6 +65,7 @@ int AK_sequence_add(char *name, int start_value, int increment, int max_value, i
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_sequence_remove(char *name){
+    AK_PRO;
     printf("\n***Remove sequence***");
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
@@ -71,10 +75,12 @@ int AK_sequence_remove(char *name){
    
     if (result == EXIT_ERROR) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_delete: Could not delete sequence.\n");
+      AK_EPI;
       return EXIT_ERROR;
     }
     Ak_DeleteAll_L(row_root);
     AK_free(row_root);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -89,6 +95,7 @@ int AK_sequence_current_value(char *name){
     int i = 0;
     int current_value = -1;
     AK_list *row;
+    AK_PRO;
     while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
         if (strcmp(row->next->next->data, name) == 0) {
             memcpy(&current_value, row->next->next->next->data, sizeof (int));
@@ -97,9 +104,11 @@ int AK_sequence_current_value(char *name){
         i++;
     }
     
-    if (current_value == -1)
+    if (current_value == -1){
+	AK_EPI;
         return EXIT_ERROR;
- 
+    }
+    AK_EPI;
     return current_value;
 }
 
@@ -119,6 +128,7 @@ int AK_sequence_next_value(char *name){
     int min_value;
     int cycle;
     AK_list *row;
+    AK_PRO;
     while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
         if (strcmp(row->next->next->data, name) == 0) {
 	    memcpy(&obj_id, row->next->data, sizeof (int));
@@ -132,14 +142,17 @@ int AK_sequence_next_value(char *name){
         i++;
     }
     
-    if (current_value == -1)
+    if (current_value == -1){
+	AK_EPI;
         return EXIT_ERROR;
+    }
  
     next_value = current_value + increment;
     
     if(next_value < min_value){
 	if(cycle==0){
 	    printf("\nNon-cyclic sequence can not go below its minimum value.");
+            AK_EPI;
 	    return EXIT_ERROR;
 	}
 	else{
@@ -150,6 +163,7 @@ int AK_sequence_next_value(char *name){
     if(next_value > max_value){
 	if(cycle==0){
 	    printf("\nNon-cyclic sequence can not go over its maximum value.");
+	    AK_EPI;
 	    return EXIT_ERROR;
 	}
 	else{
@@ -168,9 +182,11 @@ int AK_sequence_next_value(char *name){
    
     if (result == EXIT_ERROR) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_next_value: Could not retrieve next value.\n");
+      AK_EPI;
       return EXIT_ERROR;
     }
 
+    AK_EPI;
     return next_value;
 }
 
@@ -183,15 +199,18 @@ int AK_sequence_next_value(char *name){
 int AK_sequence_get_id(char *name){
     int i = 0;
     AK_list *row;
+    AK_PRO;
 	while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL) {
 		if (strcmp(row->next->next->data, name) == 0) {
 			i = (int) * row->next->data;
 			AK_free(row);
+			AK_EPI;
 			return i;
 		}
 		i++;
 	}
 	AK_free(row);
+	AK_EPI;
 	return EXIT_ERROR;
 }
 
@@ -204,6 +223,7 @@ int AK_sequence_get_id(char *name){
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_sequence_rename(char *old_name, char *new_name){
+    AK_PRO;
     printf("\n***Rename sequence***");
     int i = 0;
     
@@ -220,9 +240,10 @@ int AK_sequence_rename(char *old_name, char *new_name){
     
     if (result == EXIT_ERROR || seq_id == -1) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_rename: Could not rename sequence.\n");
+      AK_EPI;
       return EXIT_ERROR;
     }
-    
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -238,6 +259,7 @@ int AK_sequence_rename(char *old_name, char *new_name){
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_sequence_modify(char *name, int start_value, int increment, int max_value, int min_value, int cycle){
+    AK_PRO;
     printf("\n***Edit sequence***");
     int i = 0;
     int seq_id = -1;
@@ -265,9 +287,10 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
     
     if (result == EXIT_ERROR || seq_id == -1) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_modify: Could not modify sequence.\n");
+      AK_EPI;
       return EXIT_ERROR;
     }
-    
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -277,6 +300,7 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
  * @return No return value
  */
 void AK_sequence_test() {
+    AK_PRO;
     printf("sequence.c: Present!\n");
     AK_sequence_add("sekvenca1", 100, 5, 200, 100, 1);    
     AK_print_table("AK_sequence");
@@ -292,5 +316,6 @@ void AK_sequence_test() {
     AK_print_table("AK_sequence"); 
     AK_sequence_modify("sekvenca3", 200, 20, 300, 150, 0);
     AK_print_table("AK_sequence"); 
+    AK_EPI;
 }
     

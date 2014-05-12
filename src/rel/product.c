@@ -28,6 +28,7 @@
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
+    AK_PRO;
     table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
 
@@ -156,12 +157,13 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
         AK_free(src_addr1);
         AK_free(src_addr2);
 		Ak_dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
-
+        AK_EPI;
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");
         AK_free(src_addr1);
         AK_free(src_addr2);
+        AK_EPI;
         return EXIT_ERROR;
     }
 }
@@ -172,8 +174,10 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
  *
  */
 void AK_op_product_test() {
+    AK_PRO;
     printf("\n********** PRODUCT TEST **********\n\n");
 
     AK_product("employee", "department", "product_test");
     AK_print_table("product_test");
+    AK_EPI;
 }

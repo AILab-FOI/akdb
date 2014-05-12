@@ -22,6 +22,7 @@
 
 #include "../file/table.h"
 #include "../file/files.h"
+#include "../auxi/mempro.h"
 
 
 int AK_product(char *srcTable1, char * srcTable2, char * dstTable);

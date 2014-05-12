@@ -22,6 +22,7 @@
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rec/archive_log.h"
+#include "../auxi/mempro.h"
 
 /**
  * @author Dino Laktašić

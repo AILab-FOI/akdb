@@ -30,6 +30,7 @@
 int AK_elem_hash_value(AK_list_elem elem) {
     int type = elem->type, value = 0, i = 0;
     char temp_char[MAX_VARCHAR_LENGTH];
+    AK_PRO;
     switch (type) {
         case TYPE_INT:
             memcpy(&value, elem->data, elem->size);
@@ -42,6 +43,7 @@ int AK_elem_hash_value(AK_list_elem elem) {
             } while (temp_char[i]);
             break;
     }
+    AK_EPI;
     return value;
 }
 
@@ -55,6 +57,7 @@ int AK_elem_hash_value(AK_list_elem elem) {
  */
 struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type) {
     int size, id;
+    AK_PRO;
     struct_add *add = (struct_add*) AK_malloc(sizeof (struct_add));
     add->addBlock = 0;
     add->indexTd = 0;
@@ -62,8 +65,10 @@ struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type) {
     int adr_to_write = (int) AK_find_AK_free_space(AK_get_index_addresses(indexName));
     if (adr_to_write == -1)
         adr_to_write = (int) AK_init_new_extent(indexName, SEGMENT_TYPE_INDEX);
-    if (adr_to_write == 0)
+    if (adr_to_write == 0){
+	AK_EPI;
         return add;
+    }
 
     AK_block *block = (AK_block*) AK_read_block(adr_to_write);
 
@@ -88,7 +93,7 @@ struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type) {
 
     add->addBlock = adr_to_write;
     add->indexTd = id;
-
+    AK_EPI;
     return add;
 }
 
@@ -100,11 +105,13 @@ struct_add* Ak_insert_bucket_to_block(char *indexName, char *data, int type) {
   *  @return No return value
  */
 void Ak_update_bucket_in_block(struct_add *add, char *data) {
+    AK_PRO;
     AK_block *block = (AK_block*) AK_read_block(add->addBlock);
     int address = block->tuple_dict[add->indexTd].address;
     int size = block->tuple_dict[add->indexTd].size;
     memcpy(&block->data[address], data, size);
     AK_write_block(block);
+    AK_EPI;
 }
 
 /**
@@ -117,6 +124,7 @@ void Ak_update_bucket_in_block(struct_add *add, char *data) {
   * @return No return value
  */
 void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int hash_bucket_num) {
+    AK_PRO;
     table_addresses *hash_addresses = (table_addresses*) AK_get_index_addresses(indexName);
     int block_add = hash_addresses->address_from[ 0 ];
     if (block_add == 0) {
@@ -133,6 +141,7 @@ void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int h
     block->tuple_dict[0].type = INFO_BUCKET;
     block->tuple_dict[0].size = sizeof (hash_info);
     AK_write_block(block);
+    AK_EPI;
 }
 
 /**
@@ -142,16 +151,19 @@ void AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int h
   * @return info bucket with info data for hash index
  */
 hash_info* AK_get_hash_info(char *indexName) {
+    AK_PRO;
     table_addresses *hash_addresses = (table_addresses*) AK_get_index_addresses(indexName);
     int block_add = hash_addresses->address_from[ 0 ];
     hash_info *info = (hash_info*) AK_malloc(sizeof (hash_info));
     memset(info, 0, sizeof (hash_info));
     if (block_add == 0) {
         printf("Hash index does not exist!\n");
+	AK_EPI;
         return info;
     }
     AK_block *block = (AK_block*) AK_read_block(block_add);
     memcpy(info, block->data, sizeof (hash_info));
+    AK_EPI;
     return info;
 }
 
@@ -164,6 +176,7 @@ hash_info* AK_get_hash_info(char *indexName) {
  */
 struct_add* Ak_get_nth_main_bucket_add(char *indexName, int n) {
     int i = 0, j = 0, k = 0, counter = 0, end = 0;
+    AK_PRO;
     struct_add *add = (struct_add*) AK_malloc(sizeof (struct_add));
     add->addBlock = 301;
     add->indexTd = 2;
@@ -188,6 +201,7 @@ struct_add* Ak_get_nth_main_bucket_add(char *indexName, int n) {
         }
         i++;
     }
+    AK_EPI;
     return add;
     AK_free(add);
 }
@@ -202,6 +216,7 @@ struct_add* Ak_get_nth_main_bucket_add(char *indexName, int n) {
  */
 void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
     int i, address, size, hash_AK_free_space = 0;
+    AK_PRO;
     struct_add *main_add = (struct_add*) AK_malloc(sizeof (struct_add));
     struct_add *hash_add = (struct_add*) AK_malloc(sizeof (struct_add));
     main_bucket *temp_main_bucket = (main_bucket*) AK_malloc(sizeof (main_bucket));
@@ -321,6 +336,7 @@ void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
             AK_insert_in_hash_index(indexName, hashValue, add);
         }
     }
+    AK_EPI;
 }
 
 /**
@@ -333,11 +349,13 @@ void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
  
  */
 struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int delete) {
+    AK_PRO;
     struct_add *add = (struct_add*) AK_malloc(sizeof (struct_add));
     memset(add, 0, sizeof (struct_add));
     table_addresses *addresses = (table_addresses*) AK_get_index_addresses(indexName);
     if (addresses->address_from[0] == 0) {
         printf("Hash index does not exist!\n");
+        AK_EPI;
         return add;
     } else {
         int hashValue = 0, address, size, i, j, k, found, match;
@@ -415,6 +433,7 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
             }
         }
     }
+    AK_EPI;
     return add;
 }
 
@@ -427,7 +446,10 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
  
  */
 struct_add * AK_find_in_hash_index(char *indexName, AK_list *values) {
-    return AK_find_delete_in_hash_index(indexName, values, FIND);
+    AK_PRO;
+    struct_add* ret = AK_find_delete_in_hash_index(indexName, values, FIND);
+    AK_EPI;
+    return ret;
 }
 
 /**
@@ -439,7 +461,9 @@ struct_add * AK_find_in_hash_index(char *indexName, AK_list *values) {
  
  */
 void AK_delete_in_hash_index(char *indexName, AK_list *values) {
+    AK_PRO;
     AK_find_delete_in_hash_index(indexName, values, DELETE);
+    AK_EPI;
 }
 
 /**
@@ -453,7 +477,7 @@ void AK_delete_in_hash_index(char *indexName, AK_list *values) {
  */
 int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
     int i, j, k, l, n, exist, hashValue;
-
+    AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     int num_attr = AK_num_attr(tblName);
     AK_header *table_header = (AK_header *)AK_get_header(tblName);
@@ -474,12 +498,14 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
                 n++;
                 if ((table_header + 1)->type != TYPE_VARCHAR && (table_header + 1)->type != TYPE_INT) {
                     printf("Unsupported data type for hash index! Only int and varchar!");
+                    AK_EPI;
                     return EXIT_ERROR;
                 }
             }
         }
         if (!exist) {
             printf("Atribut %s ne postoji u tablici", attribute->data);
+            AK_EPI;
             return EXIT_ERROR;
         }
         attribute = attribute->next;
@@ -550,12 +576,15 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
         }
         i++;
     }
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
 void AK_delete_hash_index(char *indexName) {
+    AK_PRO;
     AK_delete_segment(indexName, SEGMENT_TYPE_INDEX);
     printf("INDEX %s DELETED!\n", indexName);
+    AK_EPI;
 }
 
 /**
@@ -568,7 +597,7 @@ void Ak_hash_test() {
     char *tblName = "student";
     char *indexName = "student_hash_index";
     //AK_print_table("AK_relation");
-
+    AK_PRO;
     AK_list *att_list = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(att_list);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr\0", 4, att_list);
@@ -604,5 +633,6 @@ void Ak_hash_test() {
             printf("Record found in table block %d and TupleDict ID %d\n", add->addBlock, add->indexTd);
     }
     printf("hash_test: Present!\n");
+    AK_EPI;
 }
 

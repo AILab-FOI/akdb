@@ -41,7 +41,11 @@ int transactionsCount = 0;
  * @return integer containing the hash value of the passed memory address
  */
 int AK_memory_block_hash(int blockMemoryAddress) {
-    return blockMemoryAddress % NUMBER_OF_KEYS;
+    int ret;
+    AK_PRO;
+    ret = blockMemoryAddress % NUMBER_OF_KEYS;
+    AK_EPI;
+    return ret;
 }
 
 /**
@@ -51,15 +55,23 @@ int AK_memory_block_hash(int blockMemoryAddress) {
  * @return pointer to the existing hash list entry
  */
 AK_transaction_elem_P AK_search_existing_link_for_hook(int blockAddress){
+	AK_PRO;
 	int hash = AK_memory_block_hash(blockAddress);
 	AK_transaction_elem_P tmp = LockTable[hash].DLLHead;
 
-	if(!tmp)return NULL;
+	if(!tmp){
+		AK_EPI;
+		return NULL;
+	}
 
 	do{
-		if(tmp->address == blockAddress) return tmp;
+		if(tmp->address == blockAddress){
+			AK_EPI;
+			return tmp;
+		}
 		tmp = tmp->nextBucket;
 	} while(tmp != LockTable[hash].DLLHead);
+	AK_EPI;
 	return NULL;
 }
 
@@ -70,18 +82,20 @@ AK_transaction_elem_P AK_search_existing_link_for_hook(int blockAddress){
  * @return pointer to empty location to store new active address
  */
 AK_transaction_elem_P AK_search_empty_link_for_hook(int blockAddress){
+	AK_PRO;
 	int hash = AK_memory_block_hash(blockAddress);
 
 	if(!LockTable[hash].DLLHead){
 
 		LockTable[hash].DLLHead = (AK_transaction_elem_P) AK_malloc(sizeof (AK_transaction_elem));
 		memset(LockTable[hash].DLLHead, 0, sizeof (AK_transaction_elem));
-
+		AK_EPI;
 		return LockTable[hash].DLLHead;
 	}else{
+		AK_EPI;
 		return LockTable[hash].DLLHead;
 	}
-
+	AK_EPI;
 }
 
 /**
@@ -93,10 +107,13 @@ AK_transaction_elem_P AK_search_empty_link_for_hook(int blockAddress){
  */
 AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
 
-
+    AK_PRO;
     AK_transaction_elem_P root = AK_search_existing_link_for_hook(blockAddress);
     AK_transaction_elem_P bucket;
-    if(root) return root;
+    if(root){
+	AK_EPI;
+	return root;
+    }
 
     root = AK_search_empty_link_for_hook(blockAddress);
     if(!root->nextBucket){
@@ -118,7 +135,7 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
     bucket->lock_type = type;
     bucket->observer_lock = AK_init_observer_lock();
     AK_transaction_register_observer(observable_transaction, bucket->observer_lock->observer);
-
+    AK_EPI;
     return bucket;
 }
 
@@ -129,6 +146,7 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
  * @return integer OK or NOT_OK based on success of finding the specific element in the list.
  */
 int AK_delete_hash_entry_list(int blockAddress) {
+    AK_PRO;
     int hash = AK_memory_block_hash(blockAddress);
     AK_transaction_elem_P elemDelete = AK_search_existing_link_for_hook(blockAddress);
 
@@ -146,12 +164,14 @@ int AK_delete_hash_entry_list(int blockAddress) {
 
         elemDelete->prevBucket = NULL;
         elemDelete->nextBucket = NULL;
-
+	AK_EPI;
         return OK;
 
     } else {
+	AK_EPI;
         return NOT_OK;
     }
+    AK_EPI;
 }
 
 /**
@@ -162,20 +182,23 @@ int AK_delete_hash_entry_list(int blockAddress) {
  * @return NULL pointer if the element is not found otherwise it returns a pointer to the found element
  */
 AK_transaction_lock_elem_P AK_search_lock_entry_list_by_key(AK_transaction_elem_P Lockslist, int memoryAddress, pthread_t id) {
-
+    AK_PRO;
     AK_transaction_lock_elem_P tmpElem = Lockslist->DLLLocksHead;
 
     if (!tmpElem || pthread_equal(tmpElem->TransactionId,id)) {
+	AK_EPI;
         return tmpElem;
     }
     
     int counter = 0;
     while (counter++ <= NUMBER_OF_KEYS) {
         if (pthread_equal(tmpElem->TransactionId,id)) {
+	    AK_EPI;
             return tmpElem;
         }
         tmpElem = tmpElem->nextLock;
     }
+    AK_EPI;
     return NULL;
 }
 
@@ -187,10 +210,14 @@ AK_transaction_lock_elem_P AK_search_lock_entry_list_by_key(AK_transaction_elem_
  * @return int OK or NOT_OK based on success of finding the specific element in the list.
  */
 int AK_delete_lock_entry_list(int blockAddress, pthread_t id) {
+	AK_PRO;
 	AK_transaction_elem_P elemListHolder = AK_search_existing_link_for_hook(blockAddress);
     AK_transaction_lock_elem_P elemDelete = AK_search_lock_entry_list_by_key(elemListHolder,blockAddress, id);
 
-    if (!elemDelete) { return NOT_OK;}
+    if (!elemDelete) {
+	AK_EPI;
+	return NOT_OK;
+    }
     
     do {
         /* printf("##########################\n# Lock Released		 #\n#------------------------#\n# Lock	ID:%lu		 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long) elemDelete->TransactionId, elemListHolder->address); */
@@ -213,7 +240,7 @@ int AK_delete_lock_entry_list(int blockAddress, pthread_t id) {
         elemDelete = AK_search_lock_entry_list_by_key(elemListHolder,blockAddress, id);
 
     } while (elemDelete);
-
+    AK_EPI;
     return OK;
 
 
@@ -229,26 +256,32 @@ int AK_delete_lock_entry_list(int blockAddress, pthread_t id) {
  * @return int PASS_LOCK_QUEUE or WAIT_FOR_UNLOCK based on the rules described inside the function.
  */
 int AK_isLock_waiting(AK_transaction_elem_P lockHolder, int type, pthread_t transactionId, AK_transaction_lock_elem_P lock) {
+    AK_PRO;
     AK_transaction_lock_elem_P tmp = lockHolder->DLLLocksHead;
     
 	if (tmp == lock) {
 		lockHolder->lock_type = type;
+		AK_EPI;
 		return PASS_LOCK_QUEUE;
 	} else if (tmp->lock_type == SHARED_LOCK) {
         //BEGIN SHARED LOCK
 		if (type == SHARED_LOCK) {
+			AK_EPI;
 			return PASS_LOCK_QUEUE;
 
 		} else if (type == EXCLUSIVE_LOCK) {
+	    AK_EPI;
             return WAIT_FOR_UNLOCK;
 		}
         //END SHARED LOCK
 
 	} else if (tmp->lock_type == EXCLUSIVE_LOCK) {
         if ( pthread_equal(tmp->TransactionId, transactionId) ) {
+	    AK_EPI;
             return PASS_LOCK_QUEUE;
         }
 	}
+	AK_EPI;
 	return WAIT_FOR_UNLOCK;
 }
 
@@ -262,7 +295,7 @@ int AK_isLock_waiting(AK_transaction_elem_P lockHolder, int type, pthread_t tran
  * @return pointer to the newly created Locks doubly linked element.
  */
 AK_transaction_lock_elem_P AK_add_lock(AK_transaction_elem_P HashList, int type, pthread_t transactionId) {
-
+    AK_PRO;
     AK_transaction_lock_elem_P root = HashList->DLLLocksHead;
     AK_transaction_lock_elem_P lock = (AK_transaction_lock_elem_P) AK_malloc(sizeof (AK_transaction_lock_elem));
     memset(lock, 0, sizeof (AK_transaction_lock_elem));
@@ -283,6 +316,7 @@ AK_transaction_lock_elem_P AK_add_lock(AK_transaction_elem_P HashList, int type,
     lock->lock_type = type;
     
     lock->isWaiting = AK_isLock_waiting(HashList, type, transactionId, lock);
+    AK_EPI;
     return lock;
 }
 
@@ -295,11 +329,13 @@ AK_transaction_lock_elem_P AK_add_lock(AK_transaction_elem_P HashList, int type,
  * @return pointer to the newly created Locks doubly linked element.
  */
 AK_transaction_lock_elem_P AK_create_lock(int blockAddress, int type, pthread_t transactionId) {
+    AK_PRO;
     AK_transaction_elem_P elem = AK_search_existing_link_for_hook(blockAddress);
 
     if (!elem) {
         elem = AK_add_hash_entry_list(blockAddress, type);
     }
+    AK_EPI;
     return AK_add_lock(elem, type, transactionId);
 }
 
@@ -316,6 +352,7 @@ AK_transaction_lock_elem_P AK_create_lock(int blockAddress, int type, pthread_t 
  */
 
 int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
+    AK_PRO;
     pthread_mutex_lock(&accessLockMutex);
     AK_transaction_lock_elem_P lock = AK_create_lock(memoryAddress, type, transactionId);
     pthread_mutex_unlock(&accessLockMutex);
@@ -342,7 +379,7 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
 
     	/* printf("##########################\n# Lock Granted		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long)lock->TransactionId, lock->lock_type, memoryAddress); */
     }
-
+    AK_EPI;
     return OK;
 }
 
@@ -353,6 +390,7 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
  * @param transactionId integer representation of transaction id.
  */
 void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactionId) {
+    AK_PRO;
     pthread_mutex_lock(&accessLockMutex);
 
     while (addressesTmp->nextElement != NULL) {
@@ -371,6 +409,7 @@ void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactio
         addressesTmp = addressesTmp->nextElement;
     }
     pthread_mutex_unlock(&accessLockMutex);
+    AK_EPI;
 }
 
 /**
@@ -381,9 +420,12 @@ void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactio
  * @return OK or NOT_OK based on the success of the function.
  */
 int AK_get_memory_blocks(char *tblName, AK_memoryAddresses_link addressList) {
+    AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    if (addresses->address_from[0] == 0)
+    if (addresses->address_from[0] == 0){
+	AK_EPI;
         return NOT_OK;
+    }
 
     if (addressList->nextElement != NULL) {
         addressList->nextElement = NULL;
@@ -399,6 +441,7 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses_link addressList) {
         tmp = tmp->nextElement;
 
     }
+    AK_EPI;
     return OK;
 }
 
@@ -414,12 +457,14 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses_link addressList) {
 int AK_execute_commands(command * commandArray, int lengthOfArray) {
     int i = 0, status = 0;
     AK_memoryAddresses addresses;
+    AK_PRO;
     AK_memoryAddresses_link address = (AK_memoryAddresses_link) AK_malloc(sizeof(struct memoryAddresses));
 
     for (i = 0; i < lengthOfArray; i++) {
 
         if (!AK_get_memory_blocks(commandArray[i].tblName, &addresses)) {
             printf("Error reading block Addresses. Aborting\n");
+	    AK_EPI;
             return ABORT;
         };
 
@@ -446,16 +491,20 @@ int AK_execute_commands(command * commandArray, int lengthOfArray) {
             if (status == NOT_OK) {
                 printf("Error acquiring lock. Aborting\n");
                 AK_release_locks(&addresses, pthread_self());
+		AK_EPI;
                 return ABORT;
             }
             address = address->nextElement;
         }
     }
     
-    if(AK_command(commandArray, lengthOfArray) == EXIT_ERROR)
+    if(AK_command(commandArray, lengthOfArray) == EXIT_ERROR){
+	AK_EPI;
         return ABORT;
+    }
     
     AK_release_locks(&addresses, pthread_self());
+    AK_EPI;
     return COMMIT;
 }
 
@@ -467,6 +516,7 @@ int AK_execute_commands(command * commandArray, int lengthOfArray) {
  */
 void * AK_execute_transaction(void *params) {
     int status;
+    AK_PRO;
     AK_transaction_data *data = (AK_transaction_data *)params;
 
     status = AK_execute_commands(data->array, data->lengthOfArray);
@@ -477,7 +527,7 @@ void * AK_execute_transaction(void *params) {
     }
     // notify observable_transaction about transaction finish
     observable_transaction->AK_transaction_finished();
-
+    AK_EPI;
     return NULL;
 }
 
@@ -490,13 +540,16 @@ void * AK_execute_transaction(void *params) {
  */
 int AK_remove_transaction_thread(pthread_t transaction_thread) {
     int i;
+    AK_PRO;
     for (i = 0; i < MAX_ACTIVE_TRANSACTIONS_COUNT; ++i) {
         if(activeThreads[i] == transaction_thread) {
             activeThreads[i] = (pthread_t)NULL;
             activeTransactionsCount--;
+	    AK_EPI;
             return OK;
         }
     }
+    AK_EPI;
     return NOT_OK;
 }
 
@@ -509,16 +562,18 @@ int AK_remove_transaction_thread(pthread_t transaction_thread) {
  */
 int AK_create_new_transaction_thread(AK_transaction_data *transaction_data) {
     pthread_t t1;
-
+    AK_PRO;
     int i;
     for (i = 0; i < MAX_ACTIVE_TRANSACTIONS_COUNT; ++i) {
         if(activeThreads[i] == (pthread_t)NULL) {
             pthread_create(&t1, NULL, AK_execute_transaction, transaction_data);
             activeThreads[i] = t1;
             activeTransactionsCount++;
+	    AK_EPI;
             return OK;
         }
     }
+    AK_EPI;
     return NOT_OK;
 }
 
@@ -529,6 +584,7 @@ int AK_create_new_transaction_thread(AK_transaction_data *transaction_data) {
  * @param lengthOfArray length of commandArray
  */
 void AK_transaction_manager(command * commandArray, int lengthOfArray) {
+    AK_PRO;
     AK_transaction_data* params = AK_malloc(sizeof(AK_transaction_data));
     params->array = AK_malloc(sizeof(command));
     params->array = commandArray;
@@ -546,6 +602,7 @@ void AK_transaction_manager(command * commandArray, int lengthOfArray) {
         pthread_mutex_lock(&newTransactionLockMutex);
         AK_create_new_transaction_thread(params);
     }
+    AK_EPI;
 }
 
 /** 
@@ -557,7 +614,11 @@ void AK_transaction_manager(command * commandArray, int lengthOfArray) {
  * @return Exit status (OK or NOT_OK)
  */
 int AK_transaction_register_observer(AK_observable_transaction *observable_transaction, AK_observer *observer) {
-    return observable_transaction->observable->AK_register_observer(observable_transaction->observable, observer);
+    int ret;
+    AK_PRO;
+    ret = observable_transaction->observable->AK_register_observer(observable_transaction->observable, observer);
+    AK_EPI;
+    return ret;
 }
 
 /** 
@@ -569,7 +630,11 @@ int AK_transaction_register_observer(AK_observable_transaction *observable_trans
  * @return Exit status (OK or NOT_OK)
  */
 int AK_transaction_unregister_observer(AK_observable_transaction *observable_transaction, AK_observer *observer) {
-    return observable_transaction->observable->AK_unregister_observer(observable_transaction->observable, observer);
+    int ret;
+    AK_PRO;
+    ret = observable_transaction->observable->AK_unregister_observer(observable_transaction->observable, observer);
+    AK_EPI;
+    return ret;
 }
 
 /** 
@@ -578,7 +643,9 @@ int AK_transaction_unregister_observer(AK_observable_transaction *observable_tra
  * @param observer_lock Observer type instance
  */
 void handle_transaction_notify(AK_observer_lock *observer_lock) {
+    AK_PRO;
     printf ("MESSAGE FROM TRANSACTION RECIEVED!\n");
+    AK_EPI;
 }
 
 /** 
@@ -589,6 +656,7 @@ void handle_transaction_notify(AK_observer_lock *observer_lock) {
  * @param type Type of observable who sent some notice
  */
 void AK_on_observable_notify(void *observer, void *observable, AK_ObservableType_Enum type) {
+    AK_PRO;
     switch(type) {
     case AK_TRANSACTION:
         handle_transaction_notify((AK_observer_lock*) observer);
@@ -596,6 +664,7 @@ void AK_on_observable_notify(void *observer, void *observable, AK_ObservableType
     default:
         break;
     }
+    AK_EPI;
 }
 
 /** 
@@ -604,6 +673,7 @@ void AK_on_observable_notify(void *observer, void *observable, AK_ObservableType
  * @param transaction_thread Thread ID of transaction which is finished
  */
 void AK_on_transaction_end(pthread_t transaction_thread) {
+    AK_PRO;
     AK_remove_transaction_thread(transaction_thread);
     pthread_cond_broadcast(&cond_lock);
     // unlock mutex -> after this new transaction can be executed if lock stops transaction execution
@@ -612,6 +682,7 @@ void AK_on_transaction_end(pthread_t transaction_thread) {
     printf ("TRANSACTIN END!!!!\n");
     if(transactionsCount == 0)
         observable_transaction->AK_all_transactions_finished();
+    AK_EPI;
 }
 
 /** 
@@ -620,8 +691,10 @@ void AK_on_transaction_end(pthread_t transaction_thread) {
  */
 void AK_on_all_transactions_end() {
     // after unlocking this mutex, main thread will continue execution
+    AK_PRO;
     pthread_mutex_unlock(&endTransationTestLockMutex);
     printf ("ALL TRANSACTIONS ENDED!!!\n");
+    AK_EPI;
 }
 
 /** 
@@ -629,8 +702,10 @@ void AK_on_all_transactions_end() {
  * @brief Function for handling event when one of lock is released
  */
 void AK_on_lock_release() {
+    AK_PRO;
     pthread_cond_broadcast(&cond_lock);
     printf ("TRANSACTION LOCK RELEASED!\n");
+    AK_EPI;
 }
 
 /** 
@@ -639,6 +714,7 @@ void AK_on_lock_release() {
  * @param noticeType Type of action (event)
  */
 void AK_handle_observable_transaction_action(NoticeType *noticeType) {
+    AK_PRO;
     switch((NoticeType)noticeType) {
     case AK_LOCK_RELEASED:
         AK_on_lock_release();
@@ -652,6 +728,7 @@ void AK_handle_observable_transaction_action(NoticeType *noticeType) {
     default:
         break;
     }
+    AK_EPI;
 }
 
 /** 
@@ -667,7 +744,9 @@ void AK_lock_released() {
  * @brief Function which is called when some transaction is finished
  */
 void AK_transaction_finished() {
+    AK_PRO;
     observable_transaction->observable->AK_run_custom_action((NoticeType*)AK_TRANSACTION_FINISHED);
+    AK_EPI;
 }
 
 /** 
@@ -675,7 +754,9 @@ void AK_transaction_finished() {
  * @brief Function which is called when all transactions are finished
  */
 void AK_all_transactions_finished() {
+    AK_PRO;
     observable_transaction->observable->AK_run_custom_action((NoticeType*)AK_ALL_TRANSACTION_FINISHED);
+    AK_EPI;
 }
 
 /** 
@@ -685,6 +766,7 @@ void AK_all_transactions_finished() {
  * @return Pointer to new AK_observable_transaction instance
  */
 AK_observable_transaction * AK_init_observable_transaction() {
+    AK_PRO;
     observable_transaction = AK_calloc(1, sizeof(AK_observable_transaction));
     observable_transaction->AK_transaction_register_observer = &AK_transaction_register_observer;
     observable_transaction->AK_transaction_unregister_observer = &AK_transaction_unregister_observer;
@@ -692,7 +774,7 @@ AK_observable_transaction * AK_init_observable_transaction() {
     observable_transaction->AK_transaction_finished = &AK_transaction_finished;
     observable_transaction->AK_all_transactions_finished = &AK_all_transactions_finished;
     observable_transaction->observable = AK_init_observable(observable_transaction, AK_TRANSACTION, &AK_handle_observable_transaction_action);
-    
+    AK_EPI;
     return observable_transaction;
 }
 
@@ -703,13 +785,16 @@ AK_observable_transaction * AK_init_observable_transaction() {
  * @return Pointer to new AK_observer_lock instance
  */
 AK_observer_lock * AK_init_observer_lock() {
+    AK_PRO;
     AK_observer_lock *self;
     self = AK_calloc(1, sizeof(AK_observer_lock));
     self->observer = AK_init_observer(self, &AK_on_observable_notify);
+    AK_EPI;
     return self;
 }
 
 void AK_test_Transaction() {
+    AK_PRO;
     printf("***Test Transaction***\n");
     pthread_mutex_lock(&endTransationTestLockMutex);
     pthread_mutex_lock(&newTransactionLockMutex);
@@ -807,4 +892,5 @@ void AK_test_Transaction() {
     pthread_mutex_unlock(&endTransationTestLockMutex);
     
     printf("***End test Transaction***\n");
+    AK_EPI;
 }

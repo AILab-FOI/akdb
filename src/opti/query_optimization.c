@@ -27,6 +27,7 @@
  * @result list output
  */
 void AK_print_optimized_query(AK_list *list_query) {
+    AK_PRO;
     AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_query);
 
     int length;
@@ -74,6 +75,7 @@ void AK_print_optimized_query(AK_list *list_query) {
         AK_print_row_spacer(len, length);
         list_elem = list_elem->next;
     }
+    AK_EPI;
 }
 
 /**
@@ -90,6 +92,7 @@ void AK_print_optimized_query(AK_list *list_query) {
  * @return returns AK_list (RA expresion list) optimized by given relational equivalence rule 
  */
 AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *FLAGS) {
+    AK_PRO;
     Ak_dbg_messg(LOW, REL_EQ, "\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
     Ak_dbg_messg(LOW, REL_EQ, "=================================================\n");
 
@@ -97,30 +100,36 @@ AK_list *AK_execute_rel_eq(AK_list *list_query, const char rel_eq, const char *F
         switch (rel_eq) {
             case 'c':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_commute.\n");
+                AK_EPI;
                 return (AK_list *)AK_rel_eq_comut(list_query);
                 break;
 
             case 'a':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_assoc.\n");
+                AK_EPI;
                 return (AK_list *) AK_rel_eq_assoc(list_query);
                 break;
 
             case 'p':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_projection.\n");
+                AK_EPI;
                 return (AK_list *) AK_rel_eq_projection(list_query);
                 break;
 
             case 's':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_selection.\n");
+                AK_EPI;
                 return (AK_list *) AK_rel_eq_selection(list_query);
                 break;
 
             default:
                 Ak_dbg_messg(LOW, REL_EQ, "Invalid relational equivalence flag: %c", rel_eq);
+                AK_EPI;
                 return list_query;
                 break;
         }
     }
+    AK_EPI;
 }
     
 /**
@@ -142,6 +151,7 @@ AK_list *AK_query_optimization(AK_list *list_query, const char *FLAGS, const int
 int num_perms = 1;
 int div;
     int next_perm,sum, next_flag;
+    AK_PRO;
     int len_flags = strlen(FLAGS);
 
     AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -175,6 +185,7 @@ int div;
 
     if (num_perms > MAX_PERMUTATION) {
         Ak_dbg_messg(LOW, REL_EQ, "ERROR: max four flags are allowed!\n");
+        AK_EPI;
         return temp;
     }
 
@@ -217,7 +228,7 @@ int div;
     }
 
     Ak_DeleteAll_L(list_query);
-
+    AK_EPI;
     return temp;
 }
 /**
@@ -226,7 +237,7 @@ int div;
   * @return No return value
   */
 void AK_query_optimization_test() { 
-
+    AK_PRO;
     printf("query_optimization.c: Present!\n");
     printf("\n********** QUERY OPTIMIZATION TEST by Dino Laktašić **********\n");
 
@@ -423,5 +434,5 @@ AK_list *mylist10 = (AK_list *) AK_malloc(sizeof (AK_list));
   
 
   //printf("\n\nLOGIC PLAN GENERATED IN: %d μs, %d s\n", end - start, (end - start) / 1000000);
-
+   AK_EPI;
 }

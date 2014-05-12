@@ -28,6 +28,7 @@
 #include "string.h"
 #include "ctype.h"
 #include "debug.h"
+#include "mempro.h"
 
 //#include "ini_parser/iniparser.h"
 
@@ -122,7 +123,7 @@ AK_list_elem Ak_Next_L(AK_list_elem current);
 AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L);
 int Ak_IsEmpty_L(AK_list *L);
 void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
-void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
+void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list **L);
 void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L);
 void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L);
 void Ak_Delete_L(AK_list_elem current, AK_list *L);

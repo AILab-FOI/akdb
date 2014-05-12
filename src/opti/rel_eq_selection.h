@@ -21,7 +21,7 @@
 #define REL_EQ_SELECTION
 
 #include "../file/table.h"
-
+#include "../auxi/mempro.h"
 
 int AK_rel_eq_is_attr_subset(char *set, char *subset) ;
 char *AK_rel_eq_get_atrributes_char(char *tblName) ;

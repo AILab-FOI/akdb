@@ -32,6 +32,7 @@ pthread_mutex_t fileMut = PTHREAD_MUTEX_INITIALIZER;
 int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     int start_address = -1;
     int end_address = INITIAL_EXTENT_SIZE;
+    AK_PRO;
     pthread_mutex_lock(&fileMut);
     int objectID = AK_get_id();
     pthread_mutex_unlock(&fileMut);
@@ -39,6 +40,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
 
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
+        AK_EPI;
         return EXIT_ERROR;
     } else {
         end_address += start_address;
@@ -64,8 +66,10 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
         Ak_insert_row(row_root);
 
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
+        AK_EPI;
         return start_address;
     }
+    AK_EPI;
 }
 /**
   * @author Unknown
@@ -74,6 +78,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
   */
 void Ak_files_test() {
     AK_header header[MAX_ATTRIBUTES], header1[MAX_ATTRIBUTES];
+    AK_PRO;
     memset(header, '\0', MAX_ATTRIBUTES);
     memset(header1, '\0', MAX_ATTRIBUTES);
 
@@ -95,4 +100,5 @@ void Ak_files_test() {
         printf("AK_init_new_segment: Test1 succeded!\n");
 
     AK_printout_redolog();
+    AK_EPI;
 }

@@ -30,6 +30,7 @@ of Kalashnikov DB
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include "../auxi/mempro.h"
 
 
 #include <sys/stat.h>   /* for stat structure*/

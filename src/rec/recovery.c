@@ -32,11 +32,12 @@
     char * line = NULL;
     size_t len = 0;
     ssize_t read;
-
+    AK_PRO;
     fp = fopen("../src/rec/log.log", "r");
 
     if (fp == NULL){
         perror("fopen");
+        AK_EPI;
         exit(EXIT_FAILURE);
     }
 
@@ -45,6 +46,7 @@
     }
     
     fclose(fp);
+    AK_EPI;
 }
 
 /** 
@@ -54,6 +56,7 @@
  * @return no value
  */
 void AK_recover_line(char* line){
+    AK_PRO;
     char* table = AK_get_recovery_line_table(line);
     int n= AK_recovery_get_id(line);
 
@@ -72,6 +75,7 @@ void AK_recover_line(char* line){
     } else if(c == 'D'){
         AK_recovery_insert_row(table, line);
     }
+    AK_EPI;
 }
 
 /** 
@@ -81,6 +85,7 @@ void AK_recover_line(char* line){
  * @return table name
  */
 char* AK_get_recovery_line_table(char* command){
+    AK_PRO;
     char* result = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
     int index = 0;
 
@@ -92,6 +97,7 @@ char* AK_get_recovery_line_table(char* command){
         }
         command++;
     } while ( *command != '\0' || index < MAX_VARCHAR_LENGTH);
+    AK_EPI;
     return result;
 }
 
@@ -102,7 +108,7 @@ char* AK_get_recovery_line_table(char* command){
  * @return id of the row
  */
 int AK_recovery_get_id(char *command){
-
+    AK_PRO;
     int length = strlen(command);
 
     int i = 0;
@@ -125,7 +131,7 @@ int AK_recovery_get_id(char *command){
     }
 
     int n = atoi(result2);
-
+    AK_EPI;
     return n;
 }
 
@@ -137,7 +143,7 @@ int AK_recovery_get_id(char *command){
  * @return no value
  */
 void AK_recovery_insert_row(char* table, char* attributes){
-
+    AK_PRO;
     char* result = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
     int i = 0;
     int index = 0;
@@ -172,6 +178,7 @@ void AK_recovery_insert_row(char* table, char* attributes){
     int n = i;
 
     insert_data_test(table, attr_name, attr_value, n, type);
+    AK_EPI;
 }
 
 /** 
@@ -181,7 +188,7 @@ void AK_recovery_insert_row(char* table, char* attributes){
  * @return new attribute
  */
 char* AK_check_redolog_attributes(char* attributes){
-
+    AK_PRO;
     char* result = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
     int index = 0;
 
@@ -193,7 +200,7 @@ char* AK_check_redolog_attributes(char* attributes){
         }
         attributes++;
     } while ( *attributes != '\0' || index < MAX_VARCHAR_LENGTH);
-
+    AK_EPI;
     return result;
 }
 
@@ -206,6 +213,7 @@ char* AK_check_redolog_attributes(char* attributes){
  * @return new double pointer structure with tokens
  */
 char** AK_recovery_tokenize(const char* input, char* delimiter, int valuesOrNot){
+    AK_PRO;
     char* str = strdup(input);
     int count = 0;
     char** result = AK_malloc(MAX_ATTRIBUTES*sizeof(*result));
@@ -230,8 +238,11 @@ char** AK_recovery_tokenize(const char* input, char* delimiter, int valuesOrNot)
             values[j] = result[i];
         }
         AK_free(result);
+        AK_EPI;
         return values;
     } else{
+        AK_EPI;
         return result;
     }
+    AK_EPI;
 }

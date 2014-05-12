@@ -26,7 +26,7 @@
  * @return EXIT_FAILURE if not allocated memory for ispis, otherwise EXIT_SUCCESS
  */
 int AK_add_to_redolog(char command[6], AK_list *row_root){
-
+    AK_PRO;
     int n = redo_log->number;
 
     if(n == MAX_REDO_LOG_ENTRIES){
@@ -38,6 +38,7 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
     
     char* record;
     if((record = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
+        AK_EPI;
     	return EXIT_FAILURE;
     }
 
@@ -91,7 +92,7 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
     AK_free(int_char);
     AK_free(float_char);
     AK_free(default_char);
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -102,11 +103,13 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
  * @return No return value.
  */
 void AK_printout_redolog(){
+    AK_PRO;
     int x = redo_log->number;
     int i = 0;
     for (i = 0; i < x; i++){
         printf("%d. %s %s %s\n", i, redo_log->table_name[i], redo_log->command[i], redo_log->attributes[i]);
     }
+    AK_EPI;
 }
 
 /** 
@@ -115,7 +118,7 @@ void AK_printout_redolog(){
  * @return new attribute
  */
 char* AK_check_attributes(char *attributes){
-
+    AK_PRO;
     int n = strlen(attributes);
 
     if( attributes[n-1] == '\\' ){
@@ -142,6 +145,6 @@ char* AK_check_attributes(char *attributes){
         }
         att_index++;
     } while ( att_index < n || index < MAX_VARCHAR_LENGTH);
-
+    AK_EPI;
     return result;
 }

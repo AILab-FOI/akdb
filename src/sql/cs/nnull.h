@@ -22,6 +22,7 @@
 
 #include "../../mm/memoman.h"
 #include "../../file/id.h"
+#include "../../auxi/mempro.h"
 
 void AK_set_constraint_not_null(char* tableName, char* constraintName, char* attName);
 int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNamePar) ;

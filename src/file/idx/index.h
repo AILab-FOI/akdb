@@ -20,6 +20,8 @@
 #ifndef INDEX
 #define	INDEX
 
+#include "../../auxi/mempro.h"
+
 /**
   * @author Unknown
   * @struct struct_add

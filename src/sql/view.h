@@ -23,6 +23,7 @@
 #include "../file/table.h"
 #include "../file/id.h"
 #include "../file/fileio.h"
+#include "../auxi/mempro.h"
 
 
 int AK_get_view_obj_id(char *name);

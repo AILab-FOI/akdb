@@ -11,6 +11,7 @@ void AK_archive_log(){
     struct timeval tv;
     struct timezone tz;
     struct tm *tm;
+    AK_PRO;
     gettimeofday(&tv, &tz);
     tm=localtime(&tv.tv_sec);
     int i = 0;   
@@ -30,4 +31,5 @@ void AK_archive_log(){
         fprintf(fp, "%s\n", (char *) redo_log->attributes[i]);
     }
     fclose(fp);
+    AK_EPI;
 }

@@ -29,13 +29,16 @@
 int AK_trigger_save_conditions(int trigger, AK_list* condition) {
     int i = 0;
     char tempData[MAX_VARCHAR_LENGTH];
+    AK_PRO;
     AK_list_elem temp = (AK_list_elem)Ak_First_L(condition);
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &trigger, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
-    if (Ak_delete_row(row_root) == EXIT_ERROR)
+    if (Ak_delete_row(row_root) == EXIT_ERROR){
+	AK_EPI;
         return EXIT_ERROR;
+    }
 
     Ak_DeleteAll_L(row_root);
     while (temp != NULL) {
@@ -51,6 +54,7 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
         Ak_Insert_New_Element(TYPE_INT, &temp->type, "AK_trigger_conditions", "type", row_root);
         if (Ak_insert_row(row_root) == EXIT_ERROR) {
             AK_free(row_root);
+	    AK_EPI;
             return EXIT_ERROR;
         }
         temp = (AK_list_elem)Ak_Next_L(temp);
@@ -58,6 +62,7 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
     }
 
     AK_free(row_root);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -73,11 +78,12 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition) {
  */
 int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, char* function) {
     int funk_id = -1, table_id = -1, trigg_id;
-
+    AK_PRO;
     table_id = AK_get_table_obj_id(table);
 
     if (table_id == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_add: No such table upon which to create a trigger.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
 
@@ -85,6 +91,7 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
 
     if (funk_id == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_add: No such function to execute upon activation of trigger.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
 
@@ -107,7 +114,7 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
     
     if (condition != NULL && Ak_IsEmpty_L(condition) == 0)
         AK_trigger_save_conditions(trigg_id, condition);
-
+    AK_EPI;
     return trigg_id;
 }
 
@@ -121,21 +128,25 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
 int AK_trigger_get_id(char *name, char *table) {
     int i = 0, table_id = -1;
     AK_list *row;
-
+    AK_PRO;
     table_id = AK_get_table_obj_id(table);
-    if (table_id == EXIT_ERROR)
+    if (table_id == EXIT_ERROR){
+	AK_EPI;
         return EXIT_ERROR;
+    }
 
     while ((row = (AK_list *)AK_get_row(i, "AK_trigger")) != NULL) {
         if (strcmp(row->next->next->data, name) == 0 && table_id == (int) * row->next->next->next->next->next->next->data) {
             i = (int) * row->next->data;
             AK_free(row);
+	    AK_EPI;
             return i;
         }
         i++;
     }
 
     AK_free(row);
+    AK_EPI;
     return EXIT_ERROR;
 }
 
@@ -147,6 +158,7 @@ int AK_trigger_get_id(char *name, char *table) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_remove_by_name(char *name, char *table) {
+    AK_PRO;
     int trigg_id = AK_trigger_get_id(name, table);
 
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
@@ -158,12 +170,14 @@ int AK_trigger_remove_by_name(char *name, char *table) {
 
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_remove_by_name: Could not delete trigger.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
 
     // the following can be avoided if foreign key is declared...
     Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &trigg_id, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
+    AK_EPI;
     return Ak_delete_row(row_root);
 }
 
@@ -174,6 +188,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_remove_by_obj_id(int obj_id) {
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
@@ -183,12 +198,14 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
 
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_remove_by_name: Could not delete trigger.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
 
     // the following can be avoided if foreign key is declared...
     Ak_DeleteAll_L(row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
+    AK_EPI;
     return Ak_delete_row(row_root);
 }
 
@@ -207,8 +224,10 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
 int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, char* function) {
+    AK_PRO;
     if (name == NULL || table == NULL) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Not enough data to identify the trigger.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
     int table_id = AK_get_table_obj_id(table);
@@ -216,11 +235,13 @@ int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, ch
     int function_id = AK_get_function_obj_id(function, NULL);
     if (function_id == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Could not update trigger. Function does not exist.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
 
     if(table_id == -1 || trigger_id == -1){
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Could not update trigger. Table or trigger does not exist.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
 
@@ -245,9 +266,10 @@ int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, ch
 
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_edit: Could not update trigger.\n");
+	AK_EPI;
         return EXIT_ERROR;
     }
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -259,6 +281,7 @@ int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, ch
  */
 AK_list *AK_trigger_get_conditions(int trigger) {
     char *endPtr;
+    AK_PRO;
     printf("\nid triggera: %d\n", trigger);
     AK_list expr;
     Ak_Init_L(&expr);
@@ -278,6 +301,7 @@ AK_list *AK_trigger_get_conditions(int trigger) {
 
     AK_delete_segment("AK_trigger_conditions_temp", SEGMENT_TYPE_TABLE);
     AK_free(row);
+    AK_EPI;
     return result;
 }
 
@@ -289,6 +313,7 @@ AK_list *AK_trigger_get_conditions(int trigger) {
 * @return EXIT_SUCCESS or EXIT_ERROR
 */
 int AK_trigger_rename(char *old_name, char *new_name, char *table){
+	AK_PRO;
 	printf("\n***Rename trigger***\n");
 
 	int trig_id = AK_trigger_get_id(old_name, table);
@@ -305,9 +330,10 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 	    
 	if (result == EXIT_ERROR) {
 	   Ak_dbg_messg(HIGH, SEQUENCES, "AK_trigger_rename: Could not rename trigger.\n");
+	   AK_EPI;
 	   return EXIT_ERROR;
 	   }
-
+	AK_EPI;
 	return EXIT_SUCCESS;
 }
 
@@ -319,6 +345,7 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
  * @return No return value
  */
 void AK_trigger_test() {
+    AK_PRO;
     printf("trigger.c: Present!\n");
 
     AK_list *arguments_list1 = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -377,4 +404,5 @@ void AK_trigger_test() {
     
     AK_free(dummyExpression);
     AK_free(expr);
+    AK_EPI;
 }

@@ -30,11 +30,13 @@
  * @return EXIT_SUCCESS
  */
 int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
+        AK_PRO;
 	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
 	int num_attr = AK_num_attr(srcTable);
 
 		int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
 		if (startAddress == EXIT_ERROR) {
+			AK_EPI;
 			return EXIT_ERROR;
 		}
 		Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
@@ -83,6 +85,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 	
 
 	Ak_dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
+	AK_EPI;
 	return EXIT_SUCCESS;
 }
 
@@ -93,6 +96,7 @@ int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
  *
  */
 void AK_op_selection_test() {
+	AK_PRO;
 	printf("\n********** SELECTION TEST **********\n");
 
 	AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -123,6 +127,7 @@ void AK_op_selection_test() {
 
 	Ak_DeleteAll_L(expr);
 	AK_free(expr);
+	AK_EPI;
 }
 
 /**
@@ -131,6 +136,7 @@ void AK_op_selection_test() {
  *
  */
 void AK_op_selection_test2() {
+	AK_PRO;
 	printf("\n********** SELECTION TEST 2**********\n");
 
 	AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -162,6 +168,7 @@ void AK_op_selection_test2() {
 
 	Ak_DeleteAll_L(expr);
 	AK_free(expr);
+	AK_EPI;
 }
 
 /**
@@ -170,6 +177,7 @@ void AK_op_selection_test2() {
  *
  */
 void AK_op_selection_test_redolog(){
+	AK_PRO;
 /*
 	int brojac = 0;
 	printf("\n********** REDO LOG TEST ************\n");
@@ -205,4 +213,5 @@ void AK_op_selection_test_redolog(){
 		else AK_op_selection_test2();
 
 	}*/
+	AK_EPI;
 }

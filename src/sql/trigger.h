@@ -26,6 +26,7 @@
 #include "../file/id.h"
 #include "../sql/function.h"
 #include "../rel/selection.h"
+#include "../auxi/mempro.h"
 
 int AK_trigger_save_conditions(int trigger, AK_list* condition);
 int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, char* function);

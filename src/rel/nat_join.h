@@ -22,6 +22,7 @@
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rel/projection.h"
+#include "../auxi/mempro.h"
 
 void AK_create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att);
 void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *temp_block, char *new_table);

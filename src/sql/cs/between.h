@@ -22,6 +22,7 @@
 
 #include "../../mm/memoman.h"
 #include "../../file/id.h"
+#include "../../auxi/mempro.h"
 
 void AK_set_constraint_between(char* tableName, char* constraintName, char* attName, char* startValue, char* endValue);
 int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar);

@@ -36,10 +36,11 @@ char* AK_get_table_atribute_types(char* tblName){
     int len_attr, num_attr, next_attr, attr_type;
     int next_address = 0;
     char attr_buffer[4];
-
+    AK_PRO;
     num_attr = AK_num_attr(tblName);
 
     if (num_attr == -1) {
+        AK_EPI;
         return NULL;
     }
 
@@ -68,11 +69,14 @@ char* AK_get_table_atribute_types(char* tblName){
     AK_free(table_header);
     
     if (next_address > 0) {
+        AK_EPI;
         return attr;
     } else {
         AK_free(attr);
+        AK_EPI;
         return NULL;
     }
+    AK_EPI;
 }
 
 /**
@@ -90,6 +94,7 @@ int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type){
     
     AK_header t_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
+    AK_PRO;
     for (i = 0; i < _num; i++){
         temp = (AK_header*) AK_create_header(attr_name[i], _type[i], FREE_INT, FREE_CHAR, FREE_CHAR);
         memcpy(t_header + i, temp, sizeof ( AK_header));
@@ -99,10 +104,15 @@ int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type){
 
     int startAddress = AK_initialize_new_segment(tbl_name, SEGMENT_TYPE_TABLE, t_header);
 
-    if (startAddress != EXIT_ERROR)
+    if (startAddress != EXIT_ERROR){
+        AK_EPI;
         return 1;
-    else
+    }
+    else{
+	AK_EPI;
         return 0;
+    }
+    AK_EPI;
 }
 
 /**
@@ -117,8 +127,8 @@ int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type){
  */
 int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _num, int* _type){
 
-    int i;
-
+    int i, ret;
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
@@ -135,8 +145,9 @@ int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _n
             Ak_Insert_New_Element(_type[i], &val , tbl_name, attr_name[i], row_root);  
         }
     }
-
-    return Ak_insert_row(row_root);
+    ret = Ak_insert_row(row_root);
+    AK_EPI;
+    return ret;
 }
 
 /**
@@ -151,6 +162,7 @@ int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _n
  *
  */
 int selection_test(char* src_table, char* dest_table, char** sel_query, int _num, int* _type){
+    AK_PRO;
 	printf("==================== SELECTION_TEST =====================\n");
 
     AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -178,9 +190,11 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
 
     if (AK_selection(src_table, dest_table, expr) == EXIT_SUCCESS){
         Ak_DeleteAll_L(expr);
-        AK_free(expr);    
+        AK_free(expr); 
+        AK_EPI;  
         return 1;
     }
+    AK_EPI;
     return 0;
 
 }
@@ -197,6 +211,7 @@ char* FILEP = "table_test.txt";
 FILE *fp;
 
  int get_column_test(int num, char* tbl){
+    AK_PRO;
     fp = fopen(FILEP,"a");
 
     AK_list *row = AK_get_column(num, tbl);
@@ -214,8 +229,10 @@ FILE *fp;
             }
         }
         fclose(fp);
+        AK_EPI;
         return 1;
     }
+    AK_EPI;
     fclose(fp);
     return 0;
  }
@@ -229,6 +246,7 @@ FILE *fp;
  */
 
  int get_row_test(int num, char* tbl){
+    AK_PRO;
     fp = fopen(FILEP,"a");
     
     AK_list *row = AK_get_row(num, tbl);
@@ -245,9 +263,11 @@ FILE *fp;
                 fprintf(fp, "| %s ", row->data);
             }
         }
+        AK_EPI;
         fclose(fp);
         return 1;
     }
+    AK_EPI;
     fclose(fp);
     return 0;
  }
@@ -266,7 +286,7 @@ void AK_create_test_tables() {
     //create header
     AK_header t_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
-
+    AK_PRO;
     temp = (AK_header*) AK_create_header("mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header, temp, sizeof ( AK_header));
     temp = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -1077,6 +1097,8 @@ void AK_create_test_tables() {
 //printf("\n\n----------------View test----------------\n\n");
 //	AK_view_test();
 /*******************************/
+
+   AK_EPI;
 }
 
 

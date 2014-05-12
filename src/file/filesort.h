@@ -23,6 +23,7 @@
 #include "../mm/memoman.h"
 #include "table.h"
 #include "files.h"
+#include "../auxi/mempro.h"
 /**
   * @def DATA_ROW_SIZE
   * @brief Constatnt declaring size of data to be compared

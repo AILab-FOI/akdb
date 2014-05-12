@@ -30,7 +30,7 @@ int AK_get_id() {
     int seq_id = -1;
     int current_value = ID_START_VALUE;
     char temp_data[MAX_VARCHAR_LENGTH];
-
+    AK_PRO;
     AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root); 
     AK_list *row = (AK_list*) AK_malloc(sizeof (AK_list));
@@ -61,8 +61,10 @@ int AK_get_id() {
         AK_free(row_root);
 
         if(result != EXIT_SUCCESS){
+            AK_EPI;
             return EXIT_ERROR;
         }
+        AK_EPI;
         return current_value;
     }
 
@@ -75,6 +77,7 @@ int AK_get_id() {
     Ak_insert_row(row_root);
     Ak_DeleteAll_L(row_root);
     AK_free(row_root);
+    AK_EPI;
     return current_value;
 }
 
@@ -83,6 +86,7 @@ int AK_get_id() {
  * @brief  Function for testing getting ID's
  */
 void Ak_id_test() {
+    AK_PRO;
     printf("ID: %i\n", AK_get_id());
     AK_print_table("AK_sequence");
     printf("ID: %i\n", AK_get_id());
@@ -93,4 +97,5 @@ void Ak_id_test() {
     AK_print_table("AK_sequence");
     printf("ID: %i\n", AK_get_id());
     AK_print_table("AK_sequence");
+    AK_EPI;
 }

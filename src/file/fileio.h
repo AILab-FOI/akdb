@@ -24,6 +24,7 @@
 #include "../rec/recovery.h"
 #include "../rec/redo_log.h"
 #include "files.h"
+#include "../auxi/mempro.h"
 
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint);
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore);

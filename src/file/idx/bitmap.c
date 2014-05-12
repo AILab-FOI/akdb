@@ -28,14 +28,17 @@
  */
 int Ak_If_ExistOp(AK_list *L, char *ele) {
     AK_list *Currentelement_op;
+    AK_PRO;
     Currentelement_op = L->next;
     while (Currentelement_op) {
         //printf("iz liste: %s, iz tablice: %s \n", Currentelement_op->attribute_name, ele);
         if (strcmp(Currentelement_op->attribute_name, ele) == 0) {
+            AK_EPI;
             return 1;
         }
         Currentelement_op = (AK_list_elem) Currentelement_op->next;
     }
+    AK_EPI;
     return 0;
 }
 
@@ -54,25 +57,28 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
     int num_attr;
     int i, j, k;
     //start and end addresses of segment's
-    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-
-    num_attr = AK_num_attr(tblName);
-
-    AK_header *temp_head = (AK_header *) AK_get_header(tblName);
+    table_addresses *addresses;
+    AK_header *temp_head;
     int temp_int;
     char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
-
     AK_list_elem some_element;
     AK_list_elem e, ee;
-    AK_list *headerAtributes = (AK_list *) AK_malloc(sizeof (AK_list));
-
+    AK_list *headerAtributes;
     int br;
     char * indexName;
-
     AK_header t_header[ MAX_ATTRIBUTES ];
     AK_header t_headerr[ MAX_ATTRIBUTES ];
     AK_header* tempHeader;
+
+    AK_PRO;
+
+    addresses = (table_addresses*) AK_get_table_addresses(tblName);
+    num_attr = AK_num_attr(tblName);
+    temp_head = (AK_header *) AK_get_header(tblName);
+    headerAtributes = (AK_list *) AK_malloc(sizeof (AK_list));
+
+
 
     for (i = 0; i < num_attr; i++) {
         some_element = Ak_First_L(attributes);
@@ -227,6 +233,7 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
     AK_free(headerAtributes);
     AK_free(tempHeader);
     AK_free(temp_head);
+    AK_EPI;
 
 }
 
@@ -237,9 +244,11 @@ void AK_create_Index(char *tblName, AK_list *attributes) {
    @return No return value
  **/
 void Ak_print_Header_Test(char* tblName) {
-    AK_header *temp_head = AK_get_header(tblName);
+    AK_header *temp_head;
     int i;
     int num_attr;
+    AK_PRO;
+    temp_head = AK_get_header(tblName);
     num_attr = AK_num_attr(tblName);
     printf("Broj atributa u zaglavlju: %d", num_attr);
     printf("\n");
@@ -247,6 +256,7 @@ void Ak_print_Header_Test(char* tblName) {
         printf("%-10s", (temp_head + i)->att_name);
     printf("\n----------------------------------------------\n");
     AK_free(temp_head);
+    AK_EPI;
 }
 
 /*
@@ -261,8 +271,8 @@ void Ak_print_Header_Test(char* tblName) {
  * @return No return value
  */
 void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex) {
-    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[0]);
+    table_addresses *addresses;
+    AK_block *temp;
 
     //AK_header *t_header = AK_get_header( tblNameIndex );
 
@@ -274,6 +284,10 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
     i = 0;
     AK_list_elem row_root;
 
+    AK_PRO;
+
+    addresses = (table_addresses*) AK_get_table_addresses(tblName);
+    temp = (AK_block*) AK_read_block(addresses->address_from[0]);
 
     while (addresses->address_from[ i ] != 0) {
         for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) {
@@ -351,6 +365,7 @@ void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
     AK_free(addresses);
     AK_free(temp);
     // AK_free(t_header);
+    AK_EPI;
 }
 
 /**
@@ -366,18 +381,21 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
     int num_attr;
     int i, j, k;
     //start and end addresses of segment's
-    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(indexName);
-
-    num_attr = AK_num_attr(indexName);
-
-    AK_header *temp_head = (AK_header *) AK_get_header(indexName);
+    table_addresses *addresses;
+    AK_header *temp_head;
     int temp_int;
     char temp_char[ MAX_VARCHAR_LENGTH ];
     float temp_float;
     int b, br = 0;
     int addBlock, indexTd;
+    list_ad *add_root;
+    AK_PRO;
 
-    list_ad *add_root = (list_ad *) AK_malloc(sizeof (list_ad));
+    addresses = (table_addresses*) AK_get_table_addresses(indexName);
+    num_attr = AK_num_attr(indexName);
+    temp_head = (AK_header *) AK_get_header(indexName);
+
+    add_root = (list_ad *) AK_malloc(sizeof (list_ad));
     Ak_InitializelistAd(add_root);
 
     printf("\n");
@@ -429,6 +447,7 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
         }
         i++;
     }
+    AK_EPI;
     return add_root;
     AK_free(add_root);
 }
@@ -439,7 +458,9 @@ list_ad* Ak_get_Attribute(char *indexName, char *attribute) {
  * @return No return value
  **/
 void Ak_create_List_Address_Test() {
-    list_ad *add_root = (list_ad *) AK_malloc(sizeof (list_ad));
+    list_ad *add_root;
+    AK_PRO;
+    add_root = (list_ad *) AK_malloc(sizeof (list_ad));
     Ak_InitializelistAd(add_root);
     Ak_Insert_NewelementAd(1, 1, "prvi", add_root);
     element_ad some_element;
@@ -455,7 +476,7 @@ void Ak_create_List_Address_Test() {
         ele = Ak_Get_Next_elementAd(ele);
     }
 
-
+    AK_EPI;
 
 }
 
@@ -468,11 +489,14 @@ void Ak_create_List_Address_Test() {
 void Ak_print_Att_Test(list_ad *list) {
 
     //list_ad *list = getAttribute("studentfirstname","Matija");
-    element_ad ele = Ak_Get_First_elementAd(list);
+    element_ad ele;
+    AK_PRO;
+    ele = Ak_Get_First_elementAd(list);
     while (ele != 0) {
         //printf("Atribut : %s Blok: %i Adresa td: %i Size: %i\n",ele->attName,ele->add.addBlock,ele->add.addTd,ele->add.sizeTd);
         ele = Ak_Get_Next_elementAd(ele);
     }
+    AK_EPI;
 }
 
 /**
@@ -483,13 +507,13 @@ void Ak_print_Att_Test(list_ad *list) {
  * @return list of adresses
  **/
 list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeValue) {
-    list_ad *list = (list_ad *) AK_malloc(sizeof (list_ad));
-    Ak_InitializelistAd(list);
+    list_ad *list;
     char inde[50];
     char *indexName;
+    AK_PRO;
 
-
-
+    list = (list_ad *) AK_malloc(sizeof (list_ad));
+    Ak_InitializelistAd(list);
     strcpy(inde, tableName);
     indexName = strcat(inde, attributeName);
     indexName = strcat(indexName, "_bmapIndex");
@@ -502,7 +526,7 @@ list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeV
     } else {
         list = Ak_get_Attribute(indexName, attributeValue);
     }
-
+    AK_EPI;
     return list;
 }
 
@@ -526,7 +550,7 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
     int temp_adr_Td;
     int pos;
     int posNew = -1;
-
+    AK_PRO;
     strcpy(inde, tableName);
     indexName = strcat(inde, attributeName);
     indexName = strcat(indexName, "_bmapIndex");
@@ -550,6 +574,7 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
 
     if (posNew == -1) {
         printf("Moguc update samo za postojece vrijednosti ! \n");
+        AK_EPI;
         exit(1);
     }
 
@@ -587,6 +612,7 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
             }
         }
     }
+    AK_EPI;
 }
 
 /**
@@ -596,20 +622,25 @@ void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, ch
  * @return EXIT_SUCESS when write operation is successful, otherwise EXIT_ERROR
  **/
 int Ak_write_block(AK_block * block) {
+    AK_PRO;
     if ((db = fopen(DB_FILE, "r+")) == NULL) {
         printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+        AK_EPI;
         exit(EXIT_ERROR);
     }
     if (fseek(db, block->address * sizeof ( AK_block), SEEK_SET) != 0) {
         printf("AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address);
+        AK_EPI;
         exit(EXIT_ERROR);
     }
     if (AK_fwrite(block, sizeof ( *block), 1, db) != 1) {
         printf("AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address);
+        AK_EPI;
         exit(EXIT_ERROR);
     }
     fclose(db);
     Ak_dbg_messg(MIDDLE, INDICES, "AK_write_block: Written block at address %d\n", block->address * sizeof ( AK_block));
+    AK_EPI;
     return ( EXIT_SUCCESS);
 }
 
@@ -619,6 +650,7 @@ int Ak_write_block(AK_block * block) {
  * @return No return value
  * */
 void Ak_bitmap_test() {
+    AK_PRO;
     printf("\n********** BITMAP INDEX TEST **********\n\n");
 
     char *tblName = "assistant";
@@ -638,4 +670,5 @@ void Ak_bitmap_test() {
     AK_print_table("assistanttel_bmapIndex");
 
     //AK_update(321, 58, tblName, "firstname", "Alen", "Markus");
+    AK_EPI;
 }

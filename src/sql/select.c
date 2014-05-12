@@ -15,7 +15,7 @@
 int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
 
 	///calling the relational operator for filtering according to given condition
-
+	AK_PRO;
 	AK_selection(srcTable,destTable,condition);
 
 
@@ -115,6 +115,7 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
   AK_print_table(helptable);
 
 	AK_free(temp_block);
+	AK_EPI;
 	return EXIT_SUCCESS;
 
 }
@@ -127,6 +128,7 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
  * @return No return value
  */
 void AK_select_test(){
+	AK_PRO;
 printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
 
 
@@ -163,5 +165,5 @@ AK_free(attributes);
 
 Ak_DeleteAll_L(condition);
 AK_free(condition);
-
+	AK_EPI;
 }

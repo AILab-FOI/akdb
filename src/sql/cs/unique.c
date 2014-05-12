@@ -21,7 +21,7 @@ void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attNa
     AK_block *tempBlock;
     int itis = 1;
     int id;
-
+    AK_PRO;
     tempBlock = (AK_block *)AK_read_block(0);
 
    // printf("%s\n",tempBlock->data + tempBlock->tuple_dict[30].address);
@@ -60,6 +60,7 @@ void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attNa
             } else {
                 //if (DEBUG)
                     //printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
+		    AK_EPI;
                     exit (EXIT_ERROR);
             }
             itis = 0;
@@ -69,6 +70,7 @@ void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attNa
     //printf("///////////////////%d\n", i);
    // printf("%d", tempBlock->address);
     AK_free(tempBlock);
+    AK_EPI;
 }
 
 /**
@@ -93,7 +95,7 @@ int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar)
 
     char value[50];
     char attval[50];
-
+    AK_PRO;
     tempBlock = (AK_block*)AK_read_block(0);
 
     while(itis){
@@ -148,6 +150,7 @@ int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar)
     }
 
     AK_free(tempBlock);
+    AK_EPI;
     return flag;
 }
  
@@ -164,9 +167,10 @@ void AK_unique_test() {
     char* constraintName = "AK_constraints_unique";
     char* attName = "firstname";
     char* newValue = "Unique";
-
+    AK_PRO;
     Ak_set_constraint_unique(tableName, constraintName, attName);
 
     AK_read_constraint_unique(tableName, newValue, attName);
+    AK_EPI;
 
 }

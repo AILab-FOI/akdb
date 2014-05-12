@@ -33,7 +33,11 @@
  */
 int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable, char *parentAttNames[], int attNum, char *constraintName, int type) {
     int i;
-    if (type != REF_TYPE_CASCADE && type != REF_TYPE_NO_ACTION && type != REF_TYPE_RESTRICT && type != REF_TYPE_SET_DEFAULT && type != REF_TYPE_SET_NULL) return 0;
+    AK_PRO;
+    if (type != REF_TYPE_CASCADE && type != REF_TYPE_NO_ACTION && type != REF_TYPE_RESTRICT && type != REF_TYPE_SET_DEFAULT && type != REF_TYPE_SET_NULL){
+	AK_EPI;
+	return 0;
+    }
 
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
@@ -50,6 +54,7 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
     }
 
     AK_free(row_root);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -64,7 +69,7 @@ AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
     int i = 0;
     AK_list *list;
     AK_ref_item reference;
-
+    AK_PRO;
     reference.attributes_number = 0;
 
     while ((list = AK_get_row(i, "AK_reference")) != NULL) {
@@ -80,6 +85,7 @@ AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
         }
         i++;
     }
+    AK_EPI;
     return reference;
 }
 
@@ -95,6 +101,7 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
     int i;
     int att_index;
     AK_list *list_row, *list_col;
+    AK_PRO;
     while ((list_row = AK_get_row(i, "AK_reference")) != NULL) {
         if (strcmp(list_row->next->data, tableName) == 0 &&
                 strcmp(list_row->next->next->next->data, attribute) == 0) {
@@ -102,12 +109,15 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
             list_col = AK_get_column(att_index, list_row->next->next->next->next->data);
             while (strcmp(list_col->data, value) != 0) {
                 list_col = list_col->next;
-                if (list_col == NULL)
+                if (list_col == NULL){
+		    AK_EPI;
                     return EXIT_ERROR;
+		}
             }
         }
         i++;
     }
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -122,21 +132,25 @@ int AK_reference_check_if_update_needed(AK_list *lista, int action) {
     AK_list_elem temp;
     int i = 0;
     AK_list *row;
-
+   AK_PRO;
     while ((row = AK_get_row(i, "AK_reference")) != NULL) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
             temp = Ak_First_L(lista);
             while (temp != NULL) {
-                if (action == UPDATE && temp->constraint == 0 && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0)
+                if (action == UPDATE && temp->constraint == 0 && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0){
+		    AK_EPI;
                     return EXIT_SUCCESS;
-                else if (action == DELETE && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0)
+		}
+                else if (action == DELETE && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0){
+		    AK_EPI;
                     return EXIT_SUCCESS;
+		}
                 temp = Ak_Next_L(temp);
             }
         }
         i++;
     }
-
+    AK_EPI;
     return EXIT_ERROR;
 }
 
@@ -151,21 +165,26 @@ int AK_reference_check_restricion(AK_list *lista, int action) {
     AK_list_elem temp;
     int i = 0;
     AK_list *row;
-
+    AK_PRO;
     while ((row = AK_get_row(i, "AK_reference")) != NULL) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
             temp = Ak_First_L(lista);
             while (temp != NULL) {
-                if (action == UPDATE && temp->constraint == 0 && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
+                if (action == UPDATE && temp->constraint == 0 && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT){
+		    AK_EPI;
                     return EXIT_ERROR;
-                else if (action == DELETE && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT)
+		}
+                else if (action == DELETE && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT){
+		    AK_EPI;
                     return EXIT_ERROR;
+		}
                 temp = Ak_Next_L(temp);
             }
         }
         i++;
     }
 
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -187,7 +206,7 @@ int AK_reference_update(AK_list *lista, int action) {
     char child_tables[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGTH];
 
     char tempData[MAX_VARCHAR_LENGTH];
-
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
 
@@ -298,6 +317,7 @@ int AK_reference_update(AK_list *lista, int action) {
     //AK_delete_table("ref_update_temp");
     //AK_delete_table(tempTable);
     AK_delete_segment(tempTable, SEGMENT_TYPE_TABLE);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -317,11 +337,13 @@ int AK_reference_check_entry(AK_list *lista) {
     AK_ref_item reference;
 
     AK_list_elem temp1;
-
+    AK_PRO;
     temp = Ak_First_L(lista);
     while (temp != NULL) {
-        if (temp->constraint == 1)
+        if (temp->constraint == 1){
+	    AK_EPI;
             return EXIT_SUCCESS;
+        }
         temp = Ak_Next_L(temp);
     }
 
@@ -341,8 +363,10 @@ int AK_reference_check_entry(AK_list *lista) {
         i++;
     }
 
-    if (con_num == 0)
+    if (con_num == 0){
+	AK_EPI;
         return EXIT_SUCCESS;
+    }
 
     for (i = 0; i < con_num; i++) { // reference
         reference = AK_get_reference(lista->next->table, constraints[i]);
@@ -367,6 +391,7 @@ int AK_reference_check_entry(AK_list *lista) {
 
         if (reference.attributes_number == 1) {
             if (AK_reference_check_attribute(reference.table, reference.attributes[0], attributes[0]) == EXIT_ERROR) {
+		AK_EPI;
                 return EXIT_ERROR;
             } else continue;
         }
@@ -384,13 +409,14 @@ int AK_reference_check_entry(AK_list *lista) {
             }
             if (success == 1) {
                 //AK_free(attributes);
+		AK_EPI;
                 return EXIT_SUCCESS;
             }
             j++;
         }
         // AK_free(attributes);
     }
-
+    AK_EPI;
     return EXIT_ERROR;
 }
 
@@ -400,6 +426,7 @@ int AK_reference_check_entry(AK_list *lista) {
  * @return No return value
  */
 void AK_reference_test() {
+    AK_PRO;
     printf("reference.c: Present!\n");
 
     AK_header t_header[4] ={
@@ -484,4 +511,5 @@ void AK_reference_test() {
 
     AK_print_table("student");
     AK_print_table("ref_test");
+    AK_EPI;
 }

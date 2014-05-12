@@ -45,8 +45,9 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     char *save_token_set, *save_token_subset;
     char *tokens_set[MAX_TOKENS] = {NULL};
     char *tokens_subset[MAX_TOKENS] = {NULL};
-
+    AK_PRO;
     if (set == NULL || subset == NULL) {
+        AK_EPI;
         return EXIT_FAILURE;
     }
 
@@ -78,6 +79,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 
     if (len_set < len_subset) {
         Ak_dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
+        AK_EPI;
         return EXIT_FAILURE;
     }
 
@@ -96,6 +98,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 
     if (len_set != len_subset) {
         Ak_dbg_messg(HIGH, REL_EQ, "RULE - failed (%s) isn't subset of set (%s)!\n", subset, set);
+        AK_EPI;
         return EXIT_FAILURE;
     }
 
@@ -103,6 +106,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
     AK_free(temp_subset);
 
     Ak_dbg_messg(HIGH, REL_EQ, "RULE - succeed (%s) is subset of set (%s).\n", subset, set);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -125,10 +129,11 @@ char *AK_rel_eq_get_atrributes_char(char *tblName) {
     int len_attr, num_attr, next_attr;
     int next_address = 0;
     char *attr_name;
-
+    AK_PRO;
     num_attr = AK_num_attr(tblName);
 
     if (num_attr == -1) {
+        AK_EPI;
         return NULL;
     }
 
@@ -154,9 +159,11 @@ char *AK_rel_eq_get_atrributes_char(char *tblName) {
     AK_free(table_header);
 
     if (next_address > 0) {
+        AK_EPI;
         return attr;
     } else {
         AK_free(attr);
+        AK_EPI;
         return NULL;
     }
 }
@@ -171,8 +178,9 @@ char *AK_rel_eq_cond_attributes(char *cond) {
     int next_chr = 0;
     int next_address = 0;
     int attr_end = -1;
-
+    AK_PRO;
     if (cond == NULL) {
+        AK_EPI;
         return NULL;
     }
 
@@ -204,9 +212,11 @@ char *AK_rel_eq_cond_attributes(char *cond) {
 
     if (next_address > 0) {
         memcpy(attr + next_address, "\0", 1);
+        AK_EPI;
         return attr;
     } else {
         AK_free(attr);
+        AK_EPI;
         return NULL;
     }
 }
@@ -225,7 +235,9 @@ char *AK_rel_eq_cond_attributes(char *cond) {
  * @result EXIT_SUCCESS if set and subset share at least one attribute, else returns EXIT_FAILURE 
  */
 int AK_rel_eq_share_attributes(char *set, char *subset) {
+    AK_PRO;
     if (set == NULL || subset == NULL) {
+        AK_EPI;
         return EXIT_FAILURE;
     }
 
@@ -247,6 +259,7 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
                 (token_subset = strtok_r(NULL, ATTR_DELIMITER, &save_token_subset))) {
             if (memcmp(token_set, token_subset, strlen(token_set)) == 0) {
                 AK_free(temp);
+                AK_EPI;
                 return EXIT_SUCCESS;
             }
         }
@@ -254,7 +267,7 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
     }
 
     AK_free(temp);
-
+    AK_EPI;
     return EXIT_FAILURE;
 }
 
@@ -384,6 +397,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
  * @result conditions list
  */
 AK_list *AK_rel_eq_split_condition(char *cond) {
+    AK_PRO;
     AK_list *list_attr = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(list_attr);
 
@@ -433,7 +447,7 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
 
     AK_free(temp_cond);
     AK_free(temp_attr);
-
+    AK_EPI;
     return list_attr;
 }
 
@@ -445,7 +459,7 @@ AK_list *AK_rel_eq_split_condition(char *cond) {
  */
 AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
     int step; //, exit_cond[5] = {0};
-
+    AK_PRO;
     //Initialize temporary linked list
     AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
@@ -730,6 +744,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
     //}
 
     Ak_DeleteAll_L(list_rel_eq);
+    AK_EPI;
     return temp;
 }
 
@@ -740,6 +755,7 @@ AK_list *AK_rel_eq_selection(AK_list *list_rel_eq) {
  * @return void
  */
 void AK_print_rel_eq_selection(AK_list *list_rel_eq) {
+    AK_PRO;
     AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_rel_eq);
 
     printf("\n");
@@ -747,6 +763,7 @@ void AK_print_rel_eq_selection(AK_list *list_rel_eq) {
         printf("Type: %i, size: %i, data: %s\n", list_elem->type, list_elem->size, list_elem->data);
         list_elem = list_elem->next;
     }
+    AK_EPI;
 }
 
 /**
@@ -755,6 +772,7 @@ void AK_print_rel_eq_selection(AK_list *list_rel_eq) {
  * @return No return value
  */
 void AK_rel_eq_selection_test() {
+    AK_PRO;
     printf("rel_eq_selection.c: Present!\n");
     printf("\n********** REL_EQ_SELECTION TEST by Dino Laktašić **********\n");
 
@@ -872,4 +890,5 @@ void AK_rel_eq_selection_test() {
 
     Ak_DeleteAll_L(expr);
     //dealocate variables ;)
+    AK_EPI;
 }

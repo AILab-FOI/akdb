@@ -47,8 +47,11 @@ static char * strlwc(const char * s)
 {
     static char l[ASCIILINESZ+1];
     int i ;
-
-    if (s==NULL) return NULL ;
+    AK_PRO;
+    if (s==NULL){
+        AK_EPI;
+        return NULL ;
+    }
     memset(l, 0, ASCIILINESZ+1);
     i=0 ;
     while (s[i] && i<ASCIILINESZ) {
@@ -56,6 +59,7 @@ static char * strlwc(const char * s)
         i++ ;
     }
     l[ASCIILINESZ]=(char)0;
+    AK_EPI;
     return l ;
 }
 
@@ -77,8 +81,11 @@ static char * strstrip(const char * s)
 {
     static char l[ASCIILINESZ+1];
     char * last ;
-    
-    if (s==NULL) return NULL ;
+    AK_PRO;
+    if (s==NULL){
+      AK_EPI;
+      return NULL ;
+    }
     
     while (isspace((int)*s) && *s) s++;
     memset(l, 0, ASCIILINESZ+1);
@@ -90,6 +97,7 @@ static char * strstrip(const char * s)
         last -- ;
     }
     *last = (char)0;
+    AK_EPI;
     return (char*)l ;
 }
 
@@ -115,8 +123,11 @@ int iniparser_getnsec(dictionary * d)
 {
     int i ;
     int nsec ;
-
-    if (d==NULL) return -1 ;
+    AK_PRO;
+    if (d==NULL){
+       AK_EPI;
+       return -1 ;
+    }
     nsec=0 ;
     for (i=0 ; i<d->size ; i++) {
         if (d->key[i]==NULL)
@@ -125,6 +136,7 @@ int iniparser_getnsec(dictionary * d)
             nsec ++ ;
         }
     }
+    AK_EPI;
     return nsec ;
 }
 
@@ -146,8 +158,11 @@ char * iniparser_getsecname(dictionary * d, int n)
 {
     int i ;
     int foundsec ;
-
-    if (d==NULL || n<0) return NULL ;
+    AK_PRO;
+    if (d==NULL || n<0){
+      AK_EPI;
+      return NULL ;
+    }
     foundsec=0 ;
     for (i=0 ; i<d->size ; i++) {
         if (d->key[i]==NULL)
@@ -159,8 +174,10 @@ char * iniparser_getsecname(dictionary * d, int n)
         }
     }
     if (foundsec<=n) {
+        AK_EPI;
         return NULL ;
     }
+    AK_EPI;
     return d->key[i] ;
 }
 
@@ -180,8 +197,11 @@ char * iniparser_getsecname(dictionary * d, int n)
 void iniparser_dump(dictionary * d, FILE * f)
 {
     int     i ;
-
-    if (d==NULL || f==NULL) return ;
+    AK_PRO;
+    if (d==NULL || f==NULL){
+       AK_EPI;
+       return ;
+    }
     for (i=0 ; i<d->size ; i++) {
         if (d->key[i]==NULL)
             continue ;
@@ -191,6 +211,7 @@ void iniparser_dump(dictionary * d, FILE * f)
             fprintf(f, "[%s]=UNDEF\n", d->key[i]);
         }
     }
+    AK_EPI;
     return ;
 }
 
@@ -210,8 +231,12 @@ void iniparser_dump_ini(dictionary * d, FILE * f)
     int     i ;
     int     nsec ;
     char *  secname ;
+    AK_PRO;
 
-    if (d==NULL || f==NULL) return ;
+    if (d==NULL || f==NULL){
+        AK_EPI;
+        return ;
+    }
 
     nsec = iniparser_getnsec(d);
     if (nsec<1) {
@@ -228,6 +253,7 @@ void iniparser_dump_ini(dictionary * d, FILE * f)
         iniparser_dumpsection_ini(d, secname, f) ;
     }
     fprintf(f, "\n");
+    AK_EPI;
     return ;
 }
 
@@ -248,9 +274,15 @@ void iniparser_dumpsection_ini(dictionary * d, char * s, FILE * f)
     int     j ;
     char    keym[ASCIILINESZ+1];
     int     seclen ;
-
-    if (d==NULL || f==NULL) return ;
-    if (! iniparser_find_entry(d, s)) return ;
+    AK_PRO;
+    if (d==NULL || f==NULL){
+       AK_EPI;
+       return ;
+    }
+    if (! iniparser_find_entry(d, s)){
+       AK_EPI;
+       return ;
+    }
 
     seclen  = (int)strlen(s);
     fprintf(f, "\n[%s]\n", s);
@@ -266,6 +298,7 @@ void iniparser_dumpsection_ini(dictionary * d, char * s, FILE * f)
         }
     }
     fprintf(f, "\n");
+    AK_EPI;
     return ;
 }
 
@@ -282,11 +315,17 @@ int iniparser_getsecnkeys(dictionary * d, char * s)
     int     seclen, nkeys ;
     char    keym[ASCIILINESZ+1];
     int j ;
-
+    AK_PRO;
     nkeys = 0;
 
-    if (d==NULL) return nkeys;
-    if (! iniparser_find_entry(d, s)) return nkeys;
+    if (d==NULL){
+        AK_EPI;
+        return nkeys;
+    }
+    if (! iniparser_find_entry(d, s)){
+        AK_EPI;
+        return nkeys;
+    }
 
     seclen  = (int)strlen(s);
     sprintf(keym, "%s:", s);
@@ -297,7 +336,7 @@ int iniparser_getsecnkeys(dictionary * d, char * s)
         if (!strncmp(d->key[j], keym, seclen+1)) 
             nkeys++;
     }
-
+    AK_EPI;
     return nkeys;
 
 }
@@ -324,11 +363,17 @@ char ** iniparser_getseckeys(dictionary * d, char * s)
     int i, j ;
     char    keym[ASCIILINESZ+1];
     int     seclen, nkeys ;
-
+    AK_PRO;
     keys = NULL;
 
-    if (d==NULL) return keys;
-    if (! iniparser_find_entry(d, s)) return keys;
+    if (d==NULL){
+       AK_EPI;
+       return keys;
+    }
+    if (! iniparser_find_entry(d, s)){
+       AK_EPI;
+       return keys;
+    }
 
     nkeys = iniparser_getsecnkeys(d, s);
 
@@ -347,7 +392,7 @@ char ** iniparser_getseckeys(dictionary * d, char * s)
             i++;
         }
     }
-
+    AK_EPI;
     return keys;
 
 }
@@ -369,16 +414,22 @@ char ** iniparser_getseckeys(dictionary * d, char * s)
 /*--------------------------------------------------------------------------*/
 char * iniparser_getstring(dictionary * d, const char * key, char * def)
 {
-    pthread_mutex_lock(&iniParserMutex);
     char * lc_key ;
     char * sval ;
+    AK_PRO;
+    pthread_mutex_lock(&iniParserMutex);
+    
 
-    if (d==NULL || key==NULL)
+    if (d==NULL || key==NULL){
+        pthread_mutex_unlock(&iniParserMutex);
+        AK_EPI;
         return def ;
+    }
 
     lc_key = strlwc(key);
     sval = dictionary_get(d, lc_key, def);
     pthread_mutex_unlock(&iniParserMutex);
+    AK_EPI;
     return sval ;
 }
 
@@ -412,9 +463,13 @@ char * iniparser_getstring(dictionary * d, const char * key, char * def)
 int iniparser_getint(dictionary * d, const char * key, int notfound)
 {
     char    *   str ;
-
+    AK_PRO;
     str = iniparser_getstring(d, key, INI_INVALID_KEY);
-    if (str==INI_INVALID_KEY) return notfound ;
+    if (str==INI_INVALID_KEY){
+        AK_EPI;
+        return notfound ;
+    }
+    AK_EPI;
     return (int)strtol(str, NULL, 0);
 }
 
@@ -434,9 +489,13 @@ int iniparser_getint(dictionary * d, const char * key, int notfound)
 double iniparser_getdouble(dictionary * d, const char * key, double notfound)
 {
     char    *   str ;
-
+    AK_PRO;
     str = iniparser_getstring(d, key, INI_INVALID_KEY);
-    if (str==INI_INVALID_KEY) return notfound ;
+    if (str==INI_INVALID_KEY){
+       AK_EPI;
+       return notfound ;
+    }
+    AK_EPI;
     return atof(str);
 }
 
@@ -476,9 +535,12 @@ int iniparser_getboolean(dictionary * d, const char * key, int notfound)
 {
     char    *   c ;
     int         ret ;
-
+    AK_PRO;
     c = iniparser_getstring(d, key, INI_INVALID_KEY);
-    if (c==INI_INVALID_KEY) return notfound ;
+    if (c==INI_INVALID_KEY){
+        AK_EPI;
+        return notfound ;
+    }
     if (c[0]=='y' || c[0]=='Y' || c[0]=='1' || c[0]=='t' || c[0]=='T') {
         ret = 1 ;
     } else if (c[0]=='n' || c[0]=='N' || c[0]=='0' || c[0]=='f' || c[0]=='F') {
@@ -486,6 +548,7 @@ int iniparser_getboolean(dictionary * d, const char * key, int notfound)
     } else {
         ret = notfound ;
     }
+    AK_EPI;
     return ret;
 }
 
@@ -507,9 +570,11 @@ int iniparser_find_entry(
 )
 {
     int found=0 ;
+    AK_PRO;
     if (iniparser_getstring(ini, entry, INI_INVALID_KEY)!=INI_INVALID_KEY) {
         found = 1 ;
     }
+    AK_EPI;
     return found ;
 }
 
@@ -528,7 +593,11 @@ int iniparser_find_entry(
 /*--------------------------------------------------------------------------*/
 int iniparser_set(dictionary * ini, const char * entry, const char * val)
 {
-    return dictionary_set(ini, strlwc(entry), val) ;
+    int ret;
+    AK_PRO;
+    ret = dictionary_set(ini, strlwc(entry), val);
+    AK_EPI;
+    return ret ;
 }
 
 /*-------------------------------------------------------------------------*/
@@ -543,7 +612,9 @@ int iniparser_set(dictionary * ini, const char * entry, const char * val)
 /*--------------------------------------------------------------------------*/
 void iniparser_unset(dictionary * ini, const char * entry)
 {
+    AK_PRO;
     dictionary_unset(ini, strlwc(entry));
+    AK_EPI;
 }
 
 /*-------------------------------------------------------------------------*/
@@ -565,6 +636,8 @@ static line_status iniparser_line(
     line_status sta ;
     char        line[ASCIILINESZ+1];
     int         len ;
+
+    AK_PRO;
 
     strcpy(line, strstrip(input_line));
     len = (int)strlen(line);
@@ -613,6 +686,7 @@ static line_status iniparser_line(
         /* Generate syntax error */
         sta = LINE_ERROR ;
     }
+    AK_EPI;
     return sta ;
 }
 
@@ -646,15 +720,17 @@ dictionary * iniparser_load(const char * ininame)
     int  errs=0;
 
     dictionary * dict ;
-
+    AK_PRO;
     if ((in=fopen(ininame, "r"))==NULL) {
         fprintf(stderr, "iniparser: cannot open %s\n", ininame);
+        AK_EPI;
         return NULL ;
     }
 
     dict = dictionary_new(0) ;
     if (!dict) {
         fclose(in);
+        AK_EPI;
         return NULL ;
     }
 
@@ -678,6 +754,7 @@ dictionary * iniparser_load(const char * ininame)
                     lineno);
             dictionary_del(dict);
             fclose(in);
+            AK_EPI;
             return NULL ;
         }
          
@@ -733,6 +810,7 @@ dictionary * iniparser_load(const char * ininame)
         dict = NULL ;
     }
     fclose(in);
+    AK_EPI;
     return dict ;
 }
 
@@ -749,7 +827,9 @@ dictionary * iniparser_load(const char * ininame)
 /*--------------------------------------------------------------------------*/
 void iniparser_AK_freedict(dictionary * d)
 {
+    AK_PRO;
     dictionary_del(d);
+    AK_EPI;
 }
 
 dictionary * AK_config;
@@ -774,8 +854,9 @@ char * AK_config_get(dictionary * d, char * key, char * def)
 
 void AK_inflate_config()
 {
+  AK_PRO;
   AK_config = iniparser_load("config.ini");
-
+  AK_EPI;
   //DB_FILE = AK_config_get(AK_config,"general:db_file", NULL);
   //printf("DB_FILE: %s \n",DB_FILE);
 }

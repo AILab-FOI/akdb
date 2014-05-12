@@ -25,10 +25,14 @@
  */
 int Ak_get_total_headers(AK_block *iBlock) {
     register int i;
+    AK_PRO;
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
-        if (strcmp((char *) iBlock->header[i].att_name, "") == 0) //if there is no more attributes
-            return i;
+        if (strcmp((char *) iBlock->header[i].att_name, "") == 0){ //if there is no more attributes
+		AK_EPI;            
+		return i;
+	}
     }
+    AK_EPI;
     return i;
 }
 
@@ -39,16 +43,19 @@ int Ak_get_total_headers(AK_block *iBlock) {
  */
 int Ak_get_header_number(AK_block *iBlock, char *attribute_name) {
     register int i;
-
+    AK_PRO;
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
         if (!strcmp((char *) iBlock->header[i].att_name, attribute_name)) {
+	    AK_EPI;
             return i;
         } else if (!strcmp((char *) iBlock->header[i].att_name, "/0")) {
             printf("get_header_number: ERROR: in this table does not exist atribute: %s", attribute_name);
+            AK_EPI;
             return EXIT_ERROR;
         }
     }
     printf("get_header_number: ERROR: in this table does not exist atribute: %s", attribute_name);
+    AK_EPI;
     return EXIT_ERROR;
 }
 
@@ -60,6 +67,7 @@ int Ak_get_header_number(AK_block *iBlock, char *attribute_name) {
 int Ak_get_num_of_tuples(AK_block *iBlock) {
     int i = 0;
     int kraj = 1;
+    AK_PRO;
     while (kraj) {
         i++;
         if (iBlock->tuple_dict[ i ].size == 0) {
@@ -67,10 +75,13 @@ int Ak_get_num_of_tuples(AK_block *iBlock) {
         }
     }
 
-    if (i == 0)
+    if (i == 0){
+	AK_EPI;
         return 0;
+    }
 
     int max_header_num = Ak_get_total_headers(iBlock);
+    AK_EPI;
     return (i / max_header_num);
 }
 /*
@@ -96,7 +107,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 	int num_extents = 0;						//number of extents in segment
     int num_temp_blocks = 0;					//number of temporary blocks in segment
     //---------------------------------------------------------------------------------
-	
+    AK_PRO;
     //Get number of extents and number of blocks for given table
 	table_addresses *addresses = (table_addresses *) AK_get_table_addresses(table_name);
 	
@@ -213,6 +224,7 @@ void AK_sort_segment(char *table_name, char *attr) {
                 //second data
 				printf("\nData: %i\n", cache2->block->tuple_dict[2].address);
 				if (cache2->block->last_tuple_dict_id == 0) {
+					AK_EPI;
 					return;
 				}
 
@@ -431,6 +443,7 @@ void AK_sort_segment(char *table_name, char *attr) {
             num_blocks = num_swap_blocks;
         }
     } // end : for(n = 1; n < num_blocks; n = n * 2 )
+    AK_EPI;
 }
 /*
  * @author Unknown
@@ -444,6 +457,7 @@ void Ak_reset_block(AK_block * block) {
     AK_header empty_header[ MAX_ATTRIBUTES ];
     AK_tuple_dict empty_tuple_dict[ DATA_BLOCK_SIZE ];
     unsigned char empty_data[ DATA_BLOCK_SIZE * DATA_ENTRY_SIZE ];
+    AK_PRO;
 
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
         empty_header[i].type = FREE_INT;
@@ -478,6 +492,7 @@ void Ak_reset_block(AK_block * block) {
     memcpy(block->header, empty_header, sizeof (*empty_header));
     memcpy(block->tuple_dict, empty_tuple_dict, sizeof ( *empty_tuple_dict));
     memcpy(block->data, empty_data, sizeof (*empty_data));
+    AK_EPI;
 }
 
 /**
@@ -489,10 +504,9 @@ void Ak_reset_block(AK_block * block) {
  */
 void AK_block_sort(AK_block * iBlock, char * atr_name) {
     register int i, j, k, n, t, q;
-
     char x[DATA_ROW_SIZE]; //bas podatak koji nas zanima
     char y[DATA_ROW_SIZE]; //bas podatak s kojim se uspoređuje
-
+    AK_PRO;
     AK_block * cTemp1 = (AK_block*) AK_malloc(sizeof (AK_block));
     cTemp1 = (AK_block *) AK_read_block(15);
 
@@ -736,6 +750,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
 
     AK_write_block(cTemp1); //ali mislim da samo ide dirty bit
     AK_write_block(cTemp2);
+    AK_EPI;
 }
 
 //extern int address_of_tempBlock = 0;
@@ -745,6 +760,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
  * @return No return value
  */
 void Ak_filesort_test() {
+    AK_PRO;
     printf("filesort_test: Present!\n");
     AK_sort_segment("student", "year");
 	AK_print_table("SORT_TEMP_HELP_student");
@@ -756,4 +772,5 @@ void Ak_filesort_test() {
 	AK_block_sort(temp_block, "lastname");
 	AK_print_table("student");
 	*/
+    AK_EPI;
 }

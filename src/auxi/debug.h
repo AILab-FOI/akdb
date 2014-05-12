@@ -23,6 +23,7 @@
 #include "stdarg.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "mempro.h"
 
 /**
  * @brief Set constant to 1 for complete project debug, else set constant to 0

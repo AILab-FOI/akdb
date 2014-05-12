@@ -21,7 +21,7 @@
 #define REL_EQ_PROJECTION
 
 #include "../file/table.h"
-
+#include "../auxi/mempro.h"
 
 int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subset);
 int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem_conds);

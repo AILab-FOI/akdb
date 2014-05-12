@@ -4,6 +4,7 @@
 #include "../file/table.h"
 #include "../file/id.h"
 #include "../rec/archive_log.h"
+#include "../auxi/mempro.h"
 
 int AK_user_add(char *username, int *password, int set_id);
 int AK_user_get_id(char *username);

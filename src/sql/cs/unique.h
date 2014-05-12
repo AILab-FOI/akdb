@@ -12,7 +12,7 @@
 
 #include "../../mm/memoman.h"
 #include "../../file/id.h"
-
+#include "../../auxi/mempro.h"
 
 void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attName);
 int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar);

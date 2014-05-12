@@ -28,12 +28,15 @@
 int AK_get_view_obj_id(char *name) {
     int id, i = 0;
     AK_list *row;
+    AK_PRO;
     while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
             memcpy(&id, row->next->data, sizeof(int));
+	    AK_EPI;
             return id;
         }
     }
+    AK_EPI;
     return EXIT_ERROR;
 }
 
@@ -46,14 +49,15 @@ char* AK_get_view_query(char *name){
    int i = 0;
    char *query;
     AK_list *row;
+    AK_PRO;
     while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
             query = row->next->next->next->data;
-	    
+	    AK_EPI;
 	    return query;
         }
     }
-    
+    AK_EPI;
     return (char*)(EXIT_ERROR);
 }
 
@@ -66,14 +70,15 @@ char* AK_get_rel_exp(char *name){
    int i = 0;
    char *rel_exp;
     AK_list *row;
+   AK_PRO;
     while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
             rel_exp = row->next->next->next->next->data;
-	    
+	    AK_EPI;
 	    return rel_exp;
         }
     }
-    
+    AK_EPI;
     return (char*)(EXIT_ERROR);
 }
 
@@ -84,6 +89,7 @@ char* AK_get_rel_exp(char *name){
  */
 int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
     char *tblName = "AK_view";
+    AK_PRO;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     int view_id = AK_get_id();
@@ -97,6 +103,7 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
     Ak_Insert_New_Element(TYPE_VARCHAR, query, tblName, "query", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, rel_exp, tblName, "rel_exp", row_root);
     Ak_insert_row(row_root);
+    AK_EPI;
     return view_id;
 }
 
@@ -106,12 +113,14 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
  * @return Result of AK_delete_row for the view (success or error)
  */
 int AK_view_remove_by_obj_id(int obj_id) {
+    AK_PRO;
     obj_id+=1;
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L((AK_list_elem)row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root, 1);
     int result = Ak_delete_row((AK_list_elem)row_root);  
     Ak_DeleteAll_L((AK_list_elem)row_root);
+    AK_EPI;
     return result;
 }
 
@@ -121,10 +130,12 @@ int AK_view_remove_by_obj_id(int obj_id) {
  * @return Result of AK_view_remove_by_obj_id or EXIT_ERROR if no id is found
  */
 int AK_view_remove_by_name(char *name) {
+   AK_PRO;
    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
    Ak_Init_L((AK_list_elem)row_root);
    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_view", "name", row_root, 1);
    int result = Ak_delete_row(row_root);
+   AK_EPI;
    return result;
 }
 
@@ -139,6 +150,7 @@ int AK_view_rename(char *name, char *new_name){
    char *query;
    char *rel_exp;
    AK_list *row;
+   AK_PRO;
    while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
             memcpy(&view_id, row->next->data, sizeof(int));
@@ -150,6 +162,7 @@ int AK_view_rename(char *name, char *new_name){
    result = AK_view_remove_by_name(name);
    result = AK_view_remove_by_name(name);
    result = AK_view_add(new_name, query, rel_exp, view_id);
+   AK_EPI;
    return result;
 }
 
@@ -159,10 +172,12 @@ int AK_view_rename(char *name, char *new_name){
  * @return error or success 
  */
 int AK_view_change_query(char *name, char *query, char *rel_exp){
+   AK_PRO;
    int view_id = AK_get_view_obj_id(name);
    //char *rel_exp = AK_get_rel_exp(name);
    int result = AK_view_remove_by_name(name);
    result = AK_view_add(name, query, rel_exp, view_id);
+   AK_EPI;
    return result;
 }
 
@@ -172,6 +187,7 @@ int AK_view_change_query(char *name, char *query, char *rel_exp){
  * @return 
  */
 void AK_view_test() {
+   AK_PRO;
    printf("\n*******View test**********\n\n");
    AK_view_add("view1", "SELECT lastname FROM profesor","profesor;lastname;", 0);
    AK_view_add("view2", "query2","firstname;", 0);
@@ -209,6 +225,6 @@ void AK_view_test() {
    printf("\nChanging 'view4' query to '44query44'...\n");
    AK_view_change_query("view4","44query44","student;id");
    AK_print_table("AK_view");
-  
+   AK_EPI;
 }
 

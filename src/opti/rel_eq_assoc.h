@@ -21,6 +21,7 @@
 #define REL_EQ_ASSOC
 
 #include "../file/table.h"
+#include "../auxi/mempro.h"
 
 /**
  * @author Dino Laktašić

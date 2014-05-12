@@ -41,7 +41,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
     AK_block *tempBlock;
     int itis = 1;
     int id;
-
+    AK_PRO;
     tempBlock = (AK_block *)AK_read_block(0);
 
     while (itis) {
@@ -77,6 +77,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
             } else {
                 //if (DEBUG)
                     //printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
+		    AK_EPI;
                     exit (EXIT_ERROR);
             }
             itis = 0;
@@ -84,6 +85,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
         i++;
     }
     AK_free(tempBlock);
+    AK_EPI;
 }
 
 
@@ -107,7 +109,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     int AK_freeSpaceFound = 0;
     int tupleDictID = -1;
     int flag = EXIT_SUCCESS;
-
+    AK_PRO;
     tempBlock = (AK_block *)AK_read_block(0);
 
     while (itis) {
@@ -207,6 +209,7 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     }
 
     AK_free(tempBlock);
+    AK_EPI;
     return flag;
 }
 /**
@@ -222,7 +225,7 @@ void Ak_constraint_between_test() {
     char* newValue = "Krunoslav";
     char* startValue = "ivica";
     char* endValue = "marica";
-
+    AK_PRO;
     AK_set_constraint_between(tableName, constraintName, attName, startValue, endValue);
     AK_read_constraint_between(tableName, newValue, attName);
 
@@ -235,4 +238,5 @@ void Ak_constraint_between_test() {
 
     AK_set_constraint_between(tableName, constraintName, attName, startValue, endValue);
     AK_read_constraint_between(tableName, newValue, attName);
+    AK_EPI;
 }

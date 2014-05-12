@@ -23,6 +23,7 @@
 #include "../file/table.h"
 #include "../file/id.h"
 #include "../file/fileio.h"
+#include "../auxi/mempro.h"
 
 int AK_sequence_add(char *name, int start_value, int increment, int max_value, int min_value, int cycle);
 int AK_sequence_remove(char *name);

@@ -31,6 +31,7 @@
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
+    AK_PRO;
     table_addresses *src_addr1 = (table_addresses*) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses*) AK_get_table_addresses(srcTable2);
 
@@ -47,6 +48,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 		int num_att = AK_check_tables_scheme(tbl1_temp_block, tbl2_temp_block, "Difference");
 		 
 		if (num_att == EXIT_ERROR) {
+			AK_EPI;
 			return EXIT_ERROR;
 		}
 
@@ -181,13 +183,16 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 	AK_free(src_addr1);
         AK_free(src_addr2);
 		Ak_dbg_messg(LOW, REL_OP, "DIFFERENCE_TEST_SUCCESS\n\n");
+		AK_EPI;
 		return EXIT_SUCCESS;
 	} else {
 		Ak_dbg_messg(LOW, REL_OP, "\nAK_difference: Table/s doesn't exist!");
         AK_free(src_addr1);
         AK_free(src_addr2);
+		AK_EPI;
 		return EXIT_ERROR;
 	}
+	AK_EPI;
 }
 
 /**
@@ -195,9 +200,11 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
  * @author Dino Laktašić
  */
 void Ak_op_difference_test() {
+    AK_PRO;
     printf("\n********** DIFFERENCE TEST **********\n\n");
 
     AK_difference("professor", "assistant", "difference_test");
     AK_print_table("difference_test");
+    AK_EPI;
 }
 

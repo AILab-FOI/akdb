@@ -24,6 +24,7 @@
 #define TABLE
 
 #include "../mm/memoman.h"
+#include "../auxi/mempro.h"
 #include <time.h>
 
 

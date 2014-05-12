@@ -22,6 +22,7 @@
 
 #include "constants.h"
 #include "debug.h"
+#include "mempro.h"
 #include <string.h>
 
 /**

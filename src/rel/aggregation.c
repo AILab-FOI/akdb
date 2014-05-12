@@ -30,9 +30,11 @@ extern search_result AK_search_unsorted(char *szRelation, search_params *aspPara
  */
 int AK_header_size(AK_header *header) {
     int counter = 0;
+    AK_PRO;
     while (*((char*) & header[counter]) != '\0') {
         counter++;
     }
+    AK_EPI;
     return counter;
 }
 
@@ -44,11 +46,13 @@ int AK_header_size(AK_header *header) {
  */
 void AK_agg_input_init(AK_agg_input *input) {
     int i;
+    AK_PRO;
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
         memcpy(&(*input).attributes[i], "\0", sizeof ("\0"));
         (*input).tasks[i] = -1;
         (*input).counter = 0;
     }
+    AK_EPI;
 }
 
 /**
@@ -61,11 +65,15 @@ void AK_agg_input_init(AK_agg_input *input) {
   */
 
 int AK_agg_input_add(AK_header header, int agg_task, AK_agg_input *input) {
-    if ((char*) & header == '\0' || agg_task < 0 || (*input).counter == MAX_ATTRIBUTES)
+    AK_PRO;
+    if ((char*) & header == '\0' || agg_task < 0 || (*input).counter == MAX_ATTRIBUTES){
+        AK_EPI;
         return EXIT_FAILURE;
+    }
     (*input).attributes[(*input).counter] = header;
     (*input).tasks[(*input).counter] = agg_task;
     (*input).counter++;
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 /**
@@ -80,8 +88,11 @@ int AK_agg_input_add(AK_header header, int agg_task, AK_agg_input *input) {
  
  */
 int AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *input) {
-    if ((char*) & header == '\0' || agg_task < 0 || (*input).counter == MAX_ATTRIBUTES)
+    AK_PRO;
+    if ((char*) & header == '\0' || agg_task < 0 || (*input).counter == MAX_ATTRIBUTES){
+        AK_EPI;
         return EXIT_FAILURE;
+    }
 
     int i;
     for (i = (*input).counter; i > 0; i--) {
@@ -93,6 +104,7 @@ int AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *
     (*input).tasks[0] = agg_task;
     (*input).counter++;
 
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -107,6 +119,7 @@ int AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *
  */
 void AK_agg_input_fix(AK_agg_input *input) {
     int i = 0;
+    AK_PRO;
     while ((*input).tasks[i] != -1) {
         if ((*input).tasks[i] == AGG_TASK_AVG) {
             AK_agg_input_add_to_beginning((*input).attributes[i], AGG_TASK_AVG_COUNT, input); //bitno je da se AVG_COUNT i AVG_SUM dodaju na pocetak tak da se uvijek racunaju prije samog AVGa
@@ -116,6 +129,7 @@ void AK_agg_input_fix(AK_agg_input *input) {
         }
         i++;
     }
+    AK_EPI;
 }
 
 /**
@@ -135,6 +149,7 @@ void AK_agg_input_fix(AK_agg_input *input) {
 int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     //int AK_aggregation (AK_header *att_root,int *att_tasks,char *source_table, char *new_table) {
     int i, j;
+    AK_PRO;
     AK_agg_input_fix(input);
     AK_header *att_root = (*input).attributes;
     int *att_tasks = (*input).tasks;
@@ -607,11 +622,12 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_free(needed_values);
     AK_free(row_root);
     AK_free(temp);
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
 void Ak_aggregation_test() {
+    AK_PRO;
     printf("aggregation.c: Present!\n");
 
     char *tblName = "student";
@@ -629,4 +645,5 @@ void Ak_aggregation_test() {
 
     AK_aggregation(&aggregation, tblName, "agg");
     AK_print_table("agg");
+    AK_EPI;
 }

@@ -29,6 +29,7 @@
  * @return No return value
  */
 void AK_create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att) {
+    AK_PRO;
     AK_block *temp_block = (AK_block *) AK_read_block(table_address1);
     
 	//Currently it works with headers no longer than MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
@@ -82,6 +83,7 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
 
     AK_temp_create_table(new_table, header, SEGMENT_TYPE_TABLE);
     AK_free(temp_block);
+    AK_EPI;
 }
 
 /**
@@ -94,6 +96,7 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
  * @return No return value
  */
 void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *temp_block, char *new_table) {
+    AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n MERGE NAT JOIN...");
 
     AK_list_elem some_element;
@@ -164,6 +167,7 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
             Ak_insert_row(row_root_insert);
         }
     }
+    AK_EPI;
 }
 
 /**
@@ -177,6 +181,7 @@ void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *
  * @return No return value
  */
 void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
+    AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING NAT JOIN");
 
     AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -245,6 +250,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, A
     }
     AK_free(row_root);
     AK_free(row_root_insert);
+    AK_EPI;
 }
 
 /**
@@ -257,6 +263,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, A
  * @return if success returns EXIT_SUCCESS
  */
 int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
+    AK_PRO;
     table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
 
@@ -316,14 +323,16 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
         AK_free(src_addr1);
         AK_free(src_addr2);
 		Ak_dbg_messg(LOW, REL_OP, "NAT_JOIN_TEST_SUCCESS\n\n");
-
+        AK_EPI;
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\n AK_join: Table/s doesn't exist!");
         AK_free(src_addr1);
         AK_free(src_addr2);
+        AK_EPI;
         return EXIT_ERROR;
     }
+    AK_EPI;
 }
 /**
  * @author Matija Novak
@@ -331,6 +340,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
  * @return No return value
  */
 void AK_op_join_test() {
+    AK_PRO;
     printf("\n********** NAT JOIN TEST **********\n\n");
 
     AK_list *att = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -343,5 +353,6 @@ void AK_op_join_test() {
     AK_print_table("nat_join_test");
 
     Ak_DeleteAll_L(att);
+    AK_EPI;
 }
 

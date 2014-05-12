@@ -33,6 +33,7 @@
  */
 
 search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params) {
+    AK_PRO;
     AK_flush_cache();
     int iBlock;
     AK_mem_block *mem_block = NULL, tmp;
@@ -46,8 +47,10 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
     srResult.aiSearch_attributes = NULL;
     srResult.aiBlocks = NULL;
 
-    if (aspParams == NULL || iNum_search_params == 0)
+    if (aspParams == NULL || iNum_search_params == 0){
+	AK_EPI;
         return srResult;
+    }
 
     taAddresses = AK_get_table_addresses(szRelation);
 
@@ -69,6 +72,7 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
             srResult.aiSearch_attributes = (int *) AK_malloc(iNum_search_params * sizeof (int));
             if (srResult.aiSearch_attributes == NULL) {
                 printf("AK_search_unsorted: ERROR. Cannot allocate srResult.aiAttributes_searched.\n");
+                AK_EPI;
                 exit(EXIT_ERROR);
             }
             srResult.iNum_search_attributes = 0;
@@ -166,6 +170,7 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
 
                     if (srResult.aiTuple_addresses == NULL) {
                         printf("AK_search_unsorted: ERROR. Cannot AK_reallocate srResult.aiTuple_addresses, iteration %d.\n", i);
+                        AK_EPI;
                         exit(EXIT_ERROR);
                     }
 
@@ -174,6 +179,7 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
                     srResult.aiBlocks = (int *) AK_realloc(srResult.aiBlocks, srResult.iNum_tuple_addresses * sizeof (int));
                     if (srResult.aiBlocks == NULL) {
                         printf("AK_search_unsorted: ERROR. Cannot AK_reallocate srResult.aiBlocks, iteration %d.\n", i);
+                        AK_EPI;
                         exit(EXIT_ERROR);
                     }
 
@@ -183,7 +189,7 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
             }
         }
     }
-
+    AK_EPI;
     return srResult;
 }
 
@@ -195,9 +201,11 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
  */
 
 void AK_deallocate_search_result(search_result srResult) {
+    AK_PRO;
     AK_free(srResult.aiTuple_addresses);
     AK_free(srResult.aiSearch_attributes);
     AK_free(srResult.aiBlocks);
+    AK_EPI;
 }
 /**
   * @author Miroslav Policki
@@ -210,7 +218,7 @@ void Ak_filesearch_test() {
     AK_mem_block *mem_block, tmp;
     AK_header hBroj_int[4], *hTmp;
     AK_list *row_root;
-
+    AK_PRO;
     // create table and fill it for testing purposes
     hTmp = (AK_header *) AK_create_header("Number int", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     hBroj_int[0] = *hTmp;
@@ -222,12 +230,14 @@ void Ak_filesearch_test() {
 
     if (EXIT_ERROR == AK_initialize_new_segment("filesearch test table", SEGMENT_TYPE_TABLE, hBroj_int)) {
         printf("filesearch_test: ERROR. Unable to create \"filesearch test table \"\n");
+        AK_EPI;
         exit(EXIT_ERROR);
     }
 
     row_root = AK_malloc(sizeof (AK_list));
     if (row_root == NULL) {
         printf("filesearch_test: ERROR. Cannot allocate row_root.\n");
+        AK_EPI;
         exit(EXIT_ERROR);
     }
 
@@ -285,4 +295,5 @@ void Ak_filesearch_test() {
 
         AK_deallocate_search_result(sr);
     }
+    AK_EPI;
 }

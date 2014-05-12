@@ -27,7 +27,11 @@
  * @return returns result of comparison
  */
 int AK_compare(const void *a, const void *b) {
-    return ((*(struct cost_eval_t*) a).value - (*(struct cost_eval_t*) b).value);
+    int ret;
+    AK_PRO;
+    ret = ((*(struct cost_eval_t*) a).value - (*(struct cost_eval_t*) b).value);
+    AK_EPI;
+    return ret;
 }
 
 /**
@@ -39,7 +43,7 @@ int AK_compare(const void *a, const void *b) {
 AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
     //int exit_cond[5] = {0};
     int next_cost, i;
-
+    AK_PRO;
     //Initialize temporary linked list
     AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
@@ -391,6 +395,7 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
     //}
 
     Ak_DeleteAll_L(list_rel_eq);
+    AK_EPI;
     return temp;
 }
 /**
@@ -400,6 +405,7 @@ AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) {
  * @return optimised RA expresion as the AK_list
  */
 void AK_print_rel_eq_assoc(AK_list *list_rel_eq) {
+    AK_PRO;
     AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_rel_eq);
 
     printf("\n");
@@ -407,6 +413,7 @@ void AK_print_rel_eq_assoc(AK_list *list_rel_eq) {
         printf("Type: %i, size: %i, data: %s\n", list_elem->type, list_elem->size, list_elem->data);
         list_elem = list_elem->next;
     }
+    AK_EPI;
 }
 /**
  * @author Dino Laktašić.
@@ -414,6 +421,7 @@ void AK_print_rel_eq_assoc(AK_list *list_rel_eq) {
  * @return No return value
  */
 void AK_rel_eq_assoc_test() {
+    AK_PRO;
     printf("rel_eq_assoc.c: Present!\n");
     printf("\n********** REL_EQ_ASSOCIATIVITY TEST by Dino Laktašić **********\n");
 
@@ -681,4 +689,6 @@ void AK_rel_eq_assoc_test() {
 
     Ak_DeleteAll_L(expr);
     //dealocate variables ;)
+
+    AK_EPI;
 }

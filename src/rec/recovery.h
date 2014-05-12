@@ -18,6 +18,7 @@
 #include "../file/fileio.h"
 #include "../file/test.h"
 #include "../opti/rel_eq_selection.h"
+#include "../auxi/mempro.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"

@@ -22,6 +22,8 @@
 
 #include "table.h"
 #include "fileio.h"
+#include "../auxi/mempro.h"
+
 /**
  * @def ID_START_VALUE
  * @brief Constant declaring start value of id 

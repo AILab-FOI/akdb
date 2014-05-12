@@ -21,7 +21,7 @@
 #define TEST
 
 #include "files.h"
-
+#include "../auxi/mempro.h"
 
 char* AK_get_table_atribute_types(char* tblName);
 int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type);

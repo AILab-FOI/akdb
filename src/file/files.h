@@ -21,7 +21,7 @@
 #define FILES
 
 #include "id.h"
-
+#include "../auxi/mempro.h"
 
 
 int AK_initialize_new_segment(char *name, int type, AK_header *header);

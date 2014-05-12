@@ -25,6 +25,7 @@
 #include "../../file/table.h"
 #include "../../file/fileio.h"
 #include "../../file/files.h"
+#include "../../auxi/mempro.h"
 
 
 int Ak_If_ExistOp(AK_list *L, char *ele);

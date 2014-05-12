@@ -25,6 +25,7 @@
 #include "../auxi/constants.h"
 #include "../auxi/configuration.h"
 #include "../file/files.h"
+#include "../auxi/mempro.h"
 
 int AK_selection(char *srcTable, char *dstTable, AK_list *expr);
 void AK_op_selection_test();

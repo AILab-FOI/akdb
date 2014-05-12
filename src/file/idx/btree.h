@@ -33,6 +33,7 @@
 #include "../../file/table.h"
 #include "../../auxi/constants.h"
 #include "../../auxi/configuration.h"
+#include "../../auxi/mempro.h"
 
 typedef struct{
 	//B values

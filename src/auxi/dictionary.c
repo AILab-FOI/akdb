@@ -41,13 +41,15 @@
 static void * mem_double(void * ptr, int size)
 {
     void * newptr ;
- 
+    AK_PRO; 
     newptr = AK_calloc(2*size, 1);
     if (newptr==NULL) {
+        AK_EPI;
         return NULL ;
     }
     memcpy(newptr, ptr, size);
     AK_free(ptr);
+    AK_EPI;
     return newptr ;
 }
 
@@ -64,12 +66,16 @@ static void * mem_double(void * ptr, int size)
 static char * xstrdup(const char * s)
 {
     char * t ;
-    if (!s)
+    AK_PRO;
+    if (!s){
+        AK_EPI;
         return NULL ;
+    }
     t = (char*)AK_malloc(strlen(s)+1) ;
     if (t) {
         strcpy(t,s);
     }
+    AK_EPI;
     return t ;
 }
 
@@ -93,6 +99,7 @@ unsigned dictionary_hash(const char * key)
     int         len ;
     unsigned    hash ;
     int         i ;
+    AK_PRO;
 
     len = strlen(key);
     for (hash=0, i=0 ; i<len ; i++) {
@@ -103,6 +110,7 @@ unsigned dictionary_hash(const char * key)
     hash += (hash <<3);
     hash ^= (hash >>11);
     hash += (hash <<15);
+    AK_EPI;
     return hash ;
 }
 
@@ -120,17 +128,19 @@ unsigned dictionary_hash(const char * key)
 dictionary * dictionary_new(int size)
 {
     dictionary  *   d ;
-
+    AK_PRO;
     /* If no size was specified, allocate space for DICTMINSZ */
     if (size<DICTMINSZ) size=DICTMINSZ ;
 
     if (!(d = (dictionary *)AK_calloc(1, sizeof(dictionary)))) {
+        AK_EPI;
         return NULL;
     }
     d->size = size ;
     d->val  = (char **)AK_calloc(size, sizeof(char*));
     d->key  = (char **)AK_calloc(size, sizeof(char*));
     d->hash = (unsigned int *)AK_calloc(size, sizeof(unsigned));
+    AK_EPI;
     return d ;
 }
 
@@ -146,8 +156,11 @@ dictionary * dictionary_new(int size)
 void dictionary_del(dictionary * d)
 {
     int     i ;
-
-    if (d==NULL) return ;
+    AK_PRO;
+    if (d==NULL){
+        AK_EPI;
+        return ;
+    }
     for (i=0 ; i<d->size ; i++) {
         if (d->key[i]!=NULL)
             AK_free(d->key[i]);
@@ -158,6 +171,7 @@ void dictionary_del(dictionary * d)
     AK_free(d->key);
     AK_free(d->hash);
     AK_free(d);
+    AK_EPI;
     return ;
 }
 
@@ -179,7 +193,7 @@ char * dictionary_get(dictionary * d, const char * key, char * def)
 {
     unsigned    hash ;
     int         i ;
-
+    AK_PRO;
     hash = dictionary_hash(key);
     for (i=0 ; i<d->size ; i++) {
         if (d->key[i]==NULL)
@@ -188,10 +202,12 @@ char * dictionary_get(dictionary * d, const char * key, char * def)
         if (hash==d->hash[i]) {
             /* Compare string, to avoid hash collisions */
             if (!strcmp(key, d->key[i])) {
+                AK_EPI;
                 return d->val[i] ;
             }
         }
     }
+    AK_EPI;
     return def ;
 }
 
@@ -225,7 +241,7 @@ int dictionary_set(dictionary * d, const char * key, const char * val)
 {
     int         i ;
     unsigned    hash ;
-
+    AK_PRO;
     if (d==NULL || key==NULL) return -1 ;
     
     /* Compute hash for this key */
@@ -242,6 +258,7 @@ int dictionary_set(dictionary * d, const char * key, const char * val)
                         AK_free(d->val[i]);
                     d->val[i] = val ? xstrdup(val) : NULL ;
                     /* Value has been modified: return */
+                    AK_EPI;
                     return 0 ;
                 }
             }
@@ -257,6 +274,7 @@ int dictionary_set(dictionary * d, const char * key, const char * val)
         d->hash = (unsigned int *)mem_double(d->hash, d->size * sizeof(unsigned)) ;
         if ((d->val==NULL) || (d->key==NULL) || (d->hash==NULL)) {
             /* Cannot grow dictionary */
+            AK_EPI;
             return -1 ;
         }
         /* Double size */
@@ -274,6 +292,7 @@ int dictionary_set(dictionary * d, const char * key, const char * val)
     d->val[i]  = val ? xstrdup(val) : NULL ;
     d->hash[i] = hash;
     d->n ++ ;
+    AK_EPI;
     return 0 ;
 }
 
@@ -292,8 +311,9 @@ void dictionary_unset(dictionary * d, const char * key)
 {
     unsigned    hash ;
     int         i ;
-
+    AK_PRO;
     if (key == NULL) {
+        AK_EPI;
         return;
     }
 
@@ -310,9 +330,11 @@ void dictionary_unset(dictionary * d, const char * key)
             }
         }
     }
-    if (i>=d->size)
+    if (i>=d->size){
         /* Key not found */
+        AK_EPI;
         return ;
+    }
 
     AK_free(d->key[i]);
     d->key[i] = NULL ;
@@ -322,6 +344,7 @@ void dictionary_unset(dictionary * d, const char * key)
     }
     d->hash[i] = 0 ;
     d->n -- ;
+    AK_EPI;
     return ;
 }
 
@@ -340,10 +363,14 @@ void dictionary_unset(dictionary * d, const char * key)
 void dictionary_dump(dictionary * d, FILE * out)
 {
     int     i ;
-
-    if (d==NULL || out==NULL) return ;
+    AK_PRO;
+    if (d==NULL || out==NULL){
+        AK_EPI;
+        return ;
+    }
     if (d->n<1) {
         fprintf(out, "empty dictionary\n");
+        AK_EPI;
         return ;
     }
     for (i=0 ; i<d->size ; i++) {
@@ -353,6 +380,7 @@ void dictionary_dump(dictionary * d, FILE * out)
                     d->val[i] ? d->val[i] : "UNDEF");
         }
     }
+    AK_EPI;
     return ;
 }
 
@@ -368,6 +396,8 @@ int main(int argc, char *argv[])
     char        cval[90] ;
     char 						str[90];
     char 						sign[90];
+
+    AK_PRO;
     strcpy (str,"value no - ");
 			
 
@@ -404,6 +434,7 @@ int main(int argc, char *argv[])
     }
     printf("deallocating...\n");
     dictionary_del(d);
+    AK_EPI;
     return 0 ;
 }
 #endif

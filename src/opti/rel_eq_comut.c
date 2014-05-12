@@ -26,6 +26,7 @@
  * @param *list_rel_eq RA expresion as the AK_list
  */
 void AK_print_rel_eq_comut(AK_list *list_rel_eq) {
+    AK_PRO;
     AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_rel_eq);
 
     printf("\n");
@@ -33,6 +34,7 @@ void AK_print_rel_eq_comut(AK_list *list_rel_eq) {
         printf("Type: %i, size: %i, data: %s\n", list_elem->type, list_elem->size, list_elem->data);
         list_elem = list_elem->next;
     }
+    AK_EPI;
 }
 
 /**
@@ -43,7 +45,7 @@ void AK_print_rel_eq_comut(AK_list *list_rel_eq) {
  */
 AK_list *AK_rel_eq_comut(AK_list *list_rel_eq) {
     int step; // exit_cond[5] = {0};
-
+    AK_PRO;
     //Initialize temporary linked list
     AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
@@ -292,6 +294,7 @@ AK_list *AK_rel_eq_comut(AK_list *list_rel_eq) {
     //}
 
     Ak_DeleteAll_L(list_rel_eq);
+    AK_EPI;
     return temp;
 }
 
@@ -315,7 +318,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
     int id = 0;
     int token_id = 0;
     int next_cond = 0;
-
+    AK_PRO;
     char *token_cond, *save_token_cond;
     char *ret_attributes = (char *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (char));
     char *temp_cond = (char *) AK_calloc(strlen(cond) + 1, sizeof (char));
@@ -358,10 +361,12 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 
     if (ret_attributes > 0) {
         Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join succeed.\n");
+        AK_EPI;
         return ret_attributes;
     } else {
         Ak_dbg_messg(HIGH, REL_EQ, "RULE - commute selection with theta-join failed!\n");
         AK_free(ret_attributes);
+        AK_EPI;
         return NULL;
     }
 }
@@ -372,6 +377,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
  * @return No return vlaue
  */
 void AK_rel_eq_comut_test() {
+    AK_PRO;
     printf("AK_rel_eq_commute_with_theta_join: Present!\n");
     printf(AK_rel_eq_commute_with_theta_join("`mbr` 100 > `firstname` 50 < AND `id` 'A' > OR", "profesor"));
     printf("\n");
@@ -497,5 +503,7 @@ void AK_rel_eq_comut_test() {
 
     Ak_DeleteAll_L(expr);
     //dealocate variables ;)
+
+    AK_EPI;
 }
 

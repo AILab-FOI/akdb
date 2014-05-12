@@ -27,6 +27,7 @@
 #include "trigger.h"
 #include "function.h"
 #include "privileges.h"
+#include "../auxi/mempro.h"
 
 struct drop_arguments {
     void *value;

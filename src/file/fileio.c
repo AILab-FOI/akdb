@@ -34,6 +34,7 @@
    * @return No return value
  */
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint) {
+    AK_PRO;
     AK_list *newElement = (AK_list *) AK_malloc(sizeof (AK_list));
     newElement->type = newtype;
 
@@ -52,6 +53,7 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
 
     newElement->next = ElementBefore->next;
     ElementBefore->next = newElement;
+    AK_EPI;
 }
 
 /** 
@@ -67,7 +69,9 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
    * @return No return value
  */
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore) {
+  AK_PRO;
   Ak_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, NEW_VALUE);
+  AK_EPI;
 }
 
 //END SPECIAL FUNCTIONS row_element_structure
@@ -87,7 +91,8 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
 
     int search_elem; //serch for tuple dict id and searc for data in list
     char entry_data[MAX_VARCHAR_LENGTH];
-    
+    AK_PRO;
+
     while (strcmp(temp_block->header[head].att_name, "\0") != 0) {//inserting values of the list one by one
         while (temp_block->tuple_dict[id].size != FREE_INT) {//searches for AK_free tuple dict, maybe it can be last_tuple_dict_id
             id++;
@@ -130,7 +135,7 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
     //writes the last used tuple dict id
 
     temp_block->last_tuple_dict_id = id;
-
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -142,10 +147,12 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
 
  */
 int Ak_insert_row(AK_list *row_root) {
+    AK_PRO;
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Start testing reference integrity.\n");
 
     if (AK_reference_check_entry(row_root) == EXIT_ERROR) {
         printf("Could not insert row. Reference integrity violation.\n");
+        AK_EPI;
         return EXIT_ERROR;
     }
     
@@ -165,6 +172,7 @@ int Ak_insert_row(AK_list *row_root) {
         adr_to_write = (int) AK_init_new_extent(table, SEGMENT_TYPE_TABLE);
 
     if (adr_to_write == 0) {
+        AK_EPI;
         return EXIT_ERROR;
     }
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into block on adress: %d\n", adr_to_write);
@@ -182,6 +190,7 @@ int Ak_insert_row(AK_list *row_root) {
     unsigned long timestamp;
     timestamp = clock(); /// get the timestamp
     mem_block->timestamp_last_change = timestamp; /// set timestamp_last_change
+    AK_EPI;
     return end;
 }
 
@@ -198,7 +207,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
     int del = 1; //if can delete gorup of tuple dicts which are in the same row of table
     int exists_equal_attrib = 0; //if we found at least one header in the list
     char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
-
+    AK_PRO;
     AK_list * new_data = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(new_data);
 
@@ -297,6 +306,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
     }
 
     AK_free(new_data);
+    AK_EPI;
 }
 
 /** 
@@ -312,7 +322,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
     int del = 1; //if can delete gorup of tuple dicts which are in the same row of table
     int exists_equal_attrib = 0; //if we found at least one header in the list
     char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
-    
+    AK_PRO;
     AK_list * row_root_backup = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root_backup);
 
@@ -378,6 +388,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
         exists_equal_attrib = 0;
     }
     AK_free(row_root_backup);
+    AK_EPI;
 }
 
 
@@ -391,6 +402,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
 */
 int Ak_delete_update_segment(AK_list *row_root, int del) {
     char table[MAX_ATT_NAME];
+    AK_PRO;
     AK_list_elem some_element = (AK_list_elem) Ak_First_L(row_root);
 
     //memset(table, '\0', MAX_ATT_NAME);
@@ -424,6 +436,7 @@ int Ak_delete_update_segment(AK_list *row_root, int del) {
         } else 
             break;
     }
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -433,6 +446,7 @@ int Ak_delete_update_segment(AK_list *row_root, int del) {
         @returs EXIT_SUCCESS if success
  */
 int Ak_delete_row(AK_list *row_root) {
+    AK_PRO;
     if (AK_reference_check_restricion(row_root, DELETE) == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FILE_MAN, "Could not delete row. Reference integrity violation (restricted).\n");
         return EXIT_ERROR;
@@ -442,6 +456,7 @@ int Ak_delete_row(AK_list *row_root) {
     }
 
     Ak_delete_update_segment(row_root, DELETE);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
@@ -452,10 +467,10 @@ int Ak_delete_row(AK_list *row_root) {
  *@param tableName name of table to delete the row
  */
 void Ak_delete_row_by_id(int id, char* tableName){
+    AK_PRO;
     char* attributes = AK_rel_eq_get_atrributes_char(tableName);
     char* nameID = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
     int index = 0;
-
     do{
         if ( *attributes == ';'){
             nameID[index] = '\0';
@@ -469,6 +484,7 @@ void Ak_delete_row_by_id(int id, char* tableName){
     AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Insert_New_Element_For_Update(TYPE_INT, &id, tableName, nameID, row_root, 1);
     Ak_delete_row(row_root);
+    AK_EPI;
 }
 
 /** @author Matija Novak, Dejan Frankovic (added referential integrity)
@@ -477,19 +493,23 @@ void Ak_delete_row_by_id(int id, char* tableName){
         @return EXIT_SUCCESS if success
 */
 int Ak_update_row(AK_list *row_root) {
+    AK_PRO;
     if (AK_reference_check_restricion(row_root, UPDATE) == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FILE_MAN, "Could not update row. Reference integrity violation (restricted).\n");
+        AK_EPI;
         return EXIT_ERROR;
     }
     if (AK_reference_check_if_update_needed(row_root, UPDATE) == EXIT_SUCCESS) {
         AK_reference_update(row_root, UPDATE);
     }
     Ak_delete_update_segment(row_root, UPDATE);
+    AK_EPI;
     return EXIT_SUCCESS;
 }
 
 
 void Ak_fileio_test() {
+    AK_PRO;
     printf("\n\nThis is fileio test!\n");
 
     AK_header t_header[4] = {
@@ -588,4 +608,5 @@ void Ak_fileio_test() {
 
     Ak_DeleteAll_L(row_root);
     AK_free(row_root);
+    AK_EPI;
 }

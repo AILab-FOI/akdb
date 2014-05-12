@@ -67,7 +67,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
     char *name;
     char *sys_table, *sys_tbl2, *sys_tbl3, *tbl;
-
+    AK_PRO;
     switch (type) {
         case DROP_TABLE:
 
@@ -309,6 +309,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
         default:
             break;
     }
+    AK_EPI;
 }
 
 /**
@@ -321,7 +322,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 void AK_drop_help_function(char *tblName, char *sys_table) {
 
     table_addresses *addresses;
-
+    AK_PRO;
     //addresses = AK_get_segment_addresses(tblName, SEGMENT_TYPE_TABLE);
     addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
@@ -417,6 +418,8 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
     Ak_delete_row(row_root);
     AK_free(addresses);
     AK_free(addresses2);
+
+    AK_EPI;
 }
 
 /**
@@ -427,6 +430,7 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
  * @return if element exist in system catalog returns 1, if not returns 0
  */
 int AK_if_exist(char *tblName, char *sys_table) {
+    AK_PRO;
     int num_rows = AK_get_num_records(sys_table);
     int a;
     int exist = 0;
@@ -438,6 +442,7 @@ int AK_if_exist(char *tblName, char *sys_table) {
             exist = 1;
         }
     }
+    AK_EPI;
     return exist;
 }
 
@@ -446,6 +451,7 @@ int AK_if_exist(char *tblName, char *sys_table) {
  * @brief Function for testing all DROP functions
  */
 void AK_drop_test() {
+    AK_PRO;
     printf("=========================================================\n");
     printf("========================DROP_TEST========================\n");
     AK_drop_arguments *drop_arguments = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
@@ -551,9 +557,11 @@ drop_arguments->next->next->next->next =NULL;
     // printf("\n-----DROP CONSTRAINT-----\n");
  AK_free(drop_arguments );
     printf("======================END_DROP_TEST======================\n");
+    AK_EPI;
 }
 
 void AK_drop_test_helper(int type,char* dropargs){
+    AK_PRO;
     AK_drop_arguments *drop_arguments = AK_malloc(sizeof (AK_drop_arguments));
     drop_arguments->value = dropargs;
     if (type == 0) {
@@ -585,4 +593,5 @@ void AK_drop_test_helper(int type,char* dropargs){
     }
 
     AK_free(drop_arguments );
+    AK_EPI;
 }
