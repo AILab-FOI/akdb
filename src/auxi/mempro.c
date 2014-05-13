@@ -30,6 +30,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 * @return void
 */
 void AK_debmod_d(AK_debmod_state* ds, const char *message){
+#if AK_DEBMOD_PRINT
     clock_t t;
     assert(ds != NULL && ds->init == 1);
     if (ds->print == 0){
@@ -38,6 +39,7 @@ void AK_debmod_d(AK_debmod_state* ds, const char *message){
     t = clock();
     fprintf(stderr, "[DEBMOD %p] %ld %s", (void*)ds, t, message);
     fflush(stderr);
+#endif
 }
 
 /**
@@ -48,6 +50,7 @@ void AK_debmod_d(AK_debmod_state* ds, const char *message){
 * @return void
 */
 void AK_debmod_dv(AK_debmod_state* ds, const char *format, ...){
+#if AK_DEBMOD_PRINT
     va_list arg;
     clock_t t;
     assert(ds != NULL && ds->init == 1);
@@ -60,6 +63,7 @@ void AK_debmod_dv(AK_debmod_state* ds, const char *format, ...){
     vfprintf(stderr, format, arg);
     va_end(arg);
     fflush(stderr);
+#endif
 }
 
 #ifdef __linux__
@@ -804,6 +808,7 @@ void AK_debmod_function_prologue(const char *func_name,
 * @return void
 */
 void AK_debmod_log_memory_alloc(int32_t func_id){
+#if AK_DEBMOD_PRINT
     uint8_t has_allocs;
     int32_t i;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
@@ -836,6 +841,7 @@ void AK_debmod_log_memory_alloc(int32_t func_id){
         printf("Function %s did not allocate memory.\n", 
             AK_debmod_func_get_name(AK_DEBMOD_STATE, func_id));
     }
+#endif
 }
 
 /**
@@ -874,6 +880,7 @@ void AK_debmod_function_epilogue(const char *func_name,
 * @return void
 */
 void AK_debmod_print_function_use(const char *func_name, uint8_t in_recur){
+#if AK_DEBMOD_PRINT
     int32_t i, func_id;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     if (in_recur == 0){
@@ -893,6 +900,7 @@ void AK_debmod_print_function_use(const char *func_name, uint8_t in_recur){
                 AK_debmod_func_get_name(AK_DEBMOD_STATE, i));
         }
     }
+#endif
 }
 
 /**
@@ -911,6 +919,7 @@ void AK_print_function_use(const char *func_name){
 * @return void
 */
 void AK_print_function_uses(){
+#if AK_DEBMOD_PRINT
     int32_t i, j;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     printf("Function dependency:\n");
@@ -925,6 +934,7 @@ void AK_print_function_uses(){
             }
         }
     }
+#endif
 }
 
 /**
@@ -933,6 +943,7 @@ void AK_print_function_uses(){
 * @return void
 */
 void AK_print_active_functions(){
+#if AK_DEBMOD_PRINT
     int32_t i;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     printf("Used functions:\n");
@@ -940,6 +951,7 @@ void AK_print_active_functions(){
         i < AK_DEBMOD_MAX_FUNCTIONS; ++i){
         printf("%d.\t%s\n", i + 1, AK_DEBMOD_STATE->function[i]);
     }
+#endif
 }
 
 /**
