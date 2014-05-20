@@ -30,7 +30,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 * @return void
 */
 void AK_debmod_d(AK_debmod_state* ds, const char *message){
-#if AK_DEBMOD_PRINT
+#if AK_DEBMOD_ON & AK_DEBMOD_PRINT
     clock_t t;
     assert(ds != NULL && ds->init == 1);
     if (ds->print == 0){
@@ -50,7 +50,7 @@ void AK_debmod_d(AK_debmod_state* ds, const char *message){
 * @return void
 */
 void AK_debmod_dv(AK_debmod_state* ds, const char *format, ...){
-#if AK_DEBMOD_PRINT
+#if AK_DEBMOD_ON & AK_DEBMOD_PRINT
     va_list arg;
     clock_t t;
     assert(ds != NULL && ds->init == 1);
@@ -233,8 +233,11 @@ AK_debmod_state* AK_debmod_init(void){
     sa.sa_flags = SA_SIGINFO;
     sigemptyset(&sa.sa_mask);
     sa.sa_sigaction = AK_debmod_signal_callback;
-    if (sigaction(SIGSEGV, &sa, NULL) == -1) {
-        return NULL;
+
+    if(AK_DEBMOD_ON || 1) {
+        if (sigaction(SIGSEGV, &sa, NULL) == -1) {
+            return NULL;
+        }
     }
 #endif
     for (i = 0; i < AK_DEBMOD_PAGES_NUM; ++i){
@@ -446,6 +449,9 @@ void* AK_calloc(size_t num, size_t size){
             return NULL;
         }
     }
+#if !AK_DEBMOD_ON
+    return calloc(num, size);
+#endif
     return AK_debmod_calloc(AK_DEBMOD_STATE, (uint32_t)(num * size));
 }
 
@@ -456,6 +462,9 @@ void* AK_calloc(size_t num, size_t size){
 * @return allocated memory or NULL
 */
 void* AK_malloc(size_t size){
+#if !AK_DEBMOD_ON
+    return malloc(size);
+#endif
     return AK_calloc(1, size);
 }
 
@@ -466,6 +475,9 @@ void* AK_malloc(size_t size){
 * @return void
 */
 void AK_free(void* ptr){
+#if !AK_DEBMOD_ON
+    return free(ptr);
+#endif
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     AK_debmod_free(AK_DEBMOD_STATE, ptr);
 }
@@ -485,6 +497,9 @@ void* AK_realloc(void* ptr, size_t size){
 #ifdef __linux__
     int32_t ret_i;
     int32_t ret_pos;
+#endif
+#if !AK_DEBMOD_ON
+    return realloc(ptr, size);
 #endif
     if (ptr == NULL){
         return AK_malloc(size);
@@ -808,7 +823,7 @@ void AK_debmod_function_prologue(const char *func_name,
 * @return void
 */
 void AK_debmod_log_memory_alloc(int32_t func_id){
-#if AK_DEBMOD_PRINT
+#if AK_DEBMOD_ON & AK_DEBMOD_PRINT
     uint8_t has_allocs;
     int32_t i;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
@@ -880,7 +895,7 @@ void AK_debmod_function_epilogue(const char *func_name,
 * @return void
 */
 void AK_debmod_print_function_use(const char *func_name, uint8_t in_recur){
-#if AK_DEBMOD_PRINT
+#if AK_DEBMOD_ON & AK_DEBMOD_PRINT
     int32_t i, func_id;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     if (in_recur == 0){
@@ -919,7 +934,7 @@ void AK_print_function_use(const char *func_name){
 * @return void
 */
 void AK_print_function_uses(){
-#if AK_DEBMOD_PRINT
+#if AK_DEBMOD_ON & AK_DEBMOD_PRINT
     int32_t i, j;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     printf("Function dependency:\n");
@@ -943,7 +958,7 @@ void AK_print_function_uses(){
 * @return void
 */
 void AK_print_active_functions(){
-#if AK_DEBMOD_PRINT
+#if AK_DEBMOD_ON & AK_DEBMOD_PRINT
     int32_t i;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     printf("Used functions:\n");
@@ -961,6 +976,9 @@ void AK_print_active_functions(){
 */
 size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
     size_t ret;
+#if !AK_MEMPRO_ON
+    return fwrite(buf, size, count, fp);
+#endif
 #ifdef __linux__
     int32_t pos, i;
     pos = -1;
@@ -987,6 +1005,9 @@ size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
 */
 size_t AK_fread(void *buf, size_t size, size_t count, FILE *fp) {
     size_t ret;
+#if !AK_MEMPRO_ON
+    return fread(buf, size, count, fp);
+#endif
 #ifdef __linux__
     int32_t pos, i;
     pos = -1;
@@ -1006,3 +1027,20 @@ size_t AK_fread(void *buf, size_t size, size_t count, FILE *fp) {
     return ret;
 }
 
+#if 0
+/* Dummy versions of wrapper functions */
+void* AK_calloc(size_t num, size_t size) { return calloc(num, size); }
+void* AK_malloc(size_t size) { return malloc(size); }
+void AK_free(void* ptr) { return free(ptr); }
+void* AK_realloc(void* ptr, size_t size) { return realloc(ptr, size); }
+size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
+    return fwrite(buf, size, count, fp);
+}
+size_t AK_fread(void *buf, size_t size, size_t count, FILE *fp) {
+    return fread(buf, size, count, fp);
+}
+void AK_debmod_function_epilogue(const char *func_name,
+    const char *source_file, int source_line) { }
+void AK_debmod_function_prologue(const char *func_name,
+    const char *source_file, int source_line){ }
+#endif

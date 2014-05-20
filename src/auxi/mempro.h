@@ -58,6 +58,12 @@ memory wrappers and debug mode of Kalashnikov DB.
 #include <stdarg.h>
 
 /**
+  * @def AK_DEBMOD_ON
+  * @brief Zero to switch memory protection and debug mode off.
+  */
+#define AK_DEBMOD_ON 0
+
+/**
   * @def AK_DEBMOD_PRINT
   * @brief Defines if debug mode messages are going to be printed
   */
