@@ -409,7 +409,7 @@ AK_list_elem Ak_GetNth_L(int pos, AK_list *row) {
     AK_PRO;
     assert(pos > -1);
     temp_elem = Ak_First_L(row);
-    for(i = 0; temp_elem != NULL; ++i){
+    for(i = 1; temp_elem != NULL; ++i){
         if (i == pos){
             AK_EPI;
             return temp_elem;
