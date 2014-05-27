@@ -427,6 +427,7 @@ void AK_write_block_to_disk(AK_block *block, FILE * db)
     AK_PRO;
     int true = 1, false = 0;
     int i, being_accessed = false, index_of_accessed_block;
+    int popunjeno = 0;
     
     pthread_mutex_lock(&check_if_block_being_accessed_mutex);
     // first we check if given block exists in array
@@ -447,11 +448,7 @@ void AK_write_block_to_disk(AK_block *block, FILE * db)
     } else {
 	// this while will loop until there is at least one free element in AK_accessed_blocks
 	int free_block_found = false;
-	while(1) {
-	    if (free_block_found == true) {
-		break;
-	    }
-	    
+	while(free_block_found == false) {	    
 	    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
 		if (AK_accessed_blocks[i].used == false) {
 		    free_block_found = true;
@@ -460,6 +457,7 @@ void AK_write_block_to_disk(AK_block *block, FILE * db)
 		    AK_accessed_blocks[i].block = block->address;
 		    AK_accessed_blocks[i].reading_writing = WRITING_BLOCK;
 		    pthread_mutex_lock(&AK_accessed_blocks[i].block_mutex);
+		    break;
 		}
 	    }
 	}
@@ -488,7 +486,6 @@ void AK_write_block_to_disk(AK_block *block, FILE * db)
     // thus making it accessible to other blocks which want to access disk
     AK_accessed_blocks[index_of_accessed_block].used = false;
     pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
-    
     AK_EPI;
 }
 
