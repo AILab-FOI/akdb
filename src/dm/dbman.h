@@ -34,7 +34,7 @@ of Kalashnikov DB
 
 
 #include <sys/stat.h>   /* for stat structure*/
-#include <limits.h>		/* for CHAR_BIT */
+#include <limits.h>        /* for CHAR_BIT */
 
 #define BITMASK(b) (1 << ((b) % CHAR_BIT))
 #define BITSLOT(b) ((int)((b) / CHAR_BIT))
@@ -52,16 +52,16 @@ of Kalashnikov DB
  type, attribute name, integrity, constraint name and constraint code.
  */
 typedef struct {
-	/// type of attribute
-	int type;
-	/// attribute name
-	char att_name[MAX_ATT_NAME];
-	/// standard integrity costraints
-	int integrity[MAX_CONSTRAINTS];
-	/// extra integrity constraint names
-	char constr_name[MAX_CONSTRAINTS][MAX_CONSTR_NAME];
-	/// extra integrity costraint codes
-	char constr_code[MAX_CONSTRAINTS][MAX_CONSTR_CODE];
+    /// type of attribute
+    int type;
+    /// attribute name
+    char att_name[MAX_ATT_NAME];
+    /// standard integrity costraints
+    int integrity[MAX_CONSTRAINTS];
+    /// extra integrity constraint names
+    char constr_name[MAX_CONSTRAINTS][MAX_CONSTR_NAME];
+    /// extra integrity costraint codes
+    char constr_code[MAX_CONSTRAINTS][MAX_CONSTR_CODE];
 } AK_header;
 
 /**
@@ -71,12 +71,12 @@ typedef struct {
  and size.
  */
 typedef struct {
-	/// data entry type
-	int type;
-	/// data entry address (in AK_block->data)
-	int address;
-	/// data entry size (using sizeof( *** ) )
-	int size;
+    /// data entry type
+    int type;
+    /// data entry address (in AK_block->data)
+    int address;
+    /// data entry size (using sizeof( *** ) )
+    int size;
 } AK_tuple_dict;
 
 /**
@@ -86,21 +86,21 @@ typedef struct {
   last_tuple_dict_id, header and tuple_dict and data.
   */
 typedef struct {
-	/// block number (address) in DB file
-	int address;
-	/// block type (can be BLOCK_TYPE_FREE, BLOCK_TYPE_NORMAL or BLOCK_TYPE_CHAINED)
-	int type;
-	/// address of chained block; NOT_CHAINED otherwise
-	int chained_with;
-	/// AK_free space in block
-	int AK_free_space;
-	int last_tuple_dict_id;
-	/// attribute definitions
-	AK_header header[MAX_ATTRIBUTES];
-	/// dictionary of data entries
-	AK_tuple_dict tuple_dict[DATA_BLOCK_SIZE];
-	/// actual data entries
-	unsigned char data[DATA_BLOCK_SIZE * DATA_ENTRY_SIZE];
+    /// block number (address) in DB file
+    int address;
+    /// block type (can be BLOCK_TYPE_FREE, BLOCK_TYPE_NORMAL or BLOCK_TYPE_CHAINED)
+    int type;
+    /// address of chained block; NOT_CHAINED otherwise
+    int chained_with;
+    /// AK_free space in block
+    int AK_free_space;
+    int last_tuple_dict_id;
+    /// attribute definitions
+    AK_header header[MAX_ATTRIBUTES];
+    /// dictionary of data entries
+    AK_tuple_dict tuple_dict[DATA_BLOCK_SIZE];
+    /// actual data entries
+    unsigned char data[DATA_BLOCK_SIZE * DATA_ENTRY_SIZE];
 } AK_block;
 
 /**
@@ -108,7 +108,7 @@ typedef struct {
  * @var db
  * @brief Variable that defines the DB file file handle
  */
-FILE * db;
+    FILE * db;
 
 /**
  * @author Markus Schatten
@@ -123,9 +123,9 @@ unsigned int db_file_size;
   * @brief Structure that defines start and end address of extent
   */
 typedef struct {
-	///sturcture for extents start end stop adresses
-	int address_from[MAX_EXTENTS_IN_SEGMENT]; //start adress of the extent
-	int address_to[MAX_EXTENTS_IN_SEGMENT]; //end adress of the extent
+    ///sturcture for extents start end stop adresses
+    int address_from[MAX_EXTENTS_IN_SEGMENT]; //start adress of the extent
+    int address_to[MAX_EXTENTS_IN_SEGMENT]; //end adress of the extent
 } table_addresses;
 
 #define DB_FILE_SIZE_EX 40
@@ -138,12 +138,12 @@ typedef struct {
   * @brief Structure that defines bit status of blocks, last initialized and last allocated index
   */
 typedef struct {
-	unsigned int allocationtable[DB_FILE_BLOCKS_NUM_EX];
-	unsigned char bittable[BITNSLOTS(DB_FILE_BLOCKS_NUM_EX)];
-	int last_allocated;
-	int last_initialized;
-	int prepared;
-	time_t ltime;
+    unsigned int allocationtable[DB_FILE_BLOCKS_NUM_EX];
+    unsigned char bittable[BITNSLOTS(DB_FILE_BLOCKS_NUM_EX)];
+    int last_allocated;
+    int last_initialized;
+    int prepared;
+    time_t ltime;
 }AK_blocktable;
 
 /**
@@ -185,12 +185,46 @@ AK_blocktable * AK_allocationbit;
  * AROUND - set tries to place itself around targeted index
  */
 typedef enum{
-	allocationSEQUENCE = 10001,
-	allocationUPPER,
-	allocationLOWER,
-	allocationAROUND,
-	allocationNOMODE
+    allocationSEQUENCE = 10001,
+    allocationUPPER,
+    allocationLOWER,
+    allocationAROUND,
+    allocationNOMODE
 }AK_allocation_set_mode;
+
+/**
+ * @author Domagoj Šitum
+ * @brief Structure of currently accessed block. 
+ * It is important to note such blocks, to enable quick and thread-safe
+ * reading from or writing to disk (in terms of blocks).
+ * Structure contains of:
+ * block - address of block (in DB file) which is being read or written to disk
+ * block_mutex - mutex of the block, to provide thread-safe operation
+ * reading_writing - indicates whether block is being read from disk (READING_BLOCK) od written to it (WRITING_BLOCK).
+    * used - indicates whether allocated structure is in use or not.
+ * If it's not used, than it is available for next block that has to access disk
+ * Constants READING_BLOCK and WRITING_BLOCK are defined in auxi/constants.h
+ */
+typedef struct {
+    int block;
+    pthread_mutex_t block_mutex;
+    short reading_writing;
+    short used;
+} AK_blocks_currently_accessed;
+
+/**
+ * @author Domagoj Šitum
+ * @def MAX_BLOCKS_CURRENTLY_ACCESSED
+ * @brief Indicates maximum number of blocks that can be accessing (reading or writing) database at the same time
+ */
+#define MAX_BLOCKS_CURRENTLY_ACCESSED 32
+
+/**
+ * @author Domagoj Šitum
+ * @var AK_accessed_blocks
+ * @brief Blocks which are currently being written to disk or read from it.
+ */
+AK_blocks_currently_accessed *AK_accessed_blocks;
 
 
 int AK_print_block(AK_block * block, int num, char* gg, FILE *fpp);
@@ -205,6 +239,8 @@ AK_block *  AK_init_block();
 void AK_allocationtable_dump(int zz);
 void AK_blocktable_dump(int zz);
 int AK_blocktable_flush();
+void AK_write_block_to_disk(AK_block *block, FILE * db);
+AK_block* AK_read_block_from_disk();
 int AK_blocktable_get();
 int fsize(FILE *fp);
 int AK_init_allocation_table();
@@ -216,10 +252,10 @@ int AK_new_segment(char * name, int type, AK_header *header);
 AK_header * AK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code);
 void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int i);
 int AK_init_system_tables_catalog(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-	int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference);
+    int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference);
 void AK_memset_int(void *block, int value, size_t num);
 int AK_register_system_tables(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-	int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference);
+    int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference);
 int AK_init_system_catalog();
 int AK_delete_block(int address);
 int AK_delete_extent(int begin, int end);

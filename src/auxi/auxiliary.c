@@ -237,9 +237,9 @@ void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_
  * @param size data size of the new element in the list
  * @param current current element in the list
  * @param L root of the list
- * @return No return value
+ * @return Address of new element
  */
-void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list **L) {
+AK_list_elem Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list **L) {
     AK_list_elem new_elem;
     AK_PRO;
     new_elem = (AK_list_elem) AK_calloc(1, sizeof ( struct list_elem));
@@ -255,6 +255,7 @@ void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_l
     new_elem->next = current->next;
     current->next = new_elem;
     AK_EPI;
+    return new_elem;
 }
 
 /**
@@ -279,12 +280,13 @@ void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L) {
  * @param data new data
  * @param size data size of the new element in the list
  * @param L root of the list
- * @return No return value
+ * @return Address of new element
  */
-void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L) {
+AK_list_elem Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L) {
     AK_PRO;
-    Ak_InsertAfter_L(type, data, size, Ak_End_L(L), L);
+    AK_list_elem new_elem = Ak_InsertAfter_L(type, data, size, Ak_End_L(L), L);
     AK_EPI;
+    return new_elem;
 } //Ak_InsertAtEnd_L  Ak_Insert_AtEnd_L
 
 /**
@@ -346,6 +348,7 @@ int Ak_Size_L(AK_list *L) {
     AK_EPI;
     return size;
 }
+
 
 /**
  * @author Matija Šestak.

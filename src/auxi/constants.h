@@ -386,6 +386,19 @@
 */
 #define NEW_ID 0
 
+/**
+ * @def READING_BLOCK
+ * @brief Constant declaring that block is being read from disk
+ */
+#define READING_BLOCK false
+
+
+/**
+ * @def WRITING_BLOCK
+ * @brief Constant declaring that block is being written to disk
+ */
+#define WRITING_BLOCK true
+
 
 #endif
 
