@@ -61,7 +61,7 @@ memory wrappers and debug mode of Kalashnikov DB.
   * @def AK_DEBMOD_ON
   * @brief Zero to switch memory protection and debug mode off.
   */
-#define AK_DEBMOD_ON 0
+#define AK_DEBMOD_ON 1
 
 /**
   * @def AK_DEBMOD_PRINT

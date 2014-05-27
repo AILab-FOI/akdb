@@ -976,7 +976,7 @@ void AK_print_active_functions(){
 */
 size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
     size_t ret;
-#if !AK_MEMPRO_ON
+#if !AK_DEBMOD_ON
     return fwrite(buf, size, count, fp);
 #endif
 #ifdef __linux__
@@ -1005,7 +1005,7 @@ size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
 */
 size_t AK_fread(void *buf, size_t size, size_t count, FILE *fp) {
     size_t ret;
-#if !AK_MEMPRO_ON
+#if !AK_DEBMOD_ON
     return fread(buf, size, count, fp);
 #endif
 #ifdef __linux__
