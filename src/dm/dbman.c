@@ -39,6 +39,7 @@ int k;
  * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
  */
 int AK_init_db_file(int size) {
+    printf("\nInicijalizacija\n");
     int sz;
     AK_PRO;
     Ak_dbg_messg(HIGH, DB_MAN, "AK_block: %i, AK_header: %i, AK_tuple_dict: %i , char: %i, int: %i\n",
@@ -80,28 +81,12 @@ int AK_init_db_file(int size) {
     AK_allocationbit->allocationtable[0] = 0;
     AK_allocationbit->last_allocated = 1;
 
-    AK_blocktable_flush();
-    
-    
-    // allocation of array which will contain currently accessed blocks
-    // for more info, see explanation in dbman.h
-    AK_accessed_blocks = (AK_blocks_currently_accessed *) 
-	AK_malloc(MAX_BLOCKS_CURRENTLY_ACCESSED * sizeof(AK_blocks_currently_accessed));
-    // initialization of this array
-    int i;
-    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
-	AK_accessed_blocks->used = 0; // false
-	pthread_mutex_init(&AK_accessed_blocks->block_mutex, NULL);
-    }
-	
-	
+    AK_blocktable_flush();	
 
     printf("AK_init_db_file: Donex!\n");
     AK_EPI;
     return (EXIT_SUCCESS);
 }
-
-
 
 
 /**
@@ -416,6 +401,24 @@ int AK_blocktable_flush(){
 }
 
 
+
+/**
+ * @author Domagoj Šitum
+ * @brief Allocation of array which will contain currently accessed blocks.
+ * For more info, see explanation in dbman.h
+ */
+void AK_allocate_array_currently_accessed_blocks() {
+    AK_accessed_blocks = (AK_blocks_currently_accessed *) 
+	AK_malloc(MAX_BLOCKS_CURRENTLY_ACCESSED * sizeof(AK_blocks_currently_accessed));
+    // initialization of this array
+    int i;
+    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
+	AK_accessed_blocks->used = 0; // false
+	pthread_mutex_init(&AK_accessed_blocks->block_mutex, NULL);
+    }
+}
+
+
 /**
  * @author Domagoj Šitum
  * @brief Writes block to disk, thread-safe.
@@ -432,14 +435,14 @@ void AK_write_block_to_disk(AK_block *block, FILE * db)
     pthread_mutex_lock(&check_if_block_being_accessed_mutex);
     // first we check if given block exists in array
     // if it does, that means that it's already being accessed
-    // so we take it's array index
+    // so we take it's array index    
     for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
 	if (AK_accessed_blocks[i].block == block->address && AK_accessed_blocks[i].used == true) {
 	    index_of_accessed_block = i;
 	    being_accessed = true;
+	    break;
 	}
     }
-    
     // if block is in the list, then we lock it's mutex
     //	 (thus preventing it from accessing disk once again)
     // if block isn't in list of currently accessed blocks, then we add it to this list
@@ -2345,6 +2348,8 @@ int AK_init_disk_manager() {
         AK_EPI;
         exit(EXIT_ERROR);
     }
+    
+    AK_allocate_array_currently_accessed_blocks();
 
     if (AK_allocationbit->prepared == 31){
 

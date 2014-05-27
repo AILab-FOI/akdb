@@ -655,6 +655,10 @@ def AK_blocktable_flush():
   return _kalashnikovDB.AK_blocktable_flush()
 AK_blocktable_flush = _kalashnikovDB.AK_blocktable_flush
 
+def AK_allocate_array_currently_accessed_blocks():
+  return _kalashnikovDB.AK_allocate_array_currently_accessed_blocks()
+AK_allocate_array_currently_accessed_blocks = _kalashnikovDB.AK_allocate_array_currently_accessed_blocks
+
 def AK_write_block_to_disk(*args):
   return _kalashnikovDB.AK_write_block_to_disk(*args)
 AK_write_block_to_disk = _kalashnikovDB.AK_write_block_to_disk

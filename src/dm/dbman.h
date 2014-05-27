@@ -239,6 +239,7 @@ AK_block *  AK_init_block();
 void AK_allocationtable_dump(int zz);
 void AK_blocktable_dump(int zz);
 int AK_blocktable_flush();
+void AK_allocate_array_currently_accessed_blocks();
 void AK_write_block_to_disk(AK_block *block, FILE * db);
 AK_block* AK_read_block_from_disk();
 int AK_blocktable_get();
