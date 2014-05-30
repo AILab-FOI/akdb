@@ -166,6 +166,9 @@ NOT_OK = _kalashnikovDB.NOT_OK
 COMMIT = _kalashnikovDB.COMMIT
 ABORT = _kalashnikovDB.ABORT
 NEW_ID = _kalashnikovDB.NEW_ID
+MAX_BLOCKS_CURRENTLY_ACCESSED = _kalashnikovDB.MAX_BLOCKS_CURRENTLY_ACCESSED
+DEBUG_MODE_ON = _kalashnikovDB.DEBUG_MODE_ON
+DEBUG_MODE_OFF = _kalashnikovDB.DEBUG_MODE_OFF
 MAX_EXTENTS_IN_SEGMENT = _kalashnikovDB.MAX_EXTENTS_IN_SEGMENT
 MAX_REDO_LOG_MEMORY = _kalashnikovDB.MAX_REDO_LOG_MEMORY
 MAX_REDO_LOG_ENTRIES = _kalashnikovDB.MAX_REDO_LOG_ENTRIES
@@ -605,7 +608,6 @@ class AK_blocks_currently_accessed(_object):
 AK_blocks_currently_accessed_swigregister = _kalashnikovDB.AK_blocks_currently_accessed_swigregister
 AK_blocks_currently_accessed_swigregister(AK_blocks_currently_accessed)
 
-MAX_BLOCKS_CURRENTLY_ACCESSED = _kalashnikovDB.MAX_BLOCKS_CURRENTLY_ACCESSED
 
 def AK_print_block(*args):
   return _kalashnikovDB.AK_print_block(*args)
@@ -659,13 +661,17 @@ def AK_allocate_array_currently_accessed_blocks():
   return _kalashnikovDB.AK_allocate_array_currently_accessed_blocks()
 AK_allocate_array_currently_accessed_blocks = _kalashnikovDB.AK_allocate_array_currently_accessed_blocks
 
-def AK_write_block_to_disk(*args):
-  return _kalashnikovDB.AK_write_block_to_disk(*args)
-AK_write_block_to_disk = _kalashnikovDB.AK_write_block_to_disk
+def AK_thread_safe_block_access_test():
+  return _kalashnikovDB.AK_thread_safe_block_access_test()
+AK_thread_safe_block_access_test = _kalashnikovDB.AK_thread_safe_block_access_test
 
-def AK_read_block_from_disk():
-  return _kalashnikovDB.AK_read_block_from_disk()
-AK_read_block_from_disk = _kalashnikovDB.AK_read_block_from_disk
+def AK_read_block_for_testing(*args):
+  return _kalashnikovDB.AK_read_block_for_testing(*args)
+AK_read_block_for_testing = _kalashnikovDB.AK_read_block_for_testing
+
+def AK_write_block_for_testing(*args):
+  return _kalashnikovDB.AK_write_block_for_testing(*args)
+AK_write_block_for_testing = _kalashnikovDB.AK_write_block_for_testing
 
 def AK_blocktable_get():
   return _kalashnikovDB.AK_blocktable_get()

@@ -146,7 +146,8 @@ function fun[] = {
         {"AK_allocationbit_test", &AK_allocationbit_test},
         {"AK_allocationtable_test", &AK_allocationtable_test},
         {"AK_block_test", &AK_memoman_test2},
-	    {"AK_select_test", &AK_select_test}
+	{"AK_select_test", &AK_select_test},
+	{"AK_thread_safe_block_access_test", &AK_thread_safe_block_access_test}
     };
 
 /**
@@ -167,6 +168,8 @@ int main(int argc, char * argv[])
         printf( "KALASHNIKOV DB - STARTING\n\n" );
         AK_inflate_config();
         printf("db_file: %s\n", DB_FILE);
+	
+	DEBUG_MODE = DEBUG_MODE_OFF;
 
         if( AK_init_disk_manager() == EXIT_SUCCESS )
         {

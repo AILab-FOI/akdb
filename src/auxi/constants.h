@@ -399,6 +399,23 @@
  */
 #define WRITING_BLOCK true
 
+/**
+ * @def MAX_BLOCKS_CURRENTLY_ACCESSED
+ * @brief Indicates maximum number of threads that can access (read or write) database at the same time
+ */
+#define MAX_BLOCKS_CURRENTLY_ACCESSED 32
+
+/**
+ * @def DEBUG_MODE_ON
+ * @brief This constant is used to turn DEBUG_MODE (auxi/debug.h) ON
+ */
+#define DEBUG_MODE_ON 1
+
+/**
+ * @def DEBUG_MODE_OFF
+ * @brief This constant is used to turn DEBUG_MODE (auxi/debug.h) OFF
+ */
+#define DEBUG_MODE_OFF 0
 
 #endif
 

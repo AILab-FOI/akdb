@@ -214,13 +214,6 @@ typedef struct {
 
 /**
  * @author Domagoj Šitum
- * @def MAX_BLOCKS_CURRENTLY_ACCESSED
- * @brief Indicates maximum number of blocks that can be accessing (reading or writing) database at the same time
- */
-#define MAX_BLOCKS_CURRENTLY_ACCESSED 32
-
-/**
- * @author Domagoj Šitum
  * @var AK_accessed_blocks
  * @brief Blocks which are currently being written to disk or read from it.
  */
@@ -240,8 +233,9 @@ void AK_allocationtable_dump(int zz);
 void AK_blocktable_dump(int zz);
 int AK_blocktable_flush();
 void AK_allocate_array_currently_accessed_blocks();
-void AK_write_block_to_disk(AK_block *block, FILE * db);
-AK_block* AK_read_block_from_disk();
+void AK_thread_safe_block_access_test();
+void* AK_read_block_for_testing(void *address);
+void* AK_write_block_for_testing(void *block);
 int AK_blocktable_get();
 int fsize(FILE *fp);
 int AK_init_allocation_table();

@@ -62,6 +62,8 @@ int AK_init_db_file(int size) {
     if (sz > AK_ALLOCATION_TABLE_SIZE){
         printf("AK_init_db_file: Already initialized.\n");
         fclose(db);
+	db = NULL;
+	db = NULL;
         AK_EPI;
         return (EXIT_SUCCESS);
     }
@@ -396,6 +398,7 @@ int AK_blocktable_flush(){
 
     rewind(db);
     fclose(db);
+    db = NULL;
     AK_EPI;
     return (EXIT_SUCCESS);
 }
@@ -418,94 +421,88 @@ void AK_allocate_array_currently_accessed_blocks() {
     }
 }
 
-
 /**
  * @author Domagoj Šitum
- * @brief Writes block to disk, thread-safe.
- * @param block Block which is being written to disk (database).
- * @param db Pointer to file containing database.
+ * @brief This function tests thread safe reading and writing to blocks.
+ * There is N writing and N reading threads. Each reading thread should read
+ * the data (character) that was set by last writing thread
  */
-void AK_write_block_to_disk(AK_block *block, FILE * db)
-{
+void AK_thread_safe_block_access_test() {
     AK_PRO;
-    int true = 1, false = 0;
-    int i, being_accessed = false, index_of_accessed_block;
-    int popunjeno = 0;
+    int i, n;
+    int block_address = 0;
+    srand(time(NULL));
     
-    pthread_mutex_lock(&check_if_block_being_accessed_mutex);
-    // first we check if given block exists in array
-    // if it does, that means that it's already being accessed
-    // so we take it's array index    
-    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
-	if (AK_accessed_blocks[i].block == block->address && AK_accessed_blocks[i].used == true) {
-	    index_of_accessed_block = i;
-	    being_accessed = true;
-	    break;
-	}
+    printf("N threads will read and N will write to the same block."
+	"\nRead values should be equal to the first written values "
+	"in front of them.\n");
+    printf("Enter N (between 1 and 100): ");
+    scanf("%d", &n);
+
+    if (n < 1) n = 1;
+    if (n > 100) n = 100;
+    // we read first block of actual data (after allocation bit-vector)
+
+    AK_block *block = AK_read_block(block_address);
+    AK_block *backup_block = (AK_block *) AK_malloc(sizeof(AK_block));
+    
+    
+    DEBUG_MODE = DEBUG_MODE_ON;
+
+    // we have to backup that first block, because we will make changes to it
+    memcpy((void *)backup_block, (void *)block, sizeof(AK_block));
+    
+    
+    // then we create N reading and N writing threads
+    pthread_t *threads = (pthread_t *) AK_malloc(2 * n * sizeof(pthread_t));
+
+    // and send them to read and write to the same block
+    for (i = 0; i < n; i++) {
+	pthread_create(&threads[2*i], NULL, AK_write_block_for_testing, (void *)block);
+	pthread_create(&threads[2*i+1], NULL, AK_read_block_for_testing, (void *)&block_address);
     }
-    // if block is in the list, then we lock it's mutex
-    //	 (thus preventing it from accessing disk once again)
-    // if block isn't in list of currently accessed blocks, then we add it to this list
-    if (being_accessed == true) {
-	pthread_mutex_lock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
-    } else {
-	// this while will loop until there is at least one free element in AK_accessed_blocks
-	int free_block_found = false;
-	while(free_block_found == false) {	    
-	    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
-		if (AK_accessed_blocks[i].used == false) {
-		    free_block_found = true;
-		    index_of_accessed_block = i;
-		    AK_accessed_blocks[i].used = true;
-		    AK_accessed_blocks[i].block = block->address;
-		    AK_accessed_blocks[i].reading_writing = WRITING_BLOCK;
-		    pthread_mutex_lock(&AK_accessed_blocks[i].block_mutex);
-		    break;
-		}
-	    }
-	}
-    }
-    pthread_mutex_unlock(&check_if_block_being_accessed_mutex);
+
+
+    // and then, we just have to wait all threads to finish
+    for (i = 0; i < 2*n; i++) 
+	pthread_join(threads[i],NULL);
     
-    // now we're certain that block is in the list, it's mutex is also locked
-    // so, we can safely write it to the disk
+    DEBUG_MODE = DEBUG_MODE_OFF;
     
-    // first we have to set position in file for new block writing
-    if (fseek(db, block->address * sizeof(AK_block)+AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
-        printf("AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address);
-        AK_EPI;
-        exit(EXIT_ERROR);
-    }
     
-    // then we simply write block to the disk
-    if (AK_fwrite(block, sizeof (*block), 1, db) != 1) {
-        printf("AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address);
-        pthread_mutex_unlock(&fileLockMutex);
-        AK_EPI;
-        exit(EXIT_ERROR);
-    }
+    // and at the end, we write backup block back to the file
+    AK_write_block(backup_block);
     
-    // and after everything is done, we just have to un-use block container and unlock it's mutex
-    // thus making it accessible to other blocks which want to access disk
-    AK_accessed_blocks[index_of_accessed_block].used = false;
-    pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
+    AK_free((void*)backup_block);
+    AK_free((void*)threads);
+    
     AK_EPI;
 }
 
 /**
  * @author Domagoj Šitum
- * @brief Reads block from disk, thread-safe.
- * @param block Block which is being read from disk (database).
- * @param db Pointer to file containing database.
- * @return Returns address of a block read from disk or NULL if requested block doesn't exist.
+ * @brief This function is only for testing. It has to be there, because
+ * pthread_create only accepts void* function_name (void *) function format.
+ * So AK_read_block is no-go for pthread_create.
  */
-AK_block* AK_read_block_from_disk()
-{
+void* AK_read_block_for_testing(void *address) {
     AK_PRO;
-    
+    int adr = *(int *)address;
+    AK_read_block(adr);
     AK_EPI;
-    
-    return NULL;  // ili adresu bloka
+}
+
+/**
+ * @author Domagoj Šitum
+ * @brief This function is only for testing. It has to be there, because
+ * pthread_create only accepts void* function_name (void *) function format.
+ * So AK_write_block is no-go for pthread_create.
+ */
+void* AK_write_block_for_testing(void *block) {
+    AK_PRO;
+    AK_block *blk = (AK_block *)block;
+    AK_write_block(blk);
+    AK_EPI;
 }
 
 
@@ -532,6 +529,7 @@ int AK_blocktable_get(){
 
     rewind(db);
     fclose(db);
+    db = NULL;
     AK_EPI;
     return (EXIT_SUCCESS);
 }
@@ -619,6 +617,7 @@ int AK_init_allocation_table(){
     }
 
     fclose(db);
+    db = NULL;
     pthread_mutex_unlock(&fileLockMutex);
     AK_EPI;
     return (EXIT_SUCCESS);
@@ -878,7 +877,10 @@ int  AK_print_block(AK_block * block, int num, char* gg, FILE *fpp){
 
     if (kk)AK_free(block);
 
-    if (fpp == NULL)fclose(fp);
+    if (fpp == NULL) {
+	fclose(fp);
+	db = NULL;
+    }
     AK_EPI;
     return (EXIT_SUCCESS);
 }
@@ -904,7 +906,8 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
 
 
     }
-
+    
+    pthread_mutex_lock(&fileLockMutex);
     if (fseek(db, AK_ALLOCATION_TABLE_SIZE + FromWhere * sizeof(AK_block), SEEK_SET) != 0) {
         printf("AK_allocationbit: ERROR. Cannot set position to move for AK_blocktable \n");
         AK_EPI;
@@ -922,9 +925,11 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
             return EXIT_ERROR;
 	}
     }
+    pthread_mutex_unlock(&fileLockMutex);
 
 
     fclose(db);
+    db = NULL;
 
     AK_allocationbit->last_initialized = i;
     AK_blocktable_flush();
@@ -939,72 +944,211 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
 
 
 /**
- * @author Markus Schatten, updated dv
+ * @author Markus Schatten, updated dv and Domagoj Šitum (thread-safe enabled)
  * @brief  Function that reads a block at a given address (block number less than db_file_size).
  * New block is allocated. Database file is opened. Position is set to provided address block.
- * At the end function reads file from that position.
+ * At the end function reads file from that position. Completely thread-safe.
  * @param address block number (address)
  * @return pointer to block allocated in memory
  */
 AK_block * AK_read_block(int address) {
     AK_PRO;
+    int true = 1, false = 0;
+    int i, being_accessed = false, index_of_accessed_block;
+    
     if (DB_FILE_BLOCKS_NUM<address || 0>address){
         printf("AK_read_block: ERROR. Out of range %s  address:%d  DB_FILE_BLOCKS_NUM:%d\n", DB_FILE, address, DB_FILE_BLOCKS_NUM);
         AK_EPI;
         exit(EXIT_ERROR);
     }
-
-    pthread_mutex_lock(&fileLockMutex);
-
-    AK_block * blockr = AK_malloc(sizeof(AK_block));
-
-    if ((db = fopen(DB_FILE, "rb")) == NULL) {
-        printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
-        pthread_mutex_unlock(&fileLockMutex);
-        AK_EPI;
-        exit(EXIT_ERROR);
+    
+    FILE * database;
+    if ((database = fopen(DB_FILE, "rb")) == NULL) {
+	printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+	AK_EPI;
+	exit(EXIT_ERROR);
+    }    
+    
+    
+    pthread_mutex_lock(&check_if_block_being_accessed_mutex);
+    // first we check if given block exists in array
+    // if it does, that means that it's already being accessed
+    // so we take it's array index    
+    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
+	if (AK_accessed_blocks[i].block == address && AK_accessed_blocks[i].used == true) {
+	    index_of_accessed_block = i;
+	    being_accessed = true;
+	    break;
+	}
     }
-
-
-    if (fseek(db, address * sizeof(AK_block)+AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
+    
+    // if block is in the list, and if it's being written to it, then we lock it's mutex
+    //	 (thus preventing it from accessing disk once again)
+    // if another thread is only reading from this block, then we don't have to lock it's mutex, because
+    // any number of threads can read the same block at the same time
+    
+    // if block isn't in list of currently accessed blocks, then we add it to this list
+    if (being_accessed == true) {
+	if (AK_accessed_blocks[index_of_accessed_block].reading_writing == WRITING_BLOCK) {
+	    pthread_mutex_lock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
+	}
+    } else {
+	// this while will loop until there is at least one free element in AK_accessed_blocks
+	int free_block_found = false;
+	while(free_block_found == false) {	    
+	    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
+		if (AK_accessed_blocks[i].used == false) {
+		    free_block_found = true;
+		    index_of_accessed_block = i;
+		    AK_accessed_blocks[i].used = true;
+		    AK_accessed_blocks[i].block = address;
+		    AK_accessed_blocks[i].reading_writing = READING_BLOCK;
+		    pthread_mutex_lock(&AK_accessed_blocks[i].block_mutex);
+		    break;
+		}
+	    }
+	}
+    }
+    pthread_mutex_unlock(&check_if_block_being_accessed_mutex);
+    
+    // now we're certain that block is in the list, it's mutex is also locked
+    // so, we can safely write it to the disk
+    
+    // first we have to set position in file for reading new block
+    if (fseek(database, address * sizeof(AK_block)+AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
         printf("AK_read_block: ERROR. Cannot set position to provided address block %d.\n", address);
-        pthread_mutex_unlock(&fileLockMutex);
+	pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
         AK_EPI;
         exit(EXIT_ERROR);
-
     }
+    
+    AK_block * block = AK_malloc(sizeof(AK_block));
 
-    if (AK_fread(blockr, sizeof(AK_block), 1, db) == 0) {
+    // then we simply read block from the disk
+	if (AK_fread(block, sizeof(AK_block), 1, database) == 0) {
         printf("AK_read_block: ERROR. Cannot read block %d.\n", address);
-        pthread_mutex_unlock(&fileLockMutex);
+	pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
         AK_EPI;
         exit(EXIT_ERROR);
     }
+    
+    // block of code below is used only for testing purposes!
+    // it is executed only when DEBUG_MODE is ON 
+    // (It should be ON in AK_thread_safe_block_access_test function)
+    // it takes first character of a block data and reads it
+    // that character is then printed to the stdout. 
+    // If everything goes well, we should get the same character that was written here
+    // by last writing thread
+    if (DEBUG_MODE == DEBUG_MODE_ON) {
+	printf("AK_read_block: Read character: %c\n", block->data[0]);
+    }
+    
+    // and after everything is done, we just have to un-use block container and unlock it's mutex
+    // thus making it accessible to other blocks which want to access disk
+    AK_accessed_blocks[index_of_accessed_block].used = false;
+    pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
+    
 
-    fclose(db);
-    pthread_mutex_unlock(&fileLockMutex);
+    fclose(database);
+    
     AK_EPI;
-    return (blockr);
+    return block;
 }
 
 /**
- * @author Markus Schatten
+ * @author Markus Schatten, updated by Domagoj Šitum (thread-safe enabled)
  * @brief  Function writes a block to DB file. Database file is opened. Position is set to provided address block. Block is
- written to provided address.
+ written to provided address. Completely thread-safe.
  * @param block poiner to block allocated in memory to write
  * @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
  */
 int AK_write_block(AK_block * block) {
     AK_PRO;
-    if ((db = fopen(DB_FILE, "rb+")) == NULL) {
-        printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+    int true = 1, false = 0;
+    int i, being_accessed = false, index_of_accessed_block;
+
+    FILE * database;
+    if ((database = fopen(DB_FILE, "rb+")) == NULL) {
+	printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+	AK_EPI;
+	exit(EXIT_ERROR);
+    }
+    
+    
+    pthread_mutex_lock(&check_if_block_being_accessed_mutex);
+    // first we check if given block exists in array
+    // if it does, that means that it's already being accessed
+    // so we take it's array index    
+    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
+	if (AK_accessed_blocks[i].block == block->address && AK_accessed_blocks[i].used == true) {
+	    index_of_accessed_block = i;
+	    being_accessed = true;
+	    break;
+	}
+    }
+    // if block is in the list, then we lock it's mutex
+    //	 (thus preventing it from accessing disk once again)
+    // if block isn't in list of currently accessed blocks, then we add it to this list
+    if (being_accessed == true) {
+	pthread_mutex_lock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
+    } else {
+	// this while will loop until there is at least one free element in AK_accessed_blocks
+	int free_block_found = false;
+	while(free_block_found == false) {	    
+	    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
+		if (AK_accessed_blocks[i].used == false) {
+		    free_block_found = true;
+		    index_of_accessed_block = i;
+		    AK_accessed_blocks[i].used = true;
+		    AK_accessed_blocks[i].block = block->address;
+		    AK_accessed_blocks[i].reading_writing = WRITING_BLOCK;
+		    pthread_mutex_lock(&AK_accessed_blocks[i].block_mutex);
+		    break;
+		}
+	    }
+	}
+    }
+    pthread_mutex_unlock(&check_if_block_being_accessed_mutex);
+    
+    // block of code below is used only for testing purposes!
+    // it is executed only when DEBUG_MODE is ON 
+    // (It should be ON in AK_thread_safe_block_access_test function)
+    // it takes first character of a block data and replaces it with random ASCII character
+    // than it writes it to the screen. Then, thread which is reading block can read this first character
+    // and print it out. If everything goes well, we should get the same character that was written here.
+    if (DEBUG_MODE == DEBUG_MODE_ON) {
+	int character = rand() % 26 + 97;  // ascii code for letters a-z
+	block->data[0] = (char)character;
+	printf("AK_write_block: Written character: %c\n", block->data[0]);
+    }
+    
+    // now we're certain that block is in the list, it's mutex is also locked
+    // so, we can safely write it to the disk
+   
+    // first we have to set position in file for new block writing
+    if (fseek(database, block->address * sizeof(AK_block)+AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
+        printf("AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address);
+	pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
         AK_EPI;
         exit(EXIT_ERROR);
     }
+
+    // then we simply write block to the disk
+    if (AK_fwrite(block, sizeof (*block), 1, database) != 1) {
+        printf("AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address);
+        pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
+        AK_EPI;
+        exit(EXIT_ERROR);
+    }
+	
+    // and after everything is done, we just have to un-use block container and unlock it's mutex
+    // thus making it accessible to other blocks which want to access disk
+    AK_accessed_blocks[index_of_accessed_block].used = false;
+    pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
+
     
-    AK_write_block_to_disk(block, db);
+    fclose(database);
     
-    fclose(db);
     AK_EPI;
     return (EXIT_SUCCESS);
 }
@@ -1014,7 +1158,7 @@ int AK_write_block(AK_block * block) {
 
 /**
  * @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
- * @brief  Function copy header to blocks.
+ * @brief  Function copy header to blocks. Completely thread-safe
  * @param header pointer to header provided for copy
  * @param blocknum pointer to addresses of blocks that header needs to be copied
  * @param num number of blocks waiting for its header
@@ -2338,7 +2482,9 @@ int AK_delete_segment(char * name, int type) {
 
 /**
  * @author Markus Schatten
- * @return Function that calls functions AK_init_db_file() and AK_init_system_catalog() to initialize disk manager
+ * @return Function that calls functions AK_init_db_file() and AK_init_system_catalog() to initialize disk manager.
+ * It also calls AK_allocate_array_currently_accessed_blocks() to allocate memory needed for thread-safe reading
+ * and writing to disk.
  */
 int AK_init_disk_manager() {
     //int size_in_mb = DB_FILE_SIZE;

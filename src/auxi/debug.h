@@ -70,6 +70,17 @@ typedef enum debug_type {
 	REDO = 0
 } DEBUG_TYPE;
 
+/**
+ * @author Domagoj Šitum
+ * @var DEBUG_MODE
+ * @brief You can turn DEBUG_MODE on or off with DEBUG_MODE_ON and DEBUG_MODE_OFF.
+ * To do this, simply enable or disable it in YOUR function (not in any other!)
+ * Debug mode can be used when you need some special cases in your functions (for example, when you are testing some functionality).
+ * But don't forget to turn this mode off, after you are done!
+ */
+int DEBUG_MODE;
+
+
 int Ak_dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...);
 
 #endif
