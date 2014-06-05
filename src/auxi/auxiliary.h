@@ -30,6 +30,7 @@
 #include "debug.h"
 #include "mempro.h"
 
+#define MAX_LOOP_ITERATIONS 1000
 //#include "ini_parser/iniparser.h"
 
 /**
@@ -59,6 +60,25 @@ typedef struct list_elem AK_list;
 typedef struct list_elem *AK_list_elem;
 
 
+/**
+ * @author Ljiljana Pintarić
+ * @struct list_node
+ * @brief Structure defines a list node. 
+ */
+struct list_node { 
+    ///loaded data
+    char data[ MAX_VARCHAR_LENGTH ];  
+    struct list_node *next;
+};
+
+
+struct list_structures{
+ void * bad;
+ void * good;
+};
+
+struct list_structures list_structures_array[1000];
+int lsa_counter;
 
 #define TBL_BOX_OFFSET 1
 //#define TBL_COL_DELIMITER '|'
@@ -116,22 +136,42 @@ int AK_chars_num_from_number(int number, int base);
 size_t AK_type_size(int iDB_type, char *szVarchar);
 int AK_strcmp(const void *a, const void *b);
 void Ak_Init_L(AK_list *L);
+void Ak_Init_L2(AK_list *L);
+void Ak_Init_L3(struct list_node **L);
 AK_list_elem Ak_First_L(AK_list *L);
+struct list_node *Ak_First_L2(struct list_node *L);
 AK_list_elem Ak_End_L(AK_list *L);
+struct list_node *Ak_End_L2(struct list_node *L);
 AK_list_elem Ak_Next_L(AK_list_elem current);
+struct list_node *Ak_Next_L2(struct list_node *current);
 AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L);
+struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L);
 int Ak_IsEmpty_L(AK_list *L);
+unsigned int Ak_IsEmpty_L2(struct list_node *L);
 void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
-AK_list_elem Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list **L);
+void Ak_InsertBefore_L2(char* data, struct list_node **current, struct list_node **L);
+void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
+void Ak_InsertAfter_L2(char* data, struct list_node **current,  struct list_node **L);
 void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L);
-AK_list_elem Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L);
+void Ak_InsertAtBegin_L2(int type, char* data, int size, AK_list *L);
+void Ak_InsertAtBegin_L3(char* data, struct list_node *L);
+void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L);
+void Ak_InsertAtEnd_L2(int type, char* data, int size, AK_list *L);
+void Ak_InsertAtEnd_L3(char* data, struct list_node *L);
 void Ak_Delete_L(AK_list_elem current, AK_list *L);
+void Ak_Delete_L2(AK_list_elem current, AK_list *L);
+void Ak_Delete_L3(struct list_node **current, struct list_node **L);
 void Ak_DeleteAll_L(AK_list *L) ;
+void Ak_DeleteAll_L2(AK_list *L);
+void Ak_DeleteAll_L3(struct list_node **L);
 int Ak_Size_L(AK_list *L);
+int Ak_Size_L2(struct list_node *L);
 char* Ak_Retrieve_L(AK_list_elem current, AK_list *L);
+char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L);
 int Ak_GetType_L(AK_list_elem current, AK_list *L);
 int Ak_GetSize_L(AK_list_elem current, AK_list *L);
 AK_list_elem Ak_GetNth_L(int pos, AK_list *row);
+struct list_node * Ak_GetNth_L2(int pos, struct list_node *row);
 int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L);
 char *AK_get_array_perms(char *arr) ;
 AK_vertex AK_search_vertex(int id);
@@ -148,5 +188,6 @@ void AK_tarjan_test();
 void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem);
 void AK_copy_L(AK_list *src, AK_list *dest) ;
 int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal);
+
 
 #endif

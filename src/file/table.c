@@ -241,8 +241,8 @@ AK_list *AK_get_column(int num, char *tblName) {
                     int size = temp->block->tuple_dict[k].size;
                     int address = temp->block->tuple_dict[k].address;
                     memcpy(data, &(temp->block->data[address]), size);
-                    data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, data, size, &row_root);
+                    data[ size ] = '\0';                    
+                    Ak_InsertAtEnd_L(type, data, size, row_root);
                 }
             }
         }
@@ -285,8 +285,8 @@ AK_list * AK_get_row(int num, char * tblName) {
                         int size = temp->block->tuple_dict[k + l].size;
                         int address = temp->block->tuple_dict[k + l].address;
                         memcpy(data, &(temp->block->data[address]), size);
-                        data[size] = '\0';
-                        Ak_InsertAtEnd_L(type, data, size, &row_root);
+                        data[size] = '\0';                        
+                        Ak_InsertAtEnd_L(type, data, size, row_root);
                     }
                     AK_free(addresses);
                     AK_EPI;
@@ -342,7 +342,7 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
                     int address = temp->block->tuple_dict[ k + column ].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, data, size, &row_root);
+                    Ak_InsertAtEnd_L(type, data, size, row_root);
                     AK_free(addresses);
                     AK_EPI;
                     return (AK_list_elem) Ak_First_L(row_root);
@@ -604,8 +604,8 @@ void AK_print_table(char *tblName) {
                             for (l = 0; l < num_attr; l++) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
-                                address = temp->block->tuple_dict[k + l].address;
-                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, &row_root);
+                                address = temp->block->tuple_dict[k + l].address;				
+                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row(len, row_root);
                             AK_print_row_spacer(len, length);
@@ -827,8 +827,8 @@ void AK_print_table_to_file(char *tblName) {
                             for (l = 0; l < num_attr; l++) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
-                                address = temp->block->tuple_dict[k + l].address;
-                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, &row_root);
+                                address = temp->block->tuple_dict[k + l].address;				
+                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row_to_file(len, row_root);
                             AK_print_row_spacer_to_file(len, length);

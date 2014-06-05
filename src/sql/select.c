@@ -129,41 +129,43 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
  */
 void AK_select_test(){
 	AK_PRO;
-printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
+	
+
+	printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
 
 
-///list of attributes which will be in the result of selection
+	///list of attributes which will be in the result of selection
 
-AK_list *attributes = (AK_list *) AK_malloc(sizeof (AK_list));
-Ak_Init_L(attributes);
+	AK_list *attributes = (AK_list *) AK_malloc(sizeof (AK_list));
+	Ak_Init_L(attributes);
 
-///list of elements which represent the condition for selection
+	///list of elements which represent the condition for selection
 
-AK_list *condition = (AK_list *) AK_malloc(sizeof (AK_list));
-Ak_Init_L(condition);
+	AK_list *condition = (AK_list *) AK_malloc(sizeof (AK_list));
+	Ak_Init_L(condition);
 
 
 
-char *num = "2005";
+	char *num = "2005";
 
-char *srcTable="student";
-char *destTable="select_result";
+	char *srcTable="student";
+	char *destTable="select_result";
 
-Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
-Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
-Ak_InsertAtEnd_L(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
+	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
+	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
+	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
 
-Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
-Ak_InsertAtEnd_L(TYPE_INT, num, sizeof (int), condition);
-Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), condition);
+	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
+	Ak_InsertAtEnd_L(TYPE_INT, num, sizeof (int), condition);
+	Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), condition);
 
-printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
+	printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
 
-AK_select(srcTable,destTable,attributes,condition);
-Ak_DeleteAll_L(attributes);
-AK_free(attributes);
+	AK_select(srcTable,destTable,attributes,condition);
+	Ak_DeleteAll_L(attributes);
+	AK_free(attributes);
 
-Ak_DeleteAll_L(condition);
-AK_free(condition);
+	Ak_DeleteAll_L(condition);
+	AK_free(condition);
 	AK_EPI;
 }
