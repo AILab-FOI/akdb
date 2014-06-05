@@ -34,6 +34,17 @@
 //#include "ini_parser/iniparser.h"
 
 /**
+ * @author Domagoj Šitum
+ * @var testMode
+ * @brief You can turn testMode on or off with TEST_MODE_ON and TEST_MODE_OFF.
+ * To do this, simply enable or disable it in YOUR function (not in any other!)
+ * Test mode can be used when you need some special cases in your functions 
+ * (i.e., when you are testing some functionality, which doesn't apply in normal conditions).
+ * But don't forget to turn this mode off, after you are done (within test function for example)!
+ */
+int testMode;
+
+/**
  * @author Unknown
  * @struct list_elem
  * @brief Structure defines a list element. Every list_elem has its type, size, data and name of column which it belongs

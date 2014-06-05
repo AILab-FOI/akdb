@@ -167,8 +167,8 @@ COMMIT = _kalashnikovDB.COMMIT
 ABORT = _kalashnikovDB.ABORT
 NEW_ID = _kalashnikovDB.NEW_ID
 MAX_BLOCKS_CURRENTLY_ACCESSED = _kalashnikovDB.MAX_BLOCKS_CURRENTLY_ACCESSED
-DEBUG_MODE_ON = _kalashnikovDB.DEBUG_MODE_ON
-DEBUG_MODE_OFF = _kalashnikovDB.DEBUG_MODE_OFF
+TEST_MODE_ON = _kalashnikovDB.TEST_MODE_ON
+TEST_MODE_OFF = _kalashnikovDB.TEST_MODE_OFF
 MAX_EXTENTS_IN_SEGMENT = _kalashnikovDB.MAX_EXTENTS_IN_SEGMENT
 MAX_REDO_LOG_MEMORY = _kalashnikovDB.MAX_REDO_LOG_MEMORY
 MAX_REDO_LOG_ENTRIES = _kalashnikovDB.MAX_REDO_LOG_ENTRIES
@@ -185,77 +185,145 @@ def AK_strcmp(*args):
   return _kalashnikovDB.AK_strcmp(*args)
 AK_strcmp = _kalashnikovDB.AK_strcmp
 
+def Ak_Init_L3(*args):
+  return _kalashnikovDB.Ak_Init_L3(*args)
+Ak_Init_L3 = _kalashnikovDB.Ak_Init_L3
+
+def Ak_Init_L2(*args):
+  return _kalashnikovDB.Ak_Init_L2(*args)
+Ak_Init_L2 = _kalashnikovDB.Ak_Init_L2
+
 def Ak_Init_L(*args):
   return _kalashnikovDB.Ak_Init_L(*args)
 Ak_Init_L = _kalashnikovDB.Ak_Init_L
+
+def Ak_First_L2(*args):
+  return _kalashnikovDB.Ak_First_L2(*args)
+Ak_First_L2 = _kalashnikovDB.Ak_First_L2
 
 def Ak_First_L(*args):
   return _kalashnikovDB.Ak_First_L(*args)
 Ak_First_L = _kalashnikovDB.Ak_First_L
 
+def Ak_End_L2(*args):
+  return _kalashnikovDB.Ak_End_L2(*args)
+Ak_End_L2 = _kalashnikovDB.Ak_End_L2
+
 def Ak_End_L(*args):
   return _kalashnikovDB.Ak_End_L(*args)
 Ak_End_L = _kalashnikovDB.Ak_End_L
+
+def Ak_Next_L2(*args):
+  return _kalashnikovDB.Ak_Next_L2(*args)
+Ak_Next_L2 = _kalashnikovDB.Ak_Next_L2
 
 def Ak_Next_L(*args):
   return _kalashnikovDB.Ak_Next_L(*args)
 Ak_Next_L = _kalashnikovDB.Ak_Next_L
 
+def Ak_Previous_L2(*args):
+  return _kalashnikovDB.Ak_Previous_L2(*args)
+Ak_Previous_L2 = _kalashnikovDB.Ak_Previous_L2
+
 def Ak_Previous_L(*args):
   return _kalashnikovDB.Ak_Previous_L(*args)
 Ak_Previous_L = _kalashnikovDB.Ak_Previous_L
+
+def Ak_IsEmpty_L2(*args):
+  return _kalashnikovDB.Ak_IsEmpty_L2(*args)
+Ak_IsEmpty_L2 = _kalashnikovDB.Ak_IsEmpty_L2
 
 def Ak_IsEmpty_L(*args):
   return _kalashnikovDB.Ak_IsEmpty_L(*args)
 Ak_IsEmpty_L = _kalashnikovDB.Ak_IsEmpty_L
 
+def Ak_InsertBefore_L2(*args):
+  return _kalashnikovDB.Ak_InsertBefore_L2(*args)
+Ak_InsertBefore_L2 = _kalashnikovDB.Ak_InsertBefore_L2
+
 def Ak_InsertBefore_L(*args):
   return _kalashnikovDB.Ak_InsertBefore_L(*args)
 Ak_InsertBefore_L = _kalashnikovDB.Ak_InsertBefore_L
+
+def Ak_InsertAfter_L2(*args):
+  return _kalashnikovDB.Ak_InsertAfter_L2(*args)
+Ak_InsertAfter_L2 = _kalashnikovDB.Ak_InsertAfter_L2
 
 def Ak_InsertAfter_L(*args):
   return _kalashnikovDB.Ak_InsertAfter_L(*args)
 Ak_InsertAfter_L = _kalashnikovDB.Ak_InsertAfter_L
 
+def Ak_InsertAtBegin_L3(*args):
+  return _kalashnikovDB.Ak_InsertAtBegin_L3(*args)
+Ak_InsertAtBegin_L3 = _kalashnikovDB.Ak_InsertAtBegin_L3
+
+def Ak_InsertAtBegin_L2(*args):
+  return _kalashnikovDB.Ak_InsertAtBegin_L2(*args)
+Ak_InsertAtBegin_L2 = _kalashnikovDB.Ak_InsertAtBegin_L2
+
 def Ak_InsertAtBegin_L(*args):
   return _kalashnikovDB.Ak_InsertAtBegin_L(*args)
 Ak_InsertAtBegin_L = _kalashnikovDB.Ak_InsertAtBegin_L
+
+def Ak_InsertAtEnd_L3(*args):
+  return _kalashnikovDB.Ak_InsertAtEnd_L3(*args)
+Ak_InsertAtEnd_L3 = _kalashnikovDB.Ak_InsertAtEnd_L3
+
+def Ak_InsertAtEnd_L2(*args):
+  return _kalashnikovDB.Ak_InsertAtEnd_L2(*args)
+Ak_InsertAtEnd_L2 = _kalashnikovDB.Ak_InsertAtEnd_L2
 
 def Ak_InsertAtEnd_L(*args):
   return _kalashnikovDB.Ak_InsertAtEnd_L(*args)
 Ak_InsertAtEnd_L = _kalashnikovDB.Ak_InsertAtEnd_L
 
+def Ak_Delete_L3(*args):
+  return _kalashnikovDB.Ak_Delete_L3(*args)
+Ak_Delete_L3 = _kalashnikovDB.Ak_Delete_L3
+
+def Ak_Delete_L2(*args):
+  return _kalashnikovDB.Ak_Delete_L2(*args)
+Ak_Delete_L2 = _kalashnikovDB.Ak_Delete_L2
+
 def Ak_Delete_L(*args):
   return _kalashnikovDB.Ak_Delete_L(*args)
 Ak_Delete_L = _kalashnikovDB.Ak_Delete_L
+
+def Ak_DeleteAll_L3(*args):
+  return _kalashnikovDB.Ak_DeleteAll_L3(*args)
+Ak_DeleteAll_L3 = _kalashnikovDB.Ak_DeleteAll_L3
+
+def Ak_DeleteAll_L2(*args):
+  return _kalashnikovDB.Ak_DeleteAll_L2(*args)
+Ak_DeleteAll_L2 = _kalashnikovDB.Ak_DeleteAll_L2
 
 def Ak_DeleteAll_L(*args):
   return _kalashnikovDB.Ak_DeleteAll_L(*args)
 Ak_DeleteAll_L = _kalashnikovDB.Ak_DeleteAll_L
 
+def Ak_Size_L2(*args):
+  return _kalashnikovDB.Ak_Size_L2(*args)
+Ak_Size_L2 = _kalashnikovDB.Ak_Size_L2
+
 def Ak_Size_L(*args):
   return _kalashnikovDB.Ak_Size_L(*args)
 Ak_Size_L = _kalashnikovDB.Ak_Size_L
+
+def Ak_Retrieve_L2(*args):
+  return _kalashnikovDB.Ak_Retrieve_L2(*args)
+Ak_Retrieve_L2 = _kalashnikovDB.Ak_Retrieve_L2
 
 def Ak_Retrieve_L(*args):
   return _kalashnikovDB.Ak_Retrieve_L(*args)
 Ak_Retrieve_L = _kalashnikovDB.Ak_Retrieve_L
 
-def Ak_GetType_L(*args):
-  return _kalashnikovDB.Ak_GetType_L(*args)
-Ak_GetType_L = _kalashnikovDB.Ak_GetType_L
-
-def Ak_GetSize_L(*args):
-  return _kalashnikovDB.Ak_GetSize_L(*args)
-Ak_GetSize_L = _kalashnikovDB.Ak_GetSize_L
+def Ak_GetNth_L2(*args):
+  return _kalashnikovDB.Ak_GetNth_L2(*args)
+Ak_GetNth_L2 = _kalashnikovDB.Ak_GetNth_L2
 
 def Ak_GetNth_L(*args):
   return _kalashnikovDB.Ak_GetNth_L(*args)
 Ak_GetNth_L = _kalashnikovDB.Ak_GetNth_L
-
-def Ak_Get_Position_Of_Element(*args):
-  return _kalashnikovDB.Ak_Get_Position_Of_Element(*args)
-Ak_Get_Position_Of_Element = _kalashnikovDB.Ak_Get_Position_Of_Element
 
 def AK_get_array_perms(*args):
   return _kalashnikovDB.AK_get_array_perms(*args)
@@ -304,18 +372,7 @@ AK_tarjan = _kalashnikovDB.AK_tarjan
 def AK_tarjan_test():
   return _kalashnikovDB.AK_tarjan_test()
 AK_tarjan_test = _kalashnikovDB.AK_tarjan_test
-
-def AK_copy_L_Ele(*args):
-  return _kalashnikovDB.AK_copy_L_Ele(*args)
-AK_copy_L_Ele = _kalashnikovDB.AK_copy_L_Ele
-
-def AK_copy_L(*args):
-  return _kalashnikovDB.AK_copy_L(*args)
-AK_copy_L = _kalashnikovDB.AK_copy_L
-
-def AK_compare_L(*args):
-  return _kalashnikovDB.AK_compare_L(*args)
-AK_compare_L = _kalashnikovDB.AK_compare_L
+MAX_LOOP_ITERATIONS = _kalashnikovDB.MAX_LOOP_ITERATIONS
 class list_elem(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, list_elem, name, value)
@@ -352,6 +409,48 @@ class list_elem(_object):
 list_elem_swigregister = _kalashnikovDB.list_elem_swigregister
 list_elem_swigregister(list_elem)
 cvar = _kalashnikovDB.cvar
+
+class list_node(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, list_node, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, list_node, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["data"] = _kalashnikovDB.list_node_data_set
+    __swig_getmethods__["data"] = _kalashnikovDB.list_node_data_get
+    if _newclass:data = _swig_property(_kalashnikovDB.list_node_data_get, _kalashnikovDB.list_node_data_set)
+    __swig_setmethods__["next"] = _kalashnikovDB.list_node_next_set
+    __swig_getmethods__["next"] = _kalashnikovDB.list_node_next_get
+    if _newclass:next = _swig_property(_kalashnikovDB.list_node_next_get, _kalashnikovDB.list_node_next_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_list_node()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_list_node
+    __del__ = lambda self : None;
+list_node_swigregister = _kalashnikovDB.list_node_swigregister
+list_node_swigregister(list_node)
+
+class list_structures(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, list_structures, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, list_structures, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["bad"] = _kalashnikovDB.list_structures_bad_set
+    __swig_getmethods__["bad"] = _kalashnikovDB.list_structures_bad_get
+    if _newclass:bad = _swig_property(_kalashnikovDB.list_structures_bad_get, _kalashnikovDB.list_structures_bad_set)
+    __swig_setmethods__["good"] = _kalashnikovDB.list_structures_good_set
+    __swig_getmethods__["good"] = _kalashnikovDB.list_structures_good_get
+    if _newclass:good = _swig_property(_kalashnikovDB.list_structures_good_get, _kalashnikovDB.list_structures_good_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_list_structures()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_list_structures
+    __del__ = lambda self : None;
+list_structures_swigregister = _kalashnikovDB.list_structures_swigregister
+list_structures_swigregister(list_structures)
 
 TBL_BOX_OFFSET = _kalashnikovDB.TBL_BOX_OFFSET
 class Vertex(_object):
@@ -426,6 +525,30 @@ class Stack(_object):
 Stack_swigregister = _kalashnikovDB.Stack_swigregister
 Stack_swigregister(Stack)
 
+
+def Ak_GetType_L(*args):
+  return _kalashnikovDB.Ak_GetType_L(*args)
+Ak_GetType_L = _kalashnikovDB.Ak_GetType_L
+
+def Ak_GetSize_L(*args):
+  return _kalashnikovDB.Ak_GetSize_L(*args)
+Ak_GetSize_L = _kalashnikovDB.Ak_GetSize_L
+
+def Ak_Get_Position_Of_Element(*args):
+  return _kalashnikovDB.Ak_Get_Position_Of_Element(*args)
+Ak_Get_Position_Of_Element = _kalashnikovDB.Ak_Get_Position_Of_Element
+
+def AK_copy_L_Ele(*args):
+  return _kalashnikovDB.AK_copy_L_Ele(*args)
+AK_copy_L_Ele = _kalashnikovDB.AK_copy_L_Ele
+
+def AK_copy_L(*args):
+  return _kalashnikovDB.AK_copy_L(*args)
+AK_copy_L = _kalashnikovDB.AK_copy_L
+
+def AK_compare_L(*args):
+  return _kalashnikovDB.AK_compare_L(*args)
+AK_compare_L = _kalashnikovDB.AK_compare_L
 class AK_header(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, AK_header, name, value)

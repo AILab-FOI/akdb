@@ -406,16 +406,16 @@
 #define MAX_BLOCKS_CURRENTLY_ACCESSED 32
 
 /**
- * @def DEBUG_MODE_ON
- * @brief This constant is used to turn DEBUG_MODE (auxi/debug.h) ON
+ * @def TEST_MODE_ON
+ * @brief This constant is used to turn testMode (auxi/auxillary.h) ON
  */
-#define DEBUG_MODE_ON 1
+#define TEST_MODE_ON 1
 
 /**
- * @def DEBUG_MODE_OFF
- * @brief This constant is used to turn DEBUG_MODE (auxi/debug.h) OFF
+ * @def TEST_MODE_OFF
+ * @brief This constant is used to turn testMode (auxi/auxillary.h) OFF
  */
-#define DEBUG_MODE_OFF 0
+#define TEST_MODE_OFF 0
 
 #endif
 

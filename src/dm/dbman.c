@@ -447,7 +447,7 @@ void AK_thread_safe_block_access_test() {
     AK_block *backup_block = (AK_block *) AK_malloc(sizeof(AK_block));
     
     
-    DEBUG_MODE = DEBUG_MODE_ON;
+    testMode = TEST_MODE_ON;
 
     // we have to backup that first block, because we will make changes to it
     memcpy((void *)backup_block, (void *)block, sizeof(AK_block));
@@ -467,7 +467,7 @@ void AK_thread_safe_block_access_test() {
     for (i = 0; i < 2*n; i++) 
 	pthread_join(threads[i],NULL);
     
-    DEBUG_MODE = DEBUG_MODE_OFF;
+    testMode = TEST_MODE_OFF;
     
     
     // and at the end, we write backup block back to the file
@@ -1033,13 +1033,13 @@ AK_block * AK_read_block(int address) {
     }
     
     // block of code below is used only for testing purposes!
-    // it is executed only when DEBUG_MODE is ON 
+    // it is executed only when testMode is ON 
     // (It should be ON in AK_thread_safe_block_access_test function)
     // it takes first character of a block data and reads it
     // that character is then printed to the stdout. 
     // If everything goes well, we should get the same character that was written here
     // by last writing thread
-    if (DEBUG_MODE == DEBUG_MODE_ON) {
+    if (testMode == TEST_MODE_ON) {
 	printf("AK_read_block: Read character: %c\n", block->data[0]);
     }
     
@@ -1111,12 +1111,12 @@ int AK_write_block(AK_block * block) {
     pthread_mutex_unlock(&check_if_block_being_accessed_mutex);
     
     // block of code below is used only for testing purposes!
-    // it is executed only when DEBUG_MODE is ON 
+    // it is executed only when testMode is ON 
     // (It should be ON in AK_thread_safe_block_access_test function)
     // it takes first character of a block data and replaces it with random ASCII character
     // than it writes it to the screen. Then, thread which is reading block can read this first character
     // and print it out. If everything goes well, we should get the same character that was written here.
-    if (DEBUG_MODE == DEBUG_MODE_ON) {
+    if (testMode == TEST_MODE_ON) {
 	int character = rand() % 26 + 97;  // ascii code for letters a-z
 	block->data[0] = (char)character;
 	printf("AK_write_block: Written character: %c\n", block->data[0]);

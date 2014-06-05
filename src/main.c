@@ -169,7 +169,7 @@ int main(int argc, char * argv[])
         AK_inflate_config();
         printf("db_file: %s\n", DB_FILE);
 	
-	DEBUG_MODE = DEBUG_MODE_OFF;
+	testMode = TEST_MODE_OFF;
 
         if( AK_init_disk_manager() == EXIT_SUCCESS )
         {
