@@ -168,7 +168,7 @@ int main(int argc, char * argv[])
         printf( "KALASHNIKOV DB - STARTING\n\n" );
         AK_inflate_config();
         printf("db_file: %s\n", DB_FILE);
-	
+
 	testMode = TEST_MODE_OFF;
 
         if( AK_init_disk_manager() == EXIT_SUCCESS )
@@ -193,6 +193,12 @@ int main(int argc, char * argv[])
             if ( AK_flush_cache() == EXIT_SUCCESS ){
 
                 printf( "\nEverything was fine!\nBye =)\n" );
+
+                /* For easyer debugging and GDB usage
+                //AK_create_test_tables();
+                //AK_view_test();
+                */
+
                 //            pthread_exit(NULL);
 		AK_EPI;
                 return ( EXIT_SUCCESS );

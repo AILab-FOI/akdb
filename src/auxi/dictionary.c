@@ -41,7 +41,7 @@
 static void * mem_double(void * ptr, int size)
 {
     void * newptr ;
-    AK_PRO; 
+    AK_PRO;
     newptr = AK_calloc(2*size, 1);
     if (newptr==NULL) {
         AK_EPI;
@@ -125,21 +125,23 @@ unsigned dictionary_hash(const char * key)
   dictionary, give size=0.
  */
 /*--------------------------------------------------------------------------*/
-dictionary * dictionary_new(int size)
+dictionary *dictionary_new(int size)
 {
-    dictionary  *   d ;
+    dictionary  *d;
     AK_PRO;
+    d = (dictionary *)AK_calloc(1, sizeof(dictionary));
     /* If no size was specified, allocate space for DICTMINSZ */
-    if (size<DICTMINSZ) size=DICTMINSZ ;
+    if (size < DICTMINSZ) size = DICTMINSZ ;
 
-    if (!(d = (dictionary *)AK_calloc(1, sizeof(dictionary)))) {
+    if (!d) {
         AK_EPI;
         return NULL;
     }
-    d->size = size ;
+
+    d->size = size;
     d->val  = (char **)AK_calloc(size, sizeof(char*));
     d->key  = (char **)AK_calloc(size, sizeof(char*));
-    d->hash = (unsigned int *)AK_calloc(size, sizeof(unsigned));
+    d->hash = (unsigned int *) AK_calloc(size, sizeof(unsigned));
     AK_EPI;
     return d ;
 }
@@ -243,7 +245,7 @@ int dictionary_set(dictionary * d, const char * key, const char * val)
     unsigned    hash ;
     AK_PRO;
     if (d==NULL || key==NULL) return -1 ;
-    
+
     /* Compute hash for this key */
     hash = dictionary_hash(key) ;
     /* Find if value is already in dictionary */
@@ -385,7 +387,7 @@ void dictionary_dump(dictionary * d, FILE * out)
 }
 
 
-/* Test code */
+/* KAJ JE OVO????
 #ifdef TESTDIC
 #define NVALS 20
 int main(int argc, char *argv[])
@@ -399,13 +401,10 @@ int main(int argc, char *argv[])
 
     AK_PRO;
     strcpy (str,"value no - ");
-			
 
-    /* Allocate dictionary */
     printf("allocating...\n");
     d = dictionary_new(0);
-    
-    /* Set values in dictionary */
+
     printf("setting %d values...\n", NVALS);
     for (i=0 ; i<NVALS ; i++) {
         sprintf(cval, "%04d", i);
@@ -438,4 +437,5 @@ int main(int argc, char *argv[])
     return 0 ;
 }
 #endif
+/*
 /* vim: set ts=4 et sw=4 tw=75 */

@@ -111,7 +111,7 @@ int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, cha
     Ak_insert_row(row_root);
 
     AK_free(row_root);
-    
+
     if (condition != NULL && Ak_IsEmpty_L(condition) == 0)
         AK_trigger_save_conditions(trigg_id, condition);
     AK_EPI;
@@ -215,7 +215,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
  * @brief Function edits information about the trigger in system table. In order to identify the trigger,
  *	  either obj_id or table and name parameters should be defined. The other options should be set to NULL.
  *   	  Values of parameters that aren't changing can be left NULL. If conditions are to be removed,
- * 	  condition parameter should hold an empty list. 
+ * 	  condition parameter should hold an empty list.
  * @param *name name of the trigger (or NULL if using obj_id)
  * @param *event event of the trigger (or NULL if it isn't changing)
  * @param *condition list of conditions for trigger (or NULL if it isn't changing; empty list if all conditions are to be removed)
@@ -258,7 +258,7 @@ int AK_trigger_edit(char *name, char* event, AK_list* condition, char* table, ch
     }
     else
         Ak_Insert_New_Element_For_Update(0, "", "AK_trigger", "condition", row_root, NEW_VALUE);
-    if (function != NULL)        
+    if (function != NULL)
         Ak_Insert_New_Element_For_Update(TYPE_INT, &function_id, "AK_trigger", "action", row_root, NEW_VALUE);
 
     int result = Ak_update_row(row_root);
@@ -319,15 +319,15 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 	int trig_id = AK_trigger_get_id(old_name, table);
 
 	AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
-	Ak_Init_L(row_root); 
+	Ak_Init_L(row_root);
 
 	Ak_Insert_New_Element_For_Update(TYPE_INT, &trig_id, "AK_trigger", "obj_id", row_root, 1);
 	Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_trigger", "name", row_root, 0);
 
-	int result =  Ak_update_row(row_root); 
+	int result =  Ak_update_row(row_root);
 	Ak_DeleteAll_L(row_root);
 	AK_free(row_root);
-	    
+
 	if (result == EXIT_ERROR) {
 	   Ak_dbg_messg(HIGH, SEQUENCES, "AK_trigger_rename: Could not rename trigger.\n");
 	   AK_EPI;
@@ -401,7 +401,7 @@ void AK_trigger_test() {
     AK_trigger_remove_by_name("trigg1", "AK_reference");
     AK_print_table("AK_trigger");
     AK_print_table("AK_trigger_conditions");
-    
+
     AK_free(dummyExpression);
     AK_free(expr);
     AK_EPI;

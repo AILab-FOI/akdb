@@ -13,7 +13,7 @@
  * GNU Library General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * 
+ *
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
@@ -73,7 +73,7 @@ char* AK_get_rel_exp(char *name){
    AK_PRO;
     while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
-            rel_exp = row->next->next->next->next->data;
+            rel_exp = row->next->next->next->data;
 	    AK_EPI;
 	    return rel_exp;
         }
@@ -118,7 +118,7 @@ int AK_view_remove_by_obj_id(int obj_id) {
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L((AK_list_elem)row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root, 1);
-    int result = Ak_delete_row((AK_list_elem)row_root);  
+    int result = Ak_delete_row((AK_list_elem)row_root);
     Ak_DeleteAll_L((AK_list_elem)row_root);
     AK_EPI;
     return result;
@@ -142,7 +142,7 @@ int AK_view_remove_by_name(char *name) {
 /**
  * @author Kresimir Ivkovic
  * @brief Renames a view (based on it's name) from "name" to "new_name"
- * @return error or success 
+ * @return error or success
  */
 int AK_view_rename(char *name, char *new_name){
    int result = 0, i = 0;
@@ -155,7 +155,7 @@ int AK_view_rename(char *name, char *new_name){
         if (!strcmp(row->next->next->data, name)) {
             memcpy(&view_id, row->next->data, sizeof(int));
             query = row->next->next->next->data;
-	    rel_exp = row->next->next->next->next->data;
+	    rel_exp = row->next->next->next->data;
         }
     }
 
@@ -169,7 +169,7 @@ int AK_view_rename(char *name, char *new_name){
 /**
  * @author Kresimir Ivkovic
  * @brief Changes the query for a view (determined by it's name) to "query"
- * @return error or success 
+ * @return error or success
  */
 int AK_view_change_query(char *name, char *query, char *rel_exp){
    AK_PRO;
@@ -184,7 +184,7 @@ int AK_view_change_query(char *name, char *query, char *rel_exp){
 /**
  * @author Kresimir Ivkovic
  * @brief A testing function for view.c functions.
- * @return 
+ * @return
  */
 void AK_view_test() {
    AK_PRO;
@@ -199,7 +199,7 @@ void AK_view_test() {
    printf("Obj_id za view1: %d\n", AK_get_view_obj_id("view1"));
    //added query strings and rel_exp string result by Danko Sacer
    printf("Query za view1: %s\n\n", AK_get_view_query("view1"));
-   printf("Rel_exp za view1: %s\n\n", AK_get_rel_exp("view1"));
+   //printf("Rel_exp za view1: %s\n\n", AK_get_rel_exp("view1"));
 
    printf("Obj_id za view2: %d\n", AK_get_view_obj_id("view2"));
    printf("Query za view2: %s\n\n", AK_get_view_query("view2"));
@@ -227,4 +227,3 @@ void AK_view_test() {
    AK_print_table("AK_view");
    AK_EPI;
 }
-

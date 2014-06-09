@@ -20,7 +20,7 @@
 #include "reference.h"
 
 /**
- * @author Dejan Frankovic 
+ * @author Dejan Frankovic
  * @brief Function adds a reference for a group of attributes over a given table to a group of attributes over another table with a given constraint name..
  * @param name of the child table
  * @param array of child table attribute names (foreign key attributes)
@@ -60,7 +60,7 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
 
 /**
  * @author Dejan Frankovic
- * @brief Function reads a reference entry from system table. 
+ * @brief Function reads a reference entry from system table.
  * @param name of the table with reference (with foreign key)
  * @param name of the reference constraint
  * @return AK_ref_item object with all neccessary information about the reference
