@@ -402,9 +402,11 @@ int AK_reference_check_entry(AK_list *lista) {
             success = 1;
             for (k = 0; k < reference.attributes_number; k++) { // attributes in reference
                 temp1 = Ak_GetNth_L(AK_get_attr_index(reference.parent, reference.parent_attributes[k]), row);
-                if (is_att_null[k] || strcmp(temp1->data, attributes[k]) != 0) {
-                    success = 0;
-                    break;
+                if (temp1 != 0x0) {
+                  if (is_att_null[k] || strcmp(temp1->data, attributes[k]) != 0) {
+                      success = 0;
+                      break;
+                  }
                 }
             }
             if (success == 1) {
@@ -486,28 +488,6 @@ void AK_reference_test() {
     Ak_insert_row(row_root);
 
     AK_print_table("ref_test");
-
-    a = 35893;
-    Ak_DeleteAll_L(row_root);
-    //InsertNewElementForUpdate(TYPE_INT, &a, "student", "mbr", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Mislav", "student", "firstname", row_root, 1);
-    Ak_delete_row(row_root);
-
-    /*DeleteAllElements(row_root);
-    a = 101;
-    InsertNewElementForUpdate(TYPE_INT, &a, "ref_test", "FK", row_root, 1);
-    a = 102;
-    InsertNewElementForUpdate(TYPE_INT, &a, "ref_test", "FK", row_root, 0);
-    InsertNewElementForUpdate(TYPE_VARCHAR, "Matija", "ref_test", "Value", row_root, 1);
-    InsertNewElementForUpdate(TYPE_VARCHAR, "Igor", "ref_test", "Value", row_root, 0);
-    update_row(row_root);*/
-
-    /*    a = 101;
-        DeleteAllElements(row_root);
-        InsertNewElementForUpdate(TYPE_INT, &a, "student", "mbr", row_root, 1);
-        a = 5;
-        InsertNewElementForUpdate(TYPE_INT, &a, "student", "mbr", row_root, 0);
-        update_row(row_root);*/
 
     AK_print_table("student");
     AK_print_table("ref_test");

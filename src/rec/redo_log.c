@@ -27,7 +27,7 @@
  */
 int AK_add_to_redolog(char command[6], AK_list *row_root){
     AK_PRO;
-    int n = redo_log->number;
+    int n = 0; //redo_log->number;
 
     if(n == MAX_REDO_LOG_ENTRIES){
         AK_archive_log();
@@ -35,7 +35,7 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
     }
 
     AK_list_elem el = (AK_list_elem) Ak_First_L(row_root);
-    
+
     char* record;
     if((record = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
         AK_EPI;
@@ -46,7 +46,7 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
     char* float_char = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
     char* default_char = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
 
-    char table[MAX_ATT_NAME];   
+    char table[MAX_ATT_NAME];
     memset(table, '\0', MAX_ATT_NAME);
     memcpy(&table, el->table, strlen(el->table));
 
@@ -83,7 +83,7 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
     memcpy(redo_log->table_name[n], table, strlen(table));
     memcpy(redo_log->attributes[n], record, strlen(record));
     memcpy(redo_log->command[n], command, strlen(command));
-    
+
     int x = n + 1;
 
     redo_log->number = x;
@@ -97,7 +97,7 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
 }
 
 
-/** 
+/**
  * @author Krunoslav Bilić updated by Dražen Bandić
  * @brief Function prints out the content of redolog memory
  * @return No return value.
@@ -112,7 +112,7 @@ void AK_printout_redolog(){
     AK_EPI;
 }
 
-/** 
+/**
  * @author Dražen Bandić
  * @brief Checks if the attribute contains '|', and if it does it replaces it with "\|"
  * @return new attribute
