@@ -346,6 +346,7 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
  */
 void AK_trigger_test() {
     AK_PRO;
+
     printf("trigger.c: Present!\n");
 
     AK_list *arguments_list1 = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -392,6 +393,8 @@ void AK_trigger_test() {
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "not null", 8, expr);
 
     printf("\n\nupdate trigger\n");
+
+
     //look for 'trigg1' on table 'AK_reference' and change it's event to drop and it's function to 'dummy_funk_1'
     AK_trigger_edit("trigg1", "drop", expr, "AK_reference", "dummy_funk_2");
 
