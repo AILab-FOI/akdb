@@ -23,7 +23,7 @@
  * @brief  Function compares values according to their data type, checks aritmetic statement which is part of expression given in   	       the function below. For every type of arithmetic operator, there is switch-case statement which examines type of el and
            casts void operands to this type.
  * @param el list element, last element put in list temp which holds elements of row ordered according to expression and results of 		     their evaluation
- * @param *op comparison operator 
+ * @param *op comparison operator
  * @param *a left operand
  * @param *b right operand
  * @return 0 if arithmetic statement is false, 1 if arithmetic statement is true
@@ -67,7 +67,7 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a
 //				return strcmp((const char *) a, (const char *) b) > 0;
 //
 //		}
-            
+
 		switch (el->type) {
 
 			case TYPE_INT:
@@ -84,8 +84,8 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a
 				return strcmp((const char *) a, (const char *) b) > 0;
 
 		}
-            
-            
+
+
 	}else if(strcmp(op, "<=") == 0){
 
 		switch (el->type) {
@@ -202,11 +202,12 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a
  */
 int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
     AK_PRO;
-    if (expr == 0){
-	AK_EPI;
-	return 1;
+    if (expr == 0) {
+    	AK_EPI;
+    	return 1;
     }
-	char true = 1, false = 0;
+
+    char true = 1, false = 0;
     int found, result;
 
     AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -219,7 +220,7 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
     char data[MAX_VARCHAR_LENGTH];
 
     while (el) {
-     
+
         if (el->type == TYPE_ATTRIBS) {
 
             found = 0;
@@ -291,8 +292,8 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
                 Ak_InsertAtEnd_L(TYPE_INT, &rs, sizeof (int), temp);
             }
 
-            Ak_Delete_L(a, temp);
-            Ak_Delete_L(b, temp);
+            //Ak_Delete_L(a, temp);
+            //Ak_Delete_L(b, temp);
 
         } else {
         	Ak_InsertAtEnd_L(el->type, el->data, el->size, temp);
@@ -316,11 +317,11 @@ void Ak_expression_check_test()
     const char *a = "800";
     const char *b = "400";
     int outcome;
-    
+
     outcome = AK_check_arithmetic_statement(elem, op, a, b);
-    
+
     printf("The outcome is: %d", outcome);
-    
+
     AK_free(elem);
     AK_EPI;
 }

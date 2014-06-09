@@ -5,7 +5,7 @@
 #include "select.h"
 
 
-/** 
+/**
  * @author Renata Mesaros
  * @brief Function that implements SELECT relational operator
  * @param srcTable - original table that is used for selection
@@ -21,13 +21,13 @@ int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condit
 
 	///help table for the final result
 	char *helptable="help_table";
-		
-	
+
+
 	table_addresses *src_addr=(table_addresses *) AK_get_table_addresses(destTable);
 	int startAddress = 	src_addr->address_from[0];
-	
+
 	AK_block *temp_block = (AK_block *) AK_read_block(startAddress);
-	
+
 
 	AK_list_elem list_attributes;
 	AK_header header[MAX_ATTRIBUTES];
@@ -36,15 +36,15 @@ int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condit
 	int new_head=0;
 	int head_num[6]={7,7,7,7,7,7};
 	int head_counter=0;
-	
+
 	///new header for the resulting table
-	int head;
-	
-	
+	int head = 0;
+
+
 	///going through the header of the table of subscore
 	///making a new header for the final result from the selected ones from the subscore
-	while(strcmp(temp_block->header[head].att_name,"")!=0){
-			
+	while(strcmp(temp_block->header[head].att_name, "") != 0) {
+
 		list_attributes=(AK_list_elem) Ak_First_L(attributes);
 		int create=0;
 		while(list_attributes!=NULL){
@@ -64,46 +64,46 @@ int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condit
 	AK_initialize_new_segment(helptable, SEGMENT_TYPE_TABLE, header);
 
 	AK_free(temp_block);
-	
-	
-	
+
+
+
 	AK_list* row_root = (AK_list *) AK_malloc(sizeof (AK_list));
-			
+
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
-	
-int b;	
+
+int b = 0;
 printf("\n\n\n");
-	
+
 	for (i = 0; src_addr->address_from[i] != 0; i++) {
 
 			for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
 				AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
 				if (temp->block->last_tuple_dict_id == 0)
 						break;
-	
+
 for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 	if (temp->block->tuple_dict[k].type == FREE_INT)
 						break;
-		
+
 			int gl=0;
-			
+
 			for(l=0;l<5;l++){
 				int write=0;
 				///if the attribute number is in the selected list, write it in the resulting table
-				while(head_num[b]!=7) {
+				while(head_num[b] != 7) {
 							if(head_num[b++]==l){write=1;break;}
 					}
 					if(write==1){
 						type = temp->block->tuple_dict[l + k].type;
 						size = temp->block->tuple_dict[l + k].size;
-						
+
 						address = temp->block->tuple_dict[l + k].address;
 						memcpy(data, &(temp->block->data[address]), size);
 						data[size] = '\0';
 						Ak_Insert_New_Element(type, data, helptable, header[gl++].att_name, row_root);
-						
-						
+
+
 					}
 					b=0;
 				}
@@ -111,7 +111,7 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 				Ak_DeleteAll_L(row_root);
 	}
 }}
-  
+
   AK_print_table(helptable);
 
 	AK_free(temp_block);
@@ -129,7 +129,7 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
  */
 void AK_select_test(){
 	AK_PRO;
-	
+
 
 	printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
 
@@ -161,7 +161,7 @@ void AK_select_test(){
 
 	printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
 
-	AK_select(srcTable,destTable,attributes,condition);
+	AK_select(srcTable, destTable, attributes, condition);
 	Ak_DeleteAll_L(attributes);
 	AK_free(attributes);
 
