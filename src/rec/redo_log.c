@@ -27,7 +27,12 @@
  */
 int AK_add_to_redolog(char command[6], AK_list *row_root){
     AK_PRO;
-    int n = 0; //redo_log->number;
+
+    int n;
+    if (redo_log != 0x0) 
+      n = redo_log->number;
+    else
+      n = 0;
 
     if(n == MAX_REDO_LOG_ENTRIES){
         AK_archive_log();
