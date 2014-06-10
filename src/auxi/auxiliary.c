@@ -494,7 +494,7 @@ void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_l
     new_elem->next = current->next;
     current->next = new_elem;
     AK_EPI;
-    return new_elem;
+    
 }
 
 /**

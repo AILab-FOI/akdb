@@ -83,10 +83,22 @@ struct list_node {
 };
 
 
+/**
+ * @author Ljiljana Pintarić
+ * @struct list_structures
+ * @brief Bad - head of list_elem linked list. Good - head of list_node linked list. 
+ */
+
 struct list_structures{
  void * bad;
  void * good;
 };
+
+/**
+ * @author Ljiljana Pintarić
+ * @array list_structures_array
+ * @brief Array of all linked list (list_elem and list_node) heads.
+ */
 
 struct list_structures list_structures_array[1000];
 int lsa_counter;
