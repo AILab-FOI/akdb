@@ -91,6 +91,9 @@
 #include "auxi/observable.h"
 #include "sql/view.h"
 
+
+#include "file/blobs.h"
+
 void help();
 void show_test();
 void choose_test();
@@ -146,8 +149,8 @@ function fun[] = {
         {"AK_allocationbit_test", &AK_allocationbit_test},
         {"AK_allocationtable_test", &AK_allocationtable_test},
         {"AK_block_test", &AK_memoman_test2},
-	{"AK_select_test", &AK_select_test},
-	{"AK_thread_safe_block_access_test", &AK_thread_safe_block_access_test}
+	      {"AK_select_test", &AK_select_test},
+	      {"AK_thread_safe_block_access_test", &AK_thread_safe_block_access_test}
     };
 
 /**
@@ -159,6 +162,8 @@ int main(int argc, char * argv[])
 {
     AK_PRO;
     qsort(fun, sizeof(fun)/sizeof(fun[0]), (int)sizeof(fun[0]), (void*)strcasecmp);
+    AK_check_folder_blobs();
+    AK_lo_test();
     if((argc == 2) && !strcmp(argv[1], "help"))
         help();
     else if((argc == 3) && !strcmp(argv[1], "test") && !strcmp(argv[2], "show"))
@@ -194,11 +199,9 @@ int main(int argc, char * argv[])
 
                 printf( "\nEverything was fine!\nBye =)\n" );
 
-
-
                 /* For easyer debugging and GDB usage
-                  AK_create_test_tables();
-                  AK_trigger_test();
+                AK_create_test_tables();
+                AK_trigger_test();
                 */
 
                 //            pthread_exit(NULL);

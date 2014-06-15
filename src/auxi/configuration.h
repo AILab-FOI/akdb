@@ -2,6 +2,14 @@
 #define CONFIGURATION
 
 #include "iniparser.h"
+
+/**
+ * @def AK_BLOBS_PATH
+ * @brief Constant declaring the path of blobs folder (note: if changed keep in mind for make clean in makefile).
+   Path declared in config.ini has to be absolute (tied up with installation package), but for debugging purpose we are going to keep it relative.
+*/
+#define AK_BLOBS_PATH (iniparser_getstring(AK_config, "general:blobs_folder", "./blobs"))
+
 /**
  * @def DB_NAME
  * @brief Constant declaring the name oof database file
@@ -9,7 +17,7 @@
 #define DB_FILE (iniparser_getstring(AK_config,"general:db_file","kalashnikov.db"))
 /**
  * @def MAX_NUM_OF_BLOCKS
- * @brief Constant declaring maximum number of blocks in a segment 
+ * @brief Constant declaring maximum number of blocks in a segment
 */
 #define MAX_NUM_OF_BLOCKS (iniparser_getint(AK_config,"segments:max_num_of_blocks",200))
 /**
@@ -21,7 +29,7 @@
   * @def MAX_FREE_SPACE_SIZE
   * @brief Constant declaring maximum AK_free space in block
 */
-#define MAX_FREE_SPACE_SIZE (iniparser_getint(AK_config,"blocks:max_AK_free_space_size",4000)) 
+#define MAX_FREE_SPACE_SIZE (iniparser_getint(AK_config,"blocks:max_AK_free_space_size",4000))
 /**
   * @def MAX_LAST_TUPLE_DICT_SIZE_TO_USE
   * @brief Constant declaring maximum size od last tuple in dictionary

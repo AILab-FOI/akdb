@@ -5,7 +5,7 @@ CFLAGS = $(DEBUG) -c
 
 DISKTARGETS = dm/dbman.o
 MEMORYTARGETS = mm/memoman.o
-FILETARGETS = file/files.o file/fileio.o file/filesearch.o file/filesort.o file/idx/index.o file/idx/btree.o file/idx/hash.o file/idx/bitmap.o file/table.o
+FILETARGETS = file/files.o file/fileio.o file/filesearch.o file/filesort.o file/idx/index.o file/idx/btree.o file/idx/hash.o file/idx/bitmap.o file/table.o file/blobs.o
 RELOPTARGETS = rel/difference.o rel/intersect.o rel/nat_join.o rel/projection.o rel/selection.o rel/union.o rel/aggregation.o rel/product.o rel/theta_join.o trans/transaction.o
 OPTITARGETS = opti/rel_eq_projection.o opti/rel_eq_selection.o opti/rel_eq_assoc.o opti/rel_eq_comut.o opti/query_optimization.o
 CONSTRAINTTARGETS = sql/cs/reference.o sql/cs/between.o sql/cs/nnull.o file/id.o rel/expression_check.o sql/cs/check_constraint.o sql/cs/unique.o
@@ -41,7 +41,7 @@ clean-d:
 	rm -rf *.d auxi/*.d dm/*.d mm/*.d file/*.d trans/*.d file/idx/*.d rec/*.d sql/cs/*.d sql/*.d opti/*.d rel/*.d
 
 clean: clean-d
-	rm -rf *~ *.o auxi/*.o dm/*.o mm/*.o file/*.o trans/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/*.log ../doc/* ../bin/kalashnikov.db swig/build swig/*.pyc swig/*.so swig/*.log swig/*~ swig/kalashnikovDB_wrap.c swig/kalashnikov.db srv/kalashnikov.db
+	rm -rf *~ *.o auxi/*.o dm/*.o mm/*.o file/*.o trans/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/*.log ../doc/* ../bin/kalashnikov.db ../bin/blobs swig/build swig/*.pyc swig/*.so swig/*.log swig/*~ swig/kalashnikovDB_wrap.c swig/kalashnikov.db srv/kalashnikov.db
 
 doc:
 	doxygen doxygen.config
