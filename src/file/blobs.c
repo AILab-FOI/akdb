@@ -224,17 +224,12 @@ void AK_split_path_file(char **p, char** f, char *pf) {
   }
 
   if (z >= pf) {
-    /* There is a delimiter: construct separate
-       path and filename fragments. */
-    //printf("--> %i\n", z-pf);
     *p = malloc(z - pf + 1);
     strncpy(*p, pf, z - pf);
     (*p)[z - pf] = '\0';
     *f = malloc(strlen(z));
     strcpy(*f, z + 1);
   } else {
-    /* There is no delimiter: the entire
-       string must be a filename. */
     *p = NULL;
     *f = malloc(strlen(pf) + 1);
     strcpy(*f, pf);
@@ -356,15 +351,11 @@ char *AK_lo_import(char *filepath) {
   char *oid = AK_GUID();
   meta->checksum = "";
 
-  //char *oid = AK_GUID(); //AK_get_id();
-  //char *checksum = "";
-  //printf("oid: %s\n", oid);
-  //printf("filepath: %s\n", filepath);
   char *old_name = (char) AK_malloc(sizeof(char) * 128); // filename
   char *old_path = (char) AK_malloc(sizeof(char) * 512); // filepath from where file is imported (without trailing slash)
 
   AK_split_path_file(&old_path, &old_name, filepath);
-  //printf("\n\n\npath: %s\nfilename: %s\noid: %s\n", old_path, old_name, oid);
+
 
   strcpy(meta->new_name, oid);
   strcpy(meta->old_name, old_name);
@@ -372,8 +363,6 @@ char *AK_lo_import(char *filepath) {
 
   meta->new_path = AK_concat(AK_concat(AK_BLOBS_PATH, "/"), oid);
 
-  //printf("new_path: %s\n", new_path);
-  //printf("blobs_folder: %s\n", AK_BLOBS_PATH);
   if ( AK_copy(filepath, meta->new_path) == 0 ) {
     printf("[INFO] Large object imported successfully.\n\t[+] Object is at %s\n", meta->new_path);
     printf("[INFO] Importing metadata to catalog\n");
@@ -413,8 +402,6 @@ int AK_lo_export(char *oid, char *filepath) {
 
   if (metadata != 0x0)
   {
-    //printf("[INFO] Copying from %s to %s.\n", metadata->new_path, filepath);
-
     if ( AK_copy(metadata->new_path, filepath) == 0 )
     {
       printf("[INFO] File exported successfully.\n");
@@ -461,8 +448,6 @@ int AK_lo_unlink(char *oid) {
  */
 void AK_lo_test() {
   printf("[INFO] Starting AK_lo_test.\n");
-  // TODO: dodati u testin interface.
-  // TODO: popraviti
   char *oid = AK_lo_import("./config.ini");
   AK_lo_export(oid, "/tmp/config.ini");
   AK_lo_unlink(oid);
