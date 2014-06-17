@@ -156,10 +156,10 @@ int AK_copy(const char *from, const char *to) {
 
 /**
  * @author Samuel Picek
- * @brief Function for concatinating 2 strings
+ * @brief Function for AK_concatinating 2 strings
  * @return returns new string
  */
-char* concat(char *s1, char *s2)
+char* AK_concat(char *s1, char *s2)
 {
     char *result = AK_malloc( strlen(s1) + strlen(s2) + 1); // +1 for the zero-terminator
     if (result != NULL) {
@@ -191,7 +191,7 @@ int AK_check_folder_blobs() {
   int err = stat(AK_BLOBS_PATH, &s);
   if(-1 == err) {
       if(ENOENT == errno) {
-          printf("[INFO] There is no folder blobs. Trying to create folder at: %s\n", AK_BLOBS_PATH);
+          printf("[INFO] There is no folder for blobs. Trying to create folder at: %s\n", AK_BLOBS_PATH);
           AK_mkdir(AK_BLOBS_PATH);
           //AK_create_blobs_table();
       } else {
@@ -248,7 +248,7 @@ void AK_split_path_file(char **p, char** f, char *pf) {
 int AK_write_metadata(char *oid, AK_File_Metadata meta) {
 
 
-  FILE *f = fopen(concat(meta->new_path, ".meta"), "w");
+  FILE *f = fopen(AK_concat(meta->new_path, ".meta"), "w");
 
   if (f == NULL)
   {
@@ -281,9 +281,9 @@ AK_File_Metadata AK_read_metadata(char *oid) {
   ssize_t read;
 
 
-  char *blobs = concat(AK_BLOBS_PATH, "/");
-  char *oid_file = concat(blobs, oid);
-  char *metadata = concat(oid_file, ".meta");
+  char *blobs = AK_concat(AK_BLOBS_PATH, "/");
+  char *oid_file = AK_concat(blobs, oid);
+  char *metadata = AK_concat(oid_file, ".meta");
 
 
   printf("[INFO] Opening file at %s\n", metadata);
@@ -370,7 +370,7 @@ char *AK_lo_import(char *filepath) {
   strcpy(meta->old_name, old_name);
   strcpy(meta->old_path, old_path);
 
-  meta->new_path = concat(concat(AK_BLOBS_PATH, "/"), oid);
+  meta->new_path = AK_concat(AK_concat(AK_BLOBS_PATH, "/"), oid);
 
   //printf("new_path: %s\n", new_path);
   //printf("blobs_folder: %s\n", AK_BLOBS_PATH);
@@ -447,7 +447,7 @@ int AK_lo_unlink(char *oid) {
   if (metadata != 0x0)
   {
     remove(metadata->new_path);
-    remove(concat(metadata->new_path, ".meta"));
+    remove(AK_concat(metadata->new_path, ".meta"));
     printf("[INFO] File removed successfully\n");
   }
 
@@ -461,7 +461,8 @@ int AK_lo_unlink(char *oid) {
  */
 void AK_lo_test() {
   printf("[INFO] Starting AK_lo_test.\n");
-
+  // TODO: dodati u testin interface.
+  // TODO: popraviti
   char *oid = AK_lo_import("./config.ini");
   AK_lo_export(oid, "/tmp/config.ini");
   AK_lo_unlink(oid);

@@ -43,7 +43,7 @@ AK_File_Metadata AK_File_Metadata_malloc();
 int AK_mkdir(const char *path);
 int AK_mkdir(const char *path);
 int AK_copy(const char *from, const char *to);
-char *concat(char *s1, char *s2);
+char *AK_concat(char *s1, char *s2);
 char *AK_clear_all_newline(char *str);
 void AK_split_path_file(char **p, char **f, char *pf);
 
