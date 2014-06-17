@@ -421,6 +421,32 @@ void AK_allocate_array_currently_accessed_blocks() {
     }
 }
 
+
+/**
+ * @var test_lastCharacterWritten
+ * @brief This variable is used only when TEST_MODE is ON!
+ * It is used only for testing functionality of 
+ * AK_thread_safe_block_access_test() function.
+ * It will contain first character of last written block.
+ * When reading thread reads the block (written by some other thread),
+ * it will compare the first character from this block
+ * to character containted in this wariables.
+ * If they don't match, then the error occured!
+ * It is assumed that the same block is being written to
+ * and read from (just like AK_thread_safe_block_access_test
+ * function works!)
+ */
+char test_lastCharacterWritten = '\0';
+
+/**
+ * @var test_threadSafeBlockAccessSucceeded
+ * @brief Used in combination with test_lastCharacterWritten.
+ * Will give the answer to question: 
+ * "Has AK_thread_safe_block_access_test suceeded?"
+ * 0 means NO, 1 means YES
+ */
+int test_threadSafeBlockAccessSucceeded = 1;
+
 /**
  * @author Domagoj Šitum
  * @brief This function tests thread safe reading and writing to blocks.
@@ -475,6 +501,21 @@ void AK_thread_safe_block_access_test() {
     
     AK_free((void*)backup_block);
     AK_free((void*)threads);
+    
+    // and we check if thread safe block access succeeded
+    int TRUE = 1, FALSE = 0;
+    if (test_threadSafeBlockAccessSucceeded == TRUE) {
+	printf("\nTest succeeded!\n");
+    } else {
+	printf("Test didn't succeed because somewhere \
+	read character was not equal to last written character. \
+	E.g. If written character was 'n', then every read character \
+	after it should also be 'n'");
+    }
+    
+    // and we reinitialize test variables
+    test_lastCharacterWritten = '\0';
+    test_threadSafeBlockAccessSucceeded = TRUE;
     
     AK_EPI;
 }
@@ -1040,7 +1081,13 @@ AK_block * AK_read_block(int address) {
     // If everything goes well, we should get the same character that was written here
     // by last writing thread
     if (testMode == TEST_MODE_ON) {
+	int FALSE = 0;
 	printf("AK_read_block: Read character: %c\n", block->data[0]);
+	if (test_lastCharacterWritten != '\0') {
+	    if (test_lastCharacterWritten != block->data[0]) {
+		test_threadSafeBlockAccessSucceeded = FALSE;
+	    }
+	}
     }
     
     // and after everything is done, we just have to un-use block container and unlock it's mutex
@@ -1120,6 +1167,7 @@ int AK_write_block(AK_block * block) {
 	int character = rand() % 26 + 97;  // ascii code for letters a-z
 	block->data[0] = (char)character;
 	printf("AK_write_block: Written character: %c\n", block->data[0]);
+	test_lastCharacterWritten = block->data[0];
     }
     
     // now we're certain that block is in the list, it's mutex is also locked
