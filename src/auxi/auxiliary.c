@@ -911,7 +911,7 @@ char* Ak_Retrieve_L(AK_list_elem current, AK_list *L) {
  * @return data type  of the current list element
  */
 
-/* 0 uses found!!
+// 0 uses found (except for swig/test.py - dont comment this)!!
 int Ak_GetType_L(AK_list_elem current, AK_list *L) {
     int ret;
     AK_PRO;
@@ -919,7 +919,8 @@ int Ak_GetType_L(AK_list_elem current, AK_list *L) {
     AK_EPI;
     return ret;
 }
-*/
+
+
 /**
  * @author Matija Šestak.
  * @brief  Function gets a data size of the element
@@ -927,7 +928,7 @@ int Ak_GetType_L(AK_list_elem current, AK_list *L) {
  * @param L - root of the list
  * @return data size of the current list element
  */
-/* 0 uses found!!
+// 0 uses found (except for swig/test.py - dont comment this)!!
 int Ak_GetSize_L(AK_list_elem current, AK_list *L) {
     int ret;
     AK_PRO;
@@ -935,7 +936,7 @@ int Ak_GetSize_L(AK_list_elem current, AK_list *L) {
     AK_EPI;
     return ret;
 }
-*/
+
 
 /**
  * @author Ljiljana Pintarić
@@ -998,7 +999,7 @@ AK_list_elem Ak_GetNth_L(int pos, AK_list *row) {
  * @param L root of the list
  * @return returns the posititon number of some elelemnt
  */
-/* 0 uses found!!
+// 0 uses found (except for swig/test.py - dont comment this)!!
 int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L) {
     AK_list *CurrentElement;
     int i = 0;
@@ -1011,7 +1012,7 @@ int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L) {
     AK_EPI;
     return i;
 }
-*/
+
 /**
  * @author Dino Laktašić.
  * @brief  Get all permutations without repetition (currently not used, but it can be helpful)
@@ -1317,7 +1318,7 @@ void AK_tarjan_test() {
  * @param second "AK_list_elem" to be compared - destination
  * @return No return value.
  */
-/* 0 uses found !!
+// 0 uses found (except for swig/test.py - dont comment this) !!
 void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem) {
         AK_PRO;
 	destElem->size = srcElem->size;
@@ -1326,7 +1327,7 @@ void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem) {
 	memcpy(destElem->table, srcElem->table, sizeof(srcElem->table));
         AK_EPI;
 }
-*/
+
 /**
  * @author Krunoslav Bilić
  * @brief Function used to copy one "AK_list" to another. Uses AK_copy_L_Ele(..) for copying.
@@ -1334,7 +1335,7 @@ void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem) {
  * @param second "AK_list" to be compared - destination
  * @return No return value.
  */
-/* 0 uses found!!
+// 0 uses found (except for swig/test.py - dont comment this)!!
 void AK_copy_L(AK_list *src, AK_list *dest) {
 
 	AK_list_elem srcElem;
@@ -1357,7 +1358,7 @@ void AK_copy_L(AK_list *src, AK_list *dest) {
 	} while (srcElem != NULL);
         AK_EPI;
 }
-*/
+
 /**
  * @author Krunoslav Bilić
  * @brief Function compares two "AK_list" lists by DATA, SIZE and TYPE
@@ -1365,7 +1366,7 @@ void AK_copy_L(AK_list *src, AK_list *dest) {
  * @param second "AK_list" to be compared
  * @return EXIT_SUCCESS if content is same, otherwise EXIT_FAILURE
  */
-/* 0 uses found!!
+// 0 uses found (except for swig/test.py - dont comment this)!!
 int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal) {
         AK_list_elem srcElemInp;
         AK_list_elem srcElemOrig;
@@ -1412,4 +1413,3 @@ int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal) {
 	return EXIT_SUCCESS;
 
 }
-*/
