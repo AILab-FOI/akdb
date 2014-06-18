@@ -319,14 +319,6 @@ def Ak_Retrieve_L(*args):
   return _kalashnikovDB.Ak_Retrieve_L(*args)
 Ak_Retrieve_L = _kalashnikovDB.Ak_Retrieve_L
 
-def Ak_GetType_L(*args):
-  return _kalashnikovDB.Ak_GetType_L(*args)
-Ak_GetType_L = _kalashnikovDB.Ak_GetType_L
-
-def Ak_GetSize_L(*args):
-  return _kalashnikovDB.Ak_GetSize_L(*args)
-Ak_GetSize_L = _kalashnikovDB.Ak_GetSize_L
-
 def Ak_GetNth_L2(*args):
   return _kalashnikovDB.Ak_GetNth_L2(*args)
 Ak_GetNth_L2 = _kalashnikovDB.Ak_GetNth_L2
@@ -334,10 +326,6 @@ Ak_GetNth_L2 = _kalashnikovDB.Ak_GetNth_L2
 def Ak_GetNth_L(*args):
   return _kalashnikovDB.Ak_GetNth_L(*args)
 Ak_GetNth_L = _kalashnikovDB.Ak_GetNth_L
-
-def Ak_Get_Position_Of_Element(*args):
-  return _kalashnikovDB.Ak_Get_Position_Of_Element(*args)
-Ak_Get_Position_Of_Element = _kalashnikovDB.Ak_Get_Position_Of_Element
 
 def AK_get_array_perms(*args):
   return _kalashnikovDB.AK_get_array_perms(*args)
@@ -386,18 +374,6 @@ AK_tarjan = _kalashnikovDB.AK_tarjan
 def AK_tarjan_test():
   return _kalashnikovDB.AK_tarjan_test()
 AK_tarjan_test = _kalashnikovDB.AK_tarjan_test
-
-def AK_copy_L_Ele(*args):
-  return _kalashnikovDB.AK_copy_L_Ele(*args)
-AK_copy_L_Ele = _kalashnikovDB.AK_copy_L_Ele
-
-def AK_copy_L(*args):
-  return _kalashnikovDB.AK_copy_L(*args)
-AK_copy_L = _kalashnikovDB.AK_copy_L
-
-def AK_compare_L(*args):
-  return _kalashnikovDB.AK_compare_L(*args)
-AK_compare_L = _kalashnikovDB.AK_compare_L
 MAX_LOOP_ITERATIONS = _kalashnikovDB.MAX_LOOP_ITERATIONS
 class list_elem(_object):
     __swig_setmethods__ = {}

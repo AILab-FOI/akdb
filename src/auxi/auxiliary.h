@@ -6,12 +6,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -38,7 +38,7 @@
  * @var testMode
  * @brief You can turn testMode on or off with TEST_MODE_ON and TEST_MODE_OFF.
  * To do this, simply enable or disable it in YOUR function (not in any other!)
- * Test mode can be used when you need some special cases in your functions 
+ * Test mode can be used when you need some special cases in your functions
  * (i.e., when you are testing some functionality, which doesn't apply in normal conditions).
  * But don't forget to turn this mode off, after you are done (within test function for example)!
  */
@@ -74,11 +74,11 @@ typedef struct list_elem *AK_list_elem;
 /**
  * @author Ljiljana Pintarić
  * @struct list_node
- * @brief Structure defines a list node. 
+ * @brief Structure defines a list node.
  */
-struct list_node { 
+struct list_node {
     ///loaded data
-    char data[ MAX_VARCHAR_LENGTH ];  
+    char data[ MAX_VARCHAR_LENGTH ];
     struct list_node *next;
 };
 
@@ -86,7 +86,7 @@ struct list_node {
 /**
  * @author Ljiljana Pintarić
  * @struct list_structures
- * @brief Bad - head of list_elem linked list. Good - head of list_node linked list. 
+ * @brief Bad - head of list_elem linked list. Good - head of list_node linked list.
  */
 
 struct list_structures{
@@ -191,11 +191,12 @@ int Ak_Size_L(AK_list *L);
 int Ak_Size_L2(struct list_node *L);
 char* Ak_Retrieve_L(AK_list_elem current, AK_list *L);
 char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L);
-int Ak_GetType_L(AK_list_elem current, AK_list *L);
-int Ak_GetSize_L(AK_list_elem current, AK_list *L);
+//int Ak_GetType_L(AK_list_elem current, AK_list *L);
+//int Ak_GetSize_L(AK_list_elem current, AK_list *L);
 AK_list_elem Ak_GetNth_L(int pos, AK_list *row);
 struct list_node * Ak_GetNth_L2(int pos, struct list_node *row);
-int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L);
+
+//int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L);
 char *AK_get_array_perms(char *arr) ;
 AK_vertex AK_search_vertex(int id);
 AK_vertex AK_search_empty_link() ;
@@ -208,9 +209,9 @@ AK_stack AK_search_in_stack(int id);
 int MIN(int X, int Y);
 void AK_tarjan(int id);
 void AK_tarjan_test();
-void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem);
-void AK_copy_L(AK_list *src, AK_list *dest) ;
-int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal);
+//void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem);
+//void AK_copy_L(AK_list *src, AK_list *dest) ;
+//int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal);
 
 
 #endif
