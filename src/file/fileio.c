@@ -20,7 +20,7 @@
 
 //START SPECIAL FUNCTIONS FOR WORK WITH row_element_structure
 
-/** 
+/**
    * @author Matija Novak
    * @brief Function inserts new element after some element, to insert on first place give list as before element. New element
             is allocated. Type, data, attribute name and constraint of new elemets are set according to function arguments. Pointers
@@ -56,7 +56,7 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
     AK_EPI;
 }
 
-/** 
+/**
    * @author Matija Novak, changed by Dino Laktašić
    * @brief Function inserts new element after some element, to insert on first place give list as before element. It calls function
             Ak_Insert_New_Element_For_Update.
@@ -98,7 +98,7 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
             id++;
         }
         Ak_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
-        
+
         search_elem = 1;
         some_element = (AK_list_elem) Ak_First_L(row_root);
         while (search_elem) {
@@ -106,7 +106,7 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
                     && (some_element->constraint == 0)) {//found correct element
 
                 type = some_element->type;
-                
+
                 memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                 memcpy(entry_data, some_element->data, AK_type_size(type, some_element->data));
 
@@ -128,7 +128,7 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
         temp_block->tuple_dict[id].size = AK_type_size(type, entry_data);
 
         memcpy(entry_data, temp_block->data + temp_block->tuple_dict[id].address, temp_block->tuple_dict[id].size);
-            
+
         Ak_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Insert: data: %s, size: %d\n", entry_data, AK_type_size(type, entry_data));
         head++; //go to next header
     }
@@ -140,8 +140,8 @@ int Ak_insert_row_to_block(AK_list *row_root, AK_block *temp_block) {
 }
 
 /** @author Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference check), updated by Dino         Laktašić (removed variable AK_free, variable table initialized using memset)
-        @brief Function inserts a one row into table. Firstly it is checked whether inserted row would violite reference integrity. 
-        Then it is checked in which table should row be inserted. If there is no AK_free space for new table, new extent is allocated. New block is            allocated on given address. Row is inserted in this block and dirty flag is set to BLOCK_DIRTY. 
+        @brief Function inserts a one row into table. Firstly it is checked whether inserted row would violite reference integrity.
+        Then it is checked in which table should row be inserted. If there is no AK_free space for new table, new extent is allocated. New block is            allocated on given address. Row is inserted in this block and dirty flag is set to BLOCK_DIRTY.
         @param row_root list of elements which contain data of one row
         @return EXIT_SUCCESS if success else EXIT_ERROR
 
@@ -155,15 +155,15 @@ int Ak_insert_row(AK_list *row_root) {
         AK_EPI;
         return EXIT_ERROR;
     }
-    
+
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Start inserting data\n");
     AK_list_elem some_element = (AK_list_elem) Ak_First_L(row_root);
 
-    char table[MAX_ATT_NAME];   
-    
+    char table[MAX_ATT_NAME];
+
     memset(table, '\0', MAX_ATT_NAME);
     memcpy(&table, some_element->table, strlen(some_element->table));
-    
+
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
 
@@ -179,7 +179,7 @@ int Ak_insert_row(AK_list *row_root) {
 
     AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(adr_to_write);
 
-    AK_add_to_redolog("INSERT", row_root);
+    //AK_add_to_redolog("INSERT", row_root);
 
     int end = (int) Ak_insert_row_to_block(row_root, mem_block->block);
 
@@ -194,7 +194,7 @@ int Ak_insert_row(AK_list *row_root) {
     return end;
 }
 
-/** 
+/**
    * @author Matija Novak, updated by Dino Laktašić, updated by Mario Peroković - separated from deletion
    * @brief Function updates row from table in given block.
    * @param temp_block block to work with
@@ -214,7 +214,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
     AK_list_elem some_element = (AK_list_elem) Ak_First_L(row_root);
 
     int i, overflow, address, size;
-    
+
     for(i = 0; i < DATA_BLOCK_SIZE; i++) {
         exists_equal_attrib = 0;
         head = 0;
@@ -223,12 +223,12 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
         size = temp_block->tuple_dict[i].size;
         overflow = address + size;
 
-        while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers            
+        while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers
             some_element = (AK_list_elem) Ak_First_L(row_root);
-            
+
             while (some_element) {
                 if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (some_element->constraint == SEARCH_CONSTRAINT))
-                {                    
+                {
                     exists_equal_attrib = 1;
                     attPlace = head;
 
@@ -236,7 +236,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
                     {
                         memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(entry_data, temp_block->data + address, size);
-                        
+
                         // ako nisu jednaki podaci u tablici i u atributu po kojem se pretražuje, neće se ažurirati
                         if (strcmp(entry_data, some_element->data) != 0)
                         {
@@ -248,7 +248,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
             }
             head++; //next header
         }
-        
+
         if (exists_equal_attrib == 1 && del == 1)
         {
             int j;
@@ -256,7 +256,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
             {
                 Ak_DeleteAll_L(new_data);
                 int a = temp_block->tuple_dict[j].address;
-                int s = temp_block->tuple_dict[j].size;    
+                int s = temp_block->tuple_dict[j].size;
 
                 memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                 memcpy(entry_data, temp_block->data + a, s);
@@ -271,12 +271,12 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
                     {
                         // we need to delete and insert row, because size of new data is larger than size of old data
                         if (strlen(some_element->data) > s)
-                        {                                
+                        {
                             int k;
                             for (k = i - attPlace; k < i + head - attPlace; k++)
                             {
                                 int o = temp_block->tuple_dict[k].address;
-                                int p = temp_block->tuple_dict[k].size; 
+                                int p = temp_block->tuple_dict[k].size;
                                 memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                                 memcpy(entry_data, temp_block->data + o, p);
                                 // if att_names are different, this is old data, and we need to insert it again
@@ -284,12 +284,12 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
                                 {
                                     Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[k].type, entry_data, some_element->table, temp_block->header[k % head].att_name, new_data, NEW_VALUE);
                                 }
-                                
+
                                 temp_block->tuple_dict[k].size = 0;
                                 temp_block->tuple_dict[k].type = 0;
                                 temp_block->tuple_dict[k].address = 0;
                             }
-                            // insert new data  
+                            // insert new data
                             Ak_insert_row(new_data);
                         }
                         // we need to update row
@@ -309,7 +309,7 @@ void Ak_update_row_from_block(AK_block *temp_block, AK_list *row_root) {
     AK_EPI;
 }
 
-/** 
+/**
    * @author Matija Novak, updated by Dino Laktašić, changed by Davorin Vukelic, updated by Mario Peroković
    * @brief Function deletes row from table in given block. Given list of elements is firstly back-upped.
    * @param temp_block block to work with
@@ -348,15 +348,15 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
             while (some_element) {
                 //if we found header that is constraint in list
                 if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (some_element->constraint == SEARCH_CONSTRAINT)) {
-                    
+
                     exists_equal_attrib = 1;
                     attPlace = head;
-                    
+
                     if ((overflow < (temp_block->AK_free_space + 1)) && (overflow > -1)) {
                         //before there was for loop to clear (check if memset works correct)
                         memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(entry_data, temp_block->data + address, size);
-                        
+
                         if (strcmp(entry_data, some_element->data) != 0) { //is the data equal on which we delete
                             del = 0; //if one constraint doesn't metch we dont delete or update
                         }
@@ -370,14 +370,14 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
         }
         if ((exists_equal_attrib == 1) && (del == 1)) {
             int j;
-            
+
             for (j = i -attPlace; j < i+head-attPlace; j++) {//delete one row
 
                 int k = temp_block->tuple_dict[j].address;
                 int l = temp_block->tuple_dict[j].size;
                 memset(temp_block->data + k, '\0', l);
                 Ak_dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);
-                
+
                 //clean tuple dict
                 temp_block->tuple_dict[j].size = 0;
                 temp_block->tuple_dict[j].type = 0;
@@ -392,7 +392,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, AK_list *row_root) {
 }
 
 
-/** 
+/**
       * @author Matija Novak, updated by Matija Šestak (function now uses caching)
       * @brief Function updates or deletes the whole segment of an table. Addresses for given table atr fetched. For each block
         in extent row is updated or deleted according to operator del.
@@ -414,7 +414,7 @@ int Ak_delete_update_segment(AK_list *row_root, int del) {
 
     AK_mem_block *mem_block;
     int startAddress, j, i;
-    
+
     for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++) { //going through extent
         startAddress = addresses->address_from[j];
         if (startAddress != 0) {
@@ -424,16 +424,16 @@ int Ak_delete_update_segment(AK_list *row_root, int del) {
                 Ak_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: delete_update block: %d\n", i);
 
                 mem_block = (AK_mem_block *) AK_get_block(i);
-                
+
                 if(del == DELETE) {
                     Ak_delete_row_from_block(mem_block->block, row_root);
                 }
                 else {
                     Ak_update_row_from_block(mem_block->block, row_root);
-                }                
+                }
                 mem_block->dirty = BLOCK_DIRTY;
             }
-        } else 
+        } else
             break;
     }
     AK_EPI;

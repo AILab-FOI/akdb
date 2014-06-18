@@ -199,9 +199,10 @@ int main(int argc, char * argv[])
 
                 printf( "\nEverything was fine!\nBye =)\n" );
 
+
                 /* For easyer debugging and GDB usage
                 AK_create_test_tables();
-                AK_trigger_test();
+                AK_view_test();
                 */
 
                 //            pthread_exit(NULL);

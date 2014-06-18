@@ -80,7 +80,7 @@
  *@def MAX_REDO_LOG_ENTRIES
  *@brief maximum size of REDO log entries
  */
-#define MAX_REDO_LOG_ENTRIES 100
+#define MAX_REDO_LOG_ENTRIES 1000
 
 /**
  * @def NUMBER_OF_THREADS
