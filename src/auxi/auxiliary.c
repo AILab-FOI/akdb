@@ -6,12 +6,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -24,10 +24,10 @@ AK_stackHead S;
 int indexCounter = 0;
 
 /**
- * @author Dino Laktašić.	
+ * @author Dino Laktašić.
  * @brief Function gets number of digits for given number
- * @param number number to evaluate 
- * @param int base mathematic base (e.g. 2, 10 etc.)  
+ * @param number number to evaluate
+ * @param int base mathematic base (e.g. 2, 10 etc.)
  * @return number of digits for given number
  */
 int AK_chars_num_from_number(int number, int base) {
@@ -42,7 +42,7 @@ int AK_chars_num_from_number(int number, int base) {
     return len;
 }
 
-/** 
+/**
  * @author Miroslav Policki
  * @brief Function returns size in bytes of the provided database type
  * @param iDB_type database data type (defined in constants.h)
@@ -111,9 +111,9 @@ int AK_strcmp(const void *a, const void *b) {
  */
 
 void Ak_Init_L3(struct list_node **L){
-    AK_PRO;    
+    AK_PRO;
     assert(L != NULL);
-    (*L)->next = NULL;      
+    (*L)->next = NULL;
     AK_EPI;
 }
 
@@ -125,31 +125,31 @@ void Ak_Init_L3(struct list_node **L){
  */
 
 void Ak_Init_L2(AK_list *L) {
-    AK_PRO;   
+    AK_PRO;
     unsigned int insert_list_address= 1;
-    
-    int i;  
+
+    int i;
     for(i = 0; i < lsa_counter; i++)
     {
       if(list_structures_array[i].bad == L)
-      {	
+      {
 	insert_list_address = 0;
-      }     
+      }
     }
-    
+
     struct list_node *list_node_L;
     list_node_L=NULL;
-    
+
     if(insert_list_address)
     {
 	list_node_L = (struct list_node*) AK_malloc(sizeof(struct list_node));
 	assert(list_node_L != NULL);
-	//list_node_L->next = NULL;	
-	Ak_Init_L3(&list_node_L);	
+	//list_node_L->next = NULL;
+	Ak_Init_L3(&list_node_L);
 	list_structures_array[lsa_counter].bad = L;
 	list_structures_array[lsa_counter].good = list_node_L;
 	lsa_counter++;
-    }       
+    }
     AK_EPI;
 }
 
@@ -163,7 +163,7 @@ void Ak_Init_L(AK_list *L) {
     AK_PRO;
     assert(L != NULL);
     L->next = NULL;
-    Ak_Init_L2(L);     
+    Ak_Init_L2(L);
     AK_EPI;
 }
 
@@ -174,7 +174,7 @@ void Ak_Init_L(AK_list *L) {
  * @return first element of the list
  */
 
-struct list_node *Ak_First_L2(struct list_node *L){   
+struct list_node *Ak_First_L2(struct list_node *L){
   AK_PRO;
   if(L == NULL){
 	AK_EPI;
@@ -208,16 +208,16 @@ AK_list_elem Ak_First_L(AK_list *L) {
  */
 
 struct list_node *Ak_End_L2(struct list_node *L) {
-    AK_PRO;   
+    AK_PRO;
     struct list_node *current;
     current=Ak_First_L2(L);
-    
+
     if (current == NULL)
     {
-      AK_EPI;      
+      AK_EPI;
       return NULL;
-    }    
-    
+    }
+
     int counter = 0;
     while (current->next != NULL)
     {
@@ -225,7 +225,7 @@ struct list_node *Ak_End_L2(struct list_node *L) {
       counter++;
       assert(counter < MAX_LOOP_ITERATIONS);
     }
-    
+
     AK_EPI;
     return current;
 }
@@ -244,7 +244,7 @@ AK_list_elem Ak_End_L(AK_list *L) {
         AK_EPI;
         return NULL;
     }
-    
+
     int counter = 0;
     while (current->next != NULL)
     {
@@ -252,7 +252,7 @@ AK_list_elem Ak_End_L(AK_list *L) {
       counter++;
       assert(counter < MAX_LOOP_ITERATIONS);
     }
-    
+
     AK_EPI;
     return current;
 }
@@ -265,7 +265,7 @@ AK_list_elem Ak_End_L(AK_list *L) {
  */
 
 struct list_node *Ak_Next_L2(struct list_node *current) {
-    AK_PRO;    
+    AK_PRO;
     if (current == NULL)
     {
         AK_EPI;
@@ -301,22 +301,22 @@ AK_list_elem Ak_Next_L(AK_list_elem current) {
 
 struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L) {
     AK_PRO;
-    
+
     if (current == NULL || current == L)
     {
         AK_EPI;
         return NULL;
     }
-     
+
     struct list_node *previous = L;
     int counter = 0;
     while (previous->next != current)
     {
       previous = previous->next;
       counter++;
-      assert(counter < MAX_LOOP_ITERATIONS);      
+      assert(counter < MAX_LOOP_ITERATIONS);
     }
-    
+
     AK_EPI;
     return previous;
 }
@@ -330,13 +330,13 @@ struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L)
  */
 AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L) {
     AK_PRO;
-    
+
     if (current == NULL || current == L)
     {
         AK_EPI;
         return NULL;
     }
-    
+
     AK_list_elem previous = L;
     int counter = 0;
     while (previous->next != current)
@@ -345,7 +345,7 @@ AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L) {
 	counter++;
 	assert(counter < MAX_LOOP_ITERATIONS);
     }
-    
+
     AK_EPI;
     return previous;
 }
@@ -358,9 +358,9 @@ AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L) {
  */
 
 unsigned int Ak_IsEmpty_L2(struct list_node *L) {
-    AK_PRO;    
+    AK_PRO;
     unsigned int ret;
-    ret = (Ak_First_L2(L) == NULL ? 1 : 0);    
+    ret = (Ak_First_L2(L) == NULL ? 1 : 0);
     AK_EPI;
     return ret;
 }
@@ -382,7 +382,7 @@ int Ak_IsEmpty_L(AK_list *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function inserts new element before the current element in the list. 
+ * @brief  Function inserts new element before the current element in the list.
  * @param data new data
  * @param current current element in the list
  * @param L root of the list
@@ -390,13 +390,13 @@ int Ak_IsEmpty_L(AK_list *L) {
  */
 
 void Ak_InsertBefore_L2(char* data, struct list_node **current, struct list_node **L) {
-    AK_PRO;  
-    struct list_node *new_elem;    
-   
+    AK_PRO;
+    struct list_node *new_elem;
+
     new_elem = (struct list_node*) AK_malloc(sizeof(struct list_node));
     memcpy(new_elem->data, data, MAX_VARCHAR_LENGTH);
-    
-    if ((*current) == NULL) 
+
+    if ((*current) == NULL)
     {
         (*L)->next = new_elem;
         new_elem->next = NULL;
@@ -411,7 +411,7 @@ void Ak_InsertBefore_L2(char* data, struct list_node **current, struct list_node
 
 /**
  * @author Matija Šestak.
- * @brief  Function inserts new element before the current element in the list. 
+ * @brief  Function inserts new element before the current element in the list.
  * @param type data type of the new element
  * @param data new data
  * @param size data size of the new element in the list
@@ -426,7 +426,7 @@ void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_
     new_elem->size = size;
     new_elem->type = type;
     memcpy(new_elem->data, data, new_elem->size);
-    if (current == NULL) 
+    if (current == NULL)
     {
         L->next = new_elem;
         new_elem->next = NULL;
@@ -441,7 +441,7 @@ void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function inserts new element after the current element in the list 
+ * @brief  Function inserts new element after the current element in the list
  * @param data new data
  * @param current current element in the list
  * @param L root of the list
@@ -449,14 +449,14 @@ void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_
  */
 
 void Ak_InsertAfter_L2(char* data, struct list_node **current,  struct list_node **L) {
-     
+
     AK_PRO;
     struct list_node *new_elem;
-    
-    new_elem = (struct list_node*) AK_malloc(sizeof(struct list_node));    
+
+    new_elem = (struct list_node*) AK_malloc(sizeof(struct list_node));
     memcpy(new_elem->data, data, MAX_VARCHAR_LENGTH);
-    if ((*current) == NULL) 
-    {     
+    if ((*current) == NULL)
+    {
 	(*L)->next = new_elem;
         new_elem->next = NULL;
         AK_EPI;
@@ -480,21 +480,24 @@ void Ak_InsertAfter_L2(char* data, struct list_node **current,  struct list_node
 void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L) {
     AK_list_elem new_elem;
     AK_PRO;
+
     new_elem = (AK_list_elem) AK_calloc(1, sizeof ( struct list_elem));
+
     new_elem->size = size;
     new_elem->type = type;
+    new_elem->next = NULL;
+
     memcpy(new_elem->data, data, new_elem->size);
-    if (current == NULL) 
+    if (current == NULL)
     {
         L->next = new_elem;
-        new_elem->next = NULL;
         AK_EPI;
         return;
     }
     new_elem->next = current->next;
     current->next = new_elem;
     AK_EPI;
-    
+    return;
 }
 
 /**
@@ -506,13 +509,13 @@ void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_l
  */
 
 void Ak_InsertAtBegin_L3(char* data, struct list_node *L) {
-    AK_PRO;    
+    AK_PRO;
     assert(L != NULL);
-    
+
     struct list_node *current = Ak_First_L2(L);
     current = Ak_First_L2(L);
     Ak_InsertBefore_L2(data, &current, &L);
-    
+
     AK_EPI;
 }
 
@@ -529,19 +532,19 @@ void Ak_InsertAtBegin_L2(int type, char* data, int size, AK_list *L) {
     AK_PRO;
     assert(L != NULL);
     struct list_node * list_node_L, *current;
-    int i; 
+    int i;
     for(i = 0; i < lsa_counter; i++)
     {
       if(list_structures_array[i].bad == L)
-      {	
+      {
 	list_node_L=list_structures_array[i].good;
-      }     
+      }
     }
-    
+
     current=Ak_First_L2(list_node_L);
-    Ak_InsertAtBegin_L3(data, &list_node_L);     
+    Ak_InsertAtBegin_L3(data, &list_node_L);
     Ak_InsertBefore_L(type, data, size, Ak_First_L(L), L);
-    
+
     AK_EPI;
 }
 
@@ -563,8 +566,8 @@ void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function inserts new element at the end of the list. It uses function Ak_InsertAfter_L 
- * @param data new data 
+ * @brief  Function inserts new element at the end of the list. It uses function Ak_InsertAfter_L
+ * @param data new data
  * @param L root of the list
  * @return No return value.
  */
@@ -572,11 +575,11 @@ void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L) {
 void Ak_InsertAtEnd_L3(char* data, struct list_node *L) {
     AK_PRO;
     assert(L != NULL);
-    struct list_node *current;    
-    current = NULL;    
-    current = Ak_End_L2(L);    
+    struct list_node *current;
+    current = NULL;
+    current = Ak_End_L2(L);
     Ak_InsertAfter_L2(data, &current, &L);
-    
+
     AK_EPI;
 }
 
@@ -593,23 +596,23 @@ void Ak_InsertAtEnd_L3(char* data, struct list_node *L) {
 void Ak_InsertAtEnd_L2(int type, char* data, int size, AK_list *L) {
     AK_PRO;
     assert(L != NULL);
-    
+
     struct list_node * list_node_L, *current;
     list_node_L=NULL;
     current=NULL;
-    int i; 
-    
+    int i;
+
     for(i=0; i<lsa_counter; i++)
-    {     
+    {
       if(list_structures_array[i].bad == L)
-      {	
+      {
 	list_node_L=list_structures_array[i].good;
-      }     
+      }
     }
-           
-    Ak_InsertAtEnd_L3(data, list_node_L);    
+
+    Ak_InsertAtEnd_L3(data, list_node_L);
     Ak_InsertAfter_L(type, data, size, Ak_End_L(L), L);
-    
+
     AK_EPI;
 }
 
@@ -623,10 +626,10 @@ void Ak_InsertAtEnd_L2(int type, char* data, int size, AK_list *L) {
  * @return No return value.
  */
 void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L) {
-    AK_PRO;       
-    Ak_InsertAtEnd_L2(type, data, size, L);        
-    AK_EPI;    
-} 
+    AK_PRO;
+    Ak_InsertAtEnd_L2(type, data, size, L);
+    AK_EPI;
+}
 
 
 /**
@@ -638,7 +641,7 @@ void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L) {
  */
 
 void Ak_Delete_L3(struct list_node **current, struct list_node **L) {
-    AK_PRO;    
+    AK_PRO;
     if ((*current) == NULL || (*L) == NULL)
     {
         AK_EPI;
@@ -654,38 +657,38 @@ void Ak_Delete_L3(struct list_node **current, struct list_node **L) {
 
 void Ak_Delete_L2(AK_list_elem current, AK_list *L) {
     AK_PRO;
-    
+
     if (current == NULL || L == NULL)
     {
         AK_EPI;
         return;
     }
-    
+
     int i;
     struct list_node *list_node_L, *current2, *current3;
-    
+
     for(i=0; i<lsa_counter; i++)
     {
       if(list_structures_array[i].bad==L)
-      {	
+      {
 	list_node_L=list_structures_array[i].good;
-      }     
+      }
     }
-    
+
     int counter = 0;
-    while ( (current3 = Ak_First_L2(list_node_L)) != NULL ) 
-    {			
+    while ( (current3 = Ak_First_L2(list_node_L)) != NULL )
+    {
       if(strcmp(current3->data, current->data)) //loše, moguće da podaci nisu unique
       {
 	current2=current3;
-      }      
-      list_node_L->next = current3->next;	
+      }
+      list_node_L->next = current3->next;
       counter++;
       assert(counter < MAX_LOOP_ITERATIONS);
-    }    
-    
+    }
+
     Ak_Delete_L3(&current2, &list_node_L);
-   
+
     AK_EPI;
 }
 
@@ -699,7 +702,7 @@ void Ak_Delete_L2(AK_list_elem current, AK_list *L) {
  */
 void Ak_Delete_L(AK_list_elem current, AK_list *L) {
     AK_PRO;
-    
+
     if (current == NULL || L == NULL)
     {
         AK_EPI;
@@ -716,30 +719,30 @@ void Ak_Delete_L(AK_list_elem current, AK_list *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function empties list 
+ * @brief  Function empties list
  * @param L root of the list
  * @return No return value
  */
 
 void Ak_DeleteAll_L3(struct list_node **L) {
-    AK_PRO; 
-    
+    AK_PRO;
+
     struct list_node *current;
     if((*L) == NULL)
     {
 	AK_EPI;
 	return;
-    }    
-    
+    }
+
     int counter = 0;
-    while ( (current = Ak_First_L2(*L)) != NULL ) 
-    {				
+    while ( (current = Ak_First_L2(*L)) != NULL )
+    {
 	(*L)->next = current->next;
-	AK_free(current);	
+	AK_free(current);
 	counter++;
 	assert(counter < MAX_LOOP_ITERATIONS);
     }
-       
+
     AK_EPI;
 }
 
@@ -752,32 +755,32 @@ void Ak_DeleteAll_L3(struct list_node **L) {
 
 void Ak_DeleteAll_L2(AK_list *L){
   AK_PRO;
-  
+
   int i;
   int position = 10000;
   struct list_node * list_node_L;
-    
+
   for(i = 0; i < lsa_counter; i++)
   {
     if(list_structures_array[i].bad == L)
     {
-      position=i;      
+      position=i;
     }
   }
-  
-  
+
+
   if(position<lsa_counter)
-  {    
-    list_node_L = list_structures_array[position].good;    
-    Ak_DeleteAll_L3(&list_node_L);  
+  {
+    list_node_L = list_structures_array[position].good;
+    Ak_DeleteAll_L3(&list_node_L);
   }
-    
+
   AK_EPI;
 }
 
 /**
  * @author Matija Šestak.
- * @brief  Function empties list 
+ * @brief  Function empties list
  * @param L root of the list
  * @return No return value
  */
@@ -789,9 +792,9 @@ void Ak_DeleteAll_L(AK_list *L) {
 	AK_EPI;
 	return;
     }
-    
+
     int counter = 0;
-    while ( (current = Ak_First_L(L)) != NULL ) 
+    while ( (current = Ak_First_L(L)) != NULL )
     {
         L->next = current->next;
         AK_free(current);
@@ -804,21 +807,21 @@ void Ak_DeleteAll_L(AK_list *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function gets a number of the elements in the list. 
+ * @brief  Function gets a number of the elements in the list.
  * @param L root of the list
  * @return Size of the list
  */
 
-int Ak_Size_L2(struct list_node *L) {  
+int Ak_Size_L2(struct list_node *L) {
     AK_PRO;
-    
+
     int size = 0;
     struct list_node *current;
-    
+
     current = Ak_First_L(L);
-    
+
     int counter = 0;
-    while (current) 
+    while (current)
     {
         size++;
         current = Ak_Next_L(current);
@@ -832,7 +835,7 @@ int Ak_Size_L2(struct list_node *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Function gets a number of the elements in the list. 
+ * @brief  Function gets a number of the elements in the list.
  * @param L root of the list
  * @return Size of the list
  */
@@ -840,10 +843,10 @@ int Ak_Size_L(AK_list *L) {
     int size = 0;
     AK_list_elem current;
     AK_PRO;
-    
+
     int counter = 0;
     current = Ak_First_L(L);
-    while (current) 
+    while (current)
     {
         size++;
         current = Ak_Next_L(current);
@@ -863,18 +866,18 @@ int Ak_Size_L(AK_list *L) {
  * @return data from the list element
  */
 
-char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L) {  
+char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L) {
     char *data;
     AK_PRO;
-    
+
     if (current == NULL || L == NULL)
     {
         return NULL;
     }
-    
+
     data = (char*) AK_malloc(MAX_VARCHAR_LENGTH);
     memcpy(data, current->data, MAX_VARCHAR_LENGTH);
-    
+
     AK_EPI;
     return data;
 }
@@ -893,7 +896,7 @@ char* Ak_Retrieve_L(AK_list_elem current, AK_list *L) {
     {
         return NULL;
     }
-    
+
     data = (char*) AK_malloc(current->size);
     memcpy(data, current->data, current->size);
     AK_EPI;
@@ -947,7 +950,7 @@ struct list_node * Ak_GetNth_L2(int pos, struct list_node *row) {
     AK_PRO;
     int i;
     struct list_node *temp_elem;
-    
+
     assert(pos > -1);
     temp_elem = Ak_First_L2(row);
     for(i = 1; temp_elem != NULL; ++i)
