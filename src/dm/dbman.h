@@ -194,30 +194,36 @@ typedef enum{
 
 /**
  * @author Domagoj Šitum
- * @brief Structure of currently accessed block. 
- * It is important to note such blocks, to enable quick and thread-safe
- * reading from or writing to disk (in terms of blocks).
+ * @brief Structure which holds information about each block,
+ * whether it is locked for reading or writing.
+ * It is important to note such information, to enable quick and thread-safe
+ * reading from or writing to disk.
  * Structure contains of:
- * block - address of block (in DB file) which is being read or written to disk
- * block_mutex - mutex of the block, to provide thread-safe operation
- * reading_writing - indicates whether block is being read from disk (READING_BLOCK) od written to it (WRITING_BLOCK).
-    * used - indicates whether allocated structure is in use or not.
- * If it's not used, than it is available for next block that has to access disk
- * Constants READING_BLOCK and WRITING_BLOCK are defined in auxi/constants.h
+ * locked_for_reading - thread which locks particular block for reading will set this value
+ * locked_for_writing - thread which locks particular block for writing will set this value
+ * block_lock - each reading and writing operation will be done atomically and uninteruptable, using this mutex block lock
+ * reading_done - represents signal, which sends thread that just finished reading block. This signal will indicate that
+ *      writing thread can start writing to block
+ * writing_done - represents signal, which sends thread that just finished writing to block. This signal will indicate
+ *      that other threads can start reading from this block or even writing to it
+ * thread_holding_lock - the only thread which can unlock locked "block_lock" is the one that locked it. 
+ *      This variable makes sure that ONLY the thread, which actually holds the lock, releases it.
  */
 typedef struct {
-    int block;
-    pthread_mutex_t block_mutex;
-    short reading_writing;
-    short used;
-} AK_blocks_currently_accessed;
+    short locked_for_reading;
+    short locked_for_writing;
+    pthread_mutex_t block_lock;
+    pthread_cond_t writing_done;
+    pthread_cond_t reading_done;
+    int *thread_holding_lock;
+} AK_block_activity;
 
 /**
  * @author Domagoj Šitum
  * @var AK_accessed_blocks
  * @brief Blocks which are currently being written to disk or read from it.
  */
-AK_blocks_currently_accessed *AK_accessed_blocks;
+AK_block_activity *AK_block_activity_info;
 
 
 int AK_print_block(AK_block * block, int num, char* gg, FILE *fpp);

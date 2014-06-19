@@ -3,41 +3,39 @@
 */
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 4; tab-width: 4 -*- */
 /*
- * dbman.c
- * Copyright (C) Markus Schatten 2009 <markus.schatten@foi.hr>
- *
- * main.c is free software: you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * main.c is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+* dbman.c
+* Copyright (C) Markus Schatten 2009 <markus.schatten@foi.hr>
+*
+* main.c is free software: you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by the
+* Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* main.c is distributed in the hope that it will be useful, but
+* WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License along
+* with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 
 #include "dbman.h"
 pthread_mutex_t fileLockMutex = PTHREAD_MUTEX_INITIALIZER;
-// mutex which is used when we have to check if some block is currently being read from or written to disk
-pthread_mutex_t check_if_block_being_accessed_mutex = PTHREAD_MUTEX_INITIALIZER;
 int k;
 
 
 /**
- * @author Markus Schatten
- * @brief  Function that initializes a new database file named DB_FILE. It opens database file. New block is allocated. In this
- block type of header is set to FREE_INT, attribute names are set to FREE_CHAR, integrities are set to FREE_INT,
- constraint names are set to FREE_CHAR, constraint names and codes are set to FREE_CHAR. Type, address and size of tuples
- * are set to FREE_INT. Data in block is set to FREE_CHAR. Type of block is BLOCK_TYPE_FREE, it is not chained and id of
- * last tuple is 0.
- * @param size size of new file in in blocks
- * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
- */
+* @author Markus Schatten
+* @brief  Function that initializes a new database file named DB_FILE. It opens database file. New block is allocated. In this
+block type of header is set to FREE_INT, attribute names are set to FREE_CHAR, integrities are set to FREE_INT,
+constraint names are set to FREE_CHAR, constraint names and codes are set to FREE_CHAR. Type, address and size of tuples
+* are set to FREE_INT. Data in block is set to FREE_CHAR. Type of block is BLOCK_TYPE_FREE, it is not chained and id of
+* last tuple is 0.
+* @param size size of new file in in blocks
+* @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+*/
 int AK_init_db_file(int size) {
     printf("\nInicijalizacija\n");
     int sz;
@@ -62,8 +60,8 @@ int AK_init_db_file(int size) {
     if (sz > AK_ALLOCATION_TABLE_SIZE){
         printf("AK_init_db_file: Already initialized.\n");
         fclose(db);
-	db = NULL;
-	db = NULL;
+        db = NULL;
+        db = NULL;
         AK_EPI;
         return (EXIT_SUCCESS);
     }
@@ -92,18 +90,18 @@ int AK_init_db_file(int size) {
 
 
 /**
- * @author dv
- * @param bitset int pointer, cointainer for bit set
- * @param fromWhere has meaning just in SEQUENCE case. It describes from which address searching have to start.
- * @param gaplength tells how many used blocks could be tolerated in bitset
- * @param num Tells how many AK_free blocks has been needed
- * @param mode Defines how to obtain set of indexes to AK_free addresses
- * @param target has meaning just in case mode=AROUND: set must be as much as possible close to target
- * from both sides
- * @brief  Function prepare demanded sets from allocation table
- * @return pointer to integer indexes field with prepared set. If it , for any reason, is not possible
- * set has FREE_INT fullfilment.
- */
+* @author dv
+* @param bitset int pointer, cointainer for bit set
+* @param fromWhere has meaning just in SEQUENCE case. It describes from which address searching have to start.
+* @param gaplength tells how many used blocks could be tolerated in bitset
+* @param num Tells how many AK_free blocks has been needed
+* @param mode Defines how to obtain set of indexes to AK_free addresses
+* @param target has meaning just in case mode=AROUND: set must be as much as possible close to target
+* from both sides
+* @brief  Function prepare demanded sets from allocation table
+* @return pointer to integer indexes field with prepared set. If it , for any reason, is not possible
+* set has FREE_INT fullfilment.
+*/
 int * AK_get_allocation_set(int* bitsetbs, int fromWhere, int gaplength, int num, AK_allocation_set_mode mode, int target){
     register int i = 0, j = 0, k = 0;
     int numAK_free = 0, tmp = 0, tmpb = 0;
@@ -305,10 +303,10 @@ int * AK_get_allocation_set(int* bitsetbs, int fromWhere, int gaplength, int num
 
 
 /**
- * @author dv
- * @brief  Function dumpes allocation table
- * @return nothing
- */
+* @author dv
+* @brief  Function dumpes allocation table
+* @return nothing
+*/
 void AK_allocationtable_dump(int zz){
     int i;
     AK_PRO;
@@ -333,10 +331,10 @@ void AK_allocationtable_dump(int zz){
 
 
 /**
- * @author dv
- * @brief  Function dumpes allocation table
- * @return nothing
- */
+* @author dv
+* @brief  Function dumpes allocation table
+* @return nothing
+*/
 void AK_blocktable_dump(int zz){
     int i;
     AK_PRO;
@@ -376,10 +374,10 @@ void AK_blocktable_dump(int zz){
 }
 
 /**
- * @author dv
- * @brief  Function flushes bitmask table to disk
- * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
- */
+* @author dv
+* @brief  Function flushes bitmask table to disk
+* @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+*/
 int AK_blocktable_flush(){
     AK_PRO;
     if ((db = fopen(DB_FILE, "rb+")) == NULL) {
@@ -406,126 +404,143 @@ int AK_blocktable_flush(){
 
 
 /**
- * @author Domagoj Šitum
- * @brief Allocation of array which will contain currently accessed blocks.
- * For more info, see explanation in dbman.h
- */
-void AK_allocate_array_currently_accessed_blocks() {
-    AK_accessed_blocks = (AK_blocks_currently_accessed *) 
-	AK_malloc(MAX_BLOCKS_CURRENTLY_ACCESSED * sizeof(AK_blocks_currently_accessed));
-    // initialization of this array
+* @author Domagoj Šitum
+* @brief Allocation of array which will contain information about which blocks are being accessed.
+* Creates an array. Each element of this array will correspond to one initialized block.
+* For more info, see explanation in dbman.h
+*/
+void AK_allocate_block_activity_modes() {
+    // read value of last initialized block. These values are sequential
+    int n = AK_allocationbit->last_initialized;
     int i;
-    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
-	AK_accessed_blocks->used = 0; // false
-	pthread_mutex_init(&AK_accessed_blocks->block_mutex, NULL);
+    AK_PRO;
+    
+    free(AK_block_activity_info);
+    if (n == 0) n = 1000;
+    
+    AK_block_activity_info = (AK_block_activity *) 
+        AK_malloc((n + 1) * sizeof(AK_block_activity));
+    // initialization of this array
+    
+    for (i = 0; i <= n; i++) {
+        AK_block_activity_info[i].locked_for_reading = 0; // false
+        AK_block_activity_info[i].locked_for_writing = 0; // false
+        pthread_mutex_init(&AK_block_activity_info[i].block_lock, NULL);
+        pthread_cond_init(&AK_block_activity_info[i].reading_done, NULL);
+        pthread_cond_init(&AK_block_activity_info[i].writing_done, NULL);
     }
+    AK_EPI;
 }
 
 
 /**
- * @var test_lastCharacterWritten
- * @brief This variable is used only when TEST_MODE is ON!
- * It is used only for testing functionality of 
- * AK_thread_safe_block_access_test() function.
- * It will contain first character of last written block.
- * When reading thread reads the block (written by some other thread),
- * it will compare the first character from this block
- * to character containted in this wariables.
- * If they don't match, then the error occured!
- * It is assumed that the same block is being written to
- * and read from (just like AK_thread_safe_block_access_test
- * function works!)
- */
+* @var test_lastCharacterWritten
+* @brief This variable is used only when TEST_MODE is ON!
+* It is used only for testing functionality of 
+* AK_thread_safe_block_access_test() function.
+* It will contain first character of last written block.
+* When reading thread reads the block (written by some other thread),
+* it will compare the first character from this block
+* to character containted in this wariables.
+* If they don't match, then the error occured!
+* It is assumed that the same block is being written to
+* and read from (just like AK_thread_safe_block_access_test
+* function works!)
+*/
 char test_lastCharacterWritten = '\0';
 
 /**
- * @var test_threadSafeBlockAccessSucceeded
- * @brief Used in combination with test_lastCharacterWritten.
- * Will give the answer to question: 
- * "Has AK_thread_safe_block_access_test suceeded?"
- * 0 means NO, 1 means YES
- */
+* @var test_threadSafeBlockAccessSucceeded
+* @brief Used in combination with test_lastCharacterWritten.
+* Will give the answer to question: 
+* "Has AK_thread_safe_block_access_test suceeded?"
+* 0 means NO, 1 means YES
+*/
 int test_threadSafeBlockAccessSucceeded = 1;
 
 /**
- * @author Domagoj Šitum
- * @brief This function tests thread safe reading and writing to blocks.
- * There is N writing and N reading threads. Each reading thread should read
- * the data (character) that was set by last writing thread
- */
+* @author Domagoj Šitum
+* @brief This function tests thread safe reading and writing to blocks.
+* There is N writing and N reading threads, which are going through iterations. 
+* Each reading thread should read
+* the data (character) that was set by last writing thread
+*/
 void AK_thread_safe_block_access_test() {
-    AK_PRO;
-    int i, n;
+    int i, j, sum_of_suceeded_tests = 0;
     int block_address = 0;
+    int true = 1, false = 0;
+    AK_block *backup_block = (AK_block *) AK_malloc(sizeof(AK_block));
+    AK_block *block;
+    pthread_t *threads;
+    AK_PRO;
+    
     srand(time(NULL));
     
-    printf("N threads will read and N will write to the same block."
-	"\nRead values should be equal to the first written values "
-	"in front of them.\n");
-    printf("Enter N (between 1 and 100): ");
-    scanf("%d", &n);
-
-    if (n < 1) n = 1;
-    if (n > 100) n = 100;
-    // we read first block of actual data (after allocation bit-vector)
-
-    AK_block *block = AK_read_block(block_address);
-    AK_block *backup_block = (AK_block *) AK_malloc(sizeof(AK_block));
+    printf("N reading threads + N writing threads are trying to read/write "
+            "to the same block. Result is printed to the screen.\n\n");
     
+    // first we have to read original value of the first block
+    // (so that we can save it somewhere and restore it after the whole operation is over)
+    block = AK_read_block(block_address);
     
-    testMode = TEST_MODE_ON;
-
     // we have to backup that first block, because we will make changes to it
+    // (explanation of the text above)
     memcpy((void *)backup_block, (void *)block, sizeof(AK_block));
     
-    
-    // then we create N reading and N writing threads
-    pthread_t *threads = (pthread_t *) AK_malloc(2 * n * sizeof(pthread_t));
+    for (j=1; j<=50; j++) {
+        printf("%d+%d threads: ", j, j);
+        
+        // we read first block of actual data (after allocation bit-vector)
+        block = AK_read_block(block_address);
+        
+        testMode = TEST_MODE_ON;
+        
+        // then we create j reading and j writing threads
+        threads = (pthread_t *) AK_malloc(2 * j * sizeof(pthread_t));
 
-    // and send them to read and write to the same block
-    for (i = 0; i < n; i++) {
-	pthread_create(&threads[2*i], NULL, AK_write_block_for_testing, (void *)block);
-	pthread_create(&threads[2*i+1], NULL, AK_read_block_for_testing, (void *)&block_address);
+        // and send them to read and write to the same block (block with index 0)
+        for (i = 0; i < j; i++) {
+            pthread_create(&threads[2*i], NULL, AK_write_block_for_testing, (void *)block);
+            pthread_create(&threads[2*i+1], NULL, AK_read_block_for_testing, (void *)&block_address);
+        }
+        
+        // and then, we just have to wait all threads to finish
+        for (i = 0; i < 2*j; i++) 
+            pthread_join(threads[i],NULL);
+        
+        testMode = TEST_MODE_OFF;
+        
+        AK_free((void*)threads);
+        
+        // and at the end of each iteration,
+        // we check if thread safe block access (reading/writing) succeeded.
+        // if it failed, we count it
+        if (test_threadSafeBlockAccessSucceeded == true) {
+            printf("Success\n");
+            sum_of_suceeded_tests++;
+        } else {
+            printf("Failed\n");
+        }
+    
+        test_lastCharacterWritten = '\0';
+        test_threadSafeBlockAccessSucceeded = true;
     }
-
-
-    // and then, we just have to wait all threads to finish
-    for (i = 0; i < 2*n; i++) 
-	pthread_join(threads[i],NULL);
-    
-    testMode = TEST_MODE_OFF;
-    
     
     // and at the end, we write backup block back to the file
     AK_write_block(backup_block);
-    
     AK_free((void*)backup_block);
-    AK_free((void*)threads);
     
-    // and we check if thread safe block access succeeded
-    int TRUE = 1, FALSE = 0;
-    if (test_threadSafeBlockAccessSucceeded == TRUE) {
-	printf("\nTest succeeded!\n");
-    } else {
-	printf("Test didn't succeed because somewhere \
-	read character was not equal to last written character. \
-	E.g. If written character was 'n', then every read character \
-	after it should also be 'n'");
-    }
-    
-    // and we reinitialize test variables
-    test_lastCharacterWritten = '\0';
-    test_threadSafeBlockAccessSucceeded = TRUE;
+    printf("\n%d out of 50 tests succeeded.", sum_of_suceeded_tests);
     
     AK_EPI;
 }
 
 /**
- * @author Domagoj Šitum
- * @brief This function is only for testing. It has to be there, because
- * pthread_create only accepts void* function_name (void *) function format.
- * So AK_read_block is no-go for pthread_create.
- */
+* @author Domagoj Šitum
+* @brief This function is only for testing. It has to be there, because
+* pthread_create only accepts void* function_name (void *) function format.
+* So AK_read_block is no-go for pthread_create.
+*/
 void* AK_read_block_for_testing(void *address) {
     AK_PRO;
     int adr = *(int *)address;
@@ -534,11 +549,11 @@ void* AK_read_block_for_testing(void *address) {
 }
 
 /**
- * @author Domagoj Šitum
- * @brief This function is only for testing. It has to be there, because
- * pthread_create only accepts void* function_name (void *) function format.
- * So AK_write_block is no-go for pthread_create.
- */
+* @author Domagoj Šitum
+* @brief This function is only for testing. It has to be there, because
+* pthread_create only accepts void* function_name (void *) function format.
+* So AK_write_block is no-go for pthread_create.
+*/
 void* AK_write_block_for_testing(void *block) {
     AK_PRO;
     AK_block *blk = (AK_block *)block;
@@ -548,10 +563,10 @@ void* AK_write_block_for_testing(void *block) {
 
 
 /**
- * @author dv
- * @brief  Function gets allocation table from disk
- * @return EXIT_SUCCESS if the file has been taken from disk, EXIT_ERROR otherwise
- */
+* @author dv
+* @brief  Function gets allocation table from disk
+* @return EXIT_SUCCESS if the file has been taken from disk, EXIT_ERROR otherwise
+*/
 int AK_blocktable_get(){
     AK_PRO;
     if ((db = fopen(DB_FILE, "rb+")) == NULL) {
@@ -578,9 +593,9 @@ int AK_blocktable_get(){
 
 
 /**
- * @brief  Helper function to determine file size
- * @return file size
- */
+* @brief  Helper function to determine file size
+* @return file size
+*/
 int fsize(FILE *fp){
     AK_PRO;
     int sz = 1;
@@ -603,10 +618,10 @@ int fsize(FILE *fp){
 
 
 /**
- * @author dv
- * @brief  Function that initializes allocation table, write it to disk and cache in memory
- * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
- */
+* @author dv
+* @brief  Function that initializes allocation table, write it to disk and cache in memory
+* @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+*/
 int AK_init_allocation_table(){
     int i, sz;
     AK_PRO;
@@ -668,10 +683,10 @@ int AK_init_allocation_table(){
 
 
 /**
- * @author Markus Schatten , rearranged by dv
- * @brief  Function that initializes new block
- * @return pointer to block allocated in memory
- */
+* @author Markus Schatten , rearranged by dv
+* @brief  Function that initializes new block
+* @return pointer to block allocated in memory
+*/
 AK_block *  AK_init_block(){
     register int i = 0, j, k;
     AK_block * block = NULL;
@@ -718,10 +733,10 @@ AK_block *  AK_init_block(){
 
 
 /**
- * @author  dv
- * @brief  Function that dumps block
- * @return nothing
- */
+* @author  dv
+* @brief  Function that dumps block
+* @return nothing
+*/
 int  AK_print_block(AK_block * block, int num, char* gg, FILE *fpp){
     register int i = 0, j, k;
     int tmp = 0, tmp1 = 0, tmp2 = 0, tmp3 = 0, tmp4 = 0, kk = 0;
@@ -919,8 +934,8 @@ int  AK_print_block(AK_block * block, int num, char* gg, FILE *fpp){
     if (kk)AK_free(block);
 
     if (fpp == NULL) {
-	fclose(fp);
-	db = NULL;
+        fclose(fp);
+        db = NULL;
     }
     AK_EPI;
     return (EXIT_SUCCESS);
@@ -930,11 +945,11 @@ int  AK_print_block(AK_block * block, int num, char* gg, FILE *fpp){
 
 
 /**
- * @author Markus Schatten , rearranged by dv
- * @brief  Function that allocates new blocks by placing them to appropriate place
- * and then update last initialized index
- * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
- */
+* @author Markus Schatten , rearranged by dv
+* @brief  Function that allocates new blocks by placing them to appropriate place
+* and then update last initialized index
+* @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+*/
 int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
     register int i = 0;
     AK_PRO;
@@ -960,11 +975,11 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
     for (i = FromWhere; i < FromWhere + HowMany; i++) {
         block->address = i;
 
-	if (AK_fwrite(block, sizeof (*block), 1, db) != 1) {
+        if (AK_fwrite(block, sizeof (*block), 1, db) != 1) {
             printf("AK_init_db_file: ERROR. Cannot write block %d\n", i);
             AK_EPI;
             return EXIT_ERROR;
-	}
+        }
     }
     pthread_mutex_unlock(&fileLockMutex);
 
@@ -973,6 +988,7 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
     db = NULL;
 
     AK_allocationbit->last_initialized = i;
+    AK_allocate_block_activity_modes();
     AK_blocktable_flush();
     printf("AK_allocationbit->last_initialized %d\n", AK_allocationbit->last_initialized);
     AK_EPI;
@@ -985,17 +1001,18 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
 
 
 /**
- * @author Markus Schatten, updated dv and Domagoj Šitum (thread-safe enabled)
- * @brief  Function that reads a block at a given address (block number less than db_file_size).
- * New block is allocated. Database file is opened. Position is set to provided address block.
- * At the end function reads file from that position. Completely thread-safe.
- * @param address block number (address)
- * @return pointer to block allocated in memory
- */
+* @author Markus Schatten, updated dv and Domagoj Šitum (thread-safe enabled)
+* @brief  Function that reads a block at a given address (block number less than db_file_size).
+* New block is allocated. Database file is opened. Position is set to provided address block.
+* At the end function reads file from that position. Completely thread-safe.
+* @param address block number (address)
+* @return pointer to block allocated in memory
+*/
 AK_block * AK_read_block(int address) {
     AK_PRO;
     int true = 1, false = 0;
-    int i, being_accessed = false, index_of_accessed_block;
+    int locked_for_writing, locked_for_reading;
+    int thread_id;
     
     if (DB_FILE_BLOCKS_NUM<address || 0>address){
         printf("AK_read_block: ERROR. Out of range %s  address:%d  DB_FILE_BLOCKS_NUM:%d\n", DB_FILE, address, DB_FILE_BLOCKS_NUM);
@@ -1005,60 +1022,36 @@ AK_block * AK_read_block(int address) {
     
     FILE * database;
     if ((database = fopen(DB_FILE, "rb")) == NULL) {
-	printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
-	AK_EPI;
-	exit(EXIT_ERROR);
-    }    
+        printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+        AK_EPI;
+        exit(EXIT_ERROR);
+    } 
+
+    pthread_mutex_lock(&AK_block_activity_info[address].block_lock);
+    // first we check if block is already locked for writing by another thread
+    locked_for_reading = AK_block_activity_info[address].locked_for_reading;
+    locked_for_writing = AK_block_activity_info[address].locked_for_writing;
     
-    
-    pthread_mutex_lock(&check_if_block_being_accessed_mutex);
-    // first we check if given block exists in array
-    // if it does, that means that it's already being accessed
-    // so we take it's array index    
-    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
-	if (AK_accessed_blocks[i].block == address && AK_accessed_blocks[i].used == true) {
-	    index_of_accessed_block = i;
-	    being_accessed = true;
-	    break;
-	}
+    if (!locked_for_reading && !locked_for_writing) {
+        AK_block_activity_info[address].thread_holding_lock = &thread_id;
     }
     
-    // if block is in the list, and if it's being written to it, then we lock it's mutex
+    // if block is locked for writing, then we have to wait another thread to unlock it
     //	 (thus preventing it from accessing disk once again)
     // if another thread is only reading from this block, then we don't have to lock it's mutex, because
     // any number of threads can read the same block at the same time
-    
-    // if block isn't in list of currently accessed blocks, then we add it to this list
-    if (being_accessed == true) {
-	if (AK_accessed_blocks[index_of_accessed_block].reading_writing == WRITING_BLOCK) {
-	    pthread_mutex_lock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
-	}
+    // else, we lock the block for reading and proceed    
+    if (locked_for_writing == true) {
+        pthread_cond_wait(&AK_block_activity_info[address].writing_done, &AK_block_activity_info[address].block_lock);
     } else {
-	// this while will loop until there is at least one free element in AK_accessed_blocks
-	int free_block_found = false;
-	while(free_block_found == false) {	    
-	    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
-		if (AK_accessed_blocks[i].used == false) {
-		    free_block_found = true;
-		    index_of_accessed_block = i;
-		    AK_accessed_blocks[i].used = true;
-		    AK_accessed_blocks[i].block = address;
-		    AK_accessed_blocks[i].reading_writing = READING_BLOCK;
-		    pthread_mutex_lock(&AK_accessed_blocks[i].block_mutex);
-		    break;
-		}
-	    }
-	}
+        AK_block_activity_info[address].locked_for_reading = true;
     }
-    pthread_mutex_unlock(&check_if_block_being_accessed_mutex);
     
-    // now we're certain that block is in the list, it's mutex is also locked
-    // so, we can safely write it to the disk
+    // now we can safely write block to the disk
     
     // first we have to set position in file for reading new block
     if (fseek(database, address * sizeof(AK_block)+AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
         printf("AK_read_block: ERROR. Cannot set position to provided address block %d.\n", address);
-	pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
         AK_EPI;
         exit(EXIT_ERROR);
     }
@@ -1066,9 +1059,8 @@ AK_block * AK_read_block(int address) {
     AK_block * block = AK_malloc(sizeof(AK_block));
 
     // then we simply read block from the disk
-	if (AK_fread(block, sizeof(AK_block), 1, database) == 0) {
+    if (AK_fread(block, sizeof(AK_block), 1, database) == 0) {
         printf("AK_read_block: ERROR. Cannot read block %d.\n", address);
-	pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
         AK_EPI;
         exit(EXIT_ERROR);
     }
@@ -1081,21 +1073,24 @@ AK_block * AK_read_block(int address) {
     // If everything goes well, we should get the same character that was written here
     // by last writing thread
     if (testMode == TEST_MODE_ON) {
-	int FALSE = 0;
-	printf("AK_read_block: Read character: %c\n", block->data[0]);
-	if (test_lastCharacterWritten != '\0') {
-	    if (test_lastCharacterWritten != block->data[0]) {
-		test_threadSafeBlockAccessSucceeded = FALSE;
-	    }
-	}
+        int FALSE = 0;
+        if (test_lastCharacterWritten != '\0') {
+            if (test_lastCharacterWritten != block->data[0]) {
+                test_threadSafeBlockAccessSucceeded = FALSE;
+            }
+        }
     }
     
-    // and after everything is done, we just have to un-use block container and unlock it's mutex
-    // thus making it accessible to other blocks which want to access disk
-    AK_accessed_blocks[index_of_accessed_block].used = false;
-    pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
+    // after reading is done, we unlock this block
+    AK_block_activity_info[address].locked_for_reading = false;
+    // and signalize other threads that reading is done!
+    pthread_cond_signal(&AK_block_activity_info[address].reading_done);
     
-
+    // and after everything is done, we just have to unlock block's mutex
+    // thus making it accessible to other blocks which want to write data to it
+    if (AK_block_activity_info[address].thread_holding_lock == &thread_id) {
+        pthread_mutex_unlock(&AK_block_activity_info[address].block_lock);
+    }
     fclose(database);
     
     AK_EPI;
@@ -1103,59 +1098,51 @@ AK_block * AK_read_block(int address) {
 }
 
 /**
- * @author Markus Schatten, updated by Domagoj Šitum (thread-safe enabled)
- * @brief  Function writes a block to DB file. Database file is opened. Position is set to provided address block. Block is
- written to provided address. Completely thread-safe.
- * @param block poiner to block allocated in memory to write
- * @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
- */
+* @author Markus Schatten, updated by Domagoj Šitum (thread-safe enabled)
+* @brief  Function writes a block to DB file. Database file is opened. Position is set to provided address block. Block is
+written to provided address. Completely thread-safe.
+* @param block poiner to block allocated in memory to write
+* @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
+*/
 int AK_write_block(AK_block * block) {
     AK_PRO;
     int true = 1, false = 0;
-    int i, being_accessed = false, index_of_accessed_block;
+    int locked_for_reading = false, locked_for_writing = false, address;
+    int thread_id;
 
     FILE * database;
     if ((database = fopen(DB_FILE, "rb+")) == NULL) {
-	printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
-	AK_EPI;
-	exit(EXIT_ERROR);
+        printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
+        AK_EPI;
+        exit(EXIT_ERROR);
     }
     
+    // first we have to find out block's address
+    address = block->address;
     
-    pthread_mutex_lock(&check_if_block_being_accessed_mutex);
-    // first we check if given block exists in array
-    // if it does, that means that it's already being accessed
-    // so we take it's array index    
-    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
-	if (AK_accessed_blocks[i].block == block->address && AK_accessed_blocks[i].used == true) {
-	    index_of_accessed_block = i;
-	    being_accessed = true;
-	    break;
-	}
+    pthread_mutex_lock(&AK_block_activity_info[address].block_lock);
+    // first we check if block is already locked for reading and for writing by another threads
+    locked_for_writing = AK_block_activity_info[address].locked_for_writing;
+    locked_for_reading = AK_block_activity_info[address].locked_for_reading;    
+    
+    if (!locked_for_reading && !locked_for_writing) {
+        AK_block_activity_info[address].thread_holding_lock = &thread_id;
     }
-    // if block is in the list, then we lock it's mutex
-    //	 (thus preventing it from accessing disk once again)
-    // if block isn't in list of currently accessed blocks, then we add it to this list
-    if (being_accessed == true) {
-	pthread_mutex_lock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
-    } else {
-	// this while will loop until there is at least one free element in AK_accessed_blocks
-	int free_block_found = false;
-	while(free_block_found == false) {	    
-	    for (i = 0; i < MAX_BLOCKS_CURRENTLY_ACCESSED; i++) {
-		if (AK_accessed_blocks[i].used == false) {
-		    free_block_found = true;
-		    index_of_accessed_block = i;
-		    AK_accessed_blocks[i].used = true;
-		    AK_accessed_blocks[i].block = block->address;
-		    AK_accessed_blocks[i].reading_writing = WRITING_BLOCK;
-		    pthread_mutex_lock(&AK_accessed_blocks[i].block_mutex);
-		    break;
-		}
-	    }
-	}
+    
+    // if block is locked for writing and/or writing, then we have to wait another thread to unlock it
+    //   (thus preventing it from accessing disk once again)
+    // if another thread is only reading from this block, then we don't have to lock it's mutex, because
+    // any number of threads can read the same block at the same time
+    // else, we lock the block for reading and proceed    
+    if (locked_for_reading == true) {
+        pthread_cond_wait(&AK_block_activity_info[address].reading_done, &AK_block_activity_info[address].block_lock);
     }
-    pthread_mutex_unlock(&check_if_block_being_accessed_mutex);
+    if (locked_for_writing == true) {
+        pthread_cond_wait(&AK_block_activity_info[address].writing_done, &AK_block_activity_info[address].block_lock);
+    }
+    
+    // and when there is no other thread reading from it or writing to it, we can proceed
+    AK_block_activity_info[address].locked_for_writing = true;
     
     // block of code below is used only for testing purposes!
     // it is executed only when testMode is ON 
@@ -1164,19 +1151,16 @@ int AK_write_block(AK_block * block) {
     // than it writes it to the screen. Then, thread which is reading block can read this first character
     // and print it out. If everything goes well, we should get the same character that was written here.
     if (testMode == TEST_MODE_ON) {
-	int character = rand() % 26 + 97;  // ascii code for letters a-z
-	block->data[0] = (char)character;
-	printf("AK_write_block: Written character: %c\n", block->data[0]);
-	test_lastCharacterWritten = block->data[0];
+        int character = rand() % 26 + 97;  // ascii code for letters a-z
+        block->data[0] = (char)character;
+        test_lastCharacterWritten = block->data[0];
     }
     
-    // now we're certain that block is in the list, it's mutex is also locked
-    // so, we can safely write it to the disk
-   
+    // now we can safely write it to the disk
+
     // first we have to set position in file for new block writing
     if (fseek(database, block->address * sizeof(AK_block)+AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
         printf("AK_write_block: ERROR. Cannot set position to provided address block %d.\n", block->address);
-	pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
         AK_EPI;
         exit(EXIT_ERROR);
     }
@@ -1184,16 +1168,20 @@ int AK_write_block(AK_block * block) {
     // then we simply write block to the disk
     if (AK_fwrite(block, sizeof (*block), 1, database) != 1) {
         printf("AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address);
-        pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
         AK_EPI;
         exit(EXIT_ERROR);
     }
-	
-    // and after everything is done, we just have to un-use block container and unlock it's mutex
-    // thus making it accessible to other blocks which want to access disk
-    AK_accessed_blocks[index_of_accessed_block].used = false;
-    pthread_mutex_unlock(&AK_accessed_blocks[index_of_accessed_block].block_mutex);
-
+        
+    // after writing is done, we unlock this block for reading and/or writing
+    AK_block_activity_info[address].locked_for_writing = false;
+    // and signalize other threads that writing is done!
+    pthread_cond_signal(&AK_block_activity_info[address].writing_done);
+    
+    // and after everything is done, we just have to unlock block's mutex
+    // thus making it accessible to other blocks which want to write data to it or read from it
+    if (AK_block_activity_info[address].thread_holding_lock == &thread_id) {
+        pthread_mutex_unlock(&AK_block_activity_info[address].block_lock);
+    }
     
     fclose(database);
     
@@ -1205,13 +1193,13 @@ int AK_write_block(AK_block * block) {
 
 
 /**
- * @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
- * @brief  Function copy header to blocks. Completely thread-safe
- * @param header pointer to header provided for copy
- * @param blocknum pointer to addresses of blocks that header needs to be copied
- * @param num number of blocks waiting for its header
- * @return number of performed header copy
- */
+* @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
+* @brief  Function copy header to blocks. Completely thread-safe
+* @param header pointer to header provided for copy
+* @param blocknum pointer to addresses of blocks that header needs to be copied
+* @param num number of blocks waiting for its header
+* @return number of performed header copy
+*/
 int AK_copy_header(AK_header *header, int * blocknum, int num)
 {
     int j = 0;
@@ -1258,21 +1246,21 @@ int AK_copy_header(AK_header *header, int * blocknum, int num)
 
 
 /**
- * @author dv
- * @brief  Function alocates new extent of blocks. Number of blocks is not ordered as well as a way of search for them.
- * @param start_address address (block number) to start searching for sufficient space
- * @param desired_size number of desired blocks
- * @param AK_allocation_set_mode a way of trying to fing AK_free space. Can be one of:
- allocationSEQUENCE,
- allocationUPPER,
- allocationLOWER,
- allocationAROUND
- * @param border number of allocated blocks gap
- * @param target block address around which other blocks have to be searched
- * @param header pointer to header that should be written to the new extent (all blocks)
- * @param int gl gap size
- * @return pointer to set of alocated block addresses
- */
+* @author dv
+* @brief  Function alocates new extent of blocks. Number of blocks is not ordered as well as a way of search for them.
+* @param start_address address (block number) to start searching for sufficient space
+* @param desired_size number of desired blocks
+* @param AK_allocation_set_mode a way of trying to fing AK_free space. Can be one of:
+allocationSEQUENCE,
+allocationUPPER,
+allocationLOWER,
+allocationAROUND
+* @param border number of allocated blocks gap
+* @param target block address around which other blocks have to be searched
+* @param header pointer to header that should be written to the new extent (all blocks)
+* @param int gl gap size
+* @return pointer to set of alocated block addresses
+*/
 int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header, int gl) {
     register int i; /// vars for loop [for]
     int num_blocks = 0;
@@ -1344,21 +1332,21 @@ int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* 
 
 
 /**
- * @author dv
- * @brief  Function alocates new blocks for increasing extent size.
- * @param start_address first address of extent that is subject of increasing
- * @param add_size number how many new blocks is to be added to existing extent
- * @param AK_allocation_set_mode a way of trying to fing AK_free space. Can be one of:
- allocationSEQUENCE,
- allocationUPPER,
- allocationLOWER,
- allocationAROUND
- * @param border number of allocated blocks gap
- * @param target block address around which other blocks have to be searched
- * @param header pointer to header that should be written to the new extent (all blocks)
- * @param int gl gap size
- * @return pointer to set of alocated block addresses
- */
+* @author dv
+* @brief  Function alocates new blocks for increasing extent size.
+* @param start_address first address of extent that is subject of increasing
+* @param add_size number how many new blocks is to be added to existing extent
+* @param AK_allocation_set_mode a way of trying to fing AK_free space. Can be one of:
+allocationSEQUENCE,
+allocationUPPER,
+allocationLOWER,
+allocationAROUND
+* @param border number of allocated blocks gap
+* @param target block address around which other blocks have to be searched
+* @param header pointer to header that should be written to the new extent (all blocks)
+* @param int gl gap size
+* @return pointer to set of alocated block addresses
+*/
 int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header, int gl){
     register int i; /// vars for loop [for]
     unsigned int last_address = 0;
@@ -1404,21 +1392,21 @@ int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode*
 
 
 /**
- * @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
- * @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE.
- * Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is
- *         incremented.
- * @param start_address address (block number) to start searching for sufficient space
- * @param old_size size of previous extent in same segment (in blocks)
- * @param extent_type type of extent (can be one of:
- SEGMENT_TYPE_SYSTEM_TABLE,
- SEGMENT_TYPE_TABLE,
- SEGMENT_TYPE_INDEX,
- SEGMENT_TYPE_TRANSACTION,
- SEGMENT_TYPE_TEMP
- * @param header pointer to header that should be written to the new extent (all blocks)
- * @return address (block number) of new extent if successful, EXIT_ERROR otherwise
- */
+* @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
+* @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE.
+* Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is
+*         incremented.
+* @param start_address address (block number) to start searching for sufficient space
+* @param old_size size of previous extent in same segment (in blocks)
+* @param extent_type type of extent (can be one of:
+SEGMENT_TYPE_SYSTEM_TABLE,
+SEGMENT_TYPE_TABLE,
+SEGMENT_TYPE_INDEX,
+SEGMENT_TYPE_TRANSACTION,
+SEGMENT_TYPE_TEMP
+* @param header pointer to header that should be written to the new extent (all blocks)
+* @return address (block number) of new extent if successful, EXIT_ERROR otherwise
+*/
 int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *header) {
     int req_AK_free_space; /// var - How much of space is required for extent
     register int i; /// vars for loop [for]
@@ -1426,7 +1414,6 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
     int firstAddress = 0;
     int * blocknum;
     AK_PRO;
-
     /// if the old_size is 0 then the size of new extent is INITIAL_EXTENT_SIZE
     if (old_size == 0) {
         req_AK_free_space = INITIAL_EXTENT_SIZE;
@@ -1509,23 +1496,23 @@ int AK_new_extent(int start_address, int old_size, int extent_type, AK_header *h
 
 
 /**
- * @author Tomislav Fotak, refurbished by dv
- * @brief  Function that allocates new segment of extents. In this phase of implementation, only extents
- containing INITIAL_EXTENT_SIZE blocks can be allocated. If extent is successfully allocated,
- number of allocated extents is incremented and function goes to next block after allocated extent.
- Otherwise, function moves to INITIAL_EXTENT_SIZE blocks. In that way function gets either first block of
- new extent or some block in that extent which will not be AK_free.
+* @author Tomislav Fotak, refurbished by dv
+* @brief  Function that allocates new segment of extents. In this phase of implementation, only extents
+containing INITIAL_EXTENT_SIZE blocks can be allocated. If extent is successfully allocated,
+number of allocated extents is incremented and function goes to next block after allocated extent.
+Otherwise, function moves to INITIAL_EXTENT_SIZE blocks. In that way function gets either first block of
+new extent or some block in that extent which will not be AK_free.
 
- * @param name (character pointer) name of segment
- * @param type segment type (possible values:
- SEGMENT_TYPE_SYSTEM_TABLE,
- SEGMENT_TYPE_TABLE,
- SEGMENT_TYPE_INDEX,
- SEGMENT_TYPE_TRANSACTION,
- SEGMENT_TYPE_TEMP)
- * @param header (header pointer) pointer to header that should be written to the new extent (all blocks)
- * @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
- */
+* @param name (character pointer) name of segment
+* @param type segment type (possible values:
+SEGMENT_TYPE_SYSTEM_TABLE,
+SEGMENT_TYPE_TABLE,
+SEGMENT_TYPE_INDEX,
+SEGMENT_TYPE_TRANSACTION,
+SEGMENT_TYPE_TEMP)
+* @param header (header pointer) pointer to header that should be written to the new extent (all blocks)
+* @return EXIT_SUCCESS for success or EXIT_ERROR if some error occurs
+*/
 int AK_new_segment(char * name, int type, AK_header *header) {
     int segment_start_addr = 1; /// start address for segment because we can not allocate segment in block 0
     int first_allocated_block = -1;
@@ -1545,17 +1532,17 @@ int AK_new_segment(char * name, int type, AK_header *header) {
 }
 
 /**
- * @author Matija Novak
- * @brief  Function for creating header and initalize integrity, constraint name and constraint
- code with parameter values of function.
+* @author Matija Novak
+* @brief  Function for creating header and initalize integrity, constraint name and constraint
+code with parameter values of function.
 
- * @param name name of the atribute
- * @param type type of the atribute
- * @param integrity standard integrity costraint
- * @param constr_name extra integrity constraint name
- * @param contr_code extra integrity costraint code
- * @return AK_header
- */
+* @param name name of the atribute
+* @param type type of the atribute
+* @param integrity standard integrity costraint
+* @param constr_name extra integrity constraint name
+* @param contr_code extra integrity costraint code
+* @return AK_header
+*/
 AK_header * AK_create_header(char * name, int type, int integrity, char * constr_name, char * contr_code) {
     AK_header * catalog_header = (AK_header *)AK_malloc(sizeof (AK_header));
     AK_PRO;
@@ -1584,16 +1571,16 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
 }
 
 /**
- * @author Matija Novak
- * @brief  Function for inserting entry in tuple_dict and data of a block. Address, type and size of
- catalog_tuple_dict are set.  Free space of block is also set.
- * @param block_adress adress of a block in which we want insert data
- * @param type type of entry_data
- * @param entry_data (char) data which is inserted, can be int but must first be converted to char
- * @param i (int) adress in tuple_dict array (example block_address->tuple_dict[i])
- * @return No return value because it gets the address of an block like a function parameter
- and works directly with the orginal block
- */
+* @author Matija Novak
+* @brief  Function for inserting entry in tuple_dict and data of a block. Address, type and size of
+catalog_tuple_dict are set.  Free space of block is also set.
+* @param block_adress adress of a block in which we want insert data
+* @param type type of entry_data
+* @param entry_data (char) data which is inserted, can be int but must first be converted to char
+* @param i (int) adress in tuple_dict array (example block_address->tuple_dict[i])
+* @return No return value because it gets the address of an block like a function parameter
+and works directly with the orginal block
+*/
 void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int i) {
     AK_tuple_dict * catalog_tuple_dict;
     AK_PRO;
@@ -1630,31 +1617,31 @@ void AK_insert_entry(AK_block * block_address, int type, void * entry_data, int 
 }
 
 /**
- * @author Matija Novak
- * @brief  Function initialises the sytem table catalog and writes the result in first (0) block in db_file. Catalog block,
- catalog header name, catalog header address are allocated. Address, type, chained_with and AK_free_space attributes are
- initialized. Names of various database elements are written in block.
- * @param relation address of system table of relation in db_file
- * @param attribute address of system table of attribute in db_file
- * @param index address of system table of index in db_file
- * @param view address of system table of view in db_file
- * @param sequence address of system table of sequence in db_file
- * @param function address of system table of function in db_file
- * @param function_arguments address of system table of function_arguments in db_file
- * @param trigger address of system table of trigger in db_file
- * @param trigger_conditions address of system table of trigger_conditions in db_file
- * @param db address of system table of db in db_file
- * @param db_obj address of system table of db_obj in db_file
- * @param user address of system table of user in db_file
- * @param group address of system table of group in db_file
- * @param user_group address of system table of users associated with groups in db_file
- * @param user_right address of system table of user right in db_file
- * @param group_right address of system table of group right in db_file
- * @param constraint address of system table of constraint in db_file
- * @param constraintNull address of system table of constraintNull in db_file
- * @param reference address of system table of reference in db_file
- * @return EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
- */
+* @author Matija Novak
+* @brief  Function initialises the sytem table catalog and writes the result in first (0) block in db_file. Catalog block,
+catalog header name, catalog header address are allocated. Address, type, chained_with and AK_free_space attributes are
+initialized. Names of various database elements are written in block.
+* @param relation address of system table of relation in db_file
+* @param attribute address of system table of attribute in db_file
+* @param index address of system table of index in db_file
+* @param view address of system table of view in db_file
+* @param sequence address of system table of sequence in db_file
+* @param function address of system table of function in db_file
+* @param function_arguments address of system table of function_arguments in db_file
+* @param trigger address of system table of trigger in db_file
+* @param trigger_conditions address of system table of trigger_conditions in db_file
+* @param db address of system table of db in db_file
+* @param db_obj address of system table of db_obj in db_file
+* @param user address of system table of user in db_file
+* @param group address of system table of group in db_file
+* @param user_group address of system table of users associated with groups in db_file
+* @param user_right address of system table of user right in db_file
+* @param group_right address of system table of group right in db_file
+* @param constraint address of system table of constraint in db_file
+* @param constraintNull address of system table of constraintNull in db_file
+* @param reference address of system table of reference in db_file
+* @return EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
+*/
 int AK_init_system_tables_catalog(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
     int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference) {
     AK_block * catalog_block;
@@ -1783,13 +1770,13 @@ int AK_init_system_tables_catalog(int relation, int attribute, int index, int vi
 }
 
 /**
- * @author Miroslav Policki
- * @brief  Function that sets the first num ints of a block of memory to the specified value
- * @param block pointer to the block of memory to fill
- * @param value int value to be set
- * @param num number of ints in the block of memory to be set
- * @return No return value
- */
+* @author Miroslav Policki
+* @brief  Function that sets the first num ints of a block of memory to the specified value
+* @param block pointer to the block of memory to fill
+* @param value int value to be set
+* @param num number of ints in the block of memory to be set
+* @return No return value
+*/
 void AK_memset_int(void *block, int value, size_t num) {
     size_t i;
     AK_PRO;
@@ -1798,29 +1785,29 @@ void AK_memset_int(void *block, int value, size_t num) {
     AK_EPI;
 }
 /**
-  * @author Unknown
-  * @brief Function that registers system tables. Block at the given address is read. Various data from function arguments are            written in block about different database elements.
-  * @param relation relation in database
-  * @param attribute attribute in databse
-  * @param index index in database
-  * @param view view in database
-  * @param sequence sequence in database
-  * @param function function in database
-  * @param function_arguments functional_arguments in databse
-  * @param trigger trigger in database
-  * @param trigger_conditions trigger conditions in databse
-  * @param db database
-  * @param db_obj database object
-  * @param user user in database
-  * @param group group in database
-  * @param user_group user associated with group in database
-  * @param user_right user right in database
-  * @param group_right group right in database
-  * @param constraint constraint in database
-  * @param constraintNull Null constraint in database
-  * @param reference reference database
-  * @return EXIT_SUCCESS
-  */
+* @author Unknown
+* @brief Function that registers system tables. Block at the given address is read. Various data from function arguments are            written in block about different database elements.
+* @param relation relation in database
+* @param attribute attribute in databse
+* @param index index in database
+* @param view view in database
+* @param sequence sequence in database
+* @param function function in database
+* @param function_arguments functional_arguments in databse
+* @param trigger trigger in database
+* @param trigger_conditions trigger conditions in databse
+* @param db database
+* @param db_obj database object
+* @param user user in database
+* @param group group in database
+* @param user_group user associated with group in database
+* @param user_right user right in database
+* @param group_right group right in database
+* @param constraint constraint in database
+* @param constraintNull Null constraint in database
+* @param reference reference database
+* @return EXIT_SUCCESS
+*/
 int AK_register_system_tables(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
     int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference) {
     AK_block *relationTable;
@@ -2057,11 +2044,11 @@ int AK_register_system_tables(int relation, int attribute, int index, int view, 
 }
 
 /**
- * @author Miroslav Policki
- * @brief  Function initializes the system catalog. Headers for system tables are defined. Segments for those system tables are
- allocated. Above function AK_register_system_tables() to register system tables.
- * @return EXIT_SUCCESS if the system catalog has been successfully initialized, EXIT_ERROR otherwise
- */
+* @author Miroslav Policki
+* @brief  Function initializes the system catalog. Headers for system tables are defined. Segments for those system tables are
+allocated. Above function AK_register_system_tables() to register system tables.
+* @return EXIT_SUCCESS if the system catalog has been successfully initialized, EXIT_ERROR otherwise
+*/
 int AK_init_system_catalog() {
     int relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right, constraint, constraintNull, constraintUnique, reference;
     int i;
@@ -2394,12 +2381,12 @@ int AK_init_system_catalog() {
 }
 
 /**
- * @author Markus Schatten
- * @brief  Function deletes a block by a given block address (resets the header and data). Types, integrities, constraint names,
- constraint codes are set to "AK_free" values. In tuple dictionary type, address and size are set to FREE_INT values. Data            of block is set to FREE_CHAR.
- * @param address address of the block to be deleted
- * @return returns EXIT_SUCCESS if deletion successful, else EXIT_ERROR
- */
+* @author Markus Schatten
+* @brief  Function deletes a block by a given block address (resets the header and data). Types, integrities, constraint names,
+constraint codes are set to "AK_free" values. In tuple dictionary type, address and size are set to FREE_INT values. Data            of block is set to FREE_CHAR.
+* @param address address of the block to be deleted
+* @return returns EXIT_SUCCESS if deletion successful, else EXIT_ERROR
+*/
 int AK_delete_block(int address) {
     register int i, j, k;
 
@@ -2456,12 +2443,12 @@ int AK_delete_block(int address) {
 }
 
 /**
- * @author Dejan Samboliæ
- * @brief  Function deletes an extent between begin and end blocks
- * @param begin address of extent's first block
- * @param end address of extent's last block
- * @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
- */
+* @author Dejan Samboliæ
+* @brief  Function deletes an extent between begin and end blocks
+* @param begin address of extent's first block
+* @param end address of extent's last block
+* @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
+*/
 int AK_delete_extent(int begin, int end) {
     int address;
     AK_PRO;
@@ -2477,11 +2464,11 @@ int AK_delete_extent(int begin, int end) {
 }
 
 /**
- * @author Mislav Èakariæ
- * @param name name of the segment
- * @param type type of the segment
- * @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
- */
+* @author Mislav Èakariæ
+* @param name name of the segment
+* @param type type of the segment
+* @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
+*/
 int AK_delete_segment(char * name, int type) {
     int i = 0;
     table_addresses *addresses;
@@ -2529,11 +2516,11 @@ int AK_delete_segment(char * name, int type) {
 }
 
 /**
- * @author Markus Schatten
- * @return Function that calls functions AK_init_db_file() and AK_init_system_catalog() to initialize disk manager.
- * It also calls AK_allocate_array_currently_accessed_blocks() to allocate memory needed for thread-safe reading
- * and writing to disk.
- */
+* @author Markus Schatten
+* @return Function that calls functions AK_init_db_file() and AK_init_system_catalog() to initialize disk manager.
+* It also calls AK_allocate_array_currently_accessed_blocks() to allocate memory needed for thread-safe reading
+* and writing to disk.
+*/
 int AK_init_disk_manager() {
     //int size_in_mb = DB_FILE_SIZE;
     float size = DB_FILE_BLOCKS_NUM; //1024 * 1024 * size_in_mb / sizeof ( AK_block);
@@ -2543,7 +2530,7 @@ int AK_init_disk_manager() {
         exit(EXIT_ERROR);
     }
     
-    AK_allocate_array_currently_accessed_blocks();
+    AK_allocate_block_activity_modes();
 
     if (AK_allocationbit->prepared == 31){
 
