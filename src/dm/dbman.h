@@ -206,7 +206,7 @@ typedef enum{
  *      writing thread can start writing to block
  * writing_done - represents signal, which sends thread that just finished writing to block. This signal will indicate
  *      that other threads can start reading from this block or even writing to it
- * thread_holding_lock - the only thread which can unlock locked "block_lock" is the one that locked it. 
+ * thread_holding_lock - the only thread which can unlock locked "block_lock" is the one that locked it.
  *      This variable makes sure that ONLY the thread, which actually holds the lock, releases it.
  */
 typedef struct {
@@ -238,7 +238,7 @@ AK_block *  AK_init_block();
 void AK_allocationtable_dump(int zz);
 void AK_blocktable_dump(int zz);
 int AK_blocktable_flush();
-void AK_allocate_array_currently_accessed_blocks();
+// void AK_allocate_array_currently_accessed_blocks(); // ne postoji nikakva implementacija
 void AK_thread_safe_block_access_test();
 void* AK_read_block_for_testing(void *address);
 void* AK_write_block_for_testing(void *block);
