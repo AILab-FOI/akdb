@@ -143,19 +143,25 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
  * @param new_table name of the theta_join table
  * @return No return value
  */
-void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
+//void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
+void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, struct list_node *constraints, char *new_table) {
     AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
 
     int tbl1_att, tbl2_att, tbl1_row, tbl2_row;
     int address, size, type;
     char data[MAX_VARCHAR_LENGTH];
-
+/*
     AK_list_elem row_root_init = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    AK_list_elem row_root_full;
+    AK_list_elem row_root_full;*/
+
+    struct list_node *row_root_init = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *row_root_full;
+
     AK_header *t_header = (AK_header *) AK_get_header(new_table);
 
-    Ak_Init_L(row_root_init);
+    //Ak_Init_L(row_root_init);
+    Ak_Init_L3(&row_root_init);
 
     for (tbl1_row = 0; tbl1_row < DATA_BLOCK_SIZE; tbl1_row += tbl1_num_att){
 
@@ -193,7 +199,8 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
 			}
     	}
 
-    	Ak_DeleteAll_L(row_root_init);
+    	//Ak_DeleteAll_L(row_root_init);
+    	Ak_DeleteAll_L3(&row_root_init);
     }
 
     AK_free(row_root_init);
@@ -212,7 +219,8 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
  * @return if successful returns EXIT_SUCCESS and EXIT_ERROR otherwise
  *   
  */
-int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *constraints) {
+//int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *constraints) {
+int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node *constraints) {
 	AK_PRO;
 	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
@@ -303,56 +311,82 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *c
 void AK_op_theta_join_test() {
     AK_PRO;
     printf("\n********** THETA JOIN TEST **********\n\n");
-
+/*
     AK_list *constraints = (AK_list *) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(constraints);
+    Ak_Init_L(constraints);*/
+    
+    struct list_node *constraints = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&constraints);
 
     //test where no column names overlap
     printf("SELECT * FROM department, professor WHERE manager = lastname;\n");
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "manager", sizeof ("manager"), constraints);
+    /*Ak_InsertAtEnd_L(TYPE_ATTRIBS, "manager", sizeof ("manager"), constraints);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), constraints);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);*/
 
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "manager", sizeof ("manager"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+    
     AK_theta_join("department", "professor", "theta_join_test", constraints);
     AK_print_table("theta_join_test");
 
-    Ak_DeleteAll_L(constraints);
+//    Ak_DeleteAll_L(constraints);
+    Ak_DeleteAll_L3(&constraints);
 
     //test where overlaping columns are not a part of the constraints
     printf("SELECT * FROM student, professor2 WHERE id_prof = mbr;\n");
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
+    /*Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr", sizeof ("mbr"), constraints);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);*/
 
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr", sizeof ("mbr"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+    
     AK_theta_join("student", "professor2", "theta_join_test2", constraints);
     AK_print_table("theta_join_test2");
 
-    Ak_DeleteAll_L(constraints);
+    //Ak_DeleteAll_L(constraints);
+    Ak_DeleteAll_L3(&constraints);
 
     //test where overlaping columns are a part of the constraints
     printf("SELECT * FROM employee, department WHERE employee.id_department = department.id_department;\n");
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
+    /*Ak_InsertAtEnd_L(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "department.id_department", sizeof ("department.id_department"), constraints);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);*/
+    
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "department.id_department", sizeof ("department.id_department"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
 
     AK_theta_join("employee", "department", "theta_join_test3", constraints);
     AK_print_table("theta_join_test3");
 
-    Ak_DeleteAll_L(constraints);
+    //Ak_DeleteAll_L(constraints);
+    Ak_DeleteAll_L3(&constraints);
 
     //test for addition and inequality
     char num = 102;
     printf("SELECT * FROM student, professor2 WHERE year + id_prof > 37895;\n");
+    /*
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), constraints);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
     Ak_InsertAtEnd_L(TYPE_OPERATOR, "+", sizeof ("+"), constraints);
     Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), constraints);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", sizeof (">"), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", sizeof (">"), constraints);*/
+    
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "+", sizeof ("+"), constraints);
+    Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), constraints);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), constraints);
 
     AK_theta_join("student", "professor2", "theta_join_test4", constraints);
     AK_print_table("theta_join_test4");
 
-    Ak_DeleteAll_L(constraints);
+    //Ak_DeleteAll_L(constraints);
+    Ak_DeleteAll_L3(&constraints);
 
     AK_free(constraints);
     AK_EPI;

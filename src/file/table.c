@@ -216,15 +216,15 @@ int AK_get_attr_index(char *tblName, char *attrName) {
  * @param  *tblName table name
  * @return column values list
  */
-AK_list *AK_get_column(int num, char *tblName) {
+struct list_node *AK_get_column(int num, char *tblName) {
     AK_PRO;
     int num_attr = AK_num_attr(tblName);
     if (num >= num_attr || num < 0){
         AK_EPI;
         return NULL;
     }
-    AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&row_root);
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     int i, j, k;
@@ -242,7 +242,7 @@ AK_list *AK_get_column(int num, char *tblName) {
                     int address = temp->block->tuple_dict[k].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';                    
-                    Ak_InsertAtEnd_L(type, data, size, row_root);
+                    Ak_InsertAtEnd_L3(type, data, size, row_root);
                 }
             }
         }
@@ -259,11 +259,11 @@ AK_list *AK_get_column(int num, char *tblName) {
  * @param  * tblName table name
  * @return row values list
  */
-AK_list * AK_get_row(int num, char * tblName) {
+struct list_node *AK_get_row(int num, char * tblName) {
     AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    AK_list *row_root = (AK_list *)AK_calloc(1, sizeof (AK_list));
-    Ak_Init_L(row_root);
+    struct list_node *row_root = (struct list_node *)AK_calloc(1, sizeof (struct list_node));
+    Ak_Init_L3(&row_root);
 
     int num_attr = AK_num_attr(tblName);
     int i, j, k, l, counter;
@@ -286,7 +286,7 @@ AK_list * AK_get_row(int num, char * tblName) {
                         int address = temp->block->tuple_dict[k + l].address;
                         memcpy(data, &(temp->block->data[address]), size);
                         data[size] = '\0';                        
-                        Ak_InsertAtEnd_L(type, data, size, row_root);
+                        Ak_InsertAtEnd_L3(type, data, size, row_root);
                     }
                     AK_free(addresses);
                     AK_EPI;
@@ -309,7 +309,7 @@ AK_list * AK_get_row(int num, char * tblName) {
  * @param *tblName table name
  * @return value in the list
  */
-AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
+struct list_node *AK_get_tuple(int row, int column, char *tblName) {
     AK_PRO;
     int num_rows = AK_get_num_records(tblName);
     int num_attr = AK_num_attr(tblName);
@@ -321,8 +321,8 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
-    AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&row_root);
 
     int i, j, k, counter;
     char data[ MAX_VARCHAR_LENGTH ];
@@ -342,10 +342,10 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
                     int address = temp->block->tuple_dict[ k + column ].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, data, size, row_root);
+                    Ak_InsertAtEnd_L3(type, data, size, row_root);
                     AK_free(addresses);
                     AK_EPI;
-                    return (AK_list_elem) Ak_First_L(row_root);
+                    return (struct list_node *) Ak_First_L2(row_root);
                 }
             }
         }
@@ -362,7 +362,7 @@ AK_list_elem AK_get_tuple(int row, int column, char *tblName) {
  * @param *tuple tuple in the list
  * @return tuple value as a string
  */
-char * AK_tuple_to_string(AK_list *tuple) {
+char * AK_tuple_to_string(struct list_node *tuple) {
     int temp_int;
     float temp_float;
     char temp_char[ MAX_VARCHAR_LENGTH ];
@@ -427,9 +427,9 @@ void AK_print_row_spacer(int col_len[], int length) {
  * @param *row  list with row elements
  * @return No return value
  */
-void AK_print_row(int col_len[], AK_list *row) {
+void AK_print_row(int col_len[], struct list_node *row) {
     AK_PRO;
-    AK_list_elem el = (AK_list_elem) Ak_First_L(row);
+    struct list_node *el = (struct list_node *) Ak_First_L2(row);
 
     int i = 0;
     void *data = (void *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (void));
@@ -486,7 +486,7 @@ int AK_table_exist(char *tblName) {
     int exist = 0;
 
     for (a = 0; a < num_rows; a++) {
-        AK_list_elem el;
+        struct list_node *el;
         el = AK_get_tuple(a, 1, sys_table);
         // printf("  Element %s !", el->data);
         if (!strcmp(tblName, el->data)) {
@@ -530,7 +530,7 @@ void AK_print_table(char *tblName) {
         //there is longer element than previously longest and store it in array
         for (i = 0; i < num_attr; i++) {
             for (j = 0; j < num_rows; j++) {
-                AK_list_elem el = AK_get_tuple(j, i, tblName);
+                struct list_node *el = AK_get_tuple(j, i, tblName);
                 switch (el->type) {
                     case TYPE_INT:
                         length = AK_chars_num_from_number(*((int *) (el)->data), 10);
@@ -588,8 +588,8 @@ void AK_print_table(char *tblName) {
             printf("\n");
             AK_print_row_spacer(len, length);
 
-            AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
-            Ak_Init_L(row_root);
+            struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+            Ak_Init_L3(&row_root);
 
             i = 0;
             int type, size, address;
@@ -605,11 +605,11 @@ void AK_print_table(char *tblName) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;				
-                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
+                                Ak_InsertAtEnd_L3(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row(len, row_root);
                             AK_print_row_spacer(len, length);
-                            Ak_DeleteAll_L(row_root);
+                            Ak_DeleteAll_L3(&row_root);
                         }
                     }
                 }
@@ -620,7 +620,7 @@ void AK_print_table(char *tblName) {
             /*
             //print table rows
             for (i = 0; i < num_rows; i++) {
-                    AK_list *row = AK_get_row(i, tblName);
+                    struct list_node *row = AK_get_row(i, tblName);
                     AK_print_row(len, row);
                     AK_print_row_spacer(len, length);
                     DeleteAllL(row);
@@ -683,10 +683,10 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
  * @param *row  list with row elements
  * @return No return value
  */
-void AK_print_row_to_file(int col_len[], AK_list * row) {
+void AK_print_row_to_file(int col_len[], struct list_node * row) {
     AK_PRO;
     fp = fopen(FILEPATH, "a");
-    AK_list_elem el = (AK_list_elem) Ak_First_L(row);
+    struct list_node *el = (struct list_node *) Ak_First_L2(row);
 
     int i = 0;
     void *data = (void *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (void));
@@ -754,7 +754,7 @@ void AK_print_table_to_file(char *tblName) {
         //there is longer element than previously longest and store it in array
         for (i = 0; i < num_attr; i++) {
             for (j = 0; j < num_rows; j++) {
-                AK_list_elem el = AK_get_tuple(j, i, tblName);
+                struct list_node *el = AK_get_tuple(j, i, tblName);
                 switch (el->type) {
                     case TYPE_INT:
                         length = AK_chars_num_from_number(*((int *) (el)->data), 10);
@@ -811,8 +811,8 @@ void AK_print_table_to_file(char *tblName) {
             fprintf(fp, "\n");
             fclose(fp);
             AK_print_row_spacer_to_file(len, length);
-            AK_list *row_root = (AK_list*) AK_malloc(sizeof (AK_list));
-            Ak_Init_L(row_root);
+            struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+            Ak_Init_L3(&row_root);
 
             i = 0;
             int type, size, address;
@@ -828,11 +828,11 @@ void AK_print_table_to_file(char *tblName) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;				
-                                Ak_InsertAtEnd_L(type, &(temp->block->data[address]), size, row_root);
+                                Ak_InsertAtEnd_L3(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row_to_file(len, row_root);
                             AK_print_row_spacer_to_file(len, length);
-                            Ak_DeleteAll_L(row_root);
+                            Ak_DeleteAll_L3(row_root);
                         }
                     }
                 }
@@ -869,7 +869,7 @@ int AK_table_empty(char *tblName) {
  */
 int AK_get_table_obj_id(char *table) {
     int i = 0, table_id = -1;
-    AK_list *row;
+    struct list_node *row;
 
     i = 0;
     AK_PRO;
@@ -991,7 +991,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     }
 
     if (strcmp(old_table_name, new_table_name) != 0) {//new name is different than old, and old needs to be replaced
-        AK_list *expr;
+        struct list_node *expr;
         expr = 0;
         AK_selection(old_table_name, new_table_name, expr);
         AK_delete_segment(old_table_name, SEGMENT_TYPE_TABLE);

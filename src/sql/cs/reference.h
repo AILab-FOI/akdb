@@ -82,17 +82,33 @@ typedef struct {
 int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable, char *parentAttNames[], int attNum, char *constraintName, int type) ;
 AK_ref_item AK_get_reference(char *tableName, char *constraintName) ;
 int AK_reference_check_attribute(char *tableName, char *attribute, char *value) ;
+/*
 int AK_reference_check_if_update_needed(AK_list *lista, int action) ;
 int AK_reference_check_restricion(AK_list *lista, int action) ;
 int AK_reference_update(AK_list *lista, int action) ;
 int AK_reference_check_entry(AK_list *lista) ;
+*/
+int AK_reference_check_if_update_needed(struct list_node *lista, int action) ;
+int AK_reference_check_restricion(struct list_node *lista, int action) ;
+int AK_reference_update(struct list_node *lista, int action) ;
+int AK_reference_check_entry(struct list_node *lista) ;
+
 void AK_reference_test();
+/*
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore);
 int Ak_insert_row(AK_list *row_root);
 int AK_selection(char *srcTable, char *dstTable, AK_list *expr);
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint);
 int Ak_delete_row(AK_list *row_root) ;
 int Ak_update_row(AK_list *row_root);
+*/
+void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore);
+int Ak_insert_row(struct list_node *row_root);
+int AK_selection(char *srcTable, char *dstTable, struct list_node *expr);
+void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore, int newconstraint);
+int Ak_delete_row(struct list_node *row_root) ;
+int Ak_update_row(struct list_node *row_root);
+
 int AK_initialize_new_segment(char *name, int type, AK_header *header);
 
 #endif

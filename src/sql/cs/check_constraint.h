@@ -25,7 +25,8 @@
 #include "../../rel/expression_check.h"
 #include "../../auxi/mempro.h"
 
-int AK_check_constraint(char *srcTable, AK_list *expr);
+//int AK_check_constraint(char *srcTable, AK_list *expr);
+int AK_check_constraint(char *srcTable, struct list_node *expr);
 void AK_check_constraint_test();
 
 #endif

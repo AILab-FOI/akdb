@@ -76,9 +76,20 @@ typedef struct list_elem *AK_list_elem;
  * @struct list_node
  * @brief Structure defines a list node.
  */
-struct list_node {
+struct list_node { 
+///TODO - type, attribute name, table staviti na početak polja data
+		///data type
+    int type;
+    //data size in list element
+    int size;
     ///loaded data
-    char data[ MAX_VARCHAR_LENGTH ];
+    char data[ MAX_VARCHAR_LENGTH ]; 
+     //table name
+    char table[ MAX_ATT_NAME ];
+    //attribute name
+    char attribute_name[ MAX_ATT_NAME ];
+     int constraint; //if 0 then it is new data for insertion, if 1 then it is a constraint on which update and delete searches the data
+    ///pointer to next element
     struct list_node *next;
 };
 
@@ -172,15 +183,15 @@ struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L)
 int Ak_IsEmpty_L(AK_list *L);
 unsigned int Ak_IsEmpty_L2(struct list_node *L);
 void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
-void Ak_InsertBefore_L2(char* data, struct list_node **current, struct list_node **L);
+void Ak_InsertBefore_L2(int type, char* data, int size, struct list_node **current, struct list_node **L);
 void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
-void Ak_InsertAfter_L2(char* data, struct list_node **current,  struct list_node **L);
+void Ak_InsertAfter_L2(int type, char* data, int size, struct list_node **current,  struct list_node **L);
 void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L);
 void Ak_InsertAtBegin_L2(int type, char* data, int size, AK_list *L);
-void Ak_InsertAtBegin_L3(char* data, struct list_node *L);
+void Ak_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L);
 void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L);
 void Ak_InsertAtEnd_L2(int type, char* data, int size, AK_list *L);
-void Ak_InsertAtEnd_L3(char* data, struct list_node *L);
+void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L);
 void Ak_Delete_L(AK_list_elem current, AK_list *L);
 void Ak_Delete_L2(AK_list_elem current, AK_list *L);
 void Ak_Delete_L3(struct list_node **current, struct list_node **L);

@@ -37,6 +37,7 @@
  * */
 
 #include "rel_eq_projection.h"
+#include "../auxi/auxiliary.h"
 
 /**
  * @author Dino Laktašić.
@@ -55,7 +56,7 @@
  * @param list_elem_subset second list element containing projection attributes 
  * @return EXIT_SUCCESS if some set of attributes is subset of larger set, else returns EXIT_FAILURE
  */
-int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subset) {
+int AK_rel_eq_is_subset(struct list_node *list_elem_set, struct list_node *list_elem_subset) {
     int len_set, len_subset, token_id = 0, set_id, subset_id;
     char *temp_set, *temp_subset, *token_set, *token_subset, *save_token_set, *save_token_subset;
     AK_PRO;
@@ -138,7 +139,7 @@ int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subse
  * @param list_elem_conds list element containing selection condition data
  * @return EXIT_SUCCESS if selection uses only attributes retained by projection, else returns EXIT_FAILURE
  */
-int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem_conds) {
+int AK_rel_eq_can_commute(struct list_node *list_elem_attribs, struct list_node *list_elem_conds) {
     int next_chr, valid_cond_attribs, token_id = 0;
     char *token_attr, *save_token_attr, *temp_attr, *temp_cond, *temp;
     AK_PRO;
@@ -196,18 +197,18 @@ int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem
 
 /**
  * @author Dino Laktašić.
- * @brief Get attributes for a given table and store them to the AK_list 
+ * @brief Get attributes for a given table and store them to the struct list_node 
  * <ol>
  * <li>Get the number of attributes in a given table</li>
  * <li>Get the table header for a given table</li>
- * <li>Initialize AK_list</li>
- * <li>For each attribute in table header, insert attribute in AK_list as new AK_list element</li>
- * <li>return AK_list</li>
+ * <li>Initialize struct list_node</li>
+ * <li>For each attribute in table header, insert attribute in struct list_node as new struct list_node element</li>
+ * <li>return struct list_node</li>
  * </ol>
  * @param *tblName name of the table
- * @result AK_list
+ * @result struct list_node
  */
-AK_list *AK_rel_eq_get_attributes(char *tblName) {
+struct list_node *AK_rel_eq_get_attributes(char *tblName) {
     int next_attr;
     int num_attr = AK_num_attr(tblName);
     char *attr_name;
@@ -215,13 +216,13 @@ AK_list *AK_rel_eq_get_attributes(char *tblName) {
     //AK_header *table_header = (AK_header*)AK_calloc(num_attr, sizeof(AK_header));
     AK_header *table_header = (AK_header *) AK_get_header(tblName);
 
-    AK_list *list_attr = (AK_list *) AK_malloc(sizeof (AK_list));
-    AK_list_elem list_el;
-    Ak_Init_L(list_attr);
+    struct list_node *list_attr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *list_el;
+    Ak_Init_L3(&list_attr);
 
     for (next_attr = 0; next_attr < num_attr; next_attr++) {
         attr_name = (table_header + next_attr)->att_name;
-        Ak_InsertAtEnd_L(TYPE_ATTRIBS, attr_name, strlen(attr_name) + 1, list_attr);
+        Ak_InsertAtEnd_L3(TYPE_ATTRIBS, attr_name, strlen(attr_name) + 1, list_attr);
     }
 
     attr_name = NULL;
@@ -268,10 +269,10 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
     int len_tokens = 0;
     int token_id = 0;
     AK_PRO;
-    AK_list *list_attr = AK_rel_eq_get_attributes(tblName);
-    AK_list_elem list_el;
+    struct list_node *list_attr = AK_rel_eq_get_attributes(tblName);
+    struct list_node *list_el;
 
-    if (Ak_Size_L(list_attr) <= 0) {
+    if (Ak_Size_L2(list_attr) <= 0) {
         printf("ERROR - table (%s) doesn't exists!\n", tblName);
         AK_EPI;
         return NULL;
@@ -298,7 +299,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
     }
 
     for (token_id = 0; token_id < len_tokens; token_id++) {
-        list_el = (AK_list_elem) Ak_First_L(list_attr);
+        list_el = (struct list_node *) Ak_First_L2(list_attr);
 
         while (list_el) {
             if (strcmp(list_el->data, tokens_attribs[token_id]) == 0) {
@@ -312,7 +313,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
         }
     }
 
-    Ak_DeleteAll_L(list_attr);
+    Ak_DeleteAll_L3(&list_attr);
     AK_free(temp_attribs);
 
     Ak_dbg_messg(HIGH, REL_EQ, "RETURN - attributes for new projection (%s)\n", ret_attributes);
@@ -326,7 +327,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
  * @param list_elem list element that contains selection or theta_join condition data
  * @return only attributes from selection or theta_join condition as the AK_list
  */
-char *AK_rel_eq_collect_cond_attributes(AK_list_elem list_elem) {
+char *AK_rel_eq_collect_cond_attributes(struct list_node *list_elem) {
     int next_chr = 0;
     int next_address = 0;
     int attr_end = -1;
@@ -417,15 +418,15 @@ char *AK_rel_eq_remove_duplicates(char *attribs) {
  * @param *list_rel_eq RA expresion as the AK_list
  * @return optimised RA expresion as the AK_list
  */
-AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
+struct list_node *AK_rel_eq_projection(struct list_node *list_rel_eq) {
     int step; //, exit_cond[5] = {0};
     AK_PRO;
     //Initialize temporary linked list
-    AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(temp);
+    struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&temp);
 
-    AK_list_elem tmp, temp_elem, temp_elem_prev, temp_elem_next;
-    AK_list_elem list_elem_next, list_elem = (AK_list_elem) Ak_First_L(list_rel_eq);
+    struct list_node *tmp, *temp_elem, *temp_elem_prev, *temp_elem_next;
+    struct list_node *list_elem_next, *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
 
     //Iterate through all the elements of RA linked list
     while (list_elem != NULL) {
@@ -436,9 +437,9 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
             case TYPE_OPERATOR:
                 Ak_dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
                 Ak_dbg_messg(LOW, REL_EQ, "----------------------\n");
-                temp_elem = (AK_list_elem) Ak_End_L(temp);
-                temp_elem_prev = (AK_list_elem) Ak_Previous_L(temp_elem, temp);
-                list_elem_next = (AK_list_elem) Ak_Next_L(list_elem);
+                temp_elem = (struct list_node *) Ak_End_L2(temp);
+                temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                list_elem_next = (struct list_node *) Ak_Next_L2(list_elem);
 
                 switch (list_elem->data[0]) {
                         //Cascade of Projection p[L1](p[L2](...p[Ln](R)...)) = p[L1](R)
@@ -446,14 +447,14 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                     case RO_PROJECTION:
                         if (temp_elem != NULL && temp_elem->type == TYPE_ATTRIBS) {
                             if (AK_rel_eq_is_subset(list_elem_next, temp_elem) == EXIT_FAILURE) {
-                            	Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
-                                Ak_InsertAtEnd_L(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                            	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                                Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
                                 Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
                             }
 
                         } else {
-                        	Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
-                            Ak_InsertAtEnd_L(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                        	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                            Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
                             Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         }
 
@@ -468,13 +469,13 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                             while (temp_elem != NULL) {
                                 if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_ATTRIBS) {
                                     //step++;
-                                    temp_elem_prev = (AK_list_elem) Ak_Previous_L(temp_elem, temp);
+                                    temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
 
                                     if (temp_elem->type == TYPE_ATTRIBS) {
                                         if ((AK_rel_eq_can_commute(temp_elem, list_elem_next) == EXIT_FAILURE) &&
                                                 (temp_elem_prev->data[0] == RO_PROJECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
-                                        	Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
-                                        	Ak_InsertAtEnd_L(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                                        	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                                        	Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
                                             Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                                             break;
                                         }
@@ -482,24 +483,24 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 
                                     if (temp_elem_prev->data[0] == RO_PROJECTION && temp_elem_prev->type == TYPE_OPERATOR) {
                                         //if (step == 0) {
-                                    	Ak_InsertBefore_L(list_elem->type, list_elem->data, list_elem->size, temp_elem_prev, temp);
-                                    	Ak_InsertBefore_L(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp_elem_prev, temp);
+                                    	Ak_InsertBefore_L2(list_elem->type, list_elem->data, list_elem->size, &temp_elem_prev, &temp);
+                                    	Ak_InsertBefore_L2(list_elem_next->type, list_elem_next->data, list_elem_next->size, &temp_elem_prev, &temp);
                                         Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                                         break;
                                         //}
                                     }
                                 } else {
-                                	Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
-                                	Ak_InsertAtEnd_L(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                                	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                                	Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
                                     Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                                     break;
                                 }
-                                temp_elem = (AK_list_elem) Ak_Previous_L(temp_elem, temp);
+                                temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
                             }
 
                         } else {
-                        	Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
-                        	Ak_InsertAtEnd_L(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                        	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                        	Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
                             Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         }
                         list_elem = list_elem->next;
@@ -513,7 +514,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                         while (temp_elem != NULL) {
                             if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_ATTRIBS) {
                                 step++;
-                                temp_elem_prev = (AK_list_elem) Ak_Previous_L(temp_elem, temp);
+                                temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
 
                                 if (temp_elem_prev->data[0] == RO_PROJECTION && temp_elem_prev->type == TYPE_OPERATOR) {
                                     if (step > 1) {
@@ -521,8 +522,8 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                                         while (tmp->type != TYPE_OPERAND) {
                                             tmp = tmp->next;
                                         }
-                                        Ak_InsertAfter_L(temp_elem->type, temp_elem->data, temp_elem->size, tmp, temp);
-                                        Ak_InsertAfter_L(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
+                                        Ak_InsertAfter_L2(temp_elem->type, temp_elem->data, temp_elem->size, &tmp, &temp);
+                                        Ak_InsertAfter_L2(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, &tmp, &temp);
                                         Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
                                     }
                                     break;
@@ -530,16 +531,16 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                             } else {
                                 break;
                             }
-                            temp_elem = (AK_list_elem) Ak_Previous_L(temp_elem, temp);
+                            temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
                         }
-                        Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
+                        Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
                         Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                         //Commuting Projection with Join and Cartesian Product
                     case RO_NAT_JOIN:
-                    	Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
-                        Ak_InsertAtEnd_L(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                    	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                        Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
                         Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         list_elem = list_elem->next;
                         break;
@@ -550,7 +551,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                         while (temp_elem != NULL) {
                             if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_ATTRIBS) {
                                 step++;
-                                temp_elem_prev = (AK_list_elem) Ak_Previous_L(temp_elem, temp);
+                                temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
 
                                 if (temp_elem_prev->data[0] == RO_PROJECTION && temp_elem_prev->type == TYPE_OPERATOR) {
                                     if (step > 1) {
@@ -582,8 +583,8 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                                                 data1 = AK_rel_eq_remove_duplicates(data1);
 
                                                 //memset(data2 + strlen(data1), '\0', 1);
-                                                Ak_InsertAfter_L(temp_elem->type, data1, strlen(data1) + 1, tmp, temp);
-                                                Ak_InsertAfter_L(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
+                                                Ak_InsertAfter_L2(temp_elem->type, data1, strlen(data1) + 1, &tmp, &temp);
+                                                Ak_InsertAfter_L2(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, &tmp, &temp);
                                                 Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data1);
                                             }
 
@@ -599,8 +600,8 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                                                 data2 = AK_rel_eq_remove_duplicates(data2);
                                             }
                                             memset(data2 + strlen(data2), '\0', 1);
-                                            Ak_InsertAfter_L(temp_elem->type, data2, strlen(data2) + 1, tmp, temp);
-                                            Ak_InsertAfter_L(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, tmp, temp);
+                                            Ak_InsertAfter_L2(temp_elem->type, data2, strlen(data2) + 1, &tmp, &temp);
+                                            Ak_InsertAfter_L2(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, &tmp, &temp);
                                             Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data2);
                                         }
 
@@ -611,22 +612,22 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
                             } else {
                                 break;
                             }
-                            temp_elem = (AK_list_elem) Ak_Previous_L(temp_elem, temp);
+                            temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
                         }
 
-                        Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
-                        Ak_InsertAtEnd_L(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                        Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                        Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
                         Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         list_elem = list_elem->next;
                         break;
 
                     case RO_EXCEPT:
-                    	Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
+                    	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
                         Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     case RO_RENAME:
-                    	Ak_InsertAtEnd_L(list_elem->type, list_elem->data, list_elem->size, temp);
+                    	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
                         Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
@@ -648,7 +649,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
 
             case TYPE_OPERAND:
                 Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in the temp list\n", list_elem->data);
-                Ak_InsertAtEnd_L(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
+                Ak_InsertAtEnd_L3(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
                 break;
 
             default:
@@ -672,7 +673,7 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
     //	}
     //}
 
-    Ak_DeleteAll_L(list_rel_eq);
+    Ak_DeleteAll_L3(&list_rel_eq);
     AK_EPI;
     return temp;
 }
@@ -683,9 +684,9 @@ AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) {
  * @param *list_rel_eq RA expresion as the AK_list
  * @return No return value
  */
-void AK_print_rel_eq_projection(AK_list *list_rel_eq) {
+void AK_print_rel_eq_projection(struct list_node *list_rel_eq) {
     AK_PRO;
-    AK_list_elem list_elem = (AK_list_elem) Ak_First_L(list_rel_eq);
+    struct list_node *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
 
     printf("\n");
     while (list_elem != NULL) {
@@ -738,17 +739,17 @@ void AK_rel_eq_projection_test() {
 
     printf("rel_eq_projection_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
-    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(expr);
+    struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&expr);
 
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
     /*
      * The projection is only made up of a one or more of attributes
      */
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof ("L1;L2;L3;L4"), expr); //projection attribute
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof ("L1;L2;L3;L4"), expr); //projection attribute
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), expr);
 
     /* The selection condition is made up of a number of clauses of the form
      * <attribute name> <comparison op> <constant value> OR
@@ -756,17 +757,17 @@ void AK_rel_eq_projection_test() {
      * In the clause, the comparison operations could be one of the following: ≤, ≥, ≠, =, >, < .
      * Clauses are connected by Boolean operators : and, or , not
      */
-    Ak_InsertAtEnd_L(TYPE_CONDITION, "`L1` 100 > `L2` 50 < OR", sizeof ("`L1` 100 > `L2` 50 < OR"), expr);
-    Ak_InsertAtEnd_L(TYPE_OPERAND, "R", sizeof ("R"), expr);
-    Ak_InsertAtEnd_L(TYPE_OPERAND, "S", sizeof ("S"), expr);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "u", sizeof ("u"), expr);
+    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`L1` 100 > `L2` 50 < OR", sizeof ("`L1` 100 > `L2` 50 < OR"), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERAND, "R", sizeof ("R"), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERAND, "S", sizeof ("S"), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
 
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr;firstname;job", sizeof ("mbr;firstname;job"), expr);
-    Ak_InsertAtEnd_L(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_InsertAtEnd_L(TYPE_CONDITION, "`mbr` `job` =", sizeof ("`mbr` `job` ="), expr); //theta join attribute
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr;firstname;job", sizeof ("mbr;firstname;job"), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
+    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` `job` =", sizeof ("`mbr` `job` ="), expr); //theta join attribute
 
     /*
 InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), &expr );
@@ -806,7 +807,7 @@ InsertAtEndL( TYPE_OPERAND, "S", sizeof("S"), &expr );
         printf("...\n");
     }
 
-    Ak_DeleteAll_L(expr);
+    Ak_DeleteAll_L3(&expr);
     //dealocate variables ;)
     AK_EPI;
 }

@@ -59,20 +59,23 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
  * @param att list of the attributes which should the projeciton table contain
  * @return No return value
  */
-void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
+void AK_create_block_header(int old_block, char *dstTable, struct list_node *att) {
+//void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
     AK_PRO;
     AK_block *temp_block = (AK_block *) AK_malloc(sizeof (AK_block));
     temp_block = (AK_block *) AK_read_block(old_block);
 
-    AK_list_elem list_elem;
+    //AK_list_elem list_elem;
+    struct list_node *list_elem;
     AK_header header[MAX_ATTRIBUTES];
 
     int head = 0; //counter of the headers
     int new_head = 0; //counter of the new headers created for the projection table
 
     while (strcmp(temp_block->header[head].att_name, "") != 0) {
-        list_elem = (AK_list_elem) Ak_First_L(att);
-
+        //list_elem = (AK_list_elem) Ak_First_L(att);
+	list_elem = Ak_First_L2(att);
+	
         while (list_elem != NULL) {
             //if header is found than copy header
             if (strcmp(list_elem->data, temp_block->header[head].att_name) == 0) {
@@ -103,12 +106,17 @@ void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
   * @param att list of the attributes which should the projeciton table contain
   * @retrun No return value
  */
-void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable) {
+void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable) {
     AK_PRO;
+    /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
+    */
+    struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    Ak_Init_L3(&row_root);
 
-    AK_list_elem list_elem;
+    //AK_list_elem list_elem;
+    struct list_node * list_elem;
 
     int i; //tuple_dict counter
     int head; //head counter
@@ -122,7 +130,8 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
         head = something_to_copy = 0;
 
         while (strcmp(old_block->header[head].att_name, "") != 0) {
-            list_elem = (AK_list_elem) Ak_First_L(att);
+            //list_elem = (AK_list_elem) Ak_First_L(att);
+	    list_elem = (struct list_node *) Ak_First_L2(att);
 
             while (list_elem != NULL) {
                 size = old_block->tuple_dict[i].size;
@@ -151,7 +160,8 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
             Ak_dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
 
             Ak_insert_row(row_root);
-            Ak_DeleteAll_L(row_root);
+            //Ak_DeleteAll_L(row_root);	    
+            Ak_DeleteAll_L3(&row_root);
         }
     }
     AK_EPI;
@@ -165,7 +175,8 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
  * @param dstTable table name for projection table
  * @return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
  */
-int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
+//int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
+int AK_projection(char *srcTable, char *dstTable, struct list_node *att) {
     //geting the table addresses from table on which we make projection
     AK_PRO;
     table_addresses *src_addr = (table_addresses *) AK_get_table_addresses(srcTable);
@@ -221,19 +232,28 @@ int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
  * @brief  Function for projection operator testing
  * @return No return value
  */
+
 void AK_op_projection_test() {
     AK_PRO;
     printf("\n********** PROJECTION TEST **********\n\n");
-
+/*
     AK_list *att = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(att);
 
+  
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), att);
-
+*/
+    struct list_node * att = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    Ak_Init_L3(&att);
+    
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), att);
+    
     AK_projection("selection_test", "projection_test", att);
     AK_print_table("projection_test");
 
-    Ak_DeleteAll_L(att);
+    //Ak_DeleteAll_L(att);
+    Ak_DeleteAll_L3(&att);
     AK_EPI;
 }

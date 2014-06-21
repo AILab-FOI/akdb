@@ -67,8 +67,9 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
         AK_free(header);
 
-        AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
-		
+        //AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
+	struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+	
 	for (i = 0; src_addr1->address_from[i] != 0; i++) {
             startAddress1 = src_addr1->address_from[i];
 
@@ -155,8 +156,8 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 											//if there is a difference between tuple_dicts
 											if (summ == 0) {
 												//printf("Num_rows: %i, Different_rows: %i\n", num_rows, different);
-												Ak_DeleteAll_L(row_root);
-
+												//Ak_DeleteAll_L(row_root);
+												Ak_DeleteAll_L3(&row_root);	
 												for (o = 0; o < num_att; o++) {
 													address = tbl1_temp_block->block->tuple_dict[m + o].address;
 													size = tbl1_temp_block->block->tuple_dict[m + o].size;

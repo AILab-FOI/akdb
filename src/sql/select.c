@@ -12,8 +12,8 @@
  * @param destTable - table that contains the result
  * @param condition - condition for selection
  */
-int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
-
+//int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
+int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct list_node *condition){
 	///calling the relational operator for filtering according to given condition
 	AK_PRO;
 	AK_selection(srcTable,destTable,condition);
@@ -24,12 +24,14 @@ int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condit
 
 
 	table_addresses *src_addr=(table_addresses *) AK_get_table_addresses(destTable);
-	int startAddress = 	src_addr->address_from[0];
+	int startAddress = src_addr->address_from[0];
 
 	AK_block *temp_block = (AK_block *) AK_read_block(startAddress);
 
 
-	AK_list_elem list_attributes;
+	//AK_list_elem list_attributes;
+	struct list_node *list_attributes;
+	
 	AK_header header[MAX_ATTRIBUTES];
  	memset(header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
 
@@ -45,7 +47,8 @@ int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condit
 	///making a new header for the final result from the selected ones from the subscore
 	while(strcmp(temp_block->header[head].att_name, "") != 0) {
 
-		list_attributes=(AK_list_elem) Ak_First_L(attributes);
+		//list_attributes=(AK_list_elem) Ak_First_L(attributes);
+		list_attributes = Ak_First_L2(attributes);
 		int create=0;
 		while(list_attributes!=NULL){
 			if(strcmp(temp_block->header[head].att_name,list_attributes->data)==0){
@@ -65,9 +68,8 @@ int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condit
 
 	AK_free(temp_block);
 
-
-
-	AK_list* row_root = (AK_list *) AK_malloc(sizeof (AK_list));
+	//AK_list* row_root = (AK_list *) AK_malloc(sizeof (AK_list));
+	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
@@ -108,7 +110,8 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 					b=0;
 				}
 				Ak_insert_row(row_root);
-				Ak_DeleteAll_L(row_root);
+//				Ak_DeleteAll_L(row_root);
+				Ak_DeleteAll_L3(&row_root);
 	}
 }}
 
@@ -135,22 +138,27 @@ void AK_select_test(){
 
 
 	///list of attributes which will be in the result of selection
-
+/*
 	AK_list *attributes = (AK_list *) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(attributes);
+	*/
+	struct list_node *attributes = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	Ak_Init_L3(&attributes);
 
 	///list of elements which represent the condition for selection
-
+/*
 	AK_list *condition = (AK_list *) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(condition);
-
+	*/
+	struct list_node *condition = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	Ak_Init_L3(&condition);
 
 
 	char *num = "2005";
 
 	char *srcTable="student";
 	char *destTable="select_result";
-
+	/*
 	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
 	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
 	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
@@ -158,13 +166,23 @@ void AK_select_test(){
 	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
 	Ak_InsertAtEnd_L(TYPE_INT, num, sizeof (int), condition);
 	Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), condition);
+	*/
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
+
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
+	Ak_InsertAtEnd_L3(TYPE_INT, num, sizeof (int), condition);
+	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof ("<"), condition);
 
 	printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
 
 	AK_select(srcTable, destTable, attributes, condition);
-	Ak_DeleteAll_L(attributes);
+	//Ak_DeleteAll_L(attributes);
+	Ak_DeleteAll_L3(&attributes);
 	AK_free(attributes);
 
+	//Ak_DeleteAll_L(condition);
 	Ak_DeleteAll_L(condition);
 	AK_free(condition);
 	AK_EPI;

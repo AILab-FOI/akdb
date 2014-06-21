@@ -22,6 +22,7 @@
 
 #include "../file/table.h"
 #include "../auxi/mempro.h"
+#include "../auxi/auxiliary.h"
 
 /**
  * @author Dino Laktašić
@@ -38,8 +39,8 @@ typedef struct cost_eval_t cost_eval;
 
 
 int AK_compare(const void *a, const void *b) ;
-AK_list *AK_rel_eq_assoc(AK_list *list_rel_eq) ;
-void AK_print_rel_eq_assoc(AK_list *list_rel_eq) ;
+struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) ;
+void AK_print_rel_eq_assoc(struct list_node *list_rel_eq) ;
 void AK_rel_eq_assoc_test();
 
 #endif

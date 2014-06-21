@@ -2,6 +2,7 @@
 #define PRIVILEGES
 
 #include "../file/table.h"
+#include "../file/fileio.h"
 #include "../file/id.h"
 #include "../rec/archive_log.h"
 #include "../auxi/mempro.h"

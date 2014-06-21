@@ -549,8 +549,8 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     int end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
     //mem_block = (AK_mem_block *) AK_get_block(0);
 
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&row_root);
     //DeleteAllElements(row_root);
     int obj_id = 0;
     Ak_Insert_New_Element(TYPE_INT, &obj_id, sys_table, "obj_id", row_root);

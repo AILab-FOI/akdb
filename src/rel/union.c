@@ -54,7 +54,8 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
         AK_free(header);
 
-        AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
+        //AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
+	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 		
 	//writing first block or table to new segment
 	for (i = 0; src_addr1->address_from[i] != 0; i++) {
@@ -82,7 +83,8 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 							
 							if ((k + 1) % num_att == 0 && k != 0) {
 								Ak_insert_row(row_root);
-								Ak_DeleteAll_L(row_root);
+								//Ak_DeleteAll_L(row_root);
+								Ak_DeleteAll_L3(&row_root);
 							}
 						}
 					}
@@ -115,7 +117,8 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 							
 							if ((k + 1) % num_att == 0) {
 								Ak_insert_row(row_root);
-								Ak_DeleteAll_L(row_root);
+								//Ak_DeleteAll_L(row_root);
+								Ak_DeleteAll_L3(&row_root);
 							}
 						}
 					}

@@ -34,9 +34,13 @@
 int AK_sequence_add(char *name, int start_value, int increment, int max_value, int min_value, int cycle){
     AK_PRO;
     printf("\n***Add sequence***");
-   
+   /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
+    */
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    Ak_Init_L3(&row_root);
+    
     int sequence_id = AK_get_id(); //get sequence_id
     Ak_Insert_New_Element(TYPE_INT, &sequence_id, "AK_sequence", "obj_id", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, name, "AK_sequence", "name", row_root);
@@ -45,6 +49,7 @@ int AK_sequence_add(char *name, int start_value, int increment, int max_value, i
     Ak_Insert_New_Element(TYPE_INT, &max_value, "AK_sequence", "max", row_root);
     Ak_Insert_New_Element(TYPE_INT, &min_value, "AK_sequence", "min", row_root);
     Ak_Insert_New_Element(TYPE_INT, &cycle, "AK_sequence", "cycle", row_root);
+    
     int result = Ak_insert_row(row_root); 
     
     if (result == EXIT_ERROR || sequence_id == EXIT_ERROR) {
@@ -52,7 +57,9 @@ int AK_sequence_add(char *name, int start_value, int increment, int max_value, i
       AK_EPI;
       return EXIT_ERROR;
     }
-    Ak_DeleteAll_L(row_root);
+    //Ak_DeleteAll_L(row_root);
+    Ak_DeleteAll_L3(&row_root);
+    
     AK_free(row_root);
     AK_EPI;
     return sequence_id;
@@ -67,8 +74,11 @@ int AK_sequence_add(char *name, int start_value, int increment, int max_value, i
 int AK_sequence_remove(char *name){
     AK_PRO;
     printf("\n***Remove sequence***");
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
+   /* AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
+    */
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    Ak_Init_L3(&row_root);
     
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_sequence", "name", row_root, 1);
     int result =  Ak_delete_row(row_root); 
@@ -78,7 +88,8 @@ int AK_sequence_remove(char *name){
       AK_EPI;
       return EXIT_ERROR;
     }
-    Ak_DeleteAll_L(row_root);
+    //Ak_DeleteAll_L(row_root);
+    Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -94,9 +105,11 @@ int AK_sequence_remove(char *name){
 int AK_sequence_current_value(char *name){
     int i = 0;
     int current_value = -1;
-    AK_list *row;
+    //AK_list *row;
+    struct list_node *row;
     AK_PRO;
-    while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+    //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+    while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
         if (strcmp(row->next->next->data, name) == 0) {
             memcpy(&current_value, row->next->next->next->data, sizeof (int));
 	    break;
@@ -127,9 +140,11 @@ int AK_sequence_next_value(char *name){
     int max_value;
     int min_value;
     int cycle;
-    AK_list *row;
+    //AK_list *row;
+    struct list_node *row;
     AK_PRO;
-    while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+    //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+    while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
         if (strcmp(row->next->next->data, name) == 0) {
 	    memcpy(&obj_id, row->next->data, sizeof (int));
 	    memcpy(&current_value, row->next->next->next->data, sizeof (int));
@@ -170,14 +185,19 @@ int AK_sequence_next_value(char *name){
 	    next_value=min_value;
 	} 
     }
-    
+    /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
+    */
+    
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    Ak_Init_L3(&row_root);
     
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &next_value, "AK_sequence", "current_value", row_root, 0);
     int result =  Ak_update_row(row_root); 
-    Ak_DeleteAll_L(row_root);
+    //Ak_DeleteAll_L(row_root);
+    Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
    
     if (result == EXIT_ERROR) {
@@ -198,9 +218,11 @@ int AK_sequence_next_value(char *name){
  */
 int AK_sequence_get_id(char *name){
     int i = 0;
-    AK_list *row;
+    //AK_list *row;
+    struct list_node * row;
     AK_PRO;
-	while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL) {
+	//while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL) {
+	while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL) {
 		if (strcmp(row->next->next->data, name) == 0) {
 			i = (int) * row->next->data;
 			AK_free(row);
@@ -228,14 +250,18 @@ int AK_sequence_rename(char *old_name, char *new_name){
     int i = 0;
     
     int seq_id = AK_sequence_get_id(old_name);
-    
+    /*
     AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root); 
-
+*/
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&row_root);
+    
     Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_sequence", "name", row_root, 0);
     int result =  Ak_update_row(row_root); 
-    Ak_DeleteAll_L(row_root);
+    //Ak_DeleteAll_L(row_root);
+    Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
     
     if (result == EXIT_ERROR || seq_id == -1) {
@@ -263,18 +289,23 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
     printf("\n***Edit sequence***");
     int i = 0;
     int seq_id = -1;
-    AK_list *row;
-    while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+    //AK_list *row;
+    struct list_node *row;
+    //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+    while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
         if (strcmp(row->next->next->data, name) == 0) {
             memcpy(&seq_id, row->next->data, sizeof (int));
 	    break;
         }
         i++;
     }
-    
+    /*
     AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root); 
-
+*/
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    Ak_Init_L3(&row_root);
+    
     Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &start_value, "AK_sequence", "current_value", row_root, 0);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &increment, "AK_sequence", "increment", row_root, 0);
@@ -282,7 +313,8 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
     Ak_Insert_New_Element_For_Update(TYPE_INT, &min_value, "AK_sequence", "min", row_root, 0);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &cycle, "AK_sequence", "cycle", row_root, 0);
     int result =  Ak_update_row(row_root); 
-    Ak_DeleteAll_L(row_root);
+    //Ak_DeleteAll_L(row_root);
+    Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
     
     if (result == EXIT_ERROR || seq_id == -1) {

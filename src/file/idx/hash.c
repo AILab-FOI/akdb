@@ -27,7 +27,7 @@
   * @return hash value
  
  */
-int AK_elem_hash_value(AK_list_elem elem) {
+int AK_elem_hash_value(struct list_node *elem) {
     int type = elem->type, value = 0, i = 0;
     char temp_char[MAX_VARCHAR_LENGTH];
     AK_PRO;
@@ -348,7 +348,7 @@ void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
   * @return address structure with data where the record is in table
  
  */
-struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int delete) {
+struct_add *AK_find_delete_in_hash_index(char *indexName, struct list_node *values, int delete) {
     AK_PRO;
     struct_add *add = (struct_add*) AK_malloc(sizeof (struct_add));
     memset(add, 0, sizeof (struct_add));
@@ -359,11 +359,11 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
         return add;
     } else {
         int hashValue = 0, address, size, i, j, k, found, match;
-        AK_list_elem temp_elem;
-        temp_elem = Ak_First_L(values);
+        struct list_node *temp_elem;
+        temp_elem = Ak_First_L2(values);
         while (temp_elem) {
             hashValue += AK_elem_hash_value(temp_elem);
-            temp_elem = Ak_Next_L(temp_elem);
+            temp_elem = Ak_Next_L2(temp_elem);
         }
         struct_add *main_add = (struct_add*) AK_malloc(sizeof (struct_add));
         struct_add *hash_add = (struct_add*) AK_malloc(sizeof (struct_add));
@@ -404,7 +404,7 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
                             int record_size = temp_table_block->tuple_dict[indexTd].size;
                             int record_type = temp_table_block->tuple_dict[indexTd].type;
                             memcpy(data, &temp_table_block->data[record_address], record_size);
-                            temp_elem = (AK_list_elem)Ak_First_L(values);
+                            temp_elem = (struct list_node *)Ak_First_L2(values);
                             while (temp_elem) {
                                 if (temp_elem->type == record_type && memcmp(data, &temp_elem->data, record_size) == 0)
                                     match = 1;
@@ -445,7 +445,7 @@ struct_add *AK_find_delete_in_hash_index(char *indexName, AK_list *values, int d
   * @return address structure with data where the record is in table
  
  */
-struct_add * AK_find_in_hash_index(char *indexName, AK_list *values) {
+struct_add * AK_find_in_hash_index(char *indexName, struct list_node *values) {
     AK_PRO;
     struct_add* ret = AK_find_delete_in_hash_index(indexName, values, FIND);
     AK_EPI;
@@ -460,7 +460,7 @@ struct_add * AK_find_in_hash_index(char *indexName, AK_list *values) {
   * @return No return value
  
  */
-void AK_delete_in_hash_index(char *indexName, AK_list *values) {
+void AK_delete_in_hash_index(char *indexName, struct list_node *values) {
     AK_PRO;
     AK_find_delete_in_hash_index(indexName, values, DELETE);
     AK_EPI;
@@ -475,7 +475,7 @@ void AK_delete_in_hash_index(char *indexName, AK_list *values) {
   * @return success or error
  
  */
-int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
+int AK_create_hash_index(char *tblName, struct list_node *attributes, char *indexName) {
     int i, j, k, l, n, exist, hashValue;
     AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
@@ -485,7 +485,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
     AK_header i_header[ MAX_ATTRIBUTES ];
     AK_header* temp;
 
-    AK_list_elem attribute = (AK_list_elem) Ak_First_L(attributes);
+    struct list_node *attribute = (struct list_node *) Ak_First_L2(attributes);
     n = 0;
     while (attribute != 0) {
         exist = 0;
@@ -529,11 +529,11 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
     block->last_tuple_dict_id = 0;
     AK_write_block(block);
 
-    AK_list_elem temp_elem;
+    struct list_node *temp_elem;
 
     char data[ MAX_VARCHAR_LENGTH ];
-    AK_list *row = (AK_list*) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row);
+    struct list_node *row = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&row);
     i = 0;
     n = 0;
     while (addresses->address_from[ i ]) {
@@ -549,18 +549,18 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
                     int address = temp->tuple_dict[ k + l ].address;
                     memcpy(data, &(temp->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L(type, data, size, row);
+                    Ak_InsertAtEnd_L3(type, data, size, row);
                 }
                 /* *************** */
                 hashValue = 0;
-                attribute = (AK_list_elem) Ak_First_L(attributes);
+                attribute = (struct list_node *) Ak_First_L2(attributes);
                 while (attribute) {
 
                     for (l = 0; l < num_attr; l++) {
                         if (strcmp((table_header + l)->att_name, attribute->data) == 0)
                             break;
                     }
-                    temp_elem = Ak_GetNth_L(l, row);
+                    temp_elem = Ak_GetNth_L2(l, row);
                     hashValue += AK_elem_hash_value(temp_elem);
 
                     attribute = attribute->next;
@@ -570,7 +570,7 @@ int AK_create_hash_index(char *tblName, AK_list *attributes, char *indexName) {
                 add->addBlock = j;
                 add->indexTd = k;
                 AK_insert_in_hash_index(indexName, hashValue, add);
-                Ak_DeleteAll_L(row);
+                Ak_DeleteAll_L3(&row);
                 /* *************** */
             }
         }
@@ -598,16 +598,16 @@ void Ak_hash_test() {
     char *indexName = "student_hash_index";
     //AK_print_table("AK_relation");
     AK_PRO;
-    AK_list *att_list = (AK_list *) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(att_list);
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr\0", 4, att_list);
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname\0", 10, att_list);
+    struct list_node *att_list = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&att_list);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr\0", 4, att_list);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname\0", 10, att_list);
 
     AK_create_hash_index(tblName, att_list, indexName);
 
-    AK_list *values = (AK_list*) AK_malloc(sizeof (AK_list));
-    AK_list *row = (AK_list*) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(values);
+    struct list_node *values = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *row = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&values);
 
     //AK_delete_hash_index(indexName);
 
@@ -623,12 +623,12 @@ void Ak_hash_test() {
     int i, num_rec = AK_get_num_records(tblName);
     for (i = 0; i < num_rec; i++) {
         row = AK_get_row(i, tblName);
-        AK_list_elem value = Ak_GetNth_L(0, row);
-        Ak_InsertAtEnd_L(value->type, value->data, value->size, values);
-        value = Ak_GetNth_L(1, row);
-        Ak_InsertAtEnd_L(value->type, value->data, value->size, values);
+        struct list_node *value = Ak_GetNth_L2(0, row);
+        Ak_InsertAtEnd_L3(value->type, value->data, value->size, values);
+        value = Ak_GetNth_L2(1, row);
+        Ak_InsertAtEnd_L3(value->type, value->data, value->size, values);
         struct_add *add = AK_find_in_hash_index(indexName, values);
-        Ak_DeleteAll_L(values);
+        Ak_DeleteAll_L3(&values);
         if (add->addBlock && add->indexTd)
             printf("Record found in table block %d and TupleDict ID %d\n", add->addBlock, add->indexTd);
     }

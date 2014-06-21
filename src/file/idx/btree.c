@@ -31,7 +31,7 @@ NOTES: 1. For now we assume that table is sorted on attribute on which we are
 creating index. We should check that with filesort.c and include it in this function.
 That file had some errors, so I couldn't test it. 2.working with multiple blocks
 */
-int AK_btree_create(char *tblName, AK_list *attributes, char *indexName){
+int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName){
 	int i,n,exist;
 	table_addresses *addresses;
 	int num_attr;
@@ -44,7 +44,7 @@ int AK_btree_create(char *tblName, AK_list *attributes, char *indexName){
 		i++;
 	}
 	AK_header *table_header = (AK_header *)AK_get_header(tblName);
-    	AK_list_elem attribute = (AK_list_elem) Ak_First_L(attributes);
+    	struct list_node *attribute = (struct list_node *) Ak_First_L2(attributes);
 	AK_header i_header[ MAX_ATTRIBUTES ];
 	AK_header* temp;
     	n = 0;
@@ -717,9 +717,9 @@ void Ak_btree_test() {
 	char *tblName = "student";
 	char *indexName = "student_btree_index";
 	AK_PRO;
-	AK_list *att_list = (AK_list *) AK_malloc(sizeof (AK_list));
-	Ak_Init_L(att_list);
-	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr\0", 4, att_list);
+	struct list_node *att_list = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	Ak_Init_L3(&att_list);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr\0", 4, att_list);
 
 	AK_btree_create(tblName, att_list, indexName);
 	printf("\n\n---------------------------");

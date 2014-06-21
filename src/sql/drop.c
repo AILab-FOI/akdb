@@ -161,16 +161,21 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
             sys_table = "AK_function";
             name = (char*) drop_arguments->value;
-
+	    /*
             AK_list *args = (AK_list *) AK_malloc(sizeof (AK_list));
             Ak_Init_L(args);
+            */
+
+	    struct list_node *args = (struct list_node *) AK_malloc(sizeof (struct list_node));
+            Ak_Init_L3(&args);
 
             if (drop_arguments != NULL) {
                 while (drop_arguments != NULL) {
                     // printf("Argument: %s\n", drop_arguments->value);
                     drop_arguments = drop_arguments->next;
                     if (drop_arguments != NULL) {
-                        Ak_InsertAtEnd_L(TYPE_VARCHAR, drop_arguments->value, sizeof (drop_arguments), args);
+                        //Ak_InsertAtEnd_L(TYPE_VARCHAR, drop_arguments->value, sizeof (drop_arguments), args);
+			Ak_InsertAtEnd_L3(TYPE_VARCHAR, drop_arguments->value, sizeof (drop_arguments), args);
                     }
                 }
             }
@@ -408,11 +413,16 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
             mem_block2->block->data[mem_block2->block->tuple_dict[i].address] = 0;
         }
     }
-
+/*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list_elem));
     Ak_Init_L(row_root);
     Ak_DeleteAll_L(row_root);
+*/
 
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
+    Ak_Init_L3(&row_root);
+    Ak_DeleteAll_L3(&row_root);
+    
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, tblName, sys_table, "name", row_root, 1);
 
     Ak_delete_row(row_root);
@@ -436,7 +446,8 @@ int AK_if_exist(char *tblName, char *sys_table) {
     int exist = 0;
 
     for (a = 0; a < num_rows; a++) {
-        AK_list_elem el;
+        //AK_list_elem el;
+	struct list_node *el;
         el = AK_get_tuple(a, 1, sys_table);
         if (!strcmp(tblName, el->data)) {
             exist = 1;

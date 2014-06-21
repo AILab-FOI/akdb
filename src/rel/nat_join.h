@@ -23,11 +23,15 @@
 #include "../file/fileio.h"
 #include "../rel/projection.h"
 #include "../auxi/mempro.h"
-
+/*
 void AK_create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att);
 void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *temp_block, char *new_table);
-void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table);
-int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att);
+void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table);*/
+void AK_create_join_block_header(int table_address1, int table_address2, char *new_table, struct list_node *att);
+void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_insert, AK_block *temp_block, char *new_table);
+void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, struct list_node *att, char *new_table);
+//int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att);
+int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node *att);
 void AK_op_join_test();
 
 #endif

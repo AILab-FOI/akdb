@@ -27,7 +27,8 @@
 #include "../file/files.h"
 #include "../auxi/mempro.h"
 
-int AK_selection(char *srcTable, char *dstTable, AK_list *expr);
+//int AK_selection(char *srcTable, char *dstTable, AK_list *expr);
+int AK_selection(char *srcTable, char *dstTable, struct list_node *expr);
 void AK_op_selection_test();
 void AK_op_selection_test2();
 void AK_op_selection_test_redolog();

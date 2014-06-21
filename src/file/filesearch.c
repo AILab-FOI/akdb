@@ -217,7 +217,7 @@ void Ak_filesearch_test() {
     double f;
     AK_mem_block *mem_block, tmp;
     AK_header hBroj_int[4], *hTmp;
-    AK_list *row_root;
+    struct list_node *row_root;
     AK_PRO;
     // create table and fill it for testing purposes
     hTmp = (AK_header *) AK_create_header("Number int", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -234,7 +234,7 @@ void Ak_filesearch_test() {
         exit(EXIT_ERROR);
     }
 
-    row_root = AK_malloc(sizeof (AK_list));
+    row_root = AK_malloc(sizeof (struct list_node));
     if (row_root == NULL) {
         printf("filesearch_test: ERROR. Cannot allocate row_root.\n");
         AK_EPI;
@@ -242,12 +242,12 @@ void Ak_filesearch_test() {
     }
 
     for (i = -10, f = -i; i < 10; i++, f = -i) {
-        Ak_Init_L(row_root);
+        Ak_Init_L3(row_root);
         Ak_Insert_New_Element(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
         Ak_Insert_New_Element(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
         Ak_Insert_New_Element(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);
         Ak_insert_row(row_root);
-        Ak_DeleteAll_L(row_root);
+        Ak_DeleteAll_L3(&row_root);
     }
 
     AK_free(row_root);

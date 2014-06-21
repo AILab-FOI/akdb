@@ -31,8 +31,9 @@
 
 #include "expression_check.h"
 
-int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a, const char *b) {
-    AK_PRO;
+//int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a, const char *b) {
+int AK_check_arithmetic_statement(struct list_node *el, const char *op, const char *a, const char *b) {  
+  AK_PRO;
     char **numericStringEnd=NULL; //A pointer to the location where the numeric part of the string ends
 
 	if(strcmp(op, "<") == 0){
@@ -200,7 +201,8 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a
  * @param *expr list with the logical expression in postfix notation
  * @result 0 if row does not satisfy, 1 if row satisfies expression
  */
-int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
+//int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
+int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list_node *expr) {
     AK_PRO;
     if (expr == 0) {
     	AK_EPI;
@@ -210,12 +212,19 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
     char true = 1, false = 0;
     int found, result;
 
-    AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
+ /*   AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(temp);
 
     AK_list_elem el = (AK_list_elem) Ak_First_L(expr);
     AK_list_elem row;
-    AK_list_elem a, b;
+    AK_list_elem a, b;*/
+    
+    struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&temp);
+
+    struct list_node *el = Ak_First_L2(expr);
+    struct list_node *row;
+    struct list_node *a, *b;
 
     char data[MAX_VARCHAR_LENGTH];
 
@@ -245,25 +254,41 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
                 int type = row->type;
                 memset(data, 0, MAX_VARCHAR_LENGTH);
                 memcpy(data, &row->data, sizeof(row->data));
-                Ak_InsertAtEnd_L(type, data, sizeof(row->data), temp);
+                //Ak_InsertAtEnd_L(type, data, sizeof(row->data), temp);
+		Ak_InsertAtEnd_L3(type, data, sizeof(row->data), temp);
             }
 
         } else if (el->type == TYPE_OPERATOR) {
             //operators implementation
-            b = (AK_list_elem) Ak_End_L(temp);
-            a = (AK_list_elem) Ak_Previous_L(b, temp);
+       /*     b = (AK_list_elem) Ak_End_L(temp);
+            a = (AK_list_elem) Ak_Previous_L(b, temp);*/
+	    b = Ak_End_L2(temp);
+            a = Ak_Previous_L2(b, temp);
 
             if (strcmp(el->data, "=") == 0) {
                 if (memcmp(a->data, b->data, sizeof(a->type)) == 0)
-                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (char), temp);
+		{
+                	//Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (char), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (char), temp);
+		}
                 else
-                	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+		{
+                	//Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp);
+		}
 
-            } else if (strcmp(el->data, "<>") == 0) {
+            } 
+            else if (strcmp(el->data, "<>") == 0) {
                 if (memcmp(a->data, b->data, a->size) != 0)
-                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+		{
+                	//Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp);
+		}
                 else
-                	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+		{
+                	//Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp);
+		}
 
             } else if (strcmp(el->data, "OR") == 0) {
                 int val_a, val_b;
@@ -271,9 +296,15 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
                 memcpy(&val_b, b->data, sizeof (int));
 
                 if (val_a || val_b)
-                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+		{
+                	//Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp);
+		}
                 else
-                	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+		{
+                	//Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp);
+		}
 
             } else if (strcmp(el->data, "AND") == 0) {
                 int val_a, val_b;
@@ -281,28 +312,38 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
                 memcpy(&val_b, b->data, sizeof (int));
 
                 if (val_a && val_b)
-                	Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+		{
+                	//Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp);
+		}
                 else
-                	Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+		{
+                	//Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp);
+		}
 
             } else {
 
                 char rs;
                 rs = AK_check_arithmetic_statement(b, el->data, a->data, b->data);
-                Ak_InsertAtEnd_L(TYPE_INT, &rs, sizeof (int), temp);
+                //Ak_InsertAtEnd_L(TYPE_INT, &rs, sizeof (int), temp);
+		Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp);
             }
 
             //Ak_Delete_L(a, temp);
             //Ak_Delete_L(b, temp);
 
-        } else {
-        	Ak_InsertAtEnd_L(el->type, el->data, el->size, temp);
+        } else 
+	{
+        //	Ak_InsertAtEnd_L(el->type, el->data, el->size, temp);
+		Ak_InsertAtEnd_L3(el->type, el->data, el->size, temp);
         }
         el = el->next;
     }
 
-    memcpy(&result, ((AK_list_elem) Ak_First_L(temp))->data, sizeof (int));
-    Ak_DeleteAll_L(temp);
+    memcpy(&result, ((struct list_node *) Ak_First_L2(temp))->data, sizeof (int));
+    //Ak_DeleteAll_L(temp);
+    Ak_DeleteAll_L3(&temp);
     AK_free(temp);
     AK_EPI;
     return result;
@@ -311,7 +352,8 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
 void Ak_expression_check_test()
 {
     AK_PRO;
-    AK_list_elem elem = AK_malloc(sizeof(AK_list_elem));
+    //AK_list_elem elem = AK_malloc(sizeof(AK_list_elem));
+    struct list_node *elem = (struct list_node *) AK_malloc(sizeof(struct list_node));
     elem->type = TYPE_INT;
     const char *op = "+";
     const char *a = "800";

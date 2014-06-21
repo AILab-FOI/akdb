@@ -389,11 +389,14 @@ int Ak_IsEmpty_L(AK_list *L) {
  * @return No return value
  */
 
-void Ak_InsertBefore_L2(char* data, struct list_node **current, struct list_node **L) {
+void Ak_InsertBefore_L2(int type, char* data, int size, struct list_node **current, struct list_node **L) {
     AK_PRO;
     struct list_node *new_elem;
 
     new_elem = (struct list_node*) AK_malloc(sizeof(struct list_node));
+    new_elem->size = size;
+    new_elem->type = type;
+    
     memcpy(new_elem->data, data, MAX_VARCHAR_LENGTH);
 
     if ((*current) == NULL)
@@ -448,12 +451,14 @@ void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_
  * @return No return value.
  */
 
-void Ak_InsertAfter_L2(char* data, struct list_node **current,  struct list_node **L) {
+void Ak_InsertAfter_L2(int type, char* data, int size, struct list_node **current,  struct list_node **L) {
 
     AK_PRO;
     struct list_node *new_elem;
 
     new_elem = (struct list_node*) AK_malloc(sizeof(struct list_node));
+    new_elem->size = size;
+    new_elem->type = type;
     memcpy(new_elem->data, data, MAX_VARCHAR_LENGTH);
     if ((*current) == NULL)
     {
@@ -508,13 +513,13 @@ void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_l
  * @return No return value
  */
 
-void Ak_InsertAtBegin_L3(char* data, struct list_node *L) {
+void Ak_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L) {
     AK_PRO;
     assert(L != NULL);
 
     struct list_node *current = Ak_First_L2(L);
     current = Ak_First_L2(L);
-    Ak_InsertBefore_L2(data, &current, &L);
+    Ak_InsertBefore_L2(type, data, size, &current, &L);
 
     AK_EPI;
 }
@@ -542,7 +547,8 @@ void Ak_InsertAtBegin_L2(int type, char* data, int size, AK_list *L) {
     }
 
     current=Ak_First_L2(list_node_L);
-    Ak_InsertAtBegin_L3(data, &list_node_L);
+    //Ak_InsertAtBegin_L3(data, &list_node_L);
+    Ak_InsertAtBegin_L3(type,data, size, &list_node_L);     
     Ak_InsertBefore_L(type, data, size, Ak_First_L(L), L);
 
     AK_EPI;
@@ -572,13 +578,13 @@ void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L) {
  * @return No return value.
  */
 
-void Ak_InsertAtEnd_L3(char* data, struct list_node *L) {
+void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L) {
     AK_PRO;
     assert(L != NULL);
     struct list_node *current;
     current = NULL;
     current = Ak_End_L2(L);
-    Ak_InsertAfter_L2(data, &current, &L);
+    Ak_InsertAfter_L2(type,data, size, &current, &L);
 
     AK_EPI;
 }
@@ -610,7 +616,9 @@ void Ak_InsertAtEnd_L2(int type, char* data, int size, AK_list *L) {
       }
     }
 
-    Ak_InsertAtEnd_L3(data, list_node_L);
+   // Ak_InsertAtEnd_L3(data, list_node_L);
+           
+    Ak_InsertAtEnd_L3(type, data, size, list_node_L);    
     Ak_InsertAfter_L(type, data, size, Ak_End_L(L), L);
 
     AK_EPI;

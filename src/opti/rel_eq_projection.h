@@ -23,14 +23,14 @@
 #include "../file/table.h"
 #include "../auxi/mempro.h"
 
-int AK_rel_eq_is_subset(AK_list_elem list_elem_set, AK_list_elem list_elem_subset);
-int AK_rel_eq_can_commute(AK_list_elem list_elem_attribs, AK_list_elem list_elem_conds);
-AK_list *AK_rel_eq_get_attributes(char *tblName);
+int AK_rel_eq_is_subset(struct list_node *list_elem_set, struct list_node *list_elem_subset);
+int AK_rel_eq_can_commute(struct list_node *list_elem_attribs, struct list_node *list_elem_conds);
+struct list_node *AK_rel_eq_get_attributes(char *tblName);
 char *AK_rel_eq_projection_attributes(char *attribs, char *tblName);
-char *AK_rel_eq_collect_cond_attributes(AK_list_elem list_elem) ;
+char *AK_rel_eq_collect_cond_attributes(struct list_node *list_elem) ;
 char *AK_rel_eq_remove_duplicates(char *attribs);
-AK_list *AK_rel_eq_projection(AK_list *list_rel_eq) ;
-void AK_print_rel_eq_projection(AK_list *list_rel_eq) ;
+struct list_node *AK_rel_eq_projection(struct list_node *list_rel_eq) ;
+void AK_print_rel_eq_projection(struct list_node *list_rel_eq) ;
 void AK_rel_eq_projection_test();
 
 #endif

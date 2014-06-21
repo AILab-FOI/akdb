@@ -25,7 +25,7 @@
  * @brief Function adds new element to redolog
  * @return EXIT_FAILURE if not allocated memory for ispis, otherwise EXIT_SUCCESS
  */
-int AK_add_to_redolog(char command[6], AK_list *row_root){
+int AK_add_to_redolog(char command[6], struct list_node *row_root){
     AK_PRO;
 
     if (redo_log == NULL)
@@ -38,7 +38,7 @@ int AK_add_to_redolog(char command[6], AK_list *row_root){
         n = 0;
     }
 
-    AK_list_elem el = (AK_list_elem) Ak_First_L(row_root);
+    struct list_node * el = (struct list_node *) Ak_First_L2(row_root);
 
     char* record;
     if((record = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){

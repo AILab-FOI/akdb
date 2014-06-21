@@ -17,7 +17,7 @@ int AK_command(command * komande, int brojkomandi) {
             char *dest_table = AK_malloc(strlen(ext) + strlen(komande[i].tblName) + 1);
             strcat(dest_table, komande[i].tblName);
             strcat(dest_table, ext);
-            if(AK_selection(komande[i].tblName, dest_table, (AK_list*)komande[i].parameters) == EXIT_ERROR){
+            if(AK_selection(komande[i].tblName, dest_table, (struct list_node*)komande[i].parameters) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
@@ -25,7 +25,7 @@ int AK_command(command * komande, int brojkomandi) {
             
         case UPDATE:
             printf("***UPDATE***\n");
-            if(Ak_update_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_update_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
                 AK_EPI;
                 return EXIT_ERROR;
             }
@@ -34,11 +34,11 @@ int AK_command(command * komande, int brojkomandi) {
             break;
         case DELETE:
             printf("***DELETE***\n");        	 
-            if(Ak_update_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_update_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
-            if(Ak_delete_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_delete_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
@@ -47,7 +47,7 @@ int AK_command(command * komande, int brojkomandi) {
            
         case INSERT:
             printf("***INSERT***\n");
-            if(Ak_insert_row( ((AK_list_elem) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_insert_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
@@ -65,9 +65,14 @@ void AK_test_command(){
     AK_PRO;
     printf("***Test Command***\n");
     int brojkomandi;
-
+/*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
+    */
+
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&row_root);
+    
     char *tblName = "student";
    
     int mbr, year;
@@ -75,7 +80,8 @@ void AK_test_command(){
     mbr = 35917;
     year = 2012;
     weight = 82.00;
-    Ak_DeleteAll_L(row_root);
+    //Ak_DeleteAll_L(row_root);
+    Ak_DeleteAll_L3(&row_root);
     Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Mario", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Kolmacic", tblName, "lastname", row_root);
@@ -87,9 +93,13 @@ void AK_test_command(){
     komande[0].parameters = row_root;
 
     mbr = 35900;
-    row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
+    /*row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
-    Ak_DeleteAll_L(row_root);
+    Ak_DeleteAll_L(row_root);*/
+    
+    row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
+    Ak_Init_L3(&row_root);
+    Ak_DeleteAll_L(&row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
@@ -100,9 +110,15 @@ void AK_test_command(){
 
     int id_prof;
     id_prof = 35893;
+    /*
     row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     Ak_DeleteAll_L(row_root);
+    */
+    
+    row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
+    Ak_Init_L3(&row_root);
+    Ak_DeleteAll_L(&row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &id_prof, tblName, "id_prof", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
