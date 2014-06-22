@@ -21,7 +21,6 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "mempro.h"
-#if 0
 /**
 * @author Marin Rukavina, Mislav Bozicevic
 * @param ds debug mode state
@@ -96,7 +95,7 @@ static void AK_debmod_signal_callback(int sig, siginfo_t* si, void* unused) {
                 assert(AK_DEBMOD_STATE->protected[i] == 0);
                 AK_debmod_dv(
                     AK_DEBMOD_STATE,
-                    "%p marked dirty [%d/%d] (%s)\n", 
+                    "%p marked dirty [%d/%d] (%s)\n",
                     AK_DEBMOD_STATE->page[i],
                     i,
                     AK_DEBMOD_PAGES_NUM,
@@ -110,14 +109,14 @@ static void AK_debmod_signal_callback(int sig, siginfo_t* si, void* unused) {
                 /* unlock the page for RW access */
                 assert(mprotect(AK_DEBMOD_STATE->page[i],
                     AK_DEBMOD_STATE->real[i], PROT_READ | PROT_WRITE) == 0);
-                
+
                 AK_DEBMOD_STATE->dirty[i] = 1;
                 AK_DEBMOD_STATE->unlocked[i] = 1;
                 mprotect_sigsegv = 1;
             }
         }
         AK_debmod_leave_critical_sec(AK_DEBMOD_STATE);
-        
+
         /* end program execution if the sigsegv was caused by non-protected
         memory access */
 	if(mprotect_sigsegv == 0){
@@ -129,7 +128,7 @@ static void AK_debmod_signal_callback(int sig, siginfo_t* si, void* unused) {
                 AK_print_active_functions();
 		AK_print_function_uses();
 		printf("Probable current function: %s\n",
-        		AK_debmod_func_get_name(AK_DEBMOD_STATE, 
+        		AK_debmod_func_get_name(AK_DEBMOD_STATE,
 			AK_DEBMOD_STATE->fstack_items[
 			AK_DEBMOD_STATE->fstack_size - 1]));
         	assert(mprotect_sigsegv);
@@ -149,7 +148,7 @@ void AK_debmod_sample_state(AK_debmod_state* ds) {
 
     AK_debmod_enter_critical_sec(ds);
     for (i = 0; i < AK_DEBMOD_PAGES_NUM; ++i) {
-        if (ds->unlocked[i] == 1) {    
+        if (ds->unlocked[i] == 1) {
             /* protect the memory for writing so that any unsolicited writes
             can be caught and logged */
             assert(mprotect(ds->page[i], AK_DEBMOD_STATE->real[i],
@@ -345,7 +344,7 @@ void* AK_debmod_calloc(AK_debmod_state* ds, uint32_t size){
     if(ds->page[selected_spot] == NULL){
         AK_debmod_dv(ds, "alloc failed on [%d/%d] (%s)\n",
             selected_spot, AK_DEBMOD_PAGES_NUM,
-            AK_debmod_func_get_name(ds, 
+            AK_debmod_func_get_name(ds,
                 ds->fstack_items[ds->fstack_size - 1]));
         AK_debmod_leave_critical_sec(ds);
         return NULL;
@@ -394,7 +393,7 @@ void AK_debmod_free(AK_debmod_state* ds, void* memory){
 #endif
     if (memory == NULL){
         AK_debmod_dv(ds, "tried to free NULL (%s)\n",
-            AK_debmod_func_get_name(ds, 
+            AK_debmod_func_get_name(ds,
             ds->fstack_items[ds->fstack_size - 1]));
         return;
     }
@@ -408,7 +407,7 @@ void AK_debmod_free(AK_debmod_state* ds, void* memory){
     }
     if (selected_spot == -1){
         AK_debmod_dv(ds, "%s tried to free %p which does not belong\n",
-            AK_debmod_func_get_name(ds, 
+            AK_debmod_func_get_name(ds,
             ds->fstack_items[ds->fstack_size - 1]),
             memory);
         AK_debmod_leave_critical_sec(ds);
@@ -572,7 +571,7 @@ void AK_write_protect(void* memory){
 #endif
     int32_t i, selected_spot;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
-    
+
     AK_debmod_enter_critical_sec(AK_DEBMOD_STATE);
     selected_spot = -1;
     for (i = 0; i < AK_DEBMOD_PAGES_NUM; ++i){
@@ -610,7 +609,7 @@ void AK_write_unprotect(void* memory){
     selected_spot = -1;
     for (i = 0; i < AK_DEBMOD_PAGES_NUM; ++i){
         if (memory == AK_DEBMOD_STATE->page[i]){
-            selected_spot = i; 
+            selected_spot = i;
             break;
         }
     }
@@ -673,7 +672,7 @@ void AK_check_for_writes(void){
                 if (AK_DEBMOD_STATE->page[i] == changed[j]){
                     AK_DEBMOD_STATE->dirty[i] = 1;
                     AK_debmod_dv(AK_DEBMOD_STATE,
-                        "%p marked dirty [%d/%d] (%s)\n", 
+                        "%p marked dirty [%d/%d] (%s)\n",
                         AK_DEBMOD_STATE->page[i],
                         i, AK_DEBMOD_PAGES_NUM,
                         AK_debmod_func_get_name(AK_DEBMOD_STATE,
@@ -772,7 +771,7 @@ int32_t AK_debmod_fstack_pop(AK_debmod_state* ds){
 /**
 * @author Marin Rukavina, Mislav Bozicevic
 * @param ds debug mode state
-* @param new_function_id 
+* @param new_function_id
 * @brief Sets current function [private function]
 * @return void
 */
@@ -793,7 +792,7 @@ void AK_debmod_function_current(AK_debmod_state* ds, int32_t new_function_id){
 * @param func_name function name as in source
 * @param source_file file name where function is defined
 * @param source_line line from which this function is called
-* @brief Not for direct use (only with macro AK_PRO). Marks function prologue 
+* @brief Not for direct use (only with macro AK_PRO). Marks function prologue
 * @return void
 */
 void AK_debmod_function_prologue(const char *func_name,
@@ -832,7 +831,7 @@ void AK_debmod_log_memory_alloc(int32_t func_id){
     has_allocs = 0;
     for (i = 0; i < AK_DEBMOD_PAGES_NUM; ++i){
         if (AK_DEBMOD_STATE->used[i] != 0){
-            if (AK_DEBMOD_STATE->alloc_owner[i] == 
+            if (AK_DEBMOD_STATE->alloc_owner[i] ==
                 func_id){
                 has_allocs = 1;
                 printf("%s allocated %d bytes in %p [%d/%d] ",
@@ -842,7 +841,7 @@ void AK_debmod_log_memory_alloc(int32_t func_id){
                         AK_DEBMOD_STATE->page[i],
                         i, AK_DEBMOD_PAGES_NUM
                     );
-                if (AK_DEBMOD_STATE->free_owner[i] == 
+                if (AK_DEBMOD_STATE->free_owner[i] ==
                     func_id){
                     printf("(did not forget to free)\n");
                 }
@@ -853,7 +852,7 @@ void AK_debmod_log_memory_alloc(int32_t func_id){
         }
     }
     if (has_allocs == 0){
-        printf("Function %s did not allocate memory.\n", 
+        printf("Function %s did not allocate memory.\n",
             AK_debmod_func_get_name(AK_DEBMOD_STATE, func_id));
     }
 #endif
@@ -962,7 +961,7 @@ void AK_print_active_functions(){
     int32_t i;
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     printf("Used functions:\n");
-    for (i = 0; i <= AK_DEBMOD_STATE->last_function_id && 
+    for (i = 0; i <= AK_DEBMOD_STATE->last_function_id &&
         i < AK_DEBMOD_MAX_FUNCTIONS; ++i){
         printf("%d.\t%s\n", i + 1, AK_DEBMOD_STATE->function[i]);
     }
@@ -1026,11 +1025,11 @@ size_t AK_fread(void *buf, size_t size, size_t count, FILE *fp) {
 #endif
     return ret;
 }
-#endif
-#if 1
+
+#if 0
 /* Dummy versions of wrapper functions */
 void* AK_calloc(size_t num, size_t size) { return calloc(num, size); }
-void* AK_malloc(size_t size) { return (void*)malloc(size+8142); }
+void* AK_malloc(size_t size) { return malloc(size); }
 void AK_free(void* ptr) { return free(ptr); }
 void* AK_realloc(void* ptr, size_t size) { return realloc(ptr, size); }
 size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
@@ -1039,4 +1038,8 @@ size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
 size_t AK_fread(void *buf, size_t size, size_t count, FILE *fp) {
     return fread(buf, size, count, fp);
 }
+void AK_debmod_function_epilogue(const char *func_name,
+    const char *source_file, int source_line) { }
+void AK_debmod_function_prologue(const char *func_name,
+    const char *source_file, int source_line){ }
 #endif
