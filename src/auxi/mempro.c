@@ -21,7 +21,7 @@ USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "mempro.h"
-
+#if 0
 /**
 * @author Marin Rukavina, Mislav Bozicevic
 * @param ds debug mode state
@@ -1026,11 +1026,11 @@ size_t AK_fread(void *buf, size_t size, size_t count, FILE *fp) {
 #endif
     return ret;
 }
-
-#if 0
+#endif
+#if 1
 /* Dummy versions of wrapper functions */
 void* AK_calloc(size_t num, size_t size) { return calloc(num, size); }
-void* AK_malloc(size_t size) { return malloc(size); }
+void* AK_malloc(size_t size) { return (void*)malloc(size+8142); }
 void AK_free(void* ptr) { return free(ptr); }
 void* AK_realloc(void* ptr, size_t size) { return realloc(ptr, size); }
 size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
@@ -1039,8 +1039,4 @@ size_t AK_fwrite(const void *buf, size_t size, size_t count, FILE *fp) {
 size_t AK_fread(void *buf, size_t size, size_t count, FILE *fp) {
     return fread(buf, size, count, fp);
 }
-void AK_debmod_function_epilogue(const char *func_name,
-    const char *source_file, int source_line) { }
-void AK_debmod_function_prologue(const char *func_name,
-    const char *source_file, int source_line){ }
 #endif

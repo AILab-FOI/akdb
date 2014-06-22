@@ -184,12 +184,7 @@ int Ak_insert_row(struct list_node *row_root) {
     int end = (int) Ak_insert_row_to_block(row_root, mem_block->block);
 
     //AK_write_block(mem_block->block);
-    mem_block->dirty = BLOCK_DIRTY;
-
-    //timestamp
-    unsigned long timestamp;
-    timestamp = clock(); /// get the timestamp
-    mem_block->timestamp_last_change = timestamp; /// set timestamp_last_change
+    AK_mem_block_modify(mem_block, BLOCK_DIRTY);
     AK_EPI;
     return end;
 }
@@ -431,7 +426,7 @@ int Ak_delete_update_segment(struct list_node *row_root, int del) {
                 else {
                     Ak_update_row_from_block(mem_block->block, row_root);
                 }
-                mem_block->dirty = BLOCK_DIRTY;
+                AK_mem_block_modify(mem_block, BLOCK_DIRTY);
             }
         } else
             break;

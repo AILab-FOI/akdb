@@ -33,18 +33,20 @@
 
 int AK_cache_block(int num, AK_mem_block *mem_block) {
     unsigned long timestamp;
+    AK_block *block_cache;
+    AK_block *block_cache_old;
     AK_PRO;
     /// read the block from the given address
-    AK_block *block_cache = (AK_block *) AK_read_block(num);
-
-    memcpy(mem_block->block, block_cache, sizeof ( AK_block));
+    block_cache = AK_read_block(num);
+    block_cache_old = mem_block->block;
+    mem_block->block = block_cache;
     mem_block->dirty = BLOCK_CLEAN; /// set dirty bit in mem_block struct
 
     timestamp = clock(); /// get the timestamp
     mem_block->timestamp_read = timestamp; /// set timestamp_read
     mem_block->timestamp_last_change = timestamp; /// set timestamp_last_change
 
-    AK_free(block_cache);
+    AK_free(block_cache_old);
     AK_EPI;
     return EXIT_SUCCESS;
 }
@@ -55,17 +57,17 @@ int AK_cache_block(int num, AK_mem_block *mem_block) {
   * @return EXIT_SUCCESS if the cache memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_cache_AK_malloc() {
-    register int i;
+    int i;
     AK_PRO;
-    if ((db_cache = (AK_db_cache *) AK_malloc(sizeof ( AK_db_cache))) == NULL) {
+    if ((db_cache = (AK_db_cache *) AK_malloc(sizeof(AK_db_cache))) == NULL) {
         AK_EPI;
         return EXIT_ERROR;
     }
 
     db_cache->next_replace = 0;
     for (i = 0; i < MAX_CACHE_MEMORY; i++) {
-        db_cache->cache[ i ] = (AK_mem_block *) AK_malloc(sizeof ( AK_mem_block));
-        db_cache->cache[ i ]->block = (AK_block *) AK_malloc(sizeof ( AK_block));
+        db_cache->cache[ i ] = (AK_mem_block *) AK_malloc(sizeof(AK_mem_block));
+        db_cache->cache[ i ]->block = (AK_block *) AK_malloc(sizeof(AK_block));
 
         if ((AK_cache_block(i, db_cache->cache[ i ])) == EXIT_ERROR) {
             AK_EPI;
@@ -226,6 +228,7 @@ int AK_memoman_init() {
  */
 AK_mem_block *AK_get_block(int num) {
     int i = 0;
+    int min = 0;
     int pos;
     int oldest_block = db_cache->next_replace;
     int second_oldest = 0;
@@ -236,28 +239,32 @@ AK_mem_block *AK_get_block(int num) {
     AK_mem_block *cached_block;
     AK_block *data_block;
     AK_PRO;
-    while (i < MAX_CACHE_MEMORY) {
-        if (db_cache->cache[i]->timestamp_read == -1) {
-            first_AK_free_mem_block = i;
-            break;
-        }
 
+    /* search cache for already-cached block */
+    for (i = 0; i < MAX_CACHE_MEMORY; i++) {
         if (db_cache->cache[i]->block->address == num) {
             found_in_cache = 1;
             pos = i;
             cached_block = db_cache->cache[i];
             break;
         }
-        i++;
     }
     if (!found_in_cache) {
+        /* find first empty slot in cache for block to be read into */
+        for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+            if (db_cache->cache[i]->timestamp_read == -1) {
+                first_AK_free_mem_block = i;
+                break;
+            }
+        }
+
         if (first_AK_free_mem_block != -1) {
             if (AK_cache_block(num, db_cache->cache[ first_AK_free_mem_block ]) == EXIT_SUCCESS) {
                 cached_block = db_cache->cache[first_AK_free_mem_block];
             }
         } else {
             if (db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY) {
-                data_block = (AK_block *) db_cache->cache[oldest_block]->block;
+                data_block = db_cache->cache[oldest_block]->block;
                 block_written = AK_write_block(data_block);
                 /// if block form cache can not be writed to DB file -> EXIT_ERROR
                 if (block_written != EXIT_SUCCESS) {
@@ -271,7 +278,7 @@ AK_mem_block *AK_get_block(int num) {
         }
     } else {
         if (db_cache->cache[pos]->dirty == BLOCK_DIRTY) {
-            data_block = (AK_block *) db_cache->cache[pos]->block;
+            data_block = db_cache->cache[pos]->block;
             block_written = AK_write_block(data_block);
             /// if block form cache can not be writed to DB file -> EXIT_ERROR
             if (block_written != EXIT_SUCCESS) {
@@ -280,20 +287,30 @@ AK_mem_block *AK_get_block(int num) {
             }
         }
     }
-
-    int min = 0;
-    i = 1;
-    while (i < MAX_CACHE_MEMORY) {
-        if (db_cache->cache[i]->timestamp_read != -1) {
-            if (db_cache->cache[i]->timestamp_read < db_cache->cache[ min ]->timestamp_read) {
-                min = i;
-            }
+    /*i = 1;*/
+    for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+        if (db_cache->cache[i]->timestamp_read != -1 &&
+            db_cache->cache[i]->timestamp_read < db_cache->cache[ min ]->timestamp_read) {
+            min = i;
         }
-        i++;
     }
     db_cache->next_replace = min;
     AK_EPI;
     return cached_block;
+}
+
+/**
+ * @author Alen Novosel.
+ * @brief  Modify the "dirty" bit of a block, and update timestamps accordingly.
+ */
+void AK_mem_block_modify(AK_mem_block* mem_block, int dirty) {
+    unsigned long timestamp;
+    AK_PRO;
+    mem_block->dirty = dirty;
+
+    timestamp = clock();
+    mem_block->timestamp_last_change = timestamp;
+    AK_EPI;
 }
 
 /**
@@ -303,12 +320,15 @@ AK_mem_block *AK_get_block(int num) {
  */
 int AK_refresh_cache() {
     int i;
-    AK_mem_block *mem_block;
+    AK_block *new_block;
+    AK_block *old_block;
+
     AK_PRO;
     for (i = 0; i < MAX_CACHE_MEMORY; i++) {
-        mem_block = db_cache->cache[i];
-        AK_block *temp_block = (AK_block *) AK_read_block(mem_block->block->address);
-        memcpy(mem_block->block, temp_block, sizeof (AK_block));
+        new_block = AK_read_block(db_cache->cache[i]->block->address);
+        old_block = db_cache->cache[i]->block;
+        db_cache->cache[i]->block = new_block;
+        AK_free(old_block);
     }
     AK_EPI;
     return EXIT_SUCCESS;
@@ -340,7 +360,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     }
 
 	Ak_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
-    AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(0);
+    AK_mem_block *mem_block = AK_get_block(0);
 
     for (i = 0; i < DATA_BLOCK_SIZE; i++) {
         memset(name_sys, 0, MAX_ATT_NAME);
@@ -358,7 +378,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
         data_adr = mem_block->block->tuple_dict[i].address;
         data_size = mem_block->block->tuple_dict[i].size;
         data_type = mem_block->block->tuple_dict[i].type;
-        memcpy(&address_sys, mem_block->block->data + data_adr, 4);
+        memcpy(&address_sys, mem_block->block->data + data_adr, sizeof(int));
 
         if (strcmp(name_sys, sys_table) == 0) {
 			Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses: Found the address of the %s table: %d \n", sys_table, address_sys);
@@ -366,7 +386,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
         }
     }
 
-    mem_block = (AK_mem_block *) AK_get_block(address_sys);
+    mem_block = AK_get_block(address_sys);
     table_addresses * addresses = (table_addresses *) AK_malloc(sizeof (table_addresses));
 
     //memset(addresses->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
@@ -455,7 +475,7 @@ int AK_find_AK_free_space(table_addresses * addresses) {
 
             //searching block
             for (i = from; i <= to; i++) {
-                mem_block = (AK_mem_block *) AK_get_block(i);
+                mem_block = AK_get_block(i);
                 int AK_free_space_on = mem_block->block->AK_free_space;
 
 				Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: FREE SPACE %d\n", mem_block->block->AK_free_space);
@@ -495,17 +515,21 @@ int AK_init_new_extent(char *table_name, int extent_type) {
 
 	int old_size = 0;
 	int new_size = 0;
-        AK_PRO;
 	table_addresses *addresses = (table_addresses *) AK_get_segment_addresses(table_name, SEGMENT_TYPE_TABLE);
     int block_address = addresses->address_from[0]; //before 1
     int block_written;
 
-    AK_mem_block *mem_block = (AK_mem_block *)AK_get_block(block_address);
-
+    AK_mem_block *mem_block = AK_get_block(block_address);
+    int start_address = 0;
+    float RESIZE_FACTOR = 0;
+    int end_address;
+    struct list_node *row_root;
+    int obj_id = 0;
 	//!!! to correct header BUG iterate through header from 0 to N-th block while there is
 	//header attributes. Than create header and pass it to function for extent creation below.
 	//Current implementation works only with tables with max MAX_ATTRIBUTES.
-	register int i = 0;
+	int i = 0;
+    AK_PRO;
 
     for (i = 0; i < MAX_EXTENTS_IN_SEGMENT; i++) {
         if (addresses->address_from[i] == 0)
@@ -516,7 +540,6 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     }
 
     old_size++;
-    int start_address = 0;
 
     if ((start_address = AK_new_extent(1, old_size, extent_type, mem_block->block->header)) == EXIT_ERROR) {
         printf("AK_init_new_extent: Could not allocate the new extent\n");
@@ -524,8 +547,6 @@ int AK_init_new_extent(char *table_name, int extent_type) {
         return EXIT_ERROR;
     }
 	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", start_address, old_size, extent_type);
-
-    float RESIZE_FACTOR = 0;
 
     switch (extent_type) {
         case SEGMENT_TYPE_TABLE:
@@ -546,13 +567,12 @@ int AK_init_new_extent(char *table_name, int extent_type) {
             break;
     }
 
-    int end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
+    end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
     //mem_block = (AK_mem_block *) AK_get_block(0);
 
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     //DeleteAllElements(row_root);
-    int obj_id = 0;
     Ak_Insert_New_Element(TYPE_INT, &obj_id, sys_table, "obj_id", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, table_name, sys_table, "name", row_root);
     Ak_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
@@ -574,7 +594,7 @@ int AK_flush_cache() {
     AK_PRO;
 	while (i < MAX_CACHE_MEMORY) {
         if (db_cache->cache[i]->dirty == BLOCK_DIRTY) {
-            data_block = (AK_block *) db_cache->cache[i]->block;
+            data_block = db_cache->cache[i]->block;
             block_written = AK_write_block(data_block);
             /// if block form cache can not be writed to DB file -> EXIT_ERROR
             if (block_written != EXIT_SUCCESS) {
@@ -589,7 +609,7 @@ int AK_flush_cache() {
 }
 
 void AK_memoman_test() {
-    register int i;
+    int i;
     AK_PRO;
 
     for (i = 0; i < MAX_CACHE_MEMORY; i++)
@@ -598,7 +618,7 @@ void AK_memoman_test() {
 }
 
 void AK_memoman_test2() {
-    register int i;
+    int i;
     int aa=0;
     AK_PRO;
 printf("\tPick up block from 0 to: %d \n",AK_allocationbit->last_allocated );

@@ -6,12 +6,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -28,7 +28,7 @@ int Ak_get_total_headers(AK_block *iBlock) {
     AK_PRO;
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
         if (strcmp((char *) iBlock->header[i].att_name, "") == 0){ //if there is no more attributes
-		AK_EPI;            
+		AK_EPI;
 		return i;
 	}
     }
@@ -110,7 +110,7 @@ void AK_sort_segment(char *table_name, char *attr) {
     AK_PRO;
     //Get number of extents and number of blocks for given table
 	table_addresses *addresses = (table_addresses *) AK_get_table_addresses(table_name);
-	
+
     for (i = 0; addresses->address_from[i] != 0; i++) {
         for (j = addresses->address_from[i]; j <= addresses->address_to[i]; j++) {
             blocks_addr[num_blocks] = j;
@@ -130,13 +130,13 @@ void AK_sort_segment(char *table_name, char *attr) {
 
     AK_header *head = AK_get_header(table_name);
     AK_initialize_new_segment(temp_segment, SEGMENT_TYPE_TABLE, head);
-	
+
     //init new table extent
     for (i = 1; i < num_extents; i++) {
         AK_init_new_extent(temp_segment, SEGMENT_TYPE_TABLE);
     }
 	//---------------------------------------------------------------------------------
-    
+
 	//search for all blocks in segment
     addresses = (table_addresses *) AK_get_table_addresses(temp_segment);
 
@@ -156,22 +156,22 @@ void AK_sort_segment(char *table_name, char *attr) {
     char data[DATA_TUPLE_SIZE]; //data to be copied
 
     int r1, r2;
-    
+
 	//array index of the current block address
 	int id, id2, id_temp;
-	
+
 	//position
     int cache1_pos, cache2_pos, cacheTemp_pos;
-	
+
 	id = id2 = id_temp = cache1_pos = cache2_pos = cacheTemp_pos = 0;
-    
+
 	AK_mem_block * cache1 = (AK_mem_block*) AK_get_block(blocks_addr[id]);
 	AK_mem_block * cache2 = (AK_mem_block*) AK_malloc(sizeof(AK_mem_block));//AK_get_block(blocks_addr[id2]); //or AK_malloc as before
 	AK_mem_block * cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
-	
+
     int num_tuples_cache1 = Ak_get_num_of_tuples(cache1->block);
 	int num_tuples_cache2 = 0;
-	
+
 	//get total number of headers and the number of header used to sort segment
 	int num_headers = Ak_get_total_headers(cache1->block);
 	int num_sort_header = Ak_get_header_number(cache1->block, attr);
@@ -209,15 +209,15 @@ void AK_sort_segment(char *table_name, char *attr) {
 
 			int type, address, size;
 			type = address = size = 0;
-			
+
             while ((id < r1) && (id2 < r2)) {
 				int address = cache1->block->tuple_dict[cache1_pos * num_headers + num_sort_header].address;
 				int size = cache1->block->tuple_dict[cache1_pos * num_headers + num_sort_header].size;
-				
+
                 //first data
                 memset(x, '\0', MAX_VARCHAR_LENGTH); //DATA_ROW_SIZE
                 memcpy(x, cache1->block->data + address, size);
-				
+
 				address = cache2->block->tuple_dict[cache2_pos * num_headers + num_sort_header].address;
 				size = cache2->block->tuple_dict[cache2_pos * num_headers + num_sort_header].size;
 
@@ -230,7 +230,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 
 				memset(y, '\0', MAX_VARCHAR_LENGTH);
 				memcpy(y, cache2->block->data + address, size);
-				
+
                 Ak_dbg_messg(HIGH, FILE_MAN, ">> tuples: %s , %s   \n", x, y);
 
                 //comparison (x < y)
@@ -244,7 +244,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 
                     if ((cacheTemp->block->AK_free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
 						id_temp++;
-						cacheTemp->dirty = BLOCK_DIRTY;
+                        AK_mem_block_modify(cacheTemp, BLOCK_DIRTY);
                         cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
                         cacheTemp_pos = 0;
                     }
@@ -255,7 +255,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 						address = cache1->block->tuple_dict[i + (cache1_pos * num_headers)].address;
 						size = cache1->block->tuple_dict[i + (cache1_pos * num_headers)].size;
                         type = cache1->block->tuple_dict[i + (cache1_pos * num_headers)].type;
-						
+
 						memset(data, '\0', MAX_VARCHAR_LENGTH); // DATA_TUPLE_SIZE
                         memcpy(data, cache1->block->data + address, size);
                         AK_insert_entry(cacheTemp->block, type, data, cacheTemp_pos);
@@ -286,8 +286,8 @@ void AK_sort_segment(char *table_name, char *attr) {
 
                     if ((cacheTemp->block->AK_free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
 						id_temp++;
-						cacheTemp->dirty = BLOCK_DIRTY;
-                        cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
+                        AK_mem_block_modify(cacheTemp, BLOCK_DIRTY);
+                        cacheTemp = AK_get_block(temp_blocks_addr[id_temp]);
                         cacheTemp_pos = 0;
                     }
 					//---------------------------------------------------------------------------------
@@ -297,7 +297,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 						address = cache2->block->tuple_dict[i + (cache2_pos * num_headers)].address;
 						size = cache2->block->tuple_dict[i + (cache2_pos * num_headers)].size;
 						type = cache2->block->tuple_dict[i + (cache2_pos * num_headers)].type;
-						
+
                         memset(data, '\0', MAX_VARCHAR_LENGTH); //DATA_TUPLE_SIZE
                         memcpy(data, cache2->block->data + address, size);
                         AK_insert_entry(cacheTemp->block, type, data, cacheTemp_pos);
@@ -321,7 +321,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 
             if (id == r1) {
                 while (id2 < r2) {
-					//if all data from the 1th partition copied and there is more data in 2th partition 
+					//if all data from the 1th partition copied and there is more data in 2th partition
                     Ak_dbg_messg(HIGH, FILE_MAN, "there is more data to copy from the 2th partition");
 
                     //check if data can fit in the block. If can't load the new temp block.
@@ -331,18 +331,18 @@ void AK_sort_segment(char *table_name, char *attr) {
 
                     if ((cacheTemp->block->AK_free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) { // ako je veća od zadane veličine onda treba učitati novi temp blok
 						id_temp++;
-						cacheTemp->dirty = BLOCK_DIRTY;
-                        cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
+                        AK_mem_block_modify(cacheTemp, BLOCK_DIRTY);
+                        cacheTemp = AK_get_block(temp_blocks_addr[id_temp]);
                         cacheTemp_pos = 0;
                     }
 					//---------------------------------------------------------------------------------
-					
+
                     //copy data to the temp block
                     for (i = 0; i < num_headers; i++) {
 						address = cache2->block->tuple_dict[i + (cache2_pos * num_headers)].address;
 						size = cache2->block->tuple_dict[i + (cache2_pos * num_headers)].size;
 						type = cache2->block->tuple_dict[i + (cache2_pos * num_headers)].type;
-						
+
                         memset(data, '\0', MAX_VARCHAR_LENGTH);  //DATA_TUPLE_SIZE
                         memcpy(data, cache2->block->data + address, size);
                         AK_insert_entry(cacheTemp->block, type, data, cacheTemp_pos);
@@ -363,7 +363,7 @@ void AK_sort_segment(char *table_name, char *attr) {
                     }
                 } //end: while(id2 < r2)
             }//end: if(id == r1)
-			
+
 			//if ( id2 == r2 )
             else {
                 Ak_dbg_messg(HIGH, FILE_MAN, "there is more data to copy from the 1th partition");
@@ -376,18 +376,18 @@ void AK_sort_segment(char *table_name, char *attr) {
 
                     if ((cacheTemp->block->AK_free_space + cacheTemp_size) >= DATA_BLOCK_SIZE) {
 						id_temp++;
-						cacheTemp->dirty = BLOCK_DIRTY;
+                        AK_mem_block_modify(cacheTemp, BLOCK_DIRTY);
                         cacheTemp = (AK_mem_block*) AK_get_block(temp_blocks_addr[id_temp]);
                         cacheTemp_pos = 0;
                     }
 					//---------------------------------------------------------------------------------
-					
+
                     //copy data to the temp block
                     for (i = 0; i < num_headers; i++) {
 						address = cache1->block->tuple_dict[i + (cache1_pos * num_headers)].address;
 						size = cache1->block->tuple_dict[i + (cache1_pos * num_headers)].size;
 						type = cache1->block->tuple_dict[i + (cache1_pos * num_headers)].type;
-						
+
                         memset(data, '\0', MAX_VARCHAR_LENGTH); //DATA_TUPLE_SIZE
                         memcpy(data, cache1->block->data + address, size);
                         AK_insert_entry(cacheTemp->block, type, data, cacheTemp_pos);
@@ -413,7 +413,7 @@ void AK_sort_segment(char *table_name, char *attr) {
         //zamjena polja sa blokovima
 		int swap_blocks_addr[MAX_NUM_OF_BLOCKS];		//
 		int num_swap_blocks = 0;						//
-        
+
 		// podaci su u blocks_addr
         if (glavni) {
             glavni = 0;
@@ -764,7 +764,7 @@ void Ak_filesort_test() {
     printf("filesort_test: Present!\n");
     AK_sort_segment("student", "year");
 	AK_print_table("SORT_TEMP_HELP_student");
-		
+
 	/*Sort block
 	table_addresses * addresses = (table_addresses *)get_table_addresses("student");
 	int address = addresses->address_from[0];

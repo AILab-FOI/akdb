@@ -109,7 +109,8 @@ memory wrappers and debug mode of Kalashnikov DB.
   *        related functions are excluded). Put this macro after variable
   *        declarations, before any function instruction.
   */
-#define AK_PRO AK_debmod_function_prologue(__func__, __FILE__, __LINE__);
+#define AK_PRO (void)0;
+  /*AK_debmod_function_prologue(__func__, __FILE__, __LINE__);*/
 
 /**
   * @def AK_EPI
@@ -117,7 +118,8 @@ memory wrappers and debug mode of Kalashnikov DB.
   *        related functions are excluded). Put this macro after last
   *        function instruction, before every return statement.
   */
-#define AK_EPI AK_debmod_function_epilogue(__func__, __FILE__, __LINE__);
+#define AK_EPI (void)0;
+  /*AK_debmod_function_epilogue(__func__, __FILE__, __LINE__);*/
 
 #ifdef __linux__
 static pthread_mutex_t AK_debmod_critical_section = PTHREAD_MUTEX_INITIALIZER;

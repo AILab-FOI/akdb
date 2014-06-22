@@ -6,12 +6,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -139,7 +139,7 @@ AK_free(addresses);
  * <li>else read the first block</li>
  * <li>allocate array</li>
  * <li>copy table header to the array</li>
- * </ol> 
+ * </ol>
  * @param  *tblName table name
  * @result array of table header
  */
@@ -241,7 +241,7 @@ struct list_node *AK_get_column(int num, char *tblName) {
                     int size = temp->block->tuple_dict[k].size;
                     int address = temp->block->tuple_dict[k].address;
                     memcpy(data, &(temp->block->data[address]), size);
-                    data[ size ] = '\0';                    
+                    data[ size ] = '\0';
                     Ak_InsertAtEnd_L3(type, data, size, row_root);
                 }
             }
@@ -285,7 +285,7 @@ struct list_node *AK_get_row(int num, char * tblName) {
                         int size = temp->block->tuple_dict[k + l].size;
                         int address = temp->block->tuple_dict[k + l].address;
                         memcpy(data, &(temp->block->data[address]), size);
-                        data[size] = '\0';                        
+                        data[size] = '\0';
                         Ak_InsertAtEnd_L3(type, data, size, row_root);
                     }
                     AK_free(addresses);
@@ -397,10 +397,10 @@ char * AK_tuple_to_string(struct list_node *tuple) {
 }
 
 /**
- * @author Dino Laktašić. 
- * @brief Function that prints row spacer 
- * @param col_len[] max lengths for each attribute cell 
- * @param length total table width 
+ * @author Dino Laktašić.
+ * @brief Function that prints row spacer
+ * @param col_len[] max lengths for each attribute cell
+ * @param length total table width
  * @return printed row spacer
  */
 void AK_print_row_spacer(int col_len[], int length) {
@@ -422,7 +422,7 @@ void AK_print_row_spacer(int col_len[], int length) {
 
 /**
  * @author Dino Laktašić
- * @brief  Function that prints table row 
+ * @brief  Function that prints table row
  * @param col_len[] array of max lengths for each attribute
  * @param *row  list with row elements
  * @return No return value
@@ -604,7 +604,7 @@ void AK_print_table(char *tblName) {
                             for (l = 0; l < num_attr; l++) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
-                                address = temp->block->tuple_dict[k + l].address;				
+                                address = temp->block->tuple_dict[k + l].address;
                                 Ak_InsertAtEnd_L3(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row(len, row_root);
@@ -647,11 +647,11 @@ char* FILEPATH = "table_test.txt";
 FILE *fp;
 
 /**
- * @author Dino Laktašić. 
- * @brief Function that prints row spacer 
+ * @author Dino Laktašić.
+ * @brief Function that prints row spacer
  * update by Luka Rajcevic
- * @param col_len[] max lengths for each attribute cell 
- * @param length total table width 
+ * @param col_len[] max lengths for each attribute cell
+ * @param length total table width
  * @return printed row spacer
  */
 void AK_print_row_spacer_to_file(int col_len[], int length) {
@@ -677,7 +677,7 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
 
 /**
  * @author Dino Laktašić
- * @brief  Function that prints table row 
+ * @brief  Function that prints table row
  * update by Luka Rajcevic
  * @param col_len[] array of max lengths for each attribute
  * @param *row  list with row elements
@@ -827,7 +827,7 @@ void AK_print_table_to_file(char *tblName) {
                             for (l = 0; l < num_attr; l++) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
-                                address = temp->block->tuple_dict[k + l].address;				
+                                address = temp->block->tuple_dict[k + l].address;
                                 Ak_InsertAtEnd_L3(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row_to_file(len, row_root);
@@ -891,7 +891,7 @@ int AK_get_table_obj_id(char *table) {
 /**
  * @author Dino Laktašić, abstracted from difference.c for use in difference.c, intersect.c and union.c by Tomislav Mikulček
  * @brief  Function to check if tables have the same relation schema
- * @param tbl1_temp_block first cache block of the first table 
+ * @param tbl1_temp_block first cache block of the first table
  * @param tbl2_temp_block first cache block of the second table
  * @param operator_name the name of operator, used for displaying error message
  * @return if success returns num of attributes in schema, else returns EXIT_ERROR
@@ -984,9 +984,9 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 
         //replacing old headers with new ones
         for (i = 0; i < num_blocks; i++) {
-            mem_block = (AK_mem_block *) AK_get_block(tab_addresses[i]);
+            mem_block = AK_get_block(tab_addresses[i]);
             memcpy(&mem_block->block->header, newHeader, sizeof (AK_header) * MAX_ATTRIBUTES);
-            mem_block->dirty = BLOCK_DIRTY;
+            AK_mem_block_modify(mem_block, BLOCK_DIRTY);
         }
     }
 
