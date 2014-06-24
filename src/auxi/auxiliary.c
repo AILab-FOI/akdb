@@ -1324,6 +1324,88 @@ void AK_tarjan_test() {
 }
 
 /**
+ * @author Marko Sinko
+ * @brief Initializes an AK_synchronization_info structure and returns an owned
+ *        pointer that must later be passed to AK_destroy_critical_section.
+ * @return Initialized synchronization object
+ */
+AK_synchronization_info* AK_init_critical_section() {
+    AK_synchronization_info* info = AK_calloc(1, sizeof(AK_synchronization_info));
+    if (info == NULL)
+        return NULL;
+
+#ifdef _WIN32
+    if (InitializeCriticalSectionAndSpinCount(
+        &info->critical_section, 0x00000400) == 0){
+        free(info);
+        return NULL;
+    }
+#endif
+#ifdef __linux__
+    pthread_mutex_init(&info->mutex, NULL);
+#endif
+    info->init = 1;
+    return info;
+}
+
+/**
+ * @author Marko Sinko
+ * @param info Synchronization info structure
+ * @brief Destroys a synchronization object when it is no longer necessary and
+ *        frees the pointer.
+ * @return void
+ */
+void AK_destroy_critical_section(AK_synchronization_info* info) {
+    if (info == NULL)
+        return;
+    if (info->init != 1)
+        return;
+#ifdef _WIN32
+    DeleteCriticalSection(&info->critical_section);
+#endif
+#ifdef __linux__
+    pthread_mutex_destroy(&info->mutex);
+#endif
+    AK_free(info);
+    info = NULL;
+}
+
+/**
+ * @author Marko Sinko
+ * @param info Synchronization info structure
+ * @brief Enters a critical section.
+ * @return void
+ */
+void AK_enter_critical_section(AK_synchronization_info* info) {
+    assert(info != NULL && info->init == 1);
+#ifdef __linux__
+    pthread_mutex_lock(&info->mutex);
+#endif
+#ifdef _WIN32
+    EnterCriticalSection(&info->critical_section);
+#endif
+    while (info->ready != 1); /* wait loop */
+    info->ready = 0;
+#ifdef __linux__
+    pthread_mutex_unlock(&info->mutex);
+#endif
+#ifdef _WIN32
+    LeaveCriticalSection(&info->critical_section);
+#endif
+}
+
+/**
+ * @author Marko Sinko
+ * @param info Synchronization info structure
+ * @brief Leaves a critical section
+ * @return void
+ */
+void AK_leave_critical_section(AK_synchronization_info* info) {
+    assert(info != NULL && info->init == 1);
+    info->ready = 1;
+}
+
+/**
  * @author Krunoslav Bilić
  * @brief Function used to copy one "AK_list_elem" to another.
  * @param first "AK_list_elem" to be compared - source

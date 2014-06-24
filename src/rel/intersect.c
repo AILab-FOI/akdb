@@ -128,8 +128,8 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                     }
                                                     Ak_insert_row(row_root);
                                                     //Ak_DeleteAll_L(row_root);
-						    Ak_DeleteAll_L3(&row_root);
-thesame=0;
+                        						    Ak_DeleteAll_L3(&row_root);
+                                                    thesame=0;
                                                 }
                                             }
                                         }

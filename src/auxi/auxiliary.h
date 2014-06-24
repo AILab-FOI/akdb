@@ -165,6 +165,22 @@ typedef struct Vertex *AK_vertex;
 typedef struct Stack *AK_stack;
 typedef struct Stack AK_stackHead;
 
+/**
+ * @author Marko Sinko
+ * @struct AK_synchronization_info
+ * @brief Structure for managing the synchronization between multiple threads
+ *        accessing the same resources (essentially a mutex).
+ */
+typedef struct {
+    int init;
+    int ready;
+#ifdef _WIN32
+    CRITICAL_SECTION critical_section;
+#endif
+#ifdef __linux__
+    pthread_mutex_t mutex;
+#endif
+} AK_synchronization_info;
 
 int AK_chars_num_from_number(int number, int base);
 size_t AK_type_size(int iDB_type, char *szVarchar);
@@ -220,6 +236,12 @@ AK_stack AK_search_in_stack(int id);
 int MIN(int X, int Y);
 void AK_tarjan(int id);
 void AK_tarjan_test();
+
+AK_synchronization_info* AK_init_critical_section();
+void AK_destroy_critical_section(AK_synchronization_info* info);
+void AK_enter_critical_section(AK_synchronization_info* info);
+void AK_leave_critical_section(AK_synchronization_info* info);
+
 //void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem);
 //void AK_copy_L(AK_list *src, AK_list *dest) ;
 //int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal);

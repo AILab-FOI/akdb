@@ -206,11 +206,10 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
  * @param num - 0 based index of column
  * @param tbl - name of the table
  */
+int get_column_test(int num, char* tbl){
+    char* FILEP = "table_test.txt";
+    FILE *fp;
 
-char* FILEP = "table_test.txt";
-FILE *fp;
-
- int get_column_test(int num, char* tbl){
     AK_PRO;
     fp = fopen(FILEP,"a");
 
@@ -246,6 +245,8 @@ FILE *fp;
  */
 
  int get_row_test(int num, char* tbl){
+    char* FILEP = "table_test.txt";
+    FILE *fp;
     AK_PRO;
     fp = fopen(FILEP,"a");
     

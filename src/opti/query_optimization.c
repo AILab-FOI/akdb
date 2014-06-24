@@ -148,8 +148,8 @@ struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel
  * returned heuristicly optimized list
  */
 struct list_node *AK_query_optimization(struct list_node *list_query, const char *FLAGS, const int DIFF_PLANS) {
-int num_perms = 1;
-int div;
+    int num_perms = 1;
+    int div;
     int next_perm,sum, next_flag;
     AK_PRO;
     int len_flags = strlen(FLAGS);

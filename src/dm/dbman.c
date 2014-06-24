@@ -23,7 +23,6 @@
 
 #include "dbman.h"
 pthread_mutex_t fileLockMutex = PTHREAD_MUTEX_INITIALIZER;
-int k;
 
 
 /**
