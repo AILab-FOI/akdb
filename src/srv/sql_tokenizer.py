@@ -1350,9 +1350,13 @@ test.AK_alter_index_test()
 
 #testing alter view statment
 test.AK_alter_view_test()
-'''
 
+#testing alter user statement
 test.AK_alter_user_test()
+
+#testing alter sequence statement
 test.AK_alter_sequence_test()
-test.AK_alter_index_test()
+
+#testing alter view test
 test.AK_alter_view_test()
+'''

@@ -58,21 +58,12 @@ def is_date(lit):
 # returns true if the input value is in datetime format
 # @param lit the value to be checked
 def is_datetime(lit):
-        returnVal = 2
         try:
                 time.strptime(lit, '%Y-%m-%d %H:%M:%S')
-                returnVal += 1
-        except ValueError:
-                returnVal -= 1
-        try:
-                time.strptime(lit, '%Y-%m-%d %H:%M:%S.%f')
-                returnVal += 1
-        except ValueError:
-                returnVal -= 1
-        if returnVal > 0:
                 return True
-        else:
+        except ValueError:
                 return False
+
 
 ## is_time
 # returns true if the input value is in time format
@@ -240,12 +231,10 @@ class Create_sequence_command:
         # executes the create sequence expression
         # neded revision in sequence.c in function AK_sequence_add which receives 
         # only int values but posible is also bigint which is default for undefined values
-        def execute(self):
+        def execute(self,input):
                 print "start parsing.."
-                print self.matcher.group(0)
-                print "after self"
                 pars = sql_tokenizer()
-                tok = pars.AK_create_sequence(self.matcher.group(0))
+                tok = pars.AK_create_sequence(input)
                 # isinstance needs revision for swig
                 '''
                 if isinstance(tok, str):
@@ -550,6 +539,8 @@ class Insert_into_command:
         return False
 
 
+#
+'''
 ## create group command
 # @author Zvonimir Kapes
 class Create_group_command:
@@ -588,6 +579,7 @@ class Create_group_command:
 				#result += str(ak47.AK_user_add(user, password, ak47.NEW_ID))
 				#result += str(ak47.AK_add_user_to_group(user, tokens.groupname))
 		return result
+'''
 
 ## grant command
 # @author Zvonimir Kapes
@@ -669,9 +661,7 @@ class Select_command:
 
         ## execute method
         # defines what is called when select command is invoked
-        def execute(self):
-                expr = self.matcher.group(0)
-                print expr
+        def execute(self,expr):
                 token = sql_tokenizer().AK_parse_where(expr)
                 # Selection table name
                 table_name = str(token.tableName)
@@ -693,11 +683,7 @@ class Select_command:
                 # Expression types
                 expr_types = []
                 # Result table name (randomized)
-                resultTable = ''.join(random.choice(string.ascii_uppercase) for x in range(6))
-
-                # Result table name (randomized - unique)
-                while (ak47.AK_table_exist(resultTable) == 1):
-                    resultTable = ''.join(random.choice(string.ascii_uppercase) for x in range(6))
+                resultTable = "student"
 
                 # Specific attributes for selection
                 if(token.attributes):
@@ -794,9 +780,7 @@ class Update_command:
 
         ## execute method
         # defines what is called when update command is invoked
-        def execute(self):
-                expr = self.matcher.group(0)
-                print expr
+        def execute(self,expr):
                 token = sql_tokenizer().AK_parse_where(expr)
                 # Update table name
                 table_name = str(token.tableName)
@@ -869,20 +853,20 @@ class Update_command:
                     ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, whereValue, table_name, updateColumn, element, 1)
                 elif type(whereValue) == float:
                     ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, whereValue, table_name, updateColumn, element, 1)
-                elif type(whereValue) == str:
-                    ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, whereValue, table_name, updateColumn, element, 1)
+                #elif type(whereValue) == str:
+                   # ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, whereValue, table_name, updateColumn, element, 1)
                     
                 if type(newValue) == int:
                     ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, newValue, table_name, whereColumn, element, 0)
                 elif type(newValue) == float:
                     ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, newValue, table_name, whereColumn, element, 0)
-                elif type(newValue) == str:
-                    ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, newValue, table_name, whereColumn, element, 0)
+                #elif type(newValue) == str:
+                    #ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, newValue, table_name, whereColumn, element, 0)
 
                        #update_Row(table, column1, column2, key, new_value)
                 #if(ak47.update_Row(table_name, 'weight', 'id_student', 1, 80) == EXIT_SUCCESS):
-                if(ak47.Ak_update_row(element) == ak47.EXIT_SUCCESS):
-                    return True
+                #if(ak47.Ak_update_row(element) == ak47.EXIT_SUCCESS):
+                    #return True
                 else:
                     return False
                 return False
@@ -1011,14 +995,14 @@ class sql_executor:
         create_index_command = Create_index_command()
         create_trigger_command = Create_trigger_command()
         insert_into_command = Insert_into_command()
-        create_group_command = Create_group_command()
+        #create_group_command = Create_group_command()
         grant_command = Grant_command()
         select_command = Select_command()
         update_command = Update_command()
         drop_command = Drop_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, create_group_command, grant_command, select_command, update_command,drop_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, grant_command, select_command, update_command,drop_command]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 
