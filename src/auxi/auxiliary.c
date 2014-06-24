@@ -1345,6 +1345,7 @@ AK_synchronization_info* AK_init_critical_section() {
     pthread_mutex_init(&info->mutex, NULL);
 #endif
     info->init = 1;
+    info->ready = 1;
     return info;
 }
 

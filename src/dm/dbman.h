@@ -225,6 +225,13 @@ typedef struct {
  */
 AK_block_activity *AK_block_activity_info;
 
+/**
+ * @author Marko Sinko
+ * @var fileLock
+ * @brief Synchronization object for files used by dbman.c
+ */
+AK_synchronization_info* dbmanFileLock;
+
 
 int AK_print_block(AK_block * block, int num, char* gg, FILE *fpp);
 void AK_allocationbit_test();

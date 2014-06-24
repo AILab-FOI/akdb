@@ -385,13 +385,15 @@ int AK_blocktable_flush(){
         exit(EXIT_ERROR);
     }
 
-    pthread_mutex_lock(&fileLockMutex);
+    //pthread_mutex_lock(&fileLockMutex);
+    AK_enter_critical_section(dbmanFileLock);
     if (AK_fwrite(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) != 1) {
         printf("AK_allocationbit: ERROR. Cannot write bit vector \n");
         AK_EPI;
         exit(EXIT_ERROR);
     }
-    pthread_mutex_unlock(&fileLockMutex);
+    //pthread_mutex_unlock(&fileLockMutex);
+    AK_leave_critical_section(dbmanFileLock);
 
     rewind(db);
     fclose(db);
@@ -574,13 +576,15 @@ int AK_blocktable_get(){
         exit(EXIT_ERROR);
     }
 
-    pthread_mutex_lock(&fileLockMutex);
+    //pthread_mutex_lock(&fileLockMutex);
+    AK_enter_critical_section(dbmanFileLock);
     if (AK_fread(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) == 0) {
         printf("AK_allocationbit:  Cannot read bit-vector %d.\n", AK_ALLOCATION_TABLE_SIZE);
         AK_EPI;
         exit(EXIT_ERROR);
     }
-    pthread_mutex_unlock(&fileLockMutex);
+    //pthread_mutex_unlock(&fileLockMutex);
+    AK_leave_critical_section(dbmanFileLock);
 
     rewind(db);
     fclose(db);
@@ -641,7 +645,8 @@ int AK_init_allocation_table(){
     sz = fsize(db);
 
 
-    pthread_mutex_lock(&fileLockMutex);
+    //pthread_mutex_lock(&fileLockMutex);
+    AK_enter_critical_section(dbmanFileLock);
     //if this is very first time
     if (sz == 0){
         for (i = 0; i < DB_FILE_BLOCKS_NUM; i++){
@@ -660,9 +665,7 @@ int AK_init_allocation_table(){
             AK_EPI;
             exit(EXIT_ERROR);
         }
-        pthread_mutex_unlock(&fileLockMutex);
-
-
+        //pthread_mutex_unlock(&fileLockMutex);
     }
 
     else if (AK_fread(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) == 0) {
@@ -673,7 +676,8 @@ int AK_init_allocation_table(){
 
     fclose(db);
     db = NULL;
-    pthread_mutex_unlock(&fileLockMutex);
+    //pthread_mutex_unlock(&fileLockMutex);
+    AK_leave_critical_section(dbmanFileLock);
     AK_EPI;
     return (EXIT_SUCCESS);
 
@@ -962,7 +966,8 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
 
     }
     
-    pthread_mutex_lock(&fileLockMutex);
+    //pthread_mutex_lock(&fileLockMutex);
+    AK_enter_critical_section(dbmanFileLock);
     if (fseek(db, AK_ALLOCATION_TABLE_SIZE + FromWhere * sizeof(AK_block), SEEK_SET) != 0) {
         printf("AK_allocationbit: ERROR. Cannot set position to move for AK_blocktable \n");
         AK_EPI;
@@ -980,7 +985,8 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
             return EXIT_ERROR;
         }
     }
-    pthread_mutex_unlock(&fileLockMutex);
+    //pthread_mutex_unlock(&fileLockMutex);
+    AK_leave_critical_section(dbmanFileLock);
 
 
     fclose(db);

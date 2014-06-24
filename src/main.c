@@ -162,6 +162,9 @@ Main program function
 int main(int argc, char * argv[])
 {
     AK_PRO;
+    // initialize critical sections
+    dbmanFileLock = AK_init_critical_section();
+    printf("Init: %d, ready: %d", dbmanFileLock->init, dbmanFileLock->ready);
     qsort(fun, sizeof(fun)/sizeof(fun[0]), (int)sizeof(fun[0]), (void*)strcasecmp);
     AK_check_folder_blobs();
     if((argc == 2) && !strcmp(argv[1], "help"))
@@ -218,6 +221,8 @@ int main(int argc, char * argv[])
 	AK_EPI;
         return ( EXIT_ERROR );
     }
+    // delete critical sections
+    AK_destroy_critical_section(dbmanFileLock);
     AK_EPI;
     return(EXIT_SUCCESS);
 }
