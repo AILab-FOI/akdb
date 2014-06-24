@@ -37,6 +37,7 @@ typedef struct AK_create_table AK_create_table_parameter;
 
 
 
+
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name);
 void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) ;
 int AK_num_attr(char * tblName);

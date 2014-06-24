@@ -643,9 +643,6 @@ AK_free(addresses);
     AK_EPI;
 }
 
-char* FILEPATH = "table_test.txt";
-FILE *fp;
-
 /**
  * @author Dino Laktašić.
  * @brief Function that prints row spacer
@@ -655,7 +652,11 @@ FILE *fp;
  * @return printed row spacer
  */
 void AK_print_row_spacer_to_file(int col_len[], int length) {
-    AK_PRO;
+
+	char* FILEPATH = "table_test.txt";
+	FILE *fp;
+    
+	AK_PRO;
     fp = fopen(FILEPATH, "a");
     int i, j, col, temp;
 
@@ -684,7 +685,11 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
  * @return No return value
  */
 void AK_print_row_to_file(int col_len[], struct list_node * row) {
-    AK_PRO;
+
+	char* FILEPATH = "table_test.txt";
+	FILE *fp;
+    
+	AK_PRO;
     fp = fopen(FILEPATH, "a");
     struct list_node *el = (struct list_node *) Ak_First_L2(row);
 
@@ -730,7 +735,11 @@ void AK_print_row_to_file(int col_len[], struct list_node * row) {
  * @return No return value
  */
 void AK_print_table_to_file(char *tblName) {
-    AK_PRO;
+
+	char* FILEPATH = "table_test.txt";
+	FILE *fp;
+    
+	AK_PRO;
     fp = fopen(FILEPATH, "a");
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0) {
