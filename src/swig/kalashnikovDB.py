@@ -372,6 +372,22 @@ AK_tarjan = _kalashnikovDB.AK_tarjan
 def AK_tarjan_test():
   return _kalashnikovDB.AK_tarjan_test()
 AK_tarjan_test = _kalashnikovDB.AK_tarjan_test
+
+def AK_init_critical_section():
+  return _kalashnikovDB.AK_init_critical_section()
+AK_init_critical_section = _kalashnikovDB.AK_init_critical_section
+
+def AK_destroy_critical_section(*args):
+  return _kalashnikovDB.AK_destroy_critical_section(*args)
+AK_destroy_critical_section = _kalashnikovDB.AK_destroy_critical_section
+
+def AK_enter_critical_section(*args):
+  return _kalashnikovDB.AK_enter_critical_section(*args)
+AK_enter_critical_section = _kalashnikovDB.AK_enter_critical_section
+
+def AK_leave_critical_section(*args):
+  return _kalashnikovDB.AK_leave_critical_section(*args)
+AK_leave_critical_section = _kalashnikovDB.AK_leave_critical_section
 MAX_LOOP_ITERATIONS = _kalashnikovDB.MAX_LOOP_ITERATIONS
 class list_elem(_object):
     __swig_setmethods__ = {}
@@ -539,6 +555,27 @@ class Stack(_object):
     __del__ = lambda self : None;
 Stack_swigregister = _kalashnikovDB.Stack_swigregister
 Stack_swigregister(Stack)
+
+class AK_synchronization_info(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, AK_synchronization_info, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, AK_synchronization_info, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["init"] = _kalashnikovDB.AK_synchronization_info_init_set
+    __swig_getmethods__["init"] = _kalashnikovDB.AK_synchronization_info_init_get
+    if _newclass:init = _swig_property(_kalashnikovDB.AK_synchronization_info_init_get, _kalashnikovDB.AK_synchronization_info_init_set)
+    __swig_setmethods__["ready"] = _kalashnikovDB.AK_synchronization_info_ready_set
+    __swig_getmethods__["ready"] = _kalashnikovDB.AK_synchronization_info_ready_get
+    if _newclass:ready = _swig_property(_kalashnikovDB.AK_synchronization_info_ready_get, _kalashnikovDB.AK_synchronization_info_ready_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_AK_synchronization_info()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_AK_synchronization_info
+    __del__ = lambda self : None;
+AK_synchronization_info_swigregister = _kalashnikovDB.AK_synchronization_info_swigregister
+AK_synchronization_info_swigregister(AK_synchronization_info)
 
 class AK_header(_object):
     __swig_setmethods__ = {}

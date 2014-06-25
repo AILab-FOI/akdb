@@ -156,16 +156,16 @@ print "\n------------------------------- EXECUTOR TEST -------------------------
 
 
 print "\nCreate sequence brojac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1"
-sequence = Create_sequence_command()
+#sequence = Create_sequence_command()
 
 #Takoder sljedeca metoda ne radi kako treba te bi bilo potrebno provjeriti funkciju AK_sequence_add
-sequence.execute("Create sequence brojac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1")
+#sequence.execute("Create sequence brojac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1")
 
 #sljedeci upit imao je overflow buffer error ali prilikom mojeg testiranja radi normalno
 
 print "\nSljedeci upit:\n"
 
-sequence.execute("Create sequence brojac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
+#sequence.execute("Create sequence brojac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
 print "\n---------------------------- EXECUTOR TEST END ----------------------------------\n"
 
 
