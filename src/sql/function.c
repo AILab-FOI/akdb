@@ -21,36 +21,35 @@
 #include "function.h"
 
 /**
- * @author Unknown, updated by Jurica Hlevnjak - check function arguments included for drop purpose
+ * @author Unknown, updated by Jurica Hlevnjak - check function arguments included for drop purpose, updated by Tomislav Ilisevic
  * @brief Function that gets obj_id of a function by name and arguments list (transferred from trigger.c/drop.c).
  * @param *function name of the function
  * @return obj_id of the function or EXIT_ERROR
  */
-//int AK_get_function_obj_id(char* function, AK_list *arguments_list) {
 int AK_get_function_obj_id(char* function, struct list_node *arguments_list) {
     int i = 0;
     int id = -1;
     int result;
     int arg_num;
-    //AK_list *row;
     struct list_node *row;
 
     int num_args;
     AK_PRO;
-    num_args = Ak_Size_L(arguments_list);
+    num_args = Ak_Size_L2(arguments_list) / 2; // u paru "naziv" - "vrsta" argumenta pa / 2
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_function")) != NULL) {
-    // while ((row = (AK_list *) AK_get_row(i, "AK_function")) != NULL) {
         memcpy(&arg_num, row->next->next->next->data, sizeof (int));
         if ((strcmp(row->next->next->data, function) == 0) && (arg_num == num_args)) {
 
             memcpy(&id, row->next->data, sizeof (int));
             
-            // check_type je za drop
-            result = AK_check_function_arguments_type(id, arguments_list);
-            if (result == EXIT_ERROR) {
-                // return EXIT_ERROR;
-            } else {
+			if(num_args>0){
+				result = AK_check_function_arguments_type(id, arguments_list); // check_type je za drop
+			} else {
+				result = EXIT_SUCCESS;
+			}
+			
+            if (result != EXIT_ERROR) {
                 AK_EPI;
                 return id;
             }
@@ -58,16 +57,8 @@ int AK_get_function_obj_id(char* function, struct list_node *arguments_list) {
         i++;
     }
 
-    if (result == EXIT_ERROR) {
-	AK_EPI;
-        return EXIT_ERROR;
-    }
-    if (id == -1){
-	AK_EPI;
-	return EXIT_ERROR;
-    }
     AK_EPI;
-    return id;
+    return EXIT_ERROR;
 }
 
 /**
@@ -185,19 +176,18 @@ int AK_check_function_arguments_type(int function_id, struct list_node *args) {
 }
 
 /**
- * @author Boris Kišić
+ * @author Boris Kišić, updated by Tomislav Ilisevic
  * @brief Function that adds a function to system table.
  * @param *name name of the function
  * @param *return_type data type returned from a function - values from 0 to 13 - defined in constants.h
  * @param *arguments_list list of function arguments
  * @return function id or EXIT_ERROR
  */
-//int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
 int AK_function_add(char *name, int return_type, struct list_node *arguments_list) {
     AK_PRO;
     if (return_type < 0 || return_type > 13) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_add: Invalid parameter value for return type.\n");
-	AK_EPI;
+		AK_EPI;
         return EXIT_ERROR;
     }
     //AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
@@ -205,7 +195,6 @@ int AK_function_add(char *name, int return_type, struct list_node *arguments_lis
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     int function_id = AK_get_id(); //get function_id
-    //int num_args = Ak_Size_L(arguments_list) / 2; //get number of arguments
     int num_args = Ak_Size_L2(arguments_list) / 2; //get number of arguments
     Ak_Insert_New_Element(TYPE_INT, &function_id, "AK_function", "obj_id", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, name, "AK_function", "name", row_root);
@@ -213,22 +202,19 @@ int AK_function_add(char *name, int return_type, struct list_node *arguments_lis
     Ak_Insert_New_Element(TYPE_INT, &return_type, "AK_function", "return_type", row_root);
     Ak_insert_row(row_root);
 
-    int i;
-//    AK_list_elem current_elem = Ak_First_L(arguments_list); //set current_elem to first element in a list
-    struct list_node *current_elem = Ak_First_L2(arguments_list); //set current_elem to first element in a list
-    //add arguments list to arguments system table
-    for (i = 1; i <= num_args; i++) {/*
-        char* argname = Ak_Retrieve_L(current_elem, arguments_list);
-        current_elem = Ak_Next_L(current_elem);
-        char* argtype = Ak_Retrieve_L(current_elem, arguments_list);*/
-	char* argname = Ak_Retrieve_L2(current_elem, arguments_list);
-        current_elem = Ak_Next_L2(current_elem);
-        char* argtype = Ak_Retrieve_L2(current_elem, arguments_list);
-        int argtype_int = atoi(argtype);
-//        current_elem = Ak_Next_L(current_elem);
-	current_elem = Ak_Next_L2(current_elem);
-        AK_function_arguments_add(function_id, i, argtype_int, argname);
-    }
+	if(num_args > 0){
+		int i;
+		struct list_node *current_elem = Ak_First_L2(arguments_list); //set current_elem to first element in a list
+		//add arguments list to arguments system table
+		for (i = 1; i <= num_args; i++) {
+			char* argname = Ak_Retrieve_L2(current_elem, arguments_list);
+			current_elem = Ak_Next_L2(current_elem);
+			char* argtype = Ak_Retrieve_L2(current_elem, arguments_list);
+			int argtype_int = atoi(argtype);
+			current_elem = Ak_Next_L2(current_elem);
+			AK_function_arguments_add(function_id, i, argtype_int, argname);
+		}
+	}
     AK_EPI;
     return function_id;
 }
@@ -467,7 +453,7 @@ int AK_function_change_return_type(char *name, struct list_node *arguments_list,
 }
 
 /**
- * @author Boris Kišić
+ * @author Boris Kišić, updated by Tomislav Ilisevic
  * @brief Function for functions testing.
  * @return No return value
  */
@@ -582,12 +568,24 @@ void AK_function_test() {
     AK_function_add("test_funkcija", 2, arguments_list4);
     AK_function_add("test_funkcija2", 3, arguments_list4);
     AK_function_add("test_funkcija3", 1, arguments_list4);
+	
+	// Test bez argumenata
+	struct list_node *arguments_list5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&arguments_list5);
+	
+	AK_function_add("test_bez_arg", 1, arguments_list5);
+	
+	int dohvati = AK_get_function_obj_id("test_bez_arg", arguments_list5);
+	printf("ID test_bez_arg: %i \n", dohvati);
+	
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");
 
     //Ak_DeleteAll_L(arguments_list4);
     Ak_DeleteAll_L3(&arguments_list4);
     AK_free(arguments_list4);
+	Ak_DeleteAll_L3(&arguments_list5);
+    AK_free(arguments_list5);	
     AK_EPI;
 }
 
