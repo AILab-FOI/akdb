@@ -58,7 +58,7 @@ char *system_catalog[NUM_SYS_TABLES] = {
 };
 
 /**
- * @author Unknown, Jurica Hlevnjak
+ * @author Unknown, Jurica Hlevnjak, updated by Tomislav Ilisevic
  * @brief Function for DROP table, index, view, sequence, trigger, function, user, group and constraint.
  * @param type drop type
  * @param drop_arguments arguments of DROP command
@@ -66,7 +66,7 @@ char *system_catalog[NUM_SYS_TABLES] = {
 void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
     char *name;
-    char *sys_table, *sys_tbl2, *sys_tbl3, *tbl;
+    char *sys_table;
     AK_PRO;
     switch (type) {
         case DROP_TABLE:
@@ -87,11 +87,11 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
                         break;
                     }
                 }
-            }
+			if (status != 1) {
+				AK_drop_help_function(name, sys_table);
+				printf("TABLE %s DROPPED!\n", name);
+			}
 
-            if ((!AK_if_exist(name, sys_table) == 0) && (status != 1)) {
-                AK_drop_help_function(name, sys_table);
-                printf("TABLE %s DROPPED!\n", name);
             }
 
             break;
@@ -141,10 +141,10 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
         case DROP_TRIGGER:
 
             sys_table = "AK_trigger";
-            sys_tbl2 = "AK_relation";
+            char *sys_tbl2 = "AK_relation";
 
             name = (char*) drop_arguments->value;
-            tbl = (char*) drop_arguments->next->value;
+            char *tbl = (char*) drop_arguments->next->value;
 
             if ((AK_table_empty(sys_table)) || (AK_if_exist(name, sys_table) == 0)) {
                 printf("Trigger %s does not exist!\n", name);
@@ -189,7 +189,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
                     printf("Function does not exist!\n"); // vraćen je EXIT_ERROR jer funkcija s danim argumentima nije pronađena
                 }
             }
-          AK_free(args);
+			AK_free(args);
             break;
 
         case DROP_USER:
@@ -267,47 +267,25 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
         case DROP_CONSTRAINT:
 
-            // TODO - prije je potrebno popraviti greske u pojedinom constraintu
+			sys_table = (char*) drop_arguments->value; // tablica
+			name = (char*) drop_arguments->next->value; // atribut
+			char *constName = (char*) drop_arguments->next->next->value; // ime ogranicenja
+			int pobrisano = 0;
 
-            sys_table = "AK_constraints_between";
-            sys_tbl2 = "AK_constraints_not_null";
-            sys_tbl3 = "AK_constraints_unique";
+			if(AK_read_constraint_unique(sys_table, constName, name) == EXIT_SUCCESS){
+				// TODO: funkcija za brisanje unique constrainta - implementirati unutar unique.c
+				pobrisano = 1;
+			}
+			if(AK_read_constraint_not_null(sys_table, constName, name) == EXIT_SUCCESS){
+				// TODO: funkcija za brisanje not null constrainta - implementirati unutar nnull.c
+				pobrisano = 1;
+			}
+			if(AK_read_constraint_between(sys_table, constName, name) == EXIT_SUCCESS){
+				// TODO: funkcija za brisanje between constrainta - implementirati unutar between.c
+				pobrisano = 1;
+			}
 
-            name = (char*) drop_arguments->value;
-
-            // TODO - preuzeti argumente
-
-            int exist_between = 1, exist_null = 1, exist_unique = 1;
-
-            if ((AK_table_empty(sys_table)) || (AK_if_exist(name, sys_table) == 0)) {
-                exist_between = 0;
-            }
-
-            if ((AK_table_empty(sys_tbl2)) || (AK_if_exist(name, sys_tbl2) == 0)) {
-                exist_null = 0;
-            }
-
-            if ((AK_table_empty(sys_tbl3)) || (AK_if_exist(name, sys_tbl3) == 0)) {
-                exist_unique = 0;
-            }
-
-
-            if ((exist_between == 0) && (exist_null == 0) && (exist_unique == 0)) {
-                printf("Constraint %s does not exist!\n", name);
-            } else {
-                if (exist_between == 1) {
-                    // funkcija za brisanje between constrainta
-                }
-                if (exist_null == 1) {
-                    // funkcija za brisanje not null constrainta
-                }
-                if (exist_unique == 1) {
-                    // funkcija za brisanje unique constrainta
-                }
-
-                printf("CONSTRAINT %s DROPPED!\n", name);
-
-            }
+			printf("Constraint '%s' in table '%s' %s!\n", (constName==""?name:constName), sys_table,(pobrisano==0?"does not exist":"DROPPED"));
 
             break;
 
@@ -433,7 +411,7 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
 }
 
 /**
- * @author Jurica Hlevnjak
+ * @author Jurica Hlevnjak, updated by Tomislav Ilisevic
  * @brief Help function for check if element(view, function, sequence, user ...) exist in system catalog table
  * @param tblName name of table, index view, function, trigger, sequence, user, group or constraint
  * @param sys_table name of system catalog table
@@ -443,22 +421,20 @@ int AK_if_exist(char *tblName, char *sys_table) {
     AK_PRO;
     int num_rows = AK_get_num_records(sys_table);
     int a;
-    int exist = 0;
 
     for (a = 0; a < num_rows; a++) {
-        //AK_list_elem el;
 	struct list_node *el;
         el = AK_get_tuple(a, 1, sys_table);
         if (!strcmp(tblName, el->data)) {
-            exist = 1;
+            return 1; // exist
         }
     }
     AK_EPI;
-    return exist;
+    return 0; // not exist
 }
 
 /**
- * @author unknown, Jurica Hlevnjak - added all tests except drop table test
+ * @author unknown, Jurica Hlevnjak - added all tests except drop table test, updated by Tomislav Ilisevic
  * @brief Function for testing all DROP functions
  */
 void AK_drop_test() {
@@ -469,13 +445,13 @@ void AK_drop_test() {
     drop_arguments->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
     drop_arguments->value=(char*)"\0";
 
-drop_arguments->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
-drop_arguments->next->value=(char*)"\0";
+	drop_arguments->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
+	drop_arguments->next->value=(char*)"\0";
 
-drop_arguments->next->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
-drop_arguments->next->next->value=(char*)"\0";
+	drop_arguments->next->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
+	drop_arguments->next->next->value=(char*)"\0";
 
-drop_arguments->next->next->next->next =NULL;
+	drop_arguments->next->next->next->next =NULL;
 
     printf("\n-----DROP TABLE-----\n");
     AK_print_table("AK_relation");
@@ -565,8 +541,24 @@ drop_arguments->next->next->next->next =NULL;
     AK_print_table("AK_user_group");
     AK_print_table("AK_group_right");
 
-    // printf("\n-----DROP CONSTRAINT-----\n");
- AK_free(drop_arguments );
+	printf("\n-----DROP CONSTRAINT-----\n");
+
+	Ak_set_constraint_unique("student", "studentUnique", "firstname");
+	AK_set_constraint_not_null("student", "studentNotNull", "firstname");
+
+	// argumenti: tablica, atribut, ime obranicenja - ako je ime ogranicenja "" brisu se sva ogranicenja za atribut
+	drop_arguments->value = "student";
+	drop_arguments->next->value = "firstname";
+	drop_arguments->next->next->value = "studentUnique";
+
+	AK_drop(DROP_CONSTRAINT, drop_arguments);
+
+	AK_print_table("AK_constraints_between");
+	AK_print_table("AK_constraints_not_null");
+	AK_print_table("AK_constraints_unique");
+
+
+	AK_free(drop_arguments);
     printf("======================END_DROP_TEST======================\n");
     AK_EPI;
 }
