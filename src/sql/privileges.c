@@ -877,7 +877,7 @@ int AK_check_group_privilege(char *group) {
 }
 
 /**
- * @author Kristina Takač, updated by Tomislav Ilisevic
+ * @author Kristina Takač, updated by Tomislav Ilisevic, updated by Lidija Lastavec
  * @brief Function that tests functions above for privileges
  * @return no return value                                                     
  */
@@ -887,16 +887,26 @@ void AK_privileges_test() {
     AK_user_add("proba", (int*) 123, NEW_ID);
     AK_user_add("kritakac", (int*) 321, NEW_ID);
     AK_user_add("mrvasedam", (int*) 569, NEW_ID);
+    AK_user_add("tratincica", (int*) 666, NEW_ID);
     AK_print_table("AK_user");
     //AK_user_rename("proba", "test", (int*) 123);
+    //AK_print_table("AK_user");
+    
+    printf("\nTest for remove user from Table User: - removing tratincica\n\n");
+    AK_user_remove_by_name("tratincica");
     AK_print_table("AK_user");
-
+     
     AK_group_add("grupa1", NEW_ID);
     AK_group_add("grupa2", NEW_ID);
     AK_group_add("grupa3", NEW_ID);
+    AK_group_add("grupaL", NEW_ID);
     AK_print_table("AK_group");
     //AK_group_rename("grupa1", "grupa9");
     //AK_group_rename("grupa2", "grupa4");
+    //AK_print_table("AK_group");
+
+    printf("\nTest for remove group from Table Group: - removing grupaL\n\n");
+    AK_group_remove_by_name("grupaL");
     AK_print_table("AK_group");
 
     AK_add_user_to_group("kritakac", "grupa1");
@@ -907,11 +917,23 @@ void AK_privileges_test() {
     AK_grant_privilege_group("grupa2", "professor", "DELETE");
     AK_grant_privilege_group("grupa1", "student", "ALL");
     AK_grant_privilege_group("grupa2", "student", "ALL");
+    //AK_grant_privilege_group("grupa3", "student", "ALL");
 
     AK_print_table("AK_group_right");
     //AK_revoke_privilege_group("grupa2", "student", "ALL");
-    AK_print_table("AK_group_right");
-
+    //AK_print_table("AK_group_right");
+    
+    /**
+     * Test bi trebao obrisati samo privilegije za grupu3, ali  obrišu se privilegije svih grupa!
+     * bug u funkciji AK_revoke_all_privilege_group
+     * update by Lidija Lastavec
+     * printf("\nTest za funkciju AK_revoke_all_privilege_group - revokes ALL privileges from group on ALL tables");
+	 * printf("\nTest: Brisanje svih privilegija za grupu3\nRezultat testa:");
+	 * AK_revoke_all_privileges_group("grupa3");
+	 * AK_print_table("AK_group_right");
+	 * printf("Grupa 3 nema više privilegija!\n");
+	*/
+    
     AK_grant_privilege_user("kritakac", "student", "DELETE");
     AK_grant_privilege_user("proba", "student", "UPDATE");
     AK_grant_privilege_user("kritakac", "professor", "SELECT");
