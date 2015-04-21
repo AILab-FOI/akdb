@@ -891,25 +891,25 @@ void AK_privileges_test() {
     //AK_user_rename("proba", "test", (int*) 123);
     AK_print_table("AK_user");
 
-    AK_group_add("grupa1", NEW_ID);
-    AK_group_add("grupa2", NEW_ID);
-    AK_group_add("grupa3", NEW_ID);
+    AK_group_add("group1", NEW_ID);
+    AK_group_add("group2", NEW_ID);
+    AK_group_add("group3", NEW_ID);
     AK_print_table("AK_group");
-    //AK_group_rename("grupa1", "grupa9");
-    //AK_group_rename("grupa2", "grupa4");
+    //AK_group_rename("group1", "Group9");
+    //AK_group_rename("group2", "Group4");
     AK_print_table("AK_group");
 
-    AK_add_user_to_group("kritakac", "grupa1");
-    AK_add_user_to_group("proba", "grupa1");
-    AK_add_user_to_group("proba", "grupa2");
+    AK_add_user_to_group("kritakac", "group1");
+    AK_add_user_to_group("proba", "group1");
+    AK_add_user_to_group("proba", "group2");
     AK_print_table("AK_user_group");
 
-    AK_grant_privilege_group("grupa2", "professor", "DELETE");
-    AK_grant_privilege_group("grupa1", "student", "ALL");
-    AK_grant_privilege_group("grupa2", "student", "ALL");
+    AK_grant_privilege_group("group2", "professor", "DELETE");
+    AK_grant_privilege_group("group1", "student", "ALL");
+    AK_grant_privilege_group("group2", "student", "ALL");
 
     AK_print_table("AK_group_right");
-    //AK_revoke_privilege_group("grupa2", "student", "ALL");
+    //AK_revoke_privilege_group("group2", "student", "ALL");
     AK_print_table("AK_group_right");
 
     AK_grant_privilege_user("kritakac", "student", "DELETE");
@@ -929,103 +929,128 @@ void AK_privileges_test() {
         AK_check_privilege("proba", "student", "UPDATE");
      */
 
+	int uspjesno[15] = {0};
 
-	printf("Test za funkciju AK_check_group_privilege - provjerava ima li ili nema privilegija\n");
-	printf("\nTest: grupa1 s privilegijama..\nRezultat testa: ");
-	if(AK_check_group_privilege("grupa1") == EXIT_SUCCESS) {
-		printf("Za grupu '%s' postoje privilegije!\n", "grupa1");
+	printf("Test for function AK_check_group_privilege - check if exist the privilege or not!\n");
+	printf("\n1. Test: group1 with added privileges..\nResult: ");
+	if(AK_check_group_privilege("group1") == EXIT_SUCCESS) {
+		printf("For group '%s' exist privilege!\n", "group1");
+		uspjesno[0]=1;
 	} else {
-		printf("Nema privilegija za grupu '%s'!\n", "grupa1");
+		printf("No privilege for group '%s'!\n", "group1");
 	}
-	printf("\nTest: grupa3 bez privilegija..\nRezultat testa: ");
-	if(AK_check_group_privilege("grupa3") == EXIT_SUCCESS) {
-		printf("Za grupu '%s' postoje privilegije!\n", "grupa3");
+	printf("\n2. Test: group3 without privileges..\nResult: ");
+	if(AK_check_group_privilege("group3") == EXIT_SUCCESS) {
+		printf("For group '%s' exist privilege!\n", "group3");
+		uspjesno[1]=1;
 	} else {
-		printf("Nema privilegija za grupu '%s'!\n", "grupa3");
+		printf("No privilege for group '%s'!\n", "group3");
 	}
 	AK_print_table("AK_group_right");
 
 
-	printf("Test za funkciju AK_revoke_privilege_group - brise privilegije za grupu nad nekom tablicom\n");
-	printf("\nTest: postojeća grupa s dodanim privilegijama..grupa2..\nRezultat testa: ");
-	if(AK_revoke_privilege_group("grupa2", "student", "ALL") == EXIT_SUCCESS) {
-		printf("Grupa '%s' nema više privilegije '%s' nad tablicom '%s'!\n", "grupa2", "ALL", "student");
+	printf("Test for function AK_revoke_privilege_group - removes privileges for group from some table\n");
+	printf("\n3. Test: real group with added privileges..group2..\nResult: ");
+	if(AK_revoke_privilege_group("group2", "student", "ALL") == EXIT_SUCCESS) {
+		printf("Group '%s' has no more privileges '%s' upon table '%s'!\n", "group2", "ALL", "student");
+		uspjesno[2]=1;
 	} else {
-		printf("Pogreska pri brisanju privilegija za grupu '%s'!\n", "grupa2");
+		printf("Error during removing privileges for group '%s'!\n", "group2");
 	}
-	printf("\nTest: postojeća grupa s bez privilegija za tablicu professor..grupa2..\nRezultat testa: ");
-	if(AK_revoke_privilege_group("grupa2", "professor", "ALL") == EXIT_SUCCESS) {
-		printf("Grupa '%s' nema više privilegije '%s' nad tablicom '%s'!\n", "grupa2", "ALL", "professor");
+	printf("\n4. Test: real group without added privileges for table professor..group2..\nResult: ");
+	if(AK_revoke_privilege_group("group2", "professor", "ALL") == EXIT_SUCCESS) {
+		printf("Group '%s' has no more privileges '%s' upon table '%s'!\n", "group2", "ALL", "professor");
+		uspjesno[3]=1;
 	} else {
-		printf("Pogreska pri brisanju privilegija za grupu '%s'!\n", "grupa2");
+		printf("Error during removing privileges for group '%s'!\n", "group2");
 	}
-	printf("\nTest: postojeća grupa s bez dodanih privilegijama..grupa3..\nRezultat testa: ");
-	if(AK_revoke_privilege_group("grupa3", "student", "ALL") == EXIT_SUCCESS) {
-		printf("Grupa '%s' nema više privilegije '%s' nad tablicom '%s'!\n", "grupa3", "ALL", "student");
+	printf("\n5. Test: real group without added any privileges..group3..\nResult: ");
+	if(AK_revoke_privilege_group("group3", "student", "ALL") == EXIT_SUCCESS) {
+		printf("Group '%s' has no more privileges '%s' upon table '%s'!\n", "group3", "ALL", "student");
+		uspjesno[4]=1;
 	} else {
-		printf("Pogreska pri brisanju privilegija za grupu '%s'!\n", "grupa3");
+		printf("Error during removing privileges for group '%s'!\n", "group3");
 	}
-	printf("\nTest: NE postojeća grupa..grupa6..\nRezultat testa: ");
-	if(AK_revoke_privilege_group("grupa6", "student", "ALL") == EXIT_SUCCESS) {
-		printf("Grupa '%s' nema više privilegije '%s' nad tablicom '%s'!\n", "grupa6", "ALL", "student");
+	printf("\n6. Test: Group that not exist..group6..\nResult: ");
+	if(AK_revoke_privilege_group("group6", "student", "ALL") == EXIT_SUCCESS) {
+		printf("Group '%s' has no more privileges '%s' upon table '%s'!\n", "group6", "ALL", "student");
+		uspjesno[5]=1;
 	} else {
-		printf("Pogreska pri brisanju privilegija za grupu '%s'!\n", "grupa6");
+		printf("Error during removing privileges for group '%s'!\n", "group6");
 	}
 	AK_print_table("AK_group_right");
 
 
-	printf("Test za funkciju AK_remove_all_users_from_group - brise sve korisnike iz grupe\n");
-	printf("\nTest: grupa1 s korisnicima..\nRezultat testa: ");
-	if(AK_remove_all_users_from_group("grupa1") == EXIT_SUCCESS) {
-		printf("Korisnici prebrisani iz grupe '%s'!\n", "grupa1");
+	printf("Test for function AK_remove_all_users_from_group - removes all users from some group\n");
+	printf("\n7. Test: group1 with added users..\nResult: ");
+	if(AK_remove_all_users_from_group("group1") == EXIT_SUCCESS) {
+		printf("Users deleted from group '%s'!\n", "group1");
+		uspjesno[6]=1;
 	} else {
-		printf("Pogreska pri brisanju korisnika iz grupe '%s'!\n", "grupa1");
+		printf("Error durning deleting user from group '%s'!\n", "group1");
 	}
-	printf("\nTest: grupa3 bez korisnika..\nRezultat testa: ");
-	if(AK_remove_all_users_from_group("grupa3") == EXIT_SUCCESS) {
-		printf("Korisnici prebrisani iz grupe '%s'!\n", "grupa3");
+	printf("\n8. Test: group3 without users..\nResult: ");
+	if(AK_remove_all_users_from_group("group3") == EXIT_SUCCESS) {
+		printf("Users deleted from group '%s'!\n", "group3");
+		uspjesno[7]=1;
 	} else {
-		printf("Pogreska pri brisanju korisnika iz grupe '%s'!\n", "grupa3");
+		printf("Error durning deleting user from group '%s'!\n", "group3");
 	}
 	AK_print_table("AK_user_group");
 
-	printf("Test za funkciju AK_remove_user_from_all_groups - brise korisnika iz svih grupa\n");
-	printf("\nTest: korisnik unutar grupe1 - kritakac..\nRezultat testa: ");
+	printf("Test for function AK_remove_user_from_all_groups - removes all users from all groups\n");
+	printf("\n9. Test: user in group: grupe1 - kritakac..\nResult: ");
 	if(AK_remove_user_from_all_groups("kritakac") == EXIT_SUCCESS) {
-		printf("Korisnik '%s' izbrisan iz svih grupa!\n", "kritakac");
+		printf("User '%s' is removed from all groups!\n", "kritakac");
+		uspjesno[8]=1;
 	} else {
-		printf("Pogreska pri brisanju korisnika '%s' iz grupa!\n", "kritakac");
+		printf("Error durning deleting user '%s' from groups!\n", "kritakac");
 	}
-	printf("\nTest: korisnik unutar 2 grupe - proba..\nRezultat testa: ");
+	printf("\n10. Test: User in two groups - proba..\nResult: ");
 	if(AK_remove_user_from_all_groups("proba") == EXIT_SUCCESS) {
-		printf("Korisnik '%s' izbrisan iz svih grupa!\n", "proba");
+		printf("User '%s' is removed from all groups!\n", "proba");
+		uspjesno[9]=1;
 	} else {
-		printf("Pogreska pri brisanju korisnika '%s' iz grupa!\n", "proba");
+		printf("Error durning deleting user '%s' from groups!\n", "proba");
 	}
-	printf("\nTest: korisnik nije u grupi - mrvasedam..\nRezultat testa: ");
+	printf("\n11. Test: User not added in any group - mrvasedam..\nResult: ");
 	if(AK_remove_user_from_all_groups("mrvasedam") == EXIT_SUCCESS) {
-		printf("Korisnik '%s' izbrisan iz svih grupa!\n", "mrvasedam");
+		printf("User '%s' is removed from all groups!\n", "mrvasedam");
+		uspjesno[10]=1;
 	} else {
-		printf("Pogreska pri brisanju korisnika '%s' iz grupa!\n", "mrvasedam");
+		printf("Error durning deleting user '%s' from groups!\n", "mrvasedam");
 	}
 	AK_print_table("AK_user_group");
 
 
-	printf("Test za funkciju AK_group_remove_by_name - brise grupu prema nazivu\n");
-	printf("\nTest: postojeća grupa..grupa3..\nRezultat testa: ");
-	if(AK_group_remove_by_name("grupa3") == EXIT_SUCCESS) {
-		printf("Grupa '%s' izbrisana!\n", "grupa3");
+	printf("Test for function AK_group_remove_by_name - removes group by name\n");
+	printf("\n12. Test: Group that exists..group3..\nResult: ");
+	if(AK_group_remove_by_name("group3") == EXIT_SUCCESS) {
+		printf("Group '%s' is removed!\n", "group3");
+		uspjesno[11]=1;
 	} else {
-		printf("Pogreska pri brisanju grupe '%s'!\n", "grupa3");
+		printf("Error durning deleting group '%s'!\n", "group3");
 	}
-	printf("\nTest: NE postojeća grupa..grupa6..\nRezultat testa: ");
-	if(AK_group_remove_by_name("grupa6") == EXIT_SUCCESS) {
-		printf("Grupa '%s' izbrisana!\n", "grupa6");
+	printf("\n13. Test: Group that not exists..group6..\nResult: ");
+	if(AK_group_remove_by_name("group6") == EXIT_SUCCESS) {
+		printf("Group '%s' is removed!\n", "group6");
+		uspjesno[12]=1;
 	} else {
-		printf("Pogreska pri brisanju grupe '%s'!\n", "grupa6");
+		printf("Error durning deleting group '%s'!\n", "group6");
 	}
 	AK_print_table("AK_group");
 
+
+	printf("\nSummary: \n");
+	int br=0;
+	int brFail=0;
+	for(br=0;br<13;br++){
+		printf("%i. Test: %s \n", (br+1),  (uspjesno[br]==1?"Pass":"Fail"));
+		if(uspjesno[br]==0) brFail++;
+	}
+
+	if(brFail==0) printf("\nALL TESTS ARE PASSED! \n");
+	else printf("\nThere are %i tests that failed.. \n", brFail);
 
 
     AK_EPI;
