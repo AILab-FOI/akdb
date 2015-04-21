@@ -895,8 +895,8 @@ void AK_privileges_test() {
     AK_group_add("group2", NEW_ID);
     AK_group_add("group3", NEW_ID);
     AK_print_table("AK_group");
-    //AK_group_rename("group1", "Group9");
-    //AK_group_rename("group2", "Group4");
+    //AK_group_rename("group1", "group9");
+    //AK_group_rename("group2", "group4");
     AK_print_table("AK_group");
 
     AK_add_user_to_group("kritakac", "group1");
@@ -949,7 +949,7 @@ void AK_privileges_test() {
 	AK_print_table("AK_group_right");
 
 
-	printf("Test for function AK_revoke_privilege_group - removes privileges for group from some table\n");
+	printf("Test for function AK_revoke_privilege_group - remove privileges for group from some table\n");
 	printf("\n3. Test: real group with added privileges..group2..\nResult: ");
 	if(AK_revoke_privilege_group("group2", "student", "ALL") == EXIT_SUCCESS) {
 		printf("Group '%s' has no more privileges '%s' upon table '%s'!\n", "group2", "ALL", "student");
@@ -987,14 +987,14 @@ void AK_privileges_test() {
 		printf("Users deleted from group '%s'!\n", "group1");
 		uspjesno[6]=1;
 	} else {
-		printf("Error durning deleting user from group '%s'!\n", "group1");
+		printf("Error deleting user from group '%s'!\n", "group1");
 	}
 	printf("\n8. Test: group3 without users..\nResult: ");
 	if(AK_remove_all_users_from_group("group3") == EXIT_SUCCESS) {
 		printf("Users deleted from group '%s'!\n", "group3");
 		uspjesno[7]=1;
 	} else {
-		printf("Error durning deleting user from group '%s'!\n", "group3");
+		printf("Error deleting user from group '%s'!\n", "group3");
 	}
 	AK_print_table("AK_user_group");
 
@@ -1004,21 +1004,21 @@ void AK_privileges_test() {
 		printf("User '%s' is removed from all groups!\n", "kritakac");
 		uspjesno[8]=1;
 	} else {
-		printf("Error durning deleting user '%s' from groups!\n", "kritakac");
+		printf("Error deleting user '%s' from groups!\n", "kritakac");
 	}
 	printf("\n10. Test: User in two groups - proba..\nResult: ");
 	if(AK_remove_user_from_all_groups("proba") == EXIT_SUCCESS) {
 		printf("User '%s' is removed from all groups!\n", "proba");
 		uspjesno[9]=1;
 	} else {
-		printf("Error durning deleting user '%s' from groups!\n", "proba");
+		printf("Error deleting user '%s' from groups!\n", "proba");
 	}
-	printf("\n11. Test: User not added in any group - mrvasedam..\nResult: ");
+	printf("\n11. Test: User not in any group - mrvasedam..\nResult: ");
 	if(AK_remove_user_from_all_groups("mrvasedam") == EXIT_SUCCESS) {
 		printf("User '%s' is removed from all groups!\n", "mrvasedam");
 		uspjesno[10]=1;
 	} else {
-		printf("Error durning deleting user '%s' from groups!\n", "mrvasedam");
+		printf("Error deleting user '%s' from groups!\n", "mrvasedam");
 	}
 	AK_print_table("AK_user_group");
 
@@ -1029,14 +1029,14 @@ void AK_privileges_test() {
 		printf("Group '%s' is removed!\n", "group3");
 		uspjesno[11]=1;
 	} else {
-		printf("Error durning deleting group '%s'!\n", "group3");
+		printf("Error deleting group '%s'!\n", "group3");
 	}
 	printf("\n13. Test: Group that not exists..group6..\nResult: ");
 	if(AK_group_remove_by_name("group6") == EXIT_SUCCESS) {
 		printf("Group '%s' is removed!\n", "group6");
 		uspjesno[12]=1;
 	} else {
-		printf("Error durning deleting group '%s'!\n", "group6");
+		printf("Error deleting group '%s'!\n", "group6");
 	}
 	AK_print_table("AK_group");
 
