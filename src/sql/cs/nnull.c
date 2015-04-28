@@ -21,7 +21,7 @@
 //
 
 /**
- * @author Saša Vukšić
+ * @author Saša Vukšić, updated by Nenad Makar
  * @brief Function that sets null constraint on attribute
  * @param char* tableName name of table
  * @param char* constraintName name of constraint
@@ -45,8 +45,9 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
             systemTableName[j] = FREE_CHAR;
 
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
-        memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
+        
         if (strcmp(systemTableName, "AK_constraints_not_null") == 0) {
+			memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
             Ak_dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
 
             tempBlock = (AK_block *)AK_read_block(systemTableAddress);
@@ -85,7 +86,7 @@ void AK_set_constraint_not_null(char* tableName, char* constraintName, char* att
 //
 
 /**
- * @author Saša Vukšić
+ * @author Saša Vukšić, updated by Nenad Makar
  * @brief Function checks if value is not null 
  * @param char* tableName name of table
  * @param char* newValue new value
@@ -110,8 +111,10 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
             systemTableName[j] = FREE_CHAR;
 
         memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
-        memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
+        
         if (strcmp(systemTableName, "AK_constraints_not_null") == 0) {
+			memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
+
             Ak_dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
             itis = 0;
         }
