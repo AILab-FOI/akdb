@@ -158,7 +158,7 @@ int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNameP
                 if (strcmp(att, attNamePar) == 0) {
                     if (strcmp(newValue, NULLL) == 0) {
                         flag = EXIT_ERROR;
-                        printf("\nAttribute %s of table %s can't contain NULL!\n\n", value, att);
+                        printf("\nAttribute %s of table %s can't contain NULL!\n\n", att, value);
                     }
 
                 } 
