@@ -20,12 +20,12 @@
 #ifndef NNULL
 #define NNULL
 
-#include "../../mm/memoman.h"
-#include "../../file/id.h"
+#include "../../file/table.h"
+#include "../../file/fileio.h"
 #include "../../auxi/mempro.h"
 
-void AK_set_constraint_not_null(char* tableName, char* constraintName, char* attName);
-int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNamePar) ;
+void AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName);
+int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue) ;
 void AK_null_test();
 
 #endif
