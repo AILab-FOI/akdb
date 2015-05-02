@@ -140,6 +140,7 @@ void AK_op_selection_test() {
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr1);
 	printf("\nQUERY: SELECT * FROM student WHERE weight > 83.750 OR firstname = 'Dino';\n\n");
 	AK_selection(srcTable1, destTable1, expr1);
+	printf("\n Test is successful :) \n");
 	Ak_DeleteAll_L3(&expr1);
 	AK_free(expr1);
 	AK_EPI;
