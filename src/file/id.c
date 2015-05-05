@@ -32,6 +32,8 @@ int AK_get_id() {
     Ak_Init_L3(&row_root); 
 	
 	/*Assumption was that objectID is always in the first row of table AK_sequence. If in future, for some reason, that won't be the case
+	 * then check all rows of table AK_sequence (for()) and update a row which contains objectID (Ak_GetNth_L2(2, row), value in column 
+	 * name must be objectID)*/
 	 
 	int num_rec = AK_get_num_records("AK_sequence");
 	
