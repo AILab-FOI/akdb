@@ -35,24 +35,50 @@
  */
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore, int newconstraint) {
     AK_PRO;
+
+
     struct list_node *newElement = (struct list_node *) AK_malloc(sizeof (struct list_node));
+
+    // if(strcmp(table,"AK_index")==0){
+     //   printf("Idemo 1\n\n\n\n");
+    //}
+
+
     newElement->type = newtype;
 
+    /* if(strcmp(table,"AK_index")==0){
+        printf("Idemo 2\n\n\n\n");
+
+        printf("NEWTYPE: %i \n",newtype);
+        //if(AK_type_size(newtype, data)==NULL){printf("PRVI JE NULL");}
+    }*/
+
     memcpy(newElement->data, data, AK_type_size(newtype, data));
+
+
+
     if (newtype == TYPE_VARCHAR) {
         newElement->data[AK_type_size(newtype, data)] = '\0';
     }
 
+
+
     memcpy(newElement->table, table, strlen(table));
     newElement->table[strlen(table)] = '\0';
 
+
+
+
+    //printf("ATTR_NAME : %s  , TABLE LEN: %i , ATTR LEN: %i\n",attribute_name,strlen(table),strlen(attribute_name));
     memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
+
     newElement->attribute_name[strlen(attribute_name)] = '\0';
-
     newElement->constraint = newconstraint;
-
     newElement->next = ElementBefore->next;
+
     ElementBefore->next = newElement;
+
+
     AK_EPI;
 }
 
@@ -97,6 +123,9 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
         while (temp_block->tuple_dict[id].size != FREE_INT) {//searches for AK_free tuple dict, maybe it can be last_tuple_dict_id
             id++;
         }
+        //printf("insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
+
+
         Ak_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
 
         search_elem = 1;
@@ -104,7 +133,6 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
         while (search_elem) {
             if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0)
                     && (some_element->constraint == 0)) {//found correct element
-
                 type = some_element->type;
 
                 memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
@@ -114,6 +142,7 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
             } else {
                 some_element = (struct list_node *) Ak_Next_L2(some_element);
                 if (some_element == 0) { //no data exist for this header write null
+                    some_element =1 ;
                     memcpy(entry_data, "null", strlen("null"));
                     type = TYPE_VARCHAR;
                     search_elem = 0;
@@ -128,6 +157,7 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
         temp_block->tuple_dict[id].size = AK_type_size(type, entry_data);
 
         memcpy(entry_data, temp_block->data + temp_block->tuple_dict[id].address, temp_block->tuple_dict[id].size);
+        //printf("insert_row_to_block: Insert: data: %s, size: %d\n",entry_data, AK_type_size(type, entry_data));
 
         Ak_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Insert: data: %s, size: %d\n", entry_data, AK_type_size(type, entry_data));
         head++; //go to next header
@@ -161,21 +191,29 @@ int Ak_insert_row(struct list_node *row_root) {
 
     char table[MAX_ATT_NAME];
 
+
     memset(table, '\0', MAX_ATT_NAME);
     memcpy(&table, some_element->table, strlen(some_element->table));
 
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
-
+    //printf("INSERT u %s\n",some_element->table);
     adr_to_write = (int) AK_find_AK_free_space(AK_get_table_addresses(table));
+
+
     if (adr_to_write == -1)
         adr_to_write = (int) AK_init_new_extent(table, SEGMENT_TYPE_TABLE);
+
+    if(strstr(some_element->table,"_bmapIndex")){
+        adr_to_write = (int) AK_find_AK_free_space(AK_get_index_addresses(table));
+    }
 
     if (adr_to_write == 0) {
         AK_EPI;
         return EXIT_ERROR;
     }
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into block on adress: %d\n", adr_to_write);
+    //printf("insert_row: Insert into block on adress: %d\n", adr_to_write);
 
     AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(adr_to_write);
 

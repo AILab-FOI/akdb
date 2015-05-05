@@ -73,6 +73,37 @@ int AK_get_id() {
 }
 
 /**
+ * @author Lovro Predovan
+ * @brief Function for getting unique ID for any object, stored in sequence based on table name
+ * @return objectID
+ */
+char AK_get_table_id(char *tableName) {
+    AK_PRO;
+    char *table = "AK_relation";
+    int result = 0;
+
+    int num_rows = AK_get_num_records(table);
+    int a;
+
+    if(num_rows==0){
+        return result;
+    }
+
+    for (a = 0; a < num_rows; a++) {
+        struct list_node *el;
+        el = AK_get_tuple(a, 1,table);
+        if (strcmp(tableName, el->data)==0) {
+            result = AK_tuple_to_string(AK_get_tuple(a, 0,table));
+            break;
+        }
+    }
+    AK_EPI;
+    //OK
+    return result;
+}
+
+
+/**
  * @author Mislav Čakarić, updated by Nenad Makar
  * @brief  Function for testing getting ID's
  * @return No retun value

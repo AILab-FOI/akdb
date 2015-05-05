@@ -80,7 +80,7 @@ int AK_init_db_file(int size) {
     AK_allocationbit->allocationtable[0] = 0;
     AK_allocationbit->last_allocated = 1;
 
-    AK_blocktable_flush();	
+    AK_blocktable_flush();
 
     printf("AK_init_db_file: Donex!\n");
     AK_EPI;
@@ -415,14 +415,14 @@ void AK_allocate_block_activity_modes() {
     int n = AK_allocationbit->last_initialized;
     int i;
     AK_PRO;
-    
+
     free(AK_block_activity_info);
     if (n == 0) n = 1000;
-    
-    AK_block_activity_info = (AK_block_activity *) 
+
+    AK_block_activity_info = (AK_block_activity *)
         AK_malloc((n + 1) * sizeof(AK_block_activity));
     // initialization of this array
-    
+
     for (i = 0; i <= n; i++) {
         AK_block_activity_info[i].locked_for_reading = 0; // false
         AK_block_activity_info[i].locked_for_writing = 0; // false
@@ -437,7 +437,7 @@ void AK_allocate_block_activity_modes() {
 /**
 * @var test_lastCharacterWritten
 * @brief This variable is used only when TEST_MODE is ON!
-* It is used only for testing functionality of 
+* It is used only for testing functionality of
 * AK_thread_safe_block_access_test() function.
 * It will contain first character of last written block.
 * When reading thread reads the block (written by some other thread),
@@ -453,7 +453,7 @@ char test_lastCharacterWritten = '\0';
 /**
 * @var test_threadSafeBlockAccessSucceeded
 * @brief Used in combination with test_lastCharacterWritten.
-* Will give the answer to question: 
+* Will give the answer to question:
 * "Has AK_thread_safe_block_access_test suceeded?"
 * 0 means NO, 1 means YES
 */
@@ -462,7 +462,7 @@ int test_threadSafeBlockAccessSucceeded = 1;
 /**
 * @author Domagoj Šitum
 * @brief This function tests thread safe reading and writing to blocks.
-* There is N writing and N reading threads, which are going through iterations. 
+* There is N writing and N reading threads, which are going through iterations.
 * Each reading thread should read
 * the data (character) that was set by last writing thread
 */
@@ -474,28 +474,28 @@ void AK_thread_safe_block_access_test() {
     AK_block *block;
     pthread_t *threads;
     AK_PRO;
-    
+
     srand(time(NULL));
-    
+
     printf("N reading threads + N writing threads are trying to read/write "
             "to the same block. Result is printed to the screen.\n\n");
-    
+
     // first we have to read original value of the first block
     // (so that we can save it somewhere and restore it after the whole operation is over)
     block = AK_read_block(block_address);
-    
+
     // we have to backup that first block, because we will make changes to it
     // (explanation of the text above)
     memcpy((void *)backup_block, (void *)block, sizeof(AK_block));
-    
+
     for (j=1; j<=50; j++) {
         printf("%d+%d threads: ", j, j);
-        
+
         // we read first block of actual data (after allocation bit-vector)
         block = AK_read_block(block_address);
-        
+
         testMode = TEST_MODE_ON;
-        
+
         // then we create j reading and j writing threads
         threads = (pthread_t *) AK_malloc(2 * j * sizeof(pthread_t));
 
@@ -504,15 +504,15 @@ void AK_thread_safe_block_access_test() {
             pthread_create(&threads[2*i], NULL, AK_write_block_for_testing, (void *)block);
             pthread_create(&threads[2*i+1], NULL, AK_read_block_for_testing, (void *)&block_address);
         }
-        
+
         // and then, we just have to wait all threads to finish
-        for (i = 0; i < 2*j; i++) 
+        for (i = 0; i < 2*j; i++)
             pthread_join(threads[i],NULL);
-        
+
         testMode = TEST_MODE_OFF;
-        
+
         AK_free((void*)threads);
-        
+
         // and at the end of each iteration,
         // we check if thread safe block access (reading/writing) succeeded.
         // if it failed, we count it
@@ -522,17 +522,17 @@ void AK_thread_safe_block_access_test() {
         } else {
             printf("Failed\n");
         }
-    
+
         test_lastCharacterWritten = '\0';
         test_threadSafeBlockAccessSucceeded = true;
     }
-    
+
     // and at the end, we write backup block back to the file
     AK_write_block(backup_block);
     AK_free((void*)backup_block);
-    
+
     printf("\n%d out of 50 tests succeeded.", sum_of_suceeded_tests);
-    
+
     AK_EPI;
 }
 
@@ -966,7 +966,7 @@ int AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany){
 
 
     }
-    
+
     pthread_mutex_lock(&fileLockMutex);
     //AK_enter_critical_section(dbmanFileLock);
     if (fseek(db, AK_ALLOCATION_TABLE_SIZE + FromWhere * sizeof(AK_block), SEEK_SET) != 0) {
@@ -1019,49 +1019,49 @@ AK_block * AK_read_block(int address) {
     int true = 1, false = 0;
     int locked_for_writing, locked_for_reading;
     int thread_id;
-    
+
     if (DB_FILE_BLOCKS_NUM<address || 0>address){
         printf("AK_read_block: ERROR. Out of range %s  address:%d  DB_FILE_BLOCKS_NUM:%d\n", DB_FILE, address, DB_FILE_BLOCKS_NUM);
         AK_EPI;
         exit(EXIT_ERROR);
     }
-    
+
     FILE * database;
     if ((database = fopen(DB_FILE, "rb")) == NULL) {
         printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
         AK_EPI;
         exit(EXIT_ERROR);
-    } 
+    }
 
     pthread_mutex_lock(&AK_block_activity_info[address].block_lock);
     // first we check if block is already locked for writing by another thread
     locked_for_reading = AK_block_activity_info[address].locked_for_reading;
     locked_for_writing = AK_block_activity_info[address].locked_for_writing;
-    
+
     if (!locked_for_reading && !locked_for_writing) {
         AK_block_activity_info[address].thread_holding_lock = &thread_id;
     }
-    
+
     // if block is locked for writing, then we have to wait another thread to unlock it
     //	 (thus preventing it from accessing disk once again)
     // if another thread is only reading from this block, then we don't have to lock it's mutex, because
     // any number of threads can read the same block at the same time
-    // else, we lock the block for reading and proceed    
+    // else, we lock the block for reading and proceed
     if (locked_for_writing == true) {
         pthread_cond_wait(&AK_block_activity_info[address].writing_done, &AK_block_activity_info[address].block_lock);
     } else {
         AK_block_activity_info[address].locked_for_reading = true;
     }
-    
+
     // now we can safely write block to the disk
-    
+
     // first we have to set position in file for reading new block
     if (fseek(database, address * sizeof(AK_block)+AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0) {
         printf("AK_read_block: ERROR. Cannot set position to provided address block %d.\n", address);
         AK_EPI;
         exit(EXIT_ERROR);
     }
-    
+
     AK_block * block = AK_malloc(sizeof(AK_block));
 
     // then we simply read block from the disk
@@ -1070,12 +1070,12 @@ AK_block * AK_read_block(int address) {
         AK_EPI;
         exit(EXIT_ERROR);
     }
-    
+
     // block of code below is used only for testing purposes!
-    // it is executed only when testMode is ON 
+    // it is executed only when testMode is ON
     // (It should be ON in AK_thread_safe_block_access_test function)
     // it takes first character of a block data and reads it
-    // that character is then printed to the stdout. 
+    // that character is then printed to the stdout.
     // If everything goes well, we should get the same character that was written here
     // by last writing thread
     if (testMode == TEST_MODE_ON) {
@@ -1086,19 +1086,19 @@ AK_block * AK_read_block(int address) {
             }
         }
     }
-    
+
     // after reading is done, we unlock this block
     AK_block_activity_info[address].locked_for_reading = false;
     // and signalize other threads that reading is done!
     pthread_cond_signal(&AK_block_activity_info[address].reading_done);
-    
+
     // and after everything is done, we just have to unlock block's mutex
     // thus making it accessible to other blocks which want to write data to it
     if (AK_block_activity_info[address].thread_holding_lock == &thread_id) {
         pthread_mutex_unlock(&AK_block_activity_info[address].block_lock);
     }
     fclose(database);
-    
+
     AK_EPI;
     return block;
 }
@@ -1122,36 +1122,38 @@ int AK_write_block(AK_block * block) {
         AK_EPI;
         exit(EXIT_ERROR);
     }
-    
+
+
     // first we have to find out block's address
     address = block->address;
-    
+
+    //printf("WRITING TO BLOCK ADDRESS %i\n",address);
     pthread_mutex_lock(&AK_block_activity_info[address].block_lock);
     // first we check if block is already locked for reading and for writing by another threads
     locked_for_writing = AK_block_activity_info[address].locked_for_writing;
-    locked_for_reading = AK_block_activity_info[address].locked_for_reading;    
-    
+    locked_for_reading = AK_block_activity_info[address].locked_for_reading;
+
     if (!locked_for_reading && !locked_for_writing) {
         AK_block_activity_info[address].thread_holding_lock = &thread_id;
     }
-    
+
     // if block is locked for writing and/or writing, then we have to wait another thread to unlock it
     //   (thus preventing it from accessing disk once again)
     // if another thread is only reading from this block, then we don't have to lock it's mutex, because
     // any number of threads can read the same block at the same time
-    // else, we lock the block for reading and proceed    
+    // else, we lock the block for reading and proceed
     if (locked_for_reading == true) {
         pthread_cond_wait(&AK_block_activity_info[address].reading_done, &AK_block_activity_info[address].block_lock);
     }
     if (locked_for_writing == true) {
         pthread_cond_wait(&AK_block_activity_info[address].writing_done, &AK_block_activity_info[address].block_lock);
     }
-    
+
     // and when there is no other thread reading from it or writing to it, we can proceed
     AK_block_activity_info[address].locked_for_writing = true;
-    
+
     // block of code below is used only for testing purposes!
-    // it is executed only when testMode is ON 
+    // it is executed only when testMode is ON
     // (It should be ON in AK_thread_safe_block_access_test function)
     // it takes first character of a block data and replaces it with random ASCII character
     // than it writes it to the screen. Then, thread which is reading block can read this first character
@@ -1161,7 +1163,7 @@ int AK_write_block(AK_block * block) {
         block->data[0] = (char)character;
         test_lastCharacterWritten = block->data[0];
     }
-    
+
     // now we can safely write it to the disk
 
     // first we have to set position in file for new block writing
@@ -1177,20 +1179,23 @@ int AK_write_block(AK_block * block) {
         AK_EPI;
         exit(EXIT_ERROR);
     }
-        
+
     // after writing is done, we unlock this block for reading and/or writing
     AK_block_activity_info[address].locked_for_writing = false;
     // and signalize other threads that writing is done!
     pthread_cond_signal(&AK_block_activity_info[address].writing_done);
-    
+
+
     // and after everything is done, we just have to unlock block's mutex
     // thus making it accessible to other blocks which want to write data to it or read from it
     if (AK_block_activity_info[address].thread_holding_lock == &thread_id) {
         pthread_mutex_unlock(&AK_block_activity_info[address].block_lock);
     }
-    
+
     fclose(database);
-    
+    //sprintf("WRITING DONE BLOCK ADDRESS %i\n",address);
+
+
     AK_EPI;
     return (EXIT_SUCCESS);
 }
@@ -2535,7 +2540,7 @@ int AK_init_disk_manager() {
         AK_EPI;
         exit(EXIT_ERROR);
     }
-    
+
     AK_allocate_block_activity_modes();
 
     if (AK_allocationbit->prepared == 31){

@@ -161,12 +161,14 @@ Main program function
 */
 int main(int argc, char * argv[])
 {
+    argc = 1;
     AK_PRO;
     // initialize critical sections
     dbmanFileLock = AK_init_critical_section();
     printf("Init: %d, ready: %d", dbmanFileLock->init, dbmanFileLock->ready);
     qsort(fun, sizeof(fun)/sizeof(fun[0]), (int)sizeof(fun[0]), (void*)strcasecmp);
     AK_check_folder_blobs();
+
     if((argc == 2) && !strcmp(argv[1], "help"))
         help();
     else if((argc == 3) && !strcmp(argv[1], "test") && !strcmp(argv[2], "show"))
@@ -179,38 +181,40 @@ int main(int argc, char * argv[])
 
 	testMode = TEST_MODE_OFF;
 
-        if( AK_init_disk_manager() == EXIT_SUCCESS )
+        if( AK_init_disk_manager() == EXIT_SUCCESS)
         {
+
                 if( AK_memoman_init() == EXIT_SUCCESS )
                 {
-            /* component test area --- begin */
-            if((argc == 2) && !strcmp(argv[1], "test"))
-            {
-                choose_test();
-            }
-            else if((argc == 3) && !strcmp(argv[1], "test"))
-            {
-                int ans;
-                ans = (int)strtol(argv[2], NULL, 10)-1;
-                AK_create_test_tables();
-                fun[ans].func();
-            }
+                        /* component test area --- begin */
+                        if((argc == 2) && !strcmp(argv[1], "test"))
+                        {
+                            choose_test();
+                        }
+                        else if((argc == 3) && !strcmp(argv[1], "test"))
+                        {
+                            int ans;
+                            ans = (int)strtol(argv[2], NULL, 10)-1;
+                            AK_create_test_tables();
+                            fun[ans].func();
+                        }
 
-            /*component test area --- end */
+                        /*IMPORTANT!!!*/
+                        /*component test area --- end */
 
-            if ( AK_flush_cache() == EXIT_SUCCESS ){
+                        if ( AK_flush_cache() == EXIT_SUCCESS ){
 
-                printf( "\nEverything was fine!\nBye =)\n" );
+                            printf( "\nEverything was fine!\nBye =)\n" );
+                            /* For easyer debugging and GDB usage*/
+                            AK_create_test_tables();
+                            //AK_view_test();
+                            Ak_bitmap_test();
+                            //Ak_fileio_test();
 
 
-                /* For easyer debugging and GDB usage
-                AK_create_test_tables();
-                AK_view_test();
-                */
-
-                //            pthread_exit(NULL);
-		AK_EPI;
-                return ( EXIT_SUCCESS );
+                            //            pthread_exit(NULL);
+                    AK_EPI;
+                            return ( EXIT_SUCCESS );
             }
         }
                 printf( "ERROR. Failed to initialize memory manager\n" );

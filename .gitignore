@@ -1,0 +1,6 @@
+*.o
+*.obj
+*.d
+*.db
+/bin/akdb
+
