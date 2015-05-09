@@ -41,5 +41,6 @@ int Ak_write_block(AK_block * block);
 void Ak_bitmap_test();
 
 void AK_delete_bitmap_index(char *indexName);
+void AK_add_to_bitmap_index(char *tableName, char *attributeName);
 
 #endif

@@ -36,40 +36,16 @@
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore, int newconstraint) {
     AK_PRO;
 
-
     struct list_node *newElement = (struct list_node *) AK_malloc(sizeof (struct list_node));
-
-    // if(strcmp(table,"AK_index")==0){
-     //   printf("Idemo 1\n\n\n\n");
-    //}
-
-
     newElement->type = newtype;
-
-    /* if(strcmp(table,"AK_index")==0){
-        printf("Idemo 2\n\n\n\n");
-
-        printf("NEWTYPE: %i \n",newtype);
-        //if(AK_type_size(newtype, data)==NULL){printf("PRVI JE NULL");}
-    }*/
-
     memcpy(newElement->data, data, AK_type_size(newtype, data));
-
-
 
     if (newtype == TYPE_VARCHAR) {
         newElement->data[AK_type_size(newtype, data)] = '\0';
     }
 
-
-
     memcpy(newElement->table, table, strlen(table));
     newElement->table[strlen(table)] = '\0';
-
-
-
-
-    //printf("ATTR_NAME : %s  , TABLE LEN: %i , ATTR LEN: %i\n",attribute_name,strlen(table),strlen(attribute_name));
     memcpy(newElement->attribute_name, attribute_name, strlen(attribute_name));
 
     newElement->attribute_name[strlen(attribute_name)] = '\0';

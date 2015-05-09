@@ -197,13 +197,17 @@ void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad
 }
 
 
-//Lovro's
+/**
+ * @author Lovro Predovan
+ * @brief Function for getting number of elements in index table
+ * @param index table name
+ * @return No return value
+ * */
 int AK_num_index_attr(char *indexTblName) {
 
     int num_attr = 0;
     AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_index_addresses(indexTblName);
-    //printf("ADRESS FROM 0 : %i \n",addresses->address_from[0]);
 
     if (addresses->address_from[0] == 0)
         num_attr = 0;
@@ -213,13 +217,10 @@ int AK_num_index_attr(char *indexTblName) {
         while (strcmp(temp_block->block->header[num_attr].att_name, "\0") != 0) {
             num_attr++;
         }
-
     }
 
-    //printf("BROJ ATRIBUTA U TABLICI %s je %i \n",indexTblName,num_attr);
     AK_free(addresses);
     AK_EPI;
-    //broj atrubuta mi je ok
     return num_attr;
 }
 
@@ -251,9 +252,7 @@ int AK_get_index_num_records(char *indexTblName) {
         return 0;
     }
     int i = 0, j, k;
-
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
-    //printf("GLEDAM ADRESE OD %i \n",addresses->address_from[0]);
 
     while (addresses->address_from[ i ] != 0) {
 
@@ -272,16 +271,10 @@ int AK_get_index_num_records(char *indexTblName) {
         i++;
     }
 
-
     AK_free(addresses);
     int num_head = AK_num_index_attr(indexTblName);
-
-     //printf("NUM ROWS NUM_REC %i , %i\n",num_rec ,num_head);
     number_of_rows = (num_rec / num_head);
 
-    //printf("BROJ REDOVA U TABLICI %s je %i , HEAD : %i REC: %i\n,",indexTblName,number_of_rows,num_head,num_rec);
-    //printf("BROJ REDOVA U TABLICI %s je %i\n,",indexTblName,number_of_rows);
-    //Num of rows is now OK
     AK_EPI;
     return number_of_rows;
 }
@@ -299,8 +292,6 @@ struct list_node *AK_get_index_tuple(int row, int column, char *indexTblName) {
 
     int num_rows = AK_get_index_num_records(indexTblName);
     int num_attr = AK_num_index_attr(indexTblName);
-    //printf("ROWS %i, ATTR %i u %s \n",num_rows,num_attr,indexTblName);
-
 
     if (row >= num_rows || column >= num_attr){
         AK_EPI;
@@ -364,18 +355,14 @@ int AK_index_table_exist(char *indexTblName) {
     }
 
     for (a = 0; a < num_rows; a++) {
-
         struct list_node *el;
         el = AK_get_tuple(a, 1, index_table);
-        //printf("USPOREDBA %s s %s \n",indexTblName,el->data);
-
         if (strcmp(indexTblName, el->data)==0) {
             exists = 1;
             break;
         }
     }
     AK_EPI;
-    //OK
     return exists;
 }
 
@@ -423,13 +410,9 @@ void AK_print_index_table(char *indexTblName) {
     table_addresses *addresses = (table_addresses*) AK_get_index_addresses(indexTblName);
     char *index_table = "AK_index";
 
-    //printf("ADRESS FROM 0 : %i \n",addresses->address_from[0]);
-    //printf("PROVJERA %i DAL POSTOJI %s \n",AK_index_table_exist(indexTblName),indexTblName);
-
     if ((addresses->address_from[0] == 0)  || (AK_index_table_exist(indexTblName) == 0)) {
         printf("Table %s does not exist!\n", indexTblName);
         AK_EPI;
-        //OK
     } else {
 
         AK_header *head = AK_get_index_header(indexTblName);

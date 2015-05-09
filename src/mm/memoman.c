@@ -385,7 +385,7 @@ int AK_refresh_cache()
 }
 
 /**
-* @author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić
+* @author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić,Lovro Predovan
 * @brief Function for geting addresses of some table
 * @param table table name that you search for
 * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
@@ -417,7 +417,6 @@ table_addresses *AK_get_index_segment_addresses(char * segmentName)
         {
             break;
         }
-
 
         data_adr = mem_block->block->tuple_dict[i].address;
         data_size = mem_block->block->tuple_dict[i].size;
