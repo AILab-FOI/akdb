@@ -1,5 +1,5 @@
 /**
-@file nnull.c Provides functions for not null constaint
+@file nnull.c Provides functions for not null constraint
  */
 /*
  * This program is free software; you can redistribute it and/or modify
