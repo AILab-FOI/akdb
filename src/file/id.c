@@ -35,7 +35,7 @@ int AK_get_id() {
 	 * then check all rows of table AK_sequence (for(i=0; i<num_rec; i++)) and update a row which contains objectID (Ak_GetNth_L2(2, row), value in column 
 	 * name must be objectID) or create a row which will contain objectID*/
 	
-	/*int num_rec = AK_get_num_records("AK_sequence");
+	int num_rec = AK_get_num_records("AK_sequence");
 	
     if(num_rec > 0) {
     	struct list_node *row = AK_get_row(0, "AK_sequence");
@@ -69,9 +69,9 @@ int AK_get_id() {
 		AK_free(row_root);
 		AK_EPI;
 		return current_value;
-    }*/
+    }
         AK_EPI;
-        return 100;
+        //return 100;
 }
 
 /**
