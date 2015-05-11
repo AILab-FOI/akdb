@@ -30,10 +30,14 @@ int AK_get_id() {
     AK_PRO;
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root); 
-    
-    int num_rec = AK_get_num_records("AK_sequence");
-
-    if(num_rec == 1) {
+	
+	/*Assumption was that objectID is always in the first row of table AK_sequence. If in future, for some reason, that won't be the case
+	 * then check all rows of table AK_sequence (for(i=0; i<num_rec; i++)) and update a row which contains objectID (Ak_GetNth_L2(2, row), value in column 
+	 * name must be objectID) or create a row which will contain objectID*/
+	
+	int num_rec = AK_get_num_records("AK_sequence");
+	
+    if(num_rec > 0) {
     	struct list_node *row = AK_get_row(0, "AK_sequence");
 		struct list_node *attribute = Ak_GetNth_L2(3, row);
 		memcpy(&current_value, &attribute->data, attribute->size);

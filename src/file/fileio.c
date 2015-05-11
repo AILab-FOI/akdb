@@ -219,8 +219,8 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
         overflow = address + size;
 
         while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers
-            some_element = (struct list_node *) Ak_First_L2(row_root);
-
+            //some_element = (struct list_node *) Ak_First_L2(row_root);
+            some_element = row_root;
             while (some_element) {
                 if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (some_element->constraint == SEARCH_CONSTRAINT))
                 {
@@ -239,7 +239,8 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                         }
                     } else del = 0;
                 }
-                some_element = (struct list_node *) Ak_Next_L2(some_element);
+                //some_element = (struct list_node *) Ak_Next_L2(some_element);
+		  some_element = some_element->next;
             }
             head++; //next header
         }
@@ -256,7 +257,8 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                 memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                 memcpy(entry_data, temp_block->data + a, s);
 
-                some_element = (struct list_node *) Ak_First_L2(row_root);
+                //some_element = (struct list_node *) Ak_First_L2(row_root);
+		some_element = row_root;
                 while(some_element)
                 {
                     // podatke iz row_root spremiti u listu new_data u koju se umeće cijeli redak
@@ -293,7 +295,8 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                             memcpy(temp_block->data + a, some_element->data, s);
                         }
                     }
-                    some_element = (struct list_node *) Ak_Next_L2(some_element);
+                    //some_element = (struct list_node *) Ak_Next_L2(some_element);
+		    some_element = some_element->next;
                 }
             }
         }
@@ -325,7 +328,8 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) 
 
     while (some_element) {//make a copy of list
         Ak_Insert_New_Element_For_Update(some_element->type, some_element->data, some_element->table, some_element->attribute_name, row_root_backup, some_element->constraint);
-        some_element = (struct list_node *) Ak_Next_L2(some_element);
+       //some_element = (struct list_node *) Ak_Next_L2(some_element);
+	some_element = some_element->next;
     }
 
     int i, overflow, address, size;
@@ -338,7 +342,8 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) 
         overflow = address + size;
 
         while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers
-            some_element = (struct list_node *) Ak_First_L2(row_root);
+            //some_element = (struct list_node *) Ak_First_L2(row_root);
+	      some_element = row_root;
 
             while (some_element) {
                 //if we found header that is constraint in list
@@ -359,7 +364,8 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                         del = 0;
                     }
                 }
-                some_element = (struct list_node *) Ak_Next_L2(some_element);
+                //some_element = (struct list_node *) Ak_Next_L2(some_element);
+		some_element = some_element->next;
             }
             head++;
         }
