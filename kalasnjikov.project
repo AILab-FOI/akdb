@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Project Name="kalasnjikov" InternalType="">
+  <VirtualDirectory Name="src">
+    <VirtualDirectory Name="sql">
+      <VirtualDirectory Name="cs">
+        <File Name="src/sql/cs/nnull.c"/>
+        <File Name="src/sql/cs/reference.c"/>
+        <File Name="src/sql/cs/unique.c"/>
+        <File Name="src/sql/cs/nnull.h"/>
+        <File Name="src/sql/cs/check_constraint.h"/>
+        <File Name="src/sql/cs/unique.h"/>
+        <File Name="src/sql/cs/reference.h"/>
+        <File Name="src/sql/cs/check_constraint.c"/>
+        <File Name="src/sql/cs/between.c"/>
+        <File Name="src/sql/cs/between.h"/>
+      </VirtualDirectory>
+      <File Name="src/sql/view.c"/>
+      <File Name="src/sql/function.c"/>
+      <File Name="src/sql/view.h"/>
+      <File Name="src/sql/select.c"/>
+      <File Name="src/sql/drop.c"/>
+      <File Name="src/sql/drop.h"/>
+      <File Name="src/sql/select.h"/>
+      <File Name="src/sql/trigger.c"/>
+      <File Name="src/sql/privileges.c"/>
+      <File Name="src/sql/function.h"/>
+      <File Name="src/sql/command.h"/>
+      <File Name="src/sql/privileges.h"/>
+      <File Name="src/sql/trigger.h"/>
+      <File Name="src/sql/command.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="file">
+      <VirtualDirectory Name="idx">
+        <File Name="src/file/idx/btree.h"/>
+        <File Name="src/file/idx/index.c"/>
+        <File Name="src/file/idx/index.h"/>
+        <File Name="src/file/idx/bitmap.c"/>
+        <File Name="src/file/idx/btree.c"/>
+        <File Name="src/file/idx/hash.c"/>
+        <File Name="src/file/idx/bitmap.h"/>
+        <File Name="src/file/idx/hash.h"/>
+      </VirtualDirectory>
+      <File Name="src/file/test.h"/>
+      <File Name="src/file/blobs.c"/>
+      <File Name="src/file/test.c"/>
+      <File Name="src/file/table.c"/>
+      <File Name="src/file/id.c"/>
+      <File Name="src/file/files.h"/>
+      <File Name="src/file/table.h"/>
+      <File Name="src/file/fileio.h"/>
+      <File Name="src/file/fileio.c"/>
+      <File Name="src/file/filesearch.c"/>
+      <File Name="src/file/filesearch.h"/>
+      <File Name="src/file/blobs.h"/>
+      <File Name="src/file/filesort.c"/>
+      <File Name="src/file/filesort.h"/>
+      <File Name="src/file/files.c"/>
+      <File Name="src/file/id.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="opti">
+      <File Name="src/opti/rel_eq_selection.c"/>
+      <File Name="src/opti/query_optimization.h"/>
+      <File Name="src/opti/rel_eq_comut.c"/>
+      <File Name="src/opti/rel_eq_assoc.c"/>
+      <File Name="src/opti/rel_eq_selection.h"/>
+      <File Name="src/opti/rel_eq_projection.c"/>
+      <File Name="src/opti/rel_eq_assoc.h"/>
+      <File Name="src/opti/rel_eq_projection.h"/>
+      <File Name="src/opti/query_optimization.c"/>
+      <File Name="src/opti/rel_eq_comut.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="trans">
+      <File Name="src/trans/transaction.c"/>
+      <File Name="src/trans/transaction.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="mm">
+      <File Name="src/mm/memoman.c"/>
+      <File Name="src/mm/memoman.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="dm">
+      <File Name="src/dm/dbman.h"/>
+      <File Name="src/dm/dbman.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="auxi">
+      <File Name="src/auxi/mempro.h"/>
+      <File Name="src/auxi/iniparser.h"/>
+      <File Name="src/auxi/debug.c"/>
+      <File Name="src/auxi/constants.h"/>
+      <File Name="src/auxi/observable.c"/>
+      <File Name="src/auxi/configuration.h"/>
+      <File Name="src/auxi/debug.h"/>
+      <File Name="src/auxi/dictionary.h"/>
+      <File Name="src/auxi/dictionary.c"/>
+      <File Name="src/auxi/auxiliary.c"/>
+      <File Name="src/auxi/mempro.c"/>
+      <File Name="src/auxi/observable.h"/>
+      <File Name="src/auxi/iniparser.c"/>
+      <File Name="src/auxi/auxiliary.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="rel">
+      <File Name="src/rel/union.h"/>
+      <File Name="src/rel/theta_join.c"/>
+      <File Name="src/rel/selection.h"/>
+      <File Name="src/rel/nat_join.c"/>
+      <File Name="src/rel/aggregation.h"/>
+      <File Name="src/rel/selection.c"/>
+      <File Name="src/rel/difference.c"/>
+      <File Name="src/rel/projection.h"/>
+      <File Name="src/rel/nat_join.h"/>
+      <File Name="src/rel/difference.h"/>
+      <File Name="src/rel/projection.c"/>
+      <File Name="src/rel/theta_join.h"/>
+      <File Name="src/rel/union.c"/>
+      <File Name="src/rel/product.c"/>
+      <File Name="src/rel/expression_check.c"/>
+      <File Name="src/rel/intersect.h"/>
+      <File Name="src/rel/aggregation.c"/>
+      <File Name="src/rel/expression_check.h"/>
+      <File Name="src/rel/sequence.c"/>
+      <File Name="src/rel/product.h"/>
+      <File Name="src/rel/sequence.h"/>
+      <File Name="src/rel/intersect.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="rec">
+      <File Name="src/rec/archive_log.h"/>
+      <File Name="src/rec/recovery.h"/>
+      <File Name="src/rec/archive_log.c"/>
+      <File Name="src/rec/recovery.c"/>
+      <File Name="src/rec/redo_log.h"/>
+      <File Name="src/rec/redo_log.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="swig">
+      <File Name="src/swig/implementation.h"/>
+      <File Name="src/swig/kalashnikovDB_wrap.c"/>
+    </VirtualDirectory>
+    <File Name="src/main.c"/>
+  </VirtualDirectory>
+  <Description/>
+  <Dependencies/>
+  <Settings Type="Dynamic Library">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="" Assembler="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Debug" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g" C_Options="-g" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="./Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        <RebuildCommand/>
+        <CleanCommand>make clean</CleanCommand>
+        <BuildCommand>make</BuildCommand>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory>$(WorkspacePath)</WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="-O2" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="" IntermediateDirectory="./Release" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="yes">
+        <RebuildCommand/>
+        <CleanCommand>make clean</CleanCommand>
+        <BuildCommand>make</BuildCommand>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory>$(WorkspacePath)</WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>

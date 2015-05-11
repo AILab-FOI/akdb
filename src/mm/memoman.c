@@ -22,7 +22,8 @@
  */
 
 #include "memoman.h"
-
+#include <time.h>
+#include <stdio.h>
 /**
   * @author Nikola Bakoš, Matija Šestak(revised)
   * @brief Function caches block into memory.
@@ -107,7 +108,41 @@ int AK_redo_log_AK_malloc() {
     AK_EPI;
     return EXIT_SUCCESS;
 }
+int AK_find_available_result_block(){
+	int available_index=0;
+	int i=0;
+	for(i; i<MAX_QUERY_RESULT_MEMORY;i++){
+		if(query_mem->result->results[i].free==1){
+			available_index=i;
+			break;
+		}
+	}
+	return available_index;
+}
+unsigned long AK_generate_result_id(unsigned char *str) {
+    unsigned long hash = 5381;
+    int c;
 
+    while (c = *str++) {
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    }
+
+    return abs(hash);
+}
+void AK_cache_result(){
+	//find available block in memory for query caching
+	int available_index=AK_find_available_result_block();
+	unsigned long tmp;
+	//generate query date and time
+	time_t rawtime;
+	struct tm * timeinfo;
+	time (&rawtime);
+	timeinfo = localtime (&rawtime);
+	strftime (query_mem->result->results[available_index].date_created,80,"%F %T",timeinfo);
+	query_mem->result->results[available_index].result_id=AK_generate_result_id(query_mem->result->results[available_index].date_created);
+	printf("%d \n",query_mem->result->results[available_index].result_id);
+	
+}
 /**
   *  @author Matija Novak
   *  @brief Function initializes the global query memory (variable query_mem)
@@ -139,14 +174,17 @@ int AK_query_mem_AK_malloc() {
         AK_EPI;
         exit(EXIT_ERROR);
     }
-
+	
     /// allocate memory for variable query_mem_result which is used in query_mem->result
-    AK_query_mem_result * query_mem_result;
-    if ((query_mem_result = (AK_query_mem_result *) AK_malloc(sizeof (AK_query_mem_result))) == NULL) {
+    //AK_query_mem_result * query_mem_result=AK_malloc(sizeof(*query_mem_result));
+	AK_query_mem_result * query_mem_result;
+
+	if ((query_mem_result = (AK_query_mem_result *) AK_malloc(sizeof (AK_query_mem_result))) == NULL) {
         printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate query result memory \n");
         AK_EPI;
         exit(EXIT_ERROR);
     }
+	query_mem_result->results=AK_malloc(MAX_QUERY_RESULT_MEMORY*sizeof(*query_mem_result->results));
 
     /// allocate memory for variable tuple_dict which is used in query_mem->dictionary->dictionary[]
     AK_tuple_dict * tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict));
@@ -161,7 +199,14 @@ int AK_query_mem_AK_malloc() {
     query_mem->parsed = query_mem_lib;
     query_mem->dictionary = query_mem_dict;
     query_mem->result = query_mem_result;
-
+	
+	//initializing values for result block status
+	//by default all blocks are free
+	int i=0;
+	for(i=0; i<MAX_QUERY_RESULT_MEMORY; i++){
+		query_mem->result->results[i].free=1;
+	}
+	AK_cache_result();
     /*	wrong way because we don't have data only adress which must be written in query_mem variables
             memcpy(query_mem->parsed, query_mem_lib, sizeof(* query_mem_lib));
             memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));

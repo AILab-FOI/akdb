@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Session Name="/home/mario/fizicko/kalasnjikov.workspace">
+  <int Value="0" Name="m_selectedTab"/>
+  <wxString Value="/home/mario/fizicko/kalasnjikov.workspace" Name="m_workspaceName"/>
+  <TabInfoArray Name="TabInfoArray">
+    <TabInfo>
+      <wxString Value="/home/mario/fizicko/src/mm/memoman.h" Name="FileName"/>
+      <int Value="96" Name="FirstVisibleLine"/>
+      <int Value="105" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/mario/fizicko/src/mm/memoman.c" Name="FileName"/>
+      <int Value="223" Name="FirstVisibleLine"/>
+      <int Value="238" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/mario/fizicko/src/opti/rel_eq_assoc.h" Name="FileName"/>
+      <int Value="20" Name="FirstVisibleLine"/>
+      <int Value="29" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+    <TabInfo>
+      <wxString Value="/home/mario/fizicko/src/file/fileio.c" Name="FileName"/>
+      <int Value="499" Name="FirstVisibleLine"/>
+      <int Value="485" Name="CurrentLine"/>
+      <wxArrayString Name="Bookmarks"/>
+      <IntVector Name="CollapsedFolds"/>
+    </TabInfo>
+  </TabInfoArray>
+  <SerializedObject Name="m_breakpoints">
+    <long Value="0" Name="Count"/>
+  </SerializedObject>
+</Session>

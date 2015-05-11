@@ -89,18 +89,31 @@ typedef struct {
     int next_replace;
 } AK_query_mem_dict;
 
+
+/**
+  * @author Mario Novoselec
+  * @struct AK_result
+  * @brief Structure that saves query details
+ */
+
+typedef struct{
+	unsigned long result_id;
+	int result_size;
+	char date_created[80];
+	short free;
+}AK_results;
+
 /**
   * @author Unknown
   * @struct AK_query_mem_result
   * @brief Structure that defines global query memory for results
  */
+
 typedef struct {
-    /// last recently obtained results; to be changed to more adequate data structure
-    char results[ MAX_QUERY_RESULT_MEMORY ];
+    AK_results *results;
     /// next result to be replaced (0 - MAX_QUERY_RESULT_MEMORY-1); field pointer (LIFO)
     int next_replace;
 } AK_query_mem_result;
-
 /**
   * @author Unknown
   * @struct AK_query_mem
@@ -131,7 +144,9 @@ AK_redo_log * redo_log;
  */
 AK_query_mem * query_mem;
 
-
+void AK_cache_result();
+int AK_find_available_result_block();
+unsigned long AK_generate_result_id(unsigned char *str);
 int AK_cache_block(int num, AK_mem_block *mem_block);
 int AK_cache_AK_malloc();
 int AK_redo_log_AK_malloc();

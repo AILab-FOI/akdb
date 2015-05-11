@@ -202,7 +202,6 @@ int main(int argc, char * argv[])
 
                 printf( "\nEverything was fine!\nBye =)\n" );
 
-
                 /* For easyer debugging and GDB usage
                 AK_create_test_tables();
                 AK_view_test();
@@ -221,6 +220,7 @@ int main(int argc, char * argv[])
 	AK_EPI;
         return ( EXIT_ERROR );
     }
+
     // delete critical sections
     AK_destroy_critical_section(dbmanFileLock);
     AK_EPI;

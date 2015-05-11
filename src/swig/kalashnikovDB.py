@@ -918,6 +918,18 @@ def AK_redo_log_AK_malloc():
   return _kalashnikovDB.AK_redo_log_AK_malloc()
 AK_redo_log_AK_malloc = _kalashnikovDB.AK_redo_log_AK_malloc
 
+def AK_find_available_result_block():
+  return _kalashnikovDB.AK_find_available_result_block()
+AK_find_available_result_block = _kalashnikovDB.AK_find_available_result_block
+
+def AK_generate_result_id(*args):
+  return _kalashnikovDB.AK_generate_result_id(*args)
+AK_generate_result_id = _kalashnikovDB.AK_generate_result_id
+
+def AK_cache_result():
+  return _kalashnikovDB.AK_cache_result()
+AK_cache_result = _kalashnikovDB.AK_cache_result
+
 def AK_query_mem_AK_malloc():
   return _kalashnikovDB.AK_query_mem_AK_malloc()
 AK_query_mem_AK_malloc = _kalashnikovDB.AK_query_mem_AK_malloc
@@ -1081,6 +1093,33 @@ class AK_query_mem_dict(_object):
     __del__ = lambda self : None;
 AK_query_mem_dict_swigregister = _kalashnikovDB.AK_query_mem_dict_swigregister
 AK_query_mem_dict_swigregister(AK_query_mem_dict)
+
+class AK_results(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, AK_results, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, AK_results, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["result_id"] = _kalashnikovDB.AK_results_result_id_set
+    __swig_getmethods__["result_id"] = _kalashnikovDB.AK_results_result_id_get
+    if _newclass:result_id = _swig_property(_kalashnikovDB.AK_results_result_id_get, _kalashnikovDB.AK_results_result_id_set)
+    __swig_setmethods__["result_size"] = _kalashnikovDB.AK_results_result_size_set
+    __swig_getmethods__["result_size"] = _kalashnikovDB.AK_results_result_size_get
+    if _newclass:result_size = _swig_property(_kalashnikovDB.AK_results_result_size_get, _kalashnikovDB.AK_results_result_size_set)
+    __swig_setmethods__["date_created"] = _kalashnikovDB.AK_results_date_created_set
+    __swig_getmethods__["date_created"] = _kalashnikovDB.AK_results_date_created_get
+    if _newclass:date_created = _swig_property(_kalashnikovDB.AK_results_date_created_get, _kalashnikovDB.AK_results_date_created_set)
+    __swig_setmethods__["free"] = _kalashnikovDB.AK_results_free_set
+    __swig_getmethods__["free"] = _kalashnikovDB.AK_results_free_get
+    if _newclass:free = _swig_property(_kalashnikovDB.AK_results_free_get, _kalashnikovDB.AK_results_free_set)
+    def __init__(self): 
+        this = _kalashnikovDB.new_AK_results()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _kalashnikovDB.delete_AK_results
+    __del__ = lambda self : None;
+AK_results_swigregister = _kalashnikovDB.AK_results_swigregister
+AK_results_swigregister(AK_results)
 
 class AK_query_mem_result(_object):
     __swig_setmethods__ = {}
