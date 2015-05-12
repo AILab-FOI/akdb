@@ -462,36 +462,6 @@
     AK_free(add_root);
 }
 
-/**
- * @author Saša Vukšić
- * @brief Function for test list creation
- * @return No return value
- **/
- void Ak_create_List_Address_Test()
- {
-    list_ad *add_root;
-    AK_PRO;
-    add_root = (list_ad *) AK_malloc(sizeof (list_ad));
-
-    Ak_InitializelistAd(add_root);
-
-    Ak_Insert_NewelementAd(1, 1, "prvi", add_root);
-    element_ad some_element;
-    some_element = Ak_Get_First_elementAd(add_root);
-    Ak_Insert_NewelementAd(2, 2, "drugi", some_element);
-    element_ad some_elementt = Ak_Get_Last_elementAd(add_root);
-    Ak_Insert_NewelementAd(3, 3, "treci", some_elementt);
-
-    element_ad ele = Ak_Get_First_elementAd(add_root);
-
-    while (ele != 0)
-    {
-        printf("Adresa : %s\n", ele->attName);
-        ele = Ak_Get_Next_elementAd(ele);
-    }
-    AK_EPI;
-}
-
 
 /**
  * @author Saša Vukšić, Lovro Predovan
@@ -693,7 +663,7 @@
 
 
 /**
- * @author Lovro Preovan
+ * @author Lovro Predovan
  * @brief Function for updating the index,function deletes and recrates index values again if different number of params is detected 
  * @param tableName name of table
  * @param attributeName name of attribute

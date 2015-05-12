@@ -48,7 +48,8 @@
 //Logging
 #include "rec/archive_log.h" //ARCHIVE LOG
 
-// Indices
+// Indexes
+#include "file/idx/index.h"
 #include "file/idx/hash.h"
 #include "file/idx/btree.h"
 #include "file/idx/bitmap.h"
@@ -105,6 +106,7 @@ typedef struct {
 } function;
 
 function fun[] = {
+        {"AK_index_test", &AK_index_test},
         {"Ak_bitmap_test", &Ak_bitmap_test},
         {"Ak_btree_test", &Ak_btree_test},
         {"Ak_constraint_between_test", &Ak_constraint_between_test},
@@ -207,7 +209,7 @@ int main(int argc, char * argv[])
                             printf( "\nEverything was fine!\nBye =)\n" );
                             /* For easyer debugging and GDB usage*/
                             //AK_create_test_tables();
-                            //AK_view_test();
+                            //AK_index_test();
                             //Ak_bitmap_test();
                             //Ak_fileio_test();
 

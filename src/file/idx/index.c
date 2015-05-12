@@ -556,3 +556,115 @@ void AK_print_index_table(char *indexTblName) {
     AK_free(addresses);
     AK_EPI;
 }
+
+
+
+/**
+ * @author Lovro Predovan
+ * @brief  Test funtion for index structures(list) and printing table
+ * @return No return value
+ */
+void AK_index_test() {
+
+    AK_PRO;
+    int position;
+    printf("\n********** INDEX TEST **********\n\n");
+
+    list_ad *add_root;
+    add_root = (list_ad *) AK_malloc(sizeof (list_ad));
+
+
+    Ak_InitializelistAd(add_root);
+
+    Ak_Insert_NewelementAd(1, 1, "Alen", add_root);
+    element_ad some_element;
+
+    some_element = Ak_Get_First_elementAd(add_root);
+    Ak_Insert_NewelementAd(2, 2, "Markus", some_element);
+
+    element_ad some_elementt = Ak_Get_Last_elementAd(add_root);
+    Ak_Insert_NewelementAd(3, 3, "Mirko", some_elementt);
+
+    element_ad some_elementtt = Ak_Get_Last_elementAd(add_root);
+    Ak_Insert_NewelementAd(4, 4, "Sandra", some_elementtt);
+
+    element_ad some_elementttt = Ak_Get_Last_elementAd(add_root);
+    Ak_Insert_NewelementAd(5, 5, "Tonimir", some_elementttt);
+
+
+    printf("\n********** Printing all values **********\n\n");
+    element_ad ele = Ak_Get_First_elementAd(add_root);
+    while (ele != 0)
+    {
+        printf("Value : %s\n", ele->attName);
+        ele = Ak_Get_Next_elementAd(ele);
+    }
+
+    printf("\n********** Printing position values **********\n\n");
+     element_ad last = Ak_Get_Last_elementAd(add_root);   
+     printf("Last element in list: %s \n",last->attName);
+
+     element_ad previous = Ak_Get_Previous_elementAd(last,add_root);
+     printf("Previous element from list: %s \n",previous->attName);
+
+     element_ad first = Ak_Get_First_elementAd(add_root);
+     printf("First element in list: %s \n",first->attName);
+
+     element_ad next = Ak_Get_Next_elementAd(first);
+     printf("Next element in list after '%s' is : %s \n",first->attName,next->attName);
+
+     printf("Position of element '%s' above is : %i \n",next->attName,Ak_Get_Position_Of_elementAd(next, add_root));
+
+    printf("\n********** Deleting values **********\n\n");
+
+    printf("Deleting element: %s \n",previous->attName);
+    Ak_Delete_elementAd(previous, add_root) ;
+    element_ad elem = Ak_Get_First_elementAd(add_root);
+
+    printf("\n********** Printing values after delete**********\n\n");
+
+        while (elem != 0)
+        {
+            printf("Value : %s\n", elem->attName);
+            elem = Ak_Get_Next_elementAd(elem);
+        }
+
+    printf("\n********** Printing values after deleting all values**********\n\n");
+    void Ak_Delete_All_elementsAd(add_root) ;
+    element_ad eleme = Ak_Get_First_elementAd(add_root);
+    while (elem != 0)
+        {
+            printf("Value : %s\n", eleme->attName);
+            eleme = Ak_Get_Next_elementAd(eleme);
+
+        }
+
+    printf("\n********** Index test **********\n\n");
+        //CREATING BITMAP INDEXES ON ATTRIBUTE FIRSTNAME AS REFERENCE
+
+    char *tblName = "assistant";
+    char *indexTblName = "assistantfirstname_bmapIndex";
+
+    char *notExistingIndexName = "assistantincome_bmapIndex";
+
+    struct list_node *att_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&att_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "firstname", tblName, "firstname", att_root);
+ 
+    AK_create_Index_Table(tblName, att_root);
+
+    AK_print_table(tblName);
+    AK_print_table("AK_index");
+    AK_print_index_table(indexTblName);
+
+    printf("\n\nIndex table %s exists: %i\n\n",indexTblName,AK_index_table_exist(indexTblName));
+    printf("Number of rows in index %s: %i\n\n",indexTblName,AK_get_index_num_records(indexTblName));
+    printf("Number of attributes in index %s: %i\n\n",indexTblName,AK_num_index_attr(indexTblName));
+    printf("Index table %s exists: %i\n\n\n",notExistingIndexName,AK_index_table_exist(notExistingIndexName));
+
+
+    printf("\n********** Index test Passed**********\n\n");
+
+
+    AK_EPI;
+}

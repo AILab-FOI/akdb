@@ -73,7 +73,7 @@ void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) ;
 void Ak_Delete_All_elementsAd(list_ad *L) ;
 void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore);
 
-
+void AK_index_test();
 
 
 #endif
