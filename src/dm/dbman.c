@@ -2564,8 +2564,6 @@ int AK_init_disk_manager() {
             AK_allocationbit->prepared = 31;
             AK_allocationbit->ltime = time(NULL);
             AK_blocktable_flush();
-            int vari;
-            scanf("%d", &vari);
             AK_EPI;
             return EXIT_SUCCESS;
         }
