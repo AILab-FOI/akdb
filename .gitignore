@@ -3,4 +3,8 @@
 *.d
 *.db
 /bin/akdb
+src/swig/kalashnikovDB_wrap.c
+src/swig/_kalashnikovDB.so
+src/swig/kalashnikovDB.py
+
 

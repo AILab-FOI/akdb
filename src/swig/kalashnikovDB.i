@@ -239,7 +239,7 @@ AK_frees AK_list** datatype
 
 /*
 Everything in the %{ ... %} block is simply copied verbatim to the resulting wrapper file created by SWIG.
-*/
+
 %{
   #define SWIG_FILE_WITH_INIT
   #include "implementation.h"
@@ -391,4 +391,4 @@ extern AK_list *AK_rel_eq_get_attributes(char *tblName);
 %include "../rec/redo_log.c"
 
 %include "../rec/recovery.h"
-%include "../rec/recovery.c"
+%include "../rec/recovery.c"*/
