@@ -24,7 +24,7 @@
 #include "../../file/fileio.h"
 #include "../../auxi/mempro.h"
 
-void Ak_set_constraint_unique(char* tableName, char attName[], char* constraintName);
+int Ak_set_constraint_unique(char* tableName, char attName[], char constraintName[]);
 int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]);
 void AK_unique_test();
 
