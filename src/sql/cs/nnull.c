@@ -21,68 +21,33 @@
 
 /**
  * @author Saša Vukšić, updated by Nenad Makar
- * @brief Function that sets NOT NULL constraint on attribute
+ * @brief Function that sets null constraint on attribute
  * @param char* tableName name of table
  * @param char* attName name of attribute
  * @param char* constraintName name of constraint
- * @return EXIT_ERROR or EXIT_SUCCESS
+ * @return No return value
  **/
-int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName) {
-	int i;
-	int numRows;
-	int notNullViolated = 1;
-	struct list_node *row;
-	struct list_node *attribute;
+void AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName) {
 	AK_PRO;
-	
-	numRows = AK_get_num_records(tableName);
-	
-	if(numRows == 0)
-	{
-		notNullViolated = 0;
-	}
-	else
-	{
-		int positionOfAtt = AK_get_attr_index(tableName, attName) + 1;
-		
-		for(i=0; i<numRows; i++)
-		{
-			row = AK_get_row(i, tableName);
-			attribute = Ak_GetNth_L2(positionOfAtt, row);
-			
-			if(AK_tuple_to_string(attribute) == NULL)
-			{
-				printf("\nFAILURE!\nTable: %s\ncontains NULL sign and that would violate NOT NULL constraint which You would like to set on attribute: %s\n\n", tableName, attName);
-				return EXIT_ERROR;
-				AK_EPI;
-			}
-		}
-		
-		notNullViolated = 0;
-	}
 
 	/*Check if constraintName already exists in database or if NOT NULL constraint is already set on attribute attName of table tableName
 	It should be done by using a function from new file or in system catalog
 	Put the rest of the code in if() and execute it if constraintName doesn't already exist in database and if NOT NULL constraint
 	isn't already set on attribute attName of table tableName (if pair of tableName and attName doesn't already exist in some row of
 	table AK_constraints_not_null)*/
-	
-	if(notNullViolated == 0)
-	{
-		struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-		Ak_Init_L3(&row_root);
 
-		int obj_id = AK_get_id();
-		Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_not_null", "obj_id", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_not_null", "tableName", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_not_null", "constraintName", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_not_null", "attributeName", row_root);
-		Ak_insert_row(row_root);
-		Ak_DeleteAll_L3(&row_root);
-		AK_free(row_root);
-		return EXIT_SUCCESS;
-		AK_EPI;
-	}
+	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	Ak_Init_L3(&row_root);
+
+	int obj_id = AK_get_id();
+	Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_not_null", "obj_id", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_not_null", "tableName", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_not_null", "constraintName", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_not_null", "attributeName", row_root);
+	Ak_insert_row(row_root);
+	Ak_DeleteAll_L3(&row_root);
+	AK_free(row_root);
+	AK_EPI;
 }
 
 /**
@@ -147,23 +112,17 @@ int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue) 
   * @return No return value
   */
 void AK_null_test() {
-	char* tableName = "student";
-	char* attName = "firstname";
-	char* constraintName = "firstnameNotNull";
+	char* tableName = "studenti";
+	char* attName = "ime";
+	char* constraintName = "studentiNotNull";
 	char* newValue = NULL;
-	int result;
 	AK_PRO;
 	printf("\nExisting NOT NULL constraints:\n\n");
 	AK_print_table("AK_constraints_not_null");
-	printf("\nTest table:\n\n");	
-	AK_print_table(tableName);
 	printf("\nTrying to set NOT NULL constraint on attribute %s of table %s...\n\n", attName, tableName);
-	result = AK_set_constraint_not_null(tableName, attName, constraintName);
+	AK_set_constraint_not_null(tableName, attName, constraintName);
 	AK_print_table("AK_constraints_not_null");
-	if(result == EXIT_SUCCESS)
-	{
-		printf("\nChecking if attribute %s of table %s can contain NULL sign...\nYes (0) No (-1): %d\n\n", attName, tableName, AK_read_constraint_not_null(tableName, attName, newValue));
-	}
-	printf("\nTest succeeded.");
+	printf("\nChecking if attribute %s of table %s can contain NULL sign...\nYes (0) No (-1): %d\n\n", attName, tableName, AK_read_constraint_not_null(tableName, attName, newValue));
+	printf("\nTest succeeded.\nNOT NULL constraint is set on attribute %s of table %s.", attName, tableName);
 	AK_EPI;
 }
