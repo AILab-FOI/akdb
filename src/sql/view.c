@@ -206,7 +206,7 @@ int AK_view_change_query(char *name, char *query, char *rel_exp){
 }
 
 /**
- * @author Kresimir Ivkovic
+ * @author Kresimir Ivkovic, updated by Lidija Lastavec
  * @brief A testing function for view.c functions.
  * @return
  */
@@ -218,6 +218,8 @@ void AK_view_test() {
    AK_view_add("view3", "query3","*;profesor;", 0);
    AK_view_add("view4", "query4","2 >;", 0);
    AK_view_add("view5", "query5","id_object;", 0);
+   AK_view_add("view6", "query6","lastname", 0);
+   AK_view_add("view7", "query7","student;firstname", 0);
    AK_print_table("AK_view");
 
    printf("Obj_id za view1: %d\n", AK_get_view_obj_id("view1"));
@@ -241,6 +243,18 @@ void AK_view_test() {
    AK_view_remove_by_name("view1");
    AK_view_remove_by_name("view2");
    AK_print_table("AK_view");
+   
+   printf("\nRemoving view 'view6' and 'view7' by Obj_id...\n");
+   printf("Obj_id for view6: %d\n", AK_get_view_obj_id("view6"));
+   printf("Obj_id for view7: %d\n", AK_get_view_obj_id("view7"));
+   // Test faled - BUG in AK_view_remove_by_obj_id
+   //AK_view_remove_by_obj_id(112);
+   //AK_view_remove_by_obj_id(113);
+   AK_view_remove_by_obj_id("112");
+   AK_view_remove_by_obj_id("113");
+   
+   AK_print_table("AK_view");
+   printf("\nTEST FALED!!!\n\n");
 
    printf("\nRenaming 'view3' to 'view300'...\n");
    AK_view_rename("view3","view300");

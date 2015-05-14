@@ -877,7 +877,7 @@ int AK_check_group_privilege(char *group) {
 }
 
 /**
- * @author Kristina Takač, updated by Tomislav Ilisevicupdated by Lidija Lastavec
+ * @author Kristina Takač, updated by Tomislav Ilisevic, updated by Lidija Lastavec
  * @brief Function that tests functions above for privileges, 
  * @return no return value                                                     
  */
@@ -889,6 +889,8 @@ void AK_privileges_test() {
     AK_user_add("mrvasedam", (int*) 569, NEW_ID);
     AK_user_add("swallow", (int*) 666, NEW_ID);
     AK_print_table("AK_user");
+    
+    
     //AK_user_rename("proba", "test", (int*) 123);
     //AK_print_table("AK_user");
  
@@ -899,14 +901,14 @@ void AK_privileges_test() {
     AK_group_add("group1", NEW_ID);
     AK_group_add("group2", NEW_ID);
     AK_group_add("group3", NEW_ID);
-    AK_group_add("grupaL", NEW_ID);
+    AK_group_add("groupL", NEW_ID);
     AK_print_table("AK_group");
     //AK_group_rename("group1", "group9");
     //AK_group_rename("group2", "group4");
     //AK_print_table("AK_group");
     
-    printf("\nTest for function AK_group_remove_by_name - remove grupaL\n\n");
-    AK_group_remove_by_name("grupaL");   
+    printf("\nTest for function AK_group_remove_by_name - remove groupL\n\n");
+    AK_group_remove_by_name("groupL");   
     AK_print_table("AK_group"); 
 
     AK_add_user_to_group("kritakac", "group1");
@@ -917,26 +919,20 @@ void AK_privileges_test() {
     AK_grant_privilege_group("group2", "professor", "DELETE");
     AK_grant_privilege_group("group1", "student", "ALL");
     AK_grant_privilege_group("group2", "student", "ALL");
-    //AK_grant_privilege_group("grupa3", "student", "ALL");
+    AK_grant_privilege_group("group3", "student", "ALL");
 
     AK_print_table("AK_group_right");
     //AK_revoke_privilege_group("group2", "student", "ALL");
     //AK_print_table("AK_group_right");
     
-     /**
-     * Test should revoke all privilege for grupu3, 
-     * but revokes ALL privileges for ALL grups on ALL tables
-     * Object ID - problem
-     * update by Lidija Lastavec
-     * 
-     * printf("\nTest for function AK_revoke_all_privilege_group - revokes ALL privileges from group on ALL tables");
-	 * printf("\nTest: Revoke all privileges for grupu3\nTest result:");
-	 * AK_revoke_all_privileges_group("grupa3");
-	 * AK_print_table("AK_group_right");
-	 * printf("Group3 has no more any privileges upon all tables!\n");
-	 */
-	
     
+     printf("\nTest for function AK_revoke_all_privilege_group - revokes ALL privileges from group on ALL tables");
+	 printf("\nTest: Revoke all privileges for group3\nTest result:");
+	 AK_revoke_all_privileges_group("group3");
+	 AK_print_table("AK_group_right");
+	 printf("Group3 has no more any privileges upon all tables!\n");
+	 
+	     
     AK_grant_privilege_user("kritakac", "student", "DELETE");
     AK_grant_privilege_user("proba", "student", "UPDATE");
     AK_grant_privilege_user("kritakac", "professor", "SELECT");
