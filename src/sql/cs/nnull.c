@@ -31,7 +31,6 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 	int i;
 	int numRows;
 	int newConstraint;
-	int notNullViolated = 1;
 	int uniqueConstraintName;
 	struct list_node *row;
 	struct list_node *attribute;
@@ -48,11 +47,7 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 	
 	numRows = AK_get_num_records(tableName);
 	
-	if(numRows == 0)
-	{
-		notNullViolated = 0;
-	}
-	else
+	if(numRows > 0)
 	{
 		int positionOfAtt = AK_get_attr_index(tableName, attName) + 1;
 		
@@ -68,8 +63,6 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 				AK_EPI;
 			}
 		}
-		
-		notNullViolated = 0;
 	}
 
 	uniqueConstraintName = Ak_check_constraint_name(constraintName);
@@ -81,28 +74,20 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 		AK_EPI;
 	}
 	
-	if(notNullViolated == 0)
-	{
-		struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-		Ak_Init_L3(&row_root);
+	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	Ak_Init_L3(&row_root);
 
-		int obj_id = AK_get_id();
-		Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_not_null", "obj_id", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_not_null", "tableName", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_not_null", "constraintName", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_not_null", "attributeName", row_root);
-		Ak_insert_row(row_root);
-		Ak_DeleteAll_L3(&row_root);
-		AK_free(row_root);
-		printf("\nNOT NULL constraint is set on attribute: %s\nof table: %s\n\n", attName, tableName);
-		return EXIT_SUCCESS;
-		AK_EPI;
-	}
-	else
-	{
-		return EXIT_ERROR;
-		AK_EPI;
-	}
+	int obj_id = AK_get_id();
+	Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_not_null", "obj_id", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_not_null", "tableName", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_not_null", "constraintName", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_not_null", "attributeName", row_root);
+	Ak_insert_row(row_root);
+	Ak_DeleteAll_L3(&row_root);
+	AK_free(row_root);
+	printf("\nNOT NULL constraint is set on attribute: %s\nof table: %s\n\n", attName, tableName);
+	return EXIT_SUCCESS;
+	AK_EPI;
 }
 
 /**
@@ -169,6 +154,7 @@ int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue) 
 void AK_null_test() {
 	char* tableName = "student";
 	char* attName = "firstname";
+	char* attName2 = "lastname";
 	char* constraintName = "firstnameNotNull";
 	char* newValue = NULL;
 	int result;
@@ -186,6 +172,9 @@ void AK_null_test() {
 	}
 	printf("\nTrying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attName, tableName);
 	result = AK_set_constraint_not_null(tableName, attName, constraintName);
+	AK_print_table("AK_constraints_not_null");
+	printf("\nTrying to set NOT NULL constraint with name %s AGAIN...\n\n", constraintName);
+	result = AK_set_constraint_not_null(tableName, attName2, constraintName);
 	AK_print_table("AK_constraints_not_null");
 	printf("\nTest succeeded.");
 	AK_EPI;

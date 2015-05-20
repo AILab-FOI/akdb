@@ -33,7 +33,6 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	int j;
 	int numRows;
 	int newConstraint;
-	int uniqueViolated = 1;
 	int uniqueConstraintName;
 	char attributeName[MAX_VARCHAR_LENGTH]="";
 	char values[MAX_VARCHAR_LENGTH]="";
@@ -62,11 +61,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	
 	numRows = AK_get_num_records(tableName);
 	
-	if(numRows == 0)
-	{
-		uniqueViolated = 0;
-	}
-	else
+	if(numRows > 0)
 	{
 		row = AK_get_row(0, tableName);
 		int numOfAttsInTable = Ak_Size_L2(row);
@@ -117,14 +112,12 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 				
 				if(match == 1)
 				{
-					printf("\nFAILURE!\nExisting values in table: %s\nwould violate UNIQUE constraint which You would like to set on attribute(s): %s\n\n", tableName, attName);
+					printf("\nFAILURE!\nExisting values in table: %s\nwould violate UNIQUE constraint which You would like to set on (combination of) attribute(s): %s\n\n", tableName, attName);
 					return EXIT_ERROR;
 					AK_EPI;
 				}
 			}
 		}
-		
-		uniqueViolated = 0;
 	}
 
 	uniqueConstraintName = Ak_check_constraint_name(constraintName);
@@ -136,28 +129,20 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 		AK_EPI;
 	}
 
-	if(uniqueViolated == 0)
-	{
-		struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-		Ak_Init_L3(&row_root);
+	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	Ak_Init_L3(&row_root);
 
-		int obj_id = AK_get_id();
-		Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_unique", "obj_id", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_unique", "tableName", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_unique", "constraintName", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_unique", "attributeName", row_root);
-		Ak_insert_row(row_root);
-		Ak_DeleteAll_L3(&row_root);
-		AK_free(row_root);
-		printf("\nUNIQUE constraint is set on attribute(s): %s\nof table: %s\n\n", attName, tableName);
-		return EXIT_SUCCESS;
-		AK_EPI;
-	}
-	else
-	{
-		return EXIT_SUCCESS;
-		AK_EPI;
-	}
+	int obj_id = AK_get_id();
+	Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_unique", "obj_id", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_unique", "tableName", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_unique", "constraintName", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_unique", "attributeName", row_root);
+	Ak_insert_row(row_root);
+	Ak_DeleteAll_L3(&row_root);
+	AK_free(row_root);
+	printf("\nUNIQUE constraint is set on (combination of) attribute(s): %s\nof table: %s\n\n", attName, tableName);
+	return EXIT_SUCCESS;
+	AK_EPI;
 }
 
 /**
@@ -175,22 +160,16 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 
 int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 	char *value;
-	char *substring;
 	//Because strtok could create problems for newValue...
 	char newValueCopy[MAX_VARCHAR_LENGTH];
 	int numOfValues = 0;
 	AK_PRO;
 	
-	substring = strstr(attName, "obj_id");
-	
 	//If there's check if combination of values of attributes tableName and attributeName of table AK_constraints_unique are UNIQUE numOfValues is 2
 	//First value is value of attribute tableName and second value is value of attribute attributeName which could be made of more SEPARATORS and then it would seem like
 	//there are more than two values in newValue[]
-	//Combination of values of attributes tableName and attributeName is only needed UNIQUE combination in table AK_constraints_unique (to check if UNIQUE constraint is already set on same attribute of a same table)
-	//Values of attribute obj_id (alone) will be UNIQUE when PRIMARY KEY will be created on table AK_constraints_unique
-	//UNIQUENESS of value of attribute constraintName is checked with Ak_check_constraint_name among all constraint names in database so there's
-	//no need to set UNIQUE constraint on that attribute
-	if(strcmp(tableName, "AK_constraints_unique")==0 && substring==NULL)
+	//That combination is used to check if there's some UNIQUE constraint set on table AK_constraints_unique
+	if(strcmp(tableName, "AK_constraints_unique")==0)
 	{
 		numOfValues = 2;
 	}
@@ -351,15 +330,10 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		strcpy(newValueCopy2, newValue);
 
 		value2 = strtok(newValueCopy2, SEPARATOR);
-
 		strcpy(values[index], value2);
-
-		if(numOfValues==2)
-		{
-			index++;
-			value2 = strtok(NULL, "");
-			strcpy(values[index], value2+strlen(SEPARATOR)-1);
-		}
+		index++;
+		value2 = strtok(NULL, "");
+		strcpy(values[index], value2+strlen(SEPARATOR)-1);
 
 		int numRows = AK_get_num_records(tableName);
 
@@ -412,6 +386,7 @@ void AK_unique_test() {
 	char attName[] = "firstname";
 	char attName3[MAX_VARCHAR_LENGTH]="";
 	char attName6[MAX_VARCHAR_LENGTH]="";
+	char attName7[MAX_VARCHAR_LENGTH]="mbr";
 	char constraintName0[] = "yearUnique";
 	char constraintName[] = "firstnameUnique";
 	char constraintName3[MAX_VARCHAR_LENGTH]="";
@@ -495,25 +470,28 @@ void AK_unique_test() {
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue, attName, tableName, AK_read_constraint_unique(tableName, attName, newValue));
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue2, attName, tableName, AK_read_constraint_unique(tableName, attName, newValue2));
 	}
-	printf("\nTrying to set UNIQUE constraint on attributes %s of table %s...\n\n", attName3, tableName);
+	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s...\n\n", attName3, tableName);
 	result = Ak_set_constraint_unique(tableName, attName3, constraintName3);
 	AK_print_table("AK_constraints_unique");
 	if(result == EXIT_SUCCESS)
 	{
-		printf("\nChecking if combination of values %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue3, attName3, tableName, AK_read_constraint_unique(tableName, attName3, newValue3));
-		printf("\nChecking if combination of values %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue4, attName3, tableName, AK_read_constraint_unique(tableName, attName3, newValue4));
-		printf("\nChecking if combination of values %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue5, attName3, tableName, AK_read_constraint_unique(tableName, attName3, newValue5));
+		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue3, attName3, tableName, AK_read_constraint_unique(tableName, attName3, newValue3));
+		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue4, attName3, tableName, AK_read_constraint_unique(tableName, attName3, newValue4));
+		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue5, attName3, tableName, AK_read_constraint_unique(tableName, attName3, newValue5));
 	}
-	printf("\nTrying to set UNIQUE constraint on attributes %s of table %s...\n\n", attName6, tableName);
+	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s...\n\n", attName6, tableName);
 	result = Ak_set_constraint_unique(tableName, attName6, constraintName6);
 	AK_print_table("AK_constraints_unique");
 	if(result == EXIT_SUCCESS)
 	{
-		printf("\nChecking if combination of values %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue6, attName6, tableName, AK_read_constraint_unique(tableName, attName6, newValue6));
-		printf("\nChecking if combination of values %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue7, attName6, tableName, AK_read_constraint_unique(tableName, attName6, newValue7));
+		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue6, attName6, tableName, AK_read_constraint_unique(tableName, attName6, newValue6));
+		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue7, attName6, tableName, AK_read_constraint_unique(tableName, attName6, newValue7));
 	}
-	printf("\nTrying to set UNIQUE constraint on attributes %s of table %s AGAIN...\n\n", attName6, tableName);
+	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s AGAIN...\n\n", attName6, tableName);
 	result = Ak_set_constraint_unique(tableName, attName6, constraintName6);
+	AK_print_table("AK_constraints_unique");
+	printf("\nTrying to set UNIQUE constraint with name %s AGAIN...\n\n", constraintName6);
+	result = Ak_set_constraint_unique(tableName, attName7, constraintName6);
 	AK_print_table("AK_constraints_unique");
 	printf("\nTest succeeded.");
 	AK_EPI;

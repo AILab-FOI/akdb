@@ -114,11 +114,11 @@ void AK_constraint_names_test()
 	AK_print_table("AK_reference");
 	AK_print_table("AK_constraints_between");
 	
-	printf("\nChecking if constraint name: %s\nwould be unique in database...\n", constraintName1);
+	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName1);
 	result = Ak_check_constraint_name(constraintName1);
 	printf("Yes (0) No (-1): %d\n\n", result);
 	
-	printf("\nChecking if constraint name: %s\nwould be unique in database...\n", constraintName2);
+	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName2);
 	result = Ak_check_constraint_name(constraintName2);
 	printf("Yes (0) No (-1): %d\n\n", result);
 	
