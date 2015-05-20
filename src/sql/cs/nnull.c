@@ -30,10 +30,21 @@
 int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName) {
 	int i;
 	int numRows;
+	int newConstraint;
 	int notNullViolated = 1;
+	int uniqueConstraintName;
 	struct list_node *row;
 	struct list_node *attribute;
 	AK_PRO;
+
+	newConstraint = AK_read_constraint_not_null(tableName, attName, NULL);
+
+	if(newConstraint == EXIT_ERROR)
+	{
+		printf("\nFAILURE!\nNOT NULL constraint already exists on attribute: %s\nof table: %s\n\n", attName, tableName);
+		return EXIT_ERROR;
+		AK_EPI;
+	}
 	
 	numRows = AK_get_num_records(tableName);
 	
@@ -61,11 +72,14 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 		notNullViolated = 0;
 	}
 
-	/*Check if constraintName already exists in database or if NOT NULL constraint is already set on attribute attName of table tableName
-	It should be done by using a function from new file or in system catalog
-	Put the rest of the code in if() and execute it if constraintName doesn't already exist in database and if NOT NULL constraint
-	isn't already set on attribute attName of table tableName (if pair of tableName and attName doesn't already exist in some row of
-	table AK_constraints_not_null)*/
+	uniqueConstraintName = Ak_check_constraint_name(constraintName);
+
+	if(uniqueConstraintName == EXIT_ERROR)
+	{
+		printf("\nFAILURE!\nConstraint name: %s\nalready exists in database\n\n", constraintName);
+		return EXIT_ERROR;
+		AK_EPI;
+	}
 	
 	if(notNullViolated == 0)
 	{
@@ -80,7 +94,13 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 		Ak_insert_row(row_root);
 		Ak_DeleteAll_L3(&row_root);
 		AK_free(row_root);
+		printf("\nNOT NULL constraint is set on attribute: %s\nof table: %s\n\n", attName, tableName);
 		return EXIT_SUCCESS;
+		AK_EPI;
+	}
+	else
+	{
+		return EXIT_ERROR;
 		AK_EPI;
 	}
 }
@@ -164,6 +184,9 @@ void AK_null_test() {
 	{
 		printf("\nChecking if attribute %s of table %s can contain NULL sign...\nYes (0) No (-1): %d\n\n", attName, tableName, AK_read_constraint_not_null(tableName, attName, newValue));
 	}
+	printf("\nTrying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attName, tableName);
+	result = AK_set_constraint_not_null(tableName, attName, constraintName);
+	AK_print_table("AK_constraints_not_null");
 	printf("\nTest succeeded.");
 	AK_EPI;
 }

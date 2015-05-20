@@ -1,5 +1,5 @@
 /**
-@file nnull.h Header file that provides data structures for not null constraint
+@file constraint_names.h Header file that provides functions and data structures for checking if constraint name is unique in database
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -17,16 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
-#ifndef NNULL
-#define NNULL
+#ifndef CONSTRAINT_NAMES
+#define CONSTRAINT_NAMES
 
 #include "../../file/table.h"
 #include "../../file/fileio.h"
 #include "../../auxi/mempro.h"
-#include "constraint_names.h"
 
-int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName);
-int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue);
-void AK_null_test();
+int Ak_check_constraint_name(char* constraintName);
+void AK_constraint_names_test();
 
 #endif

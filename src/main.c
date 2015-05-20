@@ -61,6 +61,7 @@
 // Query processing
 #include "opti/query_optimization.h"
 // Constraints
+#include "sql/cs/constraint_names.h"
 #include "sql/cs/reference.h"
 #include "sql/cs/between.h"
 #include "sql/cs/nnull.h"
@@ -133,7 +134,8 @@ function fun[] = {
     {"AK_block_test", &AK_memoman_test2},
     {"AK_select_test", &AK_select_test},
     {"AK_thread_safe_block_access_test", &AK_thread_safe_block_access_test},
-    {"AK_lo_test", &AK_lo_test}
+    {"AK_lo_test", &AK_lo_test},
+    {"AK_constraint_names_test", &AK_constraint_names_test}
 };
 /**
 Main program function

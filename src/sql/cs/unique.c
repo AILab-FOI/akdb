@@ -32,12 +32,33 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	int i;
 	int j;
 	int numRows;
+	int newConstraint;
 	int uniqueViolated = 1;
+	int uniqueConstraintName;
+	char attributeName[MAX_VARCHAR_LENGTH]="";
+	char values[MAX_VARCHAR_LENGTH]="";
 	struct list_node *row;
 	struct list_node *row2;
 	struct list_node *attribute;
 	struct list_node *attribute2;
 	AK_PRO;
+
+	strcat(attributeName, "tableName");
+	strcat(attributeName, SEPARATOR);
+	strcat(attributeName, "attributeName");
+
+	strcat(values, tableName);
+	strcat(values, SEPARATOR);
+	strcat(values, attName);
+
+	newConstraint = AK_read_constraint_unique("AK_constraints_unique", attributeName, values);
+
+	if(newConstraint == EXIT_ERROR)
+	{
+		printf("\nFAILURE!\nUNIQUE constraint already exists on (combination of) attribute(s): %s\nof table: %s\n\n", attName, tableName);
+		return EXIT_ERROR;
+		AK_EPI;
+	}
 	
 	numRows = AK_get_num_records(tableName);
 	
@@ -106,11 +127,14 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 		uniqueViolated = 0;
 	}
 
-	/*Check if constraintName already exists in database or if UNIQUE constraint is already set on attribute/s attName of table tableName
-	It should be done by using a function from new file or in system catalog
-	Put the rest of the code in if() and execute it if constraintName doesn't already exist in database and if UNIQUE constraint
-	isn't already set on attribute(s) attName of table tableName (if pair of tableName and attName(s) doesn't already exist in some row of
-	table AK_constraints_unique)*/
+	uniqueConstraintName = Ak_check_constraint_name(constraintName);
+
+	if(uniqueConstraintName == EXIT_ERROR)
+	{
+		printf("\nFAILURE!\nConstraint name: %s\nalready exists in database\n\n", constraintName);
+		return EXIT_ERROR;
+		AK_EPI;
+	}
 
 	if(uniqueViolated == 0)
 	{
@@ -125,6 +149,12 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 		Ak_insert_row(row_root);
 		Ak_DeleteAll_L3(&row_root);
 		AK_free(row_root);
+		printf("\nUNIQUE constraint is set on attribute(s): %s\nof table: %s\n\n", attName, tableName);
+		return EXIT_SUCCESS;
+		AK_EPI;
+	}
+	else
+	{
 		return EXIT_SUCCESS;
 		AK_EPI;
 	}
@@ -145,30 +175,47 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 
 int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 	char *value;
+	char *substring;
 	//Because strtok could create problems for newValue...
 	char newValueCopy[MAX_VARCHAR_LENGTH];
 	int numOfValues = 0;
 	AK_PRO;
 	
-	strcpy(newValueCopy, newValue);
-
-	value = strtok(newValueCopy, SEPARATOR);
-	while(value != NULL)
+	substring = strstr(attName, "obj_id");
+	
+	//If there's check if combination of values of attributes tableName and attributeName of table AK_constraints_unique are UNIQUE numOfValues is 2
+	//First value is value of attribute tableName and second value is value of attribute attributeName which could be made of more SEPARATORS and then it would seem like
+	//there are more than two values in newValue[]
+	//Combination of values of attributes tableName and attributeName is only needed UNIQUE combination in table AK_constraints_unique (to check if UNIQUE constraint is already set on same attribute of a same table)
+	//Values of attribute obj_id (alone) will be UNIQUE when PRIMARY KEY will be created on table AK_constraints_unique
+	//UNIQUENESS of value of attribute constraintName is checked with Ak_check_constraint_name among all constraint names in database so there's
+	//no need to set UNIQUE constraint on that attribute
+	if(strcmp(tableName, "AK_constraints_unique")==0 && substring==NULL)
 	{
-		//Every combination which contains NULl sign ( ) is UNIQUE
-		//http://www.postgresql.org/docs/current/interactive/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS
-		if(strcmp(value, " ") == 0)
+		numOfValues = 2;
+	}
+	else
+	{
+		strcpy(newValueCopy, newValue);
+
+		value = strtok(newValueCopy, SEPARATOR);
+		while(value != NULL)
 		{
-			return EXIT_SUCCESS;
-			AK_EPI;	
+			//Every combination which contains NULL sign ( ) is UNIQUE
+			//http://www.postgresql.org/docs/current/interactive/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS
+			if(strcmp(value, " ") == 0)
+			{
+				return EXIT_SUCCESS;
+				AK_EPI;	
+			}
+			numOfValues++;
+			value = strtok(NULL, SEPARATOR);
 		}
-		numOfValues++;
-		value = strtok(NULL, SEPARATOR);
 	}
 
 	int numRecords = AK_get_num_records("AK_constraints_unique");
 	
-	if(numRecords != 0)
+	if(numRecords !=0 && strcmp(tableName, "AK_constraints_unique")!=0)
 	{
 		struct list_node *row;
 		struct list_node *attribute;
@@ -232,6 +279,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 						index++;
 						value2 = strtok(NULL, SEPARATOR);
 					}
+
 					
 					for(h=0; h<numRows; h++)
 					{
@@ -263,6 +311,82 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 					return EXIT_SUCCESS;
 					AK_EPI;
 				}
+			}
+		}
+		
+		return EXIT_SUCCESS;
+		AK_EPI;
+	}
+	else if(numRecords !=0 && strcmp(tableName, "AK_constraints_unique")==0)
+	{
+		struct list_node *row = AK_get_row(0, tableName);
+		int numOfAttsInTable = Ak_Size_L2(row);
+		int positionsOfAtts[numOfAttsInTable];
+		int numOfImpAttPos = 0;
+		char attNameCopy[MAX_VARCHAR_LENGTH];
+		char *nameOfOneAtt;
+		char namesOfAtts[numOfAttsInTable][MAX_VARCHAR_LENGTH];
+		struct list_node *attribute2;
+		
+		strcpy(attNameCopy, attName);
+
+		nameOfOneAtt = strtok(attNameCopy, SEPARATOR);
+		while(nameOfOneAtt != NULL)
+		{
+			positionsOfAtts[numOfImpAttPos] = AK_get_attr_index(tableName, nameOfOneAtt) + 1;
+			strcpy(namesOfAtts[numOfImpAttPos], nameOfOneAtt);
+			numOfImpAttPos++;
+
+			nameOfOneAtt = strtok(NULL, SEPARATOR);
+		}
+		
+		int h;
+		int impoIndexInArray;
+		int match;
+		int index = 0;
+		char *value2;
+		char newValueCopy2[MAX_VARCHAR_LENGTH];
+		char values[numOfValues][MAX_VARCHAR_LENGTH];
+
+		strcpy(newValueCopy2, newValue);
+
+		value2 = strtok(newValueCopy2, SEPARATOR);
+
+		strcpy(values[index], value2);
+
+		if(numOfValues==2)
+		{
+			index++;
+			value2 = strtok(NULL, "");
+			strcpy(values[index], value2+strlen(SEPARATOR)-1);
+		}
+
+		int numRows = AK_get_num_records(tableName);
+
+		for(h=0; h<numRows; h++)
+		{
+			row = AK_get_row(h, tableName);
+
+			match = 1;
+			
+			for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos) && (match==1); impoIndexInArray++)
+			{
+				attribute2 = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
+				if(AK_tuple_to_string(attribute2) == NULL)
+				{
+					match = 0;
+				}
+				else if(strcmp(values[impoIndexInArray], AK_tuple_to_string(attribute2)) != 0)
+				{
+					match = 0 ;
+				}
+
+			}
+			
+			if(match == 1)
+			{
+				return EXIT_ERROR;
+				AK_EPI;
 			}
 		}
 		
@@ -360,6 +484,9 @@ void AK_unique_test() {
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue0, attName0, tableName, AK_read_constraint_unique(tableName, attName0, newValue0));
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue00, attName0, tableName, AK_read_constraint_unique(tableName, attName0, newValue00));
 	}
+	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s AGAIN...\n\n", attName0, tableName);
+	result = Ak_set_constraint_unique(tableName, attName0, constraintName0);
+	AK_print_table("AK_constraints_unique");
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s...\n\n", attName, tableName);
 	result = Ak_set_constraint_unique(tableName, attName, constraintName);
 	AK_print_table("AK_constraints_unique");
@@ -385,6 +512,9 @@ void AK_unique_test() {
 		printf("\nChecking if combination of values %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue6, attName6, tableName, AK_read_constraint_unique(tableName, attName6, newValue6));
 		printf("\nChecking if combination of values %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue7, attName6, tableName, AK_read_constraint_unique(tableName, attName6, newValue7));
 	}
+	printf("\nTrying to set UNIQUE constraint on attributes %s of table %s AGAIN...\n\n", attName6, tableName);
+	result = Ak_set_constraint_unique(tableName, attName6, constraintName6);
+	AK_print_table("AK_constraints_unique");
 	printf("\nTest succeeded.");
 	AK_EPI;
 }
