@@ -169,7 +169,11 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 	//First value is value of attribute tableName and second value is value of attribute attributeName which could be made of more SEPARATORS and then it would seem like
 	//there are more than two values in newValue[]
 	//That combination is used to check if there's some UNIQUE constraint set on table AK_constraints_unique
-	if(strcmp(tableName, "AK_constraints_unique")==0)
+	//Combination of values of attributes tableName and attributeName is only needed UNIQUE combination in table AK_constraints_unique
+	//Values of attribute obj_id (alone) will be UNIQUE when PRIMARY KEY will be created on table AK_constraints_unique
+	//UNIQUENESS of value of attribute constraintName is checked with Ak_check_constraint_name among all constraint names in database so there's
+	//no need to set UNIQUE constraint on that attribute
+	if(strcmp(tableName, "AK_constraints_unique")==0 && strcmp(attName, "obj_id")!=0)
 	{
 		numOfValues = 2;
 	}
@@ -194,7 +198,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 
 	int numRecords = AK_get_num_records("AK_constraints_unique");
 	
-	if(numRecords !=0 && strcmp(tableName, "AK_constraints_unique")!=0)
+	if(numRecords !=0 && (strcmp(tableName, "AK_constraints_unique")!=0 || (strcmp(tableName, "AK_constraints_unique")==0 && strcmp(attName, "obj_id")==0)))
 	{
 		struct list_node *row;
 		struct list_node *attribute;
@@ -296,7 +300,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		return EXIT_SUCCESS;
 		AK_EPI;
 	}
-	else if(numRecords !=0 && strcmp(tableName, "AK_constraints_unique")==0)
+	else if(numRecords !=0 && strcmp(tableName, "AK_constraints_unique")==0 && strcmp(attName, "obj_id")!=0)
 	{
 		struct list_node *row = AK_get_row(0, tableName);
 		int numOfAttsInTable = Ak_Size_L2(row);
