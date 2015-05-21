@@ -247,14 +247,12 @@ void AK_view_test() {
    printf("\nRemoving view 'view6' and 'view7' by Obj_id...\n");
    printf("Obj_id for view6: %d\n", AK_get_view_obj_id("view6"));
    printf("Obj_id for view7: %d\n", AK_get_view_obj_id("view7"));
-   // Test faled - BUG in AK_view_remove_by_obj_id
-   //AK_view_remove_by_obj_id(112);
-   //AK_view_remove_by_obj_id(113);
-   AK_view_remove_by_obj_id("112");
-   AK_view_remove_by_obj_id("113");
-   
+    printf("\nTEST FALED!!!\n\n");   
+   AK_view_remove_by_obj_id(AK_malloc(sizeof(AK_get_view_obj_id("view6"))));
+   AK_view_remove_by_obj_id(AK_malloc(sizeof(AK_get_view_obj_id("view7"))));
+   // Function AK_view_remove_by_obj_id does not work!_tested by Lidija Lastavec   
    AK_print_table("AK_view");
-   printf("\nTEST FALED!!!\n\n");
+  
 
    printf("\nRenaming 'view3' to 'view300'...\n");
    AK_view_rename("view3","view300");
