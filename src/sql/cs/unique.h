@@ -1,21 +1,32 @@
-/* 
- * File:   unique.h
- * Author: domagoj
- *
- * Created on May 23, 2012, 10:27 AM
+/**
+@file unique.h Header file that provides functions and data structures for unique constraint
  */
-
-
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
+ */
 
 #ifndef UNIQUE
 #define UNIQUE
 
-#include "../../mm/memoman.h"
-#include "../../file/id.h"
+#include "../../file/table.h"
+#include "../../file/fileio.h"
 #include "../../auxi/mempro.h"
+#include "constraint_names.h"
 
-void Ak_set_constraint_unique(char* tableName, char* constraintName, char* attName);
-int AK_read_constraint_unique(char* tableName, char *newvalue, char* attNamepar);
+int Ak_set_constraint_unique(char* tableName, char attName[], char constraintName[]);
+int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]);
 void AK_unique_test();
 
 #endif

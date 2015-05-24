@@ -31,7 +31,8 @@
   * @return EXIT_SUCCESS if the block has been successfully read into memory, EXIT_ERROR otherwise
  */
 
-int AK_cache_block(int num, AK_mem_block *mem_block) {
+int AK_cache_block(int num, AK_mem_block *mem_block)
+{
     unsigned long timestamp;
     AK_block *block_cache;
     AK_block *block_cache_old;
@@ -56,20 +57,24 @@ int AK_cache_block(int num, AK_mem_block *mem_block) {
   * @brief Function initializes the global cache memory (variable db_cache)
   * @return EXIT_SUCCESS if the cache memory has been initialized, EXIT_ERROR otherwise
  */
-int AK_cache_AK_malloc() {
+int AK_cache_AK_malloc()
+{
     int i;
     AK_PRO;
-    if ((db_cache = (AK_db_cache *) AK_malloc(sizeof(AK_db_cache))) == NULL) {
+    if ((db_cache = (AK_db_cache *) AK_malloc(sizeof(AK_db_cache))) == NULL)
+    {
         AK_EPI;
         return EXIT_ERROR;
     }
 
     db_cache->next_replace = 0;
-    for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+    for (i = 0; i < MAX_CACHE_MEMORY; i++)
+    {
         db_cache->cache[ i ] = (AK_mem_block *) AK_malloc(sizeof(AK_mem_block));
         db_cache->cache[ i ]->block = (AK_block *) AK_malloc(sizeof(AK_block));
 
-        if ((AK_cache_block(i, db_cache->cache[ i ])) == EXIT_ERROR) {
+        if ((AK_cache_block(i, db_cache->cache[ i ])) == EXIT_ERROR)
+        {
             AK_EPI;
             return EXIT_ERROR;
         }
@@ -84,9 +89,11 @@ int AK_cache_AK_malloc() {
   * @brief Function initializes the global redo log memory (variable redo_log)
   * @return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
  */
-int AK_redo_log_AK_malloc() {
+int AK_redo_log_AK_malloc()
+{
     AK_PRO;
-    if ((redo_log = (AK_redo_log *) AK_malloc(sizeof ( AK_redo_log))) == NULL) {
+    if ((redo_log = (AK_redo_log *) AK_malloc(sizeof ( AK_redo_log))) == NULL)
+    {
         AK_EPI;
         return EXIT_ERROR;
     }
@@ -113,12 +120,14 @@ int AK_redo_log_AK_malloc() {
   *  @brief Function initializes the global query memory (variable query_mem)
   *  @return EXIT_SUCCESS if the query memory has been initialized, EXIT_ERROR otherwise
  */
-int AK_query_mem_AK_malloc() {
+int AK_query_mem_AK_malloc()
+{
     AK_PRO;
-	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Start query_mem_AK_malloc\n");
+    Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Start query_mem_AK_malloc\n");
 
     /// allocate memory for global variable query_mem
-    if ((query_mem = (AK_query_mem *) AK_malloc(sizeof ( AK_query_mem))) == NULL) {
+    if ((query_mem = (AK_query_mem *) AK_malloc(sizeof ( AK_query_mem))) == NULL)
+    {
         printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query memory \n");
         AK_EPI;
         exit(EXIT_ERROR);
@@ -126,7 +135,8 @@ int AK_query_mem_AK_malloc() {
 
     /// allocate memory for variable query_mem_lib which is used in query_mem->parsed
     AK_query_mem_lib * query_mem_lib;
-    if ((query_mem_lib = (AK_query_mem_lib *) AK_malloc(sizeof (AK_query_mem_lib))) == NULL) {
+    if ((query_mem_lib = (AK_query_mem_lib *) AK_malloc(sizeof (AK_query_mem_lib))) == NULL)
+    {
         printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query library memory \n");
         AK_EPI;
         exit(EXIT_ERROR);
@@ -134,7 +144,8 @@ int AK_query_mem_AK_malloc() {
 
     /// allocate memory for variable query_mem_dict which is used in query_mem->dictionary
     AK_query_mem_dict * query_mem_dict;
-    if ((query_mem_dict = (AK_query_mem_dict *) AK_malloc(sizeof (AK_query_mem_dict))) == NULL) {
+    if ((query_mem_dict = (AK_query_mem_dict *) AK_malloc(sizeof (AK_query_mem_dict))) == NULL)
+    {
         printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query dictionary memory \n");
         AK_EPI;
         exit(EXIT_ERROR);
@@ -142,7 +153,8 @@ int AK_query_mem_AK_malloc() {
 
     /// allocate memory for variable query_mem_result which is used in query_mem->result
     AK_query_mem_result * query_mem_result;
-    if ((query_mem_result = (AK_query_mem_result *) AK_malloc(sizeof (AK_query_mem_result))) == NULL) {
+    if ((query_mem_result = (AK_query_mem_result *) AK_malloc(sizeof (AK_query_mem_result))) == NULL)
+    {
         printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate query result memory \n");
         AK_EPI;
         exit(EXIT_ERROR);
@@ -150,7 +162,8 @@ int AK_query_mem_AK_malloc() {
 
     /// allocate memory for variable tuple_dict which is used in query_mem->dictionary->dictionary[]
     AK_tuple_dict * tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict));
-    if ((tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))) == NULL) {
+    if ((tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))) == NULL)
+    {
         printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple dictionary memory \n");
         AK_EPI;
         exit(EXIT_ERROR);
@@ -167,7 +180,7 @@ int AK_query_mem_AK_malloc() {
             memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));
             memcpy(query_mem->result,query_mem_result,sizeof(* query_mem_result));*/
 
-	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Success!\n");
+    Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Success!\n");
     AK_EPI;
     return EXIT_SUCCESS;
 }
@@ -177,24 +190,28 @@ int AK_query_mem_AK_malloc() {
  * @brief  Function initializes memory manager (cache, redo log and query memory)
  * @return EXIT_SUCCESS if the query memory manager has been initialized, EXIT_ERROR otherwise
  */
-int AK_memoman_init() {
+int AK_memoman_init()
+{
     AK_PRO;
     printf("AK_memoman_init: Initializing memory manager...\n");
 
-    if (AK_cache_AK_malloc() == EXIT_ERROR) {
+    if (AK_cache_AK_malloc() == EXIT_ERROR)
+    {
         printf("AK_memoman_init: ERROR. AK_cache_AK_malloc() failed.\n");
         AK_EPI;
         return EXIT_ERROR;
     }
 
-    if (AK_redo_log_AK_malloc() == EXIT_ERROR) {
+    if (AK_redo_log_AK_malloc() == EXIT_ERROR)
+    {
         printf("AK_memoman_init: ERROR. AK_redo_log_AK_malloc() failed.\n");
         AK_EPI;
         return EXIT_ERROR;
     }
 
-    if (AK_query_mem_AK_malloc() == EXIT_ERROR) {
-	AK_EPI;
+    if (AK_query_mem_AK_malloc() == EXIT_ERROR)
+    {
+        AK_EPI;
         printf("AK_memoman_init: ERROR. AK_query_mem_AK_malloc() failed.\n");
         return EXIT_ERROR;
     }
@@ -226,7 +243,8 @@ int AK_memoman_init() {
   * @param num block number (address)
   * @return segment start address
  */
-AK_mem_block *AK_get_block(int num) {
+AK_mem_block *AK_get_block(int num)
+{
     int i = 0;
     int min = 0;
     int pos;
@@ -241,59 +259,88 @@ AK_mem_block *AK_get_block(int num) {
     AK_PRO;
 
     /* search cache for already-cached block */
-    for (i = 0; i < MAX_CACHE_MEMORY; i++) {
-        if (db_cache->cache[i]->block->address == num) {
+    for (i = 0; i < MAX_CACHE_MEMORY; i++)
+    {
+        if (db_cache->cache[i]->block->address == num)
+        {
             found_in_cache = 1;
             pos = i;
             cached_block = db_cache->cache[i];
             break;
         }
     }
-    if (!found_in_cache) {
+    if (!found_in_cache)
+    {
+        //printf("Blok NOT FOUND IN CACHE!\n");
         /* find first empty slot in cache for block to be read into */
-        for (i = 0; i < MAX_CACHE_MEMORY; i++) {
-            if (db_cache->cache[i]->timestamp_read == -1) {
+        for (i = 0; i < MAX_CACHE_MEMORY; i++)
+        {
+            if (db_cache->cache[i]->timestamp_read == -1)
+            {
                 first_AK_free_mem_block = i;
                 break;
             }
         }
 
-        if (first_AK_free_mem_block != -1) {
-            if (AK_cache_block(num, db_cache->cache[ first_AK_free_mem_block ]) == EXIT_SUCCESS) {
+        if (first_AK_free_mem_block != -1)
+        {
+            if (AK_cache_block(num, db_cache->cache[ first_AK_free_mem_block ]) == EXIT_SUCCESS)
+            {
                 cached_block = db_cache->cache[first_AK_free_mem_block];
+                printf("USPJEH!\n");
             }
-        } else {
-            if (db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY) {
+        }
+        else
+        {
+            if (db_cache->cache[oldest_block]->dirty == BLOCK_DIRTY)
+            {
                 data_block = db_cache->cache[oldest_block]->block;
                 block_written = AK_write_block(data_block);
                 /// if block form cache can not be writed to DB file -> EXIT_ERROR
-                if (block_written != EXIT_SUCCESS) {
+                if (block_written != EXIT_SUCCESS)
+                {
                     AK_EPI;
                     exit(EXIT_ERROR);
                 }
+                else
+                {
+                    //printf("BLOK NIJE ZAPISAN!\n");
+                }
             }
-            if (AK_cache_block(num, db_cache->cache[ oldest_block ]) == EXIT_SUCCESS) {
+            if (AK_cache_block(num, db_cache->cache[ oldest_block ]) == EXIT_SUCCESS)
+            {
                 cached_block = db_cache->cache[ oldest_block ];
             }
         }
-    } else {
-        if (db_cache->cache[pos]->dirty == BLOCK_DIRTY) {
+    }
+    else
+    {
+        if (db_cache->cache[pos]->dirty == BLOCK_DIRTY)
+        {
             data_block = db_cache->cache[pos]->block;
             block_written = AK_write_block(data_block);
             /// if block form cache can not be writed to DB file -> EXIT_ERROR
-            if (block_written != EXIT_SUCCESS) {
+            if (block_written != EXIT_SUCCESS)
+            {
                 AK_EPI;
                 exit(EXIT_ERROR);
+            }
+            else
+            {
+                //printf("BLOK NIJE ZAPISAN!\n");
             }
         }
     }
     /*i = 1;*/
-    for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+    for (i = 0; i < MAX_CACHE_MEMORY; i++)
+    {
         if (db_cache->cache[i]->timestamp_read != -1 &&
-            db_cache->cache[i]->timestamp_read < db_cache->cache[ min ]->timestamp_read) {
+                db_cache->cache[i]->timestamp_read < db_cache->cache[ min ]->timestamp_read)
+        {
             min = i;
         }
     }
+    //printf("KESANI BLOK %i \n",cached_block);
     db_cache->next_replace = min;
     AK_EPI;
     return cached_block;
@@ -303,7 +350,8 @@ AK_mem_block *AK_get_block(int num) {
  * @author Alen Novosel.
  * @brief  Modify the "dirty" bit of a block, and update timestamps accordingly.
  */
-void AK_mem_block_modify(AK_mem_block* mem_block, int dirty) {
+void AK_mem_block_modify(AK_mem_block* mem_block, int dirty)
+{
     unsigned long timestamp;
     AK_PRO;
     mem_block->dirty = dirty;
@@ -318,13 +366,15 @@ void AK_mem_block_modify(AK_mem_block* mem_block, int dirty) {
  * @brief  Function re-read all the blocks from disk
  * @result EXIT_SUCCESS
  */
-int AK_refresh_cache() {
+int AK_refresh_cache()
+{
     int i;
     AK_block *new_block;
     AK_block *old_block;
 
     AK_PRO;
-    for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+    for (i = 0; i < MAX_CACHE_MEMORY; i++)
+    {
         new_block = AK_read_block(db_cache->cache[i]->block->address);
         old_block = db_cache->cache[i]->block;
         db_cache->cache[i]->block = new_block;
@@ -335,12 +385,13 @@ int AK_refresh_cache() {
 }
 
 /**
-  * @author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić
-  * @brief Function for geting addresses of some table
-  * @param table table name that you search for
-  * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
- */
-table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
+* @author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić,Lovro Predovan
+* @brief Function for geting addresses of some table
+* @param table table name that you search for
+* @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
+*/
+table_addresses *AK_get_index_segment_addresses(char * segmentName)
+{
     int i = 0;
     int AK_freeVar = 0;
     int data_adr = 0;
@@ -349,23 +400,21 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
     int address_sys;
     char name_sys[MAX_ATT_NAME];
     char *sys_table;
-    AK_PRO;
-    switch (segmentType) {
-        case SEGMENT_TYPE_TABLE:
-            sys_table = "AK_relation";
-            break;
-        case SEGMENT_TYPE_INDEX:
-            sys_table = "AK_index";
-            break;
-    }
+    sys_table = "AK_index";
 
-	Ak_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
+    AK_PRO;
+
+
+    Ak_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table and %s \n\n\n\n", sys_table,segmentName);
     AK_mem_block *mem_block = AK_get_block(0);
 
-    for (i = 0; i < DATA_BLOCK_SIZE; i++) {
-        memset(name_sys, 0, MAX_ATT_NAME);
+    //printf("get_segment_addresses: Serching for %s table and %s \n\n\n\n", sys_table,segmentName);
+    for (i = 0; i < DATA_BLOCK_SIZE; i++)
+    {
 
-        if (mem_block->block->tuple_dict[i].address == FREE_INT) {
+        memset(name_sys, 0, MAX_ATT_NAME);
+        if (mem_block->block->tuple_dict[i].address == FREE_INT)
+        {
             break;
         }
 
@@ -373,38 +422,38 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
         data_size = mem_block->block->tuple_dict[i].size;
         data_type = mem_block->block->tuple_dict[i].type;
         memcpy(name_sys, mem_block->block->data + data_adr, data_size);
-
         i++;
         data_adr = mem_block->block->tuple_dict[i].address;
         data_size = mem_block->block->tuple_dict[i].size;
         data_type = mem_block->block->tuple_dict[i].type;
         memcpy(&address_sys, mem_block->block->data + data_adr, sizeof(int));
 
-        if (strcmp(name_sys, sys_table) == 0) {
-			Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses: Found the address of the %s table: %d \n", sys_table, address_sys);
+        if (strcmp(name_sys, sys_table) == 0)
+        {
+            Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses: Found the address of the %s table: %d \n", sys_table, address_sys);
             break;
         }
     }
 
+
     mem_block = AK_get_block(address_sys);
     table_addresses * addresses = (table_addresses *) AK_malloc(sizeof (table_addresses));
 
-    //memset(addresses->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
-    //memset(addresses->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
-    for (AK_freeVar = 0; AK_freeVar < MAX_EXTENTS_IN_SEGMENT; AK_freeVar++) {
+    for (AK_freeVar = 0; AK_freeVar < MAX_EXTENTS_IN_SEGMENT; AK_freeVar++)
+    {
         addresses->address_from[AK_freeVar] = 0;
         addresses->address_to[AK_freeVar] = 0;
     }
-
 
     char name[MAX_VARCHAR_LENGTH];
     int address_from;
     int address_to;
     int j = 0;
-    for (i = 0; i < DATA_BLOCK_SIZE; i++) {
+    for (i = 0; i < DATA_BLOCK_SIZE; i++)
+    {
         if (mem_block->block->tuple_dict[i].type == FREE_INT)
             break;
-            if ( (mem_block->block->last_tuple_dict_id) <= i )
+        if ( (mem_block->block->last_tuple_dict_id) <= i )
             break;
         i++;
         memcpy(name, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
@@ -413,16 +462,107 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
         memcpy(&address_from, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
         i++;
         memcpy(&address_to, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
-        //if found the table that addresses we need
-        if (strcmp(name, segmentName) == 0) {
+
+        //SEGMENT NAME AND OUR TABLE WE WANT TO PRINT ARE THE SAME
+        if (strcmp(name, segmentName) == 0)
+        {
             addresses->address_from[j] = address_from;
             addresses->address_to[j] = address_to;
             j++;
-			Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
+            Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
         }
-        if (segmentType == SEGMENT_TYPE_INDEX) {
+
             i += 2;
+
+    }
+    //printf("RESULTS FOR TABLE (%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
+    AK_EPI;
+    return addresses;
+}
+
+
+/**
+* @author Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić
+* @brief Function for geting addresses of some table
+* @param table table name that you search for
+* @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
+*/
+table_addresses *AK_get_segment_addresses(char * segmentName)
+{
+    int i = 0;
+    int AK_freeVar = 0;
+    int data_adr = 0;
+    int data_size = 0;
+    int data_type = 0;
+    int address_sys;
+    char name_sys[MAX_ATT_NAME];
+    char *sys_table;
+    sys_table = "AK_relation";
+
+    AK_PRO;
+
+    Ak_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
+    AK_mem_block *mem_block = AK_get_block(0);
+    for (i = 0; i < DATA_BLOCK_SIZE; i++)
+    {
+        memset(name_sys, 0, MAX_ATT_NAME);
+        if (mem_block->block->tuple_dict[i].address == FREE_INT)
+        {
+            break;
         }
+        data_adr = mem_block->block->tuple_dict[i].address;
+        data_size = mem_block->block->tuple_dict[i].size;
+        data_type = mem_block->block->tuple_dict[i].type;
+        memcpy(name_sys, mem_block->block->data + data_adr, data_size);
+        i++;
+        data_adr = mem_block->block->tuple_dict[i].address;
+        data_size = mem_block->block->tuple_dict[i].size;
+        data_type = mem_block->block->tuple_dict[i].type;
+        memcpy(&address_sys, mem_block->block->data + data_adr, sizeof(int));
+        if (strcmp(name_sys, sys_table) == 0)
+        {
+            Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses: Found the address of the %s table: %d \n", sys_table, address_sys);
+            break;
+        }
+    }
+    mem_block = AK_get_block(address_sys);
+    table_addresses * addresses = (table_addresses *) AK_malloc(sizeof (table_addresses));
+//memset(addresses->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
+//memset(addresses->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
+    for (AK_freeVar = 0; AK_freeVar < MAX_EXTENTS_IN_SEGMENT; AK_freeVar++)
+    {
+        addresses->address_from[AK_freeVar] = 0;
+        addresses->address_to[AK_freeVar] = 0;
+    }
+    char name[MAX_VARCHAR_LENGTH];
+    int address_from;
+    int address_to;
+    int j = 0;
+    for (i = 0; i < DATA_BLOCK_SIZE; i++)
+    {
+        if (mem_block->block->tuple_dict[i].type == FREE_INT)
+            break;
+        if ( (mem_block->block->last_tuple_dict_id) <= i )
+            break;
+        i++;
+        memcpy(name, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
+        name[ mem_block->block->tuple_dict[i].size] = '\0';
+        i++;
+        memcpy(&address_from, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
+        i++;
+        memcpy(&address_to, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
+//if found the table that addresses we need
+        if (strcmp(name, segmentName) == 0)
+        {
+            addresses->address_from[j] = address_from;
+            addresses->address_to[j] = address_to;
+            j++;
+            Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
+        }
+        /*if (segmentType == SEGMENT_TYPE_INDEX)
+        {
+            i += 2;
+        }*/
     }
     AK_EPI;
     return addresses;
@@ -434,10 +574,11 @@ table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType) {
   * @param table table name that you search for
   * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
  */
-table_addresses *AK_get_table_addresses(char *table) {
+table_addresses *AK_get_table_addresses(char *table)
+{
     AK_PRO;
     table_addresses* ret;
-    ret = AK_get_segment_addresses(table, SEGMENT_TYPE_TABLE);
+    ret = AK_get_segment_addresses(table);
     AK_EPI;
     return ret;
 }
@@ -448,10 +589,11 @@ table_addresses *AK_get_table_addresses(char *table) {
   * @param index index name that you search for
   * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
  */
-table_addresses *AK_get_index_addresses(char * index) {
+table_addresses *AK_get_index_addresses(char * index)
+{
     AK_PRO;
     table_addresses* ret;
-    ret = AK_get_segment_addresses(index, SEGMENT_TYPE_INDEX);
+    ret = AK_get_index_segment_addresses(index);
     AK_EPI;
     return ret;
 }
@@ -462,31 +604,37 @@ table_addresses *AK_get_index_addresses(char * index) {
   * @param address addresses of extents
   * @return address of the block to write in
  */
-int AK_find_AK_free_space(table_addresses * addresses) {
+int AK_find_AK_free_space(table_addresses * addresses)
+{
     AK_mem_block *mem_block;
     int from = 0, to = 0, j = 0, i = 0;
     AK_PRO;
-	Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: Searching for block that has AK_free space < 500 \n");
+    Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: Searching for block that has AK_free space < 500 \n");
 
-    for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++) {
-        if (addresses->address_from != 0) {
+    for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++)
+    {
+        if (addresses->address_from != 0)
+        {
             from = addresses->address_from[j];
             to = addresses->address_to[j];
 
             //searching block
-            for (i = from; i <= to; i++) {
+            for (i = from; i <= to; i++)
+            {
                 mem_block = AK_get_block(i);
                 int AK_free_space_on = mem_block->block->AK_free_space;
 
-				Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: FREE SPACE %d\n", mem_block->block->AK_free_space);
+                Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: FREE SPACE %d\n", mem_block->block->AK_free_space);
 
                 if ((AK_free_space_on < MAX_FREE_SPACE_SIZE) &&
-                        (mem_block->block->last_tuple_dict_id < MAX_LAST_TUPLE_DICT_SIZE_TO_USE)) {//found AK_free block to write
+                        (mem_block->block->last_tuple_dict_id < MAX_LAST_TUPLE_DICT_SIZE_TO_USE))  //found AK_free block to write
+                {
                     AK_EPI;
                     return i;
                 }
             }
-        } else break;
+        }
+        else break;
     }
 
     //I cant call function from memoman must consider another solution to place these functions
@@ -510,12 +658,13 @@ int AK_find_AK_free_space(table_addresses * addresses) {
   * @return address of new extent, otherwise EXIT_ERROR
 
  */
-int AK_init_new_extent(char *table_name, int extent_type) {
-	char *sys_table;
+int AK_init_new_extent(char *table_name, int extent_type)
+{
+    char *sys_table;
 
-	int old_size = 0;
-	int new_size = 0;
-	table_addresses *addresses = (table_addresses *) AK_get_segment_addresses(table_name, SEGMENT_TYPE_TABLE);
+    int old_size = 0;
+    int new_size = 0;
+    table_addresses *addresses = (table_addresses *) AK_get_segment_addresses(table_name);
     int block_address = addresses->address_from[0]; //before 1
     int block_written;
 
@@ -525,13 +674,14 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     int end_address;
     struct list_node *row_root;
     int obj_id = 0;
-	//!!! to correct header BUG iterate through header from 0 to N-th block while there is
-	//header attributes. Than create header and pass it to function for extent creation below.
-	//Current implementation works only with tables with max MAX_ATTRIBUTES.
-	int i = 0;
+    //!!! to correct header BUG iterate through header from 0 to N-th block while there is
+    //header attributes. Than create header and pass it to function for extent creation below.
+    //Current implementation works only with tables with max MAX_ATTRIBUTES.
+    int i = 0;
     AK_PRO;
 
-    for (i = 0; i < MAX_EXTENTS_IN_SEGMENT; i++) {
+    for (i = 0; i < MAX_EXTENTS_IN_SEGMENT; i++)
+    {
         if (addresses->address_from[i] == 0)
             break;
         new_size = addresses->address_to[i] - addresses->address_from[i];
@@ -541,30 +691,32 @@ int AK_init_new_extent(char *table_name, int extent_type) {
 
     old_size++;
 
-    if ((start_address = AK_new_extent(1, old_size, extent_type, mem_block->block->header)) == EXIT_ERROR) {
+    if ((start_address = AK_new_extent(1, old_size, extent_type, mem_block->block->header)) == EXIT_ERROR)
+    {
         printf("AK_init_new_extent: Could not allocate the new extent\n");
         AK_EPI;
         return EXIT_ERROR;
     }
-	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", start_address, old_size, extent_type);
+    Ak_dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", start_address, old_size, extent_type);
 
-    switch (extent_type) {
-        case SEGMENT_TYPE_TABLE:
-            RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
-            sys_table = "AK_relation";
-            break;
-        case SEGMENT_TYPE_INDEX:
-            RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
-            sys_table = "AK_index";
-            break;
-        case SEGMENT_TYPE_TRANSACTION:
-            RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
-            printf("Not implemented yet!\n");
-            break;
-        case SEGMENT_TYPE_TEMP:
-            RESIZE_FACTOR = EXTENT_GROWTH_TEMP;
-            printf("Not implemented yet!\n");
-            break;
+    switch (extent_type)
+    {
+    case SEGMENT_TYPE_TABLE:
+        RESIZE_FACTOR = EXTENT_GROWTH_TABLE;
+        sys_table = "AK_relation";
+        break;
+    case SEGMENT_TYPE_INDEX:
+        RESIZE_FACTOR = EXTENT_GROWTH_INDEX;
+        sys_table = "AK_index";
+        break;
+    case SEGMENT_TYPE_TRANSACTION:
+        RESIZE_FACTOR = EXTENT_GROWTH_TRANSACTION;
+        printf("Not implemented yet!\n");
+        break;
+    case SEGMENT_TYPE_TEMP:
+        RESIZE_FACTOR = EXTENT_GROWTH_TEMP;
+        printf("Not implemented yet!\n");
+        break;
     }
 
     end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
@@ -587,17 +739,21 @@ int AK_init_new_extent(char *table_name, int extent_type) {
  * @brief Function that flushes memory blocks to disk file
  * @return EXIT_SUCCESS
  */
-int AK_flush_cache() {
+int AK_flush_cache()
+{
     int i = 0;
-	int block_written;
+    int block_written;
     AK_block *data_block;
     AK_PRO;
-	while (i < MAX_CACHE_MEMORY) {
-        if (db_cache->cache[i]->dirty == BLOCK_DIRTY) {
+    while (i < MAX_CACHE_MEMORY)
+    {
+        if (db_cache->cache[i]->dirty == BLOCK_DIRTY)
+        {
             data_block = db_cache->cache[i]->block;
             block_written = AK_write_block(data_block);
             /// if block form cache can not be writed to DB file -> EXIT_ERROR
-            if (block_written != EXIT_SUCCESS) {
+            if (block_written != EXIT_SUCCESS)
+            {
                 AK_EPI;
                 exit(EXIT_ERROR);
             }
@@ -608,7 +764,8 @@ int AK_flush_cache() {
     return EXIT_SUCCESS;
 }
 
-void AK_memoman_test() {
+void AK_memoman_test()
+{
     int i;
     AK_PRO;
 
@@ -617,19 +774,23 @@ void AK_memoman_test() {
     AK_EPI;
 }
 
-void AK_memoman_test2() {
+void AK_memoman_test2()
+{
     int i;
-    int aa=0;
+    //int aa=0;
+    int aa=406;
     AK_PRO;
-printf("\tPick up block from 0 to: %d \n",AK_allocationbit->last_allocated );
+    printf("\tPick up block from 0 to: %d \n",AK_allocationbit->last_allocated );
 
- scanf("%d", &aa);
- if(aa>=0 && aa<AK_allocationbit->last_allocated){
- printf("\n\tFirst goes dump of block from HDD:\n");
- AK_print_block(NULL, aa, "Memoman_test2_HDD",stdout);
- printf("\n\n\n");
- printf("\n\n\t Then dump of block from cache:\n");
- AK_print_block(db_cache->cache[aa]->block, aa, "Memoman_test2_Cache",stdout);
-   }
-   AK_EPI;
+    scanf("%d", &aa);
+    if(aa>=0 && aa<AK_allocationbit->last_allocated)
+    {
+        printf("\n\tFirst goes dump of block from HDD:\n");
+        AK_print_block(NULL, aa, "Memoman_test2_HDD",stdout);
+        printf("\n\n\n");
+
+        //printf("\n\n\t Then dump of block from cache:\n");
+        //AK_print_block(db_cache->cache[aa]->block, aa, "Memoman_test2_Cache",stdout);
+    }
+    AK_EPI;
 }
