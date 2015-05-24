@@ -68,6 +68,26 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 			memcpy(&header[head + num_att1], &tbl2_temp_block->header[head], sizeof (tbl2_temp_block->header[head]));
 			head++;
 		}
+
+		/* renaming column names which are same in both tables */
+		for ( i = 0; i < num_att1 + num_att2; i++ ) {
+			for ( j = i + 1; j < num_att1 + num_att2; j++ ) {
+				if ( strcmp( header[ i ].att_name, header[ j ].att_name ) == 0 ) {
+					char column_name[ MAX_ATT_NAME ];  // name of column which is same in both tables
+
+					strcpy( column_name, header[ i ].att_name );
+
+					strcpy( header[ i ].att_name, srcTable1 );
+					strcat( header[ i ].att_name, "." );
+					strcat( header[ i ].att_name, column_name );
+
+					strcpy( header[ j ].att_name, srcTable2 );
+					strcat( header[ j ].att_name, "." );
+					strcat( header[ j ].att_name, column_name );
+					break;
+				}
+			}
+		}
 		
 		/* initializing new table with header */
 		AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
