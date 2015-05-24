@@ -97,14 +97,13 @@ int Ak_check_constraint_name(char* constraintName)
 /**
   * @author Nenad Makar 
   * @brief Function tests if constraint name would be unique in database
-  * 	Before or after this test you could run some test for some constraint (NOT NULL or...) and then run this test again to see the results
   * @return No return value
   */
 
 void AK_constraint_names_test()
 {
-	char* constraintName1 = "firstnameNotNull";
-	char* constraintName2 = "lastnameNotNull";
+	char* constraintName1 = "nameUnique";
+	char* constraintName2 = "nameUNIQUE";
 	int result;
 	AK_PRO;
 	

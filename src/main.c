@@ -81,6 +81,7 @@
 void help();
 void show_test();
 void choose_test();
+void set_catalog_constraints();
 //void run_test();
 typedef struct {
     char name[40];
@@ -173,6 +174,7 @@ int main(int argc, char * argv[])
                     int ans;
                     ans = (int)strtol(argv[2], NULL, 10)-1;
                     AK_create_test_tables();
+                    set_catalog_constraints();
                     fun[ans].func();
                 }
                 /*component test area --- end */
@@ -233,6 +235,7 @@ void choose_test()
     AK_PRO;
     int ans=-1;
     AK_create_test_tables();
+    set_catalog_constraints();
     while(ans)
     {
         printf("\n\n\n");
@@ -254,5 +257,49 @@ void choose_test()
             ans++;
         }
     }
+    AK_EPI;
+}
+void set_catalog_constraints()
+{
+    AK_PRO;
+    int retValue;
+    //Set PRIMARY KEY constraint on all tables of system catalog when it' s implemented
+
+    //NOT NULL constraints on table AK_constraints_not_null
+    retValue = AK_set_constraint_not_null("AK_constraints_not_null", "tableName", "tableNameNotNull");
+    retValue = AK_set_constraint_not_null("AK_constraints_not_null", "constraintName", "constraintNameNotNull");
+    retValue = AK_set_constraint_not_null("AK_constraints_not_null", "attributeName", "attributeNameNotNull");
+    //NOT NULL constraints on table AK_constraints_unique
+    retValue = AK_set_constraint_not_null("AK_constraints_unique", "tableName", "tableName2NotNull");
+    retValue = AK_set_constraint_not_null("AK_constraints_unique", "constraintName", "constraintName2NotNull");
+    retValue = AK_set_constraint_not_null("AK_constraints_unique", "attributeName", "attributeName2NotNull");
+    //NOT NULL constraints on table AK_sequence
+    retValue = AK_set_constraint_not_null("AK_sequence", "name", "nameNotNull");
+    retValue = AK_set_constraint_not_null("AK_sequence", "current_value", "current_valueNotNull");
+    retValue = AK_set_constraint_not_null("AK_sequence", "increment", "incrementNotNull");
+    //SET NOT NULL CONSTRAINT ON THE REST OF TABLES IN SYSTEM CATALOG!!!
+
+    char attributeName[MAX_VARCHAR_LENGTH]="";
+    char constraintName[MAX_VARCHAR_LENGTH]="";
+    //UNIQUE constraints on table AK_constraints_not_null
+    strcat(attributeName, "tableName");
+    strcat(attributeName, SEPARATOR);
+    strcat(attributeName, "attributeName");
+    strcat(constraintName, "tableName");
+    strcat(constraintName, SEPARATOR);
+    strcat(constraintName, "attributeName");
+    strcat(constraintName, "Unique");
+    retValue = Ak_set_constraint_unique("AK_constraints_not_null", attributeName, constraintName);
+    //UNIQUE constraints on table AK_constraints_unique
+    memset(constraintName, 0, MAX_VARCHAR_LENGTH);
+    strcat(constraintName, "tableName");
+    strcat(constraintName, SEPARATOR);
+    strcat(constraintName, "attributeName2");
+    strcat(constraintName, "Unique");
+    retValue = Ak_set_constraint_unique("AK_constraints_unique", attributeName, constraintName);
+    //UNIQUE constraints on table AK_sequence
+    retValue = Ak_set_constraint_unique("AK_sequence", "name", "nameUnique");
+    //SET UNIQUE CONSTRAINT ON THE REST OF TABLES IN SYSTEM CATALOG!!!
+
     AK_EPI;
 }

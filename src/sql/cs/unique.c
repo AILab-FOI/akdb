@@ -95,11 +95,11 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 				row2 = AK_get_row(j, tableName);
 				match = 1;
 				
-				for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos) && (match==1); impoIndexInArray++)
+				for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
 				{
 					attribute = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
 					attribute2 = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row2);
-					if(AK_tuple_to_string(attribute) == NULL || AK_tuple_to_string(attribute2) == NULL)
+					if(AK_tuple_to_string(attribute)==NULL || AK_tuple_to_string(attribute2)==NULL)
 					{
 						match = 0;
 					}
@@ -164,6 +164,9 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 	char newValueCopy[MAX_VARCHAR_LENGTH];
 	int numOfValues = 0;
 	AK_PRO;
+
+	int strcmpTableName = strcmp(tableName, "AK_constraints_unique");
+	int strcmpAttName = strcmp(attName, "obj_id");
 	
 	//If there's check if combination of values of attributes tableName and attributeName of table AK_constraints_unique are UNIQUE numOfValues is 2
 	//First value is value of attribute tableName and second value is value of attribute attributeName which could be made of more SEPARATORS and then it would seem like
@@ -173,7 +176,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 	//Values of attribute obj_id (alone) will be UNIQUE when PRIMARY KEY will be created on table AK_constraints_unique
 	//UNIQUENESS of value of attribute constraintName is checked with Ak_check_constraint_name among all constraint names in database so there's
 	//no need to set UNIQUE constraint on that attribute
-	if(strcmp(tableName, "AK_constraints_unique")==0 && strcmp(attName, "obj_id")!=0)
+	if(strcmpTableName==0 && strcmpAttName!=0)
 	{
 		numOfValues = 2;
 	}
@@ -198,7 +201,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 
 	int numRecords = AK_get_num_records("AK_constraints_unique");
 	
-	if(numRecords !=0 && (strcmp(tableName, "AK_constraints_unique")!=0 || (strcmp(tableName, "AK_constraints_unique")==0 && strcmp(attName, "obj_id")==0)))
+	if(numRecords!=0 && (strcmpTableName!=0 || (strcmpTableName==0 && strcmpAttName==0)))
 	{
 		struct list_node *row;
 		struct list_node *attribute;
@@ -270,7 +273,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 
 						match = 1;
 						
-						for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos) && (match==1); impoIndexInArray++)
+						for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
 						{
 							attribute2 = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row2);
 							if(AK_tuple_to_string(attribute2) == NULL)
@@ -300,7 +303,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		return EXIT_SUCCESS;
 		AK_EPI;
 	}
-	else if(numRecords !=0 && strcmp(tableName, "AK_constraints_unique")==0 && strcmp(attName, "obj_id")!=0)
+	else if(numRecords !=0 && strcmpTableName==0 && strcmpAttName!=0)
 	{
 		struct list_node *row = AK_get_row(0, tableName);
 		int numOfAttsInTable = Ak_Size_L2(row);
@@ -347,7 +350,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 
 			match = 1;
 			
-			for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos) && (match==1); impoIndexInArray++)
+			for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
 			{
 				attribute2 = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
 				if(AK_tuple_to_string(attribute2) == NULL)
