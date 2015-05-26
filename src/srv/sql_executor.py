@@ -1260,6 +1260,101 @@ class Drop_command:
                 ak47.AK_drop_test_helper(8, table_name)
 
 
+# @author Tomislav Ilisevic
+# executes the create view expression
+class Create_view_command:
+
+        create_view_command_regex = r"^(?i)create(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
+
+        ## matches method
+        # checks whether given input matches create view command syntax
+        def matches(self, input):
+                self.pattern = re.compile(self.create_view_command_regex)
+                self.matcher = self.pattern.match(input)
+                return self.matcher != None
+
+        ## execute method
+        # defines what is called when create view command is invoked
+        def execute(self,expr):
+                token = sql_tokenizer().AK_parse_CreateView(expr)
+                # checking syntax
+                if isinstance(token, str):
+                        print "Error: syntax error in expression"
+                        print self.expr
+                        print token
+                        return False
+
+		print "start parsing.."
+                
+                print "\nView name: ", token.name
+		print "Mode: ", token.mode
+                print "Query: ", token.query
+
+                # executing
+                try:
+			# dodati jos za mod-ove kada se implementira u c-u
+                        ak47.AK_view_add(token.name, token.query,token.query, 0);
+                        result = "View added"
+                except:
+                        result = "Error. Create view failed."
+                return result                
+  
+
+## alter view command
+# @author Tomislav Ilisevic
+class Alter_view_command:
+        alter_view_regex = r"^(?i)alter view(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
+        expr = None
+
+        ## matches method
+        def matches(self, input):
+                self.pattern = re.compile(self.alter_view_regex)
+                self.matcher = self.pattern.match(input)
+                self.expr = input
+                if (self.matcher is not None):
+                        return self.matcher
+                else:
+                        return None
+
+        
+        # executes the alter view expression
+        def execute(self,input):
+                parser = sql_tokenizer()
+                token = parser.AK_parse_alter_view(self.expr)
+                # checking syntax
+                if isinstance(token, str):
+                        print "Error: syntax error in expression"
+                        print self.expr
+                        print token
+                        return False
+
+		print "start parsing.."
+                pars = sql_tokenizer()
+                tok = pars.AK_parse_alter_view(input)
+                
+                print "\nView name: ", tok.name
+		print "Operation: ", tok.operation
+                print "New name: ", tok.newName
+
+                # executing
+                try:
+			if(tok.operation=="RENAME TO"):
+                        	ak47.AK_view_rename(tok.name,tok.newName)
+			'''elif(tok.operation=="Query"):
+				ak47.AK_view_change_query(tok.name,"44query44","student;id")'''
+                        result = "View modified"
+                except:
+                        result = "Error. Alter view failed."
+                return result
+
+
+
+
+
 ## sql_executor
 # contaions methods for sql operations
 class sql_executor:
@@ -1276,6 +1371,8 @@ class sql_executor:
 	alter_index_command = Alter_index_command()
         create_trigger_command = Create_trigger_command()
         insert_into_command = Insert_into_command()
+        create_view = Create_view_command()
+        alter_view = Alter_view_command()
         #create_group_command = Create_group_command()
         grant_command = Grant_command()
         select_command = Select_command()
@@ -1284,7 +1381,7 @@ class sql_executor:
         drop_command = Drop_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, alter_sequence_command, create_table_command,alter_table_command, create_index_command, alter_index_command, create_trigger_command,insert_into_command, grant_command, select_command, update_command,delete_command,drop_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, alter_sequence_command, create_table_command,alter_table_command, create_index_command, alter_index_command, create_trigger_command,insert_into_command, grant_command, select_command, update_command,delete_command,drop_command,create_view,alter_view]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 

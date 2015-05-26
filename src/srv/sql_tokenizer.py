@@ -775,14 +775,14 @@ class sql_tokenizer:
    
   def AK_parse_alter_view(self, string):
     '''
-    @author Marinko Radic
+    @author Marinko Radic, updated by Tomislav Ilisevic
     @brief sql parsing of ALTER VIEW command
     @param string sql command as string
     @return if command is successfully parsed returns list of tokens, else returns error message as string 
     '''    
     alterViewToken    = Keyword("ALTER VIEW", caseless=True)
     setShemaToken     = Keyword("SET SHEMA", caseless=True)
-    renameToToken     = Keyword("RENAME TO",caseless=True)
+    renameToToken     = Keyword("RENAME TO",caseless=True).setResultsName("operation")
     ownerToToken      = Keyword("OWNER TO", caseless=True)
     setDefaultToken   = Keyword("SET DEFAULT", caseless=True)
     dropDefaultToken  = Keyword("DROP DEFAULT", caseless=True)

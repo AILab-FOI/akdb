@@ -1,7 +1,7 @@
 import sys
 from sql_executor import *
 
-#sql_executor tests by Marko Sinko, updated by Matija Jurman
+#sql_executor tests by Marko Sinko, updated by Matija Jurman and Tomislav Ilisevic
 
 
 print "\n---------------------------IS NUMERIC TEST -----------------------------\n"
@@ -277,6 +277,31 @@ drop.expr = "DROP TABLE student"
 print drop.execute()
 ak47.AK_print_table("student")
 print "\n------------------------------------DROP TEST END ------------------------------------\n"
+
+
+
+print "\n------------------------------------ CREATE VIEW TEST ------------------------------------\n"
+
+print "\nCREATE VIEW pogledStudent AS SELECT * FROM student"
+create_view = Create_view_command()
+create_view.expr = "CREATE VIEW pogledStudent AS SELECT * FROM student"
+
+print create_view.execute("CREATE VIEW pogledStudent AS SELECT * FROM student")
+
+print "\n------------------------------------CREATE VIEW TEST END ------------------------------------\n"
+
+
+
+print "\n------------------------------------ ALTER VIEW TEST ------------------------------------\n"
+
+print "\nALTER VIEW pogledStudent RENAME TO pStudent"
+alter_view = Alter_view_command()
+alter_view.expr = "ALTER VIEW pogledStudent RENAME TO pStudent"
+
+print alter_view.execute("ALTER VIEW pogledStudent RENAME TO pStudent")
+
+print "\n------------------------------------ALTER VIEW TEST END ------------------------------------\n"
+
 
 
 '''
