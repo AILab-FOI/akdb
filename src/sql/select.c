@@ -3,7 +3,7 @@
  */
 
 #include "select.h"
-
+#include "../mm/memoman.h"
 
 /**
  * @author Renata Mesaros
@@ -18,6 +18,8 @@ int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct
 	AK_PRO;
 	AK_selection(srcTable,destTable,condition);
 
+	
+	
 
 	///help table for the final result
 	char *helptable="help_table";
@@ -65,7 +67,9 @@ int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct
 		head++;
 	}
 	AK_initialize_new_segment(helptable, SEGMENT_TYPE_TABLE, header);
+	
 
+	
 	AK_free(temp_block);
 
 	//AK_list* row_root = (AK_list *) AK_malloc(sizeof (AK_list));
@@ -113,16 +117,19 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 //				Ak_DeleteAll_L(row_root);
 				Ak_DeleteAll_L3(&row_root);
 	}
+	
 }}
 
   AK_print_table(helptable);
+	
+	/**CACHE RESULT IN MEMORY**/
 
+	AK_cache_result(srcTable,temp_block,header);
 	AK_free(temp_block);
 	AK_EPI;
 	return EXIT_SUCCESS;
 
 }
-
 
 
 /**
@@ -135,8 +142,7 @@ void AK_select_test(){
 
 
 	printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
-
-
+	
 	///list of attributes which will be in the result of selection
 /*
 	AK_list *attributes = (AK_list *) AK_malloc(sizeof (AK_list));

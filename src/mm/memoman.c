@@ -108,6 +108,11 @@ int AK_redo_log_AK_malloc() {
     AK_EPI;
     return EXIT_SUCCESS;
 }
+/**
+  * @author Mario Novoselec
+  * @brief Function find available block for result caching in circular array
+  * @return available_index
+ */
 int AK_find_available_result_block(){
 	int available_index=0;
 	int i=0;
@@ -119,29 +124,67 @@ int AK_find_available_result_block(){
 	}
 	return available_index;
 }
+/**
+  * @author Mario Novoselec
+  * @brief Generate unique hash identifier for each cached result by using djb2 algorithm
+  * @return hash
+ */
 unsigned long AK_generate_result_id(unsigned char *str) {
     unsigned long hash = 5381;
     int c;
+	srand(time(NULL));
+	int hash_randomizer = rand()%1000;
 
     while (c = *str++) {
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+        hash = ((hash << 5) + hash) + c; 
     }
 
-    return abs(hash);
+    return abs(hash+hash_randomizer);
 }
-void AK_cache_result(){
+/**
+  * @author Mario Novoselec
+  * @brief Cache fetched result block in memory
+ */
+void AK_cache_result(char *srcTable,AK_block *temp_block,AK_header header[]){
 	//find available block in memory for query caching
 	int available_index=AK_find_available_result_block();
 	unsigned long tmp;
+	
 	//generate query date and time
 	time_t rawtime;
 	struct tm * timeinfo;
 	time (&rawtime);
 	timeinfo = localtime (&rawtime);
+	
 	strftime (query_mem->result->results[available_index].date_created,80,"%F %T",timeinfo);
 	query_mem->result->results[available_index].result_id=AK_generate_result_id(query_mem->result->results[available_index].date_created);
-	printf("%d \n",query_mem->result->results[available_index].result_id);
+	memcpy(&query_mem->result->results[available_index].source_table,&srcTable,sizeof(srcTable));
+	memcpy(&query_mem->result->results[available_index].result_block,&temp_block,sizeof(temp_block));
+	memset(query_mem->result->results[available_index].header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
 	
+	int head=0;
+	while(strcmp(header[head].att_name, "") != 0) {
+		
+		memcpy(&query_mem->result->results[available_index].header[head],&header[head], sizeof (header[head]));
+		head++;
+	}
+	query_mem->result->results[available_index].result_size=sizeof(temp_block);
+	
+	printf("\n ****LAST CACHED QUERY***** \n \n");
+	printf("---Table attributes--- \n");
+	printf("%s \t",query_mem->result->results[available_index].header[0].constr_name);
+	int i=0;
+	for(i=0; i<MAX_ATTRIBUTES; i++){
+		printf("%s \t",query_mem->result->results[available_index].header[i].att_name);
+	};
+	printf("\n ---Unique result id--- \n");
+	printf("%d \n",query_mem->result->results[available_index].result_id);
+	printf("---Date created--- \n");
+	printf("%s \n",query_mem->result->results[available_index].date_created);
+	printf("---Source table--- \n");
+	printf("%s \n",query_mem->result->results[available_index].source_table);
+	printf("---Result size--- \n");
+	printf("%d \n",query_mem->result->results[available_index].result_size);
 }
 /**
   *  @author Matija Novak
@@ -206,7 +249,6 @@ int AK_query_mem_AK_malloc() {
 	for(i=0; i<MAX_QUERY_RESULT_MEMORY; i++){
 		query_mem->result->results[i].free=1;
 	}
-	AK_cache_result();
     /*	wrong way because we don't have data only adress which must be written in query_mem variables
             memcpy(query_mem->parsed, query_mem_lib, sizeof(* query_mem_lib));
             memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));

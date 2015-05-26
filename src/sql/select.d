@@ -34,7 +34,8 @@ sql/select.o: sql/select.c sql/select.h sql/../file/table.h \
  sql/../rel/../file/table.h sql/../rel/../file/fileio.h \
  sql/../rel/../auxi/mempro.h sql/../rel/../rec/redo_log.h \
  sql/../rel/../auxi/constants.h sql/../rel/../auxi/configuration.h \
- sql/../rel/../file/files.h sql/../auxi/auxiliary.h sql/../auxi/mempro.h
+ sql/../rel/../file/files.h sql/../auxi/auxiliary.h sql/../auxi/mempro.h \
+ sql/../mm/memoman.h
 sql/select.c:
 sql/select.h:
 sql/../file/table.h:
@@ -89,3 +90,4 @@ sql/../rel/../auxi/configuration.h:
 sql/../rel/../file/files.h:
 sql/../auxi/auxiliary.h:
 sql/../auxi/mempro.h:
+sql/../mm/memoman.h:

@@ -92,8 +92,8 @@ typedef struct {
 
 /**
   * @author Mario Novoselec
-  * @struct AK_result
-  * @brief Structure that saves query details
+  * @struct AK_results
+  * @brief Structure used for in-memory result caching
  */
 
 typedef struct{
@@ -101,6 +101,9 @@ typedef struct{
 	int result_size;
 	char date_created[80];
 	short free;
+	char *source_table;
+	AK_block *result_block;
+	AK_header header[MAX_ATTRIBUTES];
 }AK_results;
 
 /**
@@ -144,7 +147,7 @@ AK_redo_log * redo_log;
  */
 AK_query_mem * query_mem;
 
-void AK_cache_result();
+void AK_cache_result(char *srcTable,AK_block *temp_block,AK_header header[]);
 int AK_find_available_result_block();
 unsigned long AK_generate_result_id(unsigned char *str);
 int AK_cache_block(int num, AK_mem_block *mem_block);

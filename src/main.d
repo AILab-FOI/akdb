@@ -45,13 +45,13 @@ main.o: main.c auxi/mempro.h auxi/constants.h auxi/configuration.h \
  opti/../sql/../file/id.h opti/../sql/../file/fileio.h \
  opti/../sql/../auxi/mempro.h sql/cs/reference.h sql/cs/between.h \
  sql/cs/../../mm/memoman.h sql/cs/../../file/id.h \
- sql/cs/../../auxi/mempro.h sql/cs/nnull.h sql/cs/unique.h \
- rel/expression_check.h sql/drop.h sql/../rel/sequence.h sql/view.h \
- sql/trigger.h sql/../rec/archive_log.h sql/../file/id.h \
- sql/../sql/function.h sql/../sql/../file/table.h \
- sql/../sql/../file/fileio.h sql/../sql/../auxi/mempro.h sql/function.h \
- sql/privileges.h sql/cs/check_constraint.h sql/cs/../../file/table.h \
- sql/cs/../../file/fileio.h sql/cs/../../rel/expression_check.h \
+ sql/cs/../../auxi/mempro.h sql/cs/nnull.h sql/cs/../../file/table.h \
+ sql/cs/../../file/fileio.h sql/cs/unique.h rel/expression_check.h \
+ sql/drop.h sql/../rel/sequence.h sql/view.h sql/trigger.h \
+ sql/../rec/archive_log.h sql/../file/id.h sql/../sql/function.h \
+ sql/../sql/../file/table.h sql/../sql/../file/fileio.h \
+ sql/../sql/../auxi/mempro.h sql/function.h sql/privileges.h \
+ sql/cs/check_constraint.h sql/cs/../../rel/expression_check.h \
  sql/trigger.h auxi/iniparser.h sql/privileges.h trans/transaction.h \
  trans/../auxi/constants.h trans/../auxi/configuration.h \
  trans/../mm/memoman.h trans/../sql/command.h trans/../auxi/observable.h \
@@ -181,6 +181,8 @@ sql/cs/../../mm/memoman.h:
 sql/cs/../../file/id.h:
 sql/cs/../../auxi/mempro.h:
 sql/cs/nnull.h:
+sql/cs/../../file/table.h:
+sql/cs/../../file/fileio.h:
 sql/cs/unique.h:
 rel/expression_check.h:
 sql/drop.h:
@@ -196,8 +198,6 @@ sql/../sql/../auxi/mempro.h:
 sql/function.h:
 sql/privileges.h:
 sql/cs/check_constraint.h:
-sql/cs/../../file/table.h:
-sql/cs/../../file/fileio.h:
 sql/cs/../../rel/expression_check.h:
 sql/trigger.h:
 auxi/iniparser.h:

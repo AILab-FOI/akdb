@@ -2203,10 +2203,6 @@ def AK_read_constraint_not_null(*args):
   return _kalashnikovDB.AK_read_constraint_not_null(*args)
 AK_read_constraint_not_null = _kalashnikovDB.AK_read_constraint_not_null
 
-def AK_is_number(*args):
-  return _kalashnikovDB.AK_is_number(*args)
-AK_is_number = _kalashnikovDB.AK_is_number
-
 def AK_null_test():
   return _kalashnikovDB.AK_null_test()
 AK_null_test = _kalashnikovDB.AK_null_test
