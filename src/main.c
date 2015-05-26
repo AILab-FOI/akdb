@@ -20,7 +20,7 @@
 * with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 #include <stdio.h>
-#include <string.h>  //ARCHIVE LOG
+#include <string.h> //ARCHIVE LOG
 #include <stdlib.h>
 // Memory wrappers and debug mode
 #include "auxi/mempro.h"
@@ -61,6 +61,7 @@
 // Query processing
 #include "opti/query_optimization.h"
 // Constraints
+#include "sql/cs/constraint_names.h"
 #include "sql/cs/reference.h"
 #include "sql/cs/between.h"
 #include "sql/cs/nnull.h"
@@ -77,17 +78,15 @@
 #include "auxi/observable.h"
 #include "sql/view.h"
 #include "file/blobs.h"
-
 void help();
 void show_test();
 void choose_test();
+void set_catalog_constraints();
 //void run_test();
-
 typedef struct {
     char name[40];
     void (*func)(void);
 } function;
-
 function fun[] = {
 //src/auxi:
 //---------
@@ -155,8 +154,6 @@ function fun[] = {
 {"trans: AK_transaction", &AK_test_Transaction} //src/trans/transaction.c
 };
 //here are all tests in a order like in the folders from the github
-//
-
 /**
 Main program function
 @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
@@ -205,6 +202,7 @@ int main(int argc, char * argv[])
 		//long int value - min 32 bit velicine, [−2147483647,+2147483647] 
                 AK_create_test_tables();
 		//when we start the inputed test, first the tables will be created
+                set_catalog_constraints();
                 fun[ans].func();
 		//after the created tables the test will start, and call the function of the test from fun[], which we defined at the begining
             }
@@ -241,7 +239,6 @@ int main(int argc, char * argv[])
     AK_EPI;
     return(EXIT_SUCCESS);
 }//main
-
 void help()
 {
     AK_PRO;
@@ -252,7 +249,6 @@ void help()
     printf("test show - displays available tests\n");
     AK_EPI;
 }
-
 void show_test()
 {
 	int ret; //we use it later for comparing strings
@@ -291,22 +287,22 @@ void show_test()
     printf("\n\n");
     AK_EPI;
 }
-
 void choose_test()
 {
     AK_PRO;
     int ans=-1;
     AK_create_test_tables();
+    set_catalog_constraints();
     while(ans)
     {
-        printf("\n\n");
+        printf("\n\n\n");
         show_test();
         printf("Test: ");
         scanf("%d", &ans);
         while(ans<0 && ans>32)
         {
-		printf("\nTest: ");
-         	scanf("%d", &ans);
+            printf("\nTest: ");
+            scanf("%d", &ans);
         }
         if(ans)
         {
@@ -318,5 +314,49 @@ void choose_test()
             ans++;
         }
     }
+    AK_EPI;
+}
+void set_catalog_constraints()
+{
+    AK_PRO;
+    int retValue;
+    //Set PRIMARY KEY constraint on all tables of system catalog when it' s implemented
+
+    //NOT NULL constraints on table AK_constraints_not_null
+    retValue = AK_set_constraint_not_null("AK_constraints_not_null", "tableName", "tableNameNotNull");
+    retValue = AK_set_constraint_not_null("AK_constraints_not_null", "constraintName", "constraintNameNotNull");
+    retValue = AK_set_constraint_not_null("AK_constraints_not_null", "attributeName", "attributeNameNotNull");
+    //NOT NULL constraints on table AK_constraints_unique
+    retValue = AK_set_constraint_not_null("AK_constraints_unique", "tableName", "tableName2NotNull");
+    retValue = AK_set_constraint_not_null("AK_constraints_unique", "constraintName", "constraintName2NotNull");
+    retValue = AK_set_constraint_not_null("AK_constraints_unique", "attributeName", "attributeName2NotNull");
+    //NOT NULL constraints on table AK_sequence
+    retValue = AK_set_constraint_not_null("AK_sequence", "name", "nameNotNull");
+    retValue = AK_set_constraint_not_null("AK_sequence", "current_value", "current_valueNotNull");
+    retValue = AK_set_constraint_not_null("AK_sequence", "increment", "incrementNotNull");
+    //SET NOT NULL CONSTRAINT ON THE REST OF TABLES IN SYSTEM CATALOG!!!
+
+    char attributeName[MAX_VARCHAR_LENGTH]="";
+    char constraintName[MAX_VARCHAR_LENGTH]="";
+    //UNIQUE constraints on table AK_constraints_not_null
+    strcat(attributeName, "tableName");
+    strcat(attributeName, SEPARATOR);
+    strcat(attributeName, "attributeName");
+    strcat(constraintName, "tableName");
+    strcat(constraintName, SEPARATOR);
+    strcat(constraintName, "attributeName");
+    strcat(constraintName, "Unique");
+    retValue = Ak_set_constraint_unique("AK_constraints_not_null", attributeName, constraintName);
+    //UNIQUE constraints on table AK_constraints_unique
+    memset(constraintName, 0, MAX_VARCHAR_LENGTH);
+    strcat(constraintName, "tableName");
+    strcat(constraintName, SEPARATOR);
+    strcat(constraintName, "attributeName2");
+    strcat(constraintName, "Unique");
+    retValue = Ak_set_constraint_unique("AK_constraints_unique", attributeName, constraintName);
+    //UNIQUE constraints on table AK_sequence
+    retValue = Ak_set_constraint_unique("AK_sequence", "name", "nameUnique");
+    //SET UNIQUE CONSTRAINT ON THE REST OF TABLES IN SYSTEM CATALOG!!!
+
     AK_EPI;
 }
