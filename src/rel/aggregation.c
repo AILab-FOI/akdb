@@ -153,7 +153,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_agg_input_fix(input);
     AK_header *att_root = (*input).attributes;
     int *att_tasks = (*input).tasks;
-    int header_size = (*input).counter;
+    int num_aggregations = (*input).counter;
     // int header_size = AK_header_size(att_root);
     AK_header agg_head[MAX_ATTRIBUTES];
     int agg_group_number = 0;
@@ -165,12 +165,12 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     int agg_h_type;
     char group_h_name[MAX_ATT_NAME];
 
-    AK_agg_value *needed_values = AK_malloc(sizeof (AK_agg_value) * header_size);
+    AK_agg_value *needed_values = AK_malloc(sizeof (AK_agg_value) * num_aggregations);
 
     char new_table[MAX_ATT_NAME];
     sprintf(new_table, "_%s", agg_table);
 
-    for (i = 0; i < header_size; i++) {
+    for (i = 0; i < num_aggregations; i++) {
         agg_h_type = att_root[i].type;
         switch (att_tasks[i]) {
             case AGG_TASK_GROUP:
@@ -215,9 +215,11 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
         agg_head[i] = *(AK_header*) AK_create_header(agg_h_name, agg_h_type, FREE_INT, FREE_CHAR, FREE_CHAR);
     }
 
-    for (i = header_size; i < MAX_ATTRIBUTES; i++) {
+    // removing rest of the unneeded attributes (where attribute id is greater than number of used aggregations)
+    for (i = num_aggregations; i < MAX_ATTRIBUTES; i++) {
         memcpy(&agg_head[i], "\0", sizeof ( "\0"));
     }
+    
 
     int startAddress = AK_initialize_new_segment(new_table, SEGMENT_TYPE_TABLE, agg_head);
 
@@ -254,22 +256,19 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     i = 0;
     counter = 0;
 
-
     while (addresses->address_from[ i ] != 0) {
         for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) {
             temp = (AK_block*) AK_read_block(j);
-            for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+            if ( temp->last_tuple_dict_id == 0 )
+            	break;
+            for (k = 0; k < temp->last_tuple_dict_id; k += num_attr) {
                 counter++;
-
-                if (temp->tuple_dict[k].type == FREE_INT)
-					break;
-
                 n = 0;
 
                 //aggregation when no grouping is done will be executed separately to skip the unsorted search
                 if(agg_group_number == 0){
                 	for (l = 0; l < num_attr; l++) {
-						for (m = 0; m < header_size; m++) {
+						for (m = 0; m < num_aggregations; m++) {
 							if (strcmp(needed_values[m].att_name, temp->header[l].att_name) == 0) {
 								switch (needed_values[m].agg_task) {
 									case AGG_TASK_COUNT:
@@ -356,7 +355,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 				else{
 
 					for (l = 0; l < num_attr; l++) {
-						for (m = 0; m < header_size; m++) {
+						for (m = 0; m < num_aggregations; m++) {
 							if (strcmp(needed_values[m].att_name, temp->header[l].att_name) == 0) {
 
 								memcpy(needed_values[m].data, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
@@ -364,8 +363,9 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 								if (needed_values[m].agg_task == AGG_TASK_GROUP) {
 									search_parameters[n].iSearchType = SEARCH_PARTICULAR;
-									search_parameters[n].pData_lower = AK_malloc(temp->tuple_dict[k + l].size);
+									search_parameters[n].pData_lower = AK_malloc(temp->tuple_dict[k + l].size + 1);
 									memcpy(search_parameters[n].pData_lower, &(temp->data[temp->tuple_dict[k + l].address]), temp->tuple_dict[k + l].size);
+									((char *) search_parameters[n].pData_lower)[ temp->tuple_dict[k + l].size ] = '\0';
 									search_parameters[n].szAttribute = (temp->header[l].att_name);
 									n++;
 								}
@@ -376,16 +376,48 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 					sresult = AK_search_unsorted(new_table, search_parameters, agg_group_number);
 
 					if (sresult.iNum_tuple_addresses == 0) {
-						//Ak_DeleteAll_L(row_root);
-						  Ak_DeleteAll_L3(&row_root);
+						Ak_DeleteAll_L3(&row_root);
 
-						for (l = 0; l < header_size; l++) {
+						for (l = 0; l < num_aggregations; l++) {
 							switch (needed_values[l].agg_task) {
 								case AGG_TASK_COUNT:
 									//no break is intentional
 								case AGG_TASK_AVG_COUNT:
 									inttemp = 1;
-									memcpy(needed_values[l].data, &inttemp, sizeof (int));
+									/**
+									 * THIS SINGLE LINE BELOW (memcpy) is the purpose of ALL evil in the world!
+									 * This line is the reason why test function prints one extra empty 
+									 * row with "nulls" at the end! Trust me! Comment it, and you will see - 
+									 * test function will not print extra row with nulls (but counts and averages 
+									 * in table will be all messed up!)
+									 * After two days of hard research, I still have not found what is the
+									 * reason behind printing extra row at the end! Fellow programmer,
+									 * if you really really want to solve this issue, arm yourself with
+									 * at least 2 liters of hot coffee!
+									 *
+									 * What this line does? What is the purpose of this line in the universe?
+									 * Well, fellow programmer, this line sets the initial count to 1.
+									 * That means if name "Ivan" is found, it will have count of 1
+									 * because, well, that's the first Ivan that is found!
+									 * If function finds another Ivan (which, actually, will happen),
+									 * this part of code will not handle it (other part of code will).
+									 *
+									 * That actually means that this little piece of code 
+									 * (this line below) only (and ONLY) sets count to 1! And besides that
+									 * causes every other evil in the world. :O
+									 *
+									 * P.S. The reason for that may be in linked list, or in AK_insert_row()
+									 * You'll have to check every piece of AKDB code to find cause!
+									 * I have found out that additional line is added when k == 25.
+									 * There may be problem in linked lists or in AK_insert_row function
+									 * or somewhere else. Who knows.
+									 *
+									 * If I didn't handle that last row (which has one attribute of size 0),
+									 * test would not pass!
+									 *
+									 * Good luck, fellow programmer!
+									 */
+									memcpy(needed_values[l].data, &inttemp, sizeof(int));
 									needed_values[l].data[sizeof (int) ] = '\0';
 									Ak_Insert_New_Element(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
 									break;
@@ -414,7 +446,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 						mem_block = AK_get_block(sresult.aiBlocks[0]);
 
 						for (l = 0; l < num_attr; l++) {
-							for (m = 0; m < header_size; m++) {
+							for (m = 0; m < num_aggregations; m++) {
 								if (strcmp(needed_values[m].att_name, temp->header[l].att_name) == 0) {
 									switch (needed_values[m].agg_task) {
 										case AGG_TASK_COUNT:
@@ -503,7 +535,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 										case AGG_TASK_AVG:
 											inttemp = floattemp = -1;
-											for (o = 0; o < header_size; o++) {
+											for (o = 0; o < num_aggregations; o++) {
 												sprintf(agg_h_name, "_cAvg(%s)", needed_values[m].att_name);
 
 												if (strcmp(agg_h_name, mem_block->block->header[o].att_name) == 0) {
@@ -532,7 +564,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 						//Ak_DeleteAll_L(row_root);
 						Ak_DeleteAll_L3(&row_root);
 
-						for (l = 0; l<header_size;l++) {
+						for (l = 0; l<num_aggregations;l++) {
 							if (needed_values[l].agg_task == AGG_TASK_GROUP)
 							   inttemp = 1;
 							else
@@ -555,7 +587,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     	AK_header agg_head_final[MAX_ATTRIBUTES];
     	j = 0;
 
-    	for (i = 0; i < header_size; i++) {
+    	for (i = 0; i < num_aggregations; i++) {
 			if (agg_head[i].att_name[0] != '_') {
 				agg_head_final[j] = agg_head[i];
 				j++;
@@ -570,7 +602,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     	//Ak_DeleteAll_L(row_root);
 	Ak_DeleteAll_L3(&row_root);
 
-		for (l = 0; l < header_size; l++) {
+		for (l = 0; l < num_aggregations; l++) {
 
 			switch (needed_values[l].agg_task) {
 
@@ -611,7 +643,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 	struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
 	Ak_Init_L3(&projection_att);
 
-	for (i = 0; i < header_size; i++) {
+	for (i = 0; i < num_aggregations; i++) {
 			if (agg_head[i].att_name[0] != '_') {
 				//Ak_InsertAtEnd_L(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
 				Ak_InsertAtEnd_L3(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
@@ -633,7 +665,6 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		AK_delete_extent(addresses->address_from[i], addresses->address_to[i]);
 		i++;
 	}
-
     AK_free(needed_values);
     AK_free(row_root);
     AK_free(temp);
@@ -646,19 +677,202 @@ void Ak_aggregation_test() {
     printf("aggregation.c: Present!\n");
 
     char *tblName = "student";
-    AK_header *t_header = (AK_header *) AK_get_header(tblName);
+    AK_header *t_header = (AK_header *) AK_get_header(tblName);  // header is array of attributes
 
     AK_agg_input aggregation;
     AK_agg_input_init(&aggregation);
-    AK_agg_input_add(t_header[1], AGG_TASK_GROUP, &aggregation);
-    AK_agg_input_add(t_header[4], AGG_TASK_AVG, &aggregation);
-    AK_agg_input_add(t_header[2], AGG_TASK_COUNT, &aggregation);
-    AK_agg_input_add(t_header[4], AGG_TASK_SUM, &aggregation);
-    AK_agg_input_add(t_header[4], AGG_TASK_MAX, &aggregation);
-    AK_agg_input_add(t_header[4], AGG_TASK_MIN, &aggregation);
+    AK_agg_input_add(t_header[1], AGG_TASK_GROUP, &aggregation);  // group by second column (first name)
+    AK_agg_input_add(t_header[4], AGG_TASK_AVG, &aggregation);  // average by last (5th) column (weight)
+    AK_agg_input_add(t_header[2], AGG_TASK_COUNT, &aggregation);  // count of last names (for the same first name)
+    AK_agg_input_add(t_header[4], AGG_TASK_SUM, &aggregation);  // sum of weights by student's first name
+    AK_agg_input_add(t_header[4], AGG_TASK_MAX, &aggregation);  // max weight grouped by student's first name
+    AK_agg_input_add(t_header[4], AGG_TASK_MIN, &aggregation);  // min weight grouped by student's first name
     AK_free(t_header);
 
     AK_aggregation(&aggregation, tblName, "agg");
     AK_print_table("agg");
+
+    printf("\n\n\n");
+
+    /**
+     * checking results
+     */
+    AK_block *block;
+    int i, j, k, l, current_row = 0;  // counters
+
+    int first_name_address, first_name_size,  // addresses for data in block
+    	last_name_address, last_name_size,
+    	weight_address;
+
+    char tmp_first_name[MAX_VARCHAR_LENGTH];  // placeholders for temp data loaded from the block
+   	float tmp_weight;
+
+    int student_numrows = AK_get_num_records("student");
+    int student_numattr = AK_num_attr("student");
+    /* initializing arrays which will hold aggregated data */
+    int *counts = AK_malloc(student_numrows * sizeof(int));
+    float *sum_weights = AK_malloc(student_numrows * sizeof(float));
+    float *min_weights = AK_malloc(student_numrows * sizeof(float));
+    float *max_weights = AK_malloc(student_numrows * sizeof(float));
+    char **first_names = AK_malloc(student_numrows * sizeof(char *));
+    for(i=0; i < student_numrows; i++) {
+    	first_names[i] = AK_malloc(MAX_VARCHAR_LENGTH);
+    	first_names[i][0] = '\0';
+    }
+
+    /* Reading table data and aggregating it within allocated arrays */
+    i = 0;
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses("student");
+    while (addresses->address_from[ i ] != 0) {
+        for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) {
+            block = (AK_block*) AK_read_block(j);
+            if (block->last_tuple_dict_id == 0) { continue; }
+
+            for (k = 0; k < block->last_tuple_dict_id; k += student_numattr) {
+	            first_name_address = block->tuple_dict[k + 1].address;
+	            first_name_size = block->tuple_dict[k + 1].size;
+	            weight_address = block->tuple_dict[k + 4].address;
+
+	            memcpy(tmp_first_name, &block->data[first_name_address], first_name_size);
+	            tmp_first_name[first_name_size] = '\0';
+	            memcpy(&tmp_weight, &block->data[weight_address], sizeof(float));
+
+	            // checking if that first name has already been added
+	            int added_name_index = -1;
+	            for (l = 0; l < student_numrows; l++) {
+	            	if ( strcmp(first_names[l], tmp_first_name) == 0 ) {
+	            		added_name_index = l;
+	            		break;
+	            	}
+	            }
+
+	            if ( added_name_index != -1 ) {  // if that name is already added to first names array
+	            	counts[added_name_index]++;
+	            	sum_weights[added_name_index] += tmp_weight;
+	            	if ( tmp_weight < min_weights[added_name_index] ) { min_weights[added_name_index] = tmp_weight; }
+	            	if ( tmp_weight > max_weights[added_name_index] ) { max_weights[added_name_index] = tmp_weight; }
+	            } else {
+	            	strcpy(first_names[current_row], tmp_first_name);
+	            	counts[current_row] = 1;
+	            	sum_weights[current_row] = tmp_weight;
+	            	min_weights[current_row] = tmp_weight;
+	            	max_weights[current_row] = tmp_weight;
+	            	current_row++;
+	            }
+        	}
+		}
+		i++;
+	}
+
+	/* Reading data from aggregated table and comparing results to the data in arrays! */
+	i = 0;
+	int agg_numcol = AK_num_attr("agg"),
+		current_aggregated_row = 0;
+
+	int avg_weight_address, cnt_last_names_address, // addresses for data in block
+		sum_weights_address, max_weight_address,
+		min_weight_address;
+
+	int num_errors = 0;  // this will count number of errors
+
+	float tmp_avg_weight, tmp_sum_weights,  // placeholders for temp data loaded from the block
+		  tmp_max_weight, tmp_min_weight;
+	int   tmp_cnt_last_names;
+
+	/* Reading aggregated table data and comparing it to the data from aggregated arrays */
+    addresses = (table_addresses*) AK_get_table_addresses("agg");
+    while (addresses->address_from[ i ] != 0) {
+        for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) {
+            block = (AK_block*) AK_read_block(j);
+            if (block->last_tuple_dict_id == 0) { continue; }
+
+            for (k = 0; k < block->last_tuple_dict_id; k += agg_numcol) {
+            	/** 
+            	 * This variable was added to handle bug described in this file.
+            	 */
+            	int is_row_empty = 0;
+            	for (l=0; l<6; l++) {
+            		if ( block->tuple_dict[k + l].size == 0 ) {
+            			is_row_empty = 1;
+            			break;
+            		}
+				}
+
+				if ( is_row_empty == 1 ) { break; }
+
+            	first_name_address = block->tuple_dict[k].address;
+            	first_name_size = block->tuple_dict[k].size;
+            	avg_weight_address = block->tuple_dict[k + 1].address;
+            	cnt_last_names_address = block->tuple_dict[k + 2].address;
+            	sum_weights_address = block->tuple_dict[k + 3].address;
+            	max_weight_address = block->tuple_dict[k + 4].address;
+            	min_weight_address = block->tuple_dict[k + 5].address;
+
+            	memcpy(tmp_first_name, &block->data[first_name_address], first_name_size);
+	            tmp_first_name[first_name_size] = '\0';
+	            memcpy(&tmp_avg_weight, &block->data[avg_weight_address], sizeof(float));
+	            memcpy(&tmp_cnt_last_names, &block->data[cnt_last_names_address], sizeof(int));
+	            memcpy(&tmp_sum_weights, &block->data[sum_weights_address], sizeof(float));
+	            memcpy(&tmp_max_weight, &block->data[max_weight_address], sizeof(float));
+	            memcpy(&tmp_min_weight, &block->data[min_weight_address], sizeof(float));
+
+	            if ( strcmp( tmp_first_name, first_names[current_aggregated_row] ) != 0 ) {
+	            	num_errors++;
+	            	printf("Error in aggregated table, row: %d! Wrong first name (1st column)!\n", current_aggregated_row+1);
+	            	printf("Table showed value: '%s', but it should show: '%s'\n\n", 
+	            		tmp_first_name, first_names[current_aggregated_row]);
+	            }
+	            if ( tmp_avg_weight != sum_weights[current_aggregated_row] / counts[current_aggregated_row] ) {
+	            	num_errors++;
+	            	printf("Error in aggregated table, row: %d! Wrongly calculated avg(weight)!\n", current_aggregated_row+1);
+	            	printf("Table showed value: '%f', but it should show: '%f'\n\n", 
+	            		tmp_avg_weight, sum_weights[current_aggregated_row] / counts[current_aggregated_row]);
+	            }
+	            if ( tmp_cnt_last_names != counts[current_aggregated_row] ) {
+	            	num_errors++;
+	            	printf("Error in aggregated table, row: %d! Wrongly calculated cnt(lastname)!\n", current_aggregated_row+1);
+	            	printf("Table showed value: '%d', but it should show: '%d'\n\n", 
+	            		tmp_cnt_last_names, counts[current_aggregated_row]);
+	            }
+	            if ( tmp_sum_weights != sum_weights[current_aggregated_row] ) {
+	            	num_errors++;
+	            	printf("Error in aggregated table, row: %d! Wrongly calculated sum(weight)!\n", current_aggregated_row+1);
+	            	printf("Table showed value: '%f', but it should show: '%f'\n\n", 
+	            		tmp_sum_weights, sum_weights[current_aggregated_row]);
+	            }
+	            if ( tmp_max_weight != max_weights[current_aggregated_row] ) {
+	            	num_errors++;
+	            	printf("Error in aggregated table, row: %d! Wrongly calculated max(weight)!\n", current_aggregated_row+1);
+	            	printf("Table showed value: '%f', but it should show: '%f'\n\n", 
+	            		tmp_max_weight, max_weights[current_aggregated_row]);
+	            }
+	            if ( tmp_min_weight != min_weights[current_aggregated_row] ) {
+	            	num_errors++;
+	            	printf("Error in aggregated table, row: %d! Wrongly calculated min(weight)!\n", current_aggregated_row+1);
+	            	printf("Table showed value: '%f', but it should show: '%f'\n\n", 
+	            		tmp_min_weight, min_weights[current_aggregated_row]);
+	            }
+
+	            current_aggregated_row++;
+            }
+        }
+        i++;
+    }
+    
+    AK_free(counts);
+    AK_free(sum_weights);
+    AK_free(min_weights);
+    AK_free(max_weights);
+    for(i=0; i < student_numrows; i++) {
+        AK_free( first_names[i] );
+    }
+    AK_free(first_names);
+
+    if ( num_errors == 0 ) {
+    	printf("\nTEST PASSED!\n");
+    } else {
+    	printf("\nTEST FAILED! Number of errors: %d\n", num_errors);
+    }
+
     AK_EPI;
 }

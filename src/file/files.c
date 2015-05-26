@@ -30,6 +30,7 @@ pthread_mutex_t fileMut = PTHREAD_MUTEX_INITIALIZER;
  */
 
 int AK_initialize_new_segment(char *name, int type, AK_header *header) {
+
     int start_address = -1;
     int end_address = INITIAL_EXTENT_SIZE;
     AK_PRO;
@@ -37,32 +38,26 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     int objectID = AK_get_id();
     pthread_mutex_unlock(&fileMut);
     char *sys_table;
+    sys_table = "AK_relation";
 
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
         AK_EPI;
         return EXIT_ERROR;
+
     } else {
+
         end_address += start_address;
-		
-        switch (type) {
-            case SEGMENT_TYPE_TABLE:
-                sys_table = "AK_relation";
-                break;
-            case SEGMENT_TYPE_INDEX:
-                sys_table = "AK_index";
-                break;
-            default:
-                break;
-        }
-		
+
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
         Ak_Init_L3(&row_root);
+
         //DeleteAllElements(row_root);
         Ak_Insert_New_Element(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
         Ak_Insert_New_Element(TYPE_VARCHAR, name, sys_table, "name", row_root);
         Ak_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
         Ak_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
+
         Ak_insert_row(row_root);
 
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
@@ -71,6 +66,60 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     }
     AK_EPI;
 }
+
+/**
+ * @author Tomislav Fotak, updated by Matija Šestak (function now uses caching), reused by Lovro Predovan
+ * @brief Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, 	     etc. call this function
+ * @param name segment name
+ * @param type segment type
+ * @param header pointer to header that should be written to the new extent (all blocks)
+ * @return start address of new segment
+ */
+
+int AK_initialize_new_index_segment(char *name, char *table_id, int attr_id , AK_header *header) {
+
+    int start_address = -1;
+    int end_address = INITIAL_EXTENT_SIZE;
+    AK_PRO;
+
+    pthread_mutex_lock(&fileMut);
+    int objectID = AK_get_id();
+    pthread_mutex_unlock(&fileMut);
+
+    char *sys_table;
+    sys_table = "AK_index";
+    char type = SEGMENT_TYPE_TABLE;
+
+    if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
+        Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
+        AK_EPI;
+        return EXIT_ERROR;
+
+    } else {
+
+        end_address += start_address;
+
+        struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+        Ak_Init_L3(&row_root);
+
+
+        Ak_Insert_New_Element(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
+        Ak_Insert_New_Element(TYPE_VARCHAR, name, sys_table, "name", row_root);
+        Ak_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
+        Ak_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
+        Ak_Insert_New_Element(TYPE_VARCHAR, table_id, sys_table, "table_id", row_root);
+        Ak_Insert_New_Element(TYPE_INT, &attr_id, sys_table, "attribute_id", row_root);
+
+        Ak_insert_row(row_root);
+
+        Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
+        AK_EPI;
+        return start_address;
+    }
+    AK_EPI;
+}
+
+
 /**
   * @author Unknown
   * @brief Test function

@@ -23,13 +23,13 @@ main.o: main.c auxi/mempro.h auxi/constants.h auxi/configuration.h \
  file/../auxi/mempro.h file/files.h file/filesearch.h file/filesort.h \
  file/table.h file/table.h file/test.h rec/archive_log.h file/idx/hash.h \
  file/idx/index.h file/idx/../../auxi/mempro.h \
- file/idx/../../file/table.h file/idx/../../auxi/constants.h \
+ file/idx/../../file/table.h file/idx/../../file/fileio.h \
+ file/idx/../../file/files.h file/idx/../../auxi/constants.h \
  file/idx/../../auxi/configuration.h file/idx/../files.h file/idx/btree.h \
- file/idx/bitmap.h file/idx/../../mm/memoman.h \
- file/idx/../../file/fileio.h file/idx/../../file/files.h \
- rel/difference.h rel/../file/table.h rel/../file/fileio.h \
- rel/../auxi/mempro.h rel/intersect.h rel/../rec/archive_log.h \
- rel/nat_join.h rel/../rel/projection.h rel/../rel/../file/table.h \
+ file/idx/bitmap.h file/idx/../../mm/memoman.h rel/difference.h \
+ rel/../file/table.h rel/../file/fileio.h rel/../auxi/mempro.h \
+ rel/intersect.h rel/../rec/archive_log.h rel/nat_join.h \
+ rel/../rel/projection.h rel/../rel/../file/table.h \
  rel/../rel/../file/fileio.h rel/../rel/../auxi/mempro.h rel/theta_join.h \
  rel/expression_check.h rel/projection.h rel/selection.h \
  rel/../rec/redo_log.h rel/../auxi/constants.h \
@@ -43,10 +43,11 @@ main.o: main.c auxi/mempro.h auxi/constants.h auxi/configuration.h \
  opti/../auxi/auxiliary.h opti/rel_eq_assoc.h opti/rel_eq_projection.h \
  opti/rel_eq_selection.h opti/../sql/view.h opti/../sql/../file/table.h \
  opti/../sql/../file/id.h opti/../sql/../file/fileio.h \
- opti/../sql/../auxi/mempro.h sql/cs/reference.h sql/cs/between.h \
- sql/cs/../../mm/memoman.h sql/cs/../../file/id.h \
- sql/cs/../../auxi/mempro.h sql/cs/nnull.h sql/cs/../../file/table.h \
- sql/cs/../../file/fileio.h sql/cs/unique.h rel/expression_check.h \
+ opti/../sql/../auxi/mempro.h sql/cs/constraint_names.h \
+ sql/cs/../../file/table.h sql/cs/../../file/fileio.h \
+ sql/cs/../../auxi/mempro.h sql/cs/reference.h sql/cs/between.h \
+ sql/cs/../../mm/memoman.h sql/cs/../../file/id.h sql/cs/nnull.h \
+ sql/cs/constraint_names.h sql/cs/unique.h rel/expression_check.h \
  sql/drop.h sql/../rel/sequence.h sql/view.h sql/trigger.h \
  sql/../rec/archive_log.h sql/../file/id.h sql/../sql/function.h \
  sql/../sql/../file/table.h sql/../sql/../file/fileio.h \
@@ -119,14 +120,14 @@ file/idx/hash.h:
 file/idx/index.h:
 file/idx/../../auxi/mempro.h:
 file/idx/../../file/table.h:
+file/idx/../../file/fileio.h:
+file/idx/../../file/files.h:
 file/idx/../../auxi/constants.h:
 file/idx/../../auxi/configuration.h:
 file/idx/../files.h:
 file/idx/btree.h:
 file/idx/bitmap.h:
 file/idx/../../mm/memoman.h:
-file/idx/../../file/fileio.h:
-file/idx/../../file/files.h:
 rel/difference.h:
 rel/../file/table.h:
 rel/../file/fileio.h:
@@ -175,14 +176,16 @@ opti/../sql/../file/table.h:
 opti/../sql/../file/id.h:
 opti/../sql/../file/fileio.h:
 opti/../sql/../auxi/mempro.h:
+sql/cs/constraint_names.h:
+sql/cs/../../file/table.h:
+sql/cs/../../file/fileio.h:
+sql/cs/../../auxi/mempro.h:
 sql/cs/reference.h:
 sql/cs/between.h:
 sql/cs/../../mm/memoman.h:
 sql/cs/../../file/id.h:
-sql/cs/../../auxi/mempro.h:
 sql/cs/nnull.h:
-sql/cs/../../file/table.h:
-sql/cs/../../file/fileio.h:
+sql/cs/constraint_names.h:
 sql/cs/unique.h:
 rel/expression_check.h:
 sql/drop.h:

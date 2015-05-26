@@ -36,7 +36,7 @@ sql/cs/unique.o: sql/cs/unique.c sql/cs/unique.h sql/cs/../../file/table.h \
  sql/cs/../../file/../rec/../opti/../auxi/mempro.h \
  sql/cs/../../file/../rec/../auxi/mempro.h \
  sql/cs/../../file/../rec/redo_log.h sql/cs/../../file/files.h \
- sql/cs/../../auxi/mempro.h
+ sql/cs/../../auxi/mempro.h sql/cs/constraint_names.h
 sql/cs/unique.c:
 sql/cs/unique.h:
 sql/cs/../../file/table.h:
@@ -81,3 +81,4 @@ sql/cs/../../file/../rec/../auxi/mempro.h:
 sql/cs/../../file/../rec/redo_log.h:
 sql/cs/../../file/files.h:
 sql/cs/../../auxi/mempro.h:
+sql/cs/constraint_names.h:

@@ -29,7 +29,7 @@
 
 
 int Ak_If_ExistOp(struct list_node *L, char *ele);
-void AK_create_Index(char *tblName, struct list_node *attributes);
+void AK_create_Index_Table(char *tblName, struct list_node *attributes);
 void Ak_print_Header_Test(char* tblName);
 void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex);
 list_ad* Ak_get_Attribute(char *indexName, char *attribute);
@@ -39,5 +39,8 @@ list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeV
 void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue);
 int Ak_write_block(AK_block * block);
 void Ak_bitmap_test();
+
+void AK_delete_bitmap_index(char *indexName);
+void AK_add_to_bitmap_index(char *tableName, char *attributeName);
 
 #endif
