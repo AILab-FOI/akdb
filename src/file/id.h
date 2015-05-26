@@ -1,5 +1,5 @@
 /**
-@file id.h Provides functions, data structures and constants for creating id of objects
+@file between.h Provides data structures for creating id of objects
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,7 @@
  * @brief Constant declaring start value of id 
 */
 #define ID_START_VALUE 100
+
 
 int AK_get_id();
 void Ak_id_test();

@@ -140,10 +140,7 @@ int AK_memoman_init();
 AK_mem_block *AK_get_block(int num);
 void AK_mem_block_modify(AK_mem_block* mem_block, int dirty);
 int AK_refresh_cache();
-
-table_addresses *AK_get_segment_addresses(char * segmentName);
-table_addresses *AK_get_index_segment_addresses(char * segmentName);
-
+table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType);
 table_addresses *AK_get_table_addresses(char *table);
 table_addresses *AK_get_index_addresses(char * index);
 int AK_find_AK_free_space(table_addresses * addresses);

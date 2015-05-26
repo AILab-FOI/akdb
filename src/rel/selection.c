@@ -98,51 +98,55 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 
 
 /**
- * @author Matija Šestak, updated by Dino Laktašić,Nikola Miljancic
+ * @author Matija Šestak, updated by Dino Laktašić
  * @brief  Function for selection operator testing
  *
  */
 void AK_op_selection_test() {
 	AK_PRO;
 	printf("\n********** SELECTION TEST **********\n");
-
+	/*
+	AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
+	Ak_Init_L(expr);
+	*/
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&expr);	
+	Ak_Init_L3(&expr);
+	
 	char *srcTable = "student";
 	char *destTable = "selection_test";
-	int num = 2010;
+	char num = 22;
+	//float weight = 83.750;
+	//InsertAtEndL( TYPE_ATTRIBS, "weight", sizeof("weight"), expr );
+	//InsertAtEndL( TYPE_FLOAT, &weight, sizeof(float), expr );
+	//InsertAtEndL( TYPE_OPERATOR, "<", sizeof("<"), expr );
+
 	strcpy(expr->table,destTable);
+/*	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
+	Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), expr);
+	Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), expr);
+	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+	Ak_InsertAtEnd_L(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
+	Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), expr);
+	Ak_InsertAtEnd_L(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
+	//InsertAtEndL( TYPE_OPERATOR, "AND", sizeof("AND"), expr );
+*/
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
 	Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr);
+	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof ("<"), expr);
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
 	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
-	//Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
-	Ak_InsertAtEnd_L3( TYPE_OPERATOR, "AND", sizeof("AND"), expr );
-	printf("\nQUERY: SELECT * FROM student WHERE year > 2010 AND firstname = 'Robert';\n\n");
+	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
+	//InsertAtEndL( TYPE_OPERATOR, "AND", sizeof("AND"), expr );
+	
+	printf("\nQUERY: SELECT * FROM student WHERE year < 2010 OR firstname = 'Robert';\n\n");
+
 	AK_selection(srcTable, destTable, expr);
+	//AK_print_table("selection_test");
+
+	//Ak_DeleteAll_L(expr);
 	Ak_DeleteAll_L3(&expr);
 	AK_free(expr);
-
-	struct list_node *expr1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&expr1);
-	char *srcTable1 = "student";
-        char *destTable1 = "selection_test1";
-	float weight = 83.750;
-	strcpy(expr1->table,destTable1);
-	Ak_InsertAtEnd_L3( TYPE_ATTRIBS, "weight", sizeof("weight"), expr1 );
-	Ak_InsertAtEnd_L3( TYPE_FLOAT, &weight, sizeof(float), expr1 );
-	Ak_InsertAtEnd_L3( TYPE_OPERATOR, ">", sizeof(">"), expr1 );
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr1);
-	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Dino", sizeof ("Robert"), expr1);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr1);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr1);
-	printf("\nQUERY: SELECT * FROM student WHERE weight > 83.750 OR firstname = 'Dino';\n\n");
-	AK_selection(srcTable1, destTable1, expr1);
-	printf("\n Test is successful :) \n");
-	Ak_DeleteAll_L3(&expr1);
-	AK_free(expr1);
 	AK_EPI;
 }
 

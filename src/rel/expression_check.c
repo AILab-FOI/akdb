@@ -19,7 +19,7 @@
  */
 
 /**
- * @author Dino Laktašić, abstracted by Tomislav Mikulček,updated by Nikola Miljancic
+ * @author Dino Laktašić, abstracted by Tomislav Mikulček
  * @brief  Function compares values according to their data type, checks aritmetic statement which is part of expression given in   	       the function below. For every type of arithmetic operator, there is switch-case statement which examines type of el and
            casts void operands to this type.
  * @param el list element, last element put in list temp which holds elements of row ordered according to expression and results of 		     their evaluation
@@ -56,20 +56,20 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 		}
 	}else if(strcmp(op, ">") == 0){
 
+//		switch (el->type) {
+//
+//			case TYPE_INT:
+//				return *(int *) a > *(int *) b;
+//			case TYPE_FLOAT:
+//				return *((float *) a) > *((float *) b);
+//			case TYPE_NUMBER:
+//				return *((double *) a) > *((double *) b);
+//			case TYPE_VARCHAR:
+//				return strcmp((const char *) a, (const char *) b) > 0;
+//
+//		}
+
 		switch (el->type) {
-
-			case TYPE_INT:
-				return *(int *) a > *(int *) b;
-			case TYPE_FLOAT:
-				return *((float *) a) > *((float *) b);
-			case TYPE_NUMBER:
-				return *((double *) a) > *((double *) b);
-			case TYPE_VARCHAR:
-				return strcmp((const char *) a, (const char *) b) > 0;
-
-		}
-
-		/*switch (el->type) {
 
 			case TYPE_INT:
 				AK_EPI;
@@ -84,23 +84,11 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 				AK_EPI;
 				return strcmp((const char *) a, (const char *) b) > 0;
 
-		}*/
+		}
 
 
 	}else if(strcmp(op, "<=") == 0){
-		switch (el->type) {
 
-			case TYPE_INT:
-				return *(int *) a <= *(int *) b;
-			case TYPE_FLOAT:
-				return *((float *) a) <= *((float *) b);
-			case TYPE_NUMBER:
-				return *((double *) a) <= *((double *) b);
-			case TYPE_VARCHAR:
-				return strcmp((const char *) a, (const char *) b) <= 0;
-
-		}
-		/*
 		switch (el->type) {
 
 			case TYPE_INT:
@@ -115,21 +103,10 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 			case TYPE_VARCHAR:
 				AK_EPI;
 				return strcmp((const char *) a, (const char *) b) <= 0;
-		}*/
+		}
 	}else if(strcmp(op, ">=") == 0){
+
 		switch (el->type) {
-
-				case TYPE_INT:
-					return *(int *) a >= *(int *) b;
-				case TYPE_FLOAT:
-					return *((float *) a) >= *((float *) b);
-				case TYPE_NUMBER:
-					return *((double *) a) >= *((double *) b);
-				case TYPE_VARCHAR:
-					return strcmp((const char *) a, (const char *) b) >= 0;
-
-			}
-		/*switch (el->type) {
 
 			case TYPE_INT:
 				AK_EPI;
@@ -143,7 +120,7 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 			case TYPE_VARCHAR:
 				AK_EPI;
 				return strcmp((const char *) a, (const char *) b) >= 0;
-		}*/
+		}
 	}else if(strcmp(op, "+") == 0){
 
 		switch (el->type) {
@@ -216,7 +193,7 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 }
 
 /**
- * @author Matija Šestak, updated by Dino Laktašić,Nikola Miljancic, abstracted by Tomislav Mikulček
+ * @author Matija Šestak, updated by Dino Laktašić, abstracted by Tomislav Mikulček
  * @brief  Function evaluates whether one record (row) satisfies logical expression. It goes through
            given row. If it comes to logical operator, it evaluates by itself. For arithmetic operators
            function AK_check_arithmetic_statement() is called.
@@ -233,19 +210,21 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
     }
 
     char true = 1, false = 0;
-    int found;//, result;
-    char result = 0;
+    int found, result;
 
-    //list of values
+ /*   AK_list *temp = (AK_list *) AK_malloc(sizeof (AK_list));
+    Ak_Init_L(temp);
+
+    AK_list_elem el = (AK_list_elem) Ak_First_L(expr);
+    AK_list_elem row;
+    AK_list_elem a, b;*/
+    
     struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&temp);
-    //list of results (0,1)
-    struct list_node *temp_result = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&temp_result);
 
     struct list_node *el = Ak_First_L2(expr);
     struct list_node *row;
-    struct list_node *a, *b,*last,*previous;
+    struct list_node *a, *b;
 
     char data[MAX_VARCHAR_LENGTH];
 
@@ -275,86 +254,97 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
                 int type = row->type;
                 memset(data, 0, MAX_VARCHAR_LENGTH);
                 memcpy(data, &row->data, sizeof(row->data));
+                //Ak_InsertAtEnd_L(type, data, sizeof(row->data), temp);
 		Ak_InsertAtEnd_L3(type, data, sizeof(row->data), temp);
             }
 
         } else if (el->type == TYPE_OPERATOR) {
+            //operators implementation
+       /*     b = (AK_list_elem) Ak_End_L(temp);
+            a = (AK_list_elem) Ak_Previous_L(b, temp);*/
 	    b = Ak_End_L2(temp);
             a = Ak_Previous_L2(b, temp);
 
             if (strcmp(el->data, "=") == 0) {
                 if (memcmp(a->data, b->data, sizeof(a->type)) == 0)
 		{
-			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (char), temp_result);
+                	//Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (char), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (char), temp);
 		}
                 else
 		{
-			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+                	//Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp);
 		}
 
             } 
             else if (strcmp(el->data, "<>") == 0) {
                 if (memcmp(a->data, b->data, a->size) != 0)
 		{
-			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
+                	//Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp);
 		}
                 else
 		{
-			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+                	//Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp);
 		}
 
             } else if (strcmp(el->data, "OR") == 0) {
-                char val_a, val_b;
-	        last = Ak_End_L2(temp_result);
-                previous = Ak_Previous_L2(last, temp_result);
-                memcpy(&val_a, last->data, sizeof (char));
-                memcpy(&val_b, previous->data, sizeof (char));
+                int val_a, val_b;
+                memcpy(&val_a, a->data, sizeof (int));
+                memcpy(&val_b, b->data, sizeof (int));
 
                 if (val_a || val_b)
 		{
-			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
+                	//Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp);
 		}
                 else
 		{
-			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+                	//Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp);
 		}
 
             } else if (strcmp(el->data, "AND") == 0) {
-                char val_a, val_b;
-		last = Ak_End_L2(temp_result);
-                previous = Ak_Previous_L2(last, temp_result);
-                memcpy(&val_a, last->data, sizeof (char));
-                memcpy(&val_b, previous->data, sizeof (char));
+                int val_a, val_b;
+                memcpy(&val_a, a->data, sizeof (int));
+                memcpy(&val_b, b->data, sizeof (int));
 
                 if (val_a && val_b)
 		{
-			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
+                	//Ak_InsertAtEnd_L(TYPE_INT, &true, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp);
 		}
                 else
 		{
-			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+                	//Ak_InsertAtEnd_L(TYPE_INT, &false, sizeof (int), temp);
+			Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp);
 		}
 
             } else {
 
                 char rs;
                 rs = AK_check_arithmetic_statement(b, el->data, a->data, b->data);
-		Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
+                //Ak_InsertAtEnd_L(TYPE_INT, &rs, sizeof (int), temp);
+		Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp);
             }
+
+            //Ak_Delete_L(a, temp);
+            //Ak_Delete_L(b, temp);
 
         } else 
 	{
+        //	Ak_InsertAtEnd_L(el->type, el->data, el->size, temp);
 		Ak_InsertAtEnd_L3(el->type, el->data, el->size, temp);
         }
         el = el->next;
     }
 
-    //memcpy(&result, ((struct list_node *) Ak_First_L2(temp))->data, sizeof (int));
-    memcpy(&result, ((struct list_node *) Ak_End_L2(temp_result))->data, sizeof (char));
+    memcpy(&result, ((struct list_node *) Ak_First_L2(temp))->data, sizeof (int));
+    //Ak_DeleteAll_L(temp);
     Ak_DeleteAll_L3(&temp);
     AK_free(temp);
-    Ak_DeleteAll_L3(&temp_result);
-    AK_free(temp_result);
     AK_EPI;
     return result;
 }

@@ -43,12 +43,8 @@ int AK_get_function_obj_id(char* function, struct list_node *arguments_list) {
 
             memcpy(&id, row->next->data, sizeof (int));
             
-			if(num_args>0){
-				result = AK_check_function_arguments_type(id, arguments_list); // check_type je za drop
-			} else {
-				result = EXIT_SUCCESS;
-			}
-			
+            // check_type je za drop
+            result = AK_check_function_arguments_type(id, arguments_list);
             if (result != EXIT_ERROR) {
                 AK_EPI;
                 return id;
@@ -183,6 +179,7 @@ int AK_check_function_arguments_type(int function_id, struct list_node *args) {
  * @param *arguments_list list of function arguments
  * @return function id or EXIT_ERROR
  */
+//int AK_function_add(char *name, int return_type, AK_list *arguments_list) {
 int AK_function_add(char *name, int return_type, struct list_node *arguments_list) {
     AK_PRO;
     if (return_type < 0 || return_type > 13) {
@@ -453,7 +450,7 @@ int AK_function_change_return_type(char *name, struct list_node *arguments_list,
 }
 
 /**
- * @author Boris Kišić, updated by Tomislav Ilisevic
+ * @author Boris Kišić
  * @brief Function for functions testing.
  * @return No return value
  */
@@ -568,24 +565,12 @@ void AK_function_test() {
     AK_function_add("test_funkcija", 2, arguments_list4);
     AK_function_add("test_funkcija2", 3, arguments_list4);
     AK_function_add("test_funkcija3", 1, arguments_list4);
-	
-	// Test bez argumenata
-	struct list_node *arguments_list5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&arguments_list5);
-	
-	AK_function_add("test_bez_arg", 1, arguments_list5);
-	
-	int dohvati = AK_get_function_obj_id("test_bez_arg", arguments_list5);
-	printf("ID test_bez_arg: %i \n", dohvati);
-	
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");
 
     //Ak_DeleteAll_L(arguments_list4);
     Ak_DeleteAll_L3(&arguments_list4);
     AK_free(arguments_list4);
-	Ak_DeleteAll_L3(&arguments_list5);
-    AK_free(arguments_list5);	
     AK_EPI;
 }
 

@@ -404,11 +404,5 @@
  */
 #define TEST_MODE_OFF 0
 
-/**
- * @def SEPARATOR
- * @brief Used in unique.c for separation of names of attributes and their values when UNIQUE constraint is being set or tested on combination of values of attributes
- */
-#define SEPARATOR "[{(|&&|)}]"
-
 #endif
 

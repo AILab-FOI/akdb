@@ -1,7 +1,7 @@
 import sys
 from sql_executor import *
 
-#sql_executor tests by Marko Sinko
+#sql_executor tests by Marko Sinko, updated by Matija Jurman
 
 
 print "\n---------------------------IS NUMERIC TEST -----------------------------\n"
@@ -150,23 +150,47 @@ print "\n------------------------------- UPDATE TEST END -----------------------
 
 
 
+print "\n------------------------------- DELETE TEST --------------------------------\n"
+
+delete = Delete_command()
+
+print "\nDELETE FROM student WHERE id_student = 1"
+delete.execute("DELETE FROM student WHERE id_student = 1")
+
+ak47.AK_print_table("student")
+print "\n------------------------------- DELETE TEST END ------------------------------\n"
 
 
-print "\n------------------------------- EXECUTOR TEST --------------------------------\n"
+
+
+
+
+print "\n------------------------------- Create sequence TEST --------------------------------\n"
 
 
 print "\nCreate sequence brojac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1"
-#sequence = Create_sequence_command()
+sequence = Create_sequence_command()
 
 #Takoder sljedeca metoda ne radi kako treba te bi bilo potrebno provjeriti funkciju AK_sequence_add
-#sequence.execute("Create sequence brojac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1")
+sequence.execute("Create sequence brojac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1")
 
 #sljedeci upit imao je overflow buffer error ali prilikom mojeg testiranja radi normalno
 
 print "\nSljedeci upit:\n"
 
-#sequence.execute("Create sequence brojac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
-print "\n---------------------------- EXECUTOR TEST END ----------------------------------\n"
+sequence.execute("Create sequence brojac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
+print "\n---------------------------- Create sequence TEST END ----------------------------------\n"
+
+print "\n------------------------------- Alter sequence TEST --------------------------------\n"
+
+
+print "\nAlter sequence brojac_1 start with 2 increment by 5 minvalue 1 maxvalue 100 cycle 1"
+sequence = Alter_sequence_command()
+
+sequence.execute("Alter sequence brojac_1 start with 2 increment by 5 minvalue 1 maxvalue 100 cycle 1")
+
+print "\n---------------------------- Alter sequence TEST END ----------------------------------\n"
+
 
 
 
@@ -182,6 +206,20 @@ print "\n--------------------------------- CREATE TABLE TEST END ---------------
 
 
 
+print "\n--------------------------------- ALTER TABLE TEST --------------------------------\n"
+alter = Alter_table_command()
+
+print "\nALTER TABLE tablica DROP column ime1"
+
+alter.expr = "ALTER TABLE tablica DROP column ime1"
+alter.execute(alter.expr)
+
+ak47.AK_print_table("tablica")
+print "\n--------------------------------- ALTER TABLE TEST END ------------------------------\n"
+
+
+
+
 
 print "\n--------------------------------- CREATE INDEX TEST ---------------------------------\n"
 index = Create_index_command()
@@ -193,6 +231,22 @@ for command in commands:
 #ispravno, potrebno je provjeriti AK_create_index funkciju
         print index.execute()
 print "\n--------------------------------- CREATE INDEX TEST END--------------------------------\n"
+
+
+
+
+print "\n--------------------------------- ALTER INDEX TEST ---------------------------------\n"
+index = Alter_index_command()
+
+print "\nALTER INDEX Pindex RENAME TO ZZindex"
+
+index.expr = "ALTER INDEX Pindex RENAME TO ZZindex"
+
+print index.execute("ALTER INDEX Pindex RENAME TO ZZindex")
+
+print "\n--------------------------------- ALTER INDEX TEST END--------------------------------\n"
+
+
 
 
 

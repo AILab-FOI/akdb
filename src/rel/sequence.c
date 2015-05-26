@@ -132,7 +132,7 @@ int AK_sequence_current_value(char *name){
  * @return next_value or EXIT_ERROR
  */
 int AK_sequence_next_value(char *name){
-    int next_value ;
+    int next_value;
     int i = 0;
     int obj_id;
     int current_value = -1;
@@ -156,7 +156,6 @@ int AK_sequence_next_value(char *name){
         }
         i++;
     }
-	
     
     if (current_value == -1){
 	AK_EPI;
@@ -186,26 +185,29 @@ int AK_sequence_next_value(char *name){
 	    next_value=min_value;
 	} 
     }
-	
- 
+    /*
+    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
+    Ak_Init_L(row_root);
+    */
+    
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
     
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &next_value, "AK_sequence", "current_value", row_root, 0);
     int result =  Ak_update_row(row_root); 
+    //Ak_DeleteAll_L(row_root);
     Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
    
-   if (result == EXIT_ERROR) {
+    if (result == EXIT_ERROR) {
       Ak_dbg_messg(HIGH, SEQUENCES, "AK_sequence_next_value: Could not retrieve next value.\n");
       AK_EPI;
       return EXIT_ERROR;
     }
-   
+
     AK_EPI;
     return next_value;
-	//return 100;
 }
 
 /**
@@ -332,21 +334,20 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
 void AK_sequence_test() {
     AK_PRO;
     printf("sequence.c: Present!\n");
-    AK_sequence_add("sekvenca1", 100, 5, 200, 100, 1);     
-    AK_sequence_add("sekvenca2", 200, 10, 205, 100, 1);
+    AK_sequence_add("sekvenca1", 100, 5, 200, 100, 1);    
     AK_print_table("AK_sequence");
-    int currval = AK_sequence_current_value("sekvenca1");
-    printf("\nCurrent value of sequence sekvenca1: %d\n", currval);
-    int nextval = AK_sequence_next_value("sekvenca1");
-    printf("\nNext value of sequence sekvenca2: %d\n", nextval);
-    
-    AK_sequence_rename("sekvenca1", "sekvenca3");
-    AK_print_table("AK_sequence"); 
-
-    AK_sequence_modify("sekvenca3", 200, 20, 300, 150, 0);
     AK_sequence_remove("sekvenca1");
+    //AK_sequence_add("sekvenca2", 200, 10, 205, 100, 1);
+    AK_print_table("AK_sequence");
+    int currval = AK_sequence_current_value("sekvenca2");
+    printf("\nCurrent value of sequence sekvenca2: %d", currval);
+    int nextval = AK_sequence_next_value("sekvenca2");
+    printf("\nNext value of sequence sekvenca2: %d\n", nextval);
     AK_print_table("AK_sequence"); 
-    printf("\n Test is successful :) \n");
-    AK_EPI
+    AK_sequence_rename("sekvenca2", "sekvenca3");
+    AK_print_table("AK_sequence"); 
+    AK_sequence_modify("sekvenca3", 200, 20, 300, 150, 0);
+    AK_print_table("AK_sequence"); 
+    AK_EPI;
 }
     

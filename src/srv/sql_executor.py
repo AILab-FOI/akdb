@@ -271,6 +271,76 @@ class Create_sequence_command:
                 ak47.AK_print_table("AK_sequence")
                 return result
                 
+
+
+## alter sequence
+# developd by Matija Jurman
+class Alter_sequence_command:  
+        alter_seq_regex = r"^(?i)alter sequence(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
+
+        ## matches method
+        # checks whether given input matches table_exists command syntax
+        def matches(self, input):
+                print "matching regex"
+                self.pattern = re.compile(self.alter_seq_regex)
+                self.matcher = self.pattern.match(input)
+                if (self.matcher is not None):
+                        message = self.matcher
+                else:
+                        message = None
+                
+                return message 
+
+        
+        # executes the alter sequence expression
+        # neded revision in sequence.c in function AK_sequence_modify which receives 
+        # only int values but posible is also bigint which is default for undefined values
+        def execute(self,input):
+                print "start parsing.."
+                pars = sql_tokenizer()
+                tok = pars.AK_parse_alter_sequence(input)
+                # isinstance needs revision for swig
+                '''
+                if isinstance(tok, str):
+                        print "Error: syntax error in expression"
+                        print string
+
+                        print tok
+                        return False
+                '''
+                print "\nSequence name: ", tok.sequenceName
+                '''print "'AS' definition: ", tok.as_value'''
+                print "'Start with' value: ", tok.startWith
+                print "'Increment by' value: ", tok.increment
+                print "'MinValue' value: ", tok.minvalue
+                print "'MaxValue' value: ", tok.maxvalue
+                print "'Cache' value: ", tok.cache
+                print "'Cycle' value: ", tok.cycle
+                
+                # Check for sequence name, if already exists in database return false
+                # Needs more revision for swig after buffer overflow is handled
+                '''
+                names = ak47.AK_get_column(1, "AK_sequence")
+                for name in set(names):
+                        if(name==tok.seq_name):
+
+                                error = "ERROR the name is already used"
+                                return error
+                '''
+                # executing alter statement 
+                try:
+                        ak47.AK_sequence_modify(str(tok.sequenceName), int(tok.start_with), int(tok.increment_by), int(tok.max_value), int(tok.min_value), int(tok.cycle))
+                        result = "Command succesfully executed"
+                except:
+                        result = "ERROR creating sequence didn't pass"
+                
+                ak47.AK_print_table("AK_sequence")
+                return result
+
+
+
 ## create table command
 # @author Franjo Kovacic
 class Create_table_command:
@@ -326,6 +396,75 @@ class Create_table_command:
                 except:
                         result = "Error. Creating table failed."
                 return result
+
+
+
+## alter table command
+# @author Matija Jurman
+class Alter_table_command:
+        alter_table_regex = r"^(?i)alter table(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
+        expr = None
+
+        ## matches method
+        # checks whether given input matches table_exists command syntax
+        def matches(self, input):
+                self.pattern = re.compile(self.alter_table_regex)
+                self.matcher = self.pattern.match(input)
+                self.expr = input
+                if (self.matcher is not None):
+                        return self.matcher
+                else:
+                        return None
+
+        
+        # executes the alter table expression
+        def execute(self,input):
+                parser = sql_tokenizer()
+                token = parser.AK_alter_table(self.expr)
+                # checking syntax
+                if isinstance(token, str):
+                        print "Error: syntax error in expression"
+                        print self.expr
+
+                        print token
+                        return False
+                # get table name
+                table_name = str(token.tableName)
+                # table should not exist yet
+                '''
+                For some reason, AK_table_exist won't work, it always just exits here, so it's commented out
+                if (ak47.AK_table_exist(table_name) == 1):
+                        print "Error: table'" + table_name + "' already exist"
+                        return False
+
+                '''                
+                # get attributes
+                '''alter_table_attributes = []
+                for attribute in token.attributes:
+                        alter_table_attributes.append([{'name': str(attribute[0])}, {'type':get_attr_type(str(attribute[1]))}])
+                attribute_count = len(alter_table_attributes)'''
+
+		print "start parsing.."
+                pars = sql_tokenizer()
+                tok = pars.AK_alter_table(input)
+                
+                print "\nTable name: ", tok.table_name
+		print "Operation: ", tok.operation
+                print "Column name: ", tok.column_name
+
+                # executing
+                try:
+                        '''ak47.AK_alter_table(table_name, alter_table_attributes, attribute_count)
+			Okomentirati nakon implementacije funkcije alter table u c-u'''
+                        result = "Table modified"
+                except:
+                        result = "Error. Alter table failed."
+                return result
+
+
+
                 
 ## create index command
 # @author Franjo Kovacic
@@ -386,6 +525,78 @@ class Create_index_command:
                 except:
                         result = "Error. Creating index failed."
                 return result
+
+   
+## alter index command
+# @author Matija Jurman
+class Alter_index_command:
+        alter_table_regex = r"^(?i)alter index(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
+        expr = None
+
+        ## matches method
+        # checks whether given input matches table_exists command syntax
+        def matches(self, input):
+                self.pattern = re.compile(self.alter_index_regex)
+                self.matcher = self.pattern.match(input)
+                self.expr = input
+                if (self.matcher is not None):
+                        return self.matcher
+                else:
+                        return None
+
+        
+        # executes the alter index expression
+        def execute(self,input):
+                parser = sql_tokenizer()
+
+                token = parser.AK_parse_alter_index(self.expr)
+                # checking syntax
+                if isinstance(token, str):
+                        print "Error: syntax error in expression"
+                        print self.expr
+                        print token
+                        return False
+                #get table name
+                table_name = str(token.tablica)
+                # check if table exist
+                '''
+                For some reason, AK_table_exist won't work, it always just exits here, so it's commented out
+                if (ak47.AK_table_exist(table_name) == 0):
+                        print "Error: table '"+ table_name +"' does not exist"
+                        return False
+                '''
+                #get index name
+                index = str(token.IndexIme)
+                #get other expression tokens
+                t = list()
+                t.append(table_name)
+                t.append(token.stupci)
+                t.append(token.IndexVrsta)
+                #executing
+                
+		print "start parsing.."
+                pars = sql_tokenizer()
+                tok = pars.AK_parse_alter_index(input)
+                
+                print "\nOperation: ", tok.operation
+		print "Name: ", tok.name
+                print "New name: ", tok.newName
+
+
+                try:
+			'''ak47.AK_update(index, t)'''
+			'''void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char 				*newAttributeValue) '''
+			'''potrebno modificirati update funkciju u c-u jer prihvaca argumente koje nije moguce dohvatiti preko upita'''
+			'''AK_update(321, 58, tblName, "firstname", "Alen", "Markus");'''
+                        result = "Index modified"
+                except:
+                        result = "Error. Alter index failed."
+                return result
+
+
+
 
 ## create trigger command
 # @author Franjo Kovacic
@@ -871,7 +1082,74 @@ class Update_command:
                     return False
                 return False
             
+        
+
+# @author Matija Jurman
+# executes the delete expression
+class Delete_command:
+
+        delete_command_regex = r"^(?i)delete from(\s([a-zA-Z0-9_]+))+?$"
+        pattern = None
+        matcher = None
+
+        ## matches method
+        # checks whether given input matches delete command syntax
+        def matches(self, input):
+                self.pattern = re.compile(self.delete_command_regex)
+                self.matcher = self.pattern.match(input)
+                return self.matcher != None
+
+        ## execute method
+        # defines what is called when delete command is invoked
+        def execute(self,expr):
+                token = sql_tokenizer().AK_parse_where(expr)
+                # Delete table name
+                table_name = str(token.tableName)
+
+                if (ak47.AK_table_exist(table_name) == 0):
+                    print "Error: table '"+ table_name +"' does not exist"
+                    return False
+
+                # Delete values
+                # WHERE condition
+                condition = token.condition if (token.condition is not None) else '' # keep an eye on this test
+
+                # WHERE ...
+		condition_attr_types = map(lambda x: get_attr_type(x.replace("'","")),list(token.condition[1]))
+
+                # Prepare delete data element
+                # This is Test Data!
+                # Iteration required for more than one attribute!
+                '''element = ak47.list_elem()
+                ak47.Ak_Init_L(element) #tu trazi list_elem
+                ak47.Ak_DeleteAll_L(element)
+		Javlja se problem s tipom podataka list_elem i list_node'''
+
+                #deleteColumn = token.columnNames[0]
+                whereColumn = token.condition[1][0]
+                whereValue = token.condition[1][2]
+		
+		print "start parsing.."
+                pars = sql_tokenizer()
+                tok = pars.AK_parse_where(expr)
+                
+                print "\nTable name: ", tok.tableName
+                print "Column name: ", tok.condition[1][0]
+		print "Column value: ", tok.condition[1][2]
+
+		'''
+                if type(whereValue) == int:
+                    ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, whereValue, table_name, whereColumn, element, 1) # tu trazi list_node
+                elif type(whereValue) == float:
+                    ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, whereValue, table_name, whereColumn, element, 1)
+		elif type(whereValue) == str:
+                    ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, whereValue, table_name, whereColumn, element, 1)
+ 
+		ak47.Ak_delete_row(element)
+		Javlja se problem s tipom podataka list_elem i list_node, potrebno uskladiti u c-u posto je ista struktura
+		'''
             
+    
 ## Drop
 #@author Filip Sostarec
 class Drop_command:
@@ -991,18 +1269,22 @@ class sql_executor:
         table_details_command = Table_details_command()
         table_exists_command = Table_exists_command()
         create_sequence_command = Create_sequence_command()
+	alter_sequence_command = Alter_sequence_command()
         create_table_command = Create_table_command()
+ 	alter_table_command = Alter_table_command()
         create_index_command = Create_index_command()
+	alter_index_command = Alter_index_command()
         create_trigger_command = Create_trigger_command()
         insert_into_command = Insert_into_command()
         #create_group_command = Create_group_command()
         grant_command = Grant_command()
         select_command = Select_command()
         update_command = Update_command()
+	delete_command = Delete_command()
         drop_command = Drop_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, grant_command, select_command, update_command,drop_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, alter_sequence_command, create_table_command,alter_table_command, create_index_command, alter_index_command, create_trigger_command,insert_into_command, grant_command, select_command, update_command,delete_command,drop_command]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 

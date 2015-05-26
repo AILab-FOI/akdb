@@ -92,7 +92,7 @@ int AK_user_remove_by_name(char *name) {
 }
 
 /**
- * @author Ljubo Barać, upadate by Lidija Lastavec
+ * @author Ljubo Barać
  * @brief Function renames the user.
  * @param old_name Name of the user to be renamed
  * @param new_name New name of the user
@@ -101,6 +101,7 @@ int AK_user_remove_by_name(char *name) {
  */
 int AK_user_rename(char *old_name, char *new_name, int *password) {
     AK_PRO;
+    printf("\n***Rename group***");
     int result = 0;
     int user_id = AK_user_get_id(old_name);
 
@@ -114,7 +115,7 @@ int AK_user_rename(char *old_name, char *new_name, int *password) {
 
 /**
  * @author Kristina Takač, edited by Ljubo Barać
- * @brief Function that AK_group_add
+ * @brief Function that inserts group in table AK_group
  * @param *name name of group to be added
  * @param set_id non default id to be passed
  * @return id of group                                                      
@@ -178,7 +179,7 @@ int AK_group_remove_by_name(char *name) {
 }
 
 /**
- * @author Ljubo Barać, update by Lidija Lastavec
+ * @author Ljubo Barać
  * @brief Function renames the group.
  * @param old_name Name of the group to be renamed
  * @param new_name New name of the group
@@ -186,7 +187,7 @@ int AK_group_remove_by_name(char *name) {
  */
 int AK_group_rename(char *old_name, char *new_name) {
     AK_PRO;
-  
+    printf("\n***Rename group***");
     int result = 0;
     int view_id = AK_group_get_id(old_name);
 
@@ -266,7 +267,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
  */
 int AK_revoke_privilege_user(char *username, char *table, char *right) {
     AK_PRO;
-    printf("Revoke: %s %s %s", username, table, right);
+    printf("Revokanje: %s %s %s\n", username, table, right);
     int table_id = AK_get_table_obj_id(table);
     int user_id = AK_user_get_id(username);
     int result;
@@ -437,7 +438,7 @@ int AK_revoke_privilege_group(char *groupname, char *table, char *right) {
     int result;
 
     if (strcmp(right, "ALL") == 0) {
-        printf("Revoke  %s %s %s", groupname, table, right);
+        printf("Revokanje  %s %s %s\n", groupname, table, right);
         /*AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(row_root);*/
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -569,7 +570,7 @@ int AK_add_user_to_group(char *user, char *group) {
 }
 
 /**
- * @author Jurica Hlevnjak, update by Lidija Lastavec
+ * @author Jurica Hlevnjak
  * @brief Function removes user from all groups. Used for DROP user.
  * @param user name of user
  * @return EXIT_SUCCESS or EXIT_ERROR
@@ -593,7 +594,6 @@ int AK_remove_user_from_all_groups(char *user) {
             Ak_Insert_New_Element_For_Update(TYPE_INT, &user_id, "AK_user_group", "user_id", row_root, 1);
             result = Ak_delete_row(row_root);
             if (result == EXIT_ERROR){
-			printf("User '%s' is NOT in any group!\n", user);
 		AK_EPI;
 		return EXIT_ERROR;
 	    }
@@ -605,13 +605,12 @@ int AK_remove_user_from_all_groups(char *user) {
     }
 
     //if (result == EXIT_ERROR) return EXIT_ERROR;
-    printf("User '%s' is removed from all groups!\n", user);
     AK_EPI;
     return EXIT_SUCCESS;
 }
 
 /**
- * @author Jurica Hlevnjak, update by Lidija Lastavec
+ * @author Jurica Hlevnjak
  * @brief Function removes all users from group. Used for DROP group.
  * @param group name of group
  * @return EXIT_SUCCESS or EXIT_ERROR
@@ -634,21 +633,18 @@ int AK_remove_all_users_from_group(char *group) {
         if (group_id == (int) *row->next->next->data) {
             Ak_Insert_New_Element_For_Update(TYPE_INT, &group_id, "AK_user_group", "group_id", row_root, 1);
             result = Ak_delete_row(row_root);
-        
-        }
-        i++;
-        if (result == EXIT_ERROR){
-		printf("Group '%s' has NOT any user!\n", group);
+            if (result == EXIT_ERROR){
 		AK_EPI;
 		return EXIT_ERROR;
 	    }
+        }
+        i++;
         //Ak_DeleteAll_L(row_root);
 	Ak_DeleteAll_L3(&row_root);
         AK_free(row);
     }
 
     // if (result == EXIT_ERROR) return EXIT_ERROR;
-    printf("Users deleted from group '%s'!\n", group);
     AK_EPI;
     return EXIT_SUCCESS;
 }
@@ -795,7 +791,7 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
 }
 
 /**
- * @author Jurica Hlevnjak, updated by Lidija Lastavec
+ * @author Jurica Hlevnjak
  * @brief Function check if user have any privilege or belong to group. Used in drop user for restriction.
  * @param user name of user
  * @return EXIT_ERROR or EXIT_SUCCESS
@@ -812,7 +808,7 @@ int AK_check_user_privilege(char *user) {
     //while ((row = (AK_list *) AK_get_row(i, "AK_user_right")) != NULL) {
         if ((int) *row->next->next->data == user_id) {
             privilege = 1;
-        AK_EPI;
+	    AK_EPI;
             return EXIT_SUCCESS;
         }
         i++;
@@ -823,7 +819,6 @@ int AK_check_user_privilege(char *user) {
     //while ((row = (AK_list *) AK_get_row(j, "AK_user_group")) != NULL) {
         if ((int) *row->next->data == user_id) {
             privilege = 1;
-            printf("User %s has privilage!", user);
 	    AK_EPI;
             return EXIT_SUCCESS;
         }
@@ -831,8 +826,7 @@ int AK_check_user_privilege(char *user) {
         AK_free(row);
     }
     if (privilege == 0) {
-		printf("User %s has NOT any privilage!", user);
-		AK_EPI;
+  	AK_EPI;
         return EXIT_ERROR;
     }
     AK_EPI;
@@ -840,7 +834,7 @@ int AK_check_user_privilege(char *user) {
 }
 
 /**
- * @author Jurica Hlevnjak, updated by Lidija Lastavec
+ * @author Jurica Hlevnjak
  * @brief Function check if group have any privilege or user. Used in drop group for restriction.
  * @param group name of group
  * @return EXIT_ERROR or EXIT_SUCCESS
@@ -857,7 +851,6 @@ int AK_check_group_privilege(char *group) {
     //while ((row = (AK_list *) AK_get_row(i, "AK_group_right")) != NULL) {
         if ((int) *row->next->next->data == group_id) {
             privilege = 1;
-        printf("Group %s has privilage!", group);  
 	    AK_EPI;
             return EXIT_SUCCESS;
         }
@@ -876,8 +869,7 @@ int AK_check_group_privilege(char *group) {
         AK_free(row);
     }
     if (privilege == 0) {
-		printf("Group %s has NOT any privilage!", group);  
-		AK_EPI;
+	AK_EPI;
         return EXIT_ERROR;
     }
     AK_EPI;
@@ -885,360 +877,55 @@ int AK_check_group_privilege(char *group) {
 }
 
 /**
- * @author Kristina Takač, updated by Tomislav Ilisevic, updated by Lidija Lastavec
- * @brief Function that tests functions above for privileges, 
+ * @author Kristina Takač.
+ * @brief Function that tests functions above for privileges
  * @return no return value                                                     
  */
 void AK_privileges_test() {
     AK_PRO;
-    
     printf("\nThis is PRIVILEGES test!\n\n");
-    
-    int uspjesno[18] = {0};
-    
-    printf("1. Test for function AK_user_add - inserts users in table AK_user!\n");
-	printf("\n   Test data: proba 123; kitakac 321; mrvasedam 569; swallow 666; testtest 777; protest 888 \n   Result: ");
-	if(
-		AK_user_add("proba", (int*) 123, NEW_ID) == EXIT_ERROR){
-		printf("Test 1. - Fail!\n");
-				
-	} else {
-		printf("Test 1. - Pass!\n");
-		uspjesno[0]=1;
-	}
-	// more users for testing
-	    AK_user_add("kritakac", (int*) 321, NEW_ID);
-		AK_user_add("mrvasedam", (int*) 569, NEW_ID);
-		AK_user_add("swallow", (int*) 666, NEW_ID);   
-		AK_user_add("testtest", (int*) 777, NEW_ID);  
-		AK_user_add("protest", (int*) 888, NEW_ID);  
-        AK_print_table("AK_user");
-
-	printf("\n\n2. Test for function AK_user_rename - renames the user in table AK_user!\n");
-	printf("\n   Test data: from user-proba to user-test\n   Result: ");
-	if(
-		AK_user_rename("proba", "test", (int*) 123) == EXIT_ERROR){
-		printf("Test 2. - Fail!\n");
-				
-	} else {
-		printf("Test 2. - Pass!\n");
-		uspjesno[1]=1;
-	}
-       AK_print_table("AK_user");
-       
-       
-	printf("\n\n3. Test for function AK_user_remove_by_name - removes the user by name from table AK_user!\n");
-	printf("\n   Test data: removing user - swallow\n   Result: ");
-	if(
-		 AK_user_remove_by_name("swallow") == EXIT_ERROR){
-		printf("Test 3. - Fail!\n");
-				
-	} else {
-		printf("Test 3. - Pass!\n");
-		uspjesno[2]=1;
-	}
+    AK_user_add("proba", (int*) 123, NEW_ID);
+    AK_user_add("kritakac", (int*) 321, NEW_ID);
+    AK_user_add("mrvasedam", (int*) 569, NEW_ID);
+    AK_print_table("AK_user");
+    //AK_user_rename("proba", "test", (int*) 123);
     AK_print_table("AK_user");
 
-    printf("\n\n4. Test for function AK_group_add - add group in table AK_group!\n");
-	printf("\n   Test data: group1, group2, group3, groupL, group11, group12\n   Result: ");
-	if(
-		 AK_group_add("group1", NEW_ID) == EXIT_ERROR){
-		printf("Test 4. - Fail!\n");
-				
-	} else {
-		printf("Test 4. - Pass!\n");
-		uspjesno[3]=1;
-	}
-    //more groups for testing
-    AK_group_add("group2", NEW_ID);
-    AK_group_add("group3", NEW_ID);
-    AK_group_add("groupL", NEW_ID);
-    AK_group_add("group11", NEW_ID);
-    AK_group_add("group12", NEW_ID);
+    AK_group_add("grupa1", NEW_ID);
+    AK_group_add("grupa2", NEW_ID);
     AK_print_table("AK_group");
-    
-    printf("\n\n5. Test for function AK_group_rename - renames the group!\n");
-	printf("\n   Test data: group1 to group5, group2 to group4\n   Result: ");
-	if(
-		 AK_group_rename("group1", "group5") == EXIT_ERROR){
-		printf("Test 5. - Fail!\n");
-				
-	} else {
-		printf("Test 5. - Pass!\n");
-		uspjesno[4]=1;
-	}
-    //more groups renaming for test
-    AK_group_rename("group2", "group4");
+    //AK_group_rename("grupa1", "grupa9");
+    //AK_group_rename("grupa2", "grupa4");
     AK_print_table("AK_group");
-    
-    printf("\n\n6. Test for function AK_group_remove_by_name - remove the group by name from table AK_group!\n");
-	printf("\n   Test data: groupL\n   Result: ");
-	if(
-		AK_group_remove_by_name("groupL") == EXIT_ERROR){
-		printf("Test 6. - Fail!\n");
-				
-	} else {
-		printf("Test 6. - Pass!\n");
-		uspjesno[5]=1;
-	}
-    AK_print_table("AK_group"); 
 
-    printf("\n\n7. Test for function AK_add_user_to_group - puts user in given group!\n");
-	printf("\n   Test data:kritakac to group5; test to group5; mrvasedam to group4, testtest to group11\n   Result: ");
-	if(
-		AK_add_user_to_group("kritakac", "group5") == EXIT_ERROR){
-		printf("Test 7. - Fail!\n");
-				
-	} else {
-		printf("Test 7. - Pass!\n");
-		uspjesno[6]=1;
-	}
-    //more users to groups for testing
-    AK_add_user_to_group("test", "group5");
-    AK_add_user_to_group("mrvasedam", "group4");
-    AK_add_user_to_group("testtest", "group11");
+    AK_add_user_to_group("kritakac", "grupa1");
+    AK_add_user_to_group("proba", "grupa1");
+    //AK_add_user_to_group("proba", "grupa2");
     AK_print_table("AK_user_group");
-    
-	printf("\n\n8. Test for function  AK_grant_privilege_group - grants privilege to given group on given table!\n");
-	printf("\n   Test data: privileges for all groups \n   Result: ");
-	if(
-		AK_grant_privilege_group("group4", "professor", "DELETE") == EXIT_ERROR){
-		printf("Test 8. - Fail!\n");
-				
-	} else {
-		printf("Test 8. - Pass!\n");
-		uspjesno[7]=1;
-	}
-   //more privileges to groups for testing
-    AK_grant_privilege_group("group5", "student", "ALL");
-    AK_grant_privilege_group("group4", "student", "ALL");
-    AK_grant_privilege_group("group3", "student", "UPDATE");
-    AK_grant_privilege_group("group11", "student", "DELETE");
+
+    AK_grant_privilege_group("grupa2", "professor", "DELETE");
+    AK_grant_privilege_group("grupa1", "student", "ALL");
+    AK_grant_privilege_group("grupa2", "student", "ALL");
+
     AK_print_table("AK_group_right");
-    
-    printf("\n\n9. Test for function  AK_revoke_privilege_group -revokes privilege from group on given table!\n");
-	printf("\n   Test data: revoke privieleg for group3 od table student \n   Result: ");
-	if(
-		AK_revoke_privilege_group("group3", "student", "ALL") == EXIT_ERROR){
-		printf("\n   Test 9. - Fail!\n");
-				
-	} else {
-		printf("\n   Test 9. - Pass!\n");
-		uspjesno[8]=1;
-	}
+    //AK_revoke_privilege_group("grupa2", "student", "ALL");
     AK_print_table("AK_group_right");
-    // if tested data were for group4,student,all - test pass but revoke ALL privileges for group4 on ALL tables
-    // tested by Lidija Lastavec - BUG in function AK_revoke_privilege_group 
-   
-    printf("\n\n10. Test for function  AK_revoke_all_privileges_group -revokes ALL privileges from group on ALL tables!\n");
-	printf("\n   Test data: revoke all privieleg for group4 on all tables\n   Result: ");
-	if(
-		AK_revoke_all_privileges_group("group4") == EXIT_ERROR){
-		printf("Test 10. - Fail!\n");
-				
-	} else {
-		printf("Test 10. - Pass!\n");
-		uspjesno[9]=1;
-	}
-     AK_print_table("AK_group_right");
-	
-	printf("\n\n11. Test for function AK_grant_privilege_user -grants privilege to user!\n");
-	printf("\n   Test data: grant privileges for users TEST, KRITAKAC,MRVASEDAM and TESTTEST\n   Result: ");
-	if(
-		AK_grant_privilege_user("test", "student", "UPDATE") == EXIT_ERROR){
-		printf("Test 11. - Fail!\n");
-				
-	} else {
-		printf("Test 11. - Pass!\n");
-		uspjesno[10]=1;
-	}	
-	//more privileges for user kritakac     
+
     AK_grant_privilege_user("kritakac", "student", "DELETE");
+    AK_grant_privilege_user("proba", "student", "UPDATE");
     AK_grant_privilege_user("kritakac", "professor", "SELECT");
     AK_grant_privilege_user("kritakac", "employee", "ALL");
-    AK_grant_privilege_user("mrvasedam", "student", "UPDATE");
-    AK_grant_privilege_user("testtest", "employee", "SELECT");
+
     AK_print_table("AK_user_right");
-    // in table AK_user_right missing user_id!!
-    
-    printf("\n\n12. Test for function AK_revoke_privilege_user -revokes privilege from user on given table!\n");
-	printf("\n   Test data: revoke privilages for user test on table student\n   Result: ");
-	if(
-		AK_revoke_privilege_user("test", "student", "UPDATE") == EXIT_ERROR){
-		printf("\n   Test 12. - Fail!\n");
-				
-	} else {
-		printf("\n   Test 12. - Pass!\n");
-		uspjesno[11]=1;
-	} 
-	// test pass but didnt revoke privilages for user test - Lidija Lastavec
+    //AK_revoke_privilege_user("proba", "student1", "UPDATE");
     AK_print_table("AK_user_right");
-    
-    printf("\n\n13. Test for function AK_revoke_all_privileges_user -revokes ALL privileges from user on ALL tables!\n");
-	printf("\n   Test data: revoke privilages for user kritakac on all tables\n   Result: ");
-	if(
-		AK_revoke_all_privileges_user("kritakac") == EXIT_ERROR){
-		printf("\n   Test 13. - Fail!\n");
-				
-	} else {
-		printf("\n   Test 13. - Pass!\n");
-		uspjesno[12]=1;
-	} 
-	AK_print_table("AK_user_right");
-	// test pass but didnt revoke ALL privilages for user kritakac - Lidija Lastavec
-    
-    printf("\n\n14. Test for function AK_check_privilege -checks whether given user has right for given operation!\n");
-	printf("\n   Test data: check if user TEST has right UPDATE on table STUDENT\n   Result: ");
-	if(
-		AK_check_privilege("test", "student", "UPDATE") == EXIT_ERROR){
-		printf("\n   Test 14. - Fail!\n");
-				
-	} else {
-		printf("\n   Test 14. - Pass!\n");
-		uspjesno[13]=1;
-	}
-	// test for NO answer - test PASS!
-	printf("\n   Test data: check if user TEST has right SELECT on table PROFESSOR\n   Result: ");
-	if(
-		AK_check_privilege("test", "professor", "SELECT") == EXIT_ERROR){
-		printf("\n   Test 14. - Pass!\n");		
-	} else {
-		printf("\n   Test 14. - Fail!\n");
-	}
-    AK_print_table("AK_user_right");
-    
-	printf("\n\n15. Test for function AK_check_group_privilege - check if exist the privilege or not!\n");
-	printf("\n   Test data: group5-group_id 114 has privileges..\n   Result: ");
-	if(AK_check_group_privilege("group5") == EXIT_SUCCESS) {
-		printf("\n   Test 15. - Pass!\n");
-		uspjesno[14]=1;
-	} else {
-		printf("\n   Test 15. - Fail!\n");
-	}
-	// test for NO answer - test PASS!
-	printf("\n   Test data: group3-group_id 116-without privileges..\n   Result: ");
-	if(AK_check_group_privilege("group3") == EXIT_ERROR) {
-		printf("\n   Test 15. - Pass!\n");
-	} else {
-		printf("\n   Test 15. - Fail!\n");
-	}
-	AK_print_table("AK_group_right");
-	
-	printf("\n\n16. Test for function AK_check_user_privilege -check if user have any privilege or belong to group!\n");
-	printf("\n   Test data: check if user TEST has ANY privileges\n   Result: ");
-	if(
-		AK_check_user_privilege("test") == EXIT_ERROR){
-		printf("\n   Test 16. - Fail!\n");
-				
-	} else {
-		printf("\n   Test 16. - Pass!\n");
-		uspjesno[15]=1;
-	}
-	// test for NO answer - test PASS!
-	printf("\n   Test data: check if user SWALLOW has ANY privileges\n   Result: ");
-	if (
-		AK_check_user_privilege("swallow") == EXIT_ERROR) {
-		printf("\n   Test 16. - Pass!\n");
-	} else {
-		printf("\n   Test 16. - Fail!\n");
-	}
-	AK_print_table("AK_user_right");
 
-	/*
-	printf("\n6. Test: Group that not exist..group6..\nResult: ");
-	if(AK_revoke_privilege_group("group6", "student", "ALL") == EXIT_SUCCESS) {
-		printf("Group '%s' has no more privileges '%s' upon table '%s'!\n", "group6", "ALL", "student");
-		uspjesno[5]=1;
-	} else {
-		printf("Error during removing privileges for group '%s'!\n", "group6");
-	}
-	AK_print_table("AK_group_right");
-	*/
+    /*
+        printf("\nCheck if user kritakac has right ALL on table student!\n");
+        AK_check_privilege("kritakac", "student", "ALL");
 
-	printf("\n\n17. Test for function AK_remove_all_users_from_group - removes all users from some group\n");
-	printf("\n   Test data: group5-group_id 114- with added users..\n   Result: ");
-	if(AK_remove_all_users_from_group("group5") == EXIT_SUCCESS) {
-		//printf("Users deleted from group '%s'!\n", "group1");
-		printf("\n   Test 17. - Pass!\n");
-		uspjesno[16]=1;
-	} else {
-		//printf("Error deleting user from group '%s'!\n", "group1");
-		printf("\n   Test 17. - Fail!\n");
-	}
-		AK_print_table("AK_user_group");
-	// NON existent group	
-	printf("\n   Test data: group9-NONexistent-without users..\n   Result: ");
-	if(AK_remove_all_users_from_group("group9") == EXIT_ERROR) {
-		//printf("Users deleted from group '%s'!\n", "group3");
-		//uspjesno[7]=1;
-		printf("\n   Test 17. - Pass!\n");
-	} else {
-		//printf("Error deleting user from group '%s'!\n", "group3");
-		printf("\n   Test 17. - Fail!\n");
-		// test for non existent group -FAIL
-	}
-	AK_print_table("AK_user_group");
-	
-
-	printf("\n\n18. Test for function AK_remove_user_from_all_groups - removes all users from all groups\n");
-	printf("\n   Test data: user in group: testtest-group11..\n   Result: ");
-	if(AK_remove_user_from_all_groups("testtest") == EXIT_SUCCESS) {
-		//printf("User '%s' is removed from all groups!\n", "kritakac");
-	printf("\n   Test 18. - Pass!\n");
-		uspjesno[17]=1;
-	} else {
-		//printf("Error deleting user '%s' from groups!\n", "kritakac");
-		printf("\n   Test 18. - Fail!\n");
-	}
-	
-	printf("\n   Test data: User whitout group - PROTEST..\n   Result: ");
-	if(AK_remove_user_from_all_groups("protest") == EXIT_ERROR) {
-		//printf("User '%s' is removed from all groups!\n", "proba");
-		//uspjesno[9]=1;
-		printf("\n   Test 18. - Pass!\n");
-	} else {
-		//printf("Error deleting user '%s' from groups!\n", "proba");
-		printf("\n   Test 18. - Fail!\n");
-	}
-	/*
-	printf("\n11. Test: User not in any group - mrvasedam..\nResult: ");
-	if(AK_remove_user_from_all_groups("mrvasedam") == EXIT_SUCCESS) {
-		printf("User '%s' is removed from all groups!\n", "mrvasedam");
-		uspjesno[10]=1;
-	} else {
-		printf("Error deleting user '%s' from groups!\n", "mrvasedam");
-	}
-	*/
-	AK_print_table("AK_user_group");
-
-	/*
-	printf("Test for function AK_group_remove_by_name - removes group by name\n");
-	printf("\n12. Test: Group that exists..group3..\nResult: ");
-	if(AK_group_remove_by_name("group3") == EXIT_SUCCESS) {
-		printf("Group '%s' is removed!\n", "group3");
-		uspjesno[11]=1;
-	} else {
-		printf("Error deleting group '%s'!\n", "group3");
-	}
-	printf("\n13. Test: Group that not exists..group6..\nResult: ");
-	if(AK_group_remove_by_name("group6") == EXIT_SUCCESS) {
-		printf("Group '%s' is removed!\n", "group6");
-		uspjesno[12]=1;
-	} else {
-		printf("Error deleting group '%s'!\n", "group6");
-	}
-	AK_print_table("AK_group");
-	*/
-
-	printf("\nSummary: \n");
-	int br=0;
-	int brFail=0;
-	for(br=0;br<18;br++){
-		printf("%i. Test: %s \n", (br+1),  (uspjesno[br]==1?"Pass":"Fail"));
-		if(uspjesno[br]==0) brFail++;
-	}
-
-	if(brFail==0) printf("\nALL TESTS ARE PASSED! \n");
-	else printf("\nThere are %i tests that failed.. \n", brFail);
+        printf("\nCheck if user proba has right UPDATE on table student!\n");
+        AK_check_privilege("proba", "student", "UPDATE");
+     */
     AK_EPI;
 }

@@ -38,27 +38,21 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
     AK_block *temp_block_tbl1 = (AK_block *) AK_read_block(table_address1);
     AK_block *temp_block_tbl2 = (AK_block *) AK_read_block(table_address2);
 
-	// The same header is written in all allocated table blocks.
+	//Currently it works with headers no longer than MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
 	//This is wrong and needs to be corrected.
 	//If header doesn't fit in the first block than system must write the remain attributes from header to the new block.
 	//Correction must be handled in all functions that write, read or count header attributes.
-    
-    
+	AK_header header[MAX_ATTRIBUTES];
+    memset(header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
+
     int head1 = 0; 		//counter of the heads
     int head2 = 0; 		//counter of the heads
-    while (strcmp(temp_block_tbl1->header[head1].att_name, "") != 0) head1++;
-    while (strcmp(temp_block_tbl2->header[head2].att_name, "") != 0) head2++;
-    int header_size = head1+head2+1;
-    AK_header header[header_size];
-    memset(header, 0, sizeof( AK_header ) * header_size);
-   
-    head1 = 0;
-    head2 = 0;
     int new_head = 0; 	//counter of heads to write
     int rename = 0;		//indicate if we copy these header or not
     int length_tbl1 = strlen(srcTable1);
     int length_tbl2 = strlen(srcTable2);
     char *renamed_att;
+
     //first we copy all of the column names from the first table
     while (strcmp(temp_block_tbl1->header[head1].att_name, "") != 0) {
 
@@ -214,7 +208,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
 }
 
 /**
- * @author Tomislav Mikulček,updated by Nikola Miljancic
+ * @author Tomislav Mikulček
  * @brief Function for creating a theta join betwen two tables on specified conditions. Names of the attibutes in the constraints parameter must be prefixed
  *         with the table name followed by a dot if and only if they exist in both tables. This is left for the preprocessing. Also, for now the constraints  
  *	   must come from the two source tables and not from a third.
@@ -317,12 +311,19 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct lis
 void AK_op_theta_join_test() {
     AK_PRO;
     printf("\n********** THETA JOIN TEST **********\n\n");
-
+/*
+    AK_list *constraints = (AK_list *) AK_malloc(sizeof (AK_list));
+    Ak_Init_L(constraints);*/
+    
     struct list_node *constraints = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&constraints);
 
     //test where no column names overlap
     printf("SELECT * FROM department, professor WHERE manager = lastname;\n");
+    /*Ak_InsertAtEnd_L(TYPE_ATTRIBS, "manager", sizeof ("manager"), constraints);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);*/
+
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "manager", sizeof ("manager"), constraints);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), constraints);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
@@ -330,10 +331,14 @@ void AK_op_theta_join_test() {
     AK_theta_join("department", "professor", "theta_join_test", constraints);
     AK_print_table("theta_join_test");
 
+//    Ak_DeleteAll_L(constraints);
     Ak_DeleteAll_L3(&constraints);
 
+    //test where overlaping columns are not a part of the constraints
     printf("SELECT * FROM student, professor2 WHERE id_prof = mbr;\n");
-
+    /*Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "mbr", sizeof ("mbr"), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);*/
 
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr", sizeof ("mbr"), constraints);
@@ -341,19 +346,36 @@ void AK_op_theta_join_test() {
     
     AK_theta_join("student", "professor2", "theta_join_test2", constraints);
     AK_print_table("theta_join_test2");
+
+    //Ak_DeleteAll_L(constraints);
     Ak_DeleteAll_L3(&constraints);
 
     //test where overlaping columns are a part of the constraints
-    printf("SELECT * FROM employee, department WHERE employee.id_department = department.id_department;\n");   
+    printf("SELECT * FROM employee, department WHERE employee.id_department = department.id_department;\n");
+    /*Ak_InsertAtEnd_L(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "department.id_department", sizeof ("department.id_department"), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), constraints);*/
+    
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "department.id_department", sizeof ("department.id_department"), constraints);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
 
     AK_theta_join("employee", "department", "theta_join_test3", constraints);
     AK_print_table("theta_join_test3");
+
+    //Ak_DeleteAll_L(constraints);
     Ak_DeleteAll_L3(&constraints);
+
+    //test for addition and inequality
     char num = 102;
     printf("SELECT * FROM student, professor2 WHERE year + id_prof > 37895;\n");
+    /*
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), constraints);
+    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, "+", sizeof ("+"), constraints);
+    Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), constraints);
+    Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", sizeof (">"), constraints);*/
+    
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), constraints);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "+", sizeof ("+"), constraints);
@@ -362,7 +384,8 @@ void AK_op_theta_join_test() {
 
     AK_theta_join("student", "professor2", "theta_join_test4", constraints);
     AK_print_table("theta_join_test4");
-    printf("Test is successful :) \n");
+
+    //Ak_DeleteAll_L(constraints);
     Ak_DeleteAll_L3(&constraints);
 
     AK_free(constraints);

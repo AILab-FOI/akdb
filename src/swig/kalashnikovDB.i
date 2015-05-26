@@ -256,10 +256,10 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
 %include "../auxi/auxiliary.h"
 
 %include "../dm/dbman.h"
+
+extern table_addresses *AK_get_segment_addresses(char * segmentName, int segmentType);
+
 %include "../dm/dbman.c"
-extern table_addresses *AK_get_segment_addresses(char * segmentName);
-
-
 
 %include "../mm/memoman.c"
 %include "../mm/memoman.h"

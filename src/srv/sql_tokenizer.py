@@ -810,7 +810,7 @@ class sql_tokenizer:
     @return if command is successfully parsed returns list of tokens, else returns error message as string 
     '''  
     alterIndexToken  = Keyword("ALTER INDEX", caseless=True)
-    renameToToken    = Keyword("RENAME TO",caseless=True)
+    renameToToken    = Keyword("RENAME TO",caseless=True).setResultsName("operation")
     
     tokens  = Word(alphanums+"_:.-")
     name    = tokens.copy().setResultsName("name")
@@ -829,12 +829,13 @@ class sql_tokenizer:
    
   def AK_parse_alter_sequence(self, string):
     '''
-    @author Marinko Radic
+    @author Marinko Radic, updated by Matija Jurman
     @brief sql parsing of ALTER SEQUNCE command
     @param string sql command as string
     @return if command is successfully parsed returns list of tokens, else returns error message as string 
     '''     
     alterSequenceToken  = Keyword("ALTER SEQUENCE", caseless=True)
+    startWithToken      = Keyword("START WITH", caseless=True)
     incrementByToken    = Keyword("INCREMENT BY", caseless=True)
     minValueToken       = Keyword("MINVALUE",caseless=True)
     NoMinValueToken     = Keyword("NO MINVALUE",caseless=True)
@@ -851,16 +852,18 @@ class sql_tokenizer:
     tokens         = Word(alphanums+"_")
     tokens2        = Word(nums)
     sequenceName   = tokens.copy().setResultsName("sequenceName")
+    startWith      = tokens2.copy().setResultsName("startWith")
     increment      = tokens2.copy().setResultsName("increment")
     minValue       = tokens2.copy().setResultsName("minvalue")
     maxValue       = tokens2.copy().setResultsName("maxvalue")
     cache          = tokens.copy().setResultsName("cache")
+    cycle          = tokens.copy().setResultsName("cycle")
     newName        = tokens.copy().setResultsName("newName")
     restartValue   = tokens2.copy().setResultsName("restartValue")
-    constraints    = ZeroOrMore( restartWithToken + restartValue.setResultsName("restartValue") |
+    constraints    = ZeroOrMore( restartWithToken + restartValue.setResultsName("restartValue") | startWithToken + startWith.setResultsName("startWith") |
     incrementByToken + increment.setResultsName("increment")|
     minValueToken + minValue.setResultsName("minvalue")| NoMinValueToken| maxValueToken + maxValue.setResultsName("maxvalue") | noMaxValueToken |
-    cacheToken + cache.setResultsName("cache") |cycleToken | noCycleToken )
+    cacheToken + cache.setResultsName("cache") |cycleToken + cycle.setResultsName("cycle") | noCycleToken )
     
     alterSequenceCmd = alterSequenceToken.setResultsName("commandName") + sequenceName.setResultsName("sequenceName") + Optional(constraints)
     try:

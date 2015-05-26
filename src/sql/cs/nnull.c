@@ -1,5 +1,5 @@
 /**
-@file nnull.c Provides functions for not null constraint
+@file between.c Provides functions for not null constaint
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -18,164 +18,194 @@
  */
 
 #include "nnull.h"
+//
 
 /**
- * @author Saša Vukšić, updated by Nenad Makar
- * @brief Function that sets NOT NULL constraint on attribute
+ * @author Saša Vukšić
+ * @brief Function that sets null constraint on attribute
  * @param char* tableName name of table
- * @param char* attName name of attribute
  * @param char* constraintName name of constraint
- * @return EXIT_ERROR or EXIT_SUCCESS
- **/
-int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName) {
-	int i;
-	int numRows;
-	int newConstraint;
-	int uniqueConstraintName;
-	struct list_node *row;
-	struct list_node *attribute;
-	AK_PRO;
-
-	newConstraint = AK_read_constraint_not_null(tableName, attName, NULL);
-
-	if(newConstraint == EXIT_ERROR)
-	{
-		printf("\nFAILURE!\nNOT NULL constraint already exists on attribute: %s\nof table: %s\n\n", attName, tableName);
-		return EXIT_ERROR;
-		AK_EPI;
-	}
-	
-	numRows = AK_get_num_records(tableName);
-	
-	if(numRows > 0)
-	{
-		int positionOfAtt = AK_get_attr_index(tableName, attName) + 1;
-		
-		for(i=0; i<numRows; i++)
-		{
-			row = AK_get_row(i, tableName);
-			attribute = Ak_GetNth_L2(positionOfAtt, row);
-			
-			if(AK_tuple_to_string(attribute) == NULL)
-			{
-				printf("\nFAILURE!\nTable: %s\ncontains NULL sign and that would violate NOT NULL constraint which You would like to set on attribute: %s\n\n", tableName, attName);
-				return EXIT_ERROR;
-				AK_EPI;
-			}
-		}
-	}
-
-	uniqueConstraintName = Ak_check_constraint_name(constraintName);
-
-	if(uniqueConstraintName == EXIT_ERROR)
-	{
-		printf("\nFAILURE!\nConstraint name: %s\nalready exists in database\n\n", constraintName);
-		return EXIT_ERROR;
-		AK_EPI;
-	}
-	
-	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&row_root);
-
-	int obj_id = AK_get_id();
-	Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_not_null", "obj_id", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_not_null", "tableName", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_not_null", "constraintName", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_not_null", "attributeName", row_root);
-	Ak_insert_row(row_root);
-	Ak_DeleteAll_L3(&row_root);
-	AK_free(row_root);
-	printf("\nNOT NULL constraint is set on attribute: %s\nof table: %s\n\n", attName, tableName);
-	return EXIT_SUCCESS;
-	AK_EPI;
-}
-
-/**
- * @author Saša Vukšić, updated by Nenad Makar
- * @brief Function checks if there's violation of NOT NULL constraint
- * @param char* tableName name of table
  * @param char* attName name of attribute
+ * @return No return value
+ **/
+void AK_set_constraint_not_null(char* tableName, char* constraintName, char* attName) {
+    char systemTableName[50];
+    int systemTableAddress;
+    int j, i = 0;
+    int AK_freeSpaceFound = 0;
+    int tupleDictID = -1;
+    AK_block *tempBlock;
+    int itis = 1;
+    int id;
+    AK_PRO;
+    tempBlock = (AK_block *)AK_read_block(0);
+
+    while (itis) {
+        for (j = 0; j < 50; j++)
+            systemTableName[j] = FREE_CHAR;
+
+        memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
+        memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
+        if (strcmp(systemTableName, "AK_constraints_not_null") == 0) {
+            Ak_dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
+
+            tempBlock = (AK_block *)AK_read_block(systemTableAddress);
+
+            while (AK_freeSpaceFound == 0) {
+                tupleDictID += 1;
+                if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT)
+                    AK_freeSpaceFound = 1;
+            }
+
+            //printf("ddddddddddd %i",tupleDictID);
+
+            if (AK_freeSpaceFound == 1) {
+                id = AK_get_id();
+                AK_insert_entry(tempBlock, TYPE_INT, &id, tupleDictID);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, tableName, tupleDictID + 1);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, constraintName, tupleDictID + 2);
+                AK_insert_entry(tempBlock, TYPE_VARCHAR, attName, tupleDictID + 3);
+
+                AK_write_block(tempBlock);
+
+            } else {
+                //if (DEBUG)
+                    //printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
+		    AK_EPI;
+                    exit (EXIT_ERROR);
+            }
+            itis = 0;
+        }
+        i++;
+    }
+    AK_free(tempBlock);
+    AK_EPI;
+}
+
+//
+
+/**
+ * @author Saša Vukšić
+ * @brief Function checks if value is not null 
+ * @param char* tableName name of table
  * @param char* newValue new value
+ * @param char* attNamePar name of attribute
  * @return EXIT_ERROR or EXIT_SUCCESS
  **/
 
-int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue) {
-	if(newValue == NULL)
-	{
-		AK_PRO;
-		int numRecords = AK_get_num_records("AK_constraints_not_null");
+int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNamePar) {
+    char systemTableName[50];
+    int systemTableAddress;
+    int j, i = 0;
+    AK_block *tempBlock;
+    int itis = 1;
+    int AK_freeSpaceFound = 0;
+    int tupleDictID = -1;
+    int flag = EXIT_SUCCESS;
+    AK_PRO;
+    tempBlock = (AK_block *)AK_read_block(0);
 
-		if(numRecords != 0)
-		{
-			struct list_node *row;
-			struct list_node *attribute;
-			struct list_node *table;
-			int i;
-			
-			for(i=0; i<numRecords; i++)
-			{
-				row = AK_get_row(i, "AK_constraints_not_null");
-				attribute = Ak_GetNth_L2(4, row);
-				
-				if(strcmp(attribute->data, attName) == 0)
-				{
-					table = Ak_GetNth_L2(2, row);
-					
-					if(strcmp(table->data, tableName) == 0)
-					{
-						return EXIT_ERROR;
-						AK_EPI;
-					}
-				}
-			}
-			
-			return EXIT_SUCCESS;
-			AK_EPI;
-		}
-		else
-		{
-			return EXIT_SUCCESS;
-			AK_EPI;			
-		}
+    while (itis) {
+        for (j = 0; j < 50; j++)
+            systemTableName[j] = FREE_CHAR;
 
-	}
-	else
-	{
-		return EXIT_SUCCESS;
-		AK_EPI;
-	}
+        memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
+        memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
+        if (strcmp(systemTableName, "AK_constraints_not_null") == 0) {
+            Ak_dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
+            itis = 0;
+        }
+        i++;
+    }
+    tempBlock = (AK_block *)AK_read_block(systemTableAddress);
+
+
+    char value[50];
+    char att[50];
+
+
+    while (AK_freeSpaceFound == 0) {
+        tupleDictID += 1;
+        if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT) {
+            AK_freeSpaceFound = 1;
+        } else {
+            for (j = 0; j < 50; j++) {
+                value[j] = FREE_CHAR;
+                att[j] = FREE_CHAR;
+            }
+
+            memcpy(value, tempBlock->data + tempBlock->tuple_dict[tupleDictID].address, tempBlock->tuple_dict[tupleDictID].size);
+            if (strcmp(value, tableName) == 0) {
+                memcpy(att, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
+                if (strcmp(att, attNamePar) == 0) {
+                    /*
+                                        if(is_number(newValue) == 0)
+                                        {
+                                            if(DEBUG)
+                                                printf("NIje broj\n");
+                                            if(strlen(newValue) == 0)
+                                            {
+                                                flag = EXIT_ERROR;
+                                                printf("Postoji null ograničenje nad atributm %s u tablici %s\n",att,value);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if(DEBUG)
+                                                printf("Broj je\n");
+                                            nValue = atof(newValue);
+                                            if(nValue == 0)
+                                            {
+                                              flag = EXIT_ERROR;
+                                              printf("Postoji null ograničenje nad atributm %s u tablici %s\n",att,value);
+                                            }
+                                        }
+                     */
+                    if (strcmp(newValue, NULLL) == 0) {
+                        flag = EXIT_ERROR;
+                        printf("It is null!!!");
+                    }
+
+                } else {
+                    flag = EXIT_SUCCESS;
+                }
+            }
+        }
+    }
+    AK_EPI;
+    return flag;
 }
-
 /**
-  * @author Saša Vukšić, updated by Nenad Makar
-  * @brief Function for testing testing NOT NULL constraint
+  * @author Unknown
+  * @brief Function checks wether some char is number
+  * @param *s sign which we want to check
+  * @return 0 if s is number, otherwise 1 
+  */
+int AK_is_number(char* s) {
+    int i;
+    AK_PRO;
+    for (i = 0; i < strlen(s); i++) {
+        if (isdigit(s[i]) == 0){
+	    AK_EPI;
+            return 0;
+	}
+    }
+    AK_EPI;
+    return 1;
+}
+/**
+  * @author Saša Vukšić
+  * @brief Function for testing testing not null constraint
   * @return No return value
   */
 void AK_null_test() {
-	char* tableName = "student";
-	char* attName = "firstname";
-	char* attName2 = "lastname";
-	char* constraintName = "firstnameNotNull";
-	char* newValue = NULL;
-	int result;
-	AK_PRO;
-	printf("\nExisting NOT NULL constraints:\n\n");
-	AK_print_table("AK_constraints_not_null");
-	printf("\nTest table:\n\n");	
-	AK_print_table(tableName);
-	printf("\nTrying to set NOT NULL constraint on attribute %s of table %s...\n\n", attName, tableName);
-	result = AK_set_constraint_not_null(tableName, attName, constraintName);
-	AK_print_table("AK_constraints_not_null");
-	if(result == EXIT_SUCCESS)
-	{
-		printf("\nChecking if attribute %s of table %s can contain NULL sign...\nYes (0) No (-1): %d\n\n", attName, tableName, AK_read_constraint_not_null(tableName, attName, newValue));
-	}
-	printf("\nTrying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attName, tableName);
-	result = AK_set_constraint_not_null(tableName, attName, constraintName);
-	AK_print_table("AK_constraints_not_null");
-	printf("\nTrying to set NOT NULL constraint with name %s AGAIN...\n\n", constraintName);
-	result = AK_set_constraint_not_null(tableName, attName2, constraintName);
-	AK_print_table("AK_constraints_not_null");
-	printf("\nTest succeeded.");
-	AK_EPI;
+    char* tableName = "studenti";
+    char* constraintName = "studentiNotNull";
+    char* attName = "ime";
+    char* newValue = NULLL;
+    AK_PRO;
+    AK_set_constraint_not_null(tableName, constraintName, attName);
+    AK_read_constraint_not_null(tableName, newValue, attName);
+    AK_EPI;
+
 }

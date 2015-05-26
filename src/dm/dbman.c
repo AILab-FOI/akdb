@@ -80,7 +80,7 @@ int AK_init_db_file(int size) {
     AK_allocationbit->allocationtable[0] = 0;
     AK_allocationbit->last_allocated = 1;
 
-    AK_blocktable_flush();  
+    AK_blocktable_flush();	
 
     printf("AK_init_db_file: Donex!\n");
     AK_EPI;
@@ -666,7 +666,7 @@ int AK_init_allocation_table(){
             exit(EXIT_ERROR);
         }
         pthread_mutex_unlock(&fileLockMutex);
-    //AK_leave_critical_section(dbmanFileLock);
+	//AK_leave_critical_section(dbmanFileLock);
     }
 
     else if (AK_fread(AK_allocationbit, AK_ALLOCATION_TABLE_SIZE, 1, db) == 0) {
@@ -1043,7 +1043,7 @@ AK_block * AK_read_block(int address) {
     }
     
     // if block is locked for writing, then we have to wait another thread to unlock it
-    //   (thus preventing it from accessing disk once again)
+    //	 (thus preventing it from accessing disk once again)
     // if another thread is only reading from this block, then we don't have to lock it's mutex, because
     // any number of threads can read the same block at the same time
     // else, we lock the block for reading and proceed    
@@ -2479,7 +2479,7 @@ int AK_delete_segment(char * name, int type) {
     int i = 0;
     table_addresses *addresses;
     AK_PRO;
-    addresses = (table_addresses*)AK_get_segment_addresses(name);
+    addresses = (table_addresses*)AK_get_segment_addresses(name, type);
     while (addresses->address_from[i] != 0) {
         if (AK_delete_extent(addresses->address_from[i], addresses->address_to[i]) == EXIT_ERROR){
             AK_EPI;
@@ -2559,6 +2559,8 @@ int AK_init_disk_manager() {
             AK_allocationbit->prepared = 31;
             AK_allocationbit->ltime = time(NULL);
             AK_blocktable_flush();
+            int vari;
+            scanf("%d", &vari);
             AK_EPI;
             return EXIT_SUCCESS;
         }

@@ -18,7 +18,7 @@ To see list of entered comands, type 'history'.
 #You should add commands to this list when needed
 client_specific_commands = ["", "\?", "history"]
 
-##command list, used to print out the help
+##command list, used to print out the help, updated by Matija Jurman
 #update this list when new commands are added
 command_list =  {'\q': 'Disconnect from the server and quit akdb client.',
 				 '\?': 'List all commands supported in akdb.',
@@ -26,11 +26,15 @@ command_list =  {'\q': 'Disconnect from the server and quit akdb client.',
 				 '\p <table_name>' : 'Prints out table',
 				 '\\t <table_name>?': 'Check whether the given table exists in database or not.',
 				 'create sequence <sequence_name> <sql_expression>' : 'Creating sequence in AK_sequence table',
+				 'alter sequence <sequence_name> <sql_expression>' : 'Alter sequence in AK_sequence table',
 				 'create table <table_name> <sql_expression>' : 'Create table',
+				 'alter table <table_name> <sql_expression>' : 'Alter table',
 				 'create index <index_name> <sql_expression>' : 'Create index',
+				 'alter index <index_name> <sql_expression>' : 'Alter index',
 				 'create trigger <trigger_name> <sql_expression>' : 'Create trigger',
 				 'select <sql_expression>' : 'Select data from table',
 				 'update <sql_expression>' : 'Update table',
+				 'delete from <table_name> <sql_expression>' : 'Delete from table',
 				 'history': 'List all previously typed commands.'
 				}
 

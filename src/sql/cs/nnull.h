@@ -1,5 +1,5 @@
 /**
-@file nnull.h Header file that provides data structures for not null constraint
+@file nnull.h Header file that provides data structures for not null constaint
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -20,13 +20,13 @@
 #ifndef NNULL
 #define NNULL
 
-#include "../../file/table.h"
-#include "../../file/fileio.h"
+#include "../../mm/memoman.h"
+#include "../../file/id.h"
 #include "../../auxi/mempro.h"
-#include "constraint_names.h"
 
-int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName);
-int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue);
+void AK_set_constraint_not_null(char* tableName, char* constraintName, char* attName);
+int AK_read_constraint_not_null(char* tableName, char newValue[], char* attNamePar) ;
+int AK_is_number(char* s);
 void AK_null_test();
 
 #endif

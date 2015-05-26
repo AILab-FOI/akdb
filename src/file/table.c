@@ -600,7 +600,7 @@ void AK_print_table(char *tblName) {
                     if (temp->block->last_tuple_dict_id == 0)
                         break;
                     for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
-                        if (temp->block->tuple_dict[k].size > 0 /*&& k / num_attr < num_rows*/) {
+                        if (temp->block->tuple_dict[k].size > 0) {
                             for (l = 0; l < num_attr; l++) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
