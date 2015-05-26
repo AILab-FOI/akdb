@@ -1286,11 +1286,11 @@ class Create_view_command:
                         print token
                         return False
 
-		print "start parsing.."
+		'''print "test...start parsing.."
                 
                 print "\nView name: ", token.name
 		print "Mode: ", token.mode
-                print "Query: ", token.query
+                print "Query: ", token.query'''
 
                 # executing
                 try:
@@ -1332,20 +1332,20 @@ class Alter_view_command:
                         print token
                         return False
 
-		print "start parsing.."
+		'''print "test...start parsing.."
                 pars = sql_tokenizer()
                 tok = pars.AK_parse_alter_view(input)
                 
                 print "\nView name: ", tok.name
 		print "Operation: ", tok.operation
-                print "New name: ", tok.newName
+                print "New name: ", tok.newName'''
 
                 # executing
                 try:
-			if(tok.operation=="RENAME TO"):
-                        	ak47.AK_view_rename(tok.name,tok.newName)
+			if(token.operation=="RENAME TO"):
+                        	ak47.AK_view_rename(token.name,token.newName)
 			'''elif(tok.operation=="Query"):
-				ak47.AK_view_change_query(tok.name,"44query44","student;id")'''
+				ak47.AK_view_change_query(token.name,"44query44","student;id")'''
                         result = "View modified"
                 except:
                         result = "Error. Alter view failed."
