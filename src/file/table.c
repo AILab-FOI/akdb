@@ -1009,10 +1009,17 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     return EXIT_SUCCESS;
 }
 
+
+
+
+
+
 /**
  * @author Unknown
  * @brief Function for testing table abstraction
  * @return No return value
+
+    @update by Ana-Marija Balen - added getRow function to the test
  */
 void AK_table_test() {
     AK_PRO;
@@ -1039,7 +1046,18 @@ void AK_table_test() {
     printf("%d\n", AK_get_num_records("student"));
     printf("\n");
 
-    printf("Table \"student\": AK_get_row: First row: \n");
+    printf("Table \"student\": AK_get_row: ");
+    
+    int i;
+
+    AK_header *head = AK_get_header("student");
+    int num_attr = AK_num_attr("student");
+    int len[num_attr];
+    for (i = 0; i < num_attr; i++) {
+            len[i] = strlen((head + i)->att_name);
+    }
+
+    AK_print_row(len, AK_get_row(0,"student"));
     printf("\n");
 
     printf("Table \"student\": AK_get_attr_name for index 3: ");
