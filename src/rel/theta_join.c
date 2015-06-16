@@ -144,7 +144,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
  * @return No return value
  */
 //void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
-void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, struct list_node *constraints, char *new_table) {
+void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, list_node *constraints, char *new_table) {
     AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
 
@@ -155,8 +155,8 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
     AK_list_elem row_root_init = (AK_list_elem) AK_malloc(sizeof (AK_list));
     AK_list_elem row_root_full;*/
 
-    struct list_node *row_root_init = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    struct list_node *row_root_full;
+    list_node *row_root_init = (list_node *) AK_malloc(sizeof (list_node));
+    list_node *row_root_full;
 
     AK_header *t_header = (AK_header *) AK_get_header(new_table);
 
@@ -220,7 +220,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
  *   
  */
 //int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *constraints) {
-int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node *constraints) {
+int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, list_node *constraints) {
 	AK_PRO;
 	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
@@ -315,7 +315,7 @@ void AK_op_theta_join_test() {
     AK_list *constraints = (AK_list *) AK_malloc(sizeof (AK_list));
     Ak_Init_L(constraints);*/
     
-    struct list_node *constraints = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *constraints = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&constraints);
 
     //test where no column names overlap

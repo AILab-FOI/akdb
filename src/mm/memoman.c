@@ -523,7 +523,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     int start_address = 0;
     float RESIZE_FACTOR = 0;
     int end_address;
-    struct list_node *row_root;
+    list_node *row_root;
     int obj_id = 0;
 	//!!! to correct header BUG iterate through header from 0 to N-th block while there is
 	//header attributes. Than create header and pass it to function for extent creation below.
@@ -570,7 +570,7 @@ int AK_init_new_extent(char *table_name, int extent_type) {
     end_address = start_address + (old_size + old_size * RESIZE_FACTOR);
     //mem_block = (AK_mem_block *) AK_get_block(0);
 
-    row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
     //DeleteAllElements(row_root);
     Ak_Insert_New_Element(TYPE_INT, &obj_id, sys_table, "obj_id", row_root);

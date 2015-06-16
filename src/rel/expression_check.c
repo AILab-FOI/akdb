@@ -32,7 +32,7 @@
 #include "expression_check.h"
 
 //int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a, const char *b) {
-int AK_check_arithmetic_statement(struct list_node *el, const char *op, const char *a, const char *b) {  
+int AK_check_arithmetic_statement(list_node *el, const char *op, const char *a, const char *b) {  
   AK_PRO;
     char **numericStringEnd=NULL; //A pointer to the location where the numeric part of the string ends
 
@@ -202,7 +202,7 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
  * @result 0 if row does not satisfy, 1 if row satisfies expression
  */
 //int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr) {
-int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list_node *expr) {
+int AK_check_if_row_satisfies_expression(list_node *row_root, list_node *expr) {
     AK_PRO;
     if (expr == 0) {
     	AK_EPI;
@@ -219,12 +219,12 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
     AK_list_elem row;
     AK_list_elem a, b;*/
     
-    struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *temp = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&temp);
 
-    struct list_node *el = Ak_First_L2(expr);
-    struct list_node *row;
-    struct list_node *a, *b;
+    list_node *el = Ak_First_L2(expr);
+    list_node *row;
+    list_node *a, *b;
 
     char data[MAX_VARCHAR_LENGTH];
 
@@ -341,7 +341,7 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
         el = el->next;
     }
 
-    memcpy(&result, ((struct list_node *) Ak_First_L2(temp))->data, sizeof (int));
+    memcpy(&result, ((list_node *) Ak_First_L2(temp))->data, sizeof (int));
     //Ak_DeleteAll_L(temp);
     Ak_DeleteAll_L3(&temp);
     AK_free(temp);
@@ -353,7 +353,7 @@ void Ak_expression_check_test()
 {
     AK_PRO;
     //AK_list_elem elem = AK_malloc(sizeof(AK_list_elem));
-    struct list_node *elem = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    list_node *elem = (list_node *) AK_malloc(sizeof(list_node));
     elem->type = TYPE_INT;
     const char *op = "+";
     const char *a = "800";

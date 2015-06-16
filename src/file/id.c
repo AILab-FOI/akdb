@@ -31,14 +31,14 @@ int AK_get_id() {
     int current_value = ID_START_VALUE;
     char temp_data[MAX_VARCHAR_LENGTH];
     AK_PRO;
-    struct list_node *row_root= (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root= (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root); 
-    struct list_node *row = (struct list_node*) AK_malloc(sizeof (struct list_node));
+    list_node *row = (list_node*) AK_malloc(sizeof (list_node));
 
     int num_rec = AK_get_num_records("AK_sequence");
     for (i = 0; i < num_rec; i++) {
-        row = (struct list_node *)AK_get_row(i, "AK_sequence");
-        struct list_node *value = Ak_GetNth_L2(1, row);
+        row = (list_node *)AK_get_row(i, "AK_sequence");
+        list_node *value = Ak_GetNth_L2(1, row);
         memcpy(temp_data, &value->data, value->size);
         temp_data[value->size] = 0; //terminate string
         

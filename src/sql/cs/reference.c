@@ -42,7 +42,7 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     */
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
 
     for (i = 0; i < attNum; i++) {
@@ -72,7 +72,7 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
 AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
     int i = 0;
     //AK_list *list;
-    struct list_node *list;
+    list_node *list;
     AK_ref_item reference;
     AK_PRO;
     reference.attributes_number = 0;
@@ -106,7 +106,7 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
     int i;
     int att_index;
 //    AK_list *list_row, *list_col;
-    struct list_node *list_row, *list_col;
+    list_node *list_row, *list_col;
     AK_PRO;
     while ((list_row = AK_get_row(i, "AK_reference")) != NULL) {
         if (strcmp(list_row->next->data, tableName) == 0 &&
@@ -135,12 +135,12 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
  * @return EXIT_SUCCESS if update is needed, EXIT_ERROR if not
  */
 //int AK_reference_check_if_update_needed(AK_list *lista, int action) {
-int AK_reference_check_if_update_needed(struct list_node *lista, int action) {
+int AK_reference_check_if_update_needed(list_node *lista, int action) {
     //AK_list_elem temp;
-    struct list_node *temp;
+    list_node *temp;
     int i = 0;
 //    AK_list *row;
-    struct list_node *row;
+    list_node *row;
    AK_PRO;
     while ((row = AK_get_row(i, "AK_reference")) != NULL) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
@@ -173,14 +173,14 @@ int AK_reference_check_if_update_needed(struct list_node *lista, int action) {
  * @return EXIT_SUCCESS if there is no restriction on this action, EXIT_ERROR if there is
  */
 //int AK_reference_check_restricion(AK_list *lista, int action) {    
-int AK_reference_check_restricion(struct list_node *lista, int action) {    
+int AK_reference_check_restricion(list_node *lista, int action) {    
     int i = 0;
     /*
     AK_list_elem temp;
     AK_list *row;
     */
-    struct list_node *temp;
-    struct list_node *row;
+    list_node *temp;
+    list_node *row;
     AK_PRO;
     while ((row = AK_get_row(i, "AK_reference")) != NULL) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
@@ -214,7 +214,7 @@ int AK_reference_check_restricion(struct list_node *lista, int action) {
  * @return EXIT_SUCCESS
  */
 //int AK_reference_update(AK_list *lista, int action) {
-int AK_reference_update(struct list_node *lista, int action) {
+int AK_reference_update(list_node *lista, int action) {
     int parent_i, i, j, ref_i, con_num = 0;
     /*
     AK_list *parent_row;
@@ -222,10 +222,10 @@ int AK_reference_update(struct list_node *lista, int action) {
     AK_list_elem temp;
     AK_list_elem tempcell;
     */
-    struct list_node *parent_row;
-    struct list_node *ref_row;
-    struct list_node *temp;
-    struct list_node *tempcell;
+    list_node *parent_row;
+    list_node *ref_row;
+    list_node *temp;
+    list_node *tempcell;
     AK_ref_item reference;
     char constraints[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGTH];
     char child_tables[MAX_CHILD_CONSTRAINTS][MAX_VARCHAR_LENGTH];
@@ -236,7 +236,7 @@ int AK_reference_update(struct list_node *lista, int action) {
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     */
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
 
     while ((ref_row = AK_get_row(ref_i, "AK_reference")) != NULL) {
@@ -258,7 +258,7 @@ int AK_reference_update(struct list_node *lista, int action) {
     AK_list expr;
     Ak_Init_L(&expr);
     */
-    struct list_node *expr;
+    list_node *expr;
     Ak_Init_L3(&expr);
 
     // selecting only affected rows in parent table..
@@ -373,9 +373,9 @@ int AK_reference_update(struct list_node *lista, int action) {
  * @param list of elements for insert row
  * @return EXIT_SUCCESS if referential integrity is ok, EXIT_ERROR if it is compromised
  */
-int AK_reference_check_entry(struct list_node *lista) {
+int AK_reference_check_entry(list_node *lista) {
     //AK_list_elem temp;
-    struct list_node *temp, *row, *temp1;
+    list_node *temp, *row, *temp1;
     int i = 0, j, k, con_num = 0, success;
     char constraints[10][MAX_VARCHAR_LENGTH]; // this 10 should probably be a constant... how many foreign keys can one table have..
     char attributes[MAX_REFERENCE_ATTRIBUTES][MAX_ATT_NAME];
@@ -520,7 +520,7 @@ void AK_reference_test() {
     Ak_Init_L(row_root);
     Ak_DeleteAll_L(row_root);
     */
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L3(&row_root);
     Ak_Insert_New_Element(TYPE_INT, &a, "ref_test", "FK", row_root);

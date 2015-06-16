@@ -28,8 +28,8 @@
 #include "../../auxi/mempro.h"
 
 
-int Ak_If_ExistOp(struct list_node *L, char *ele);
-void AK_create_Index(char *tblName, struct list_node *attributes);
+int Ak_If_ExistOp(list_node *L, char *ele);
+void AK_create_Index(char *tblName, list_node *attributes);
 void Ak_print_Header_Test(char* tblName);
 void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex);
 list_ad* Ak_get_Attribute(char *indexName, char *attribute);

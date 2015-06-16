@@ -2,6 +2,7 @@
 *.obj
 *.d
 *.db
+*.pyc
 /bin/akdb
 src/swig/kalashnikovDB_wrap.c
 src/swig/_kalashnikovDB.so

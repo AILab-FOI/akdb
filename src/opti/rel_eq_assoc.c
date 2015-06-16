@@ -38,19 +38,19 @@ int AK_compare(const void *a, const void *b) {
 /**
  * @author Dino Laktašić.
  * @brief Main function for generating RA expresion according to associativity equivalence rules 
- * @param *list_rel_eq RA expresion as the struct list_node
- * @return optimised RA expresion as the struct list_node
+ * @param *list_rel_eq RA expresion as the list_node
+ * @return optimised RA expresion as the list_node
  */
-struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
+list_node *AK_rel_eq_assoc(list_node *list_rel_eq) {
     //int exit_cond[5] = {0};
     int next_cost, i;
     AK_PRO;
     //Initialize temporary linked list
-    struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *temp = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&temp);
 
-    struct list_node *tmp, *temp_elem, *temp_elem_prev, *temp_elem_next;
-    struct list_node *list_elem_next, *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
+    list_node *tmp, *temp_elem, *temp_elem_prev, *temp_elem_next;
+    list_node *list_elem_next, *list_elem = (list_node *) Ak_First_L2(list_rel_eq);
 
     //Iterate through all the elements of RA linked list
     while (list_elem != NULL) {
@@ -61,9 +61,9 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
             case TYPE_OPERATOR:
                 Ak_dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
 				Ak_dbg_messg(LOW, REL_EQ, "----------------------\n");
-                temp_elem = (struct list_node *) Ak_End_L2(temp);
-                temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
-                list_elem_next = (struct list_node *) Ak_Next_L2(list_elem);
+                temp_elem = (list_node *) Ak_End_L2(temp);
+                temp_elem_prev = (list_node *) Ak_Previous_L2(temp_elem, temp);
+                list_elem_next = (list_node *) Ak_Next_L2(list_elem);
 
                 switch (list_elem->data[0]) {
                     //Associativity of set operations: Union and Intersection are associative but Set Difference is not
@@ -156,7 +156,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                     cost[next_cost].value = AK_get_num_records(temp_elem->data);
                                     strcpy(cost[next_cost].data, temp_elem->data);
                                     next_cost++;
-                                    temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                    temp_elem = (list_node *) Ak_Previous_L2(temp_elem, temp);
                                 }
 
                                 //see comment on the previous operator for getting heuristics values
@@ -170,7 +170,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
 
                                 //if values for all three relations are saved, rearrange tables in list
                                 if (next_cost-- == 2) {
-                                    temp_elem = (struct list_node *) Ak_End_L2(temp);
+                                    temp_elem = (list_node *) Ak_End_L2(temp);
                                     while (next_cost < 3) {
                                         if (temp_elem->type == TYPE_OPERAND) {
                                             temp_elem->size = strlen(cost[next_cost].data) + 1;
@@ -179,7 +179,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                             Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
                                             next_cost++;
                                         }
-                                        temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                        temp_elem = (list_node *) Ak_Previous_L2(temp_elem, temp);
                                     }
                                     //insert final relation
                                     Ak_InsertAtEnd_L3(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
@@ -290,7 +290,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                     cost[next_cost].value = AK_get_num_records(temp_elem->data);
                                     strcpy(cost[next_cost].data, temp_elem->data);
                                     next_cost++;
-                                    temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                    temp_elem = (list_node *) Ak_Previous_L2(temp_elem, temp);
                                 }
 
                                 if (next_cost > 1) {
@@ -298,7 +298,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                     cost[next_cost].value = AK_get_num_records((list_elem_next->next)->data);
                                     strcpy(cost[next_cost].data, (list_elem_next->next)->data);
                                     qsort(cost, 3, sizeof (cost_eval), AK_compare);
-                                    temp_elem = (struct list_node *) Ak_End_L2(temp);
+                                    temp_elem = (list_node *) Ak_End_L2(temp);
 
                                     next_cost = 1;
                                     while (next_cost < 3) {
@@ -309,7 +309,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                             Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
                                             next_cost++;
                                         }
-                                        temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                        temp_elem = (list_node *) Ak_Previous_L2(temp_elem, temp);
                                     }
 
                                     Ak_InsertAtEnd_L3(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
@@ -401,13 +401,13 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
 }
 /**
  * @author Dino Laktašić.
- * @brief Function for printing RA expresion struct list_node
- * @param *list_rel_eq RA expresion as the struct list_node
- * @return optimised RA expresion as the struct list_node
+ * @brief Function for printing RA expresion list_node
+ * @param *list_rel_eq RA expresion as the list_node
+ * @return optimised RA expresion as the list_node
  */
-void AK_print_rel_eq_assoc(struct list_node *list_rel_eq) {
+void AK_print_rel_eq_assoc(list_node *list_rel_eq) {
     AK_PRO;
-    struct list_node *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
+    list_node *list_elem = (list_node *) Ak_First_L2(list_rel_eq);
 
     printf("\n");
     while (list_elem != NULL) {
@@ -452,7 +452,7 @@ void AK_rel_eq_assoc_test() {
 
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
 
     int id = 35890, year = 1999;
@@ -553,7 +553,7 @@ void AK_rel_eq_assoc_test() {
 
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName2));
 
-    struct list_node *row_root2 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root2 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root2);
 
     int mbr = 35890;
@@ -652,7 +652,7 @@ void AK_rel_eq_assoc_test() {
     printf("rel_eq_associativity_test: After data insertion: %d\n", AK_num_attr(tblName2));
     //-----------------------------------------------------------------------------------------
 
-    struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *expr = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&expr);
 
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);

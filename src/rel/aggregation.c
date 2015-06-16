@@ -248,7 +248,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     Ak_Init_L(row_root);
 ````*/
 
-    struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
+    list_node * row_root = (list_node*) AK_malloc(sizeof(list_node));
     Ak_Init_L3(&row_root);
 
     i = 0;
@@ -608,7 +608,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     	AK_list *projection_att = (AK_list *) AK_malloc(sizeof (AK_list));
 		Ak_Init_L(projection_att);
 */
-	struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
+	list_node * projection_att = (list_node*) AK_malloc(sizeof(list_node));
 	Ak_Init_L3(&projection_att);
 
 	for (i = 0; i < header_size; i++) {

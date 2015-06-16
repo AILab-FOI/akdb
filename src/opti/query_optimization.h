@@ -35,9 +35,9 @@
 #define MAX_PERMUTATION 24
 
 
-void AK_print_optimized_query(struct list_node *list_query);
-struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel_eq, const char *FLAGS);
-struct list_node *AK_query_optimization(struct list_node *list_query, const char *FLAGS, const int DIFF_PLANS);
-void AK_query_optimization_test() ; // (struct list_node *list_query)
+void AK_print_optimized_query(list_node *list_query);
+list_node *AK_execute_rel_eq(list_node *list_query, const char rel_eq, const char *FLAGS);
+list_node *AK_query_optimization(list_node *list_query, const char *FLAGS, const int DIFF_PLANS);
+void AK_query_optimization_test() ; // (list_node *list_query)
 
 #endif

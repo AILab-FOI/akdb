@@ -26,13 +26,13 @@
  * @param *list_query optimized RA expresion list 
  * @result list output
  */
-void AK_print_optimized_query(struct list_node *list_query) {
+void AK_print_optimized_query(list_node *list_query) {
     AK_PRO;
-    struct list_node *list_elem = (struct list_node *) Ak_First_L2(list_query);
+    list_node *list_elem = (list_node *) Ak_First_L2(list_query);
 
     int length;
     int len[] = {strlen("Type"), strlen("Size"), strlen("Data")};
-    list_elem = (struct list_node *) Ak_First_L2(list_query);
+    list_elem = (list_node *) Ak_First_L2(list_query);
 
     printf("==>");
     while (list_elem != NULL) {
@@ -67,7 +67,7 @@ void AK_print_optimized_query(struct list_node *list_query) {
             len[1] + TBL_BOX_OFFSET, "Size", len[2] + TBL_BOX_OFFSET, "Data");
     AK_print_row_spacer(len, length);
 
-    list_elem = (struct list_node *) Ak_First_L2(list_query);
+    list_elem = (list_node *) Ak_First_L2(list_query);
 
     while (list_elem != NULL) {
         printf("\n| %-*i| %-*i| %-*s|\n", len[0] + TBL_BOX_OFFSET, list_elem->type,
@@ -89,9 +89,9 @@ void AK_print_optimized_query(struct list_node *list_query) {
  * @param *list_query RA expresion list where we need to apply relational equivalences rules
  * @param rel_eq rel_eq to execute 
  * @param *FLAGS flags for relation equivalences (execute rel_eq for given flags) 
- * @return returns struct list_node (RA expresion list) optimized by given relational equivalence rule 
+ * @return returns list_node (RA expresion list) optimized by given relational equivalence rule 
 */ 
-struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel_eq, const char *FLAGS) {
+list_node *AK_execute_rel_eq(list_node *list_query, const char rel_eq, const char *FLAGS) {
     AK_PRO;
     Ak_dbg_messg(LOW, REL_EQ, "\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
     Ak_dbg_messg(LOW, REL_EQ, "=================================================\n");
@@ -101,25 +101,25 @@ struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel
             case 'c':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_commute.\n");
                 AK_EPI;
-                return (struct list_node *)AK_rel_eq_comut(list_query);
+                return (list_node *)AK_rel_eq_comut(list_query);
                 break;
 
             case 'a':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_assoc.\n");
                 AK_EPI;
-                return (struct list_node *) AK_rel_eq_assoc(list_query);
+                return (list_node *) AK_rel_eq_assoc(list_query);
                 break;
 
             case 'p':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_projection.\n");
                 AK_EPI;
-                return (struct list_node *) AK_rel_eq_projection(list_query);
+                return (list_node *) AK_rel_eq_projection(list_query);
                 break;
 
             case 's':
                 Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_selection.\n");
                 AK_EPI;
-                return (struct list_node *) AK_rel_eq_selection(list_query);
+                return (list_node *) AK_rel_eq_selection(list_query);
                 break;
 
             default:
@@ -147,20 +147,20 @@ struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel
  * For futher development consider to implement cost estimation for given plan based on 
  * returned heuristicly optimized list
  */
-struct list_node *AK_query_optimization(struct list_node *list_query, const char *FLAGS, const int DIFF_PLANS) {
+list_node *AK_query_optimization(list_node *list_query, const char *FLAGS, const int DIFF_PLANS) {
     int num_perms = 1;
     int div;
     int next_perm,sum, next_flag;
     AK_PRO;
     int len_flags = strlen(FLAGS);
 
-    struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *temp = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&temp);
     
     //change view name for its rel_exp in list_query if exists
     //@author Danko Sacer
-    struct list_node *list_elem = (struct list_node *) Ak_First_L2(list_query);
-    list_elem = (struct list_node *) Ak_First_L2(list_query);
+    list_node *list_elem = (list_node *) Ak_First_L2(list_query);
+    list_elem = (list_node *) Ak_First_L2(list_query);
     
     while (list_elem != NULL) {
  	//suposed that views have name prefiks or sufics 'view' (viewname_view or view_viewname)
@@ -181,7 +181,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
     //Get total permutation without repetition number
     for (next_flag = 1; next_flag <= len_flags; num_perms *= next_flag++);
 
-    struct list_node *temps[num_perms];
+    list_node *temps[num_perms];
 
     if (num_perms > MAX_PERMUTATION) {
         Ak_dbg_messg(LOW, REL_EQ, "ERROR: max four flags are allowed!\n");
@@ -199,7 +199,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
             int index = (next_perm / div) % next_flag;
 
             if (DIFF_PLANS) {
-            temps[next_perm] = (struct list_node *)AK_malloc(sizeof(struct list_node));
+            temps[next_perm] = (list_node *)AK_malloc(sizeof(list_node));
             Ak_Init_L3(&temps[next_perm]);
             temps[next_perm] = AK_execute_rel_eq(temp, perm[index], FLAGS);
             AK_print_optimized_query(temps[next_perm]);
@@ -222,7 +222,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
     if (DIFF_PLANS) {
         Ak_dbg_messg(LOW, REL_EQ, "\nTOTAL REL_EQ OPTIMIZED PLANS: %i\n", num_perms);
 	
-        temp = (struct list_node *)AK_realloc(temp, num_perms * sizeof(temps));
+        temp = (list_node *)AK_realloc(temp, num_perms * sizeof(temps));
 	sum=num_perms * sizeof(temps);
         memcpy(temp,temps,sum);
     }
@@ -258,8 +258,8 @@ void AK_query_optimization_test() {
         cond_attr2 = (char *) AK_rel_eq_cond_attributes(test_cond2);
 
         //Initialize list elements...
-        struct list_node *list_elem_set, *list_elem_subset;
-        struct list_node *list_elem_cond, *list_elem_attr;
+        list_node *list_elem_set, *list_elem_subset;
+        list_node *list_elem_cond, *list_elem_attr;
 
         printf("Test table: (%s) | Test attributes: (%s)\n", test_table, test_attribs);
         printf("Test first condition       : (%s)\n", test_cond1);
@@ -295,35 +295,35 @@ void AK_query_optimization_test() {
     printf("View query: %s\n", query);
 
 
-    struct list_node *mylist = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *mylist = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist);
 
   
-    struct list_node *mylist2 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *mylist2 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist2);
 
-struct list_node *mylist3 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+list_node *mylist3 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist3);
 
-struct list_node *mylist4 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+list_node *mylist4 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist4);
 
-struct list_node *mylist5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+list_node *mylist5 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist5);
 
-struct list_node *mylist6 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+list_node *mylist6 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist6);
 
-struct list_node *mylist7 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+list_node *mylist7 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist7);
 
-struct list_node *mylist8 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+list_node *mylist8 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist8);
 
-struct list_node *mylist9 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+list_node *mylist9 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist9);
 
-struct list_node *mylist10 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+list_node *mylist10 = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&mylist10);
 
 

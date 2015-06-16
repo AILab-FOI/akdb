@@ -1120,10 +1120,9 @@ class Delete_command:
                 # Prepare delete data element
                 # This is Test Data!
                 # Iteration required for more than one attribute!
-                '''element = ak47.list_elem()
-                ak47.Ak_Init_L(element) #tu trazi list_elem
+                element = ak47.list_elem()
+                ak47.Ak_Init_L(element)
                 ak47.Ak_DeleteAll_L(element)
-		Javlja se problem s tipom podataka list_elem i list_node'''
 
                 #deleteColumn = token.columnNames[0]
                 whereColumn = token.condition[1][0]
@@ -1137,17 +1136,16 @@ class Delete_command:
                 print "Column name: ", tok.condition[1][0]
 		print "Column value: ", tok.condition[1][2]
 
-		'''
+		
                 if type(whereValue) == int:
-                    ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, whereValue, table_name, whereColumn, element, 1) # tu trazi list_node
+                    ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, whereValue, table_name, whereColumn, element, 1)
                 elif type(whereValue) == float:
                     ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, whereValue, table_name, whereColumn, element, 1)
-		elif type(whereValue) == str:
-                    ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, whereValue, table_name, whereColumn, element, 1)
- 
+                elif type(whereValue) == str:
+					ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, whereValue, table_name, whereColumn, element, 1)
+ 		
 		ak47.Ak_delete_row(element)
-		Javlja se problem s tipom podataka list_elem i list_node, potrebno uskladiti u c-u posto je ista struktura
-		'''
+		
             
     
 ## Drop

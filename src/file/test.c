@@ -129,7 +129,7 @@ int insert_data_test(char* tbl_name, char** attr_name, char** attr_value, int _n
 
     int i, ret;
     AK_PRO;
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
 
     Ak_DeleteAll_L3(&row_root);
@@ -165,7 +165,7 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
     AK_PRO;
 	printf("==================== SELECTION_TEST =====================\n");
 
-    struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *expr = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&expr);
 
     // TYPE_OPERAND 10
@@ -213,7 +213,7 @@ int get_column_test(int num, char* tbl){
     AK_PRO;
     fp = fopen(FILEP,"a");
 
-    struct list_node *row = AK_get_column(num, tbl);
+    list_node *row = AK_get_column(num, tbl);
     if (!Ak_IsEmpty_L2(row)){
         while (row->next != NULL){
             row = row->next;
@@ -250,7 +250,7 @@ int get_column_test(int num, char* tbl){
     AK_PRO;
     fp = fopen(FILEP,"a");
     
-    struct list_node *row = AK_get_row(num, tbl);
+    list_node *row = AK_get_row(num, tbl);
     if (!Ak_IsEmpty_L2(row)){
         while (row->next != NULL){
             row = row->next;
@@ -307,7 +307,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
 
     mbr = 35890;
@@ -1000,7 +1000,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
 
     id_department = 1;

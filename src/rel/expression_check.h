@@ -28,8 +28,8 @@ int AK_check_arithmetic_statement(AK_list_elem el, const char *op, const char *a
 int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr);
 */
 
-int AK_check_arithmetic_statement(struct list_node *el, const char *op, const char *a, const char *b);
-int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list_node *expr);
+int AK_check_arithmetic_statement(list_node *el, const char *op, const char *a, const char *b);
+int AK_check_if_row_satisfies_expression(list_node *row_root, list_node *expr);
 
 
 #endif /* CONSTRAINT_CHECKER_H_ */

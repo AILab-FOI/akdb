@@ -166,7 +166,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
             Ak_Init_L(args);
             */
 
-	    struct list_node *args = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	    list_node *args = (list_node *) AK_malloc(sizeof (list_node));
             Ak_Init_L3(&args);
 
             if (drop_arguments != NULL) {
@@ -419,7 +419,7 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
     Ak_DeleteAll_L(row_root);
 */
 
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node ));
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L3(&row_root);
     
@@ -447,7 +447,7 @@ int AK_if_exist(char *tblName, char *sys_table) {
 
     for (a = 0; a < num_rows; a++) {
         //AK_list_elem el;
-	struct list_node *el;
+	list_node *el;
         el = AK_get_tuple(a, 1, sys_table);
         if (!strcmp(tblName, el->data)) {
             exist = 1;

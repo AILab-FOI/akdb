@@ -29,7 +29,7 @@
  * @return No return value
  */
 //void AK_create_join_block_header(int table_address1, int table_address2, char *new_table, AK_list *att) {
-void AK_create_join_block_header(int table_address1, int table_address2, char *new_table, struct list_node *att) {
+void AK_create_join_block_header(int table_address1, int table_address2, char *new_table, list_node *att) {
     AK_PRO;
     AK_block *temp_block = (AK_block *) AK_read_block(table_address1);
     
@@ -45,7 +45,7 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
     int s_copy; 		//indicate if we copy these header or not
 
     //AK_list_elem list_elem;
-    struct list_node *list_elem;
+    list_node *list_elem;
 	
     while (strcmp(temp_block->header[head].att_name, "") != 0) {
         s_copy = 1;
@@ -98,12 +98,12 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
  * @param new_table - name of the nat_join table
  * @return No return value
  */
-void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_insert, AK_block *temp_block, char *new_table) {
+void AK_merge_block_join(list_node *row_root, list_node *row_root_insert, AK_block *temp_block, char *new_table) {
 //void AK_merge_block_join(AK_list *row_root, AK_list *row_root_insert, AK_block *temp_block, char *new_table) {
     AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n MERGE NAT JOIN...");
 
-    struct list_node *some_element;
+    list_node *some_element;
 
     int i; //counter of tuple_dicts
     int head; //counter of the headers
@@ -185,7 +185,7 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
  * @param new_table name of the nat_join table
  * @return No return value
  */
-void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, struct list_node *att, char *new_table) {
+void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, list_node *att, char *new_table) {
 //void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
     AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING NAT JOIN");
@@ -198,11 +198,11 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
     AK_list_elem list_elem;
     */
     
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
-    struct list_node *row_root_insert = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof(list_node));
+    list_node *row_root_insert = (list_node *) AK_malloc(sizeof(list_node));
     Ak_Init_L3(&row_root);
     Ak_Init_L3(&row_root_insert);
-    struct list_node *list_elem;
+    list_node *list_elem;
     
     int i;
     int head;
@@ -281,7 +281,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
  * @param dstTable name of the nat_join table
  * @return if success returns EXIT_SUCCESS
  */
-int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node *att) {
+int AK_join(char *srcTable1, char * srcTable2, char * dstTable, list_node *att) {
 //int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
     AK_PRO;
     table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
@@ -369,7 +369,7 @@ void AK_op_join_test() {
     Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);
     //InsertAtEndL(TYPE_ATTRIBS, "lastname", sizeof("lastname"), att);
 */
-    struct list_node *att = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    list_node *att = (list_node *) AK_malloc(sizeof(list_node));
     Ak_Init_L3(&att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);
 

@@ -68,7 +68,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_free(header);
 
         //AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
-	struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+	list_node * row_root = (list_node *) AK_malloc(sizeof(list_node));
 	
 	for (i = 0; src_addr1->address_from[i] != 0; i++) {
             startAddress1 = src_addr1->address_from[i];

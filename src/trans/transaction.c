@@ -807,7 +807,7 @@ void AK_test_Transaction() {
 
     /**************** INSERT AND UPDATE COMMAND TEST ******************/
     char *tblName = "student";
-    struct list_node *row_root_insert = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root_insert = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root_insert);
     Ak_DeleteAll_L3(&row_root_insert);
     int mbr, year;
@@ -822,7 +822,7 @@ void AK_test_Transaction() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root_insert);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root_insert);
 
-    struct list_node *row_root_update = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root_update = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root_update);
     Ak_DeleteAll_L3(&row_root_update);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root_update, SEARCH_CONSTRAINT);
@@ -839,7 +839,7 @@ void AK_test_Transaction() {
 
     int id_prof;
     id_prof = 35893;
-    struct list_node *row_root_p_update = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root_p_update = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root_p_update);
     Ak_DeleteAll_L3(&row_root_p_update);
     
@@ -854,7 +854,7 @@ void AK_test_Transaction() {
     commands_delete[0].parameters = row_root_p_update;
 
 
-    struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *expr = (list_node *) AK_malloc(sizeof (list_node));
 	Ak_Init_L3(&expr);
 	int num = 2010;
 

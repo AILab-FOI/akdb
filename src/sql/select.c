@@ -13,7 +13,7 @@
  * @param condition - condition for selection
  */
 //int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
-int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct list_node *condition){
+int AK_select(char *srcTable,char *destTable,list_node *attributes,list_node *condition){
 	///calling the relational operator for filtering according to given condition
 	AK_PRO;
 	AK_selection(srcTable,destTable,condition);
@@ -30,7 +30,7 @@ int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct
 
 
 	//AK_list_elem list_attributes;
-	struct list_node *list_attributes;
+	list_node *list_attributes;
 	
 	AK_header header[MAX_ATTRIBUTES];
  	memset(header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
@@ -69,7 +69,7 @@ int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct
 	AK_free(temp_block);
 
 	//AK_list* row_root = (AK_list *) AK_malloc(sizeof (AK_list));
-	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
 
     int i, j, k, l, type, size, address;
     char data[MAX_VARCHAR_LENGTH];
@@ -142,7 +142,7 @@ void AK_select_test(){
 	AK_list *attributes = (AK_list *) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(attributes);
 	*/
-	struct list_node *attributes = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	list_node *attributes = (list_node *) AK_malloc(sizeof (list_node));
 	Ak_Init_L3(&attributes);
 
 	///list of elements which represent the condition for selection
@@ -150,7 +150,7 @@ void AK_select_test(){
 	AK_list *condition = (AK_list *) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(condition);
 	*/
-	struct list_node *condition = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	list_node *condition = (list_node *) AK_malloc(sizeof (list_node));
 	Ak_Init_L3(&condition);
 
 

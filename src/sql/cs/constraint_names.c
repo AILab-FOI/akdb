@@ -30,8 +30,8 @@ int Ak_check_constraint_name(char* constraintName)
 {
 	int i;
 	int numRows;
-	struct list_node *row;
-	struct list_node *attribute;
+	list_node *row;
+	list_node *attribute;
 	AK_PRO;
 	
 	numRows = AK_get_num_records("AK_constraints_not_null");

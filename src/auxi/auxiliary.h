@@ -69,6 +69,7 @@ struct list_elem {
 
 typedef struct list_elem AK_list;
 typedef struct list_elem *AK_list_elem;
+typedef struct list_elem list_node;
 
 
 /**
@@ -76,6 +77,7 @@ typedef struct list_elem *AK_list_elem;
  * @struct list_node
  * @brief Structure defines a list node.
  */
+/*
 struct list_node { 
 ///TODO - type, attribute name, table staviti na početak polja data
 		///data type
@@ -92,6 +94,7 @@ struct list_node {
     ///pointer to next element
     struct list_node *next;
 };
+*/
 
 
 /**
@@ -187,41 +190,41 @@ size_t AK_type_size(int iDB_type, char *szVarchar);
 int AK_strcmp(const void *a, const void *b);
 void Ak_Init_L(AK_list *L);
 void Ak_Init_L2(AK_list *L);
-void Ak_Init_L3(struct list_node **L);
+void Ak_Init_L3(list_node **L);
 AK_list_elem Ak_First_L(AK_list *L);
-struct list_node *Ak_First_L2(struct list_node *L);
+list_node *Ak_First_L2(list_node *L);
 AK_list_elem Ak_End_L(AK_list *L);
-struct list_node *Ak_End_L2(struct list_node *L);
+list_node *Ak_End_L2(list_node *L);
 AK_list_elem Ak_Next_L(AK_list_elem current);
-struct list_node *Ak_Next_L2(struct list_node *current);
+list_node *Ak_Next_L2(list_node *current);
 AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L);
-struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L);
+list_node *Ak_Previous_L2(list_node *current, list_node *L);
 int Ak_IsEmpty_L(AK_list *L);
-unsigned int Ak_IsEmpty_L2(struct list_node *L);
+unsigned int Ak_IsEmpty_L2(list_node *L);
 void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
-void Ak_InsertBefore_L2(int type, char* data, int size, struct list_node **current, struct list_node **L);
+void Ak_InsertBefore_L2(int type, char* data, int size, list_node **current, list_node **L);
 void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
-void Ak_InsertAfter_L2(int type, char* data, int size, struct list_node **current,  struct list_node **L);
+void Ak_InsertAfter_L2(int type, char* data, int size, list_node **current,  list_node **L);
 void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L);
 void Ak_InsertAtBegin_L2(int type, char* data, int size, AK_list *L);
-void Ak_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L);
+void Ak_InsertAtBegin_L3(int type, char* data, int size, list_node *L);
 void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L);
 void Ak_InsertAtEnd_L2(int type, char* data, int size, AK_list *L);
-void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L);
+void Ak_InsertAtEnd_L3(int type, char* data, int size, list_node *L);
 void Ak_Delete_L(AK_list_elem current, AK_list *L);
 void Ak_Delete_L2(AK_list_elem current, AK_list *L);
-void Ak_Delete_L3(struct list_node **current, struct list_node **L);
+void Ak_Delete_L3(list_node **current, list_node **L);
 void Ak_DeleteAll_L(AK_list *L) ;
 void Ak_DeleteAll_L2(AK_list *L);
-void Ak_DeleteAll_L3(struct list_node **L);
+void Ak_DeleteAll_L3(list_node **L);
 int Ak_Size_L(AK_list *L);
-int Ak_Size_L2(struct list_node *L);
+int Ak_Size_L2(list_node *L);
 char* Ak_Retrieve_L(AK_list_elem current, AK_list *L);
-char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L);
+char* Ak_Retrieve_L2(list_node *current, list_node *L);
 //int Ak_GetType_L(AK_list_elem current, AK_list *L);
 //int Ak_GetSize_L(AK_list_elem current, AK_list *L);
 AK_list_elem Ak_GetNth_L(int pos, AK_list *row);
-struct list_node * Ak_GetNth_L2(int pos, struct list_node *row);
+list_node * Ak_GetNth_L2(int pos, list_node *row);
 
 //int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L);
 char *AK_get_array_perms(char *arr) ;

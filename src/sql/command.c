@@ -17,7 +17,7 @@ int AK_command(command * komande, int brojkomandi) {
             char *dest_table = AK_malloc(strlen(ext) + strlen(komande[i].tblName) + 1);
             strcat(dest_table, komande[i].tblName);
             strcat(dest_table, ext);
-            if(AK_selection(komande[i].tblName, dest_table, (struct list_node*)komande[i].parameters) == EXIT_ERROR){
+            if(AK_selection(komande[i].tblName, dest_table, (list_node*)komande[i].parameters) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
@@ -25,7 +25,7 @@ int AK_command(command * komande, int brojkomandi) {
             
         case UPDATE:
             printf("***UPDATE***\n");
-            if(Ak_update_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_update_row( ((list_node *) (komande[i].parameters))) == EXIT_ERROR){
                 AK_EPI;
                 return EXIT_ERROR;
             }
@@ -34,11 +34,11 @@ int AK_command(command * komande, int brojkomandi) {
             break;
         case DELETE:
             printf("***DELETE***\n");        	 
-            if(Ak_update_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_update_row( ((list_node *) (komande[i].parameters))) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
-            if(Ak_delete_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_delete_row( ((list_node *) (komande[i].parameters))) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
@@ -47,7 +47,7 @@ int AK_command(command * komande, int brojkomandi) {
            
         case INSERT:
             printf("***INSERT***\n");
-            if(Ak_insert_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_insert_row( ((list_node *) (komande[i].parameters))) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
@@ -70,7 +70,7 @@ void AK_test_command(){
     Ak_Init_L(row_root);
     */
 
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
     
     char *tblName = "student";
@@ -97,7 +97,7 @@ void AK_test_command(){
     Ak_Init_L(row_root);
     Ak_DeleteAll_L(row_root);*/
     
-    row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
+    row_root = (list_node *) AK_malloc(sizeof (list_node ));
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L(&row_root);
 
@@ -116,7 +116,7 @@ void AK_test_command(){
     Ak_DeleteAll_L(row_root);
     */
     
-    row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
+    row_root = (list_node *) AK_malloc(sizeof (list_node ));
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L(&row_root);
 

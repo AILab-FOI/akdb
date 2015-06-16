@@ -25,8 +25,8 @@
 #include "../auxi/mempro.h"
 #include "../auxi/auxiliary.h"
 
-void AK_print_rel_eq_comut(struct list_node *list_rel_eq);
-struct list_node *AK_rel_eq_comut(struct list_node *list_rel_eq);
+void AK_print_rel_eq_comut(list_node *list_rel_eq);
+list_node *AK_rel_eq_comut(list_node *list_rel_eq);
 char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName);
 void AK_rel_eq_comut_test();
 

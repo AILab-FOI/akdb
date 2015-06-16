@@ -30,7 +30,7 @@
  * @return EXIT_SUCCESS
  */
 //int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
-int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
+int AK_selection(char *srcTable, char *dstTable, list_node *expr) {
         AK_PRO;
 	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
 	int num_attr = AK_num_attr(srcTable);
@@ -48,7 +48,7 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 		Ak_Init_L(row_root);
 		*/
 		
-		struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+		list_node * row_root = (list_node *) AK_malloc(sizeof(list_node));
 		Ak_Init_L3(&row_root);
 		
 		int i, j, k, l, type, size, address;
@@ -109,7 +109,7 @@ void AK_op_selection_test() {
 	AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
 	Ak_Init_L(expr);
 	*/
-	struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	list_node *expr = (list_node *) AK_malloc(sizeof (list_node));
 	Ak_Init_L3(&expr);
 	
 	char *srcTable = "student";
@@ -163,7 +163,7 @@ void AK_op_selection_test2() {
 	Ak_Init_L(expr);
 	*/
 	
-	struct list_node *expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
+	list_node *expr = (list_node *) AK_malloc(sizeof(list_node));
 	Ak_Init_L3(&expr);
 	
 	char *srcTable = "student";

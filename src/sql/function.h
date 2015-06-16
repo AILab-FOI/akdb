@@ -35,16 +35,16 @@ int AK_function_remove_by_name(char *name, AK_list *arguments_list);
 int AK_function_rename(char *name, AK_list *arguments_list, char *new_name);
 int AK_function_change_return_type(char *name, AK_list *arguments_list, int new_return_type);
 */
-int AK_get_function_obj_id(char* function, struct list_node *arguments_list);
-int AK_check_function_arguments(int function_id, struct list_node *arguments_list);
-int AK_check_function_arguments_type(int function_id, struct list_node *args);
-int AK_function_add(char *name, int return_type, struct list_node *arguments_list);
+int AK_get_function_obj_id(char* function, list_node *arguments_list);
+int AK_check_function_arguments(int function_id, list_node *arguments_list);
+int AK_check_function_arguments_type(int function_id, list_node *args);
+int AK_function_add(char *name, int return_type, list_node *arguments_list);
 int AK_function_arguments_add(int function_id, int arg_number, int arg_type, char *argname);
 int AK_function_remove_by_obj_id(int obj_id);
 int AK_function_arguments_remove_by_obj_id(int *obj_id);
-int AK_function_remove_by_name(char *name, struct list_node *arguments_list);
-int AK_function_rename(char *name, struct list_node *arguments_list, char *new_name);
-int AK_function_change_return_type(char *name, struct list_node *arguments_list, int new_return_type);
+int AK_function_remove_by_name(char *name, list_node *arguments_list);
+int AK_function_rename(char *name, list_node *arguments_list, char *new_name);
+int AK_function_change_return_type(char *name, list_node *arguments_list, int new_return_type);
 void AK_function_test();
 
 #endif

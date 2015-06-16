@@ -118,7 +118,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
  * <li>Get the number of attributes in a given table</li>
  * <li>If there is no attributes return NULL</li>
  * <li>Get the table header for a given table</li>
- * <li>Initialize struct list_node</li>
+ * <li>Initialize list_node</li>
  * <li>For each attribute in table header, insert attribute in the array</li>
  * <li>Delimit each new attribute with ";" (ATTR_DELIMITER)</li>
  * <li>return pointer to char array</li>
@@ -391,15 +391,15 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
  * @brief Break conjunctive conditions to individual conditions 
  * (currently not used - commented in main AK_rel_eq_selection function), it can be usefull in some optimization cases
  * <ol>
- * <li>For each delimited item (' AND ') insert item to the struct list_node</li>
+ * <li>For each delimited item (' AND ') insert item to the list_node</li>
  * <li>Remove unused pointers and return the conditions list</li>
  * </ol>
  * @param *cond condition expression
  * @result conditions list
  */
-struct list_node *AK_rel_eq_split_condition(char *cond) {
+list_node *AK_rel_eq_split_condition(char *cond) {
     AK_PRO;
-    struct list_node *list_attr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *list_attr = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&list_attr);
 
     int token_id = 0;
@@ -455,19 +455,19 @@ struct list_node *AK_rel_eq_split_condition(char *cond) {
 /**
  * @author Dino Laktašić.
  * @brief Main function for generating RA expresion according to selection equivalence rules 
- * @param *list_rel_eq RA expresion as the struct list_node
- * @return optimised RA expresion as the struct list_node
+ * @param *list_rel_eq RA expresion as the list_node
+ * @return optimised RA expresion as the list_node
  */
-struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
+list_node *AK_rel_eq_selection(list_node *list_rel_eq) {
     int step; //, exit_cond[5] = {0};
     AK_PRO;
     //Initialize temporary linked list
-    struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *temp = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&temp);
 
-    struct list_node *list_split_sel;
-    struct list_node *tmp, *temp_elem, *temp_elem_prev, *temp_elem_next;
-    struct list_node *list_elem_next, *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
+    list_node *list_split_sel;
+    list_node *tmp, *temp_elem, *temp_elem_prev, *temp_elem_next;
+    list_node *list_elem_next, *list_elem = (list_node *) Ak_First_L2(list_rel_eq);
 
     //Iterate through all the elements of RA linked list
     while (list_elem != NULL) {
@@ -477,9 +477,9 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
             case TYPE_OPERATOR:
                 Ak_dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
                 Ak_dbg_messg(LOW, REL_EQ, "----------------------\n");
-                temp_elem = (struct list_node *) Ak_End_L2(temp);
-                temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
-                list_elem_next = (struct list_node *) Ak_Next_L2(list_elem);
+                temp_elem = (list_node *) Ak_End_L2(temp);
+                temp_elem_prev = (list_node *) Ak_Previous_L2(temp_elem, temp);
+                list_elem_next = (list_node *) Ak_Next_L2(list_elem);
 
                 switch (list_elem->data[0]) {
                         //Commutativity of Selection and Projection.
@@ -490,7 +490,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                             while (temp_elem != NULL) {
                                 if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_CONDITION) {
                                     if (temp_elem->type == TYPE_CONDITION) {
-                                        temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                        temp_elem_prev = (list_node *) Ak_Previous_L2(temp_elem, temp);
 
                                         if ((AK_rel_eq_can_commute(list_elem_next, temp_elem) == EXIT_FAILURE) &&
                                                 (temp_elem_prev->data[0] == RO_SELECTION) && (temp_elem_prev->type == TYPE_OPERATOR)) {
@@ -509,7 +509,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                                         }
                                     }
                                 }
-                                temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                temp_elem = (list_node *) Ak_Previous_L2(temp_elem, temp);
                             }
                         }
 
@@ -543,7 +543,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
 
                         /*//Divide selection condition (slower than upper solution but can be useful in certain cases)
                         list_split_sel = AK_rel_eq_split_condition(list_elem_next->data);
-                        struct list_node *list_elem_split = (struct list_node *)FirstL(list_split_sel);
+                        list_node *list_elem_split = (list_node *)FirstL(list_split_sel);
 						
                         if (temp_elem != NULL) {
                                 tmp = temp_elem;
@@ -561,7 +561,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                                                         InsertAtEndL(list_elem_next->type, list_elem_split->data, list_elem_split->size, temp);
                                                         break;
                                                 }
-                                                temp_elem = (struct list_node *)PreviousL(temp_elem, temp);
+                                                temp_elem = (list_node *)PreviousL(temp_elem, temp);
                                         }
 								
                                         list_elem_split = list_elem_split->next;
@@ -587,7 +587,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                         while (temp_elem != NULL) {
                             if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_CONDITION) {
                                 step++;
-                                temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                temp_elem_prev = (list_node *) Ak_Previous_L2(temp_elem, temp);
 
                                 if (temp_elem_prev->data[0] == RO_SELECTION && temp_elem_prev->type == TYPE_OPERATOR) {
                                     if (step > 1) {
@@ -604,7 +604,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                             } else {
                                 break;
                             }
-                            temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                            temp_elem = (list_node *) Ak_Previous_L2(temp_elem, temp);
                         }
                         Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
                         Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
@@ -624,7 +624,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                         while (temp_elem != NULL) {
                             if (temp_elem->type == TYPE_OPERAND || temp_elem->type == TYPE_CONDITION) {
                                 step++;
-                                temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                temp_elem_prev = (list_node *) Ak_Previous_L2(temp_elem, temp);
 
                                 if (temp_elem_prev->data[0] == RO_SELECTION && temp_elem_prev->type == TYPE_OPERATOR) {
                                     if (step > 1) {
@@ -654,14 +654,14 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                                                 memset(temp_elem->data + temp_elem->size, '\0', MAX_VARCHAR_LENGTH - temp_elem->size);
                                                 Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, temp_elem->data);
                                             } else {
-                                                struct list_node *temp_elem_prevprev = (struct list_node *) Ak_Previous_L2(temp_elem_prev, temp);
+                                                list_node *temp_elem_prevprev = (list_node *) Ak_Previous_L2(temp_elem_prev, temp);
                                                 temp_elem_prevprev->next = temp_elem;
                                                 AK_free(temp_elem_prev);
-                                                struct list_node *temp_elem_prev = temp_elem_prevprev;
+                                                list_node *temp_elem_prev = temp_elem_prevprev;
 
                                                 temp_elem_prev->next = temp_elem_next;
                                                 AK_free(temp_elem);
-                                                struct list_node *temp_elem = temp_elem_next;
+                                                list_node *temp_elem = temp_elem_next;
                                                 temp_elem_next = temp_elem->next;
                                                 tmp = temp_elem;
                                             }
@@ -688,7 +688,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                             } else {
                                 break;
                             }
-                            temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                            temp_elem = (list_node *) Ak_Previous_L2(temp_elem, temp);
                         }
 
                         Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
@@ -733,11 +733,11 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
 
     //====================================> IMPROVMENTS <=======================================
     //Recursive RA optimization (need to implement exit condition in place of each operator, ...)
-    //If there is no new changes on the list return generated struct list_nodes
+    //If there is no new changes on the list return generated list_nodes
     //int iter_cond;
     //for (iter_cond = 0; iter_cond < sizeof(exit_cond); iter_cond++) {
     //	if (exit_cond[iter_cond] == 0) {
-    ////	Edit function to return collection of the struct list_nodes
+    ////	Edit function to return collection of the list_nodes
     ////	Generate next RA expr. (new plan)
     ////	temp += remain from the list_rel_eq
     //		AK_rel_eq_selection(temp);
@@ -751,13 +751,13 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
 
 /**
  * @author Dino Laktašić.
- * @brief Function for printing struct list_node to the screen 
- * @param *list_rel_eq RA expresion as the struct list_node
+ * @brief Function for printing list_node to the screen 
+ * @param *list_rel_eq RA expresion as the list_node
  * @return void
  */
-void AK_print_rel_eq_selection(struct list_node *list_rel_eq) {
+void AK_print_rel_eq_selection(list_node *list_rel_eq) {
     AK_PRO;
-    struct list_node *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
+    list_node *list_elem = (list_node *) Ak_First_L2(list_rel_eq);
 
     printf("\n");
     while (list_elem != NULL) {
@@ -831,7 +831,7 @@ void AK_rel_eq_selection_test() {
     //-----------------------------------------------------------------------------------------
 
     //Init list and insert elements (Query parser output)
-    struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *expr = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&expr);
 
     //Commutativity of Selection and Projection

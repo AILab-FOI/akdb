@@ -28,10 +28,10 @@
 int AK_get_view_obj_id(char *name) {
     int id, i = 0;
     //AK_list *row;
-    struct list_node *row;
+    list_node *row;
     AK_PRO;
     //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
-    while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
+    while ((row = (list_node*)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
             memcpy(&id, row->next->data, sizeof(int));
 	    AK_EPI;
@@ -51,10 +51,10 @@ char* AK_get_view_query(char *name){
    int i = 0;
    char *query;
     //AK_list *row;
-    struct list_node *row;
+    list_node *row;
     AK_PRO;
     //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
-    while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
+    while ((row = (list_node*)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
             query = row->next->next->next->data;
 	    AK_EPI;
@@ -74,10 +74,10 @@ char* AK_get_rel_exp(char *name){
    int i = 0;
    char *rel_exp;
    //AK_list *row;
-    struct list_node *row;
+    list_node *row;
    AK_PRO;
     //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
-    while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
+    while ((row = (list_node*)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
             rel_exp = row->next->next->next->data;
 	    AK_EPI;
@@ -100,7 +100,7 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     */
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
     
     int view_id = AK_get_id();
@@ -130,7 +130,7 @@ int AK_view_remove_by_obj_id(int obj_id) {
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     */
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
     
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root, 1);
@@ -152,7 +152,7 @@ int AK_view_remove_by_name(char *name) {
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
     Ak_Init_L(row_root);
     */
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    list_node *row_root = (list_node *) AK_malloc(sizeof (list_node));
     Ak_Init_L3(&row_root);
     
    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_view", "name", row_root, 1);
@@ -172,10 +172,10 @@ int AK_view_rename(char *name, char *new_name){
    char *query;
    char *rel_exp;
    //AK_list *row;
-   struct list_node *row;
+   list_node *row;
    AK_PRO;
    //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
-   while ((row = (struct list_node *)AK_get_row(i++, "AK_view"))) {
+   while ((row = (list_node *)AK_get_row(i++, "AK_view"))) {
         if (!strcmp(row->next->next->data, name)) {
             memcpy(&view_id, row->next->data, sizeof(int));
             query = row->next->next->next->data;

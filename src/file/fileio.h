@@ -26,15 +26,15 @@
 #include "files.h"
 #include "../auxi/mempro.h"
 
-void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node * ElementBefore, int newconstraint);
-void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node * ElementBefore);
-int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block);
-int Ak_insert_row(struct list_node *row_root);
-void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root);
-void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root);
-int Ak_delete_update_segment(struct list_node *row_root, int del);
-int Ak_delete_row(struct list_node *row_root) ;
-int Ak_update_row(struct list_node *row_root);
+void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, list_node * ElementBefore, int newconstraint);
+void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, list_node * ElementBefore);
+int Ak_insert_row_to_block(list_node *row_root, AK_block *temp_block);
+int Ak_insert_row(list_node *row_root);
+void Ak_update_row_from_block(AK_block *temp_block, list_node *row_root);
+void Ak_delete_row_from_block(AK_block *temp_block, list_node *row_root);
+int Ak_delete_update_segment(list_node *row_root, int del);
+int Ak_delete_row(list_node *row_root) ;
+int Ak_update_row(list_node *row_root);
 void Ak_fileio_test();
 void Ak_delete_row_by_id(int id, char* tableName);
 
