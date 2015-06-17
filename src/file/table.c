@@ -733,6 +733,7 @@ void AK_print_row_to_file(int col_len[], struct list_node * row) {
  * @brief  Function for printing table
  * @param *tblName table name
  * @return No return value
+ * update by Anto Tomaš (corrected the Ak_DeleteAll_L3 function)
  */
 void AK_print_table_to_file(char *tblName) {
 
@@ -841,7 +842,7 @@ void AK_print_table_to_file(char *tblName) {
                             }
                             AK_print_row_to_file(len, row_root);
                             AK_print_row_spacer_to_file(len, length);
-                            Ak_DeleteAll_L3(row_root);
+                            Ak_DeleteAll_L3(&row_root);
                         }
                     }
                 }
