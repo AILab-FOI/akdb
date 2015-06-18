@@ -247,7 +247,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
     /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+    Ak_Init_L3(&row_root);
 ````*/
 
     struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
@@ -561,7 +561,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 							}
 						}
 						AK_deallocate_search_result(sresult);
-						//Ak_DeleteAll_L(row_root);
+						
 						Ak_DeleteAll_L3(&row_root);
 
 						for (l = 0; l<num_aggregations;l++) {
@@ -599,7 +599,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		if (startAddress != EXIT_ERROR)
 			printf("\nTABLE %s CREATED!\n", agg_table);
 
-    	//Ak_DeleteAll_L(row_root);
+    	
 	Ak_DeleteAll_L3(&row_root);
 
 		for (l = 0; l < num_aggregations; l++) {
@@ -636,16 +636,12 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		Ak_insert_row(row_root);
     }
     else{
-/*
-    	AK_list *projection_att = (AK_list *) AK_malloc(sizeof (AK_list));
-		Ak_Init_L(projection_att);
-*/
+
 	struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
 	Ak_Init_L3(&projection_att);
 
 	for (i = 0; i < num_aggregations; i++) {
 			if (agg_head[i].att_name[0] != '_') {
-				//Ak_InsertAtEnd_L(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
 				Ak_InsertAtEnd_L3(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
 
 			}
@@ -653,7 +649,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 		AK_projection(new_table, agg_table, projection_att);
 
-		//Ak_DeleteAll_L(projection_att);
+		
 		Ak_DeleteAll_L3(&projection_att);
 		AK_free(projection_att);
     }

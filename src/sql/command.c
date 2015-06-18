@@ -100,7 +100,7 @@ void AK_test_command(){
     
     row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
     Ak_Init_L3(&row_root);
-    Ak_DeleteAll_L(&row_root);
+    Ak_DeleteAll_L3(&row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
@@ -117,7 +117,7 @@ void AK_test_command(){
     
     row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
     Ak_Init_L3(&row_root);
-    Ak_DeleteAll_L(&row_root);
+    Ak_DeleteAll_L3(&row_root);
 
     Ak_Insert_New_Element_For_Update(TYPE_INT, &id_prof, tblName, "id_prof", row_root, 1);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
@@ -131,7 +131,7 @@ void AK_test_command(){
 
 	row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
 	Ak_Init_L3(&row_root);
-	Ak_DeleteAll_L(&row_root);
+	Ak_DeleteAll_L3(&row_root);
 
 //	printf("\nQUERY: SELECT * FROM student WHERE firstname = 'Robert';\n\n");
 
@@ -146,7 +146,7 @@ void AK_test_command(){
 
 	// Izvrsi komande
 	AK_command(komande, brojkomandi);
-	Ak_DeleteAll_L(&row_root);
+	Ak_DeleteAll_L3(&row_root);
 
 	AK_EPI;
 }

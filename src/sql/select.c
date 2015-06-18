@@ -49,7 +49,7 @@ int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct
 	///making a new header for the final result from the selected ones from the subscore
 	while(strcmp(temp_block->header[head].att_name, "") != 0) {
 
-		//list_attributes=(AK_list_elem) Ak_First_L(attributes);
+		//list_attributes=(AK_list_elem) Ak_First_L2(attributes);
 		list_attributes = Ak_First_L2(attributes);
 		int create=0;
 		while(list_attributes!=NULL){
@@ -114,7 +114,7 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 					b=0;
 				}
 				Ak_insert_row(row_root);
-//				Ak_DeleteAll_L(row_root);
+//				Ak_DeleteAll_L3(&row_root);
 				Ak_DeleteAll_L3(&row_root);
 	}
 	
@@ -144,18 +144,12 @@ void AK_select_test(){
 	printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
 	
 	///list of attributes which will be in the result of selection
-/*
-	AK_list *attributes = (AK_list *) AK_malloc(sizeof (AK_list));
-	Ak_Init_L(attributes);
-	*/
+
 	struct list_node *attributes = (struct list_node *) AK_malloc(sizeof (struct list_node));
 	Ak_Init_L3(&attributes);
 
 	///list of elements which represent the condition for selection
-/*
-	AK_list *condition = (AK_list *) AK_malloc(sizeof (AK_list));
-	Ak_Init_L(condition);
-	*/
+
 	struct list_node *condition = (struct list_node *) AK_malloc(sizeof (struct list_node));
 	Ak_Init_L3(&condition);
 
@@ -164,15 +158,7 @@ void AK_select_test(){
 
 	char *srcTable="student";
 	char *destTable="select_result";
-	/*
-	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
-	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
-	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
-
-	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
-	Ak_InsertAtEnd_L(TYPE_INT, num, sizeof (int), condition);
-	Ak_InsertAtEnd_L(TYPE_OPERATOR, "<", sizeof ("<"), condition);
-	*/
+	
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
@@ -184,12 +170,12 @@ void AK_select_test(){
 	printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
 
 	AK_select(srcTable, destTable, attributes, condition);
-	//Ak_DeleteAll_L(attributes);
+	
 	Ak_DeleteAll_L3(&attributes);
 	AK_free(attributes);
 
-	//Ak_DeleteAll_L(condition);
-	Ak_DeleteAll_L(condition);
+	
+	Ak_DeleteAll_L3(&condition);
 	AK_free(condition);
 	AK_EPI;
 }

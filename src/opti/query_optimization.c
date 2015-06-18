@@ -285,7 +285,7 @@ void AK_query_optimization_test() {
         printf("\n...\n");
     }
 
-    //Ak_DeleteAll_L(expr);
+    
     
     //testing a query representation of view in relation operators
     printf("\n\n---------Integration of view query test by Danko Sacer-----------\n\n");
@@ -329,7 +329,6 @@ struct list_node *mylist10 = (struct list_node *) AK_malloc(sizeof (struct list_
 
     //*Associativity of union and intersection
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist);
-    //Ak_InsertAtEnd_L(TYPE_OPERAND, "view1",strlen(query), mylist);
 
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"), mylist);

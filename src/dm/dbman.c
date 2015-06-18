@@ -2487,8 +2487,10 @@ int AK_delete_segment(char * name, int type) {
         }
         i++;
     }
-    AK_list *row_root = (AK_list *)AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+	
+	struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
+    Ak_Init_L3(&row_root);
+	
     char *system_table;
     switch (type) {
     case SEGMENT_TYPE_TABLE:
@@ -2513,7 +2515,7 @@ int AK_delete_segment(char * name, int type) {
         AK_EPI;
         return EXIT_ERROR;
     }
-    Ak_DeleteAll_L(row_root);
+	Ak_DeleteAll_L3(&row_root);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, system_table, "name", row_root, 1);
     Ak_delete_row(row_root);
     AK_free(row_root);

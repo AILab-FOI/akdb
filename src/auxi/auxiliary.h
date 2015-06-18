@@ -45,33 +45,6 @@
 int testMode;
 
 /**
- * @author Unknown
- * @struct list_elem
- * @brief Structure defines a list element. Every list_elem has its type, size, data and name of column which it belongs
- */
-
-struct list_elem {
-    ///data type
-    int type;
-    //data size in list element
-    int size;
-    ///loaded data
-    char data[ MAX_VARCHAR_LENGTH ];
-    //table name
-    char table[ MAX_ATT_NAME ];
-    //attribute name
-    char attribute_name[ MAX_ATT_NAME ];
-    int constraint; //if 0 then it is new data for insertion, if 1 then it is a constraint on which update and delete searches the data
-    ///pointer to next element
-    struct list_elem *next;
-};
-
-
-typedef struct list_elem AK_list;
-typedef struct list_elem *AK_list_elem;
-
-
-/**
  * @author Ljiljana Pintarić
  * @struct list_node
  * @brief Structure defines a list node.
@@ -93,26 +66,8 @@ struct list_node {
     struct list_node *next;
 };
 
-
-/**
- * @author Ljiljana Pintarić
- * @struct list_structures
- * @brief Bad - head of list_elem linked list. Good - head of list_node linked list.
- */
-
-struct list_structures{
- void * bad;
- void * good;
-};
-
-/**
- * @author Ljiljana Pintarić
- * @array list_structures_array
- * @brief Array of all linked list (list_elem and list_node) heads.
- */
-
-struct list_structures list_structures_array[1000];
-int lsa_counter;
+typedef struct list_node AK_list;
+typedef struct list_node *AK_list_elem;
 
 #define TBL_BOX_OFFSET 1
 //#define TBL_COL_DELIMITER '|'
@@ -185,42 +140,22 @@ typedef struct {
 int AK_chars_num_from_number(int number, int base);
 size_t AK_type_size(int iDB_type, char *szVarchar);
 int AK_strcmp(const void *a, const void *b);
-void Ak_Init_L(AK_list *L);
-void Ak_Init_L2(AK_list *L);
 void Ak_Init_L3(struct list_node **L);
-AK_list_elem Ak_First_L(AK_list *L);
 struct list_node *Ak_First_L2(struct list_node *L);
-AK_list_elem Ak_End_L(AK_list *L);
 struct list_node *Ak_End_L2(struct list_node *L);
-AK_list_elem Ak_Next_L(AK_list_elem current);
 struct list_node *Ak_Next_L2(struct list_node *current);
-AK_list_elem Ak_Previous_L(AK_list_elem current, AK_list *L);
 struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L);
-int Ak_IsEmpty_L(AK_list *L);
 unsigned int Ak_IsEmpty_L2(struct list_node *L);
-void Ak_InsertBefore_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
 void Ak_InsertBefore_L2(int type, char* data, int size, struct list_node **current, struct list_node **L);
-void Ak_InsertAfter_L(int type, char* data, int size, AK_list_elem current, AK_list *L);
 void Ak_InsertAfter_L2(int type, char* data, int size, struct list_node **current,  struct list_node **L);
-void Ak_InsertAtBegin_L(int type, char* data, int size, AK_list *L);
-void Ak_InsertAtBegin_L2(int type, char* data, int size, AK_list *L);
 void Ak_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L);
-void Ak_InsertAtEnd_L(int type, char* data, int size, AK_list *L);
-void Ak_InsertAtEnd_L2(int type, char* data, int size, AK_list *L);
 void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L);
-void Ak_Delete_L(AK_list_elem current, AK_list *L);
-void Ak_Delete_L2(AK_list_elem current, AK_list *L);
 void Ak_Delete_L3(struct list_node **current, struct list_node **L);
-void Ak_DeleteAll_L(AK_list *L) ;
-void Ak_DeleteAll_L2(AK_list *L);
 void Ak_DeleteAll_L3(struct list_node **L);
-int Ak_Size_L(AK_list *L);
 int Ak_Size_L2(struct list_node *L);
-char* Ak_Retrieve_L(AK_list_elem current, AK_list *L);
 char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L);
 //int Ak_GetType_L(AK_list_elem current, AK_list *L);
 //int Ak_GetSize_L(AK_list_elem current, AK_list *L);
-AK_list_elem Ak_GetNth_L(int pos, AK_list *row);
 struct list_node * Ak_GetNth_L2(int pos, struct list_node *row);
 
 //int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L);

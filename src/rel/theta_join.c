@@ -149,7 +149,6 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
  * @param new_table name of the theta_join table
  * @return No return value
  */
-//void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, AK_list *constraints, char *new_table) {
 void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, struct list_node *constraints, char *new_table) {
     AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
@@ -157,16 +156,12 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
     int tbl1_att, tbl2_att, tbl1_row, tbl2_row;
     int address, size, type;
     char data[MAX_VARCHAR_LENGTH];
-/*
-    AK_list_elem row_root_init = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    AK_list_elem row_root_full;*/
 
     struct list_node *row_root_init = (struct list_node *) AK_malloc(sizeof (struct list_node));
     struct list_node *row_root_full;
 
     AK_header *t_header = (AK_header *) AK_get_header(new_table);
 
-    //Ak_Init_L(row_root_init);
     Ak_Init_L3(&row_root_init);
 
     for (tbl1_row = 0; tbl1_row < DATA_BLOCK_SIZE; tbl1_row += tbl1_num_att){
@@ -205,7 +200,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
 			}
     	}
 
-    	//Ak_DeleteAll_L(row_root_init);
+    	
     	Ak_DeleteAll_L3(&row_root_init);
     }
 

@@ -45,7 +45,7 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 		
 		/*
 		AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-		Ak_Init_L(row_root);
+		Ak_Init_L3(&row_root);
 		*/
 		
 		struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
@@ -78,7 +78,7 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 					if (AK_check_if_row_satisfies_expression(row_root, expr))
 						Ak_insert_row(row_root);
 
-					//Ak_DeleteAll_L(row_root);
+					
 					Ak_DeleteAll_L3(&row_root);
 				}
 			}
@@ -154,10 +154,6 @@ void AK_op_selection_test() {
 void AK_op_selection_test2() {
 	AK_PRO;
 	printf("\n********** SELECTION TEST 2**********\n");
-	/*
-	AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
-	Ak_Init_L(expr);
-	*/
 	
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
 	Ak_Init_L3(&expr);
@@ -165,21 +161,9 @@ void AK_op_selection_test2() {
 	char *srcTable = "student";
 	char *destTable = "selection_test2";
 	char num = 23;
-	//float weight = 83.750;
-	//InsertAtEndL( TYPE_ATTRIBS, "weight", sizeof("weight"), expr );
-	//InsertAtEndL( TYPE_FLOAT, &weight, sizeof(float), expr );
-	//InsertAtEndL( TYPE_OPERATOR, "<", sizeof("<"), expr );
 
 	strcpy(expr->table,destTable);
-	/*Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
-	Ak_InsertAtEnd_L(TYPE_INT, &num, sizeof (int), expr);
-	Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", sizeof (">"), expr);
-	Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-	Ak_InsertAtEnd_L(TYPE_VARCHAR, "Mislav", sizeof ("Mislav"), expr);
-	Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", sizeof ("="), expr);
-	Ak_InsertAtEnd_L(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
-	//InsertAtEndL( TYPE_OPERATOR, "AND", sizeof("AND"), expr );
-*/
+
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
 	Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr);
@@ -193,7 +177,6 @@ void AK_op_selection_test2() {
 	AK_selection(srcTable, destTable, expr);
 	//AK_print_table("selection_test");
 
-	//Ak_DeleteAll_L(expr);
 	Ak_DeleteAll_L3(&expr);
 	AK_free(expr);
 	AK_EPI;
@@ -217,14 +200,14 @@ void AK_op_selection_test_redolog(){
 		if (brojac == 4){
 
 			AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
-			Ak_Init_L(row_root);
+			Ak_Init_L3(&row_root);
 
 			int mbr=70000;
 			int year=3000;
 			float weight = 5.00;
 			char *tblName = "selection_test2";
 
-			Ak_DeleteAll_L(row_root);
+			Ak_DeleteAll_L3(&row_root);
 			Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root);
 			Ak_Insert_New_Element(TYPE_VARCHAR, "Krunoslav", tblName, "firstname", row_root);
 			Ak_Insert_New_Element(TYPE_VARCHAR, "Bilic", tblName, "lastname", row_root);

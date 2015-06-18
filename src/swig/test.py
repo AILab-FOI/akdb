@@ -17,9 +17,9 @@ class Functions:
         return ak47.insert_data_test(table, attr_name, attr_value, attr_type)
 
     def update_Row(self, table, column1, column2, key, new_value):
-        element = ak47.list_elem()
-        ak47.Ak_Init_L(element)
-        ak47.Ak_DeleteAll_L(element)
+        element = ak47.list_node()
+        ak47.Ak_Init_L3(&element)
+        ak47.Ak_DeleteAll_L3(&element)
         
         if type(key) == int:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
@@ -39,9 +39,9 @@ class Functions:
         
         
     def delete_Row(self, table, column1, key):
-        element = ak47.list_elem()
-        ak47.Ak_Init_L(element)
-        ak47.Ak_DeleteAll_L(element)
+        element = ak47.list_node()
+        ak47.Ak_Init_L3(&element)
+        ak47.Ak_DeleteAll_L3(&element)
         
         if type(key) == int:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
@@ -74,9 +74,9 @@ class Functions:
         return ak47.AK_get_attr_index(table, attr_name)
 
     def get_value(self, row, col, table):
-        element = ak47.list_elem()
-        ak47.Ak_Init_L(element)
-        ak47.Ak_DeleteAll_L(element)
+        element = ak47.list_node()
+        ak47.Ak_Init_L3(&element)
+        ak47.Ak_DeleteAll_L3(&element)
 
         element = ak47.AK_get_tuple(row, col, table)
         return ak47.AK_tuple_to_string(element)
@@ -103,39 +103,39 @@ class Functions:
             else:
                 break
                 
-        element = ak47.list_elem()
-        ak47.Ak_Init_L(element)
-        ak47.Ak_DeleteAll_L(element)
+        element = ak47.list_node()
+        ak47.Ak_Init_L3(&element)
+        ak47.Ak_DeleteAll_L3(&element)
         
         operatori = ["<", ">", "=", "AND", "OR", "+", "-", "*"]
 
         c = 0        
         for el in expr:
             if operatori.count(el) == 1:
-                ak47.Ak_InsertAtEnd_L(ak47.TYPE_OPERATOR, el, len(el), element)
+                ak47.Ak_InsertAtEnd_L3(ak47.TYPE_OPERATOR, el, len(el), element)
                 c = 0
             elif table1_attributes.count(el) == 1 or table2_attributes.count(el) == 1:
-                ak47.Ak_InsertAtEnd_L(ak47.TYPE_ATTRIBS, el, len(el), element)
+                ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, el, len(el), element)
                 c = 1
             else:
                 if type(el) == int:
-                    ak47.Ak_InsertAtEnd_L(ak47.TYPE_INT, el, 4, element)
+                    ak47.Ak_InsertAtEnd_L3(ak47.TYPE_INT, el, 4, element)
                 elif type(el) == float:
-                    ak47.Ak_InsertAtEnd_L(ak47.TYPE_FLOAT, el, 4, element)
+                    ak47.Ak_InsertAtEnd_L3(ak47.TYPE_FLOAT, el, 4, element)
                 elif type(el) == str:
-                    ak47.Ak_InsertAtEnd_L(ak47.TYPE_VARCHAR, el, len(el), element)
+                    ak47.Ak_InsertAtEnd_L3(ak47.TYPE_VARCHAR, el, len(el), element)
                 c = 0
        
         ak47.AK_theta_join(table1, table2, table_res, element)
 
     def nat_Join(self, table1, table2, table_res, attributes):
-        att = ak47.list_elem()
-        ak47.Ak_Init_L(att)
-        ak47.Ak_DeleteAll_L(att)
+        att = ak47.list_node()
+        ak47.Ak_Init_L3(&att)
+        ak47.Ak_DeleteAll_L3(&att)
         for attribute in attributes:
-            ak47.Ak_InsertAtEnd_L(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
+            ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
         return ak47.AK_join(table1, table2, table_res, att)
-        #ak47.Ak_DeleteAll_L(att)
+        #ak47.Ak_DeleteAll_L3(&att)
         
     def union(self, table1, table2, table_res):
         return ak47.AK_union(table1, table2, table_res)
@@ -144,13 +144,13 @@ class Functions:
         return ak47.AK_difference(table1, table2, table_res)
         
     def projection(self, table1, table_res, attributes):
-        att = ak47.list_elem()
-        ak47.Ak_Init_L(att)
-        ak47.Ak_DeleteAll_L(att)
+        att = ak47.list_node()
+        ak47.Ak_Init_L3(&att)
+        ak47.Ak_DeleteAll_L3(&att)
         for attribute in attributes:
-            ak47.Ak_InsertAtEnd_L(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
+            ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
         return ak47.AK_projection(table1, table_res, att)
-        #ak47.Ak_DeleteAll_L(att)
+        
         
     def product(self, table1, table2, table_res):
         return ak47.AK_product(table1, table2, table_res)

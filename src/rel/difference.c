@@ -156,7 +156,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 											//if there is a difference between tuple_dicts
 											if (summ == 0) {
 												//printf("Num_rows: %i, Different_rows: %i\n", num_rows, different);
-												//Ak_DeleteAll_L(row_root);
+												
 												Ak_DeleteAll_L3(&row_root);	
 												for (o = 0; o < num_att; o++) {
 													address = tbl1_temp_block->block->tuple_dict[m + o].address;

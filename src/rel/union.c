@@ -83,7 +83,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 							
 							if ((k + 1) % num_att == 0 && k != 0) {
 								Ak_insert_row(row_root);
-								//Ak_DeleteAll_L(row_root);
+								
 								Ak_DeleteAll_L3(&row_root);
 							}
 						}
@@ -117,7 +117,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 							
 							if ((k + 1) % num_att == 0) {
 								Ak_insert_row(row_root);
-								//Ak_DeleteAll_L(row_root);
+								
 								Ak_DeleteAll_L3(&row_root);
 							}
 						}

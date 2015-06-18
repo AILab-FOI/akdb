@@ -49,7 +49,7 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
 	
     while (strcmp(temp_block->header[head].att_name, "") != 0) {
         s_copy = 1;
-        //list_elem = (AK_list_elem) Ak_First_L(att);
+        //list_elem = (AK_list_elem) Ak_First_L2(att);
 	list_elem = Ak_First_L2(att);
 	
         while (list_elem != NULL) {
@@ -120,13 +120,13 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
         something_to_copy = 1;
 
         //make a copy of insert row list of the first table
-        //some_element = (AK_list_elem) Ak_First_L(row_root_insert);
+        //some_element = (AK_list_elem) Ak_First_L2(row_root_insert);
 	some_element = Ak_First_L2(row_root_insert);
 
         //going through headers of the second table
         while (strcmp(temp_block->header[head].att_name, "") != 0) {
             //going through list of elements to compare
-            //some_element = (AK_list_elem) Ak_First_L(row_root);
+            //some_element = (AK_list_elem) Ak_First_L2(row_root);
 	    some_element = Ak_First_L2(row_root);
 	    
             while (some_element != NULL) {
@@ -186,17 +186,9 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
  * @return No return value
  */
 void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, struct list_node *att, char *new_table) {
-//void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, AK_list *att, char *new_table) {
     AK_PRO;
     Ak_dbg_messg(HIGH, REL_OP, "\n COPYING NAT JOIN");
 
-    /*
-    AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
-    AK_list *row_root_insert = (AK_list *) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
-    Ak_Init_L(row_root_insert);
-    AK_list_elem list_elem;
-    */
     
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     struct list_node *row_root_insert = (struct list_node *) AK_malloc(sizeof(struct list_node));
@@ -217,7 +209,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
         head = something_to_copy = 0;
 
         while (strcmp(tbl1_temp_block->header[head].att_name, "") != 0) {
-            //list_elem = (AK_list_elem) Ak_First_L(att);
+            
 	  list_elem = Ak_First_L2(att);
 
             //going through list of elements on which we merge
@@ -259,10 +251,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
         if (something_to_copy) {
             //merge data with second table
             AK_merge_block_join(row_root, row_root_insert, tbl2_temp_block, new_table);
-            /*
-	    Ak_DeleteAll_L(row_root);
-            Ak_DeleteAll_L(row_root_insert);
-	    */
+            
 	    Ak_DeleteAll_L3(&row_root);
 	    Ak_DeleteAll_L3(&row_root_insert);
         }
@@ -282,7 +271,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
  * @return if success returns EXIT_SUCCESS
  */
 int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node *att) {
-//int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att) {
+
     AK_PRO;
     table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
     table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
@@ -362,13 +351,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
 void AK_op_join_test() {
     AK_PRO;
     printf("\n********** NAT JOIN TEST **********\n\n");
-/*
-    AK_list *att = (AK_list *) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(att);
 
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);
-    //InsertAtEndL(TYPE_ATTRIBS, "lastname", sizeof("lastname"), att);
-*/
     struct list_node *att = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);
@@ -376,7 +359,7 @@ void AK_op_join_test() {
     AK_join("employee", "department", "nat_join_test", att);
     AK_print_table("nat_join_test");
 
-    //Ak_DeleteAll_L(att);
+    
     Ak_DeleteAll_L3(&att);
     AK_EPI;
 }

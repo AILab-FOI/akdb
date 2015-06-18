@@ -26,16 +26,11 @@
  * @param *condition AK_list list of conditions
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
-//int AK_trigger_save_conditions(int trigger, AK_list* condition) {
 int AK_trigger_save_conditions(int trigger, struct list_node *condition) {
     int i = 0;
     char tempData[MAX_VARCHAR_LENGTH];
     AK_PRO;
-    /*
-    AK_list_elem temp = (AK_list_elem)Ak_First_L(condition);
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
-    */
+
     struct list_node *temp = Ak_First_L2(condition);
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
@@ -46,7 +41,6 @@ int AK_trigger_save_conditions(int trigger, struct list_node *condition) {
         return EXIT_ERROR;
     }
 
-    //Ak_DeleteAll_L(row_root);
     Ak_DeleteAll_L3(&row_root);
     while (temp != NULL) {
         memcpy(tempData, temp->data, temp->size);
@@ -64,7 +58,7 @@ int AK_trigger_save_conditions(int trigger, struct list_node *condition) {
 	    AK_EPI;
             return EXIT_ERROR;
         }
-//        temp = (AK_list_elem)Ak_Next_L(temp);
+
 	temp = Ak_Next_L2(temp);
         i++;
     }
@@ -84,7 +78,6 @@ int AK_trigger_save_conditions(int trigger, struct list_node *condition) {
  * @param *function function that is being called by the trigger
  * @return trigger id or EXIT_ERROR
  */
-//int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, char* function) {
 int AK_trigger_add(char *name, char* event, struct list_node *condition, char* table, char* function) {
     int funk_id = -1, table_id = -1, trigg_id;
     AK_PRO;
@@ -103,10 +96,7 @@ int AK_trigger_add(char *name, char* event, struct list_node *condition, char* t
 	AK_EPI;
         return EXIT_ERROR;
     }
-    /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
-    */
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
@@ -114,7 +104,6 @@ int AK_trigger_add(char *name, char* event, struct list_node *condition, char* t
     Ak_Insert_New_Element(TYPE_INT, &trigg_id, "AK_trigger", "obj_id", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, name, "AK_trigger", "name", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, event, "AK_trigger", "event", row_root);
-    //if (condition == NULL || Ak_IsEmpty_L(condition) == 1)
     if (condition == NULL || Ak_IsEmpty_L2(condition) == 1) 
         Ak_Insert_New_Element(0, "", "AK_trigger", "condition", row_root);
     else
@@ -125,7 +114,7 @@ int AK_trigger_add(char *name, char* event, struct list_node *condition, char* t
 
     AK_free(row_root);
 
-    if (condition != NULL && Ak_IsEmpty_L(condition) == 0)
+    if (condition != NULL && Ak_IsEmpty_L2(condition) == 0)
         AK_trigger_save_conditions(trigg_id, condition);
     AK_EPI;
     return trigg_id;
@@ -140,7 +129,7 @@ int AK_trigger_add(char *name, char* event, struct list_node *condition, char* t
  */
 int AK_trigger_get_id(char *name, char *table) {
     int i = 0, table_id = -1;
-    //AK_list *row;
+    
     struct list_node *row;
     AK_PRO;
     table_id = AK_get_table_obj_id(table);
@@ -177,7 +166,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
     int trigg_id = AK_trigger_get_id(name, table);
     /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+    Ak_Init_L3(&row_root);
     */
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -194,7 +183,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
     }
 
     // the following can be avoided if foreign key is declared...
-    //Ak_DeleteAll_L(row_root);
+    
     Ak_DeleteAll_L3(&row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &trigg_id, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
     AK_EPI;
@@ -211,7 +200,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
     AK_PRO;
     /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+    Ak_Init_L3(&row_root);
     */
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -228,7 +217,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
     }
 
     // the following can be avoided if foreign key is declared...
-    //Ak_DeleteAll_L(row_root);
+    
     Ak_DeleteAll_L3(&row_root);
     Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
     AK_EPI;
@@ -274,7 +263,7 @@ int AK_trigger_edit(char *name, char* event, struct list_node *condition, char* 
 
     /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(row_root);
+    Ak_Init_L3(&row_root);
     */
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -316,13 +305,6 @@ struct list_node *AK_trigger_get_conditions(int trigger) {
     char *endPtr;
     AK_PRO;
     printf("\nid triggera: %d\n", trigger);
-    /*
-    AK_list expr;
-    Ak_Init_L(&expr);
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "trigger", strlen("trigger"), &expr);
-    Ak_InsertAtEnd_L(TYPE_INT, (char*)(&trigger), sizeof (int), &expr);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", 1, &expr);
-    */
 
     struct list_node *expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&expr);
@@ -333,7 +315,7 @@ struct list_node *AK_trigger_get_conditions(int trigger) {
     AK_selection("AK_trigger_conditions", "AK_trigger_conditions_temp", expr);
     /*
     AK_list *result = AK_malloc(sizeof(AK_list));
-    Ak_Init_L(result);
+    Ak_Init_L3(&result);
     */
     
     struct list_node *result = (struct list_node *) AK_malloc(sizeof(struct list_node));
@@ -344,7 +326,7 @@ struct list_node *AK_trigger_get_conditions(int trigger) {
     struct list_node *row;
     //while((row = (AK_list *)AK_get_row(i, "AK_trigger_conditions_temp")) != NULL){
     while((row = (struct list_node *)AK_get_row(i, "AK_trigger_conditions_temp")) != NULL){
-        Ak_InsertAtEnd_L(strtol(row->next->next->next->next->data, &endPtr, 10), row->next->next->next->data, row->next->next->next->size, result);
+        Ak_InsertAtEnd_L3(strtol(row->next->next->next->next->data, &endPtr, 10), row->next->next->next->data, row->next->next->next->size, result);
         i++;
     }
 
@@ -369,7 +351,7 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 
 	/*
 	AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-	Ak_Init_L(row_root);
+	Ak_Init_L3(&row_root);
 	*/
 
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -380,7 +362,7 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 	Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_trigger", "name", row_root, 0);
 
 	int result =  Ak_update_row(row_root);
-	//Ak_DeleteAll_L(row_root);
+	
 	Ak_DeleteAll_L3(&row_root);
 	AK_free(row_root);
 
@@ -404,20 +386,12 @@ void AK_trigger_test() {
     AK_PRO;
 
     printf("trigger.c: Present!\n");
-    /*
-    AK_list *arguments_list1 = (AK_list *) AK_malloc(sizeof (AK_list));
-    Ak_Init_L(arguments_list1);
-    */
+   
 
     struct list_node *arguments_list1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&arguments_list1);
 
-    /*  
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list1);
-    Ak_InsertAtEnd_L(TYPE_INT, "5", sizeof (int), arguments_list1);
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument2", sizeof ("argument1"), arguments_list1);
-    Ak_InsertAtEnd_L(TYPE_INT, "3", sizeof (int), arguments_list1);
-    */
+  
     
     Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list1);
     Ak_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list1);
@@ -425,40 +399,25 @@ void AK_trigger_test() {
     Ak_InsertAtEnd_L3(TYPE_INT, "3", sizeof (int), arguments_list1);
     
     AK_function_add("dummy_funk_1", 1, arguments_list1);
-    /*
-    Ak_DeleteAll_L(arguments_list1);
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "argument7", sizeof ("argument1"), arguments_list1);
-    Ak_InsertAtEnd_L(TYPE_INT, "5", sizeof (int), arguments_list1);
-    */
+    
     Ak_DeleteAll_L3(&arguments_list1);
     Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument7", sizeof ("argument1"), arguments_list1);
     Ak_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list1);
     AK_function_add("dummy_funk_2", 1, arguments_list1);
 
-    //Ak_DeleteAll_L(arguments_list1);
+    
     Ak_DeleteAll_L3(&arguments_list1);
     AK_free(arguments_list1);
     AK_print_table("AK_function");
-    /*
-    AK_list *expr = (AK_list *) AK_malloc(sizeof (AK_list));
-    AK_list *dummyExpression = (AK_list *) AK_malloc(sizeof(AK_list));
-    */
+    
     
     struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
     struct list_node *dummyExpression = (struct list_node *) AK_malloc(sizeof(struct list_node));
     strcpy(dummyExpression->data, "");
-    //Ak_Init_L(expr);
+    
     Ak_Init_L3(&expr);
     char *num = "2002";
-    /*
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "year", 4, expr);
-    Ak_InsertAtEnd_L(TYPE_INT, num, 4, expr);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, ">", 2, expr);
-    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "firstname", 9, expr);
-    Ak_InsertAtEnd_L(TYPE_VARCHAR, "Matija", 6, expr);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "=", 2, expr);
-    Ak_InsertAtEnd_L(TYPE_OPERATOR, "OR", 2, expr);
-    */
+   
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", 4, expr);
     Ak_InsertAtEnd_L3(TYPE_INT, num, 4, expr);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", 2, expr);
@@ -477,8 +436,8 @@ void AK_trigger_test() {
     printf("\n\nAK_trigger_get_conditions test!\n");
     AK_trigger_get_conditions(109);
 
-    Ak_DeleteAll_L(expr);
-//    Ak_InsertAtEnd_L(TYPE_ATTRIBS, "not null", 8, expr);
+    Ak_DeleteAll_L3(&expr);
+
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "not null", 8, expr);
 
     printf("\n\nupdate trigger\n");
