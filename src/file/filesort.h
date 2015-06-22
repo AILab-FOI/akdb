@@ -23,6 +23,7 @@
 #include "../mm/memoman.h"
 #include "table.h"
 #include "files.h"
+#include "fileio.h"
 #include "../auxi/mempro.h"
 /**
   * @def DATA_ROW_SIZE
