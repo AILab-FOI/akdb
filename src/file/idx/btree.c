@@ -240,9 +240,9 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 		contin = 0;
 	}
 	if(searchValue > endRange){
-		int help = searchValue;
+		int help = *searchValue;
 		searchValue = endRange;
-		endRange = help;
+		endRange = &help;
 	}
 
 	int adr_to_read = (int) AK_find_AK_free_space(AK_get_index_addresses(indexName));
@@ -259,7 +259,7 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 		memcpy(temp,&block->data[address],sizeof(btree_node));
 		int b,goTo = B,done=0;
 		for(b=0;b<B;b++){
-			if((searchValue<(temp->values[b])) && (done == 0)){
+			if((*searchValue<(temp->values[b])) && (done == 0)){
 				goTo=b;
 				done = 1;
 			}
@@ -272,12 +272,12 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 	memcpy(temp,&block->data[address],sizeof(btree_node));
 	int f,found = 0,idNext;
 	for(f=0;f<B;f++){
-		if(searchValue == (temp->values[f])){
+		if(*searchValue == (temp->values[f])){
 			found = 1;
 		}
-		if((found == 1) && (temp->values[f] <= endRange) && (endRange > 0)) {
+		if((found == 1) && (temp->values[f] <= *endRange) && (*endRange > 0)) {
 			printf("\n Value %i found! Block %u - IDX_TBL = %u", temp->values[f], temp->pointers[f].addBlock, temp->pointers[f].indexTd);	
-			if(toDo == 1){
+			if(*toDo == 1){
 				temp->values[f] = -1;
 				temp->pointers[f].addBlock = 0;
 				temp->pointers[f].indexTd = 0;
@@ -295,9 +295,9 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 		memset(temp,0,sizeof(btree_node));
 		memcpy(temp,&block->data[block->tuple_dict[idNext].address],sizeof(btree_node));
 		for(f=0;f<B;f++){
-			if((temp->values[f]) <= endRange){
+			if((temp->values[f]) <= *endRange){
 				printf("\n Value %i found! Block %u - IDX_TBL = %u", temp->values[f], temp->pointers[f].addBlock, temp->pointers[f].indexTd);
-				if(toDo == 1){
+				if(*toDo == 1){
 					temp->values[f] = -1;
 					temp->pointers[f].addBlock = 0;
 					temp->pointers[f].indexTd = 0;
@@ -332,7 +332,7 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 		memcpy(temp,&block->data[address],sizeof(btree_node));
 		int b,goTo = B,done=0;
 		for(b=0;b<B;b++){
-			if((insertValue<(temp->values[b])) && (done == 0)){
+			if((*insertValue<(temp->values[b])) && (done == 0)){
 				goTo=b;
 				done = 1;
 			}
@@ -361,16 +361,16 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 	if(AK_freeSpace != 0){ //we have FREE space in LEAF
 		for(j=0;j<B;j++){
 			if(inserted == 0){
-				if(insertValue < temp->values[increase]){
-					temp_help->values[j] = insertValue;
-					temp_help->pointers[j].indexTd = insertTd;
-					temp_help->pointers[j].addBlock = insertBlock;
+				if(*insertValue < temp->values[increase]){
+					temp_help->values[j] = *insertValue;
+					temp_help->pointers[j].indexTd = *insertTd;
+					temp_help->pointers[j].addBlock = *insertBlock;
 					inserted = 1;	
 				}else{
 					if(temp->values[increase] == -1){
-						temp_help->values[j] = insertValue;
-						temp_help->pointers[j].indexTd = insertTd;
-						temp_help->pointers[j].addBlock = insertBlock;
+						temp_help->values[j] = *insertValue;
+						temp_help->pointers[j].indexTd = *insertTd;
+						temp_help->pointers[j].addBlock = *insertBlock;
 						inserted = 1;
 					}else{
 						temp_help->values[j] = temp->values[increase];
@@ -412,10 +412,10 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 		for(j=0;j<B;j++){
 			if(stop == 0){
 				if(inserted == 0){
-					if(insertValue < temp->values[increase]){
-						temp_help->values[j] = insertValue;
-						temp_help->pointers[j].indexTd = insertTd;
-						temp_help->pointers[j].addBlock = insertBlock;
+					if(*insertValue < temp->values[increase]){
+						temp_help->values[j] = *insertValue;
+						temp_help->pointers[j].indexTd = *insertTd;
+						temp_help->pointers[j].addBlock = *insertBlock;
 						inserted = 1;
 					}else{
 						temp_help->values[j] = temp->values[increase];
@@ -445,10 +445,10 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 		for(j=0;j<B;j++){
 			if(stop == 0){
 				if(inserted == 0){
-					if(insertValue < temp->values[increase]){
-						temp_help_two->values[j] = insertValue;
-						temp_help_two->pointers[j].indexTd = insertTd;
-						temp_help_two->pointers[j].addBlock = insertBlock;
+					if(*insertValue < temp->values[increase]){
+						temp_help_two->values[j] = *insertValue;
+						temp_help_two->pointers[j].indexTd = *insertTd;
+						temp_help_two->pointers[j].addBlock = *insertBlock;
 						inserted = 1;
 					}else{
 						temp_help_two->values[j] = temp->values[increase];
@@ -724,20 +724,26 @@ void Ak_btree_test() {
 	AK_btree_create(tblName, att_list, indexName);
 	printf("\n\n---------------------------");
 	printf("\nInserting new value...\n");
-	int *insertValue = 39123; //insert in leaf with available space
+	int iv=39123;
+	int ii=101;
+	int ib=301;
+	int *insertValue = &iv; //insert in leaf with available space
 	//int *insertValue = 35901; //insert in full leaf -> new leaf, full node above - split
-	int *insertTd = 101;
-	int *insertBlock = 301;
+	int *insertTd = &ii;
+	int *insertBlock = &ib;
 	AK_btree_insert(indexName,insertValue,insertTd,insertBlock);
 	//use insert function for 39123 and again for 39000 to test spliting leaf with AK_free space above
 	//insertValue = 39000; //insert in full leaf -> new leaf, AK_free space in node above
 	//AK_btree_insert(indexName,insertValue,insertTd,insertBlock);
 	printf("\n\n---------------------------");
 	printf("\nSearching value...\n");
-	int *searchValue = 35906;
-	int *endRange = 35916;
+	int sv=35906;
+	int er=35916;
+	int td=0;
+	int *searchValue = &sv;
+	int *endRange = &er;
 	//int *endRange = 0;
-	int *toDo = 0;//0 search, 1 delete
+	int *toDo = &td;//0 search, 1 delete
 	AK_btree_search_delete(indexName, searchValue, endRange, toDo);
 	AK_EPI;
 }

@@ -605,7 +605,7 @@ void AK_print_table(char *tblName) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
-                                Ak_InsertAtEnd_L3(type, &(temp->block->data[address]), size, row_root);
+                                Ak_InsertAtEnd_L3(type, &temp->block->data[address], size, row_root);
                             }
                             AK_print_row(len, row_root);
                             AK_print_row_spacer(len, length);

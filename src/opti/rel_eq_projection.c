@@ -217,7 +217,6 @@ struct list_node *AK_rel_eq_get_attributes(char *tblName) {
     AK_header *table_header = (AK_header *) AK_get_header(tblName);
 
     struct list_node *list_attr = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    struct list_node *list_el;
     Ak_Init_L3(&list_attr);
 
     for (next_attr = 0; next_attr < num_attr; next_attr++) {
@@ -374,7 +373,6 @@ char *AK_rel_eq_collect_cond_attributes(struct list_node *list_elem) {
  */
 char *AK_rel_eq_remove_duplicates(char *attribs) {
     int next_attr = 0;
-    int next_address = 0;
     int token_id = 0;
     int exist_attr;
     AK_PRO;
@@ -787,14 +785,14 @@ InsertAtEndL( TYPE_OPERAND, "S", sizeof("S"), &expr );
         //AK_list_elem list_elem_set, list_elem_subset;
         //AK_list_elem list_elem_cond, list_elem_attr;
 
-        char *test_cond1, *test_cond2;
-        char *test_table;
-        char *test_attribs;
+        //char *test_cond1, *test_cond2;
+        //char *test_table;
+        //char *test_attribs;
 
-        test_table = "profesor";
-        test_cond1 = "`mbr` 100 > `firstname` 'Dino' = AND `id` 1000 > OR";
-        test_cond2 = "`id` 100 > `firstname` 50 < AND `job` 'teacher' = AND";
-        test_attribs = "id;mbr";
+        //test_table = "profesor";
+        //test_cond1 = "`mbr` 100 > `firstname` 'Dino' = AND `id` 1000 > OR";
+        //test_cond2 = "`id` 100 > `firstname` 50 < AND `job` 'teacher' = AND";
+        //test_attribs = "id;mbr";
 
         //printf("IS_SET_SUBSET_OF_LARGER_SET_TEST  : (%i)\n\n", AK_rel_eq_is_subset(list_elem_set, list_elem_subset));
         //printf("COMMUTE_PROJECTION_SELECTION_TEST : (%i)\n\n", AK_rel_eq_can_commute(list_elem_attr, list_elem_cond));

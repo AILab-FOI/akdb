@@ -345,7 +345,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
                 AK_free(tbl);
                 AK_free(attr);
             }
-            //`category` 'teacher' = `firstname` 'Dino' = AND `lastname` 'Laktasic' = OR
+            //'category' 'teacher' = 'firstname' 'Dino' = AND 'lastname' 'Laktasic' = OR
             if ((strcmp(token_cond, "AND") != 0 && strcmp(token_cond, "OR") != 0) && id > 0) {
                 if (strlen(ret_attributes)) {
                     strcat(ret_attributes, " ");
@@ -379,7 +379,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 void AK_rel_eq_comut_test() {
     AK_PRO;
     printf("AK_rel_eq_commute_with_theta_join: Present!\n");
-    printf(AK_rel_eq_commute_with_theta_join("`mbr` 100 > `firstname` 50 < AND `id` 'A' > OR", "profesor"));
+    printf(AK_rel_eq_commute_with_theta_join("'mbr' 100 > 'firstname' 50 < AND 'id' 'A' > OR", "profesor"));
     printf("\n");
 
     printf("rel_eq_comut.c: Present!\n");
@@ -428,7 +428,7 @@ void AK_rel_eq_comut_test() {
      * In the clause, the comparison operations could be one of the following: ≤, ≥, ≠, =, >, < .
      * Clauses are connected by Boolean operators : and, or , not
      */
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`L1` 100 > `L2` 50 < OR", sizeof ("`L1` 100 > `L2` 50 < OR"), expr);
+    Ak_InsertAtEnd_L3(TYPE_CONDITION, "'L1' 100 > 'L2' 50 < OR", sizeof ("'L1' 100 > 'L2' 50 < OR"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "R", sizeof ("R"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "S", sizeof ("S"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
@@ -438,7 +438,7 @@ void AK_rel_eq_comut_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` `job` =", sizeof ("`mbr` `job` ="), expr); //theta join attribute
+    Ak_InsertAtEnd_L3(TYPE_CONDITION, "'mbr' 'job' =", sizeof ("'mbr' 'job' ="), expr); //theta join attribute
 
     /*
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
@@ -446,7 +446,7 @@ void AK_rel_eq_comut_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`L1` > 100 OR `L2` < 50", sizeof ("`L1` > 100 OR `L2` < 50"), expr);
+    Ak_InsertAtEnd_L3(TYPE_CONDITION, "'L1' > 100 OR 'L2' < 50", sizeof ("'L1' > 100 OR 'L2' < 50"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
@@ -457,7 +457,7 @@ void AK_rel_eq_comut_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` = `id`", sizeof ("`mbr` = `id`"), expr); //theta join attribute
+    Ak_InsertAtEnd_L3(TYPE_CONDITION, "'mbr' = 'id'", sizeof ("'mbr' = 'id'"), expr); //theta join attribute
 
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
     Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
@@ -479,18 +479,18 @@ void AK_rel_eq_comut_test() {
         //struct list_node list_elem_set, list_elem_subset;
         //struct list_node list_elem_cond, list_elem_attr;
 
-        char *test_cond1, *test_cond2;
+        char *test_cond1;//, *test_cond2;
         char *test_table;
-        char *test_attribs;
-        char *cond_attr1, *cond_attr2;
+        //char *test_attribs;
+        //char *cond_attr1;, *cond_attr2;
 
         test_table = "profesor";
-        test_cond1 = "`mbr` 100 > `firstname` 'Markus' = AND `id` 1000 > OR";
-        test_cond2 = "`id` 100 > `firstname` 50 < AND `job` 'teacher' = AND";
-        test_attribs = "id;mbr";
+        test_cond1 = "'mbr' 100 > 'firstname' 'Markus' = AND 'id' 1000 > OR";
+        //test_cond2 = "'id' 100 > 'firstname' 50 < AND 'job' 'teacher' = AND";
+        //test_attribs = "id;mbr";
 
-        cond_attr1 = AK_rel_eq_cond_attributes(test_cond1);
-        cond_attr2 = AK_rel_eq_cond_attributes(test_cond2);
+        //cond_attr1 = AK_rel_eq_cond_attributes(test_cond1);
+        //cond_attr2 = AK_rel_eq_cond_attributes(test_cond2);
 
         printf("GET_ALL_TABLE_ATTRIBUTES_TEST   : (%s)\n\n", AK_rel_eq_get_atrributes_char(test_table));
         printf("GET_CONDITION_ATTRIBUTES_TEST   : (%s)\n\n", AK_rel_eq_cond_attributes(test_cond1));

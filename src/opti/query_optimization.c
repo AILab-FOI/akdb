@@ -62,7 +62,7 @@ void AK_print_optimized_query(struct list_node *list_query) {
     //set offset to change the box size
     length = len[0] + len[1] + len[2] + 3 * TBL_BOX_OFFSET + 7;
 
-    printf("\n%-*sREL_EQ OPTIMIZED QUERY TABLE", (length / 2) - (strlen("REL_EQ OPTIMIZED QUERY TABLE") / 2), " ");
+    printf("\n%i REL_EQ OPTIMIZED QUERY TABLE", (length / 2) - (strlen("REL_EQ OPTIMIZED QUERY TABLE") / 2));
     printf("\n| %-*s| %-*s| %-*s|\n", len[0] + TBL_BOX_OFFSET, "Type",
             len[1] + TBL_BOX_OFFSET, "Size", len[2] + TBL_BOX_OFFSET, "Data");
     AK_print_row_spacer(len, length);

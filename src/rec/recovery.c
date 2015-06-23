@@ -62,13 +62,13 @@ void AK_recover_line(char* line){
 
     char c;
     do{
-        if ( *line == ' '){
+        if ((*line) == ' '){
             line++;
             c = *line;
             break;
         }
         line++;
-    } while ( *line != '\0' || index < MAX_VARCHAR_LENGTH);
+    } while ((*line) != '\0' || index < MAX_VARCHAR_LENGTH);
 
     if(c == 'I'){
         Ak_delete_row_by_id(n, table);
@@ -115,7 +115,7 @@ int AK_recovery_get_id(char *command){
     int j= 0;
     char* result = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
 
-    for(i = length-1, j = 0; i >= 0, j < length; i--, j++){
+    for(i = length-1, j = 0; i >= 0 && j < length; i--, j++){
         if( command[i] == '|' ){
             break;
         }
@@ -126,7 +126,7 @@ int AK_recovery_get_id(char *command){
 
     length = strlen(result);
 
-    for(i = length-1, j = 0; i >= 0, j < length; i--, j++){
+    for(i = length-1, j = 0; i >= 0 && j < length; i--, j++){
         result2[j] = result[i];
     }
 
@@ -234,7 +234,7 @@ char** AK_recovery_tokenize(const char* input, char* delimiter, int valuesOrNot)
 
     char** values = AK_malloc(MAX_ATTRIBUTES*sizeof(*result));
     if(valuesOrNot == 1){
-        for(i = count - 2, j = 0; i >= 0, j < count - 1; i--, j++){
+        for(i = count - 2, j = 0; i >= 0 && j < count - 1; i--, j++){
             values[j] = result[i];
         }
         AK_free(result);

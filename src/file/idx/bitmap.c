@@ -65,7 +65,7 @@
     AK_header *temp_head;
     int temp_int;
     char temp_char[ MAX_VARCHAR_LENGTH ];
-    float temp_float;
+    //float temp_float;
     struct list_node *some_element;
     struct list_node *e, *ee;
     struct list_node *headerAtributes;
@@ -285,13 +285,13 @@
     table_addresses *addresses;
     AK_block *temp;
 
-    AK_header *t_header = AK_get_header( tblNameIndex );
+    //AK_header *t_header = AK_get_header( tblNameIndex );
 
     int i, j, k;
     int temp_int;
     int temp_indexTd;
     char temp_char[ MAX_VARCHAR_LENGTH ];
-    float temp_float;
+//    float temp_float;
     i = 0;
     struct list_node *row_root;
 
@@ -743,7 +743,7 @@
  * */
  void Ak_bitmap_test()
  {
-    list_ad *list;
+    //list_ad *list;
     int id_prof;
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 

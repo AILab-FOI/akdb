@@ -323,12 +323,12 @@ extern char *AK_rel_eq_get_atrributes_char(char *tblName);
 extern char *AK_rel_eq_cond_attributes(char *cond);
 extern int AK_rel_eq_share_attributes(char *set, char *subset);
 extern char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName);
-extern AK_list *AK_rel_eq_split_condition(char *cond) ;
+extern struct list_node *AK_rel_eq_split_condition(char *cond) ;
 extern AK_list *AK_rel_eq_selection(AK_list *list_rel_eq);
 
 extern char *AK_rel_eq_projection_attributes(char *attribs, char *tblName);
 extern AK_list *AK_rel_eq_projection(AK_list *list_rel_eq);
-extern AK_list *AK_rel_eq_get_attributes(char *tblName);
+extern struct list_node *AK_rel_eq_get_attributes(char *tblName);
 
 %include "../opti/query_optimization.c"
 %include "../opti/query_optimization.h"

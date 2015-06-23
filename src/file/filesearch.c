@@ -242,7 +242,7 @@ void Ak_filesearch_test() {
     }
 
     for (i = -10, f = -i; i < 10; i++, f = -i) {
-        Ak_Init_L3(row_root);
+        Ak_Init_L3(&row_root);
         Ak_Insert_New_Element(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
         Ak_Insert_New_Element(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
         Ak_Insert_New_Element(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);

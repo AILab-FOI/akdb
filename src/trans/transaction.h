@@ -46,15 +46,15 @@ typedef enum {
  * @struct observable_transaction
  * @brief Structure which defines transaction observable type
  */
-struct observable_transaction {
-    int (*AK_transaction_register_observer) (struct observable_transaction*, AK_observer*);
-    int (*AK_transaction_unregister_observer) (struct observable_transaction*, AK_observer*);
+struct observable_transaction_struct {
+    int (*AK_transaction_register_observer) (struct observable_transaction_struct*, AK_observer*);
+    int (*AK_transaction_unregister_observer) (struct observable_transaction_struct*, AK_observer*);
     void (*AK_lock_released) ();
     void (*AK_transaction_finished) ();
     void (*AK_all_transactions_finished) ();
     AK_observable *observable;
 };
-typedef struct observable_transaction AK_observable_transaction;
+typedef struct observable_transaction_struct AK_observable_transaction;
 
 /**
  * @author Ivan Pusic

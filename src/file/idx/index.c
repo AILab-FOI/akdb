@@ -319,7 +319,7 @@ struct list_node *AK_get_index_tuple(int row, int column, char *indexTblName) {
                     int type = temp->block->tuple_dict[ k + column ].type;
                     int size = temp->block->tuple_dict[ k + column ].size;
                     int address = temp->block->tuple_dict[ k + column ].address;
-                    memcpy(data, &(temp->block->data[address]), size);
+                    memcpy(data, &temp->block->data[address], size);
                     data[ size ] = '\0';
                     Ak_InsertAtEnd_L3(type, data, size, row_root);
                     AK_free(addresses);
@@ -537,7 +537,7 @@ void AK_print_index_table(char *indexTblName) {
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
 
-                                Ak_InsertAtEnd_L3(type, &(temp->block->data[address]), size, row_root);
+                                Ak_InsertAtEnd_L3(type, &temp->block->data[address], size, row_root);
                             }
 
                             AK_print_row(len, row_root);

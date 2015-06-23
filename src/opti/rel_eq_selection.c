@@ -465,7 +465,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
     struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&temp);
 
-    struct list_node *list_split_sel;
+//    struct list_node *list_split_sel;
     struct list_node *tmp, *temp_elem, *temp_elem_prev, *temp_elem_next;
     struct list_node *list_elem_next, *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
 

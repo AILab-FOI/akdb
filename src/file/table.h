@@ -28,12 +28,12 @@
 #include <time.h>
 
 
-struct AK_create_table {
+struct AK_create_table_struct {
 	char name[MAX_ATT_NAME];
 	int type;
 };
 
-typedef struct AK_create_table AK_create_table_parameter;
+typedef struct AK_create_table_struct AK_create_table_parameter;
 
 
 
