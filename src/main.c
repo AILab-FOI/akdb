@@ -92,7 +92,7 @@ function fun[] = {
 //---------
 {"auxi: AK_tarjan", &AK_tarjan_test},  //auxi/auxiliary.c
 {"auxi: AK_observable", &AK_observable_test}, //auxi/observable.c
-{"auxi: AK_observable_pattern", &AK_observable_test},//auxi/observable.c
+{"auxi: AK_observable_pattern", &AK_observable_pattern},//auxi/observable.c
 //dm:
 //-------
 {"dm: AK_allocationbit", &AK_allocationbit_test}, //dm/dbman.c
