@@ -211,4 +211,6 @@ void AK_print_function_use(const char *);
 void AK_print_function_uses();
 void AK_print_active_functions();
 
+void AK_mempro_test();
+
 #endif
