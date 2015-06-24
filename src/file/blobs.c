@@ -447,9 +447,38 @@ int AK_lo_unlink(char *oid) {
  * @brief  Tests
  */
 void AK_lo_test() {
+
+  FILE *f;
+  FILE *f2;
+long size;
+long size2;
+
   printf("[INFO] Starting AK_lo_test.\n");
   char *oid = AK_lo_import("./config.ini");
   AK_lo_export(oid, "/tmp/config.ini");
   AK_lo_unlink(oid);
-  printf("[INFO] config.ini should be exported to /tmp/config.ini and unlinked\n\n");
+
+  f = fopen("./config.ini", "rb");
+  if (f == NULL)
+  {
+     printf("config.ini orginal doesent exist\n");
+  }
+  fseek(f, 0, SEEK_END);
+  size = ftell(f);
+  fclose(f);
+
+  f2 = fopen("/tmp/config.ini", "rb");
+  if (f2 == NULL) 
+  {
+      printf("config.ini in temp doesent exist\n");
+  }
+  fseek(f2, 0, SEEK_END);
+  size2 = ftell(f2);
+  fclose(f2);
+
+  if (f2 == f) 
+  {
+     printf("config.ini in temp and orginal are same\n");
+  }
+
 }
