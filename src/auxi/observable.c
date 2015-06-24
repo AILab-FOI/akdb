@@ -455,3 +455,46 @@ void AK_observable_test()
     printf ("========== OBSERVABLE PATTERN END ==========\n");
     AK_EPI;
 }
+
+void AK_observable_pattern(){
+    AK_PRO;
+    printf ("\n========== OBSERVABLE PATTERN BEGIN ==========\n");
+    
+
+    char *m1 = "AK_CUSTOM_FIRST proslijedi dalje!";
+    char *m2 = "AK_TRANSACTION proslijedi dalje!";
+
+
+
+    // Fucntion for init custom observable type
+    AK_TypeObservable *observable_type = init_observable_type();
+    // Init observer type with passing observable type instance
+    AK_TypeObserver *observer_first = init_observer_type(observable_type);
+
+    // Register out observers to observable type
+    observable_type->AK_custom_register_observer(observable_type, observer_first->observer);
+    // Set notify type and message
+    observable_type->AK_set_notify_info_details(observable_type, AK_CUSTOM_FIRST, m1);
+    // Notify all observers
+    observable_type->observable->AK_notify_observers(observable_type->observable);
+
+    // Set notify type and message
+    observable_type->AK_set_notify_info_details(observable_type, AK_TRANSACTION, m2);
+    // Notify specified observer
+    observable_type->observable->AK_notify_observer(observable_type->observable, observer_first->observer);
+
+    observable_type->observable->AK_run_custom_action(NULL);
+    // Search for observer by ID
+    AK_observer *requested_observer = observable_type->observable->AK_get_observer_by_id(observable_type->observable, 1);
+    if(requested_observer) {
+        printf ("Observer was found. Observer adress: %p\n", requested_observer);
+    }
+    else
+        printf ("Requested observer was not found!\n");
+    
+    printf ("========== OBSERVABLE PATTERN END ==========\n");
+
+    AK_EPI;
+
+}
+
