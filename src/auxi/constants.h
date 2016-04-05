@@ -410,5 +410,11 @@
  */
 #define SEPARATOR "[{(|&&|)}]"
 
+/**
+ * @def AK_CONSTRAINTS_BEWTEEN
+ * @brief Defines system table name for storing between constraints
+ */
+#define AK_CONSTRAINTS_BEWTEEN "AK_constraints_between"
+
 #endif
 
