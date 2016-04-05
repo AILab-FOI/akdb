@@ -37,12 +37,12 @@ int AK_find_table_address(char* _systemTableName) {
 
     while (++i + 1 <= tuple_dict_size) {
         memset(systemTableName, FREE_CHAR, sizeof(systemTableName));
-        memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, strlen(tempBlock->data + tempBlock->tuple_dict[i].address));
+        memmove(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, strlen(tempBlock->data + tempBlock->tuple_dict[i].address));
 
         systemTableName[strlen(tempBlock->data + tempBlock->tuple_dict[i].address) - 1] = FREE_CHAR;
 
         if (strcmp(systemTableName, _systemTableName) == 0) {
-            memcpy(&ret, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
+            memmove(&ret, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
 
             AK_EPI;
 
@@ -124,9 +124,9 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
     char* systemTableName = AK_CONSTRAINTS_BEWTEEN;
     char attName[50] = {FREE_CHAR};
     char constraintName[50] = {FREE_CHAR};
-    char value[50] = {FREE_CHAR};
-    char valueS[50] = {FREE_CHAR};
-    char valueF[50] = {FREE_CHAR};
+    char inMemoryTable[50] = {FREE_CHAR};
+    char lowerBoundary[50] = {FREE_CHAR};
+    char upperBoundary[50] = {FREE_CHAR};
 
     int systemTableAddress = AK_find_table_address(systemTableName);
     int tupleDictID = -1;
@@ -143,44 +143,44 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
             // clear all vars  
             memset(attName, FREE_CHAR, sizeof(attName));
             memset(constraintName, FREE_CHAR, sizeof(constraintName));
-            memset(value, FREE_CHAR, sizeof(value));
-            memset(valueS, FREE_CHAR, sizeof(valueS));
-            memset(valueF, FREE_CHAR, sizeof(valueF));
+            memset(inMemoryTable, FREE_CHAR, sizeof(inMemoryTable));
+            memset(lowerBoundary, FREE_CHAR, sizeof(lowerBoundary));
+            memset(upperBoundary, FREE_CHAR, sizeof(upperBoundary));
 
-            memcpy(value, tempBlock->data + tempBlock->tuple_dict[tupleDictID].address, tempBlock->tuple_dict[tupleDictID].size);
-            value[strlen(tempBlock->data + tempBlock->tuple_dict[tupleDictID].address) - 1] = FREE_CHAR;
+            memmove(inMemoryTable, tempBlock->data + tempBlock->tuple_dict[tupleDictID].address, tempBlock->tuple_dict[tupleDictID].size);
+            inMemoryTable[strlen(tempBlock->data + tempBlock->tuple_dict[tupleDictID].address) - 1] = FREE_CHAR;
 
-            if (strcmp(value, tableName) == 0) {                
+            if (strcmp(inMemoryTable, tableName) == 0) {                
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");                
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
 
-                memcpy(attName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
+                memmove(attName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
 
-                memcpy(constraintName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 1].address, tempBlock->tuple_dict[tupleDictID + 1].size);
+                memmove(constraintName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 1].address, tempBlock->tuple_dict[tupleDictID + 1].size);
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
 
-                memcpy(valueS, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 3].address, tempBlock->tuple_dict[tupleDictID + 3].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %s\n", valueS);
+                memmove(lowerBoundary, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 3].address, tempBlock->tuple_dict[tupleDictID + 3].size);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %s\n", lowerBoundary);
 
-                memcpy(valueF, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 4].address, tempBlock->tuple_dict[tupleDictID + 4].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %s\n", valueF);
+                memmove(upperBoundary, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 4].address, tempBlock->tuple_dict[tupleDictID + 4].size);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %s\n", upperBoundary);
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
 
                 // DEBUG
-                // printf("\nValue: %s\n", value);
+                // printf("\ninMemoryTable: %s\n", inMemoryTable);
                 // printf("Table name: %s\n", tableName);
                 // printf("Attribute name: %s\n", attName);
                 // printf("Constraint name: %s\n", constraintName);
-                // printf("Low boundary: %s\n", valueS);
-                // printf("High boundary: %s\n", valueF);
+                // printf("Low boundary: %s\n", lowerBoundary);
+                // printf("High boundary: %s\n", upperBoundary);
 
                 if (strcmp(attName, attNamePar) == 0) {
-                    if (strcmp(newValue, valueS) >= 0 && strcmp(newValue, valueF) <= 0) {
+                    if (strcmp(newValue, lowerBoundary) >= 0 && strcmp(newValue, upperBoundary) <= 0) {
                         printf("\nConstraint succeeded!\n\n");
                     } 
                     else {
-                        printf("\nOn table %s and attribute %s exists constraint %s\n<values have to be in range between %s and %s>\n\n", tableName, attName, constraintName, valueS, valueF);
+                        printf("\nOn table %s and attribute %s exists constraint %s\n<lowerBoundary have to be in range between %s and %s>\n\n", tableName, attName, constraintName, lowerBoundary, upperBoundary);
                         flag = EXIT_ERROR;
                     }
                 }
