@@ -31,7 +31,7 @@ int Ak_check_constraint_name(char *constraintName) {
 	int num_rows;
 
 	/**
-	 * TODO add other constraint names from the cataloge
+	 * TODO add other constraint names from the catalog
 	 * Also add them to "constants.h"
 	 */
 	char constraint_table_names[][50] = {
