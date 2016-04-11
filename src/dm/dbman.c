@@ -1645,11 +1645,12 @@ initialized. Names of various database elements are written in block.
 * @param group_right address of system table of group right in db_file
 * @param constraint address of system table of constraint in db_file
 * @param constraintNull address of system table of constraintNull in db_file
+* @param constraintCheck system table address for check constraint
 * @param reference address of system table of reference in db_file
 * @return EXIT_SUCCESS if initialization was succesful if not returns EXIT_ERROR
 */
 int AK_init_system_tables_catalog(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-    int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference) {
+    int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintCheck, int constraintUnique, int reference) {
     AK_block * catalog_block;
     AK_header * catalog_header_name;
     AK_header * catalog_header_address;
@@ -1752,6 +1753,10 @@ int AK_init_system_tables_catalog(int relation, int attribute, int index, int vi
     i++;
     AK_insert_entry(catalog_block, TYPE_INT, &constraintNull, i);
     i++;
+    AK_insert_entry(catalog_block, TYPE_VARCHAR, AK_CONSTRAINTS_CHECK_CONSTRAINT, i);
+    i++;
+    AK_insert_entry(catalog_block, TYPE_INT, &constraintCheck, i);
+    i++;
     AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_constraints_unique", i);
     i++;
     AK_insert_entry(catalog_block, TYPE_INT, &constraintUnique, i);
@@ -1811,11 +1816,12 @@ void AK_memset_int(void *block, int value, size_t num) {
 * @param group_right group right in database
 * @param constraint constraint in database
 * @param constraintNull Null constraint in database
+* @param constraintCheck Check constraint in database
 * @param reference reference database
 * @return EXIT_SUCCESS
 */
 int AK_register_system_tables(int relation, int attribute, int index, int view, int sequence, int function, int function_arguments,
-    int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintUnique, int reference) {
+    int trigger, int trigger_conditions, int db, int db_obj, int user, int group, int user_group, int user_right, int group_right, int constraint, int constraintNull, int constraintCheck, int constraintUnique, int reference) {
     AK_block *relationTable;
     int i = 1, j = 0;
     int end;
@@ -2020,6 +2026,17 @@ int AK_register_system_tables(int relation, int attribute, int index, int view, 
     j++;
     i++;
 
+    AK_insert_entry(relationTable, TYPE_INT, &i, j);
+    j++;
+    AK_insert_entry(relationTable, TYPE_VARCHAR, AK_CONSTRAINTS_CHECK_CONSTRAINT, j);
+    j++;
+    AK_insert_entry(relationTable, TYPE_INT, &constraintCheck, j);
+    j++;
+    end = constraintCheck + INITIAL_EXTENT_SIZE;
+    AK_insert_entry(relationTable, TYPE_INT, &end, j);
+    j++;
+    i++;
+
     AK_insert_entry(relationTable, TYPE_INT, &i, j); /*OVDJE SAM DODAO relationUNIQUE*/
     j++;
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_unique", j);
@@ -2056,7 +2073,7 @@ allocated. Above function AK_register_system_tables() to register system tables.
 * @return EXIT_SUCCESS if the system catalog has been successfully initialized, EXIT_ERROR otherwise
 */
 int AK_init_system_catalog() {
-    int relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right, constraint, constraintNull, constraintUnique, reference;
+    int relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right, constraint, constraintNull, constraintCheck, constraintUnique, reference;
     int i;
     AK_PRO;
     Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: System catalog initialization started...\n");
@@ -2066,6 +2083,17 @@ int AK_init_system_catalog() {
         { TYPE_VARCHAR, "tableName", { 0 }, { { '\0' } }, { { '\0' } } },
         { TYPE_VARCHAR, "constraintName", 0, '\0', '\0' },
         { TYPE_VARCHAR, "attributeName", 0, '\0', '\0' },
+        { 0, '\0', 0, '\0', '\0' }
+    };
+
+    AK_header hConstraintCheck[8] = {
+        { TYPE_INT, "obj_id", { 0 }, { { '\0' } }, { { '\0' } } },
+        { TYPE_VARCHAR, "table_name", { 0 }, { { '\0' } }, { { '\0' } } },
+        { TYPE_VARCHAR, "constraint_name", { 0 }, { { '\0' } }, { { '\0' } } },
+        { TYPE_VARCHAR, "attribute_name", { 0 }, { { '\0' } }, { { '\0' } } },
+        { TYPE_INT, "constraint_value_type", { 0 }, { { '\0' } }, { { '\0' } } },
+        { TYPE_VARCHAR, "constraint_condition", { 0 }, { { '\0' } }, { { '\0' } } },
+        { TYPE_VARCHAR, "constraint_value", { 0 }, { { '\0' } }, { { '\0' } } },
         { 0, '\0', 0, '\0', '\0' }
     };
 
@@ -2232,6 +2260,12 @@ int AK_init_system_catalog() {
         memset(hConstraintNotNull[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
     }
 
+    for (i = 0; i < 8; i++) {
+        AK_memset_int(hConstraintCheck[i].integrity, FREE_INT, MAX_CONSTRAINTS);
+        memset(hConstraintCheck[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
+        memset(hConstraintCheck[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
+    }
+
     for (i = 0; i < 4; i++) { /*DODAO UNIQUE*/
         AK_memset_int(hConstraintUnique[i].integrity, FREE_INT, MAX_CONSTRAINTS);
         memset(hConstraintUnique[i].constr_name, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_NAME);
@@ -2367,13 +2401,14 @@ int AK_init_system_catalog() {
     group_right = AK_new_segment("AK_group_right", SEGMENT_TYPE_SYSTEM_TABLE, hGroupRight);
     constraint = AK_new_segment("AK_constraints_between", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintBetween);
     constraintNull = AK_new_segment("AK_constraints_not_null", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintNotNull);
+    constraintCheck = AK_new_segment(AK_CONSTRAINTS_CHECK_CONSTRAINT, SEGMENT_TYPE_SYSTEM_TABLE, hConstraintCheck);
     constraintUnique = AK_new_segment("AK_constraints_unique", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintUnique);
     reference = AK_new_segment("AK_reference", SEGMENT_TYPE_SYSTEM_TABLE, hReference);
 
     Ak_dbg_messg(LOW, DB_MAN, "AK_init_system_catalog: Segments created!\n");
 
-    if (EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right, constraint, constraintNull, constraintUnique, reference)) {
-        AK_register_system_tables(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right, constraint, constraintNull, constraintUnique, reference);
+    if (EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right, constraint, constraintNull, constraintCheck, constraintUnique, reference)) {
+        AK_register_system_tables(relation, attribute, index, view, sequence, function, function_arguments, trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right, group_right, constraint, constraintNull, constraintCheck, constraintUnique, reference);
         printf("AK_init_system_catalog: System catalog initialized!\n");
         AK_EPI;
         return EXIT_SUCCESS;
