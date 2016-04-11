@@ -1,6 +1,7 @@
 /**
-@file constraint_names.c Provides functions for checking if constraint name is unique in database
+ * @file constraint_names.c Provides functions for checking if constraint name is unique in database
  */
+
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,69 +21,45 @@
 #include "constraint_names.h"
 
 /**
- * @author Nenad Makar 
+ * @author Nenad Makar, updated by Mislav Jurinić
  * @brief Function checks if constraint name would be unique in database 
  * @param char constraintName name which you want to give to constraint which you are trying to create
  * @return EXIT_ERROR or EXIT_SUCCESS
  **/
+int Ak_check_constraint_name(char *constraintName) {
+	int i, j;
+	int num_rows;
 
-int Ak_check_constraint_name(char* constraintName)
-{
-	int i;
-	int numRows;
+	/**
+	 * TODO add other constraint names from the cataloge
+	 * Also add them to "constants.h"
+	 */
+	char constraint_table_names[][50] = {
+		AK_CONSTRAINTS_BEWTEEN,
+		AK_CONSTRAINTS_UNIQUE,
+		AK_CONSTRAINTS_CHECK_CONSTRAINT,
+		AK_CONSTRAINTS_NOT_NULL,
+		AK_REFERENCE
+	};
+
+	size_t constraint_table_names_size = sizeof(constraint_table_names) / sizeof(constraint_table_names[0]);
+
 	struct list_node *row;
 	struct list_node *attribute;
-	AK_PRO;
-	
-	numRows = AK_get_num_records("AK_constraints_not_null");
-	for(i=0; i<numRows; i++)
-	{
-		row = AK_get_row(i, "AK_constraints_not_null");
-		attribute = Ak_GetNth_L2(3, row);
-		
-		if(strcmp(attribute->data, constraintName) == 0)
-		{
-			return EXIT_ERROR;
-			AK_EPI;
-		}
-	}
-	
-	numRows = AK_get_num_records("AK_constraints_unique");
-	for(i=0; i<numRows; i++)
-	{
-		row = AK_get_row(i, "AK_constraints_unique");
-		attribute = Ak_GetNth_L2(3, row);
-		
-		if(strcmp(attribute->data, constraintName) == 0)
-		{
-			return EXIT_ERROR;
-			AK_EPI;
-		}
-	}
 
-	numRows = AK_get_num_records("AK_reference");
-	for(i=0; i<numRows; i++)
-	{
-		row = AK_get_row(i, "AK_reference");
-		attribute = Ak_GetNth_L2(2, row);
-		
-		if(strcmp(attribute->data, constraintName) == 0)
-		{
-			return EXIT_ERROR;
-			AK_EPI;
-		}
-	}
-	
-	numRows = AK_get_num_records("AK_constraints_between");
-	for(i=0; i<numRows; i++)
-	{
-		row = AK_get_row(i, "AK_constraints_between");
-		attribute = Ak_GetNth_L2(3, row);
-		
-		if(strcmp(attribute->data, constraintName) == 0)
-		{
-			return EXIT_ERROR;
-			AK_EPI;
+	AK_PRO;
+
+	for (i = 0; i < constraint_table_names_size; ++i) {
+		num_rows = AK_get_num_records(constraint_table_names[i]);
+
+		for (j = 0; j < num_rows; ++j) {
+			row = AK_get_row(j, constraint_table_names[i]);
+			attribute = Ak_GetNth_L2(3, row);
+			
+			if (strcmp(attribute->data, constraintName) == 0) {
+				AK_EPI;
+				return EXIT_ERROR;
+			}
 		}
 	}
 		
@@ -90,8 +67,9 @@ int Ak_check_constraint_name(char* constraintName)
 	//WRITE SIMILIAR CODE TO THE CODE ABOVE, CHECK TABLES AND ATTRIBUTES NAMES IN dbman.c
 	//IF THERE ARE PROBLEMS CHECK, ACCORDING TO SYSTEM CATALOG, IF 1. PARAMETER of Ak_GetNth_L2 IS CORRECT (INDEXES START FROM 1!)
 	
-	return EXIT_SUCCESS;
 	AK_EPI;
+
+	return EXIT_SUCCESS;
 }
  
 /**
@@ -99,12 +77,11 @@ int Ak_check_constraint_name(char* constraintName)
   * @brief Function tests if constraint name would be unique in database
   * @return No return value
   */
-
-void AK_constraint_names_test()
-{
-	char* constraintName1 = "nameUnique";
-	char* constraintName2 = "nameUNIQUE";
+void AK_constraint_names_test() {
+	char *constraintName1 = "nameUnique";
+	char *constraintName2 = "nameUNIQUE";
 	int result;
+
 	AK_PRO;
 	
 	printf("\nExisting constraints:\n\n");
@@ -122,5 +99,6 @@ void AK_constraint_names_test()
 	printf("Yes (0) No (-1): %d\n\n", result);
 	
 	printf("\nTest succeeded.");
+
 	AK_EPI;
 }

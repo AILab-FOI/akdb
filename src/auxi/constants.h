@@ -422,5 +422,23 @@
  */
 #define AK_CONSTRAINTS_CHECK_CONSTRAINT "AK_constraints_check_constraint"
 
+/**
+ * @def AK_CONSTRAINTS_NOT_NULL
+ * @brief Defines system table name for storing check constraints
+ */
+#define AK_CONSTRAINTS_NOT_NULL "AK_constraints_not_null"
+
+/**
+ * @def AK_CONSTRAINTS_UNIQUE
+ * @brief Defines system table name for storing check constraints
+ */
+#define AK_CONSTRAINTS_UNIQUE "AK_constraints_unique"
+
+/**
+ * @def AK_REFERENCE
+ * @brief Defines system table name for storing check constraints
+ */
+#define AK_REFERENCE "AK_reference"
+
 #endif
 
