@@ -53,6 +53,7 @@ char *system_catalog[NUM_SYS_TABLES] = {
     "AK_group_right",
     "AK_constraints_between",
     "AK_constraints_not_null",
+    AK_CONSTRAINTS_CHECK_CONSTRAINT,
     "AK_constraints_unique",
     "AK_reference"
 };
@@ -281,6 +282,8 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 				// TODO: funkcija za brisanje between constrainta - implementirati unutar between.c
 				pobrisano = 1;
 			}
+
+            // TODO: delete "check" constraints
 
 			printf("Constraint '%s' in table '%s' %s!\n", (constName==""?name:constName), sys_table,(pobrisano==0?"does not exist":"DROPPED"));
 
