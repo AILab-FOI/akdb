@@ -1,6 +1,7 @@
 /**
-@file between.h Header file that provides data structures for between constaint
+ * @file check_constraint.h Header file that provides data structures for check constraint
  */
+ 
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

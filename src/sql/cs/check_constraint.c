@@ -1,5 +1,34 @@
+/**
+ * @file check_constraint.c Check constraint implementation file.
+ */
+
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
+ */
+
 #include "check_constraint.h"
 
+/**
+ * @author Mislav Jurinić
+ * @brief For given value, checks if it satisfies the "check" constraint.
+ * @param condition logical operator ['<', '>', '!=', ...]
+ * @param type data type [int, float, varchar, datetime, ...]
+ * @param value condition to be set
+ * @param row_data data in table
+ * @return 1 - success, 0 - failure 
+ */
 int condition_passed(char *condition, int type, void *value, void *row_data) {
     float float_value;
     float float_row_data;
@@ -8,8 +37,8 @@ int condition_passed(char *condition, int type, void *value, void *row_data) {
 
     switch (type) {
         case TYPE_INT:
-            value = (int) value;            // condition to be set
-            row_data = *((int *) row_data); // data in table
+            value = (int) value;
+            row_data = *((int *) row_data);
 
             // DEBUG
             // printf("XCondition: %s\n", condition);
@@ -97,6 +126,17 @@ int condition_passed(char *condition, int type, void *value, void *row_data) {
     return EXIT_ERROR;
 }
 
+/**
+ * @author Mislav Jurinić
+ * @brief Adds a new "check" constraint into the system table.
+ * @param table_name target table for "check" constraint evaluation
+ * @param constraint_name new "check" constraint name that will be visible in the system table
+ * @param attribute_name target attribute for "check" constraint evaluation
+ * @param condition logical operator ['<', '>', '!=', ...]
+ * @param type data type [int, float, varchar, datetime, ...]
+ * @param value condition to be set
+ * @return 1 - success, 0 - failure 
+ */
 int AK_set_check_constraint(char *table_name, char *constraint_name, char *attribute_name, char *condition, int type, void *value) {
     int i;
     int attribute_position;
@@ -171,7 +211,14 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
     return EXIT_SUCCESS;
 }
 
-// value - data we want to insert
+/**
+ * @author Mislav Jurinić
+ * @brief Verifies if the value we want to insert satisfies the "check" constraint.
+ * @param table target table name
+ * @param attribute target attribute name
+ * @param value data we want to insert
+ * @return 1 - success, 0 - failure 
+ */
 int AK_check_constraint(char *table, char *attribute, void *value) {
     int i;
     int num_rows = AK_get_num_records(AK_CONSTRAINTS_CHECK_CONSTRAINT);
@@ -221,9 +268,12 @@ int AK_check_constraint(char *table, char *attribute, void *value) {
     return EXIT_SUCCESS;
 }
 
+/**
+ * @author Mislav Jurinić
+ * @brief Test function for "check" constraint.
+ * @return void
+ */
 void AK_check_constraint_test() {
-    // AK_set_check_constraint(char *table_name, char *constraint_name, char *attribute_name, char *condition, int type, void *value)
-
     // Test 3 data
     float weight_one = 105.5, weight_three = 105.6;
     float *p_weight_one = &weight_one;
