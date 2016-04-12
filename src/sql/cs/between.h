@@ -24,6 +24,7 @@
 #include "../../file/id.h"
 #include "../../auxi/mempro.h"
 
+int AK_find_table_address(char *_systemTableName);
 void AK_set_constraint_between(char* tableName, char* constraintName, char* attName, char* startValue, char* endValue);
 int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar);
 void Ak_constraint_between_test();
