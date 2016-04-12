@@ -34,6 +34,7 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 	int uniqueConstraintName;
 	struct list_node *row;
 	struct list_node *attribute;
+
 	AK_PRO;
 
 	newConstraint = AK_read_constraint_not_null(tableName, attName, NULL);
@@ -41,8 +42,8 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 	if(newConstraint == EXIT_ERROR)
 	{
 		printf("\nFAILURE!\nNOT NULL constraint already exists on attribute: %s\nof table: %s\n\n", attName, tableName);
-		return EXIT_ERROR;
 		AK_EPI;
+		return EXIT_ERROR;
 	}
 	
 	numRows = AK_get_num_records(tableName);
@@ -59,8 +60,8 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 			if(AK_tuple_to_string(attribute) == NULL)
 			{
 				printf("\nFAILURE!\nTable: %s\ncontains NULL sign and that would violate NOT NULL constraint which You would like to set on attribute: %s\n\n", tableName, attName);
-				return EXIT_ERROR;
 				AK_EPI;
+				return EXIT_ERROR;
 			}
 		}
 	}
@@ -70,8 +71,8 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 	if(uniqueConstraintName == EXIT_ERROR)
 	{
 		printf("\nFAILURE!\nConstraint name: %s\nalready exists in database\n\n", constraintName);
-		return EXIT_ERROR;
 		AK_EPI;
+		return EXIT_ERROR;
 	}
 	
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -86,8 +87,10 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 	Ak_DeleteAll_L3(&row_root);
 	AK_free(row_root);
 	printf("\nNOT NULL constraint is set on attribute: %s\nof table: %s\n\n", attName, tableName);
-	return EXIT_SUCCESS;
+	
 	AK_EPI;
+
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -100,50 +103,35 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
  **/
 
 int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue) {
-	if(newValue == NULL)
-	{
-		AK_PRO;
-		int numRecords = AK_get_num_records("AK_constraints_not_null");
+	int numRecords = AK_get_num_records("AK_constraints_not_null");
 
-		if(numRecords != 0)
-		{
-			struct list_node *row;
-			struct list_node *attribute;
-			struct list_node *table;
-			int i;
-			
-			for(i=0; i<numRecords; i++)
-			{
+	struct list_node *row;
+	struct list_node *attribute;
+	struct list_node *table;
+	int i;
+	
+	AK_PRO;
+
+	if(newValue == NULL) {
+		if(numRecords != 0) {
+			for (i = 0; i < numRecords; i++) {
 				row = AK_get_row(i, "AK_constraints_not_null");
 				attribute = Ak_GetNth_L2(4, row);
 				
-				if(strcmp(attribute->data, attName) == 0)
-				{
+				if(strcmp(attribute->data, attName) == 0) {
 					table = Ak_GetNth_L2(2, row);
 					
-					if(strcmp(table->data, tableName) == 0)
-					{
-						return EXIT_ERROR;
+					if(strcmp(table->data, tableName) == 0) {
 						AK_EPI;
+						return EXIT_ERROR;
 					}
 				}
-			}
-			
-			return EXIT_SUCCESS;
-			AK_EPI;
+			}			
 		}
-		else
-		{
-			return EXIT_SUCCESS;
-			AK_EPI;			
-		}
+	}
 
-	}
-	else
-	{
-		return EXIT_SUCCESS;
-		AK_EPI;
-	}
+	AK_EPI;
+	return EXIT_SUCCESS;		
 }
 
 /**
