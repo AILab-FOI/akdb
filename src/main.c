@@ -150,6 +150,7 @@ function fun[] = {
 {"sql: AK_reference", &AK_reference_test}, //sql/cs/reference.c
 {"sql: Ak_constraint_between", &Ak_constraint_between_test}, //sql/cs/between.c
 {"sql: AK_check_constraint", &AK_check_constraint_test}, //sql/cs/check_constraint.c
+{"sql: AK_constraint_names", &AK_constraint_names_test}, //sql/cs/constraint_names.c
 //trans:
 //----------
 {"trans: AK_transaction", &AK_test_Transaction}, //src/trans/transaction.c
