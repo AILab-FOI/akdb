@@ -75,6 +75,7 @@
 #include "sql/privileges.h"
 #include "trans/transaction.h"
 #include "rec/redo_log.h"
+#include "rec/recovery.h"
 #include "auxi/observable.h"
 #include "sql/view.h"
 #include "file/blobs.h"
@@ -151,7 +152,10 @@ function fun[] = {
 {"sql: AK_check_constraint", &AK_check_constraint_test}, //sql/cs/check_constraint.c
 //trans:
 //----------
-{"trans: AK_transaction", &AK_test_Transaction} //src/trans/transaction.c
+{"trans: AK_transaction", &AK_test_Transaction}, //src/trans/transaction.c
+//rec:
+//----------
+{"rec: AK_recovery", &AK_recovery_test} //rec/recovery.c
 };
 //here are all tests in a order like in the folders from the github
 /**

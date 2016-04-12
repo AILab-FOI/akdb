@@ -52,17 +52,34 @@ typedef struct {
 } AK_db_cache;
 
 /**
-  * @author Dražen Bandić
-  * @struct AK_redo_log
-  * @brief Structure that defines global redo log
+ * Structure that contains all vital information for the command
+ * that is about to execute. It is defined by the operation (INSERT,
+ * UPDATE, DELETE that are defined inside the const.c file), table
+ * where the data is stored, and certain data that will be stored.
+ * @author Tomislav Turek
+ * @struct AK_command_recovery_struct
+ * @brief recovery structure used to recover commands from binary file
  */
 typedef struct {
+    int operation;
+    char *table_name;
+    char **arguments;
+} AK_command_recovery_struct;
 
-  char ** table_name;
-  char ** command;
-  char ** attributes;
-  int number;
-
+/**
+ * The structure defines an array of commands being executed at the moment.
+ * If and when commands fail to execute, the rest of the commands that did not
+ * execute will be stored inside a binary file and the system will try recovery
+ * and execution for those commands. With the array, we also store a number
+ * that defines the number of commands that failed to execute (length of 
+ * command_recovery array).
+ * @author Dražen Bandić, updated by Tomislav Turek
+ * @struct AK_redo_log
+ * @brief Structure that defines global redo log
+ */
+typedef struct {
+    AK_command_recovery_struct *command_recovery;
+    int number;
 } AK_redo_log;
 
 /**

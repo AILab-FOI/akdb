@@ -21,11 +21,11 @@
 #include "redo_log.h"
 
 /**
- * @author @author Krunoslav Bilić updated by Dražen Bandić
+ * @author @author Krunoslav Bilić updated by Dražen Bandić, second update by Tomislav Turek
  * @brief Function adds new element to redolog
  * @return EXIT_FAILURE if not allocated memory for ispis, otherwise EXIT_SUCCESS
  */
-int AK_add_to_redolog(char command[6], struct list_node *row_root){
+int AK_add_to_redolog(int command, struct list_node *row_root){
     AK_PRO;
 
     if (redo_log == NULL)
@@ -84,9 +84,9 @@ int AK_add_to_redolog(char command[6], struct list_node *row_root){
         el = el->next;
     }
 
-    memcpy(redo_log->table_name[n], table, strlen(table));
-    memcpy(redo_log->attributes[n], record, strlen(record));
-    memcpy(redo_log->command[n], command, strlen(command));
+    memcpy(redo_log->command_recovery[n].table_name, table, strlen(table));
+    memcpy(redo_log->command_recovery[n].arguments[n], record, strlen(record));
+    memcpy(redo_log->command_recovery[n].operation, command, strlen(command));
 
     int x = n + 1;
 
@@ -102,7 +102,7 @@ int AK_add_to_redolog(char command[6], struct list_node *row_root){
 
 
 /**
- * @author Krunoslav Bilić updated by Dražen Bandić
+ * @author Krunoslav Bilić updated by Dražen Bandić, second update by Tomislav Turek
  * @brief Function prints out the content of redolog memory
  * @return No return value.
  */
@@ -111,7 +111,8 @@ void AK_printout_redolog(){
     int x = redo_log->number;
     int i = 0;
     for (i = 0; i < x; i++){
-        printf("%d. %s %s %s\n", i, redo_log->table_name[i], redo_log->command[i], redo_log->attributes[i]);
+        printf("%d. %s %s %s\n", i, redo_log->command_recovery[i].table_name,
+                redo_log->command_recovery[i].operation, redo_log->command_recovery[i].arguments);
     }
     AK_EPI;
 }

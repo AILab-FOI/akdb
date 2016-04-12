@@ -28,6 +28,7 @@
 #include "../auxi/mempro.h"
 
 void AK_archive_log();
+char* AK_get_timestamp();
 
 #endif
 
