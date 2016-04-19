@@ -137,6 +137,8 @@ int condition_passed(char *condition, int type, void *value, void *row_data) {
  * @param value condition to be set
  * @return 1 - success, 0 - failure 
  */
+
+ // TODO umjesto value cijelu listu expressiona prosljediti
 int AK_set_check_constraint(char *table_name, char *constraint_name, char *attribute_name, char *condition, int type, void *value) {
     int i;
     int attribute_position;
@@ -156,6 +158,7 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
 
             memmove(data, attribute->data, attribute->size);
 
+            // TODO iterirati kroz cijeli logicki izraz
             if (!condition_passed(condition, type, value, data)) {
                 printf("\n*** ERROR ***\nFailed to add 'check constraint' on TABLE: %s\nEntry in table caused 'constraint violation'!\n\n", table_name);
 
