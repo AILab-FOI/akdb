@@ -46,7 +46,8 @@
     // read structure from file
     fread(&redo_log, sizeof(redo_log), 1, fp);
     // read command by command
-    for(int i = 0; i < redo_log->number; i++) {
+    int i;
+    for(i = 0; i < redo_log->number; i++) {
         AK_recovery_insert_row(redo_log->command_recovery[i].table_name, redo_log->command_recovery[i].arguments);
     }
     

@@ -24,6 +24,7 @@
  * @author Unknown, updated by Jurica Hlevnjak - check function arguments included for drop purpose, updated by Tomislav Ilisevic
  * @brief Function that gets obj_id of a function by name and arguments list (transferred from trigger.c/drop.c).
  * @param *function name of the function
+ * @param *arguments_list list of arguments
  * @return obj_id of the function or EXIT_ERROR
  */
 int AK_get_function_obj_id(char* function, struct list_node *arguments_list) {
@@ -38,10 +39,12 @@ int AK_get_function_obj_id(char* function, struct list_node *arguments_list) {
     num_args = Ak_Size_L2(arguments_list) / 2; // u paru "naziv" - "vrsta" argumenta pa / 2
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_function")) != NULL) {
-        memcpy(&arg_num, row->next->next->next->data, sizeof (int));
-        if ((strcmp(row->next->next->data, function) == 0) && (arg_num == num_args)) {
-
-            memcpy(&id, row->next->data, sizeof (int));
+	struct list_node *elem_in_memcpy = Ak_GetNth_L2(3,row);
+        memcpy(&arg_num, elem_in_memcpy->data, sizeof (int));
+	struct list_node *elem_in_strcmp = Ak_GetNth_L2(2,row);
+        if ((strcmp(elem_in_strcmp->data, function) == 0) && (arg_num == num_args)) {
+	    struct list_node *elem_in_memcpy2 = Ak_GetNth_L2(1,row);
+            memcpy(&id, elem_in_memcpy2->data, sizeof (int));
             
 			if(num_args>0){
 				result = AK_check_function_arguments_type(id, arguments_list); // check_type je za drop
@@ -89,7 +92,6 @@ int AK_check_function_arguments(int function_id, struct list_node *arguments_lis
         printf("\n %d  %d function id: ", function_id, fid);
 
         if (fid == function_id) {
-	    current_elem = Ak_Next_L2(current_elem);
             current_elem = Ak_Next_L2(current_elem);
             argtype_catalog = current_elem->data;
 	    current_elem = Ak_Next_L2(current_elem);
@@ -141,7 +143,6 @@ int AK_check_function_arguments_type(int function_id, struct list_node *args) {
         // printf("Function id: %d  fid: %d \n", function_id, fid);
 
         if (fid == function_id) {
-	    current_elem = Ak_Next_L2(current_elem);
             current_elem = Ak_Next_L2(current_elem);
             argtype = current_elem->data;
 
@@ -392,7 +393,7 @@ int AK_function_rename(char *name, struct list_node *arguments_list, char *new_n
 
 /**
  * @author Boris Kišić
- * @brief Function that changes the function name.
+ * @brief Function that changes the return type.
  * @param *name name of the function to be modified
  * @param *arguments_list list of function arguments
  * @param *new_return_type new return type

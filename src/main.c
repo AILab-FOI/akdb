@@ -139,6 +139,7 @@ function fun[] = {
 {"rel: AK_op_selection_test_redolog", &AK_op_selection_test_redolog}, //rel/selection.c
 //sql:
 //--------
+{"sql: AK_command", &AK_test_command}, //sql/command.c
 {"sql: AK_drop", &AK_drop_test}, //sql/drop.c
 {"sql: AK_view", &AK_view_test}, //sql/view.c
 {"sql: AK_null", &AK_null_test}, //sql/cs/nnull.c

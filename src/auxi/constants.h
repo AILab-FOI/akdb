@@ -440,5 +440,66 @@
  */
 #define AK_REFERENCE "AK_reference"
 
+/**
+ * @def DROP_TABLE
+ * @brief Constant which defines number of drop statement
+ */
+#define DROP_TABLE      0
+
+/**
+ * @def DROP_INDEX
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_INDEX      1
+
+/**
+ * @def DROP_VIEW
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_VIEW       2
+
+/**
+ * @def DROP_SEQUENCE
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_SEQUENCE   3
+
+/**
+ * @def DROP_TRIGGER
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_TRIGGER    4
+
+/**
+ * @def DROP_FUNCTION
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_FUNCTION   5
+
+/**
+ * @def DROP_USER
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_USER       6
+
+/**
+ * @def DROP_GROUP
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_GROUP      7
+
+/**
+ * @def DROP_CONSTRAINT
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_CONSTRAINT 8
+
+
+/**
+ * @def NUM_SYS_TABLES
+ * @brief  Constant which defines length of system_catalog
+ */
+#define NUM_SYS_TABLES  20
+
 #endif
 

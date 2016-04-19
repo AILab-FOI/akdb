@@ -5,6 +5,7 @@
  * @brief Function for executing given commands (SELECT, UPDATE, DELETE AND INSERT)
  * @param komande Commands array to execute
  * @param brojkomandi Number of commands in array
+ * @return ERROR_EXIT only if command can't be executed returns EXIT_ERROR
  */
 int AK_command(command * komande, int brojkomandi) {
     int i;
@@ -26,7 +27,7 @@ int AK_command(command * komande, int brojkomandi) {
             
         case UPDATE:
             printf("***UPDATE***\n");
-            if(Ak_update_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_update_row( (struct list_node *) (komande[i].parameters)) == EXIT_ERROR){
                 AK_EPI;
                 return EXIT_ERROR;
             }
@@ -35,7 +36,7 @@ int AK_command(command * komande, int brojkomandi) {
             break;
         case DELETE:
             printf("***DELETE***\n");        	 
-            if(Ak_delete_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_delete_row( (struct list_node *) (komande[i].parameters)) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
@@ -44,7 +45,7 @@ int AK_command(command * komande, int brojkomandi) {
            
         case INSERT:
             printf("***INSERT***\n");
-            if(Ak_insert_row( ((struct list_node *) (komande[i].parameters))) == EXIT_ERROR){
+            if(Ak_insert_row( (struct list_node *) (komande[i].parameters)) == EXIT_ERROR){
 		AK_EPI;
                 return EXIT_ERROR;
 	    }
