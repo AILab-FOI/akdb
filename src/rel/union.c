@@ -149,7 +149,8 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 void AK_op_union_test() {
     AK_PRO;
     printf("\n********** UNION TEST **********\n\n");
-
+    AK_print_table("professor");
+    AK_print_table("assistant");
     AK_union("professor", "assistant", "union_test");
     AK_print_table("union_test");
     AK_EPI;

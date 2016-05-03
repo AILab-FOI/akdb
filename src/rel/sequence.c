@@ -95,7 +95,6 @@ int AK_sequence_remove(char *name){
     return EXIT_SUCCESS;
 }
 
-
 /**
  * @author Boris Kišić
  * @brief Function returns the current value of the sequence.
@@ -105,13 +104,16 @@ int AK_sequence_remove(char *name){
 int AK_sequence_current_value(char *name){
     int i = 0;
     int current_value = -1;
+    int num_rows = AK_get_num_records("AK_sequence");
     
     struct list_node *row;
     AK_PRO;
+
+    
     //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
     while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
-        if (strcmp(row->next->next->data, name) == 0) {
-            memcpy(&current_value, row->next->next->next->data, sizeof (int));
+        if (strcmp(get_row_attr_data(1,row), name) == 0) {
+            memcpy(&current_value, get_row_attr_data(2,row), sizeof (int));
 	    break;
         }
         i++;
@@ -145,48 +147,48 @@ int AK_sequence_next_value(char *name){
     AK_PRO;
     //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
     while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
-        if (strcmp(row->next->next->data, name) == 0) {
-	    memcpy(&obj_id, row->next->data, sizeof (int));
-	    memcpy(&current_value, row->next->next->next->data, sizeof (int));
-            memcpy(&increment, row->next->next->next->next->data, sizeof (int));
-	    memcpy(&max_value, row->next->next->next->next->next->data, sizeof (int));
-	    memcpy(&min_value, row->next->next->next->next->next->next->data, sizeof (int));
-	    memcpy(&cycle, row->next->next->next->next->next->next->next->data, sizeof (int));
-	    break;
+        if(strcmp( get_row_attr_data(1,row) ,name) == 0) {
+        memcpy(&obj_id, get_row_attr_data(0,row), sizeof (int));
+        memcpy(&current_value, get_row_attr_data(2,row), sizeof (int));
+        memcpy(&increment, get_row_attr_data(3,row), sizeof (int));
+        memcpy(&max_value, get_row_attr_data(4,row), sizeof (int));
+        memcpy(&min_value, get_row_attr_data(5,row), sizeof (int));
+        memcpy(&cycle, get_row_attr_data(6,row), sizeof (int));
+        break;
         }
         i++;
     }
-	
-    
+   
+
     if (current_value == -1){
-	AK_EPI;
+    AK_EPI;
         return EXIT_ERROR;
     }
  
     next_value = current_value + increment;
     
     if(next_value < min_value){
-	if(cycle==0){
-	    printf("\nNon-cyclic sequence can not go below its minimum value.");
+    if(cycle==0){
+        printf("\nNon-cyclic sequence can not go below its minimum value.");
             AK_EPI;
-	    return EXIT_ERROR;
-	}
-	else{
-	    next_value=max_value;
-	} 
+        return EXIT_ERROR;
+    }
+    else{
+        next_value=max_value;
+    } 
     }
     
     if(next_value > max_value){
-	if(cycle==0){
-	    printf("\nNon-cyclic sequence can not go over its maximum value.");
-	    AK_EPI;
-	    return EXIT_ERROR;
-	}
-	else{
-	    next_value=min_value;
-	} 
+    if(cycle==0){
+        printf("\nNon-cyclic sequence can not go over its maximum value.");
+        AK_EPI;
+        return EXIT_ERROR;
     }
-	
+    else{
+        next_value=min_value;
+    } 
+    }
+    
  
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
@@ -219,10 +221,10 @@ int AK_sequence_get_id(char *name){
     
     struct list_node * row;
     AK_PRO;
-	//while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL) {
+	
 	while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL) {
-		if (strcmp(row->next->next->data, name) == 0) {
-			i = (int) * row->next->data;
+		if (strcmp( get_row_attr_data(1,row) ,name) == 0) {
+			i = (int) * get_row_attr_data(0,row);
 			AK_free(row);
 			AK_EPI;
 			return i;
@@ -291,8 +293,8 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
     struct list_node *row;
     //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
     while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
-        if (strcmp(row->next->next->data, name) == 0) {
-            memcpy(&seq_id, row->next->data, sizeof (int));
+        if (strcmp(get_row_attr_data(1,row) ,name) == 0){
+            memcpy(&seq_id, get_row_attr_data(0,row), sizeof (int));
 	    break;
         }
         i++;
@@ -338,15 +340,15 @@ void AK_sequence_test() {
     int currval = AK_sequence_current_value("sekvenca1");
     printf("\nCurrent value of sequence sekvenca1: %d\n", currval);
     int nextval = AK_sequence_next_value("sekvenca1");
-    printf("\nNext value of sequence sekvenca2: %d\n", nextval);
+    printf("\nNext value of sequence sekvenca1: %d\n", nextval);
     
     AK_sequence_rename("sekvenca1", "sekvenca3");
     AK_print_table("AK_sequence"); 
 
     AK_sequence_modify("sekvenca3", 200, 20, 300, 150, 0);
     AK_sequence_remove("sekvenca1");
-    AK_print_table("AK_sequence"); 
+    AK_print_table("AK_sequence");
+    
     printf("\n Test is successful :) \n");
     AK_EPI
 }
-    

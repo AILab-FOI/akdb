@@ -675,6 +675,27 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
     fclose(fp);
     AK_EPI;
 }
+/**
+ * @author Leon Palaić
+ * @brief  Function that returns value of attribute from row
+ * @param column index of column atribute
+ * @param *row  list with row elements
+ * @return atribute data
+ */
+char *get_row_attr_data(int column, struct list_node *node){
+    
+    struct list_node *nodee = node;
+    int i=0;
+    while(nodee->next){
+        
+        if(i == column)
+            return nodee->next->data;
+        else{
+            i++;
+            nodee = nodee->next;
+            }
+        }
+}
 
 /**
  * @author Dino Laktašić
@@ -1073,7 +1094,6 @@ void AK_table_test() {
     printf("%s\n", AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
     AK_EPI;
 }
-
 /**
  * @author Mislav Čakarić, edited by Ljubo Barać
  * @brief Function for rename operator testing (moved from rename.c)

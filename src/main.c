@@ -127,11 +127,13 @@ function fun[] = {
 //--------
 {"rel: AK_op_union", &AK_op_union_test}, //rel/union.c
 {"rel: AK_op_join", &AK_op_join_test}, // rel/nat_join.c
-{"rel: AK_sequence", &AK_sequence_test}, //rel/sequence.c
+{"rel: AK_sequence", &AK_sequence_test}, 
 {"rel: AK_op_product", &AK_op_product_test}, //rel/product.c
 {"rel: Ak_aggregation", &Ak_aggregation_test}, //rel/aggregation.c
 {"rel: AK_op_intersect", &Ak_op_intersect_test}, //rel/intersect.c
-{"rel: AK_op_selection", &AK_op_selection_test}, //rel/selection.c
+{"rel: AK_op_selection", &AK_op_selection_test},
+{"rel: AK_op_selection2", &AK_op_selection_test2}, //rel/selection.c
+{"rel: Ak_expression_check_test" , &Ak_expression_check_test},
 {"rel: AK_op_difference", &Ak_op_difference_test}, //rel/difference.c
 {"rel: AK_op_projection", &AK_op_projection_test}, //rel/projection.c
 {"rel: AK_op_theta_join", &AK_op_theta_join_test}, //rel/theta_join.c

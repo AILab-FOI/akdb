@@ -20,6 +20,7 @@
 #ifndef PROJECTION
 #define PROJECTION
 
+#include "expression_check.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../auxi/mempro.h"
@@ -31,8 +32,8 @@ void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable)
 int AK_projection(char *srcTable, char *dstTable, AK_list *att);
 */
 void AK_create_block_header(int old_block, char *dstTable, struct list_node *att);
-void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable);
-int AK_projection(char *srcTable, char *dstTable, struct list_node *att);
+void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable, struct list_node *expr);
+int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct list_node *expr);
 void AK_op_projection_test();
 
 #endif

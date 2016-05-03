@@ -315,7 +315,7 @@ void AK_op_theta_join_test() {
 
     struct list_node *constraints = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&constraints);
-
+    
     //test where no column names overlap
     printf("SELECT * FROM department, professor WHERE manager = lastname;\n");
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "manager", sizeof ("manager"), constraints);
@@ -326,18 +326,20 @@ void AK_op_theta_join_test() {
     AK_print_table("theta_join_test");
 
     Ak_DeleteAll_L3(&constraints);
-
-    printf("SELECT * FROM student, professor2 WHERE id_prof = mbr;\n");
-
+    
+    //printf("SELECT * FROM student, professor2 WHERE id_prof = mbr;\n");
+    printf("SELECT * FROM student, professor2 WHERE id_prof=mbr;\n");
 
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr", sizeof ("mbr"), constraints);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+ 
+   
     
     AK_theta_join("student", "professor2", "theta_join_test2", constraints);
     AK_print_table("theta_join_test2");
     Ak_DeleteAll_L3(&constraints);
-
+    
     //test where overlaping columns are a part of the constraints
     printf("SELECT * FROM employee, department WHERE employee.id_department = department.id_department;\n");   
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
@@ -359,7 +361,7 @@ void AK_op_theta_join_test() {
     AK_print_table("theta_join_test4");
     printf("Test is successful :) \n");
     Ak_DeleteAll_L3(&constraints);
-
+    
     AK_free(constraints);
     AK_EPI;
 }
