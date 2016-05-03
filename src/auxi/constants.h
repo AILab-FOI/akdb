@@ -410,5 +410,96 @@
  */
 #define SEPARATOR "[{(|&&|)}]"
 
+/**
+ * @def AK_CONSTRAINTS_BEWTEEN
+ * @brief Defines system table name for storing between constraints
+ */
+#define AK_CONSTRAINTS_BEWTEEN "AK_constraints_between"
+
+/**
+ * @def AK_CONSTRAINTS_CHECK_CONSTRAINT
+ * @brief Defines system table name for storing check constraints
+ */
+#define AK_CONSTRAINTS_CHECK_CONSTRAINT "AK_constraints_check_constraint"
+
+/**
+ * @def AK_CONSTRAINTS_NOT_NULL
+ * @brief Defines system table name for storing check constraints
+ */
+#define AK_CONSTRAINTS_NOT_NULL "AK_constraints_not_null"
+
+/**
+ * @def AK_CONSTRAINTS_UNIQUE
+ * @brief Defines system table name for storing check constraints
+ */
+#define AK_CONSTRAINTS_UNIQUE "AK_constraints_unique"
+
+/**
+ * @def AK_REFERENCE
+ * @brief Defines system table name for storing check constraints
+ */
+#define AK_REFERENCE "AK_reference"
+
+/**
+ * @def DROP_TABLE
+ * @brief Constant which defines number of drop statement
+ */
+#define DROP_TABLE      0
+
+/**
+ * @def DROP_INDEX
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_INDEX      1
+
+/**
+ * @def DROP_VIEW
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_VIEW       2
+
+/**
+ * @def DROP_SEQUENCE
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_SEQUENCE   3
+
+/**
+ * @def DROP_TRIGGER
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_TRIGGER    4
+
+/**
+ * @def DROP_FUNCTION
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_FUNCTION   5
+
+/**
+ * @def DROP_USER
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_USER       6
+
+/**
+ * @def DROP_GROUP
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_GROUP      7
+
+/**
+ * @def DROP_CONSTRAINT
+ * @brief  Constant which defines number of drop statement
+ */
+#define DROP_CONSTRAINT 8
+
+
+/**
+ * @def NUM_SYS_TABLES
+ * @brief  Constant which defines length of system_catalog
+ */
+#define NUM_SYS_TABLES  20
+
 #endif
 

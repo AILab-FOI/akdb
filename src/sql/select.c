@@ -11,6 +11,7 @@
  * @param srcTable - original table that is used for selection
  * @param destTable - table that contains the result
  * @param condition - condition for selection
+ * @return EXIT_SUCCESS if cache result in memory and print table else break 
  */
 //int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
 int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct list_node *condition){
@@ -135,7 +136,6 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 /**
  * @author Renata Mesaros
  * @brief Function for testing the implementation
- * @return No return value
  */
 void AK_select_test(){
 	AK_PRO;

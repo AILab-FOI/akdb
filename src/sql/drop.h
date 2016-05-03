@@ -28,18 +28,21 @@
 #include "function.h"
 #include "privileges.h"
 #include "../auxi/mempro.h"
+#include "../auxi/constants.h"
 
 struct drop_arguments {
     void *value;
     struct drop_arguments *next;
 };
 
+
+
 typedef struct drop_arguments AK_drop_arguments;
+
 
 
 void AK_drop(int type, AK_drop_arguments *drop_arguments);
 void AK_drop_test();
-void AK_drop_help_function(char *tblName, char *sys_table);
 int AK_if_exist(char *tblName, char *sys_table);
 
 #endif

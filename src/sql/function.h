@@ -23,6 +23,7 @@
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../auxi/mempro.h"
+#include "../auxi/auxiliary.h"
 
 int AK_get_function_obj_id(char* function, struct list_node *arguments_list);
 int AK_check_function_arguments(int function_id, struct list_node *arguments_list);

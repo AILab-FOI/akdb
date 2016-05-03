@@ -75,6 +75,7 @@
 #include "sql/privileges.h"
 #include "trans/transaction.h"
 #include "rec/redo_log.h"
+#include "rec/recovery.h"
 #include "auxi/observable.h"
 #include "sql/view.h"
 #include "file/blobs.h"
@@ -140,6 +141,7 @@ function fun[] = {
 {"rel: AK_op_selection_test_redolog", &AK_op_selection_test_redolog}, //rel/selection.c
 //sql:
 //--------
+{"sql: AK_command", &AK_test_command}, //sql/command.c
 {"sql: AK_drop", &AK_drop_test}, //sql/drop.c
 {"sql: AK_view", &AK_view_test}, //sql/view.c
 {"sql: AK_null", &AK_null_test}, //sql/cs/nnull.c
@@ -151,9 +153,13 @@ function fun[] = {
 {"sql: AK_reference", &AK_reference_test}, //sql/cs/reference.c
 {"sql: Ak_constraint_between", &Ak_constraint_between_test}, //sql/cs/between.c
 {"sql: AK_check_constraint", &AK_check_constraint_test}, //sql/cs/check_constraint.c
+{"sql: AK_constraint_names", &AK_constraint_names_test}, //sql/cs/constraint_names.c
 //trans:
 //----------
-{"trans: AK_transaction", &AK_test_Transaction} //src/trans/transaction.c
+{"trans: AK_transaction", &AK_test_Transaction}, //src/trans/transaction.c
+//rec:
+//----------
+{"rec: AK_recovery", &AK_recovery_test} //rec/recovery.c
 };
 //here are all tests in a order like in the folders from the github
 /**

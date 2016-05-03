@@ -22,151 +22,63 @@
 
 
 /** 
- * @author Dražen Bandić
- * @brief Gets line for line from the arhive log and calls functions to reverse the command
+ * Function opens the recovery binary file and executes all commands that were
+ * saved inside the redo_log structure
+ * @author Dražen Bandić, update by Tomislav Turek
+ * @brief Reads binary file where last commands were saved, and executes them
  * @param fileName - name of the archive log
  * @return no value
  */
  void AK_recover_archive_log(char* fileName){
     FILE * fp;
-    char * line = NULL;
-    size_t len = 0;
-    ssize_t read;
     AK_PRO;
-    fp = fopen("../src/rec/log.log", "r");
+    
+    // open recovery file
+    fp = fopen(fileName, "rb");
 
+    // cannot open file
     if (fp == NULL){
         perror("fopen");
         AK_EPI;
         exit(EXIT_FAILURE);
     }
-
-    while ((read = getline(&line, &len, fp)) != -1) {
-        AK_recover_line(line);
+    
+    // read structure from file
+    fread(&redo_log, sizeof(redo_log), 1, fp);
+    // read command by command
+    int i;
+    for(i = 0; i < redo_log->number; i++) {
+        AK_recovery_insert_row(redo_log->command_recovery[i].table_name, redo_log->command_recovery[i].arguments);
     }
     
+    // close
     fclose(fp);
     AK_EPI;
 }
 
 /** 
- * @author Dražen Bandić
- * @brief Reverses the line which it gets
- * @param line - line/command from archive log
- * @return no value
- */
-void AK_recover_line(char* line){
-    AK_PRO;
-    char* table = AK_get_recovery_line_table(line);
-    int n= AK_recovery_get_id(line);
-
-    char c;
-    do{
-        if ((*line) == ' '){
-            line++;
-            c = *line;
-            break;
-        }
-        line++;
-    } while ((*line) != '\0' || index < MAX_VARCHAR_LENGTH);
-
-    if(c == 'I'){
-        Ak_delete_row_by_id(n, table);
-    } else if(c == 'D'){
-        AK_recovery_insert_row(table, line);
-    }
-    AK_EPI;
-}
-
-/** 
- * @author Dražen Bandić
- * @brief Gets the table name from the command
- * @param command - command from archive log
- * @return table name
- */
-char* AK_get_recovery_line_table(char* command){
-    AK_PRO;
-    char* result = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
-    int index = 0;
-
-    do{
-        if ( *command == ' '){
-            break;
-        } else {
-            result[index++] = *command;
-        }
-        command++;
-    } while ( *command != '\0' || index < MAX_VARCHAR_LENGTH);
-    AK_EPI;
-    return result;
-}
-
-/** 
- * @author Dražen Bandić
- * @brief Gets the id of the row (from the command)
- * @param command - command from archive log
- * @return id of the row
- */
-int AK_recovery_get_id(char *command){
-    AK_PRO;
-    int length = strlen(command);
-
-    int i = 0;
-    int j= 0;
-    char* result = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
-
-    for(i = length-1, j = 0; i >= 0 && j < length; i--, j++){
-        if( command[i] == '|' ){
-            break;
-        }
-        result[j] = command[i];
-    }
-
-    char* result2 = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
-
-    length = strlen(result);
-
-    for(i = length-1, j = 0; i >= 0 && j < length; i--, j++){
-        result2[j] = result[i];
-    }
-
-    int n = atoi(result2);
-    AK_EPI;
-    return n;
-}
-
-/** 
- * @author Dražen Bandić
+ * Function is given the table name with desired data that should be
+ * inserted inside. By using the table name, function retrieves table 
+ * attributes names and their types which uses afterwards for insert_data_test
+ * function to insert data to designated table.
+ * @author Dražen Bandić, updated by Tomislav Turek
  * @brief Inserts a new row in table with attributes
  * @param table - table name to insert to
  * @param attributes - attribute to insert
  * @return no value
  */
-void AK_recovery_insert_row(char* table, char* attributes){
+void AK_recovery_insert_row(char* table, char** attributes){
     AK_PRO;
-    char* result = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
-    int i = 0;
-    int index = 0;
-    do{
-        if(*attributes == ' '){
-            i = 1;
-            attributes++;
-        }
-        if(i == 1){
-            result[index++] = *attributes;
-        }
-        attributes++;
-    } while ( *attributes != '\0' || index < MAX_VARCHAR_LENGTH);
-
-    result[strlen(result)-1] = '\0';
-    char** attr_value = AK_recovery_tokenize(result, "|", 1);
-
+    
+    int i;
+    // retrieve table attributes names
     char* table_attr_names = AK_rel_eq_get_atrributes_char(table);
     char** attr_name = AK_recovery_tokenize(table_attr_names, ";", 0);
-
+    // retrieve table attribute types
     char* table_attr_types = AK_get_table_atribute_types(table);
     char** attr_types = AK_recovery_tokenize(table_attr_types, ";", 0);
-
+    
+    // convert all attribute types to integers
     int type[MAX_ATTRIBUTES];
     for(i = 0; i < MAX_ATTRIBUTES; i++){
         if(attr_types[i] == NULL){
@@ -176,32 +88,11 @@ void AK_recovery_insert_row(char* table, char* attributes){
     }
 
     int n = i;
-
-    insert_data_test(table, attr_name, attr_value, n, type);
+    // insert data to table
+    printf("Executing recovered command: %d, %s, %s %s\n", INSERT,
+            table, attributes[1], attributes[2]);
+    insert_data_test(table, attr_name, attributes, n, type);
     AK_EPI;
-}
-
-/** 
- * @author Dražen Bandić
- * @brief Checks if the redolog_attribute contains "\|", and if it does it replaces it with '|'
- * @param attributes - attribute to check
- * @return new attribute
- */
-char* AK_check_redolog_attributes(char* attributes){
-    AK_PRO;
-    char* result = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
-    int index = 0;
-
-    do{
-        if ( *attributes == '\\' && *(attributes++)  == '|' ){
-            result[index++] = '|';
-        } else {
-            result[index++] = *attributes;
-        }
-        attributes++;
-    } while ( *attributes != '\0' || index < MAX_VARCHAR_LENGTH);
-    AK_EPI;
-    return result;
 }
 
 /** 
@@ -212,7 +103,7 @@ char* AK_check_redolog_attributes(char* attributes){
  * @param valuesOrNot - 1 if the input are values, 0 otherwise
  * @return new double pointer structure with tokens
  */
-char** AK_recovery_tokenize(const char* input, char* delimiter, int valuesOrNot){
+char** AK_recovery_tokenize(char* input, char* delimiter, int valuesOrNot){
     AK_PRO;
     char* str = strdup(input);
     int count = 0;
@@ -244,5 +135,80 @@ char** AK_recovery_tokenize(const char* input, char* delimiter, int valuesOrNot)
         AK_EPI;
         return result;
     }
+}
+
+/**
+ * this variable flags if system failed
+ */
+short grandfailure = 0;
+
+/**
+ * Function is called when SIGINT signal is sent to the system.
+ * All commands that are written to rec.bin file are recovered to
+ * the designated structure and then executed.
+ * @author Tomislav Turek
+ * @brief Function that recovers and executes failed commands
+ * @param sig required integer parameter for SIGINT handler functions
+ */
+void AK_recover_operation(int sig) {
+    AK_PRO;
+    // set flag that system failed
+    grandfailure = 1;
+    // acknowledge that the system has failed
+    printf("\nUnexpected system failure, trying to recover...\n");
+    // recover from failure
+    AK_recover_archive_log("../src/rec/rec.bin");
+    AK_EPI;
+}
+
+/**
+ * Function does nothing while waiting a SIGINT signal (signal represents       // doxygen @ for full description ???
+ * system failure). Upon retrieving the signal it calls function
+ * AK_recover_operation which starts the recovery by building commands.
+ * To comply with the designated structure AK_command_recovery_struct           // {link} to struct ???
+ * it writes dummy commands to the file log.log
+ * @brief Function for recovery testing.
+ * @author Tomislav Turek
+ */
+void AK_recovery_test() {
+    AK_PRO;
+    printf("Initiating recovery test\n");
+    
+    // allocate the needed space
+    AK_command_recovery_struct *command = AK_malloc(sizeof(AK_command_recovery_struct));
+    command->arguments = AK_malloc(sizeof(char*));
+    int i;
+    for(i = 0; i < MAX_ATTRIBUTES; i++) {
+        command->arguments[i] = AK_malloc(sizeof(char));
+    }
+    for(i = 0; i < MAX_VARCHAR_LENGTH; i++) {
+        command->table_name[i] = AK_malloc(sizeof(char));
+    }
+    
+    // build first command
+    command->operation = INSERT;
+    command->table_name = "student";
+    command->arguments = (char *[]){"35898", "Matija", "Novak", "2000","180"};
+    
+    // save first command to redo_log
+    redo_log->command_recovery[0] = *command;
+    redo_log->number++;
+    
+    // build second command
+    command->arguments = (char *[]){"36996", "Pero", "Peric", "2004", "88"};
+    
+    // save second command to redo_log
+    redo_log->command_recovery[1] = *command;
+    redo_log->number++;
+    
+    // write commands to file
+    AK_archive_log();
+    // print instructions
+    printf("Working... use Ctrl+C to destabilize the system\n");
+    // register handler function
+    sigset(SIGINT, AK_recover_operation);
+    
+    // do nothing
+    while(!grandfailure);
     AK_EPI;
 }

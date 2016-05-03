@@ -23,6 +23,7 @@
 /**
  * @author Kresimir Ivkovic
  * @brief Finds an object's id by its name
+ * @param name name of the view
  * @return View's id or EXIT_ERROR
  */
 int AK_get_view_obj_id(char *name) {
@@ -32,7 +33,8 @@ int AK_get_view_obj_id(char *name) {
     AK_PRO;
     //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
-        if (!strcmp(row->next->next->data, name)) {
+        struct list_node *name_elem = Ak_GetNth_L2(2,row);
+        if (!strcmp(name_elem->data, name)) {
             memcpy(&id, row->next->data, sizeof(int));
 	    AK_EPI;
             return id;
@@ -45,7 +47,8 @@ int AK_get_view_obj_id(char *name) {
 /**
  * @author Danko Sačer
  * @brief Returnes a query by its name
- * @return query string or error
+ * @param name name of the view
+ * @return query string or EXIT_ERROR
  */
 char* AK_get_view_query(char *name){
    int i = 0;
@@ -55,8 +58,10 @@ char* AK_get_view_query(char *name){
     AK_PRO;
     //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
-        if (!strcmp(row->next->next->data, name)) {
-            query = row->next->next->next->data;
+        struct list_node *name_elem = Ak_GetNth_L2(2,row);
+        if (!strcmp(name_elem->data, name)) {
+            struct list_node *query_elem = Ak_GetNth_L2(3,row);
+            query = query_elem->data;
 	    AK_EPI;
 	    return query;
         }
@@ -68,7 +73,8 @@ char* AK_get_view_query(char *name){
 /**
  * @author Danko Sačer
  * @brief Returnes a relation expression by its name
- * @return rel_exp string or error
+ * param name name of the view
+ * @return rel_exp string or EXIT_ERROR
  */
 char* AK_get_rel_exp(char *name){
    int i = 0;
@@ -78,8 +84,10 @@ char* AK_get_rel_exp(char *name){
    AK_PRO;
     //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
-        if (!strcmp(row->next->next->data, name)) {
-            rel_exp = row->next->next->next->data;
+        struct list_node *name_elem = Ak_GetNth_L2(2,row);
+        if (!strcmp(name_elem->data, name)) {
+            struct list_node *rel_exp_elem = Ak_GetNth_L2(3,row);
+            rel_exp = rel_exp_elem->data;
 	    AK_EPI;
 	    return rel_exp;
         }
@@ -91,6 +99,10 @@ char* AK_get_rel_exp(char *name){
 /**
  * @author Kresimir Ivkovic
  * @brief Adds a new view to the view table with the corresponding name and value (view query); set_id is optional, if it's not set, the system will determine the new id automatically
+ * @param name name og the view
+ * @param query query of the view
+ * @param rel_exp relation expression of the view
+ * @param set_id id of view
  * @return Id of the newly inserted view
  */
 int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
@@ -121,6 +133,7 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
 /**
  * @author Kresimir Ivkovic
  * @brief Removes the view by its object id
+ * @param obj_id object id of the view
  * @return Result of AK_delete_row for the view (success or error)
  */
 int AK_view_remove_by_obj_id(int obj_id) {
@@ -141,6 +154,7 @@ int AK_view_remove_by_obj_id(int obj_id) {
 /**
  * @author Kresimir Ivkovic
  * @brief Removes the view by its name by identifying the view's id and passing id to AK_view_remove_by_obj_id
+ * @param name name of the view
  * @return Result of AK_view_remove_by_obj_id or EXIT_ERROR if no id is found
  */
 int AK_view_remove_by_name(char *name) {
@@ -158,6 +172,8 @@ int AK_view_remove_by_name(char *name) {
 /**
  * @author Kresimir Ivkovic
  * @brief Renames a view (based on it's name) from "name" to "new_name"
+ * @param name name of the view
+ * @param new_name new name of the view
  * @return error or success
  */
 int AK_view_rename(char *name, char *new_name){
@@ -170,10 +186,13 @@ int AK_view_rename(char *name, char *new_name){
    AK_PRO;
    
    while ((row = (struct list_node *)AK_get_row(i++, "AK_view"))) {
-        if (!strcmp(row->next->next->data, name)) {
-            memcpy(&view_id, row->next->data, sizeof(int));
-            query = row->next->next->next->data;
-	    rel_exp = row->next->next->next->data;
+       struct list_node *name_elem = Ak_GetNth_L2(2,row);
+        if (!strcmp(name_elem->data, name)) {
+            struct list_node *view_elem = Ak_GetNth_L2(1,row);
+            struct list_node *query_rel_exp_elem = Ak_GetNth_L2(3,row);
+            memcpy(&view_id, view_elem->data, sizeof(int));
+            query = query_rel_exp_elem->data;
+	    rel_exp = query_rel_exp_elem->data;
         }
     }
 
@@ -187,6 +206,9 @@ int AK_view_rename(char *name, char *new_name){
 /**
  * @author Kresimir Ivkovic
  * @brief Changes the query for a view (determined by it's name) to "query"
+ * @param name of the query
+ * @param query new query of the view
+ * @param rel_exp relation expression of the view
  * @return error or success
  */
 int AK_view_change_query(char *name, char *query, char *rel_exp){
@@ -202,7 +224,6 @@ int AK_view_change_query(char *name, char *query, char *rel_exp){
 /**
  * @author Kresimir Ivkovic, updated by Lidija Lastavec
  * @brief A testing function for view.c functions.
- * @return
  */
 void AK_view_test() {
    AK_PRO;

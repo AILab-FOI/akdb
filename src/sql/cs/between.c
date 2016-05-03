@@ -21,187 +21,167 @@
 //string ograničenja moraju biti malim slovima
 
 /**
- * @author Saša Vukšić
+ * @author Mislav Jurinić
+ * @brief Returns system tables address by name
+ * @param _systemTableName table name
+ * @return int
+ **/
+int AK_find_table_address(char* _systemTableName) {
+    AK_block *tempBlock = (AK_block *) AK_read_block(0);
+    int i = -1;
+    int ret;
+    int tuple_dict_size = sizeof(tempBlock->tuple_dict) / sizeof(AK_tuple_dict);
+    char systemTableName[50];
+
+    AK_PRO;
+
+    while (++i + 1 <= tuple_dict_size) {
+        memset(systemTableName, FREE_CHAR, sizeof(systemTableName));
+        memmove(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, strlen(tempBlock->data + tempBlock->tuple_dict[i].address));
+
+        systemTableName[strlen(tempBlock->data + tempBlock->tuple_dict[i].address) - 1] = FREE_CHAR;
+
+        if (strcmp(systemTableName, _systemTableName) == 0) {
+            memmove(&ret, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
+
+            AK_EPI;
+
+            return ret;
+        }
+    }
+
+    AK_free(tempBlock);
+    AK_EPI;
+
+    return -1;
+}
+
+/**
+ * @author Saša Vukšić, updated by Mislav Jurinić
  * @brief Function sets between constraints on particulary attribute, string constraint should be writen in lowercase.
-	  It searches for AK_free space. Then it inserts id, name of table, name of constraint, name of attribute, start and
-	   end value in temporary block.	  
+      It searches for AK_free space. Then it inserts id, name of table, name of constraint, name of attribute, start and
+       end value in temporary block.      
  * @param tableName table name
  * @param constraintName name of constraint
  * @param attName name of attribute
  * @param startValue initial constraint
  * @param endValue final constraint
-   @return No return value
+ * @return No return value
  **/
 void AK_set_constraint_between(char* tableName, char* constraintName, char* attName, char* startValue, char* endValue) {
-    char systemTableName[50];
-    int systemTableAddress;
-    int j, i = 0;
+    char* systemTableName = AK_CONSTRAINTS_BEWTEEN;
+
+    int systemTableAddress = AK_find_table_address(systemTableName);
     int AK_freeSpaceFound = 0;
     int tupleDictID = -1;
-    AK_block *tempBlock;
-    int itis = 1;
     int id;
+
+    AK_block *tempBlock;
+
     AK_PRO;
-    tempBlock = (AK_block *)AK_read_block(0);
 
-    while (itis) {
-        for (j = 0; j < 50; j++)
-            systemTableName[j] = FREE_CHAR;
+    if (systemTableAddress != -1) {
+        Ak_dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
 
-        memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
-        memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
-        if (strcmp(systemTableName, "AK_constraints_between") == 0) {
-            Ak_dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
+        tempBlock = (AK_block *) AK_read_block(systemTableAddress);
 
-            tempBlock = (AK_block *)AK_read_block(systemTableAddress);
+        while (AK_freeSpaceFound == 0) {
+            ++tupleDictID;
 
-            while (AK_freeSpaceFound == 0) {
-                tupleDictID += 1;
-                if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT)
-                    AK_freeSpaceFound = 1;
+            if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT) {
+                AK_freeSpaceFound = 1;
             }
-
-            //printf("ddddddddddd %i",tupleDictID);
-
-            if (AK_freeSpaceFound == 1) {
-                id = AK_get_id();
-                AK_insert_entry(tempBlock, TYPE_INT, &id, tupleDictID);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, tableName, tupleDictID + 1);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, constraintName, tupleDictID + 2);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, attName, tupleDictID + 3);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, startValue, tupleDictID + 4);
-                AK_insert_entry(tempBlock, TYPE_VARCHAR, endValue, tupleDictID + 5);
-
-                AK_write_block(tempBlock);
-
-            } else {
-                //if (DEBUG)
-                    //printf("AK_init_new_segment__ERROR: Cannot initialize segment, no more space in last block!\n");
-		    AK_EPI;
-                    exit (EXIT_ERROR);
-            }
-            itis = 0;
         }
-        i++;
+
+        if (AK_freeSpaceFound == 1) {
+            id = AK_get_table_id(systemTableName);
+
+            AK_insert_entry(tempBlock, TYPE_INT, &id, tupleDictID);
+            AK_insert_entry(tempBlock, TYPE_VARCHAR, tableName, tupleDictID + 1);
+            AK_insert_entry(tempBlock, TYPE_VARCHAR, constraintName, tupleDictID + 2);
+            AK_insert_entry(tempBlock, TYPE_VARCHAR, attName, tupleDictID + 3);
+            AK_insert_entry(tempBlock, TYPE_VARCHAR, startValue, tupleDictID + 4);
+            AK_insert_entry(tempBlock, TYPE_VARCHAR, endValue, tupleDictID + 5);
+
+            AK_write_block(tempBlock);
+        }
     }
+
     AK_free(tempBlock);
+
     AK_EPI;
 }
 
-
-//ako je flag 0 onda nije dobro, ako je 1 onda je dobro
-
 /**
- * @author Saša Vukšić
- * @brief Function checks if this value is between constraints. First it gets table name, attribute name, constraint name,
-	  low boundary and high boundary from temporary block and than checks between constraint.
- * @param tableName name of table
- * @param newValue new value
- * @param attNamePar name of attribute
- * @return EXIT_ERROR or EXIT_SUCCESS
+ * @author Saša Vukšić, updated by Mislav Jurinić
+ * @brief Checks if the given value is between lower and upper bounds of the "between" constraint.
+ * @param tableName table name
+ * @param newValue value we want to insert
+ * @param attNamePar attribute name
+ * @return EXIT_SUCCESS or EXIT_ERROR
  **/
 int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar) {
-    char systemTableName[50];
-    int systemTableAddress;
-    int j, i = 0;
-    AK_block *tempBlock;
-    int itis = 1;
-    int AK_freeSpaceFound = 0;
+    char* systemTableName = AK_CONSTRAINTS_BEWTEEN;
+    char attName[50] = {FREE_CHAR};
+    char constraintName[50] = {FREE_CHAR};
+    char inMemoryTable[50] = {FREE_CHAR};
+    char lowerBoundary[50] = {FREE_CHAR};
+    char upperBoundary[50] = {FREE_CHAR};
+
+    int systemTableAddress = AK_find_table_address(systemTableName);
     int tupleDictID = -1;
     int flag = EXIT_SUCCESS;
+
+    AK_block *tempBlock;
+
     AK_PRO;
-    tempBlock = (AK_block *)AK_read_block(0);
 
-    while (itis) {
-        for (j = 0; j < 50; j++)
-            systemTableName[j] = FREE_CHAR;
+    if (systemTableAddress != -1) {
+        tempBlock = (AK_block *) AK_read_block(systemTableAddress);
 
-        memcpy(systemTableName, tempBlock->data + tempBlock->tuple_dict[i].address, tempBlock->tuple_dict[i].size);
-        memcpy(&systemTableAddress, tempBlock->data + tempBlock->tuple_dict[i + 1].address, tempBlock->tuple_dict[i + 1].size);
-        if (strcmp(systemTableName, "AK_constraints_between") == 0) {
-            Ak_dbg_messg(HIGH, CONSTRAINTS, "System table for reading: %s, address: %i\n", systemTableName, systemTableAddress);
-            itis = 0;
-        }
-        i++;
-    }
-    tempBlock = (AK_block *)AK_read_block(systemTableAddress);
+        while (tempBlock->tuple_dict[++tupleDictID].size != FREE_INT) {
+            // clear all vars  
+            memset(attName, FREE_CHAR, sizeof(attName));
+            memset(constraintName, FREE_CHAR, sizeof(constraintName));
+            memset(inMemoryTable, FREE_CHAR, sizeof(inMemoryTable));
+            memset(lowerBoundary, FREE_CHAR, sizeof(lowerBoundary));
+            memset(upperBoundary, FREE_CHAR, sizeof(upperBoundary));
 
+            memmove(inMemoryTable, tempBlock->data + tempBlock->tuple_dict[tupleDictID].address, tempBlock->tuple_dict[tupleDictID].size);
+            inMemoryTable[strlen(tempBlock->data + tempBlock->tuple_dict[tupleDictID].address) - 1] = FREE_CHAR;
 
-    char attName[50];
-    char constraintName[50];
-    char value[50];
-    char valueF[50];
-    char valueS[50];
-    for (j = 0; j < 50; j++) {
-        attName[j] = FREE_CHAR;
-        constraintName[j] = FREE_CHAR;
-        value[j] = FREE_CHAR;
-        valueF[j] = FREE_CHAR;
-        valueS[j] = FREE_CHAR;
-    }
-
-    double startValue;
-    double endValue;
-
-    while (AK_freeSpaceFound == 0) {
-        tupleDictID += 1;
-        if (tempBlock->tuple_dict[tupleDictID].size == FREE_INT) {
-            AK_freeSpaceFound = 1;
-        } else {
-            for (j = 0; j < 50; j++)
-                value[j] = FREE_CHAR;
-
-            memcpy(value, tempBlock->data + tempBlock->tuple_dict[tupleDictID].address, tempBlock->tuple_dict[tupleDictID].size);
-            if (strcmp(value, tableName) == 0) {
-
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
+            if (strcmp(inMemoryTable, tableName) == 0) {                
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");                
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
-                memcpy(attName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
+
+                memmove(attName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
-                for (j = 0; j < 50; j++)
-                    value[j] = FREE_CHAR;
-                memcpy(constraintName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 1].address, tempBlock->tuple_dict[tupleDictID + 1].size);
+
+                memmove(constraintName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 1].address, tempBlock->tuple_dict[tupleDictID + 1].size);
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
-                memcpy(valueF, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 3].address, tempBlock->tuple_dict[tupleDictID + 3].size);
-                startValue = atof(valueF);
-                for (j = 0; j < 50; j++)
-                    value[j] = FREE_CHAR;
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %f\n", startValue);
-                memcpy(valueS, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 4].address, tempBlock->tuple_dict[tupleDictID + 4].size);
-                endValue = atof(valueS);
-				Ak_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %f\n", endValue);
+
+                memmove(lowerBoundary, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 3].address, tempBlock->tuple_dict[tupleDictID + 3].size);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %s\n", lowerBoundary);
+
+                memmove(upperBoundary, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 4].address, tempBlock->tuple_dict[tupleDictID + 4].size);
+                Ak_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %s\n", upperBoundary);
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
+
+                // DEBUG
+                // printf("\ninMemoryTable: %s\n", inMemoryTable);
+                // printf("Table name: %s\n", tableName);
+                // printf("Attribute name: %s\n", attName);
+                // printf("Constraint name: %s\n", constraintName);
+                // printf("Low boundary: %s\n", lowerBoundary);
+                // printf("High boundary: %s\n", upperBoundary);
 
                 if (strcmp(attName, attNamePar) == 0) {
-                    if ((startValue != 0) && (endValue != 0)) {
-                        if (atof(newValue) != 0) {
-                            if ((atof(newValue) >= startValue) && (atof(newValue) <= endValue)) {
-                                printf("Constraint successed!!!\n");
-                            } else {
-                                printf("On table %s and attribute %s exists constraint %s\n <values have to be in range between %f and %f>\n", tableName, attName, constraintName, startValue, endValue);
-                                flag = EXIT_ERROR;
-                            }
-                        }
-                    } else {
-                        if (atof(newValue) == 0) {
-                            //printf("ASCI:%i",valueF[0]);
-                            if (((int) newValue[0] >= 97) && ((int) newValue[0] <= 122)) {
-                                if (((int) newValue[0] >= (int) valueF[0]) && ((int) newValue[0] <= (int) valueS[0])) {
-                                    printf("Constraint successed: %s\n", newValue);
-                                } else {
-                                    printf("On table %s and attribute %s exists constraint %s\n <values have to be in range between %s and %s>\n", tableName, attName, constraintName, valueF, valueS);
-                                    flag = EXIT_ERROR;
-                                }
-                            } else if (((int) newValue[0] >= 65) && ((int) newValue[0] <= 90)) {
-                                if (((int) newValue[0] >= (int) valueF[0] - 32) && ((int) newValue[0] <= (int) valueS[0] - 32)) {
-                                    printf("Constraint successed: %s\n", newValue);
-                                } else {
-
-                                    printf("On table %s and attribute %s exists constraint %s\n <values have to be in range between %s and %s>\n", tableName, attName, constraintName, valueF, valueS);
-                                    flag = EXIT_ERROR;
-                                }
-                            }
-                        }
+                    if (strcmp(newValue, lowerBoundary) >= 0 && strcmp(newValue, upperBoundary) <= 0) {
+                        printf("\nConstraint succeeded!\n\n");
+                    } 
+                    else {
+                        printf("\nOn table %s and attribute %s exists constraint %s\n<lowerBoundary have to be in range between %s and %s>\n\n", tableName, attName, constraintName, lowerBoundary, upperBoundary);
+                        flag = EXIT_ERROR;
                     }
                 }
             }
@@ -210,33 +190,82 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
 
     AK_free(tempBlock);
     AK_EPI;
+
     return flag;
 }
+
 /**
-  * @author Saša Vukšić
-  * @brief Function that tests the functionality of implemented between constrain
+  * @author Saša Vukšić, updated by Mislav Jurinić
+  * @brief Tests the functionality of implemented between constraint.
   * @return No return value
-*/
-
+  */
 void Ak_constraint_between_test() {
-    char* tableName = "studenti";
-    char* attName = "ime";
-    char* constraintName = "imeBetween";
-    char* newValue = "Krunoslav";
-    char* startValue = "ivica";
-    char* endValue = "marica";
+    // TEST #1
+    char* tableName_1 = "department";
+    char* attName_1 = "dep_name";
+    char* constraintName_1 = "dep_name_between";
+    char* newValue_1 = "Department of Zoo";
+    char* startValue_1 = "Department of Economy";
+    char* endValue_1 = "Department of Organization";
+    int test_status_1 = 0;
+
     AK_PRO;
-    AK_set_constraint_between(tableName, constraintName, attName, startValue, endValue);
-    AK_read_constraint_between(tableName, newValue, attName);
 
-    tableName = "studenti";
-    attName = "godine";
-    constraintName = "godineBetween";
-    newValue = "5";
-    startValue = "18";
-    endValue = "27";
+    printf("============= Running Test #1 =============\n");
 
-    AK_set_constraint_between(tableName, constraintName, attName, startValue, endValue);
-    AK_read_constraint_between(tableName, newValue, attName);
+    AK_set_constraint_between(tableName_1, constraintName_1, attName_1, startValue_1, endValue_1);
+    
+    if (AK_read_constraint_between(tableName_1, newValue_1, attName_1) == EXIT_ERROR) {
+        printf("============= Test successful! ==============\n\n");
+    } 
+    else {
+        printf("============\tTest failed.\t============\n\n");
+    }
+
+
+    // TEST #2
+    char* tableName_2 = "department";
+    char* attName_2 = "manager";
+    char* constraintName_2 = "manager_between";
+    char* newValue_2 = "Kero";
+    char* startValue_2 = "Hutinski";    
+    char* endValue_2 = "Redep";
+    int test_status_2 = 0;
+
+    AK_PRO;
+
+    printf("\n============== Running Test #2 ==============\n");
+
+    AK_set_constraint_between(tableName_2, constraintName_2, attName_2, startValue_2, endValue_2);
+    
+    if (AK_read_constraint_between(tableName_2, newValue_2, attName_2) != EXIT_ERROR) {
+        printf("============= Test successful! ==============\n\n");
+    } 
+    else {
+        printf("============\tTest failed.\t============\n\n");
+    }
+
+    // TEST #3
+    char* tableName_3 = "student";
+    char* attName_3 = "weight";
+    char* constraintName_3 = "weight_between";
+    char* newValue_3 = "80.751";
+    char* startValue_3 = "80.750";    
+    char* endValue_3 = "90.000";
+    int test_status_3 = 0;
+
+    AK_PRO;
+
+    printf("\n============== Running Test #3 ==============\n");
+
+    AK_set_constraint_between(tableName_3, constraintName_3, attName_3, startValue_3, endValue_3);
+    
+    if (AK_read_constraint_between(tableName_3, newValue_3, attName_3) != EXIT_ERROR) {
+        printf("============= Test successful! ==============\n\n");
+    } 
+    else {
+        printf("============\tTest failed.\t============\n\n");
+    }
+
     AK_EPI;
 }

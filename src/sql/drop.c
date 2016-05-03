@@ -21,18 +21,6 @@
 
 #include "drop.h"
 
-#define DROP_TABLE      0
-#define DROP_INDEX      1
-#define DROP_VIEW       2
-#define DROP_SEQUENCE   3
-#define DROP_TRIGGER    4
-#define DROP_FUNCTION   5
-#define DROP_USER       6
-#define DROP_GROUP      7
-#define DROP_CONSTRAINT 8
-
-#define NUM_SYS_TABLES  20
-
 // list of system catalog tables
 char *system_catalog[NUM_SYS_TABLES] = {
     "AK_relation",
@@ -53,6 +41,7 @@ char *system_catalog[NUM_SYS_TABLES] = {
     "AK_group_right",
     "AK_constraints_between",
     "AK_constraints_not_null",
+    AK_CONSTRAINTS_CHECK_CONSTRAINT,
     "AK_constraints_unique",
     "AK_reference"
 };
@@ -65,8 +54,8 @@ char *system_catalog[NUM_SYS_TABLES] = {
  */
 void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
-    char *name;
     char *sys_table;
+    char *name;
     AK_PRO;
     switch (type) {
         case DROP_TABLE:
@@ -281,6 +270,8 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 				// TODO: funkcija za brisanje between constrainta - implementirati unutar between.c
 				pobrisano = 1;
 			}
+
+            // TODO: delete "check" constraints
 
 			printf("Constraint '%s' in table '%s' %s!\n", (constName==""?name:constName), sys_table,(pobrisano==0?"does not exist":"DROPPED"));
 
@@ -552,41 +543,5 @@ void AK_drop_test() {
 
 	AK_free(drop_arguments);
     printf("======================END_DROP_TEST======================\n");
-    AK_EPI;
-}
-
-void AK_drop_test_helper(int type,char* dropargs){
-    AK_PRO;
-    AK_drop_arguments *drop_arguments = AK_malloc(sizeof (AK_drop_arguments));
-    drop_arguments->value = dropargs;
-    if (type == 0) {
-        AK_drop(DROP_TABLE, drop_arguments);
-    }
-	else if (type == 1) {
-        AK_drop(DROP_INDEX, drop_arguments);
-    }
-	else if (type == 2) {
-        AK_drop(DROP_VIEW, drop_arguments);
-    }
-	else if (type == 3) {
-        AK_drop(DROP_SEQUENCE, drop_arguments);
-    }
-	else if (type == 4) {
-        AK_drop(DROP_TRIGGER, drop_arguments);
-    }
-	else if (type == 5) {
-        AK_drop(DROP_FUNCTION, drop_arguments);
-    }
-	else if (type == 6) {
-        AK_drop(DROP_USER, drop_arguments);
-    }
-	else if (type == 7) {
-        AK_drop(DROP_GROUP, drop_arguments);
-    }
-	else if (type == 8) {
-        AK_drop(DROP_CONSTRAINT, drop_arguments);
-    }
-
-    AK_free(drop_arguments );
     AK_EPI;
 }

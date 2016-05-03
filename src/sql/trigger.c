@@ -140,7 +140,9 @@ int AK_trigger_get_id(char *name, char *table) {
 
     //while ((row = (AK_list *)AK_get_row(i, "AK_trigger")) != NULL) {
     while ((row = (struct list_node *)AK_get_row(i, "AK_trigger")) != NULL) {
-        if (strcmp(row->next->next->data, name) == 0 && table_id == (int) * row->next->next->next->next->next->next->data) {
+        struct list_node *name_elem = Ak_GetNth_L2(2,row);
+        struct list_node *table_elem = Ak_GetNth_L2(5,row);
+        if (strcmp(name_elem->data, name) == 0 && table_id == (int) * table_elem->data) {
             i = (int) * row->next->data;
             AK_free(row);
 	    AK_EPI;
@@ -326,7 +328,9 @@ struct list_node *AK_trigger_get_conditions(int trigger) {
     struct list_node *row;
     //while((row = (AK_list *)AK_get_row(i, "AK_trigger_conditions_temp")) != NULL){
     while((row = (struct list_node *)AK_get_row(i, "AK_trigger_conditions_temp")) != NULL){
-        Ak_InsertAtEnd_L3(strtol(row->next->next->next->next->data, &endPtr, 10), row->next->next->next->data, row->next->next->next->size, result);
+        struct list_node *first_arg_elem = Ak_GetNth_L2(4,row);
+        struct list_node *second_arg_elem = Ak_GetNth_L2(3,row);
+        Ak_InsertAtEnd_L3(strtol(first_arg_elem->data, &endPtr, 10), second_arg_elem->data, second_arg_elem->size, result);
         i++;
     }
 
@@ -380,7 +384,6 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 /**
  * @author Unknown
  * @brief Function for trigger testing
- * @return No return value
  */
 void AK_trigger_test() {
     AK_PRO;

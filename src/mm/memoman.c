@@ -85,7 +85,7 @@ int AK_cache_AK_malloc()
 }
 
 /**
-  * @author Dejan Sambolić updated by Dražen Bandić
+  * @author Dejan Sambolić updated by Dražen Bandić, updated by Tomislav Turek
   * @brief Function initializes the global redo log memory (variable redo_log)
   * @return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
  */
@@ -99,18 +99,18 @@ int AK_redo_log_AK_malloc()
     }
 
     redo_log->number = 0;
-    redo_log->table_name = AK_malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
-    redo_log->command = AK_malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
-    redo_log->attributes = AK_malloc(MAX_REDO_LOG_ENTRIES * sizeof(char*));
+    redo_log->command_recovery = AK_malloc(MAX_REDO_LOG_ENTRIES * sizeof(AK_command_recovery_struct*));
 
     int i = 0;
     for (i = 0; i < MAX_REDO_LOG_ENTRIES; i++)
     {
-        redo_log->table_name[i] = AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
-        redo_log->command[i] = AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
-        redo_log->attributes[i] = AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+        redo_log->command_recovery[i].table_name = AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+        redo_log->command_recovery[i].arguments = AK_calloc(MAX_ATTRIBUTES, sizeof(char*));
+        int j = 0;
+        for(j = 0; j < MAX_ATTRIBUTES; j++) {
+            redo_log->command_recovery[i].arguments[j] = AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char));
+        }
     }
-
     AK_EPI;
     return EXIT_SUCCESS;
 }
