@@ -18,7 +18,7 @@
  */
 
 #include "between.h"
-//string ograničenja moraju biti malim slovima
+//string restrictions must be in lowercase
 
 /**
  * @author Mislav Jurinić

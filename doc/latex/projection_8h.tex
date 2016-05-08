@@ -1,0 +1,155 @@
+\hypertarget{projection_8h}{}\section{rel/projection.h File Reference}
+\label{projection_8h}\index{rel/projection.\+h@{rel/projection.\+h}}
+{\ttfamily \#include \char`\"{}expression\+\_\+check.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../file/fileio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
+Include dependency graph for projection.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{projection_8h_a7188d9a94bdabd81bb0a6b8a6e0cf014}{A\+K\+\_\+temp\+\_\+create\+\_\+table} (char $\ast$table, \hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$header, int type\+\_\+segment)
+\begin{DoxyCompactList}\small\item\em Temporaly function to create table, and insert entry to the system\+\_\+relation catalog. \end{DoxyCompactList}\item 
+void \hyperlink{projection_8h_ad40a113ed072dccc18b710eaa5f7f1a6}{A\+K\+\_\+create\+\_\+block\+\_\+header} (int old\+\_\+block, char $\ast$dst\+Table, struct list\+\_\+node $\ast$att)
+\begin{DoxyCompactList}\small\item\em Function to create a new header for the projection table. \end{DoxyCompactList}\item 
+void \hyperlink{projection_8h_ab1476858e2f34c78f097d75c57908aaf}{A\+K\+\_\+copy\+\_\+block\+\_\+projection} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$old\+\_\+block, struct list\+\_\+node $\ast$att, char $\ast$dst\+Table, struct list\+\_\+node $\ast$expr)
+\begin{DoxyCompactList}\small\item\em Function for copying the data from old table block to the new projection table. \end{DoxyCompactList}\item 
+int \hyperlink{projection_8h_a1b9e888ad5198203223f4c74b3cdd5ef}{A\+K\+\_\+projection} (char $\ast$src\+Table, char $\ast$dst\+Table, struct list\+\_\+node $\ast$att, struct list\+\_\+node $\ast$expr)
+\begin{DoxyCompactList}\small\item\em Function makes a projection of some table. \end{DoxyCompactList}\item 
+void \hyperlink{projection_8h_a67132149077c6e6d3f995f17794d0423}{A\+K\+\_\+op\+\_\+projection\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for projection operator testing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data structures for relational projection operation 
+
+\subsection{Function Documentation}
+\index{projection.\+h@{projection.\+h}!A\+K\+\_\+copy\+\_\+block\+\_\+projection@{A\+K\+\_\+copy\+\_\+block\+\_\+projection}}
+\index{A\+K\+\_\+copy\+\_\+block\+\_\+projection@{A\+K\+\_\+copy\+\_\+block\+\_\+projection}!projection.\+h@{projection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+copy\+\_\+block\+\_\+projection(\+A\+K\+\_\+block $\ast$old\+\_\+block, struct list\+\_\+node $\ast$att, char $\ast$dst\+Table, struct list\+\_\+node $\ast$expr)}{AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable, struct list_node *expr)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+copy\+\_\+block\+\_\+projection (
+\begin{DoxyParamCaption}
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{old\+\_\+block, }
+\item[{struct list\+\_\+node $\ast$}]{att, }
+\item[{char $\ast$}]{dst\+Table, }
+\item[{struct list\+\_\+node $\ast$}]{expr}
+\end{DoxyParamCaption}
+)}\hypertarget{projection_8h_ab1476858e2f34c78f097d75c57908aaf}{}\label{projection_8h_ab1476858e2f34c78f097d75c57908aaf}
+
+
+Function for copying the data from old table block to the new projection table. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, rewrited and optimized by Dino Laktašić to support A\+K\+\_\+list 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em old\+\_\+block} & block from which we copy data \\
+\hline
+{\em dst\+Table} & name of the new table \\
+\hline
+{\em att} & list of the attributes which should the projeciton table contain  No return value \\
+\hline
+\end{DoxyParams}
+\index{projection.\+h@{projection.\+h}!A\+K\+\_\+create\+\_\+block\+\_\+header@{A\+K\+\_\+create\+\_\+block\+\_\+header}}
+\index{A\+K\+\_\+create\+\_\+block\+\_\+header@{A\+K\+\_\+create\+\_\+block\+\_\+header}!projection.\+h@{projection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+create\+\_\+block\+\_\+header(int old\+\_\+block, char $\ast$dst\+Table, struct list\+\_\+node $\ast$att)}{AK_create_block_header(int old_block, char *dstTable, struct list_node *att)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+create\+\_\+block\+\_\+header (
+\begin{DoxyParamCaption}
+\item[{int}]{old\+\_\+block, }
+\item[{char $\ast$}]{dst\+Table, }
+\item[{struct list\+\_\+node $\ast$}]{att}
+\end{DoxyParamCaption}
+)}\hypertarget{projection_8h_ad40a113ed072dccc18b710eaa5f7f1a6}{}\label{projection_8h_ad40a113ed072dccc18b710eaa5f7f1a6}
+
+
+Function to create a new header for the projection table. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, rewrited and optimized by Dino Laktašić to support A\+K\+\_\+list 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em old\+\_\+block\+\_\+add} & address of the block from which we copy headers we need \\
+\hline
+{\em dst\+Table} & name of the new table \\
+\hline
+{\em att} & list of the attributes which should the projeciton table contain \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{projection.\+h@{projection.\+h}!A\+K\+\_\+op\+\_\+projection\+\_\+test@{A\+K\+\_\+op\+\_\+projection\+\_\+test}}
+\index{A\+K\+\_\+op\+\_\+projection\+\_\+test@{A\+K\+\_\+op\+\_\+projection\+\_\+test}!projection.\+h@{projection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+op\+\_\+projection\+\_\+test()}{AK_op_projection_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+projection\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{projection_8h_a67132149077c6e6d3f995f17794d0423}{}\label{projection_8h_a67132149077c6e6d3f995f17794d0423}
+
+
+Function for projection operator testing. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{projection.\+h@{projection.\+h}!A\+K\+\_\+projection@{A\+K\+\_\+projection}}
+\index{A\+K\+\_\+projection@{A\+K\+\_\+projection}!projection.\+h@{projection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+projection(char $\ast$src\+Table, char $\ast$dst\+Table, struct list\+\_\+node $\ast$att, struct list\+\_\+node $\ast$expr)}{AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct list_node *expr)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+projection (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{src\+Table, }
+\item[{char $\ast$}]{dst\+Table, }
+\item[{struct list\+\_\+node $\ast$}]{att, }
+\item[{struct list\+\_\+node $\ast$}]{expr}
+\end{DoxyParamCaption}
+)}\hypertarget{projection_8h_a1b9e888ad5198203223f4c74b3cdd5ef}{}\label{projection_8h_a1b9e888ad5198203223f4c74b3cdd5ef}
+
+
+Function makes a projection of some table. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, rewrited and optimized by Dino Laktašić, now support cacheing 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em att} & -\/ list of atributes on which we make projection \\
+\hline
+{\em dst\+Table} & table name for projection table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if continues succesfuly, when not E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{projection.\+h@{projection.\+h}!A\+K\+\_\+temp\+\_\+create\+\_\+table@{A\+K\+\_\+temp\+\_\+create\+\_\+table}}
+\index{A\+K\+\_\+temp\+\_\+create\+\_\+table@{A\+K\+\_\+temp\+\_\+create\+\_\+table}!projection.\+h@{projection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+temp\+\_\+create\+\_\+table(char $\ast$table, A\+K\+\_\+header $\ast$header, int type\+\_\+segment)}{AK_temp_create_table(char *table, AK_header *header, int type_segment)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+temp\+\_\+create\+\_\+table (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table, }
+\item[{{\bf A\+K\+\_\+header} $\ast$}]{header, }
+\item[{int}]{type\+\_\+segment}
+\end{DoxyParamCaption}
+)}\hypertarget{projection_8h_a7188d9a94bdabd81bb0a6b8a6e0cf014}{}\label{projection_8h_a7188d9a94bdabd81bb0a6b8a6e0cf014}
+
+
+Temporaly function to create table, and insert entry to the system\+\_\+relation catalog. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Dino Laktašić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table} & table name \\
+\hline
+{\em header} & \hyperlink{structAK__header}{A\+K\+\_\+header} of the new table \\
+\hline
+{\em type\+\_\+segment} & type of the new segment \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}

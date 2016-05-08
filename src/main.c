@@ -79,6 +79,8 @@
 #include "auxi/observable.h"
 #include "sql/view.h"
 #include "file/blobs.h"
+#include "projectDetails.h"
+
 void help();
 void show_test();
 void choose_test();
@@ -181,7 +183,7 @@ int main(int argc, char * argv[])
         show_test();
     else
     {
-        printf( "KALASHNIKOV DB - STARTING\n\n" );
+        printf( "KALASHNIKOV DB %s - STARTING\n\n", AK_version );
         AK_inflate_config();
         printf("db_file: %s\n", DB_FILE);
 	testMode = TEST_MODE_OFF;
