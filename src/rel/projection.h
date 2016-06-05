@@ -25,15 +25,26 @@
 #include "../file/fileio.h"
 #include "../auxi/mempro.h"
 
+ struct AK_operand {
+	char value[MAX_VARCHAR_LENGTH];
+	int type;
+};
+
+
 void AK_temp_create_table(char *table, AK_header *header, int type_segment);
 /*
 void AK_create_block_header(int old_block, char *dstTable, AK_list *att);
 void AK_copy_block_projection(AK_block *old_block, AK_list *att, char *dstTable);
 int AK_projection(char *srcTable, char *dstTable, AK_list *att);
 */
-void AK_create_block_header(int old_block, char *dstTable, struct list_node *att);
-void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable, struct list_node *expr);
-int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct list_node *expr);
+void AK_create_block_header(int old_block, char *dstTable, struct list_node *att, struct list_node * att_operation);
+void AK_copy_block_projection(AK_block *old_block, struct list_node *att, struct list_node * att_operation, char *dstTable, struct list_node *expr);
+int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct list_node * att_operation, struct list_node *expr);
+int AK_determine_header_type(int a,int b);
+char *AK_create_header_name(char * first,char *operator, char * second);
+char *AK_perform_operatrion(char *op,struct AK_operand *a, struct AK_operand *b,int type);
+void removeSubstring(char *s,const char *toremove);
 void AK_op_projection_test();
+char *AK_get_operator(char *exp);
 
 #endif

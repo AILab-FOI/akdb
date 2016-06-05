@@ -1557,6 +1557,7 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
     //AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
 
     Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", name, strlen(name));
+    
     catalog_header->type = type;
     memcpy(catalog_header->att_name, name, strlen(name));
 

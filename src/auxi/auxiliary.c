@@ -308,6 +308,7 @@ void Ak_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L) {
     AK_EPI;
 }
 
+
 /**
  * @author Ljiljana Pintarić.
  * @brief  Function inserts new element at the end of the list. It uses function Ak_InsertAfter_L2
@@ -324,6 +325,24 @@ void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L) {
     current = Ak_End_L2(L);
     Ak_InsertAfter_L2(type,data, size, &current, &L);
 
+    AK_EPI;
+}
+/**
+@author Leon Palaić
+@brief Function that inserts new list_node element at end of the list
+@param list_node new element
+@param L root element of list
+*/
+void Ak_InsertAtEnd_L4(struct list_node *new, struct list_node *L){
+    AK_PRO;
+    struct list_node *current = L;
+    while(current->next!=NULL)
+        current=current->next;
+
+    current->next = new;
+    new->next = NULL;
+    
+    
     AK_EPI;
 }
 

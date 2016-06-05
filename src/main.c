@@ -133,7 +133,7 @@ function fun[] = {
 {"rel: Ak_aggregation", &Ak_aggregation_test}, //rel/aggregation.c
 {"rel: AK_op_intersect", &Ak_op_intersect_test}, //rel/intersect.c
 {"rel: AK_op_selection", &AK_op_selection_test},
-{"rel: AK_op_selection2", &AK_op_selection_test2}, //rel/selection.c
+{"rel: AK_op_selection_ext", &AK_op_selection_test2}, //rel/selection.c with extended ops
 {"rel: Ak_expression_check_test" , &Ak_expression_check_test},
 {"rel: AK_op_difference", &Ak_op_difference_test}, //rel/difference.c
 {"rel: AK_op_projection", &AK_op_projection_test}, //rel/projection.c
