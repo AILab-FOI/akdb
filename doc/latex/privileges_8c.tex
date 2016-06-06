@@ -1,0 +1,562 @@
+\hypertarget{privileges_8c}{}\section{sql/privileges.c File Reference}
+\label{privileges_8c}\index{sql/privileges.\+c@{sql/privileges.\+c}}
+{\ttfamily \#include \char`\"{}privileges.\+h\char`\"{}}\\*
+Include dependency graph for privileges.\+c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{privileges_8c_a59737f7e1bd4e6f4a69cd974820157ca}{A\+K\+\_\+user\+\_\+add} (char $\ast$username, int $\ast$password, int set\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Function which inserts user in table A\+K\+\_\+user. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a9dae61bb225d647d658ea98e342089ab}{A\+K\+\_\+user\+\_\+get\+\_\+id} (char $\ast$username)
+\begin{DoxyCompactList}\small\item\em Function which gets user id. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_af11462aa1b1f063d6cf3a242204e5fb1}{A\+K\+\_\+user\+\_\+remove\+\_\+by\+\_\+name} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Function removes the user. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a33776197a054d258b7906af6a23bec95}{A\+K\+\_\+user\+\_\+rename} (char $\ast$old\+\_\+name, char $\ast$new\+\_\+name, int $\ast$password)
+\begin{DoxyCompactList}\small\item\em Function renames the user. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a0ab4080d78ff866e17e272696715e412}{A\+K\+\_\+group\+\_\+add} (char $\ast$name, int set\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Function that A\+K\+\_\+group\+\_\+add. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a283e643a776fc29d6c360508687cb3cb}{A\+K\+\_\+group\+\_\+get\+\_\+id} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Function that gets id of group with given name. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_ae5a8bc30bfdc3052b08fb529c6fcc7c0}{A\+K\+\_\+group\+\_\+remove\+\_\+by\+\_\+name} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Function removes the group. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a5c2fdc33d2d3eb66344e67cdf5df4a27}{A\+K\+\_\+group\+\_\+rename} (char $\ast$old\+\_\+name, char $\ast$new\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Function renames the group. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_aed6b27e508dc84493b313fbd34a30d11}{A\+K\+\_\+grant\+\_\+privilege\+\_\+user} (char $\ast$username, char $\ast$table, char $\ast$right)
+\begin{DoxyCompactList}\small\item\em Function that grants privilege to user. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a0fdd730580cb7c05c81b1143163b0ff9}{A\+K\+\_\+revoke\+\_\+privilege\+\_\+user} (char $\ast$username, char $\ast$table, char $\ast$right)
+\begin{DoxyCompactList}\small\item\em Function that revokes privilege from user on given table. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a78334dd1bfde77de6f0251df354c2d46}{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+user} (char $\ast$username)
+\begin{DoxyCompactList}\small\item\em Function that revokes A\+LL privileges from user on A\+LL tables (for D\+R\+OP user) \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a7d6ddea07764a2ca38efb0641ddf0640}{A\+K\+\_\+grant\+\_\+privilege\+\_\+group} (char $\ast$groupname, char $\ast$table, char $\ast$right)
+\begin{DoxyCompactList}\small\item\em Function that grants privilege to given group on given table. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a04b86b58875433a59e7590d39dbeb06a}{A\+K\+\_\+revoke\+\_\+privilege\+\_\+group} (char $\ast$groupname, char $\ast$table, char $\ast$right)
+\begin{DoxyCompactList}\small\item\em Function that revokes privilege from group on given table. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_ab9ebb8a3c34ab70561c6d91f8a50d6ac}{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+group} (char $\ast$groupname)
+\begin{DoxyCompactList}\small\item\em Function that revokes A\+LL privileges from group on A\+LL tables (needed for D\+R\+OP group) \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a97c7878dd69b6bdad59c8624565fbb81}{A\+K\+\_\+add\+\_\+user\+\_\+to\+\_\+group} (char $\ast$user, char $\ast$group)
+\begin{DoxyCompactList}\small\item\em Function that puts user in given group. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_acbb1bf6c5ba6d613794feaeb4aeb27d4}{A\+K\+\_\+remove\+\_\+user\+\_\+from\+\_\+all\+\_\+groups} (char $\ast$user)
+\begin{DoxyCompactList}\small\item\em Function removes user from all groups. Used for D\+R\+OP user. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a00942026a980029b3d6e6def017dbdea}{A\+K\+\_\+remove\+\_\+all\+\_\+users\+\_\+from\+\_\+group} (char $\ast$group)
+\begin{DoxyCompactList}\small\item\em Function removes all users from group. Used for D\+R\+OP group. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a0de515ebe4cda5b50ef7ab00f8165d45}{A\+K\+\_\+check\+\_\+privilege} (char $\ast$username, char $\ast$table, char $\ast$privilege)
+\begin{DoxyCompactList}\small\item\em Function that checks whether given user has right for given operation on given table. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a6e74a2510eedd1f076e15838ebc459dd}{A\+K\+\_\+check\+\_\+user\+\_\+privilege} (char $\ast$user)
+\begin{DoxyCompactList}\small\item\em Function check if user have any privilege or belong to group. Used in drop user for restriction. \end{DoxyCompactList}\item 
+int \hyperlink{privileges_8c_a8d77acd14d2f925fd5b02c240959cd3d}{A\+K\+\_\+check\+\_\+group\+\_\+privilege} (char $\ast$group)
+\begin{DoxyCompactList}\small\item\em Function check if group have any privilege or user. Used in drop group for restriction. \end{DoxyCompactList}\item 
+void \hyperlink{privileges_8c_af30d544f7ecab9cf49dc794fcfd05bc4}{A\+K\+\_\+privileges\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function that tests functions above for privileges,. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides functions for privileges 
+
+\subsection{Function Documentation}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+add\+\_\+user\+\_\+to\+\_\+group@{A\+K\+\_\+add\+\_\+user\+\_\+to\+\_\+group}}
+\index{A\+K\+\_\+add\+\_\+user\+\_\+to\+\_\+group@{A\+K\+\_\+add\+\_\+user\+\_\+to\+\_\+group}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+add\+\_\+user\+\_\+to\+\_\+group(char $\ast$user, char $\ast$group)}{AK_add_user_to_group(char *user, char *group)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+add\+\_\+user\+\_\+to\+\_\+group (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{user, }
+\item[{char $\ast$}]{group}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a97c7878dd69b6bdad59c8624565fbb81}{}\label{privileges_8c_a97c7878dd69b6bdad59c8624565fbb81}
+
+
+Function that puts user in given group. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač, updated by Mario Peroković, added verifying the existence of user in the group, updated by Maja Vračan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$user} & username of user which will be put in group \\
+\hline
+{\em $\ast$group} & name of group in which user will be put \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if user is already in the group 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+check\+\_\+group\+\_\+privilege@{A\+K\+\_\+check\+\_\+group\+\_\+privilege}}
+\index{A\+K\+\_\+check\+\_\+group\+\_\+privilege@{A\+K\+\_\+check\+\_\+group\+\_\+privilege}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+group\+\_\+privilege(char $\ast$group)}{AK_check_group_privilege(char *group)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+group\+\_\+privilege (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{group}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a8d77acd14d2f925fd5b02c240959cd3d}{}\label{privileges_8c_a8d77acd14d2f925fd5b02c240959cd3d}
+
+
+Function check if group have any privilege or user. Used in drop group for restriction. 
+
+\begin{DoxyAuthor}{Author}
+Jurica Hlevnjak, updated by Lidija Lastavec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em group} & name of group \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+E\+R\+R\+OR or E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+check\+\_\+privilege@{A\+K\+\_\+check\+\_\+privilege}}
+\index{A\+K\+\_\+check\+\_\+privilege@{A\+K\+\_\+check\+\_\+privilege}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+privilege(char $\ast$username, char $\ast$table, char $\ast$privilege)}{AK_check_privilege(char *username, char *table, char *privilege)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+privilege (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{username, }
+\item[{char $\ast$}]{table, }
+\item[{char $\ast$}]{privilege}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a0de515ebe4cda5b50ef7ab00f8165d45}{}\label{privileges_8c_a0de515ebe4cda5b50ef7ab00f8165d45}
+
+
+Function that checks whether given user has right for given operation on given table. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$user} & username for which we want check privileges \\
+\hline
+{\em $\ast$table} & name of table for which we want to check whether user has right on \\
+\hline
+{\em $\ast$privilege} & privilege for which we want to check whether user has right for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if user has right, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if user has no right 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+check\+\_\+user\+\_\+privilege@{A\+K\+\_\+check\+\_\+user\+\_\+privilege}}
+\index{A\+K\+\_\+check\+\_\+user\+\_\+privilege@{A\+K\+\_\+check\+\_\+user\+\_\+privilege}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+user\+\_\+privilege(char $\ast$user)}{AK_check_user_privilege(char *user)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+user\+\_\+privilege (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{user}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a6e74a2510eedd1f076e15838ebc459dd}{}\label{privileges_8c_a6e74a2510eedd1f076e15838ebc459dd}
+
+
+Function check if user have any privilege or belong to group. Used in drop user for restriction. 
+
+\begin{DoxyAuthor}{Author}
+Jurica Hlevnjak, updated by Lidija Lastavec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em user} & name of user \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+E\+R\+R\+OR or E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+grant\+\_\+privilege\+\_\+group@{A\+K\+\_\+grant\+\_\+privilege\+\_\+group}}
+\index{A\+K\+\_\+grant\+\_\+privilege\+\_\+group@{A\+K\+\_\+grant\+\_\+privilege\+\_\+group}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+grant\+\_\+privilege\+\_\+group(char $\ast$groupname, char $\ast$table, char $\ast$right)}{AK_grant_privilege_group(char *groupname, char *table, char *right)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+grant\+\_\+privilege\+\_\+group (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{groupname, }
+\item[{char $\ast$}]{table, }
+\item[{char $\ast$}]{right}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a7d6ddea07764a2ca38efb0641ddf0640}{}\label{privileges_8c_a7d6ddea07764a2ca38efb0641ddf0640}
+
+
+Function that grants privilege to given group on given table. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$groupname} & name of group to which we want to grant privilege \\
+\hline
+{\em $\ast$table} & name of table on which privilege will be granted to user \\
+\hline
+{\em $\ast$right} & type of privilege which will be granted to user on given table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+privilege\+\_\+id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if table or user aren\textquotesingle{}t correct 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+grant\+\_\+privilege\+\_\+user@{A\+K\+\_\+grant\+\_\+privilege\+\_\+user}}
+\index{A\+K\+\_\+grant\+\_\+privilege\+\_\+user@{A\+K\+\_\+grant\+\_\+privilege\+\_\+user}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+grant\+\_\+privilege\+\_\+user(char $\ast$username, char $\ast$table, char $\ast$right)}{AK_grant_privilege_user(char *username, char *table, char *right)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+grant\+\_\+privilege\+\_\+user (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{username, }
+\item[{char $\ast$}]{table, }
+\item[{char $\ast$}]{right}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_aed6b27e508dc84493b313fbd34a30d11}{}\label{privileges_8c_aed6b27e508dc84493b313fbd34a30d11}
+
+
+Function that grants privilege to user. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač, updated by Mario Peroković, inserting user id instead of username in A\+K\+\_\+user\+\_\+right 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$username} & username of user to whom we want to grant privilege \\
+\hline
+{\em $\ast$table} & name of table on which privilege will be granted to user \\
+\hline
+{\em $\ast$right} & type of privilege which will be granted to user on given table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+privilege\+\_\+id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if table or user aren\textquotesingle{}t correct 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+group\+\_\+add@{A\+K\+\_\+group\+\_\+add}}
+\index{A\+K\+\_\+group\+\_\+add@{A\+K\+\_\+group\+\_\+add}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+group\+\_\+add(char $\ast$name, int set\+\_\+id)}{AK_group_add(char *name, int set_id)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+group\+\_\+add (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name, }
+\item[{int}]{set\+\_\+id}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a0ab4080d78ff866e17e272696715e412}{}\label{privileges_8c_a0ab4080d78ff866e17e272696715e412}
+
+
+Function that A\+K\+\_\+group\+\_\+add. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač, edited by Ljubo Barać 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of group to be added \\
+\hline
+{\em set\+\_\+id} & non default id to be passed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+id of group 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+group\+\_\+get\+\_\+id@{A\+K\+\_\+group\+\_\+get\+\_\+id}}
+\index{A\+K\+\_\+group\+\_\+get\+\_\+id@{A\+K\+\_\+group\+\_\+get\+\_\+id}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+group\+\_\+get\+\_\+id(char $\ast$name)}{AK_group_get_id(char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+group\+\_\+get\+\_\+id (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a283e643a776fc29d6c360508687cb3cb}{}\label{privileges_8c_a283e643a776fc29d6c360508687cb3cb}
+
+
+Function that gets id of group with given name. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of group whose id we are looking for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+id of group, otherwise E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+group\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+group\+\_\+remove\+\_\+by\+\_\+name}}
+\index{A\+K\+\_\+group\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+group\+\_\+remove\+\_\+by\+\_\+name}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+group\+\_\+remove\+\_\+by\+\_\+name(char $\ast$name)}{AK_group_remove_by_name(char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+group\+\_\+remove\+\_\+by\+\_\+name (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_ae5a8bc30bfdc3052b08fb529c6fcc7c0}{}\label{privileges_8c_ae5a8bc30bfdc3052b08fb529c6fcc7c0}
+
+
+Function removes the group. 
+
+\begin{DoxyAuthor}{Author}
+Ljubo Barać 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of the group to be removed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+group\+\_\+rename@{A\+K\+\_\+group\+\_\+rename}}
+\index{A\+K\+\_\+group\+\_\+rename@{A\+K\+\_\+group\+\_\+rename}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+group\+\_\+rename(char $\ast$old\+\_\+name, char $\ast$new\+\_\+name)}{AK_group_rename(char *old_name, char *new_name)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+group\+\_\+rename (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{old\+\_\+name, }
+\item[{char $\ast$}]{new\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a5c2fdc33d2d3eb66344e67cdf5df4a27}{}\label{privileges_8c_a5c2fdc33d2d3eb66344e67cdf5df4a27}
+
+
+Function renames the group. 
+
+\begin{DoxyAuthor}{Author}
+Ljubo Barać, update by Lidija Lastavec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em old\+\_\+name} & Name of the group to be renamed \\
+\hline
+{\em new\+\_\+name} & New name of the group \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+privileges\+\_\+test@{A\+K\+\_\+privileges\+\_\+test}}
+\index{A\+K\+\_\+privileges\+\_\+test@{A\+K\+\_\+privileges\+\_\+test}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+privileges\+\_\+test()}{AK_privileges_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+privileges\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_af30d544f7ecab9cf49dc794fcfd05bc4}{}\label{privileges_8c_af30d544f7ecab9cf49dc794fcfd05bc4}
+
+
+Function that tests functions above for privileges,. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač, updated by Tomislav Ilisevic, updated by Lidija Lastavec 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+no return value 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+remove\+\_\+all\+\_\+users\+\_\+from\+\_\+group@{A\+K\+\_\+remove\+\_\+all\+\_\+users\+\_\+from\+\_\+group}}
+\index{A\+K\+\_\+remove\+\_\+all\+\_\+users\+\_\+from\+\_\+group@{A\+K\+\_\+remove\+\_\+all\+\_\+users\+\_\+from\+\_\+group}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+remove\+\_\+all\+\_\+users\+\_\+from\+\_\+group(char $\ast$group)}{AK_remove_all_users_from_group(char *group)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+remove\+\_\+all\+\_\+users\+\_\+from\+\_\+group (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{group}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a00942026a980029b3d6e6def017dbdea}{}\label{privileges_8c_a00942026a980029b3d6e6def017dbdea}
+
+
+Function removes all users from group. Used for D\+R\+OP group. 
+
+\begin{DoxyAuthor}{Author}
+Jurica Hlevnjak, update by Lidija Lastavec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em group} & name of group \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+remove\+\_\+user\+\_\+from\+\_\+all\+\_\+groups@{A\+K\+\_\+remove\+\_\+user\+\_\+from\+\_\+all\+\_\+groups}}
+\index{A\+K\+\_\+remove\+\_\+user\+\_\+from\+\_\+all\+\_\+groups@{A\+K\+\_\+remove\+\_\+user\+\_\+from\+\_\+all\+\_\+groups}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+remove\+\_\+user\+\_\+from\+\_\+all\+\_\+groups(char $\ast$user)}{AK_remove_user_from_all_groups(char *user)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+remove\+\_\+user\+\_\+from\+\_\+all\+\_\+groups (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{user}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_acbb1bf6c5ba6d613794feaeb4aeb27d4}{}\label{privileges_8c_acbb1bf6c5ba6d613794feaeb4aeb27d4}
+
+
+Function removes user from all groups. Used for D\+R\+OP user. 
+
+\begin{DoxyAuthor}{Author}
+Jurica Hlevnjak, update by Lidija Lastavec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em user} & name of user \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+group@{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+group}}
+\index{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+group@{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+group}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+group(char $\ast$groupname)}{AK_revoke_all_privileges_group(char *groupname)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+group (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{groupname}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_ab9ebb8a3c34ab70561c6d91f8a50d6ac}{}\label{privileges_8c_ab9ebb8a3c34ab70561c6d91f8a50d6ac}
+
+
+Function that revokes A\+LL privileges from group on A\+LL tables (needed for D\+R\+OP group) 
+
+\begin{DoxyAuthor}{Author}
+Jurica Hlevnjak 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em groupname} & name of group from which we want to revoke all privileges \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if privilege is revoked, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if it isn\textquotesingle{}t 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+user@{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+user}}
+\index{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+user@{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+user}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+user(char $\ast$username)}{AK_revoke_all_privileges_user(char *username)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+revoke\+\_\+all\+\_\+privileges\+\_\+user (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{username}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a78334dd1bfde77de6f0251df354c2d46}{}\label{privileges_8c_a78334dd1bfde77de6f0251df354c2d46}
+
+
+Function that revokes A\+LL privileges from user on A\+LL tables (for D\+R\+OP user) 
+
+\begin{DoxyAuthor}{Author}
+Jurica Hlevnjak 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em username} & name of user from whom we want to revoke all privileges \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if privilege is revoked, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if it isn\textquotesingle{}t 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+revoke\+\_\+privilege\+\_\+group@{A\+K\+\_\+revoke\+\_\+privilege\+\_\+group}}
+\index{A\+K\+\_\+revoke\+\_\+privilege\+\_\+group@{A\+K\+\_\+revoke\+\_\+privilege\+\_\+group}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+revoke\+\_\+privilege\+\_\+group(char $\ast$groupname, char $\ast$table, char $\ast$right)}{AK_revoke_privilege_group(char *groupname, char *table, char *right)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+revoke\+\_\+privilege\+\_\+group (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{groupname, }
+\item[{char $\ast$}]{table, }
+\item[{char $\ast$}]{right}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a04b86b58875433a59e7590d39dbeb06a}{}\label{privileges_8c_a04b86b58875433a59e7590d39dbeb06a}
+
+
+Function that revokes privilege from group on given table. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač, updated by Mario Peroković -\/ added comparing by table id 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$grounamep} & name of group which user belongs to \\
+\hline
+{\em $\ast$table} & name of table on which privilege will be granted to group \\
+\hline
+{\em $\ast$right} & type of privilege which will be granted to group on given table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if privilege is revoked, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if it isn\textquotesingle{}t 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+revoke\+\_\+privilege\+\_\+user@{A\+K\+\_\+revoke\+\_\+privilege\+\_\+user}}
+\index{A\+K\+\_\+revoke\+\_\+privilege\+\_\+user@{A\+K\+\_\+revoke\+\_\+privilege\+\_\+user}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+revoke\+\_\+privilege\+\_\+user(char $\ast$username, char $\ast$table, char $\ast$right)}{AK_revoke_privilege_user(char *username, char *table, char *right)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+revoke\+\_\+privilege\+\_\+user (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{username, }
+\item[{char $\ast$}]{table, }
+\item[{char $\ast$}]{right}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a0fdd730580cb7c05c81b1143163b0ff9}{}\label{privileges_8c_a0fdd730580cb7c05c81b1143163b0ff9}
+
+
+Function that revokes privilege from user on given table. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač, updated by Mario Peroković -\/ added comparing by table id, and use of user\+\_\+id in A\+K\+\_\+user\+\_\+right 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$username} & username of user to whom we want to grant privilege \\
+\hline
+{\em $\ast$table} & name of table on which privilege will be revoked from user \\
+\hline
+{\em $\ast$right} & type of privilege which will be revoked from user on given table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if privilege is revoked, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if it isn\textquotesingle{}t 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+user\+\_\+add@{A\+K\+\_\+user\+\_\+add}}
+\index{A\+K\+\_\+user\+\_\+add@{A\+K\+\_\+user\+\_\+add}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+user\+\_\+add(char $\ast$username, int $\ast$password, int set\+\_\+id)}{AK_user_add(char *username, int *password, int set_id)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+user\+\_\+add (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{username, }
+\item[{int $\ast$}]{password, }
+\item[{int}]{set\+\_\+id}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a59737f7e1bd4e6f4a69cd974820157ca}{}\label{privileges_8c_a59737f7e1bd4e6f4a69cd974820157ca}
+
+
+Function which inserts user in table A\+K\+\_\+user. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$username} & username of user to be added \\
+\hline
+{\em password} & password of user to be added \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+user\+\_\+id 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+user\+\_\+get\+\_\+id@{A\+K\+\_\+user\+\_\+get\+\_\+id}}
+\index{A\+K\+\_\+user\+\_\+get\+\_\+id@{A\+K\+\_\+user\+\_\+get\+\_\+id}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+user\+\_\+get\+\_\+id(char $\ast$username)}{AK_user_get_id(char *username)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+user\+\_\+get\+\_\+id (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{username}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a9dae61bb225d647d658ea98e342089ab}{}\label{privileges_8c_a9dae61bb225d647d658ea98e342089ab}
+
+
+Function which gets user id. 
+
+\begin{DoxyAuthor}{Author}
+Kristina Takač. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$username} & username of user whose id we are looking for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+user\+\_\+id, otherwise E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+user\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+user\+\_\+remove\+\_\+by\+\_\+name}}
+\index{A\+K\+\_\+user\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+user\+\_\+remove\+\_\+by\+\_\+name}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+user\+\_\+remove\+\_\+by\+\_\+name(char $\ast$name)}{AK_user_remove_by_name(char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+user\+\_\+remove\+\_\+by\+\_\+name (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_af11462aa1b1f063d6cf3a242204e5fb1}{}\label{privileges_8c_af11462aa1b1f063d6cf3a242204e5fb1}
+
+
+Function removes the user. 
+
+\begin{DoxyAuthor}{Author}
+Ljubo Barać 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of the user to be removed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{privileges.\+c@{privileges.\+c}!A\+K\+\_\+user\+\_\+rename@{A\+K\+\_\+user\+\_\+rename}}
+\index{A\+K\+\_\+user\+\_\+rename@{A\+K\+\_\+user\+\_\+rename}!privileges.\+c@{privileges.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+user\+\_\+rename(char $\ast$old\+\_\+name, char $\ast$new\+\_\+name, int $\ast$password)}{AK_user_rename(char *old_name, char *new_name, int *password)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+user\+\_\+rename (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{old\+\_\+name, }
+\item[{char $\ast$}]{new\+\_\+name, }
+\item[{int $\ast$}]{password}
+\end{DoxyParamCaption}
+)}\hypertarget{privileges_8c_a33776197a054d258b7906af6a23bec95}{}\label{privileges_8c_a33776197a054d258b7906af6a23bec95}
+
+
+Function renames the user. 
+
+\begin{DoxyAuthor}{Author}
+Ljubo Barać, upadate by Lidija Lastavec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em old\+\_\+name} & Name of the user to be renamed \\
+\hline
+{\em new\+\_\+name} & New name of the user \\
+\hline
+{\em password} & Password of the user to be renamed (should be provided) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}

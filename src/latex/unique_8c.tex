@@ -1,0 +1,93 @@
+\hypertarget{unique_8c}{}\section{sql/cs/unique.c File Reference}
+\label{unique_8c}\index{sql/cs/unique.\+c@{sql/cs/unique.\+c}}
+{\ttfamily \#include \char`\"{}unique.\+h\char`\"{}}\\*
+Include dependency graph for unique.\+c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{unique_8c_a7456eb6c356aa06185da557af9046e41}{Ak\+\_\+set\+\_\+constraint\+\_\+unique} (char $\ast$table\+Name, char att\+Name\mbox{[}$\,$\mbox{]}, char constraint\+Name\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Function sets unique constraint on attribute(s) \end{DoxyCompactList}\item 
+int \hyperlink{unique_8c_a64346c7e67930e769dc3dbf9b693d2cf}{A\+K\+\_\+read\+\_\+constraint\+\_\+unique} (char $\ast$table\+Name, char att\+Name\mbox{[}$\,$\mbox{]}, char new\+Value\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Function checks if insertion of some value(s) would violate U\+N\+I\+Q\+UE constraint. \end{DoxyCompactList}\item 
+void \hyperlink{unique_8c_aeaab95fc479fad1ee2c21031d49e3d03}{A\+K\+\_\+unique\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for testing U\+N\+I\+Q\+UE constraint. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides functions for unique constraint 
+
+\subsection{Function Documentation}
+\index{unique.\+c@{unique.\+c}!A\+K\+\_\+read\+\_\+constraint\+\_\+unique@{A\+K\+\_\+read\+\_\+constraint\+\_\+unique}}
+\index{A\+K\+\_\+read\+\_\+constraint\+\_\+unique@{A\+K\+\_\+read\+\_\+constraint\+\_\+unique}!unique.\+c@{unique.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+read\+\_\+constraint\+\_\+unique(char $\ast$table\+Name, char att\+Name[], char new\+Value[])}{AK_read_constraint_unique(char *tableName, char attName[], char newValue[])}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+read\+\_\+constraint\+\_\+unique (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table\+Name, }
+\item[{char}]{att\+Name\mbox{[}$\,$\mbox{]}, }
+\item[{char}]{new\+Value\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\hypertarget{unique_8c_a64346c7e67930e769dc3dbf9b693d2cf}{}\label{unique_8c_a64346c7e67930e769dc3dbf9b693d2cf}
+
+
+Function checks if insertion of some value(s) would violate U\+N\+I\+Q\+UE constraint. 
+
+\begin{DoxyAuthor}{Author}
+Domagoj Tuličić, updated by Nenad Makar 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em char$\ast$} & table\+Name name of table \\
+\hline
+{\em char} & att\+Name\mbox{[}\mbox{]} name(s) of attribute(s), if you want to check combination of values of more attributes seperate names of attributes with constant S\+E\+P\+A\+R\+A\+T\+OR (see test) \\
+\hline
+{\em char} & new\+Value\mbox{[}\mbox{]} new value(s), if you want to check combination of values of more attributes seperate their values with constant S\+E\+P\+A\+R\+A\+T\+OR (see test), if some value(s) which you want to check isn\textquotesingle{}t stored as char (string) convert it to char (string) using \hyperlink{table_8h_a1364e5d1a774d82e11537323714149b7}{A\+K\+\_\+tuple\+\_\+to\+\_\+string(struct list\+\_\+node $\ast$tuple)} or with sprintf in a similiar way it\textquotesingle{}s used in that function (if value isn\textquotesingle{}t part of a $\ast$tuple), to concatenate more values in new\+Value\mbox{[}\mbox{]} use strcat(destination, source) and put constant S\+E\+P\+A\+R\+A\+T\+OR between them (see test) if new\+Value\mbox{[}\mbox{]} should contain N\+U\+LL sign pass it as \char`\"{} \char`\"{} (space) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+E\+R\+R\+OR or E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+\index{unique.\+c@{unique.\+c}!Ak\+\_\+set\+\_\+constraint\+\_\+unique@{Ak\+\_\+set\+\_\+constraint\+\_\+unique}}
+\index{Ak\+\_\+set\+\_\+constraint\+\_\+unique@{Ak\+\_\+set\+\_\+constraint\+\_\+unique}!unique.\+c@{unique.\+c}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+set\+\_\+constraint\+\_\+unique(char $\ast$table\+Name, char att\+Name[], char constraint\+Name[])}{Ak_set_constraint_unique(char *tableName, char attName[], char constraintName[])}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+set\+\_\+constraint\+\_\+unique (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table\+Name, }
+\item[{char}]{att\+Name\mbox{[}$\,$\mbox{]}, }
+\item[{char}]{constraint\+Name\mbox{[}$\,$\mbox{]}}
+\end{DoxyParamCaption}
+)}\hypertarget{unique_8c_a7456eb6c356aa06185da557af9046e41}{}\label{unique_8c_a7456eb6c356aa06185da557af9046e41}
+
+
+Function sets unique constraint on attribute(s) 
+
+\begin{DoxyAuthor}{Author}
+Domagoj Tuličić, updated by Nenad Makar 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em char$\ast$} & table\+Name name of table \\
+\hline
+{\em char} & att\+Name\mbox{[}\mbox{]} name(s) of attribute(s), if you want to set U\+N\+I\+Q\+UE constraint on combination of attributes seperate their names with constant S\+E\+P\+A\+R\+A\+T\+OR (see test) \\
+\hline
+{\em char} & constraint\+Name\mbox{[}\mbox{]} name of constraint \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+E\+R\+R\+OR or E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+\index{unique.\+c@{unique.\+c}!A\+K\+\_\+unique\+\_\+test@{A\+K\+\_\+unique\+\_\+test}}
+\index{A\+K\+\_\+unique\+\_\+test@{A\+K\+\_\+unique\+\_\+test}!unique.\+c@{unique.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+unique\+\_\+test()}{AK_unique_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+unique\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{unique_8c_aeaab95fc479fad1ee2c21031d49e3d03}{}\label{unique_8c_aeaab95fc479fad1ee2c21031d49e3d03}
+
+
+Function for testing U\+N\+I\+Q\+UE constraint. 
+
+\begin{DoxyAuthor}{Author}
+Domagoj Tuličić, updated by Nenad Makar 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}

@@ -1,0 +1,64 @@
+Kalashnikov DB
+
+AK (Автомат Калашникова) DB is a simple relational database management system 
+developed by students of the Faculty of Organization and Informatics in 
+Varaždin, Croatia.
+
+http://kalashnikovdb.sourceforge.net/
+
+The system is currently in alpha development status and NOT fully functional!
+
+-----------------------------------------------------------------------------
+                               BUILD
+-----------------------------------------------------------------------------
+1) Quick build (builds bin/akdb, documentation in doc/ and swig interface)
+
+cd src
+make
+make doc
+make swig
+
+2) Devel build (same as above, but displays compile warnings):
+
+cd src
+make
+make doc
+make swig
+
+-----------------------------------------------------------------------------
+                             TESTING
+-----------------------------------------------------------------------------
+
+1) Main engine
+
+cd bin
+./akdb test
+
+On first use DB file will be initialized. In case it hangs press 1 and Enter
+(don't ask why).
+
+2) Server (read README in src/srv)
+
+cd src/srv
+python server.py
+
+3) Client
+
+cd src/srv
+python akdb_cli.py
+
+-----------------------------------------------------------------------------
+                         USEFUL SCRIPTS
+-----------------------------------------------------------------------------
+
+1) src/build - makes a development build and starts testing interface
+
+2) src/test - just starts testing interface without rebuild
+
+3) src/quickrun - installs /bin/kalashnikovDB_quickrun on target machine
+   which rebuilds and runs akdb (with -d runs with debugger).
+
+
+
+
+

@@ -1,0 +1,123 @@
+\hypertarget{between_8c}{}\section{sql/cs/between.c File Reference}
+\label{between_8c}\index{sql/cs/between.\+c@{sql/cs/between.\+c}}
+{\ttfamily \#include \char`\"{}between.\+h\char`\"{}}\\*
+Include dependency graph for between.\+c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{between_8c_ae4bffd31ebd70215083b6fa5eb57c0b5}{A\+K\+\_\+find\+\_\+table\+\_\+address} (char $\ast$\+\_\+system\+Table\+Name)
+\begin{DoxyCompactList}\small\item\em Returns system tables address by name. \end{DoxyCompactList}\item 
+void \hyperlink{between_8c_a8c23ee2b2fbbd6aa8e54f664315d57f3}{A\+K\+\_\+set\+\_\+constraint\+\_\+between} (char $\ast$table\+Name, char $\ast$constraint\+Name, char $\ast$att\+Name, char $\ast$start\+Value, char $\ast$end\+Value)
+\begin{DoxyCompactList}\small\item\em Function sets between constraints on particulary attribute, string constraint should be writen in lowercase. It searches for A\+K\+\_\+free space. Then it inserts id, name of table, name of constraint, name of attribute, start and end value in temporary block. \end{DoxyCompactList}\item 
+int \hyperlink{between_8c_ab0b08186ba18f4d0439799a28d2edcb6}{A\+K\+\_\+read\+\_\+constraint\+\_\+between} (char $\ast$table\+Name, char $\ast$new\+Value, char $\ast$att\+Name\+Par)
+\begin{DoxyCompactList}\small\item\em Checks if the given value is between lower and upper bounds of the \char`\"{}between\char`\"{} constraint. \end{DoxyCompactList}\item 
+void \hyperlink{between_8c_a417435c26804236682d79090ce3f6029}{Ak\+\_\+constraint\+\_\+between\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Tests the functionality of implemented between constraint. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides functions for between constaint 
+
+\subsection{Function Documentation}
+\index{between.\+c@{between.\+c}!Ak\+\_\+constraint\+\_\+between\+\_\+test@{Ak\+\_\+constraint\+\_\+between\+\_\+test}}
+\index{Ak\+\_\+constraint\+\_\+between\+\_\+test@{Ak\+\_\+constraint\+\_\+between\+\_\+test}!between.\+c@{between.\+c}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+constraint\+\_\+between\+\_\+test()}{Ak_constraint_between_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+constraint\+\_\+between\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{between_8c_a417435c26804236682d79090ce3f6029}{}\label{between_8c_a417435c26804236682d79090ce3f6029}
+
+
+Tests the functionality of implemented between constraint. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, updated by Mislav Jurinić 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{between.\+c@{between.\+c}!A\+K\+\_\+find\+\_\+table\+\_\+address@{A\+K\+\_\+find\+\_\+table\+\_\+address}}
+\index{A\+K\+\_\+find\+\_\+table\+\_\+address@{A\+K\+\_\+find\+\_\+table\+\_\+address}!between.\+c@{between.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+find\+\_\+table\+\_\+address(char $\ast$\+\_\+system\+Table\+Name)}{AK_find_table_address(char *_systemTableName)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+find\+\_\+table\+\_\+address (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{\+\_\+system\+Table\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{between_8c_ae4bffd31ebd70215083b6fa5eb57c0b5}{}\label{between_8c_ae4bffd31ebd70215083b6fa5eb57c0b5}
+
+
+Returns system tables address by name. 
+
+\begin{DoxyAuthor}{Author}
+Mislav Jurinić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+system\+Table\+Name} & table name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+\index{between.\+c@{between.\+c}!A\+K\+\_\+read\+\_\+constraint\+\_\+between@{A\+K\+\_\+read\+\_\+constraint\+\_\+between}}
+\index{A\+K\+\_\+read\+\_\+constraint\+\_\+between@{A\+K\+\_\+read\+\_\+constraint\+\_\+between}!between.\+c@{between.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+read\+\_\+constraint\+\_\+between(char $\ast$table\+Name, char $\ast$new\+Value, char $\ast$att\+Name\+Par)}{AK_read_constraint_between(char *tableName, char *newValue, char *attNamePar)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+read\+\_\+constraint\+\_\+between (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table\+Name, }
+\item[{char $\ast$}]{new\+Value, }
+\item[{char $\ast$}]{att\+Name\+Par}
+\end{DoxyParamCaption}
+)}\hypertarget{between_8c_ab0b08186ba18f4d0439799a28d2edcb6}{}\label{between_8c_ab0b08186ba18f4d0439799a28d2edcb6}
+
+
+Checks if the given value is between lower and upper bounds of the \char`\"{}between\char`\"{} constraint. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, updated by Mislav Jurinić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table\+Name} & table name \\
+\hline
+{\em new\+Value} & value we want to insert \\
+\hline
+{\em att\+Name\+Par} & attribute name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{between.\+c@{between.\+c}!A\+K\+\_\+set\+\_\+constraint\+\_\+between@{A\+K\+\_\+set\+\_\+constraint\+\_\+between}}
+\index{A\+K\+\_\+set\+\_\+constraint\+\_\+between@{A\+K\+\_\+set\+\_\+constraint\+\_\+between}!between.\+c@{between.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+set\+\_\+constraint\+\_\+between(char $\ast$table\+Name, char $\ast$constraint\+Name, char $\ast$att\+Name, char $\ast$start\+Value, char $\ast$end\+Value)}{AK_set_constraint_between(char *tableName, char *constraintName, char *attName, char *startValue, char *endValue)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+set\+\_\+constraint\+\_\+between (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table\+Name, }
+\item[{char $\ast$}]{constraint\+Name, }
+\item[{char $\ast$}]{att\+Name, }
+\item[{char $\ast$}]{start\+Value, }
+\item[{char $\ast$}]{end\+Value}
+\end{DoxyParamCaption}
+)}\hypertarget{between_8c_a8c23ee2b2fbbd6aa8e54f664315d57f3}{}\label{between_8c_a8c23ee2b2fbbd6aa8e54f664315d57f3}
+
+
+Function sets between constraints on particulary attribute, string constraint should be writen in lowercase. It searches for A\+K\+\_\+free space. Then it inserts id, name of table, name of constraint, name of attribute, start and end value in temporary block. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, updated by Mislav Jurinić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table\+Name} & table name \\
+\hline
+{\em constraint\+Name} & name of constraint \\
+\hline
+{\em att\+Name} & name of attribute \\
+\hline
+{\em start\+Value} & initial constraint \\
+\hline
+{\em end\+Value} & final constraint \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}

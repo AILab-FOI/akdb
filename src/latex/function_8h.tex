@@ -1,0 +1,319 @@
+\hypertarget{function_8h}{}\section{sql/function.h File Reference}
+\label{function_8h}\index{sql/function.\+h@{sql/function.\+h}}
+{\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../file/fileio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../auxi/auxiliary.\+h\char`\"{}}\\*
+Include dependency graph for function.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{function_8h_a98c0d34a27430165c0c777dbdd2020e0}{A\+K\+\_\+get\+\_\+function\+\_\+obj\+\_\+id} (char $\ast$function, struct list\+\_\+node $\ast$arguments\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Function that gets obj\+\_\+id of a function by name and arguments list (transferred from \hyperlink{trigger_8c}{trigger.\+c}/drop.c). \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a1d800d28907ba218d37c69b21c8c901a}{A\+K\+\_\+check\+\_\+function\+\_\+arguments} (int function\+\_\+id, struct list\+\_\+node $\ast$arguments\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Function that checks whether arguments belong to function. \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a1f2c4728bfa5df838d39d0925d411e5a}{A\+K\+\_\+check\+\_\+function\+\_\+arguments\+\_\+type} (int function\+\_\+id, struct list\+\_\+node $\ast$args)
+\begin{DoxyCompactList}\small\item\em Function that checks whether arguments belong to function but only checks argument type (not name). Used for drop function. \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a6b0b6e55d365e543d98274b75313f064}{A\+K\+\_\+function\+\_\+add} (char $\ast$name, int return\+\_\+type, struct list\+\_\+node $\ast$arguments\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Function that adds a function to system table. \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a021c06311724058d194529f2b0b46d30}{A\+K\+\_\+function\+\_\+arguments\+\_\+add} (int function\+\_\+id, int arg\+\_\+number, int arg\+\_\+type, char $\ast$argname)
+\begin{DoxyCompactList}\small\item\em Function that adds a function argument to system table. \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a0b4125730f7fbfdda7221c13197e2d1c}{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id} (int obj\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Function removes a function by its obj\+\_\+id. \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a32f93c461a3bd5cdce72bf361c86c932}{A\+K\+\_\+function\+\_\+arguments\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id} (int $\ast$obj\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Function removes function arguments by function id. \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a3cd0f701679ce86a71ecb213c929325c}{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+name} (char $\ast$name, struct list\+\_\+node $\ast$arguments\+\_\+list)
+\begin{DoxyCompactList}\small\item\em Function that removes a function from system table by name and arguments. \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a2d95a479e54241362656ba2d1e2a1688}{A\+K\+\_\+function\+\_\+rename} (char $\ast$name, struct list\+\_\+node $\ast$arguments\+\_\+list, char $\ast$new\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Function that changes the function name. \end{DoxyCompactList}\item 
+int \hyperlink{function_8h_a74188a7f920348a50800f1c47f095f69}{A\+K\+\_\+function\+\_\+change\+\_\+return\+\_\+type} (char $\ast$name, struct list\+\_\+node $\ast$arguments\+\_\+list, int new\+\_\+return\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Function that changes the return type. \end{DoxyCompactList}\item 
+void \hyperlink{function_8h_a2038caac2a2e84b312b79986a0fd6d0b}{A\+K\+\_\+function\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for functions testing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data structures for functions
+
+Header file that provides data structures functions 
+
+\subsection{Function Documentation}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+check\+\_\+function\+\_\+arguments@{A\+K\+\_\+check\+\_\+function\+\_\+arguments}}
+\index{A\+K\+\_\+check\+\_\+function\+\_\+arguments@{A\+K\+\_\+check\+\_\+function\+\_\+arguments}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+function\+\_\+arguments(int function\+\_\+id, struct list\+\_\+node $\ast$arguments\+\_\+list)}{AK_check_function_arguments(int function_id, struct list_node *arguments_list)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+function\+\_\+arguments (
+\begin{DoxyParamCaption}
+\item[{int}]{function\+\_\+id, }
+\item[{struct list\+\_\+node $\ast$}]{arguments\+\_\+list}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a1d800d28907ba218d37c69b21c8c901a}{}\label{function_8h_a1d800d28907ba218d37c69b21c8c901a}
+
+
+Function that checks whether arguments belong to function. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$function\+\_\+id} & id of the function \\
+\hline
+{\em $\ast$arguments\+\_\+list} & list of arguments \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS of the function or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+check\+\_\+function\+\_\+arguments\+\_\+type@{A\+K\+\_\+check\+\_\+function\+\_\+arguments\+\_\+type}}
+\index{A\+K\+\_\+check\+\_\+function\+\_\+arguments\+\_\+type@{A\+K\+\_\+check\+\_\+function\+\_\+arguments\+\_\+type}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+function\+\_\+arguments\+\_\+type(int function\+\_\+id, struct list\+\_\+node $\ast$args)}{AK_check_function_arguments_type(int function_id, struct list_node *args)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+function\+\_\+arguments\+\_\+type (
+\begin{DoxyParamCaption}
+\item[{int}]{function\+\_\+id, }
+\item[{struct list\+\_\+node $\ast$}]{args}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a1f2c4728bfa5df838d39d0925d411e5a}{}\label{function_8h_a1f2c4728bfa5df838d39d0925d411e5a}
+
+
+Function that checks whether arguments belong to function but only checks argument type (not name). Used for drop function. 
+
+\begin{DoxyAuthor}{Author}
+Jurica Hlevnjak 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em function\+\_\+id} & id of the function \\
+\hline
+{\em args} & function arguments \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+function\+\_\+add@{A\+K\+\_\+function\+\_\+add}}
+\index{A\+K\+\_\+function\+\_\+add@{A\+K\+\_\+function\+\_\+add}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+function\+\_\+add(char $\ast$name, int return\+\_\+type, struct list\+\_\+node $\ast$arguments\+\_\+list)}{AK_function_add(char *name, int return_type, struct list_node *arguments_list)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+function\+\_\+add (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name, }
+\item[{int}]{return\+\_\+type, }
+\item[{struct list\+\_\+node $\ast$}]{arguments\+\_\+list}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a6b0b6e55d365e543d98274b75313f064}{}\label{function_8h_a6b0b6e55d365e543d98274b75313f064}
+
+
+Function that adds a function to system table. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić, updated by Tomislav Ilisevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of the function \\
+\hline
+{\em $\ast$return\+\_\+type} & data type returned from a function -\/ values from 0 to 13 -\/ defined in constants.\+h \\
+\hline
+{\em $\ast$arguments\+\_\+list} & list of function arguments \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+function\+\_\+arguments\+\_\+add@{A\+K\+\_\+function\+\_\+arguments\+\_\+add}}
+\index{A\+K\+\_\+function\+\_\+arguments\+\_\+add@{A\+K\+\_\+function\+\_\+arguments\+\_\+add}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+function\+\_\+arguments\+\_\+add(int function\+\_\+id, int arg\+\_\+number, int arg\+\_\+type, char $\ast$argname)}{AK_function_arguments_add(int function_id, int arg_number, int arg_type, char *argname)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+function\+\_\+arguments\+\_\+add (
+\begin{DoxyParamCaption}
+\item[{int}]{function\+\_\+id, }
+\item[{int}]{arg\+\_\+number, }
+\item[{int}]{arg\+\_\+type, }
+\item[{char $\ast$}]{argname}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a021c06311724058d194529f2b0b46d30}{}\label{function_8h_a021c06311724058d194529f2b0b46d30}
+
+
+Function that adds a function argument to system table. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$function\+\_\+id} & id of the function to which the argument belongs \\
+\hline
+{\em $\ast$arg\+\_\+number} & number of the argument \\
+\hline
+{\em $\ast$arg\+\_\+type} & data type of the argument \\
+\hline
+{\em $\ast$argname} & name of the argument \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function argument id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+function\+\_\+arguments\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+function\+\_\+arguments\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}}
+\index{A\+K\+\_\+function\+\_\+arguments\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+function\+\_\+arguments\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+function\+\_\+arguments\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id(int $\ast$obj\+\_\+id)}{AK_function_arguments_remove_by_obj_id(int *obj_id)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+function\+\_\+arguments\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id (
+\begin{DoxyParamCaption}
+\item[{int $\ast$}]{obj\+\_\+id}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a32f93c461a3bd5cdce72bf361c86c932}{}\label{function_8h_a32f93c461a3bd5cdce72bf361c86c932}
+
+
+Function removes function arguments by function id. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em obj\+\_\+id} & obj\+\_\+id of the function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+function\+\_\+change\+\_\+return\+\_\+type@{A\+K\+\_\+function\+\_\+change\+\_\+return\+\_\+type}}
+\index{A\+K\+\_\+function\+\_\+change\+\_\+return\+\_\+type@{A\+K\+\_\+function\+\_\+change\+\_\+return\+\_\+type}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+function\+\_\+change\+\_\+return\+\_\+type(char $\ast$name, struct list\+\_\+node $\ast$arguments\+\_\+list, int new\+\_\+return\+\_\+type)}{AK_function_change_return_type(char *name, struct list_node *arguments_list, int new_return_type)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+function\+\_\+change\+\_\+return\+\_\+type (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name, }
+\item[{struct list\+\_\+node $\ast$}]{arguments\+\_\+list, }
+\item[{int}]{new\+\_\+return\+\_\+type}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a74188a7f920348a50800f1c47f095f69}{}\label{function_8h_a74188a7f920348a50800f1c47f095f69}
+
+
+Function that changes the return type. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of the function to be modified \\
+\hline
+{\em $\ast$arguments\+\_\+list} & list of function arguments \\
+\hline
+{\em $\ast$new\+\_\+return\+\_\+type} & new return type \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+name}}
+\index{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+name}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+name(char $\ast$name, struct list\+\_\+node $\ast$arguments\+\_\+list)}{AK_function_remove_by_name(char *name, struct list_node *arguments_list)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+name (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name, }
+\item[{struct list\+\_\+node $\ast$}]{arguments\+\_\+list}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a3cd0f701679ce86a71ecb213c929325c}{}\label{function_8h_a3cd0f701679ce86a71ecb213c929325c}
+
+
+Function that removes a function from system table by name and arguments. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of the function \\
+\hline
+{\em $\ast$arguments\+\_\+list} & list of arguments \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}}
+\index{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id(int obj\+\_\+id)}{AK_function_remove_by_obj_id(int obj_id)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+function\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id (
+\begin{DoxyParamCaption}
+\item[{int}]{obj\+\_\+id}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a0b4125730f7fbfdda7221c13197e2d1c}{}\label{function_8h_a0b4125730f7fbfdda7221c13197e2d1c}
+
+
+Function removes a function by its obj\+\_\+id. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em obj\+\_\+id} & obj\+\_\+id of the function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+function\+\_\+rename@{A\+K\+\_\+function\+\_\+rename}}
+\index{A\+K\+\_\+function\+\_\+rename@{A\+K\+\_\+function\+\_\+rename}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+function\+\_\+rename(char $\ast$name, struct list\+\_\+node $\ast$arguments\+\_\+list, char $\ast$new\+\_\+name)}{AK_function_rename(char *name, struct list_node *arguments_list, char *new_name)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+function\+\_\+rename (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{name, }
+\item[{struct list\+\_\+node $\ast$}]{arguments\+\_\+list, }
+\item[{char $\ast$}]{new\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a2d95a479e54241362656ba2d1e2a1688}{}\label{function_8h_a2d95a479e54241362656ba2d1e2a1688}
+
+
+Function that changes the function name. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of the function to be modified \\
+\hline
+{\em $\ast$arguments\+\_\+list} & list of arguments to be modified \\
+\hline
+{\em $\ast$new\+\_\+name} & new name of the function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+function\+\_\+test@{A\+K\+\_\+function\+\_\+test}}
+\index{A\+K\+\_\+function\+\_\+test@{A\+K\+\_\+function\+\_\+test}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+function\+\_\+test()}{AK_function_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+function\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a2038caac2a2e84b312b79986a0fd6d0b}{}\label{function_8h_a2038caac2a2e84b312b79986a0fd6d0b}
+
+
+Function for functions testing. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić, updated by Tomislav Ilisevic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{function.\+h@{function.\+h}!A\+K\+\_\+get\+\_\+function\+\_\+obj\+\_\+id@{A\+K\+\_\+get\+\_\+function\+\_\+obj\+\_\+id}}
+\index{A\+K\+\_\+get\+\_\+function\+\_\+obj\+\_\+id@{A\+K\+\_\+get\+\_\+function\+\_\+obj\+\_\+id}!function.\+h@{function.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+get\+\_\+function\+\_\+obj\+\_\+id(char $\ast$function, struct list\+\_\+node $\ast$arguments\+\_\+list)}{AK_get_function_obj_id(char *function, struct list_node *arguments_list)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+get\+\_\+function\+\_\+obj\+\_\+id (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{function, }
+\item[{struct list\+\_\+node $\ast$}]{arguments\+\_\+list}
+\end{DoxyParamCaption}
+)}\hypertarget{function_8h_a98c0d34a27430165c0c777dbdd2020e0}{}\label{function_8h_a98c0d34a27430165c0c777dbdd2020e0}
+
+
+Function that gets obj\+\_\+id of a function by name and arguments list (transferred from \hyperlink{trigger_8c}{trigger.\+c}/drop.c). 
+
+\begin{DoxyAuthor}{Author}
+Unknown, updated by Jurica Hlevnjak -\/ check function arguments included for drop purpose, updated by Tomislav Ilisevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$function} & name of the function \\
+\hline
+{\em $\ast$arguments\+\_\+list} & list of arguments \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+obj\+\_\+id of the function or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}

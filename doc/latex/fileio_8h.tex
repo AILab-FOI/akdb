@@ -1,0 +1,302 @@
+\hypertarget{fileio_8h}{}\section{file/fileio.h File Reference}
+\label{fileio_8h}\index{file/fileio.\+h@{file/fileio.\+h}}
+{\ttfamily \#include \char`\"{}../sql/cs/reference.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../mm/memoman.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../rec/recovery.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../rec/redo\+\_\+log.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}files.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
+Include dependency graph for fileio.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{fileio_8h_ad2e954029e28dcf3149c6d9a76b960ab}{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update} (int newtype, void $\ast$data, char $\ast$table, char $\ast$attribute\+\_\+name, struct list\+\_\+node $\ast$Element\+Before, int newconstraint)
+\begin{DoxyCompactList}\small\item\em Function inserts new element after some element, to insert on first place give list as before element. New element is allocated. Type, data, attribute name and constraint of new elemets are set according to function arguments. Pointers are changed so that before element points to new element. \end{DoxyCompactList}\item 
+void \hyperlink{fileio_8h_ad2f99778d1325dba20d27bfee2fe106c}{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element} (int newtype, void $\ast$data, char $\ast$table, char $\ast$attribute\+\_\+name, struct list\+\_\+node $\ast$Element\+Before)
+\begin{DoxyCompactList}\small\item\em Function inserts new element after some element, to insert on first place give list as before element. It calls function Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update. \end{DoxyCompactList}\item 
+int \hyperlink{fileio_8h_ab8823cd141c46ebbf9ea6299a0ea15e7}{Ak\+\_\+insert\+\_\+row\+\_\+to\+\_\+block} (struct list\+\_\+node $\ast$row\+\_\+root, \hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$temp\+\_\+block)
+\begin{DoxyCompactList}\small\item\em Function inserts one row into some block. Firstly it checks wether block contain attributes from the list. Then data, type, size and last\+\_\+tuple\+\_\+id are put in temp\+\_\+block. \end{DoxyCompactList}\item 
+int \hyperlink{fileio_8h_a83f0975e1d6d62009b5c9190e9e4be28}{Ak\+\_\+insert\+\_\+row} (struct list\+\_\+node $\ast$row\+\_\+root)
+\begin{DoxyCompactList}\small\item\em Function inserts a one row into table. Firstly it is checked whether inserted row would violite reference integrity. Then it is checked in which table should row be inserted. If there is no A\+K\+\_\+free space for new table, new extent is allocated. New block is allocated on given address. Row is inserted in this block and dirty flag is set to B\+L\+O\+C\+K\+\_\+\+D\+I\+R\+TY. \end{DoxyCompactList}\item 
+void \hyperlink{fileio_8h_a2b8bf2505b4e89f56a3d8b52ce53abcd}{Ak\+\_\+update\+\_\+row\+\_\+from\+\_\+block} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$temp\+\_\+block, struct list\+\_\+node $\ast$row\+\_\+root)
+\begin{DoxyCompactList}\small\item\em Function updates row from table in given block. \end{DoxyCompactList}\item 
+void \hyperlink{fileio_8h_a755a70a5797e3db8cc0aa90ef77530df}{Ak\+\_\+delete\+\_\+row\+\_\+from\+\_\+block} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$temp\+\_\+block, struct list\+\_\+node $\ast$row\+\_\+root)
+\begin{DoxyCompactList}\small\item\em Function deletes row from table in given block. Given list of elements is firstly back-\/upped. \end{DoxyCompactList}\item 
+int \hyperlink{fileio_8h_a9646847cea4944eafebbe482f15f4906}{Ak\+\_\+delete\+\_\+update\+\_\+segment} (struct list\+\_\+node $\ast$row\+\_\+root, int del)
+\begin{DoxyCompactList}\small\item\em Function updates or deletes the whole segment of an table. Addresses for given table atr fetched. For each block in extent row is updated or deleted according to operator del. \end{DoxyCompactList}\item 
+int \hyperlink{fileio_8h_afa7b8d65fef8057c0b47502606a34994}{Ak\+\_\+delete\+\_\+row} (struct list\+\_\+node $\ast$row\+\_\+root)
+\begin{DoxyCompactList}\small\item\em Function deletes rows. \end{DoxyCompactList}\item 
+int \hyperlink{fileio_8h_a978a5fc0afeea6ec045977d886647ae3}{Ak\+\_\+update\+\_\+row} (struct list\+\_\+node $\ast$row\+\_\+root)
+\begin{DoxyCompactList}\small\item\em Function updates rows of some table. \end{DoxyCompactList}\item 
+void {\bfseries Ak\+\_\+fileio\+\_\+test} ()\hypertarget{fileio_8h_a1b5cad3ac448141051a67564647cc621}{}\label{fileio_8h_a1b5cad3ac448141051a67564647cc621}
+
+\item 
+void \hyperlink{fileio_8h_ad6f898bae229173c6f8afed9e2ef0ed7}{Ak\+\_\+delete\+\_\+row\+\_\+by\+\_\+id} (int id, char $\ast$table\+Name)
+\begin{DoxyCompactList}\small\item\em Function deletes row by id. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file provides data structures for file input/output 
+
+\subsection{Function Documentation}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+delete\+\_\+row@{Ak\+\_\+delete\+\_\+row}}
+\index{Ak\+\_\+delete\+\_\+row@{Ak\+\_\+delete\+\_\+row}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+delete\+\_\+row(struct list\+\_\+node $\ast$row\+\_\+root)}{Ak_delete_row(struct list_node *row_root)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+delete\+\_\+row (
+\begin{DoxyParamCaption}
+\item[{struct list\+\_\+node $\ast$}]{row\+\_\+root}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_afa7b8d65fef8057c0b47502606a34994}{}\label{fileio_8h_afa7b8d65fef8057c0b47502606a34994}
+
+
+Function deletes rows. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, Dejan Frankovic (added referential integrity) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+root} & elements of one row  E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if success \\
+\hline
+\end{DoxyParams}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+delete\+\_\+row\+\_\+by\+\_\+id@{Ak\+\_\+delete\+\_\+row\+\_\+by\+\_\+id}}
+\index{Ak\+\_\+delete\+\_\+row\+\_\+by\+\_\+id@{Ak\+\_\+delete\+\_\+row\+\_\+by\+\_\+id}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+delete\+\_\+row\+\_\+by\+\_\+id(int id, char $\ast$table\+Name)}{Ak_delete_row_by_id(int id, char *tableName)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+delete\+\_\+row\+\_\+by\+\_\+id (
+\begin{DoxyParamCaption}
+\item[{int}]{id, }
+\item[{char $\ast$}]{table\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_ad6f898bae229173c6f8afed9e2ef0ed7}{}\label{fileio_8h_ad6f898bae229173c6f8afed9e2ef0ed7}
+
+
+Function deletes row by id. 
+
+\begin{DoxyAuthor}{Author}
+Dražen Bandić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em id} & id of row \\
+\hline
+{\em table\+Name} & name of table to delete the row \\
+\hline
+\end{DoxyParams}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+delete\+\_\+row\+\_\+from\+\_\+block@{Ak\+\_\+delete\+\_\+row\+\_\+from\+\_\+block}}
+\index{Ak\+\_\+delete\+\_\+row\+\_\+from\+\_\+block@{Ak\+\_\+delete\+\_\+row\+\_\+from\+\_\+block}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+delete\+\_\+row\+\_\+from\+\_\+block(\+A\+K\+\_\+block $\ast$temp\+\_\+block, struct list\+\_\+node $\ast$row\+\_\+root)}{Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+delete\+\_\+row\+\_\+from\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{temp\+\_\+block, }
+\item[{struct list\+\_\+node $\ast$}]{row\+\_\+root}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_a755a70a5797e3db8cc0aa90ef77530df}{}\label{fileio_8h_a755a70a5797e3db8cc0aa90ef77530df}
+
+
+Function deletes row from table in given block. Given list of elements is firstly back-\/upped. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Dino Laktašić, changed by Davorin Vukelic, updated by Mario Peroković 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em temp\+\_\+block} & block to work with \\
+\hline
+{\em row\+\_\+list} & list of elements which contain data for delete or update \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+delete\+\_\+update\+\_\+segment@{Ak\+\_\+delete\+\_\+update\+\_\+segment}}
+\index{Ak\+\_\+delete\+\_\+update\+\_\+segment@{Ak\+\_\+delete\+\_\+update\+\_\+segment}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+delete\+\_\+update\+\_\+segment(struct list\+\_\+node $\ast$row\+\_\+root, int del)}{Ak_delete_update_segment(struct list_node *row_root, int del)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+delete\+\_\+update\+\_\+segment (
+\begin{DoxyParamCaption}
+\item[{struct list\+\_\+node $\ast$}]{row\+\_\+root, }
+\item[{int}]{del}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_a9646847cea4944eafebbe482f15f4906}{}\label{fileio_8h_a9646847cea4944eafebbe482f15f4906}
+
+
+Function updates or deletes the whole segment of an table. Addresses for given table atr fetched. For each block in extent row is updated or deleted according to operator del. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Matija Šestak (function now uses caching) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+root} & elements of one row \\
+\hline
+{\em del} & -\/ D\+E\+L\+E\+TE or U\+P\+D\+A\+TE \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if success 
+\end{DoxyReturn}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element@{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element}}
+\index{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element@{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element(int newtype, void $\ast$data, char $\ast$table, char $\ast$attribute\+\_\+name, struct list\+\_\+node $\ast$\+Element\+Before)}{Ak_Insert_New_Element(int newtype, void *data, char *table, char *attribute_name, struct list_node *ElementBefore)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element (
+\begin{DoxyParamCaption}
+\item[{int}]{newtype, }
+\item[{void $\ast$}]{data, }
+\item[{char $\ast$}]{table, }
+\item[{char $\ast$}]{attribute\+\_\+name, }
+\item[{struct list\+\_\+node $\ast$}]{Element\+Before}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_ad2f99778d1325dba20d27bfee2fe106c}{}\label{fileio_8h_ad2f99778d1325dba20d27bfee2fe106c}
+
+
+Function inserts new element after some element, to insert on first place give list as before element. It calls function Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, changed by Dino Laktašić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em newtype} & type of the data \\
+\hline
+{\em data} & the data \\
+\hline
+{\em table} & table name \\
+\hline
+{\em attribute\+\_\+name} & attribute name \\
+\hline
+{\em element} & element after we which insert the new element \\
+\hline
+{\em constraint} & is N\+E\+W\+\_\+\+V\+A\+L\+UE \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update@{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update}}
+\index{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update@{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update(int newtype, void $\ast$data, char $\ast$table, char $\ast$attribute\+\_\+name, struct list\+\_\+node $\ast$\+Element\+Before, int newconstraint)}{Ak_Insert_New_Element_For_Update(int newtype, void *data, char *table, char *attribute_name, struct list_node *ElementBefore, int newconstraint)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update (
+\begin{DoxyParamCaption}
+\item[{int}]{newtype, }
+\item[{void $\ast$}]{data, }
+\item[{char $\ast$}]{table, }
+\item[{char $\ast$}]{attribute\+\_\+name, }
+\item[{struct list\+\_\+node $\ast$}]{Element\+Before, }
+\item[{int}]{newconstraint}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_ad2e954029e28dcf3149c6d9a76b960ab}{}\label{fileio_8h_ad2e954029e28dcf3149c6d9a76b960ab}
+
+
+Function inserts new element after some element, to insert on first place give list as before element. New element is allocated. Type, data, attribute name and constraint of new elemets are set according to function arguments. Pointers are changed so that before element points to new element. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em newtype} & type of the data \\
+\hline
+{\em data} & the data \\
+\hline
+{\em table} & table name \\
+\hline
+{\em attribute\+\_\+name} & attribute name \\
+\hline
+{\em element} & element after we which insert the new element \\
+\hline
+{\em constraint} & N\+E\+W\+\_\+\+V\+A\+L\+UE if data is new value, S\+E\+A\+R\+C\+H\+\_\+\+C\+O\+N\+S\+T\+R\+A\+I\+NT if data is constraint to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+insert\+\_\+row@{Ak\+\_\+insert\+\_\+row}}
+\index{Ak\+\_\+insert\+\_\+row@{Ak\+\_\+insert\+\_\+row}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+insert\+\_\+row(struct list\+\_\+node $\ast$row\+\_\+root)}{Ak_insert_row(struct list_node *row_root)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+insert\+\_\+row (
+\begin{DoxyParamCaption}
+\item[{struct list\+\_\+node $\ast$}]{row\+\_\+root}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_a83f0975e1d6d62009b5c9190e9e4be28}{}\label{fileio_8h_a83f0975e1d6d62009b5c9190e9e4be28}
+
+
+Function inserts a one row into table. Firstly it is checked whether inserted row would violite reference integrity. Then it is checked in which table should row be inserted. If there is no A\+K\+\_\+free space for new table, new extent is allocated. New block is allocated on given address. Row is inserted in this block and dirty flag is set to B\+L\+O\+C\+K\+\_\+\+D\+I\+R\+TY. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference check), updated by Dino Laktašić (removed variable A\+K\+\_\+free, variable table initialized using memset) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+root} & list of elements which contain data of one row \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if success else E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+insert\+\_\+row\+\_\+to\+\_\+block@{Ak\+\_\+insert\+\_\+row\+\_\+to\+\_\+block}}
+\index{Ak\+\_\+insert\+\_\+row\+\_\+to\+\_\+block@{Ak\+\_\+insert\+\_\+row\+\_\+to\+\_\+block}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+insert\+\_\+row\+\_\+to\+\_\+block(struct list\+\_\+node $\ast$row\+\_\+root, A\+K\+\_\+block $\ast$temp\+\_\+block)}{Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+insert\+\_\+row\+\_\+to\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{struct list\+\_\+node $\ast$}]{row\+\_\+root, }
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{temp\+\_\+block}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_ab8823cd141c46ebbf9ea6299a0ea15e7}{}\label{fileio_8h_ab8823cd141c46ebbf9ea6299a0ea15e7}
+
+
+Function inserts one row into some block. Firstly it checks wether block contain attributes from the list. Then data, type, size and last\+\_\+tuple\+\_\+id are put in temp\+\_\+block. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Dino Laktašić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+root} & list of elements to insert \\
+\hline
+{\em temp\+\_\+block} & block in which we insert data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+IT S\+U\+C\+C\+ES if success 
+\end{DoxyReturn}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+update\+\_\+row@{Ak\+\_\+update\+\_\+row}}
+\index{Ak\+\_\+update\+\_\+row@{Ak\+\_\+update\+\_\+row}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+update\+\_\+row(struct list\+\_\+node $\ast$row\+\_\+root)}{Ak_update_row(struct list_node *row_root)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+update\+\_\+row (
+\begin{DoxyParamCaption}
+\item[{struct list\+\_\+node $\ast$}]{row\+\_\+root}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_a978a5fc0afeea6ec045977d886647ae3}{}\label{fileio_8h_a978a5fc0afeea6ec045977d886647ae3}
+
+
+Function updates rows of some table. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, Dejan Frankovic (added referential integrity) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+root} & elements of one row \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if success 
+\end{DoxyReturn}
+\index{fileio.\+h@{fileio.\+h}!Ak\+\_\+update\+\_\+row\+\_\+from\+\_\+block@{Ak\+\_\+update\+\_\+row\+\_\+from\+\_\+block}}
+\index{Ak\+\_\+update\+\_\+row\+\_\+from\+\_\+block@{Ak\+\_\+update\+\_\+row\+\_\+from\+\_\+block}!fileio.\+h@{fileio.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+update\+\_\+row\+\_\+from\+\_\+block(\+A\+K\+\_\+block $\ast$temp\+\_\+block, struct list\+\_\+node $\ast$row\+\_\+root)}{Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+update\+\_\+row\+\_\+from\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{temp\+\_\+block, }
+\item[{struct list\+\_\+node $\ast$}]{row\+\_\+root}
+\end{DoxyParamCaption}
+)}\hypertarget{fileio_8h_a2b8bf2505b4e89f56a3d8b52ce53abcd}{}\label{fileio_8h_a2b8bf2505b4e89f56a3d8b52ce53abcd}
+
+
+Function updates row from table in given block. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Dino Laktašić, updated by Mario Peroković -\/ separated from deletion 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em temp\+\_\+block} & block to work with \\
+\hline
+{\em row\+\_\+list} & list of elements which contain data for delete or update \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}

@@ -1,0 +1,61 @@
+\hypertarget{constraint__names_8h}{}\section{sql/cs/constraint\+\_\+names.h File Reference}
+\label{constraint__names_8h}\index{sql/cs/constraint\+\_\+names.\+h@{sql/cs/constraint\+\_\+names.\+h}}
+{\ttfamily \#include \char`\"{}../../file/table.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../file/fileio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../auxi/mempro.\+h\char`\"{}}\\*
+Include dependency graph for constraint\+\_\+names.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{constraint__names_8h_a71cdbf58b3aa01318a71eba77c3c53b2}{Ak\+\_\+check\+\_\+constraint\+\_\+name} (char $\ast$constraint\+Name)
+\begin{DoxyCompactList}\small\item\em Function checks if constraint name would be unique in database. \end{DoxyCompactList}\item 
+void \hyperlink{constraint__names_8h_a7104e040fc1fba38da1d159666176bd0}{A\+K\+\_\+constraint\+\_\+names\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function tests if constraint name would be unique in database. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides functions and data structures for checking if constraint name is unique in database 
+
+\subsection{Function Documentation}
+\index{constraint\+\_\+names.\+h@{constraint\+\_\+names.\+h}!Ak\+\_\+check\+\_\+constraint\+\_\+name@{Ak\+\_\+check\+\_\+constraint\+\_\+name}}
+\index{Ak\+\_\+check\+\_\+constraint\+\_\+name@{Ak\+\_\+check\+\_\+constraint\+\_\+name}!constraint\+\_\+names.\+h@{constraint\+\_\+names.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+check\+\_\+constraint\+\_\+name(char $\ast$constraint\+Name)}{Ak_check_constraint_name(char *constraintName)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+check\+\_\+constraint\+\_\+name (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{constraint\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{constraint__names_8h_a71cdbf58b3aa01318a71eba77c3c53b2}{}\label{constraint__names_8h_a71cdbf58b3aa01318a71eba77c3c53b2}
+
+
+Function checks if constraint name would be unique in database. 
+
+\begin{DoxyAuthor}{Author}
+Nenad Makar, updated by Mislav Jurinić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em char} & constraint\+Name name which you want to give to constraint which you are trying to create \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+E\+R\+R\+OR or E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+T\+O\+DO add other constraint names from the catalog Also add them to \char`\"{}constants.\+h\char`\"{}\index{constraint\+\_\+names.\+h@{constraint\+\_\+names.\+h}!A\+K\+\_\+constraint\+\_\+names\+\_\+test@{A\+K\+\_\+constraint\+\_\+names\+\_\+test}}
+\index{A\+K\+\_\+constraint\+\_\+names\+\_\+test@{A\+K\+\_\+constraint\+\_\+names\+\_\+test}!constraint\+\_\+names.\+h@{constraint\+\_\+names.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+constraint\+\_\+names\+\_\+test()}{AK_constraint_names_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+constraint\+\_\+names\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{constraint__names_8h_a7104e040fc1fba38da1d159666176bd0}{}\label{constraint__names_8h_a7104e040fc1fba38da1d159666176bd0}
+
+
+Function tests if constraint name would be unique in database. 
+
+\begin{DoxyAuthor}{Author}
+Nenad Makar 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
