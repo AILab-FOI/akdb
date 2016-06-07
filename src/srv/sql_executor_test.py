@@ -6,10 +6,10 @@ from sql_executor import *
 
 print "\n---------------------------IS NUMERIC TEST -----------------------------\n"
 commands=["1","a","2","b","3","4","c"]
-print "Polje sa testnim podacima:", commands
+print "Array with testing data:", commands
 for command in commands:
-	broj = command
-	print is_numeric(broj)
+	num = command
+	print is_numeric(num)
 print "\n--------------------------IS NUMERIC TEST END ---------------------------\n"
 
 
@@ -17,40 +17,40 @@ print "\n--------------------------IS NUMERIC TEST END -------------------------
 
 print "\n---------------------------IS DATE TEST -----------------------------\n"
 commands=["2011-12-12","21234","2013-05-21","2011.23.45"]
-print "Polje sa testnim podacima:", commands
+print "Array with testing data:", commands
 for command in commands:
-	datum = command
-	print is_date(datum)
+	date = command
+	print is_date(date)
 print "\n--------------------------IS DATE TEST END ---------------------------\n"
 
 
 
 
-print "\n---------------------------IS DATETIME TEST -----------------------------\n"
+print "\n---------------------------IS DATETname TEST -----------------------------\n"
 commands=["12:12:12","21234","13:21:56","2011.23.45"]
-print "Polje sa testnim podacima:", commands
+print "Array with testing data:", commands
 for command in commands:
-	datum = command
-	print is_datetime(datum)
-print "\n--------------------------IS DATETIME TEST END ---------------------------\n"
+	date = command
+	print is_datetname(date)
+print "\n--------------------------IS DATETname TEST END ---------------------------\n"
 
 
 
 
-print "\n---------------------------IS TIME TEST -----------------------------\n"
+print "\n---------------------------IS Tname TEST -----------------------------\n"
 commands=["12:12:12","21234","13:21:56","2011.23.45"]
-print "Polje sa testnim podacima:", commands
+print "Array with testing data:", commands
 for command in commands:
-	datum = command
-	print is_time(datum)
-print "\n--------------------------IS TIME TEST END ---------------------------\n"
+	date = command
+	print is_tname(date)
+print "\n--------------------------IS Tname TEST END ---------------------------\n"
 
 
 
 
 print "\n---------------------------GET ATTRIBUTE TYPE TEST -----------------------------\n"
 commands=["1","1.2","a","#"]
-print "Polje sa testnim podacima:", commands
+print "Array with testing data:", commands
 for command in commands:
 	att_type = command
 	print get_attr_type(att_type)
@@ -62,42 +62,42 @@ print "\n---------------------------GET ATTRIBUTE TYPE TEST END ----------------
 
 
 
-#inicijalizacija te ucitavanje sql_executor funkcije
+# init and load sql_executor function
 initialize()
 executor = sql_executor()
 
-#kreiranje atributa:id_student, ime, prezime, godina_rodenja i prosjek
-student_attr_name = ["id_student", "ime", "prezime", "godina_rodenja", "prosjek"]
+# crate attribute: id_student, name, last name, year_of_birth, gradeAvg
+student_attr_name = ["id_student", "name", "lastName", "year_of_birth", "gradeAvg"]
 
-#definiranje tipa svakog od atributa
+# def the type of every attribute
 student_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT]
 
-#kreiranje tablice pod imenom student sa gore navedenim atributima te tipovima atributa
+# create table with student name with the attributes above and attribute types
 ak47.create_header_test("student", student_attr_name, student_attr_type)
 
 
 
 
 
-print "\n----------------------------- TESTNA TABLIC------------------------\n"
+print "\n----------------------------- TEST TABLE------------------------\n"
 
-#ispis sadrzaja kreirane tablice student
+# PRINT THE CREATED TABLE STUDENT
 ak47.AK_print_table("student")
-print "\n---------------------------- TESTNA TABLIC END------------------------\n"
+print "\n---------------------------- TEST TABLE END------------------------\n"
 
 
 
 
 print "\n---------------------------- INSERT INTO TEST -----------------------------\n"
 
-#Kreiranje upita koji se proslijeduje sql_executor klasi metodi insert
-#Upiti se izvrsavaju, te insert radi u potpunosti
-print "Prvi upit: INSERT INTO student VALUES ('1','Marko','Sinko','1990','2.0') " + str(executor.insert("INSERT INTO student VALUES ('1','Marko','Sinko','1990','2.0')"))
+# creating the querie that's passed to the sql_executor class, insert method
+# execute the queries, do the whole insert
+print "First query: INSERT INTO student VALUES ('1','Marko','Sinko','1990','2.0') " + str(executor.insert("INSERT INTO student VALUES ('1','Marko','Sinko','1990','2.0')"))
 print "\n"
-print "Drugi upit: INSERT INTO student(id_student, ime, prezime, godina_rodenja, prosjek) VALUES ( '2','Marinko','Radic','1991','3.3') " + str(executor.insert("INSERT INTO student(id_student, ime, prezime, godina_rodenja, prosjek) VALUES ( '2','Marinko','Radic','1991','3.3')"))
+print "Second query: INSERT INTO student(id_student, name, lastName, year_of_birth, gradeAvg) VALUES ( '2','Marinko','Radic','1991','3.3') " + str(executor.insert("INSERT INTO student(id_student, name, lastName, year_of_birth, gradeAvg) VALUES ( '2','Marinko','Radic','1991','3.3')"))
 print "\n"
 
-#Ispis nakon izvrsenih upita
+# print after executing query
 ak47.AK_print_table("student")
 print "\n--------------------------- INSERT INTO TEST END -------------------------------\n"
 
@@ -106,9 +106,9 @@ print "\n--------------------------- INSERT INTO TEST END ----------------------
 
 
 print "\n---------------------------CREATE GROUP TEST -----------------------------\n"
-#Za ovaj test nisu implementirani tokeni, potrebno je kreirati Create_group_command() token
-#za daljnje testiranje, potrebna implementacija, potrebno provjeriti AK_group_add() funkciju
-#AK_group_add(tokens.groupname, ak47.NEW_ID)--cudni ulazni parametri u funkciju? groupname-NEW_ID?
+# tokens are not implemented for this test, need to create Create_group_command() token
+# for further testing, need implementation, need to check AK_group_add() function
+# AK_group_add(tokens.groupname, ak47.NEW_ID) -- weird input params?? groupname-NEW_ID??
 print "\n---------------------------CREATE GROUP TEST END -----------------------------\n"
 
 
@@ -118,9 +118,11 @@ print "\n---------------------------CREATE GROUP TEST END ----------------------
 print "\n---------------------------CREATE GRANT TEST -----------------------------\n"
 grant = Grant_command()
 grant.command = "GRANT INSERT ON student TO Marko"
-#Tokenizer radi u redu, treba provjeriti u klasi Grant_command() kako se izvrsava metoda
-#grant.execute() jer ne prihvaca dobro naredbu sto se moze vidjeti po izlazu kojeg dobijemo
-#izvrsavanjem grant.execute() metode, potrebno provjeriti implementaciju AK_grant_privilege_user(user, table, privilege) funkcije
+#Tokenizer works well, need to check in the Grand_command() class how the grand.execute method
+# is executed becauze it doesn't accept the command like it should. That can be seen from the 
+# return value when executing the grand.execute() method, need to check the implementation of
+# AK_grant_privilege_user(user, table, privilege) function
+
 print grant.execute()
 
 print "\n---------------------------CREATE GRANT TEST END -----------------------------\n"
@@ -129,9 +131,9 @@ print "\n---------------------------CREATE GRANT TEST END ----------------------
 
 
 print "\n------------------------------ SELECT TEST -------------------------------\n"
-#Napomena, SELECT TEST uvijek vraca samo cijelu tablicu, WHERE klauzula ne radi, najvjerojatnije
-#ne radi dobro funkcija selection_test(), trebalo bi provjeriti u nizoj razini implementaciju selecta ili
-#potrebno testirati AK_parse_where() tokenizaciju
+# SELECT TEST always returns the whole table, WHERE doesn't work, probably the selection_test() doesn't
+# work as well, need to check the implementation in the lower level of the SELECT statement or need to
+# test AK_parse_where() tokenizing
 select = Select_command()
 print str(select.execute("SELECT * FROM student"))
 print "\n------------------------------ SELECT TEST END ------------------------------\n"
@@ -141,10 +143,11 @@ print "\n------------------------------ SELECT TEST END ------------------------
 
 
 print "\n------------------------------- UPDATE TEST --------------------------------\n"
-#Nakon commita 553 javlja se dodatni error za funkciju: Ak_Insert_New_Element_For_Update()
-#Moguce da nesto nije u redu sa AK_update_Row(table, column1, column2, key, new_value) funkcijom za redm takoder koristiti AK_parse_where() tokenizaciju te ju treba provjeriti 
+# after the 553 commit it raises a new error: Ak_Insert_New_Element_For_Update()
+# probably something is wrong with the AK_update_Row(table, column1, column2, key, new_value) function
+# also need to check AK_parse_where() tokenizing 
 update = Update_command()
-print str(update.execute("UPDATE student SET prosjek = 2.200 WHERE id_student = 1"))
+print str(update.execute("UPDATE student SET gradeAvg = 2.200 WHERE id_student = 1"))
 ak47.AK_print_table("student")
 print "\n------------------------------- UPDATE TEST END ------------------------------\n"
 
@@ -155,17 +158,17 @@ print "\n------------------------------- UPDATE TEST END -----------------------
 print "\n------------------------------- EXECUTOR TEST --------------------------------\n"
 
 
-print "\nCreate sequence brojac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1"
+print "\nCreate sequence numac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1"
 #sequence = Create_sequence_command()
 
-#Takoder sljedeca metoda ne radi kako treba te bi bilo potrebno provjeriti funkciju AK_sequence_add
-#sequence.execute("Create sequence brojac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1")
+# the method above also doesn't work as it should
+# also need to check AK_sequence_add function
+# sequence.execute("Create sequence numac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1")
+# this query had an overflow buffer error but in my test it works okay
 
-#sljedeci upit imao je overflow buffer error ali prilikom mojeg testiranja radi normalno
+print "\nSljedeci query:\n"
 
-print "\nSljedeci upit:\n"
-
-#sequence.execute("Create sequence brojac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
+#sequence.execute("Create sequence numac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
 print "\n---------------------------- EXECUTOR TEST END ----------------------------------\n"
 
 
@@ -174,10 +177,13 @@ print "\n---------------------------- EXECUTOR TEST END ------------------------
 
 print "\n--------------------------------- CREATE TABLE TEST --------------------------------\n"
 create = Create_table_command()
-create.expr = "CREATE TABLE tablica (var1 INT, var2 INT)"
-#Create table ne radi
-#Potrebna reimplementacija tokenizacije AK_parse_create_table() jer ne sadrzi AK_TYPE_INT,AK_TYPE_VARCHAR tipove podataka koji su potrebni za dodavanje atributa u tablicu, INT se ne koristi, potrebno koristiti ovakvu strukturu: [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT] kao u gore navedenom primjeru
-ak47.AK_print_table("tablica")
+create.expr = "CREATE TABLE tbl (var1 INT, var2 INT)"
+# create table doesn't work
+# need to reimplement tokenizing of AK_parse_create_table() because it doesn't have AK_TYPE_INT,AK_TYPE_VARCHAR types that are 
+# needed for adding attributes to the table
+# INT is not used
+# need to have this structure: [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT] like in the example above
+ak47.AK_print_table("tbl")
 print "\n--------------------------------- CREATE TABLE TEST END ------------------------------\n"
 
 
@@ -189,8 +195,8 @@ commands = ["CREATE INDEX Pindex ON student ( stupac1, stupac2 ) USING Btree",\
                     "create index Pindex on student ( stupac1, stupac2 ) USING Hash"]
 for command in commands:
         index.expr = command
-#U klasi Create_index_command njezina metoda execute ne radi ispravno, tokeni su testirani te rade 
-#ispravno, potrebno je provjeriti AK_create_index funkciju
+# in the Create_index_command class the execute method doesn't work properly, tokens are tested and they work
+# okay, need to check AK_create_index function
         print index.execute()
 print "\n--------------------------------- CREATE INDEX TEST END--------------------------------\n"
 
@@ -199,14 +205,14 @@ print "\n--------------------------------- CREATE INDEX TEST END----------------
 
 print "\n------------------------------- CREATE TRIGGER TEST -------------------------------\n"
 trigger = Create_trigger_command()
-commands=["CREATE TRIGGER prihvat_veze AFTER INSERT ON veza FOR ROW EXECUTE PROCEDURE veza_prihvacena()",\
-          "CREATE TRIGGER prihvat_veze BEFORE  DELETE OR INSERT ON veza EXECUTE PROCEDURE veza_prihvacena()",\
-          "CREATE TRIGGER prihvat_veze BEFORE DELETE OR INSERT ON veza FOR EACH STATEMENT EXECUTE PROCEDURE veza_prihvacena(2,3,'data')",\
-          "CREATE TRIGGER prihvat_veze AFTER DELETE OR INSERT OR UPDATE ON veza FOR EACH STATEMENT EXECUTE PROCEDURE veza_prihvacena(2,10.5,'data')"]
+commands=["CREATE TRIGGER accept_conn AFTER INSERT ON conn FOR ROW EXECUTE PROCEDURE conn_accepted()",\
+          "CREATE TRIGGER accept_conn BEFORE  DELETE OR INSERT ON conn EXECUTE PROCEDURE conn_accepted()",\
+          "CREATE TRIGGER accept_conn BEFORE DELETE OR INSERT ON conn FOR EACH STATEMENT EXECUTE PROCEDURE conn_accepted(2,3,'data')",\
+          "CREATE TRIGGER accept_conn AFTER DELETE OR INSERT OR UPDATE ON conn FOR EACH STATEMENT EXECUTE PROCEDURE conn_accepted(2,10.5,'data')"]
 for command in commands:
         trigger.expr = command
-#U klasi Create_trigger_command njezina metoda execute ne radi ispravno, tokeni su testirani te rade 
-#ispravno, potrebno je provjeriti funkciju AK_trigger_add - treci argument te liste javlja error: TypeError: in method 'AK_trigger_add', argument 3 of type 'AK_list *'
+# in Create_trigger_command class its execute method doesn't work properly. Tokens are tested and they work okay
+# need to check AK_trigger_add function - 3rd argument raises error: TypeError: in method 'AK_trigger_add', argument 3 of type 'AK_list *'
         print trigger.execute()
 print "\n------------------------------- CREATE TRIGGER TEST END --------------------------\n"
 
@@ -219,27 +225,21 @@ ak47.AK_print_table("student")
 
 drop = Drop_command()
 drop.expr = "DROP TABLE student"
-#Drop test radi za dropanje tablica, potrebno ispraviti implementacije gore navedenih testova kako bi se testirali ostali dropovi ali trebali bi svi raditi, tokenizacija radi ispravno
+# drop test works, need to correct the implementation of the tests above so that the rest of the drops will be tested, but they should work
+# tokenizing works okay
 print drop.execute()
 ak47.AK_print_table("student")
 print "\n------------------------------------DROP TEST END ------------------------------------\n"
 
 
 '''
-Potrebno je povezati sljedece tokene sa sql_executorom:
+Need to connect these tokens with sql_executor:
 AK_parse_create_user
-AK_parse_CreateView -- promijena imena u AK_parse_create_view posto je to neki standard u sql_executor.py datoteci
+AK_parse_CreateView -- change name in AK_parse_create_view because it's some kind of standard in sql_executor.py file
 
-AK_alter_table  -- nevidim razloga zbog cega se ovo ne zove AK_parse_alter_table jer ce doci do problema 				sa pravom AK_alter_table funkcijom
+AK_alter_table  -- I can't see a valid reason whe this isn't named like AK_parse_alter_table because it can make some problems with the real AK_alter_table function
 AK_parse_alter_user
 AK_parse_alter_view
 AK_parse_alter_index
 AK_parse_alter_sequence
 '''
-
-
-
-
-
-
-

@@ -122,7 +122,7 @@ void AK_agg_input_fix(AK_agg_input *input) {
     AK_PRO;
     while ((*input).tasks[i] != -1) {
         if ((*input).tasks[i] == AGG_TASK_AVG) {
-            AK_agg_input_add_to_beginning((*input).attributes[i], AGG_TASK_AVG_COUNT, input); //bitno je da se AVG_COUNT i AVG_SUM dodaju na pocetak tak da se uvijek racunaju prije samog AVGa
+            AK_agg_input_add_to_beginning((*input).attributes[i], AGG_TASK_AVG_COUNT, input); // it's important that AVG_COUNT and AVG_SUM are added to the begining so that they are calculated before the AVG
             i++;
             AK_agg_input_add_to_beginning((*input).attributes[i], AGG_TASK_AVG_SUM, input);
             i++;
@@ -228,7 +228,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
 
 
-    // ovo bi bila neka optimizacija, da sort radi kak spada..
+    // this was an optimisation or someting, so that sort works normally
     //sort_segment(source_table,group_h_name);
 
 
@@ -439,7 +439,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 							}
 
 						}
-						//FILE  -  ISPRAVITI
+                        //FILE  -  fix this!
 						Ak_insert_row(row_root);
 
 					} else {
@@ -647,7 +647,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 			}
 		}
 
-		AK_projection(new_table, agg_table, projection_att);
+		AK_projection(new_table, agg_table, projection_att,NULL);
 
 		
 		Ak_DeleteAll_L3(&projection_att);

@@ -493,10 +493,10 @@ void AK_function_test() {
 	struct list_node *arguments_list5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&arguments_list5);
 	
-	AK_function_add("test_bez_arg", 1, arguments_list5);
-	
-	int dohvati = AK_get_function_obj_id("test_bez_arg", arguments_list5);
-	printf("ID test_bez_arg: %i \n", dohvati);
+    AK_function_add("test_without_arg", 1, arguments_list5);
+    
+    int get = AK_get_function_obj_id("test_bez_arg", arguments_list5);
+    printf("ID test_without_arg: %i \n", get);
 	
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");

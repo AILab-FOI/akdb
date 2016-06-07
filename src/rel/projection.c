@@ -34,17 +34,17 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
 
     int startAddress = AK_initialize_new_segment(table, type_segment, header);
 
-    int broj = 8;
+    int num = 8;
     //insert object_id
-    AK_insert_entry(sys_block, TYPE_INT, &broj, 8);
+    AK_insert_entry(sys_block, TYPE_INT, &num, 8);
     //insert table name
     AK_insert_entry(sys_block, TYPE_VARCHAR, table, 9);
     //insert start address
-    broj = startAddress;
-    AK_insert_entry(sys_block, TYPE_INT, &broj, 10);
+    num = startAddress;
+    AK_insert_entry(sys_block, TYPE_INT, &num, 10);
     //insert end address
-    broj = startAddress + 19;
-    AK_insert_entry(sys_block, TYPE_INT, &broj, 11);
+    num = startAddress + 19;
+    AK_insert_entry(sys_block, TYPE_INT, &num, 11);
 
     AK_write_block(sys_block);
     AK_free(sys_block);
@@ -106,7 +106,7 @@ void AK_create_block_header(int old_block, char *dstTable, struct list_node *att
   * @param att list of the attributes which should the projeciton table contain
   * @retrun No return value
  */
-void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable) {
+void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable,struct list_node *expr) {
     AK_PRO;
     /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
@@ -159,7 +159,15 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
         if (something_to_copy) {
             Ak_dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
 
-            Ak_insert_row(row_root);
+            if(expr != NULL){
+                if(AK_check_if_row_satisfies_expression(row_root,expr)){
+                    Ak_insert_row(row_root);
+                }
+            }else{
+                Ak_insert_row(row_root);
+            }
+
+            
             	    
             Ak_DeleteAll_L3(&row_root);
         }
@@ -176,7 +184,7 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
  * @return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
  */
 //int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
-int AK_projection(char *srcTable, char *dstTable, struct list_node *att) {
+int AK_projection(char *srcTable, char *dstTable, struct list_node *att,struct list_node *expr) {
     //geting the table addresses from table on which we make projection
     AK_PRO;
     table_addresses *src_addr = (table_addresses *) AK_get_table_addresses(srcTable);
@@ -209,7 +217,7 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att) {
                     Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy block: %d\n", j);
 
                     //get projection tuples from block
-                    AK_copy_block_projection(temp->block, att, dstTable);
+                    AK_copy_block_projection(temp->block, att, dstTable,expr);
                 }
             } else break;
         }
@@ -238,13 +246,25 @@ void AK_op_projection_test() {
     printf("\n********** PROJECTION TEST **********\n\n");
 
     struct list_node * att = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    struct list_node * expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&att);
-    
+    char *destTable2 = "projection_test2";
+    printf("\nSelect firstname,lastname from student\n\n");
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), att);
     
-    AK_projection("selection_test", "projection_test", att);
+    AK_projection("student", "projection_test", att, NULL);
     AK_print_table("projection_test");
+
+    strcpy(expr->table,destTable2);
+    char expression []= "%in%";
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression, sizeof (char), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
+
+    printf("\nSelect firstname,lastname from student where firstname LIKE .*in.*\n\n");
+    AK_projection("student", "projection_test2", att, expr);
+    AK_print_table("projection_test2");
 
     Ak_DeleteAll_L3(&att);
     AK_EPI;

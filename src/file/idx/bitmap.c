@@ -597,7 +597,7 @@
 
                                     if ((temp_adr_block == addBlock) && (temp_adr_Td == addTd))
                                     {
-                                        printf( "Adresa bloka je: %d, Adresat Td-a je: %d segment:%i \n", temp_adr_block, temp_adr_Td, temp->address );
+                                        printf( "Block address: %d, Td address: %d segment:%i \n", temp_adr_block, temp_adr_Td, temp->address );
                                     //temp->data[ temp->tuple_dict[ k+pos ].address] = NULL;
                                         memcpy(&(temp->data[ temp->tuple_dict[ k + pos ].address]), "n", 1);
                                     //temp->data[ temp->tuple_dict[ k+posNew ].address] = NULL;

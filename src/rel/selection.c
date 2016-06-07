@@ -110,21 +110,21 @@ void AK_op_selection_test() {
 	Ak_Init_L3(&expr);	
 	char *srcTable = "student";
 	char *destTable = "selection_test";
-	int num = 2010;
+	int num = 2005;
 	strcpy(expr->table,destTable);
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
 	Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr);
+	Ak_InsertAtEnd_L3( TYPE_OPERATOR, "OR", sizeof("OR"), expr );
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
 	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
 	//Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
-	Ak_InsertAtEnd_L3( TYPE_OPERATOR, "AND", sizeof("AND"), expr );
-	printf("\nQUERY: SELECT * FROM student WHERE year > 2010 AND firstname = 'Robert';\n\n");
+	printf("\nQUERY: SELECT * FROM student WHERE year > 2005 AND firstname = 'Robert';\n\n");
 	AK_selection(srcTable, destTable, expr);
 	Ak_DeleteAll_L3(&expr);
 	AK_free(expr);
-
+	/*
 	struct list_node *expr1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
 	Ak_Init_L3(&expr1);
 	char *srcTable1 = "student";
@@ -143,6 +143,7 @@ void AK_op_selection_test() {
 	printf("\n Test is successful :) \n");
 	Ak_DeleteAll_L3(&expr1);
 	AK_free(expr1);
+	*/
 	AK_EPI;
 }
 
@@ -155,27 +156,82 @@ void AK_op_selection_test2() {
 	AK_PRO;
 	printf("\n********** SELECTION TEST 2**********\n");
 	
+
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
 	Ak_Init_L3(&expr);
 	
 	char *srcTable = "student";
 	char *destTable = "selection_test2";
-	char num = 23;
-
+	char *destTable2 = "selection_test3";
+	char *destTable3 = "selection_test4";
+	char *destTable4 = "selection_test5";
+	char *destTable5 = "selection_test6";
 	strcpy(expr->table,destTable);
 
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
-	Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr);
+	int a = 2000;
+    int b = 2006;
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("id_prof"), expr);
+    Ak_InsertAtEnd_L3(TYPE_INT, &a, sizeof (int), expr);
+    Ak_InsertAtEnd_L3(TYPE_INT, &b, sizeof (int), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "BETWEEN", sizeof ("BETWEEN"), expr);
+    
+
+    printf("\nQUERY: SELECT * FROM student WHERE firstname=Dino ADN year BETWEEN 2000 AND 2006';\n\n");
+    AK_selection(srcTable, destTable, expr);
+    Ak_DeleteAll_L3(&expr);
+
+    strcpy(expr->table,destTable2);
+    char expression []= "%in%";
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression, sizeof (char), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
+
+    printf("\nQUERY: SELECT * FROM student WHERE firstname Like .*in.*;\n\n");
+	AK_selection(srcTable, destTable2, expr);
+
+	Ak_DeleteAll_L3(&expr);
+
+    strcpy(expr->table,destTable3);
+    char expression2 []= "%dino%";
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression2, sizeof (char), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "ILIKE", sizeof ("ILIKE"), expr);
+
+    printf("\nQUERY: SELECT * FROM student WHERE firstname ILike .*dino.*;\n\n");
+	AK_selection(srcTable, destTable3, expr);
+
+	Ak_DeleteAll_L3(&expr);
+
+    strcpy(expr->table,destTable4);
+    char expression3 []= "%(d|i)%";
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression3, sizeof (char), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "SIMILAR TO", sizeof ("SIMILAR TO"), expr);
+
+    printf("\nQUERY: SELECT * FROM student WHERE firstname SIMILAR TO .*(d|i).*;\n\n");
+	AK_selection(srcTable, destTable4, expr);
+
+	Ak_DeleteAll_L3(&expr);
+
+    strcpy(expr->table,destTable5);
+    char expression4 []= "^D";
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression4, sizeof (char), expr);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "~", sizeof ("~"), expr);
+
+    printf("\nQUERY: SELECT * FROM student WHERE firstname ~ '^D' ;\n\n");
+	AK_selection(srcTable, destTable5, expr);
+
+
+	/*
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
 	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Mislav", sizeof ("Mislav"), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
+	*/
 
-	printf("\nQUERY: SELECT * FROM student WHERE year > 2023 OR firstname = 'Mislav';\n\n");
-
-	AK_selection(srcTable, destTable, expr);
-	//AK_print_table("selection_test");
+	//printf("\nQUERY: SELECT * FROM student WHERE year BETWEEN 2000 AND 2006';\n\n");
+	
 
 	Ak_DeleteAll_L3(&expr);
 	AK_free(expr);

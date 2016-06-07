@@ -1,0 +1,80 @@
+\hypertarget{btree_8c}{}\section{file/idx/btree.c File Reference}
+\label{btree_8c}\index{file/idx/btree.\+c@{file/idx/btree.\+c}}
+{\ttfamily \#include \char`\"{}btree.\+h\char`\"{}}\\*
+Include dependency graph for btree.\+c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{btree_8c_a757d18fc29cae9dfcf18e73b7e60d707}{A\+K\+\_\+btree\+\_\+create} (char $\ast$tbl\+Name, struct list\+\_\+node $\ast$attributes, char $\ast$index\+Name)
+\begin{DoxyCompactList}\small\item\em Function for creating new btree index on integer attribute in table. \end{DoxyCompactList}\item 
+int {\bfseries A\+K\+\_\+btree\+\_\+delete} (char $\ast$index\+Name)\hypertarget{btree_8c_a4e10b7d4faca5feb439dad26db98b791}{}\label{btree_8c_a4e10b7d4faca5feb439dad26db98b791}
+
+\item 
+void \hyperlink{btree_8c_afa508bce63f62899a47eed86a94bda1a}{A\+K\+\_\+btree\+\_\+search\+\_\+delete} (char $\ast$index\+Name, int $\ast$search\+Value, int $\ast$end\+Range, int $\ast$to\+Do)
+\begin{DoxyCompactList}\small\item\em Function for searching or deleting a value in btree index. \end{DoxyCompactList}\item 
+int {\bfseries A\+K\+\_\+btree\+\_\+insert} (char $\ast$index\+Name, int $\ast$insert\+Value, int $\ast$insert\+Td, int $\ast$insert\+Block)\hypertarget{btree_8c_a9d1f212b791fc3e2455f492301d0f23d}{}\label{btree_8c_a9d1f212b791fc3e2455f492301d0f23d}
+
+\item 
+void {\bfseries Ak\+\_\+btree\+\_\+test} ()\hypertarget{btree_8c_a7ea5afae3c76675a9f283118292d8748}{}\label{btree_8c_a7ea5afae3c76675a9f283118292d8748}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides functions for B\+Tree indices 
+
+\subsection{Function Documentation}
+\index{btree.\+c@{btree.\+c}!A\+K\+\_\+btree\+\_\+create@{A\+K\+\_\+btree\+\_\+create}}
+\index{A\+K\+\_\+btree\+\_\+create@{A\+K\+\_\+btree\+\_\+create}!btree.\+c@{btree.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+btree\+\_\+create(char $\ast$tbl\+Name, struct list\+\_\+node $\ast$attributes, char $\ast$index\+Name)}{AK_btree_create(char *tblName, struct list_node *attributes, char *indexName)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+btree\+\_\+create (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{tbl\+Name, }
+\item[{struct list\+\_\+node $\ast$}]{attributes, }
+\item[{char $\ast$}]{index\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{btree_8c_a757d18fc29cae9dfcf18e73b7e60d707}{}\label{btree_8c_a757d18fc29cae9dfcf18e73b7e60d707}
+
+
+Function for creating new btree index on integer attribute in table. 
+
+\begin{DoxyAuthor}{Author}
+Anđelko Spevec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em tbl\+Name} & -\/ name of the table on which we are creating index \\
+\hline
+{\em attributes} & -\/ attribute on which we are creating index \\
+\hline
+{\em index\+Name} & -\/ name of the index \\
+\hline
+\end{DoxyParams}
+\index{btree.\+c@{btree.\+c}!A\+K\+\_\+btree\+\_\+search\+\_\+delete@{A\+K\+\_\+btree\+\_\+search\+\_\+delete}}
+\index{A\+K\+\_\+btree\+\_\+search\+\_\+delete@{A\+K\+\_\+btree\+\_\+search\+\_\+delete}!btree.\+c@{btree.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+btree\+\_\+search\+\_\+delete(char $\ast$index\+Name, int $\ast$search\+Value, int $\ast$end\+Range, int $\ast$to\+Do)}{AK_btree_search_delete(char *indexName, int *searchValue, int *endRange, int *toDo)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+btree\+\_\+search\+\_\+delete (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{index\+Name, }
+\item[{int $\ast$}]{search\+Value, }
+\item[{int $\ast$}]{end\+Range, }
+\item[{int $\ast$}]{to\+Do}
+\end{DoxyParamCaption}
+)}\hypertarget{btree_8c_afa508bce63f62899a47eed86a94bda1a}{}\label{btree_8c_afa508bce63f62899a47eed86a94bda1a}
+
+
+Function for searching or deleting a value in btree index. 
+
+\begin{DoxyAuthor}{Author}
+Anđelko Spevec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em index\+Name} & -\/ name of the index \\
+\hline
+{\em search\+Value} & -\/ value that we are searching in the index \\
+\hline
+{\em end\+Range} & -\/ if 0 search is for 0 value, else searching in range \\
+\hline
+{\em to\+Do} & -\/ if 0 we just search else we delete the element if we find it \\
+\hline
+\end{DoxyParams}

@@ -172,7 +172,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
                 if (AK_function_remove_by_name(name, args) == EXIT_SUCCESS) {
                     printf("FUNCTION %s DROPPED!\n", name);
                 } else {
-                    printf("Function does not exist!\n"); // vraćen je EXIT_ERROR jer funkcija s danim argumentima nije pronađena
+                    printf("Function does not exist!\n"); // returned EXIT_ERROR because the funcion with the given args was not found
                 }
             }
 			AK_free(args);
@@ -253,27 +253,27 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
         case DROP_CONSTRAINT:
 
-			sys_table = (char*) drop_arguments->value; // tablica
-			name = (char*) drop_arguments->next->value; // atribut
-			char *constName = (char*) drop_arguments->next->next->value; // ime ogranicenja
-			int pobrisano = 0;
+            sys_table = (char*) drop_arguments->value; // table
+            name = (char*) drop_arguments->next->value; // atribute
+            char *constName = (char*) drop_arguments->next->next->value; // constraint name
+            int deleted = 0;
 
-			if(AK_read_constraint_unique(sys_table, constName, name) == EXIT_SUCCESS){
-				// TODO: funkcija za brisanje unique constrainta - implementirati unutar unique.c
-				pobrisano = 1;
-			}
-			if(AK_read_constraint_not_null(sys_table, constName, name) == EXIT_SUCCESS){
-				// TODO: funkcija za brisanje not null constrainta - implementirati unutar nnull.c
-				pobrisano = 1;
-			}
-			if(AK_read_constraint_between(sys_table, constName, name) == EXIT_SUCCESS){
-				// TODO: funkcija za brisanje between constrainta - implementirati unutar between.c
-				pobrisano = 1;
-			}
+            if(AK_read_constraint_unique(sys_table, constName, name) == EXIT_SUCCESS){
+                // TODO: function for deleting unique constraints - implement inside unique.c
+                deleted = 1;
+            }
+            if(AK_read_constraint_not_null(sys_table, constName, name) == EXIT_SUCCESS){
+                // TODO: function for deleting not null constraints - implement inside nnull.c
+                deleted = 1;
+            }
+            if(AK_read_constraint_between(sys_table, constName, name) == EXIT_SUCCESS){
+                // TODO: function for deleting between constraints - implement inside between.c
+                deleted = 1;
+            }
 
             // TODO: delete "check" constraints
 
-			printf("Constraint '%s' in table '%s' %s!\n", (constName==""?name:constName), sys_table,(pobrisano==0?"does not exist":"DROPPED"));
+            printf("Constraint '%s' in table '%s' %s!\n", (constName==""?name:constName), sys_table,(deleted==0?"does not exist":"DROPPED"));
 
             break;
 
@@ -510,8 +510,8 @@ void AK_drop_test() {
     AK_print_table("AK_user_group");
     AK_print_table("AK_user_right");
 
-    // da se izbjegnu problemi prenosenja prethodne vrijednosti za drop group
-    drop_arguments->next->value = "asdfghj"; // da ne ostane cascade
+    // to avoid problems with transfering the previous value for the drop group
+    drop_arguments->next->value = "asdfghj"; // so that cascade doesn't stay
 
     printf("\n-----DROP GROUP-----\n");
     drop_arguments->value = "grupa1";
@@ -524,13 +524,13 @@ void AK_drop_test() {
     AK_print_table("AK_user_group");
     AK_print_table("AK_group_right");
 
-	printf("\n-----DROP CONSTRAINT-----\n");
+    printf("\n-----DROP CONSTRAINT-----\n");
 
-	Ak_set_constraint_unique("student", "studentUnique", "firstname");
-	AK_set_constraint_not_null("student", "studentNotNull", "firstname");
+    Ak_set_constraint_unique("student", "studentUnique", "firstname");
+    AK_set_constraint_not_null("student", "studentNotNull", "firstname");
 
-	// argumenti: tablica, atribut, ime obranicenja - ako je ime ogranicenja "" brisu se sva ogranicenja za atribut
-	drop_arguments->value = "student";
+    // args: table, atribute, constraint name - if constraint name is "" all constraints for the atributes will be deleted
+    drop_arguments->value = "student";
 	drop_arguments->next->value = "firstname";
 	drop_arguments->next->next->value = "studentUnique";
 
