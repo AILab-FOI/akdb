@@ -9,22 +9,20 @@ http://kalashnikovdb.sourceforge.net/
 The system is currently in alpha development status and NOT fully functional!
 
 ## Getting Started
-
 To get you started you can simply clone the repository and install the dependencies:
 
-### Prerequisites
+#### Prerequisites
 ```
 sudo apt-get install git build-essential swig make doxygen
 ```
-### Clone Kalashnikov DB
-
+#### Clone Kalashnikov DB
 Clone the repository using [git][git]:
 
 ```
 git clone https://github.com/mschatten/akdb
 cd akdb
 ```
-### #Install Dependencies
+#### Install Dependencies
 ```
 sudo apt-get install python2.7
 ```
@@ -46,8 +44,7 @@ If you are done working in the virtual environment for the moment, you can deact
 ```
 deactivate
 ```
-## Build the Application
-
+### Build the Application
 Build (builds bin/akdb, documentation in doc/ and swig interface)
 ```
 cd src
@@ -70,7 +67,7 @@ make clean-d
 
 ## Directory Layout
 ## Testing
-1) Main engine
+### Main engine
 ```
 cd bin
 ./akdb test
@@ -78,13 +75,13 @@ cd bin
 On first use DB file will be initialized. In case it hangs press 1 and Enter
 (don't ask why).
 
-2) Server (read README in src/srv)
+#### Server (read README in src/srv)
 ```
 cd src/srv
 python server.py
 ```
 
-3) Client
+#### Client
 ```
 cd src/srv
 python akdb_cli.py
