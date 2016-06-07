@@ -3,7 +3,7 @@ digraph "dm/dbman.c"
   bgcolor="transparent";
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="dm/dbman.c",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 [label="dm/dbman.c",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
   Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
   Node2 [label="dbman.h",height=0.2,width=0.4,color="black",URL="$dbman_8h.html"];
   Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
@@ -25,11 +25,11 @@ digraph "dm/dbman.c"
   Node2 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
   Node11 [label="limits.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
-  Node12 [label="/home/work/Desktop\l/akdb/src/auxi/constants.h",height=0.2,width=0.4,color="grey75"];
+  Node12 [label="/home/emil/Downloads\l/akdb/src/auxi/constants.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node13 [color="midnightblue",fontsize="10",style="solid"];
-  Node13 [label="/home/work/Desktop\l/akdb/src/auxi/configuration.h",height=0.2,width=0.4,color="grey75"];
+  Node13 [label="/home/emil/Downloads\l/akdb/src/auxi/configuration.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node14 [color="midnightblue",fontsize="10",style="solid"];
-  Node14 [label="/home/work/Desktop\l/akdb/src/auxi/iniparser.h",height=0.2,width=0.4,color="grey75"];
+  Node14 [label="/home/emil/Downloads\l/akdb/src/auxi/iniparser.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node15 [color="midnightblue",fontsize="10",style="solid"];
   Node15 [label="stdio.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node16 [color="midnightblue",fontsize="10",style="solid"];
@@ -38,11 +38,11 @@ digraph "dm/dbman.c"
   Node17 [label="string.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
   Node1 -> Node18 [color="midnightblue",fontsize="10",style="solid"];
-  Node18 [label="/home/work/Desktop\l/akdb/src/auxi/dictionary.h",height=0.2,width=0.4,color="grey75"];
+  Node18 [label="/home/emil/Downloads\l/akdb/src/auxi/dictionary.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node19 [color="midnightblue",fontsize="10",style="solid"];
   Node19 [label="unistd.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node20 [color="midnightblue",fontsize="10",style="solid"];
-  Node20 [label="/home/work/Desktop\l/akdb/src/auxi/mempro.h",height=0.2,width=0.4,color="grey75"];
+  Node20 [label="/home/emil/Downloads\l/akdb/src/auxi/mempro.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node21 [color="midnightblue",fontsize="10",style="solid"];
   Node21 [label="stdint.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node22 [color="midnightblue",fontsize="10",style="solid"];
@@ -54,5 +54,5 @@ digraph "dm/dbman.c"
   Node1 -> Node25 [color="midnightblue",fontsize="10",style="solid"];
   Node25 [label="ctype.h",height=0.2,width=0.4,color="grey75"];
   Node1 -> Node26 [color="midnightblue",fontsize="10",style="solid"];
-  Node26 [label="/home/work/Desktop\l/akdb/src/auxi/debug.h",height=0.2,width=0.4,color="grey75"];
+  Node26 [label="/home/emil/Downloads\l/akdb/src/auxi/debug.h",height=0.2,width=0.4,color="grey75"];
 }

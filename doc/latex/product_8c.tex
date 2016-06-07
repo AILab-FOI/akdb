@@ -1,8 +1,8 @@
-\hypertarget{product_8c}{}\section{rel/product.c File Reference}
+\hypertarget{product_8c}{\section{rel/product.c File Reference}
 \label{product_8c}\index{rel/product.\+c@{rel/product.\+c}}
+}
 {\ttfamily \#include \char`\"{}product.\+h\char`\"{}}\\*
 Include dependency graph for product.\+c\+:
-% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -16,13 +16,13 @@ void \hyperlink{product_8c_a367cbe30adfea2612d24463146d06c14}{A\+K\+\_\+op\+\_\+
 Provides functions for relational product operation 
 
 \subsection{Function Documentation}
-\index{product.\+c@{product.\+c}!A\+K\+\_\+op\+\_\+product\+\_\+test@{A\+K\+\_\+op\+\_\+product\+\_\+test}}
+\hypertarget{product_8c_a367cbe30adfea2612d24463146d06c14}{\index{product.\+c@{product.\+c}!A\+K\+\_\+op\+\_\+product\+\_\+test@{A\+K\+\_\+op\+\_\+product\+\_\+test}}
 \index{A\+K\+\_\+op\+\_\+product\+\_\+test@{A\+K\+\_\+op\+\_\+product\+\_\+test}!product.\+c@{product.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+op\+\_\+product\+\_\+test()}{AK_op_product_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+product\+\_\+test (
+\subsubsection[{A\+K\+\_\+op\+\_\+product\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+product\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}\hypertarget{product_8c_a367cbe30adfea2612d24463146d06c14}{}\label{product_8c_a367cbe30adfea2612d24463146d06c14}
+)}}\label{product_8c_a367cbe30adfea2612d24463146d06c14}
 
 
 Function for product operator testing. 
@@ -34,15 +34,15 @@ How does this test work? First, it reads all cells from both of the tables, empl
 
 Reading data from first two tables (employee and department)
 
-Now reading data from product table and comparing it to the data in first two tables\index{product.\+c@{product.\+c}!A\+K\+\_\+product@{A\+K\+\_\+product}}
+Now reading data from product table and comparing it to the data in first two tables\hypertarget{product_8c_a4abf238e07e25b97d4b184f83abbfe96}{\index{product.\+c@{product.\+c}!A\+K\+\_\+product@{A\+K\+\_\+product}}
 \index{A\+K\+\_\+product@{A\+K\+\_\+product}!product.\+c@{product.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+product(char $\ast$src\+Table1, char $\ast$src\+Table2, char $\ast$dst\+Table)}{AK_product(char *srcTable1, char *srcTable2, char *dstTable)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+product (
+\subsubsection[{A\+K\+\_\+product}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+product (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{src\+Table1, }
 \item[{char $\ast$}]{src\+Table2, }
 \item[{char $\ast$}]{dst\+Table}
 \end{DoxyParamCaption}
-)}\hypertarget{product_8c_a4abf238e07e25b97d4b184f83abbfe96}{}\label{product_8c_a4abf238e07e25b97d4b184f83abbfe96}
+)}}\label{product_8c_a4abf238e07e25b97d4b184f83abbfe96}
 
 
 Function to make product of two tables. 
@@ -60,8 +60,8 @@ Dino Laktašić
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-if success returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS, else returns E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+if success returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S, else returns E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
 Product procedure Going through one table, and for each row in it, going through another table, and joining rows that way!
 
-Sorry about indentations, but it is necessary to do it this way, until someone creates function to iterate through table rows (which would be pretty neat, btw.) At this level of code, we have access to rows from the first and from the second table. Then we do it this way\+: for each row in first table, read row from second table. And concatenate them! Since we have loop hierarchy here, each row from first table will be concatenated with each row from second table. End of story! Let\textquotesingle{}s get back to work... B\+TW. Please comment your code in the future. It is a lot easier when someone explains to you what he or she was thinking that moment. Write comments in english. Write \textquotesingle{}em in croatian. It does not matter! Just explain yourself! And share the idea about comments among others, please. Thank you!
+Sorry about indentations, but it is necessary to do it this way, until someone creates function to iterate through table rows (which would be pretty neat, btw.) At this level of code, we have access to rows from the first and from the second table. Then we do it this way\+: for each row in first table, read row from second table. And concatenate them! Since we have loop hierarchy here, each row from first table will be concatenated with each row from second table. End of story! Let's get back to work... B\+T\+W. Please comment your code in the future. It is a lot easier when someone explains to you what he or she was thinking that moment. Write comments in english. Write 'em in croatian. It does not matter! Just explain yourself! And share the idea about comments among others, please. Thank you!

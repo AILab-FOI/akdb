@@ -1,13 +1,12 @@
-\hypertarget{expression__check_8h}{}\section{rel/expression\+\_\+check.h File Reference}
+\hypertarget{expression__check_8h}{\section{rel/expression\+\_\+check.h File Reference}
 \label{expression__check_8h}\index{rel/expression\+\_\+check.\+h@{rel/expression\+\_\+check.\+h}}
+}
 {\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../file/fileio.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
 {\ttfamily \#include $<$regex.\+h$>$}\\*
 Include dependency graph for expression\+\_\+check.\+h\+:
-% FIG 0
 This graph shows which files directly or indirectly include this file\+:
-% FIG 1
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -19,7 +18,7 @@ int \hyperlink{expression__check_8h_a3eadc5af7dc99bc9594b1e70b9e7cd17}{Ak\+\_\+c
 \begin{DoxyCompactList}\small\item\em Function that evaluates regex expression on given string input. \end{DoxyCompactList}\item 
 int \hyperlink{expression__check_8h_a7f6c0f9af80177f8b556b2fcb9264cd6}{Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression} (const char $\ast$value, const char $\ast$expression)
 \begin{DoxyCompactList}\small\item\em Function that evaluates regex expression on given string input. \end{DoxyCompactList}\item 
-void {\bfseries Ak\+\_\+expression\+\_\+check\+\_\+test} ()\hypertarget{expression__check_8h_a0fdc01c764caf868e02a363199f84d7d}{}\label{expression__check_8h_a0fdc01c764caf868e02a363199f84d7d}
+\hypertarget{expression__check_8h_a0fdc01c764caf868e02a363199f84d7d}{void {\bfseries Ak\+\_\+expression\+\_\+check\+\_\+test} ()}\label{expression__check_8h_a0fdc01c764caf868e02a363199f84d7d}
 
 \end{DoxyCompactItemize}
 
@@ -28,16 +27,16 @@ void {\bfseries Ak\+\_\+expression\+\_\+check\+\_\+test} ()\hypertarget{expressi
 Header file that provides data structures for expression ckecking 
 
 \subsection{Function Documentation}
-\index{expression\+\_\+check.\+h@{expression\+\_\+check.\+h}!A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement@{A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement}}
+\hypertarget{expression__check_8h_aca1d14ca80978f1f289e5fcbbd4b2ba4}{\index{expression\+\_\+check.\+h@{expression\+\_\+check.\+h}!A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement@{A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement}}
 \index{A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement@{A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement}!expression\+\_\+check.\+h@{expression\+\_\+check.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement(struct list\+\_\+node $\ast$el, const char $\ast$op, const char $\ast$a, const char $\ast$b)}{AK_check_arithmetic_statement(struct list_node *el, const char *op, const char *a, const char *b)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement (
+\subsubsection[{A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{el, }
 \item[{const char $\ast$}]{op, }
 \item[{const char $\ast$}]{a, }
 \item[{const char $\ast$}]{b}
 \end{DoxyParamCaption}
-)}\hypertarget{expression__check_8h_aca1d14ca80978f1f289e5fcbbd4b2ba4}{}\label{expression__check_8h_aca1d14ca80978f1f289e5fcbbd4b2ba4}
+)}}\label{expression__check_8h_aca1d14ca80978f1f289e5fcbbd4b2ba4}
 
 
 Function compares values according to their data type, checks aritmetic statement which is part of expression given in the function below. For every type of arithmetic operator, there is switch-\/case statement which examines type of el and casts void operands to this type. 
@@ -59,14 +58,14 @@ Dino Laktašić, abstracted by Tomislav Mikulček,updated by Nikola Miljancic
 \begin{DoxyReturn}{Returns}
 0 if arithmetic statement is false, 1 if arithmetic statement is true 
 \end{DoxyReturn}
-\index{expression\+\_\+check.\+h@{expression\+\_\+check.\+h}!A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression@{A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression}}
+\hypertarget{expression__check_8h_a06926cb709105a1d579e6ad7d087b97f}{\index{expression\+\_\+check.\+h@{expression\+\_\+check.\+h}!A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression@{A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression}}
 \index{A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression@{A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression}!expression\+\_\+check.\+h@{expression\+\_\+check.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression(struct list\+\_\+node $\ast$row\+\_\+root, struct list\+\_\+node $\ast$expr)}{AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list_node *expr)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression (
+\subsubsection[{A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+if\+\_\+row\+\_\+satisfies\+\_\+expression (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{row\+\_\+root, }
 \item[{struct list\+\_\+node $\ast$}]{expr}
 \end{DoxyParamCaption}
-)}\hypertarget{expression__check_8h_a06926cb709105a1d579e6ad7d087b97f}{}\label{expression__check_8h_a06926cb709105a1d579e6ad7d087b97f}
+)}}\label{expression__check_8h_a06926cb709105a1d579e6ad7d087b97f}
 
 
 Function evaluates whether one record (row) satisfies logical expression. It goes through given row. If it comes to logical operator, it evaluates by itself. For arithmetic operators function \hyperlink{expression__check_8c_aca1d14ca80978f1f289e5fcbbd4b2ba4}{A\+K\+\_\+check\+\_\+arithmetic\+\_\+statement()} is called. 
@@ -84,16 +83,16 @@ Matija Šestak, updated by Dino Laktašić,Nikola Miljancic, abstracted by Tomis
 \begin{DoxyReturn}{Returns}
 0 if row does not satisfy, 1 if row satisfies expression 
 \end{DoxyReturn}
-\index{expression\+\_\+check.\+h@{expression\+\_\+check.\+h}!Ak\+\_\+check\+\_\+regex\+\_\+expression@{Ak\+\_\+check\+\_\+regex\+\_\+expression}}
+\hypertarget{expression__check_8h_a3eadc5af7dc99bc9594b1e70b9e7cd17}{\index{expression\+\_\+check.\+h@{expression\+\_\+check.\+h}!Ak\+\_\+check\+\_\+regex\+\_\+expression@{Ak\+\_\+check\+\_\+regex\+\_\+expression}}
 \index{Ak\+\_\+check\+\_\+regex\+\_\+expression@{Ak\+\_\+check\+\_\+regex\+\_\+expression}!expression\+\_\+check.\+h@{expression\+\_\+check.\+h}}
-\subsubsection[{\texorpdfstring{Ak\+\_\+check\+\_\+regex\+\_\+expression(const char $\ast$value, const char $\ast$expression, int sensitive, int check\+Wild\+Card)}{Ak_check_regex_expression(const char *value, const char *expression, int sensitive, int checkWildCard)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+check\+\_\+regex\+\_\+expression (
+\subsubsection[{Ak\+\_\+check\+\_\+regex\+\_\+expression}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+check\+\_\+regex\+\_\+expression (
 \begin{DoxyParamCaption}
 \item[{const char $\ast$}]{value, }
 \item[{const char $\ast$}]{expression, }
 \item[{int}]{sensitive, }
 \item[{int}]{check\+Wild\+Card}
 \end{DoxyParamCaption}
-)}\hypertarget{expression__check_8h_a3eadc5af7dc99bc9594b1e70b9e7cd17}{}\label{expression__check_8h_a3eadc5af7dc99bc9594b1e70b9e7cd17}
+)}}\label{expression__check_8h_a3eadc5af7dc99bc9594b1e70b9e7cd17}
 
 
 Function that evaluates regex expression on given string input. 
@@ -102,9 +101,9 @@ Leon Palaić
 \begin{DoxyParams}{Parameters}
 {\em value} & string value that must match regex expression \\
 \hline
-{\em expression} & P\+O\+S\+IX regex expression \\
+{\em expression} & P\+O\+S\+I\+X regex expression \\
 \hline
-{\em check\+Wild\+Card} & replaces S\+QL wildcard to correesponding P\+O\+S\+IX regex charachter \\
+{\em check\+Wild\+Card} & replaces S\+Q\+L wildcard to correesponding P\+O\+S\+I\+X regex charachter \\
 \hline
 {\em sensitive} & case insensitive indicator 1-\/case sensitive,0-\/ case insensitive \\
 \hline
@@ -112,14 +111,14 @@ Leon Palaić
 \begin{DoxyReturn}{Returns}
 0 if regex didnt match or sytnax of regex is incorecct 1 if string matches coresponding regex expression 
 \end{DoxyReturn}
-\index{expression\+\_\+check.\+h@{expression\+\_\+check.\+h}!Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression@{Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression}}
+\hypertarget{expression__check_8h_a7f6c0f9af80177f8b556b2fcb9264cd6}{\index{expression\+\_\+check.\+h@{expression\+\_\+check.\+h}!Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression@{Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression}}
 \index{Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression@{Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression}!expression\+\_\+check.\+h@{expression\+\_\+check.\+h}}
-\subsubsection[{\texorpdfstring{Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression(const char $\ast$value, const char $\ast$expression)}{Ak_check_regex_operator_expression(const char *value, const char *expression)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression (
+\subsubsection[{Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+check\+\_\+regex\+\_\+operator\+\_\+expression (
 \begin{DoxyParamCaption}
 \item[{const char $\ast$}]{value, }
 \item[{const char $\ast$}]{expression}
 \end{DoxyParamCaption}
-)}\hypertarget{expression__check_8h_a7f6c0f9af80177f8b556b2fcb9264cd6}{}\label{expression__check_8h_a7f6c0f9af80177f8b556b2fcb9264cd6}
+)}}\label{expression__check_8h_a7f6c0f9af80177f8b556b2fcb9264cd6}
 
 
 Function that evaluates regex expression on given string input. 
@@ -128,7 +127,7 @@ Leon Palaić
 \begin{DoxyParams}{Parameters}
 {\em value} & string value that must match regex expression \\
 \hline
-{\em expression} & P\+O\+S\+IX regex expression \\
+{\em expression} & P\+O\+S\+I\+X regex expression \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}

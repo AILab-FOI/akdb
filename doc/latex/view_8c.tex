@@ -1,27 +1,27 @@
-\hypertarget{view_8c}{}\section{sql/view.c File Reference}
+\hypertarget{view_8c}{\section{sql/view.c File Reference}
 \label{view_8c}\index{sql/view.\+c@{sql/view.\+c}}
+}
 {\ttfamily \#include \char`\"{}view.\+h\char`\"{}}\\*
 Include dependency graph for view.\+c\+:
-% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{view_8c_a6b3751926267fa6d65ac45364f532293}{A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id} (char $\ast$name)
-\begin{DoxyCompactList}\small\item\em Finds an object\textquotesingle{}s id by its name. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Finds an object's id by its name. \end{DoxyCompactList}\item 
 char $\ast$ \hyperlink{view_8c_a580426951b25a8139b977382484dfa51}{A\+K\+\_\+get\+\_\+view\+\_\+query} (char $\ast$name)
 \begin{DoxyCompactList}\small\item\em Returnes a query by its name. \end{DoxyCompactList}\item 
 char $\ast$ \hyperlink{view_8c_a09cad63c8e7da2c6cc43eed8c3fd74b1}{A\+K\+\_\+get\+\_\+rel\+\_\+exp} (char $\ast$name)
 \begin{DoxyCompactList}\small\item\em Returnes a relation expression by its name param name name of the view. \end{DoxyCompactList}\item 
 int \hyperlink{view_8c_a65b56a6f7a5c9052b4ef29daa881c9cc}{A\+K\+\_\+view\+\_\+add} (char $\ast$name, char $\ast$query, char $\ast$rel\+\_\+exp, int set\+\_\+id)
-\begin{DoxyCompactList}\small\item\em Adds a new view to the view table with the corresponding name and value (view query); set\+\_\+id is optional, if it\textquotesingle{}s not set, the system will determine the new id automatically. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Adds a new view to the view table with the corresponding name and value (view query); set\+\_\+id is optional, if it's not set, the system will determine the new id automatically. \end{DoxyCompactList}\item 
 int \hyperlink{view_8c_af897ad35b38a5cb01fb2adae38b02b6a}{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id} (int obj\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Removes the view by its object id. \end{DoxyCompactList}\item 
 int \hyperlink{view_8c_a7eba9fce8e11d5da6d54db4f9d1f3e66}{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name} (char $\ast$name)
-\begin{DoxyCompactList}\small\item\em Removes the view by its name by identifying the view\textquotesingle{}s id and passing id to A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Removes the view by its name by identifying the view's id and passing id to A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id. \end{DoxyCompactList}\item 
 int \hyperlink{view_8c_ab1d059a8445dfc015947547036b8c7b1}{A\+K\+\_\+view\+\_\+rename} (char $\ast$name, char $\ast$new\+\_\+name)
-\begin{DoxyCompactList}\small\item\em Renames a view (based on it\textquotesingle{}s name) from \char`\"{}name\char`\"{} to \char`\"{}new\+\_\+name\char`\"{}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Renames a view (based on it's name) from \char`\"{}name\char`\"{} to \char`\"{}new\+\_\+name\char`\"{}. \end{DoxyCompactList}\item 
 int \hyperlink{view_8c_a7b268eb18dc2d441396b14a52a8b8cd5}{A\+K\+\_\+view\+\_\+change\+\_\+query} (char $\ast$name, char $\ast$query, char $\ast$rel\+\_\+exp)
-\begin{DoxyCompactList}\small\item\em Changes the query for a view (determined by it\textquotesingle{}s name) to \char`\"{}query\char`\"{}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Changes the query for a view (determined by it's name) to \char`\"{}query\char`\"{}. \end{DoxyCompactList}\item 
 void \hyperlink{view_8c_a7dea06c8dd422b73066d2f39b588e3b4}{A\+K\+\_\+view\+\_\+test} ()
 \begin{DoxyCompactList}\small\item\em A testing function for \hyperlink{view_8c}{view.\+c} functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -30,13 +30,13 @@ void \hyperlink{view_8c_a7dea06c8dd422b73066d2f39b588e3b4}{A\+K\+\_\+view\+\_\+t
 Provides functions for views 
 
 \subsection{Function Documentation}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+get\+\_\+rel\+\_\+exp@{A\+K\+\_\+get\+\_\+rel\+\_\+exp}}
+\hypertarget{view_8c_a09cad63c8e7da2c6cc43eed8c3fd74b1}{\index{view.\+c@{view.\+c}!A\+K\+\_\+get\+\_\+rel\+\_\+exp@{A\+K\+\_\+get\+\_\+rel\+\_\+exp}}
 \index{A\+K\+\_\+get\+\_\+rel\+\_\+exp@{A\+K\+\_\+get\+\_\+rel\+\_\+exp}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+get\+\_\+rel\+\_\+exp(char $\ast$name)}{AK_get_rel_exp(char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+get\+\_\+rel\+\_\+exp (
+\subsubsection[{A\+K\+\_\+get\+\_\+rel\+\_\+exp}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+get\+\_\+rel\+\_\+exp (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_a09cad63c8e7da2c6cc43eed8c3fd74b1}{}\label{view_8c_a09cad63c8e7da2c6cc43eed8c3fd74b1}
+)}}\label{view_8c_a09cad63c8e7da2c6cc43eed8c3fd74b1}
 
 
 Returnes a relation expression by its name param name name of the view. 
@@ -45,18 +45,18 @@ Returnes a relation expression by its name param name name of the view.
 Danko Sačer 
 \end{DoxyAuthor}
 \begin{DoxyReturn}{Returns}
-rel\+\_\+exp string or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+rel\+\_\+exp string or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id@{A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id}}
+\hypertarget{view_8c_a6b3751926267fa6d65ac45364f532293}{\index{view.\+c@{view.\+c}!A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id@{A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id}}
 \index{A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id@{A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id(char $\ast$name)}{AK_get_view_obj_id(char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id (
+\subsubsection[{A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+get\+\_\+view\+\_\+obj\+\_\+id (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_a6b3751926267fa6d65ac45364f532293}{}\label{view_8c_a6b3751926267fa6d65ac45364f532293}
+)}}\label{view_8c_a6b3751926267fa6d65ac45364f532293}
 
 
-Finds an object\textquotesingle{}s id by its name. 
+Finds an object's id by its name. 
 
 \begin{DoxyAuthor}{Author}
 Kresimir Ivkovic 
@@ -67,15 +67,15 @@ Kresimir Ivkovic
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-View\textquotesingle{}s id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+View's id or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+get\+\_\+view\+\_\+query@{A\+K\+\_\+get\+\_\+view\+\_\+query}}
+\hypertarget{view_8c_a580426951b25a8139b977382484dfa51}{\index{view.\+c@{view.\+c}!A\+K\+\_\+get\+\_\+view\+\_\+query@{A\+K\+\_\+get\+\_\+view\+\_\+query}}
 \index{A\+K\+\_\+get\+\_\+view\+\_\+query@{A\+K\+\_\+get\+\_\+view\+\_\+query}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+get\+\_\+view\+\_\+query(char $\ast$name)}{AK_get_view_query(char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+get\+\_\+view\+\_\+query (
+\subsubsection[{A\+K\+\_\+get\+\_\+view\+\_\+query}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+get\+\_\+view\+\_\+query (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_a580426951b25a8139b977382484dfa51}{}\label{view_8c_a580426951b25a8139b977382484dfa51}
+)}}\label{view_8c_a580426951b25a8139b977382484dfa51}
 
 
 Returnes a query by its name. 
@@ -89,21 +89,21 @@ Danko Sačer
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-query string or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+query string or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+add@{A\+K\+\_\+view\+\_\+add}}
+\hypertarget{view_8c_a65b56a6f7a5c9052b4ef29daa881c9cc}{\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+add@{A\+K\+\_\+view\+\_\+add}}
 \index{A\+K\+\_\+view\+\_\+add@{A\+K\+\_\+view\+\_\+add}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+view\+\_\+add(char $\ast$name, char $\ast$query, char $\ast$rel\+\_\+exp, int set\+\_\+id)}{AK_view_add(char *name, char *query, char *rel_exp, int set_id)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+add (
+\subsubsection[{A\+K\+\_\+view\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+add (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name, }
 \item[{char $\ast$}]{query, }
 \item[{char $\ast$}]{rel\+\_\+exp, }
 \item[{int}]{set\+\_\+id}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_a65b56a6f7a5c9052b4ef29daa881c9cc}{}\label{view_8c_a65b56a6f7a5c9052b4ef29daa881c9cc}
+)}}\label{view_8c_a65b56a6f7a5c9052b4ef29daa881c9cc}
 
 
-Adds a new view to the view table with the corresponding name and value (view query); set\+\_\+id is optional, if it\textquotesingle{}s not set, the system will determine the new id automatically. 
+Adds a new view to the view table with the corresponding name and value (view query); set\+\_\+id is optional, if it's not set, the system will determine the new id automatically. 
 
 \begin{DoxyAuthor}{Author}
 Kresimir Ivkovic 
@@ -122,18 +122,18 @@ Kresimir Ivkovic
 \begin{DoxyReturn}{Returns}
 Id of the newly inserted view 
 \end{DoxyReturn}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+change\+\_\+query@{A\+K\+\_\+view\+\_\+change\+\_\+query}}
+\hypertarget{view_8c_a7b268eb18dc2d441396b14a52a8b8cd5}{\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+change\+\_\+query@{A\+K\+\_\+view\+\_\+change\+\_\+query}}
 \index{A\+K\+\_\+view\+\_\+change\+\_\+query@{A\+K\+\_\+view\+\_\+change\+\_\+query}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+view\+\_\+change\+\_\+query(char $\ast$name, char $\ast$query, char $\ast$rel\+\_\+exp)}{AK_view_change_query(char *name, char *query, char *rel_exp)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+change\+\_\+query (
+\subsubsection[{A\+K\+\_\+view\+\_\+change\+\_\+query}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+change\+\_\+query (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name, }
 \item[{char $\ast$}]{query, }
 \item[{char $\ast$}]{rel\+\_\+exp}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_a7b268eb18dc2d441396b14a52a8b8cd5}{}\label{view_8c_a7b268eb18dc2d441396b14a52a8b8cd5}
+)}}\label{view_8c_a7b268eb18dc2d441396b14a52a8b8cd5}
 
 
-Changes the query for a view (determined by it\textquotesingle{}s name) to \char`\"{}query\char`\"{}. 
+Changes the query for a view (determined by it's name) to \char`\"{}query\char`\"{}. 
 
 \begin{DoxyAuthor}{Author}
 Kresimir Ivkovic 
@@ -150,16 +150,16 @@ Kresimir Ivkovic
 \begin{DoxyReturn}{Returns}
 error or success 
 \end{DoxyReturn}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name}}
+\hypertarget{view_8c_a7eba9fce8e11d5da6d54db4f9d1f3e66}{\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name}}
 \index{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name(char $\ast$name)}{AK_view_remove_by_name(char *name)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name (
+\subsubsection[{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+name (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_a7eba9fce8e11d5da6d54db4f9d1f3e66}{}\label{view_8c_a7eba9fce8e11d5da6d54db4f9d1f3e66}
+)}}\label{view_8c_a7eba9fce8e11d5da6d54db4f9d1f3e66}
 
 
-Removes the view by its name by identifying the view\textquotesingle{}s id and passing id to A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id. 
+Removes the view by its name by identifying the view's id and passing id to A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id. 
 
 \begin{DoxyAuthor}{Author}
 Kresimir Ivkovic 
@@ -170,15 +170,15 @@ Kresimir Ivkovic
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Result of A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if no id is found 
+Result of A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R if no id is found 
 \end{DoxyReturn}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}}
+\hypertarget{view_8c_af897ad35b38a5cb01fb2adae38b02b6a}{\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}}
 \index{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id(int obj\+\_\+id)}{AK_view_remove_by_obj_id(int obj_id)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id (
+\subsubsection[{A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id (
 \begin{DoxyParamCaption}
 \item[{int}]{obj\+\_\+id}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_af897ad35b38a5cb01fb2adae38b02b6a}{}\label{view_8c_af897ad35b38a5cb01fb2adae38b02b6a}
+)}}\label{view_8c_af897ad35b38a5cb01fb2adae38b02b6a}
 
 
 Removes the view by its object id. 
@@ -194,17 +194,17 @@ Kresimir Ivkovic
 \begin{DoxyReturn}{Returns}
 Result of A\+K\+\_\+delete\+\_\+row for the view (success or error) 
 \end{DoxyReturn}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+rename@{A\+K\+\_\+view\+\_\+rename}}
+\hypertarget{view_8c_ab1d059a8445dfc015947547036b8c7b1}{\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+rename@{A\+K\+\_\+view\+\_\+rename}}
 \index{A\+K\+\_\+view\+\_\+rename@{A\+K\+\_\+view\+\_\+rename}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+view\+\_\+rename(char $\ast$name, char $\ast$new\+\_\+name)}{AK_view_rename(char *name, char *new_name)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+rename (
+\subsubsection[{A\+K\+\_\+view\+\_\+rename}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+view\+\_\+rename (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name, }
 \item[{char $\ast$}]{new\+\_\+name}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_ab1d059a8445dfc015947547036b8c7b1}{}\label{view_8c_ab1d059a8445dfc015947547036b8c7b1}
+)}}\label{view_8c_ab1d059a8445dfc015947547036b8c7b1}
 
 
-Renames a view (based on it\textquotesingle{}s name) from \char`\"{}name\char`\"{} to \char`\"{}new\+\_\+name\char`\"{}. 
+Renames a view (based on it's name) from \char`\"{}name\char`\"{} to \char`\"{}new\+\_\+name\char`\"{}. 
 
 \begin{DoxyAuthor}{Author}
 Kresimir Ivkovic 
@@ -219,13 +219,13 @@ Kresimir Ivkovic
 \begin{DoxyReturn}{Returns}
 error or success 
 \end{DoxyReturn}
-\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+test@{A\+K\+\_\+view\+\_\+test}}
+\hypertarget{view_8c_a7dea06c8dd422b73066d2f39b588e3b4}{\index{view.\+c@{view.\+c}!A\+K\+\_\+view\+\_\+test@{A\+K\+\_\+view\+\_\+test}}
 \index{A\+K\+\_\+view\+\_\+test@{A\+K\+\_\+view\+\_\+test}!view.\+c@{view.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+view\+\_\+test()}{AK_view_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+view\+\_\+test (
+\subsubsection[{A\+K\+\_\+view\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+view\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}\hypertarget{view_8c_a7dea06c8dd422b73066d2f39b588e3b4}{}\label{view_8c_a7dea06c8dd422b73066d2f39b588e3b4}
+)}}\label{view_8c_a7dea06c8dd422b73066d2f39b588e3b4}
 
 
 A testing function for \hyperlink{view_8c}{view.\+c} functions. 

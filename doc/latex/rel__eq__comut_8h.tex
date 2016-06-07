@@ -1,20 +1,19 @@
-\hypertarget{rel__eq__comut_8h}{}\section{opti/rel\+\_\+eq\+\_\+comut.h File Reference}
+\hypertarget{rel__eq__comut_8h}{\section{opti/rel\+\_\+eq\+\_\+comut.h File Reference}
 \label{rel__eq__comut_8h}\index{opti/rel\+\_\+eq\+\_\+comut.\+h@{opti/rel\+\_\+eq\+\_\+comut.\+h}}
+}
 {\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}./rel\+\_\+eq\+\_\+selection.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../auxi/auxiliary.\+h\char`\"{}}\\*
 Include dependency graph for rel\+\_\+eq\+\_\+comut.\+h\+:
-% FIG 0
 This graph shows which files directly or indirectly include this file\+:
-% FIG 1
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \hyperlink{rel__eq__comut_8h_ae764cf4e0e534c7ecddcf8bbf556abab}{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut} (struct list\+\_\+node $\ast$list\+\_\+rel\+\_\+eq)
 \begin{DoxyCompactList}\small\item\em Function for printing optimized relation equivalence expression list regarding commutativity. \end{DoxyCompactList}\item 
 struct list\+\_\+node $\ast$ \hyperlink{rel__eq__comut_8h_adc660067d03f9c0b4d36f21ffc6b2e21}{A\+K\+\_\+rel\+\_\+eq\+\_\+comut} (struct list\+\_\+node $\ast$list\+\_\+rel\+\_\+eq)
-\begin{DoxyCompactList}\small\item\em Main function for generating RA expresion according to commutativity equivalence rules. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Main function for generating R\+A expresion according to commutativity equivalence rules. \end{DoxyCompactList}\item 
 char $\ast$ \hyperlink{rel__eq__comut_8h_ac99e121b9f1ceb81bdcd116a6d2bb4bc}{A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join} (char $\ast$cond, char $\ast$tbl\+Name)
 \begin{DoxyCompactList}\small\item\em Check if selection can commute with theta-\/join or product. \end{DoxyCompactList}\item 
 void \hyperlink{rel__eq__comut_8h_a8aab27cdd73ea98784ab6bafaaddafa2}{A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test} ()
@@ -25,13 +24,13 @@ void \hyperlink{rel__eq__comut_8h_a8aab27cdd73ea98784ab6bafaaddafa2}{A\+K\+\_\+r
 Header file that provides data structures for relational equivalences regarding comutativity 
 
 \subsection{Function Documentation}
-\index{rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}!A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut@{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut}}
+\hypertarget{rel__eq__comut_8h_ae764cf4e0e534c7ecddcf8bbf556abab}{\index{rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}!A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut@{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut}}
 \index{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut@{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut}!rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut(struct list\+\_\+node $\ast$list\+\_\+rel\+\_\+eq)}{AK_print_rel_eq_comut(struct list_node *list_rel_eq)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut (
+\subsubsection[{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+comut (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{list\+\_\+rel\+\_\+eq}
 \end{DoxyParamCaption}
-)}\hypertarget{rel__eq__comut_8h_ae764cf4e0e534c7ecddcf8bbf556abab}{}\label{rel__eq__comut_8h_ae764cf4e0e534c7ecddcf8bbf556abab}
+)}}\label{rel__eq__comut_8h_ae764cf4e0e534c7ecddcf8bbf556abab}
 
 
 Function for printing optimized relation equivalence expression list regarding commutativity. 
@@ -41,17 +40,17 @@ Davor Tomala
 \end{DoxyAuthor}
 
 \begin{DoxyParams}{Parameters}
-{\em $\ast$list\+\_\+rel\+\_\+eq} & RA expresion as the struct list\+\_\+node \\
+{\em $\ast$list\+\_\+rel\+\_\+eq} & R\+A expresion as the struct list\+\_\+node \\
 \hline
 \end{DoxyParams}
-\index{rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join@{A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join}}
+\hypertarget{rel__eq__comut_8h_ac99e121b9f1ceb81bdcd116a6d2bb4bc}{\index{rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join@{A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join}}
 \index{A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join@{A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join}!rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join(char $\ast$cond, char $\ast$tbl\+Name)}{AK_rel_eq_commute_with_theta_join(char *cond, char *tblName)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join (
+\subsubsection[{A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+commute\+\_\+with\+\_\+theta\+\_\+join (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{cond, }
 \item[{char $\ast$}]{tbl\+Name}
 \end{DoxyParamCaption}
-)}\hypertarget{rel__eq__comut_8h_ac99e121b9f1ceb81bdcd116a6d2bb4bc}{}\label{rel__eq__comut_8h_ac99e121b9f1ceb81bdcd116a6d2bb4bc}
+)}}\label{rel__eq__comut_8h_ac99e121b9f1ceb81bdcd116a6d2bb4bc}
 
 
 Check if selection can commute with theta-\/join or product. 
@@ -77,35 +76,35 @@ Dino Laktašić.
 \begin{DoxyReturn}{Returns}
 pointer to char array that contains new condition for a given table 
 \end{DoxyReturn}
-\index{rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+comut@{A\+K\+\_\+rel\+\_\+eq\+\_\+comut}}
+\hypertarget{rel__eq__comut_8h_adc660067d03f9c0b4d36f21ffc6b2e21}{\index{rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+comut@{A\+K\+\_\+rel\+\_\+eq\+\_\+comut}}
 \index{A\+K\+\_\+rel\+\_\+eq\+\_\+comut@{A\+K\+\_\+rel\+\_\+eq\+\_\+comut}!rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+comut(struct list\+\_\+node $\ast$list\+\_\+rel\+\_\+eq)}{AK_rel_eq_comut(struct list_node *list_rel_eq)}}]{\setlength{\rightskip}{0pt plus 5cm}struct list\+\_\+node$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+comut (
+\subsubsection[{A\+K\+\_\+rel\+\_\+eq\+\_\+comut}]{\setlength{\rightskip}{0pt plus 5cm}struct list\+\_\+node$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+comut (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{list\+\_\+rel\+\_\+eq}
 \end{DoxyParamCaption}
-)}\hypertarget{rel__eq__comut_8h_adc660067d03f9c0b4d36f21ffc6b2e21}{}\label{rel__eq__comut_8h_adc660067d03f9c0b4d36f21ffc6b2e21}
+)}}\label{rel__eq__comut_8h_adc660067d03f9c0b4d36f21ffc6b2e21}
 
 
-Main function for generating RA expresion according to commutativity equivalence rules. 
+Main function for generating R\+A expresion according to commutativity equivalence rules. 
 
 \begin{DoxyAuthor}{Author}
 Davor Tomala 
 \end{DoxyAuthor}
 
 \begin{DoxyParams}{Parameters}
-{\em $\ast$list\+\_\+rel\+\_\+eq} & RA expresion as the struct list\+\_\+node \\
+{\em $\ast$list\+\_\+rel\+\_\+eq} & R\+A expresion as the struct list\+\_\+node \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-optimised RA expresion as the struct list\+\_\+node 
+optimised R\+A expresion as the struct list\+\_\+node 
 \end{DoxyReturn}
-\index{rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test@{A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test}}
+\hypertarget{rel__eq__comut_8h_a8aab27cdd73ea98784ab6bafaaddafa2}{\index{rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test@{A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test}}
 \index{A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test@{A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test}!rel\+\_\+eq\+\_\+comut.\+h@{rel\+\_\+eq\+\_\+comut.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test()}{AK_rel_eq_comut_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test (
+\subsubsection[{A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+rel\+\_\+eq\+\_\+comut\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}\hypertarget{rel__eq__comut_8h_a8aab27cdd73ea98784ab6bafaaddafa2}{}\label{rel__eq__comut_8h_a8aab27cdd73ea98784ab6bafaaddafa2}
+)}}\label{rel__eq__comut_8h_a8aab27cdd73ea98784ab6bafaaddafa2}
 
 
 relational equivalences regarding commutativity 

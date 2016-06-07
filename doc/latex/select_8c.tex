@@ -1,35 +1,35 @@
-\hypertarget{select_8c}{}\section{sql/select.c File Reference}
+\hypertarget{select_8c}{\section{sql/select.c File Reference}
 \label{select_8c}\index{sql/select.\+c@{sql/select.\+c}}
+}
 {\ttfamily \#include \char`\"{}select.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../mm/memoman.\+h\char`\"{}}\\*
 Include dependency graph for select.\+c\+:
-% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{select_8c_a79d6bf0b2fed0f1010d502028eea7b4f}{A\+K\+\_\+select} (char $\ast$src\+Table, char $\ast$dest\+Table, struct list\+\_\+node $\ast$attributes, struct list\+\_\+node $\ast$condition)
-\begin{DoxyCompactList}\small\item\em Function that implements S\+E\+L\+E\+CT relational operator. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Function that implements S\+E\+L\+E\+C\+T relational operator. \end{DoxyCompactList}\item 
 void \hyperlink{select_8c_a79ca22fca4231f9435e016daa191ae75}{A\+K\+\_\+select\+\_\+test} ()
 \begin{DoxyCompactList}\small\item\em Function for testing the implementation. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-Provides functions for S\+E\+L\+E\+CT relational operator 
+Provides functions for S\+E\+L\+E\+C\+T relational operator 
 
 \subsection{Function Documentation}
-\index{select.\+c@{select.\+c}!A\+K\+\_\+select@{A\+K\+\_\+select}}
+\hypertarget{select_8c_a79d6bf0b2fed0f1010d502028eea7b4f}{\index{select.\+c@{select.\+c}!A\+K\+\_\+select@{A\+K\+\_\+select}}
 \index{A\+K\+\_\+select@{A\+K\+\_\+select}!select.\+c@{select.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+select(char $\ast$src\+Table, char $\ast$dest\+Table, struct list\+\_\+node $\ast$attributes, struct list\+\_\+node $\ast$condition)}{AK_select(char *srcTable, char *destTable, struct list_node *attributes, struct list_node *condition)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+select (
+\subsubsection[{A\+K\+\_\+select}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+select (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{src\+Table, }
 \item[{char $\ast$}]{dest\+Table, }
 \item[{struct list\+\_\+node $\ast$}]{attributes, }
 \item[{struct list\+\_\+node $\ast$}]{condition}
 \end{DoxyParamCaption}
-)}\hypertarget{select_8c_a79d6bf0b2fed0f1010d502028eea7b4f}{}\label{select_8c_a79d6bf0b2fed0f1010d502028eea7b4f}
+)}}\label{select_8c_a79d6bf0b2fed0f1010d502028eea7b4f}
 
 
-Function that implements S\+E\+L\+E\+CT relational operator. 
+Function that implements S\+E\+L\+E\+C\+T relational operator. 
 
 \begin{DoxyAuthor}{Author}
 Renata Mesaros 
@@ -44,7 +44,7 @@ Renata Mesaros
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if cache result in memory and print table else break 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S if cache result in memory and print table else break 
 \end{DoxyReturn}
 calling the relational operator for filtering according to given condition
 
@@ -58,13 +58,13 @@ the ordinal number of the selected attribute
 
 if the attribute number is in the selected list, write it in the resulting table
 
-C\+A\+C\+HE R\+E\+S\+U\+LT IN M\+E\+M\+O\+RY \index{select.\+c@{select.\+c}!A\+K\+\_\+select\+\_\+test@{A\+K\+\_\+select\+\_\+test}}
+C\+A\+C\+H\+E R\+E\+S\+U\+L\+T I\+N M\+E\+M\+O\+R\+Y \hypertarget{select_8c_a79ca22fca4231f9435e016daa191ae75}{\index{select.\+c@{select.\+c}!A\+K\+\_\+select\+\_\+test@{A\+K\+\_\+select\+\_\+test}}
 \index{A\+K\+\_\+select\+\_\+test@{A\+K\+\_\+select\+\_\+test}!select.\+c@{select.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+select\+\_\+test()}{AK_select_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+select\+\_\+test (
+\subsubsection[{A\+K\+\_\+select\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+select\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}\hypertarget{select_8c_a79ca22fca4231f9435e016daa191ae75}{}\label{select_8c_a79ca22fca4231f9435e016daa191ae75}
+)}}\label{select_8c_a79ca22fca4231f9435e016daa191ae75}
 
 
 Function for testing the implementation. 

@@ -1,8 +1,8 @@
-\hypertarget{projection_8c}{}\section{rel/projection.c File Reference}
+\hypertarget{projection_8c}{\section{rel/projection.c File Reference}
 \label{projection_8c}\index{rel/projection.\+c@{rel/projection.\+c}}
+}
 {\ttfamily \#include \char`\"{}projection.\+h\char`\"{}}\\*
 Include dependency graph for projection.\+c\+:
-% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -22,16 +22,16 @@ void \hyperlink{projection_8c_a67132149077c6e6d3f995f17794d0423}{A\+K\+\_\+op\+\
 Provides functions for relational projection operation 
 
 \subsection{Function Documentation}
-\index{projection.\+c@{projection.\+c}!A\+K\+\_\+copy\+\_\+block\+\_\+projection@{A\+K\+\_\+copy\+\_\+block\+\_\+projection}}
+\hypertarget{projection_8c_ab1476858e2f34c78f097d75c57908aaf}{\index{projection.\+c@{projection.\+c}!A\+K\+\_\+copy\+\_\+block\+\_\+projection@{A\+K\+\_\+copy\+\_\+block\+\_\+projection}}
 \index{A\+K\+\_\+copy\+\_\+block\+\_\+projection@{A\+K\+\_\+copy\+\_\+block\+\_\+projection}!projection.\+c@{projection.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+copy\+\_\+block\+\_\+projection(\+A\+K\+\_\+block $\ast$old\+\_\+block, struct list\+\_\+node $\ast$att, char $\ast$dst\+Table, struct list\+\_\+node $\ast$expr)}{AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable, struct list_node *expr)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+copy\+\_\+block\+\_\+projection (
+\subsubsection[{A\+K\+\_\+copy\+\_\+block\+\_\+projection}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+copy\+\_\+block\+\_\+projection (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+block} $\ast$}]{old\+\_\+block, }
 \item[{struct list\+\_\+node $\ast$}]{att, }
 \item[{char $\ast$}]{dst\+Table, }
 \item[{struct list\+\_\+node $\ast$}]{expr}
 \end{DoxyParamCaption}
-)}\hypertarget{projection_8c_ab1476858e2f34c78f097d75c57908aaf}{}\label{projection_8c_ab1476858e2f34c78f097d75c57908aaf}
+)}}\label{projection_8c_ab1476858e2f34c78f097d75c57908aaf}
 
 
 Function for copying the data from old table block to the new projection table. 
@@ -48,15 +48,15 @@ Matija Novak, rewrited and optimized by Dino Laktašić to support A\+K\+\_\+lis
 {\em att} & list of the attributes which should the projeciton table contain  No return value \\
 \hline
 \end{DoxyParams}
-\index{projection.\+c@{projection.\+c}!A\+K\+\_\+create\+\_\+block\+\_\+header@{A\+K\+\_\+create\+\_\+block\+\_\+header}}
+\hypertarget{projection_8c_ad40a113ed072dccc18b710eaa5f7f1a6}{\index{projection.\+c@{projection.\+c}!A\+K\+\_\+create\+\_\+block\+\_\+header@{A\+K\+\_\+create\+\_\+block\+\_\+header}}
 \index{A\+K\+\_\+create\+\_\+block\+\_\+header@{A\+K\+\_\+create\+\_\+block\+\_\+header}!projection.\+c@{projection.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+create\+\_\+block\+\_\+header(int old\+\_\+block, char $\ast$dst\+Table, struct list\+\_\+node $\ast$att)}{AK_create_block_header(int old_block, char *dstTable, struct list_node *att)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+create\+\_\+block\+\_\+header (
+\subsubsection[{A\+K\+\_\+create\+\_\+block\+\_\+header}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+create\+\_\+block\+\_\+header (
 \begin{DoxyParamCaption}
 \item[{int}]{old\+\_\+block, }
 \item[{char $\ast$}]{dst\+Table, }
 \item[{struct list\+\_\+node $\ast$}]{att}
 \end{DoxyParamCaption}
-)}\hypertarget{projection_8c_ad40a113ed072dccc18b710eaa5f7f1a6}{}\label{projection_8c_ad40a113ed072dccc18b710eaa5f7f1a6}
+)}}\label{projection_8c_ad40a113ed072dccc18b710eaa5f7f1a6}
 
 
 Function to create a new header for the projection table. 
@@ -76,13 +76,13 @@ Matija Novak, rewrited and optimized by Dino Laktašić to support A\+K\+\_\+lis
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\index{projection.\+c@{projection.\+c}!A\+K\+\_\+op\+\_\+projection\+\_\+test@{A\+K\+\_\+op\+\_\+projection\+\_\+test}}
+\hypertarget{projection_8c_a67132149077c6e6d3f995f17794d0423}{\index{projection.\+c@{projection.\+c}!A\+K\+\_\+op\+\_\+projection\+\_\+test@{A\+K\+\_\+op\+\_\+projection\+\_\+test}}
 \index{A\+K\+\_\+op\+\_\+projection\+\_\+test@{A\+K\+\_\+op\+\_\+projection\+\_\+test}!projection.\+c@{projection.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+op\+\_\+projection\+\_\+test()}{AK_op_projection_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+projection\+\_\+test (
+\subsubsection[{A\+K\+\_\+op\+\_\+projection\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+projection\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}\hypertarget{projection_8c_a67132149077c6e6d3f995f17794d0423}{}\label{projection_8c_a67132149077c6e6d3f995f17794d0423}
+)}}\label{projection_8c_a67132149077c6e6d3f995f17794d0423}
 
 
 Function for projection operator testing. 
@@ -93,16 +93,16 @@ Dino Laktašić
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\index{projection.\+c@{projection.\+c}!A\+K\+\_\+projection@{A\+K\+\_\+projection}}
+\hypertarget{projection_8c_a1b9e888ad5198203223f4c74b3cdd5ef}{\index{projection.\+c@{projection.\+c}!A\+K\+\_\+projection@{A\+K\+\_\+projection}}
 \index{A\+K\+\_\+projection@{A\+K\+\_\+projection}!projection.\+c@{projection.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+projection(char $\ast$src\+Table, char $\ast$dst\+Table, struct list\+\_\+node $\ast$att, struct list\+\_\+node $\ast$expr)}{AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct list_node *expr)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+projection (
+\subsubsection[{A\+K\+\_\+projection}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+projection (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{src\+Table, }
 \item[{char $\ast$}]{dst\+Table, }
 \item[{struct list\+\_\+node $\ast$}]{att, }
 \item[{struct list\+\_\+node $\ast$}]{expr}
 \end{DoxyParamCaption}
-)}\hypertarget{projection_8c_a1b9e888ad5198203223f4c74b3cdd5ef}{}\label{projection_8c_a1b9e888ad5198203223f4c74b3cdd5ef}
+)}}\label{projection_8c_a1b9e888ad5198203223f4c74b3cdd5ef}
 
 
 Function makes a projection of some table. 
@@ -118,17 +118,17 @@ Matija Novak, rewrited and optimized by Dino Laktašić, now support cacheing
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if continues succesfuly, when not E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S if continues succesfuly, when not E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{projection.\+c@{projection.\+c}!A\+K\+\_\+temp\+\_\+create\+\_\+table@{A\+K\+\_\+temp\+\_\+create\+\_\+table}}
+\hypertarget{projection_8c_a7188d9a94bdabd81bb0a6b8a6e0cf014}{\index{projection.\+c@{projection.\+c}!A\+K\+\_\+temp\+\_\+create\+\_\+table@{A\+K\+\_\+temp\+\_\+create\+\_\+table}}
 \index{A\+K\+\_\+temp\+\_\+create\+\_\+table@{A\+K\+\_\+temp\+\_\+create\+\_\+table}!projection.\+c@{projection.\+c}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+temp\+\_\+create\+\_\+table(char $\ast$table, A\+K\+\_\+header $\ast$header, int type\+\_\+segment)}{AK_temp_create_table(char *table, AK_header *header, int type_segment)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+temp\+\_\+create\+\_\+table (
+\subsubsection[{A\+K\+\_\+temp\+\_\+create\+\_\+table}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+temp\+\_\+create\+\_\+table (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{table, }
 \item[{{\bf A\+K\+\_\+header} $\ast$}]{header, }
 \item[{int}]{type\+\_\+segment}
 \end{DoxyParamCaption}
-)}\hypertarget{projection_8c_a7188d9a94bdabd81bb0a6b8a6e0cf014}{}\label{projection_8c_a7188d9a94bdabd81bb0a6b8a6e0cf014}
+)}}\label{projection_8c_a7188d9a94bdabd81bb0a6b8a6e0cf014}
 
 
 Temporaly function to create table, and insert entry to the system\+\_\+relation catalog. 

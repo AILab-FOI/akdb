@@ -1,5 +1,6 @@
-\hypertarget{trigger_8h}{}\section{sql/trigger.h File Reference}
+\hypertarget{trigger_8h}{\section{sql/trigger.h File Reference}
 \label{trigger_8h}\index{sql/trigger.\+h@{sql/trigger.\+h}}
+}
 {\ttfamily \#include \char`\"{}../rec/archive\+\_\+log.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../file/fileio.\+h\char`\"{}}\\*
@@ -8,9 +9,7 @@
 {\ttfamily \#include \char`\"{}../rel/selection.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
 Include dependency graph for trigger.\+h\+:
-% FIG 0
 This graph shows which files directly or indirectly include this file\+:
-% FIG 1
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -25,7 +24,7 @@ int \hyperlink{trigger_8h_a256bc5cfe1886dba1310fc849668a635}{A\+K\+\_\+trigger\+
 int \hyperlink{trigger_8h_a5580f5dfc669b80c2c5f2f482d784494}{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id} (int obj\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Function removes a trigger by its obj\+\_\+id. \end{DoxyCompactList}\item 
 int \hyperlink{trigger_8h_aa5218f2c11756674db7080b6ba62ebe4}{A\+K\+\_\+trigger\+\_\+edit} (char $\ast$name, char $\ast$event, struct list\+\_\+node $\ast$condition, char $\ast$table, char $\ast$function)
-\begin{DoxyCompactList}\small\item\em Function edits information about the trigger in system table. In order to identify the trigger, either obj\+\_\+id or table and name parameters should be defined. The other options should be set to N\+U\+LL. Values of parameters that aren\textquotesingle{}t changing can be left N\+U\+LL. If conditions are to be removed, condition parameter should hold an empty list. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Function edits information about the trigger in system table. In order to identify the trigger, either obj\+\_\+id or table and name parameters should be defined. The other options should be set to N\+U\+L\+L. Values of parameters that aren't changing can be left N\+U\+L\+L. If conditions are to be removed, condition parameter should hold an empty list. \end{DoxyCompactList}\item 
 struct list\+\_\+node $\ast$ \hyperlink{trigger_8h_a1b6b1d8b82240230cca2a8d570d2f03e}{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions} (int trigger)
 \begin{DoxyCompactList}\small\item\em Function gets postfix list of conditions for the trigger (compatible with selection) \end{DoxyCompactList}\item 
 int \hyperlink{trigger_8h_a54b8df0db010c361c9d110521f896c81}{A\+K\+\_\+trigger\+\_\+rename} (char $\ast$old\+\_\+name, char $\ast$new\+\_\+name, char $\ast$table)
@@ -38,9 +37,9 @@ void \hyperlink{trigger_8h_a25769445eb63fbe7d8aaee161b463a9a}{A\+K\+\_\+trigger\
 Header file that provides data structures triggers 
 
 \subsection{Function Documentation}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+add@{A\+K\+\_\+trigger\+\_\+add}}
+\hypertarget{trigger_8h_aab7b601863091d0708653c8f817b3cf8}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+add@{A\+K\+\_\+trigger\+\_\+add}}
 \index{A\+K\+\_\+trigger\+\_\+add@{A\+K\+\_\+trigger\+\_\+add}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+add(char $\ast$name, char $\ast$event, struct list\+\_\+node $\ast$condition, char $\ast$table, char $\ast$function)}{AK_trigger_add(char *name, char *event, struct list_node *condition, char *table, char *function)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+add (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+add (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name, }
 \item[{char $\ast$}]{event, }
@@ -48,7 +47,7 @@ Header file that provides data structures triggers
 \item[{char $\ast$}]{table, }
 \item[{char $\ast$}]{function}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_aab7b601863091d0708653c8f817b3cf8}{}\label{trigger_8h_aab7b601863091d0708653c8f817b3cf8}
+)}}\label{trigger_8h_aab7b601863091d0708653c8f817b3cf8}
 
 
 Function that adds a trigger to system table. 
@@ -70,11 +69,11 @@ Unknown
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-trigger id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+trigger id or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+edit@{A\+K\+\_\+trigger\+\_\+edit}}
+\hypertarget{trigger_8h_aa5218f2c11756674db7080b6ba62ebe4}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+edit@{A\+K\+\_\+trigger\+\_\+edit}}
 \index{A\+K\+\_\+trigger\+\_\+edit@{A\+K\+\_\+trigger\+\_\+edit}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+edit(char $\ast$name, char $\ast$event, struct list\+\_\+node $\ast$condition, char $\ast$table, char $\ast$function)}{AK_trigger_edit(char *name, char *event, struct list_node *condition, char *table, char *function)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+edit (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+edit}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+edit (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name, }
 \item[{char $\ast$}]{event, }
@@ -82,37 +81,37 @@ trigger id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR
 \item[{char $\ast$}]{table, }
 \item[{char $\ast$}]{function}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_aa5218f2c11756674db7080b6ba62ebe4}{}\label{trigger_8h_aa5218f2c11756674db7080b6ba62ebe4}
+)}}\label{trigger_8h_aa5218f2c11756674db7080b6ba62ebe4}
 
 
-Function edits information about the trigger in system table. In order to identify the trigger, either obj\+\_\+id or table and name parameters should be defined. The other options should be set to N\+U\+LL. Values of parameters that aren\textquotesingle{}t changing can be left N\+U\+LL. If conditions are to be removed, condition parameter should hold an empty list. 
+Function edits information about the trigger in system table. In order to identify the trigger, either obj\+\_\+id or table and name parameters should be defined. The other options should be set to N\+U\+L\+L. Values of parameters that aren't changing can be left N\+U\+L\+L. If conditions are to be removed, condition parameter should hold an empty list. 
 
 \begin{DoxyAuthor}{Author}
 Unknown 
 \end{DoxyAuthor}
 
 \begin{DoxyParams}{Parameters}
-{\em $\ast$name} & name of the trigger (or N\+U\+LL if using obj\+\_\+id) \\
+{\em $\ast$name} & name of the trigger (or N\+U\+L\+L if using obj\+\_\+id) \\
 \hline
-{\em $\ast$event} & event of the trigger (or N\+U\+LL if it isn\textquotesingle{}t changing) \\
+{\em $\ast$event} & event of the trigger (or N\+U\+L\+L if it isn't changing) \\
 \hline
-{\em $\ast$condition} & list of conditions for trigger (or N\+U\+LL if it isn\textquotesingle{}t changing; empty list if all conditions are to be removed) \\
+{\em $\ast$condition} & list of conditions for trigger (or N\+U\+L\+L if it isn't changing; empty list if all conditions are to be removed) \\
 \hline
-{\em $\ast$table} & name of the connected table (or N\+U\+LL id using obj\+\_\+id) \\
+{\em $\ast$table} & name of the connected table (or N\+U\+L\+L id using obj\+\_\+id) \\
 \hline
-{\em $\ast$function} & name of the connected function (or N\+U\+LL if it isn\textquotesingle{}t changing) \\
+{\em $\ast$function} & name of the connected function (or N\+U\+L\+L if it isn't changing) \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+get\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions}}
+\hypertarget{trigger_8h_a1b6b1d8b82240230cca2a8d570d2f03e}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+get\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions}}
 \index{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions(int trigger)}{AK_trigger_get_conditions(int trigger)}}]{\setlength{\rightskip}{0pt plus 5cm}struct list\+\_\+node$\ast$ A\+K\+\_\+trigger\+\_\+get\+\_\+conditions (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions}]{\setlength{\rightskip}{0pt plus 5cm}struct list\+\_\+node$\ast$ A\+K\+\_\+trigger\+\_\+get\+\_\+conditions (
 \begin{DoxyParamCaption}
 \item[{int}]{trigger}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_a1b6b1d8b82240230cca2a8d570d2f03e}{}\label{trigger_8h_a1b6b1d8b82240230cca2a8d570d2f03e}
+)}}\label{trigger_8h_a1b6b1d8b82240230cca2a8d570d2f03e}
 
 
 Function gets postfix list of conditions for the trigger (compatible with selection) 
@@ -128,14 +127,14 @@ Unknown, updated by Mario Peroković
 \begin{DoxyReturn}{Returns}
 list of conditions for the trigger 
 \end{DoxyReturn}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+get\+\_\+id@{A\+K\+\_\+trigger\+\_\+get\+\_\+id}}
+\hypertarget{trigger_8h_a49f3375c2693be93bd370895bea42b0a}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+get\+\_\+id@{A\+K\+\_\+trigger\+\_\+get\+\_\+id}}
 \index{A\+K\+\_\+trigger\+\_\+get\+\_\+id@{A\+K\+\_\+trigger\+\_\+get\+\_\+id}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+get\+\_\+id(char $\ast$name, char $\ast$table)}{AK_trigger_get_id(char *name, char *table)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+get\+\_\+id (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+get\+\_\+id}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+get\+\_\+id (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name, }
 \item[{char $\ast$}]{table}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_a49f3375c2693be93bd370895bea42b0a}{}\label{trigger_8h_a49f3375c2693be93bd370895bea42b0a}
+)}}\label{trigger_8h_a49f3375c2693be93bd370895bea42b0a}
 
 
 Function that gets obj\+\_\+id of a trigger defined by name and table. 
@@ -151,16 +150,16 @@ Function that gets obj\+\_\+id of a trigger defined by name and table.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-obj\+\_\+id of the trigger or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+obj\+\_\+id of the trigger or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name}}
+\hypertarget{trigger_8h_a256bc5cfe1886dba1310fc849668a635}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name}}
 \index{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name(char $\ast$name, char $\ast$table)}{AK_trigger_remove_by_name(char *name, char *table)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{name, }
 \item[{char $\ast$}]{table}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_a256bc5cfe1886dba1310fc849668a635}{}\label{trigger_8h_a256bc5cfe1886dba1310fc849668a635}
+)}}\label{trigger_8h_a256bc5cfe1886dba1310fc849668a635}
 
 
 Function that removes a trigger from system table by name. 
@@ -176,15 +175,15 @@ Unknown
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}}
+\hypertarget{trigger_8h_a5580f5dfc669b80c2c5f2f482d784494}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}}
 \index{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id(int obj\+\_\+id)}{AK_trigger_remove_by_obj_id(int obj_id)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id (
 \begin{DoxyParamCaption}
 \item[{int}]{obj\+\_\+id}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_a5580f5dfc669b80c2c5f2f482d784494}{}\label{trigger_8h_a5580f5dfc669b80c2c5f2f482d784494}
+)}}\label{trigger_8h_a5580f5dfc669b80c2c5f2f482d784494}
 
 
 Function removes a trigger by its obj\+\_\+id. 
@@ -198,17 +197,17 @@ Unknown
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+rename@{A\+K\+\_\+trigger\+\_\+rename}}
+\hypertarget{trigger_8h_a54b8df0db010c361c9d110521f896c81}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+rename@{A\+K\+\_\+trigger\+\_\+rename}}
 \index{A\+K\+\_\+trigger\+\_\+rename@{A\+K\+\_\+trigger\+\_\+rename}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+rename(char $\ast$old\+\_\+name, char $\ast$new\+\_\+name, char $\ast$table)}{AK_trigger_rename(char *old_name, char *new_name, char *table)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+rename (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+rename}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+rename (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{old\+\_\+name, }
 \item[{char $\ast$}]{new\+\_\+name, }
 \item[{char $\ast$}]{table}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_a54b8df0db010c361c9d110521f896c81}{}\label{trigger_8h_a54b8df0db010c361c9d110521f896c81}
+)}}\label{trigger_8h_a54b8df0db010c361c9d110521f896c81}
 
 
 Function renames the trigger. 
@@ -224,22 +223,22 @@ Ljubo Barać
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+save\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions}}
+\hypertarget{trigger_8h_a38811626ecbd7e6bb1cc8820ead9199f}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+save\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions}}
 \index{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions(int trigger, struct list\+\_\+node $\ast$condition)}{AK_trigger_save_conditions(int trigger, struct list_node *condition)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+save\+\_\+conditions (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+trigger\+\_\+save\+\_\+conditions (
 \begin{DoxyParamCaption}
 \item[{int}]{trigger, }
 \item[{struct list\+\_\+node $\ast$}]{condition}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_a38811626ecbd7e6bb1cc8820ead9199f}{}\label{trigger_8h_a38811626ecbd7e6bb1cc8820ead9199f}
+)}}\label{trigger_8h_a38811626ecbd7e6bb1cc8820ead9199f}
 
 
 Saves conditions for a trigger. 
 
 \begin{DoxyAuthor}{Author}
-Unknown, updated by Mario Peroković, check if data is T\+Y\+P\+E\+\_\+\+I\+NT 
+Unknown, updated by Mario Peroković, check if data is T\+Y\+P\+E\+\_\+\+I\+N\+T 
 \end{DoxyAuthor}
 
 \begin{DoxyParams}{Parameters}
@@ -249,15 +248,15 @@ Unknown, updated by Mario Peroković, check if data is T\+Y\+P\+E\+\_\+\+I\+NT
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S or E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
 \end{DoxyReturn}
-\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+test@{A\+K\+\_\+trigger\+\_\+test}}
+\hypertarget{trigger_8h_a25769445eb63fbe7d8aaee161b463a9a}{\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+test@{A\+K\+\_\+trigger\+\_\+test}}
 \index{A\+K\+\_\+trigger\+\_\+test@{A\+K\+\_\+trigger\+\_\+test}!trigger.\+h@{trigger.\+h}}
-\subsubsection[{\texorpdfstring{A\+K\+\_\+trigger\+\_\+test()}{AK_trigger_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+trigger\+\_\+test (
+\subsubsection[{A\+K\+\_\+trigger\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+trigger\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}\hypertarget{trigger_8h_a25769445eb63fbe7d8aaee161b463a9a}{}\label{trigger_8h_a25769445eb63fbe7d8aaee161b463a9a}
+)}}\label{trigger_8h_a25769445eb63fbe7d8aaee161b463a9a}
 
 
 Function for trigger testing. 
