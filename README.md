@@ -24,11 +24,11 @@ Clone the repository using [git][git]:
 git clone https://github.com/mschatten/akdb
 cd akdb
 ```
-### Install Dependencies
+### #Install Dependencies
 ```
 sudo apt-get install python2.7
 ```
-### Setting up virtualenv
+#### Setting up virtualenv
 Install [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) via [pip](https://pip.pypa.io/en/stable/installing/):
 ```
 pip install virtualenv
@@ -55,13 +55,13 @@ make
 make doc
 make swig
 ```
-## Run the Application
+### Run the Application
 ```
 cd bin/
 ./akdb help
 ./akdb <option>
 ```
-## Clean project
+### Clean project
 Cleaning the project from files generated while compiling use this:
 ```
 make clean
