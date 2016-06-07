@@ -1,23 +1,23 @@
-\hypertarget{drop_8c}{\section{sql/drop.c File Reference}
+\hypertarget{drop_8c}{}\section{sql/drop.c File Reference}
 \label{drop_8c}\index{sql/drop.\+c@{sql/drop.\+c}}
-}
 {\ttfamily \#include \char`\"{}drop.\+h\char`\"{}}\\*
 Include dependency graph for drop.\+c\+:
+% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 void \hyperlink{drop_8c_aa1742fc1273439bcc3b6af122c9c728b}{A\+K\+\_\+drop} (int type, \hyperlink{structdrop__arguments}{A\+K\+\_\+drop\+\_\+arguments} $\ast$\hyperlink{structdrop__arguments}{drop\+\_\+arguments})
-\begin{DoxyCompactList}\small\item\em Function for D\+R\+O\+P table, index, view, sequence, trigger, function, user, group and constraint. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Function for D\+R\+OP table, index, view, sequence, trigger, function, user, group and constraint. \end{DoxyCompactList}\item 
 void \hyperlink{drop_8c_a9c1102bbfc43ebb3b6cfde2b997a5ea2}{A\+K\+\_\+drop\+\_\+help\+\_\+function} (char $\ast$tbl\+Name, char $\ast$sys\+\_\+table)
 \begin{DoxyCompactList}\small\item\em Help function for drop command. Delete memory blocks and addresses of table and removes table or index from system table. \end{DoxyCompactList}\item 
 int \hyperlink{drop_8c_a99346b51b22d1c78660bcae4aba29ba7}{A\+K\+\_\+if\+\_\+exist} (char $\ast$tbl\+Name, char $\ast$sys\+\_\+table)
 \begin{DoxyCompactList}\small\item\em Help function for check if element(view, function, sequence, user ...) exist in system catalog table. \end{DoxyCompactList}\item 
 void \hyperlink{drop_8c_af80e90a8a4ae40fb1fc2e94456785773}{A\+K\+\_\+drop\+\_\+test} ()
-\begin{DoxyCompactList}\small\item\em Function for testing all D\+R\+O\+P functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Function for testing all D\+R\+OP functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-char $\ast$ {\bfseries system\+\_\+catalog} \mbox{[}N\+U\+M\+\_\+\+S\+Y\+S\+\_\+\+T\+A\+B\+L\+E\+S\mbox{]}
+char $\ast$ {\bfseries system\+\_\+catalog} \mbox{[}N\+U\+M\+\_\+\+S\+Y\+S\+\_\+\+T\+A\+B\+L\+ES\mbox{]}
 \end{DoxyCompactItemize}
 
 
@@ -25,20 +25,20 @@ char $\ast$ {\bfseries system\+\_\+catalog} \mbox{[}N\+U\+M\+\_\+\+S\+Y\+S\+\_\+
 \begin{DoxyAuthor}{Author}
 Unknown, Jurica Hlevnjak -\/ drop table bugs fixed, reorganized code structure, system catalog tables drop disabled, drop index added, drop view added, drop sequence added, drop trigger added, drop\+\_\+function added, drop user added, drop group added, A\+K\+\_\+drop\+\_\+test updated
 \end{DoxyAuthor}
-Provides D\+R\+O\+P functions 
+Provides D\+R\+OP functions 
 
 \subsection{Function Documentation}
-\hypertarget{drop_8c_aa1742fc1273439bcc3b6af122c9c728b}{\index{drop.\+c@{drop.\+c}!A\+K\+\_\+drop@{A\+K\+\_\+drop}}
+\index{drop.\+c@{drop.\+c}!A\+K\+\_\+drop@{A\+K\+\_\+drop}}
 \index{A\+K\+\_\+drop@{A\+K\+\_\+drop}!drop.\+c@{drop.\+c}}
-\subsubsection[{A\+K\+\_\+drop}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+drop (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+drop(int type, A\+K\+\_\+drop\+\_\+arguments $\ast$drop\+\_\+arguments)}{AK_drop(int type, AK_drop_arguments *drop_arguments)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+drop (
 \begin{DoxyParamCaption}
 \item[{int}]{type, }
 \item[{{\bf A\+K\+\_\+drop\+\_\+arguments} $\ast$}]{drop\+\_\+arguments}
 \end{DoxyParamCaption}
-)}}\label{drop_8c_aa1742fc1273439bcc3b6af122c9c728b}
+)}\hypertarget{drop_8c_aa1742fc1273439bcc3b6af122c9c728b}{}\label{drop_8c_aa1742fc1273439bcc3b6af122c9c728b}
 
 
-Function for D\+R\+O\+P table, index, view, sequence, trigger, function, user, group and constraint. 
+Function for D\+R\+OP table, index, view, sequence, trigger, function, user, group and constraint. 
 
 \begin{DoxyAuthor}{Author}
 Unknown, Jurica Hlevnjak, updated by Tomislav Ilisevic 
@@ -47,17 +47,17 @@ Unknown, Jurica Hlevnjak, updated by Tomislav Ilisevic
 \begin{DoxyParams}{Parameters}
 {\em type} & drop type \\
 \hline
-{\em \hyperlink{structdrop__arguments}{drop\+\_\+arguments}} & arguments of D\+R\+O\+P command \\
+{\em \hyperlink{structdrop__arguments}{drop\+\_\+arguments}} & arguments of D\+R\+OP command \\
 \hline
 \end{DoxyParams}
-\hypertarget{drop_8c_a9c1102bbfc43ebb3b6cfde2b997a5ea2}{\index{drop.\+c@{drop.\+c}!A\+K\+\_\+drop\+\_\+help\+\_\+function@{A\+K\+\_\+drop\+\_\+help\+\_\+function}}
+\index{drop.\+c@{drop.\+c}!A\+K\+\_\+drop\+\_\+help\+\_\+function@{A\+K\+\_\+drop\+\_\+help\+\_\+function}}
 \index{A\+K\+\_\+drop\+\_\+help\+\_\+function@{A\+K\+\_\+drop\+\_\+help\+\_\+function}!drop.\+c@{drop.\+c}}
-\subsubsection[{A\+K\+\_\+drop\+\_\+help\+\_\+function}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+drop\+\_\+help\+\_\+function (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+drop\+\_\+help\+\_\+function(char $\ast$tbl\+Name, char $\ast$sys\+\_\+table)}{AK_drop_help_function(char *tblName, char *sys_table)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+drop\+\_\+help\+\_\+function (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{tbl\+Name, }
 \item[{char $\ast$}]{sys\+\_\+table}
 \end{DoxyParamCaption}
-)}}\label{drop_8c_a9c1102bbfc43ebb3b6cfde2b997a5ea2}
+)}\hypertarget{drop_8c_a9c1102bbfc43ebb3b6cfde2b997a5ea2}{}\label{drop_8c_a9c1102bbfc43ebb3b6cfde2b997a5ea2}
 
 
 Help function for drop command. Delete memory blocks and addresses of table and removes table or index from system table. 
@@ -72,28 +72,28 @@ unknown, Jurica Hlevnjak -\/ fix bugs and reorganize code in this function
 {\em sys\+\_\+table} & name of system catalog table \\
 \hline
 \end{DoxyParams}
-\hypertarget{drop_8c_af80e90a8a4ae40fb1fc2e94456785773}{\index{drop.\+c@{drop.\+c}!A\+K\+\_\+drop\+\_\+test@{A\+K\+\_\+drop\+\_\+test}}
+\index{drop.\+c@{drop.\+c}!A\+K\+\_\+drop\+\_\+test@{A\+K\+\_\+drop\+\_\+test}}
 \index{A\+K\+\_\+drop\+\_\+test@{A\+K\+\_\+drop\+\_\+test}!drop.\+c@{drop.\+c}}
-\subsubsection[{A\+K\+\_\+drop\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+drop\+\_\+test (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+drop\+\_\+test()}{AK_drop_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+drop\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{drop_8c_af80e90a8a4ae40fb1fc2e94456785773}
+)}\hypertarget{drop_8c_af80e90a8a4ae40fb1fc2e94456785773}{}\label{drop_8c_af80e90a8a4ae40fb1fc2e94456785773}
 
 
-Function for testing all D\+R\+O\+P functions. 
+Function for testing all D\+R\+OP functions. 
 
 \begin{DoxyAuthor}{Author}
 unknown, Jurica Hlevnjak -\/ added all tests except drop table test, updated by Tomislav Ilisevic 
 \end{DoxyAuthor}
-\hypertarget{drop_8c_a99346b51b22d1c78660bcae4aba29ba7}{\index{drop.\+c@{drop.\+c}!A\+K\+\_\+if\+\_\+exist@{A\+K\+\_\+if\+\_\+exist}}
+\index{drop.\+c@{drop.\+c}!A\+K\+\_\+if\+\_\+exist@{A\+K\+\_\+if\+\_\+exist}}
 \index{A\+K\+\_\+if\+\_\+exist@{A\+K\+\_\+if\+\_\+exist}!drop.\+c@{drop.\+c}}
-\subsubsection[{A\+K\+\_\+if\+\_\+exist}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+if\+\_\+exist (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+if\+\_\+exist(char $\ast$tbl\+Name, char $\ast$sys\+\_\+table)}{AK_if_exist(char *tblName, char *sys_table)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+if\+\_\+exist (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{tbl\+Name, }
 \item[{char $\ast$}]{sys\+\_\+table}
 \end{DoxyParamCaption}
-)}}\label{drop_8c_a99346b51b22d1c78660bcae4aba29ba7}
+)}\hypertarget{drop_8c_a99346b51b22d1c78660bcae4aba29ba7}{}\label{drop_8c_a99346b51b22d1c78660bcae4aba29ba7}
 
 
 Help function for check if element(view, function, sequence, user ...) exist in system catalog table. 
@@ -114,9 +114,9 @@ if element exist in system catalog returns 1, if not returns 0
 
 
 \subsection{Variable Documentation}
-\hypertarget{drop_8c_a43441b8d54c881093a0c79aec53274a0}{\index{drop.\+c@{drop.\+c}!system\+\_\+catalog@{system\+\_\+catalog}}
+\index{drop.\+c@{drop.\+c}!system\+\_\+catalog@{system\+\_\+catalog}}
 \index{system\+\_\+catalog@{system\+\_\+catalog}!drop.\+c@{drop.\+c}}
-\subsubsection[{system\+\_\+catalog}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ system\+\_\+catalog\mbox{[}N\+U\+M\+\_\+\+S\+Y\+S\+\_\+\+T\+A\+B\+L\+E\+S\mbox{]}}}\label{drop_8c_a43441b8d54c881093a0c79aec53274a0}
+\subsubsection[{\texorpdfstring{system\+\_\+catalog}{system_catalog}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ system\+\_\+catalog\mbox{[}N\+U\+M\+\_\+\+S\+Y\+S\+\_\+\+T\+A\+B\+L\+ES\mbox{]}}\hypertarget{drop_8c_a43441b8d54c881093a0c79aec53274a0}{}\label{drop_8c_a43441b8d54c881093a0c79aec53274a0}
 {\bfseries Initial value\+:}
 \begin{DoxyCode}
 = \{

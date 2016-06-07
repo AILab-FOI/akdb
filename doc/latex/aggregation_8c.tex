@@ -1,13 +1,13 @@
-\hypertarget{aggregation_8c}{\section{rel/aggregation.c File Reference}
+\hypertarget{aggregation_8c}{}\section{rel/aggregation.c File Reference}
 \label{aggregation_8c}\index{rel/aggregation.\+c@{rel/aggregation.\+c}}
-}
 {\ttfamily \#include \char`\"{}aggregation.\+h\char`\"{}}\\*
 Include dependency graph for aggregation.\+c\+:
+% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{structsearch__result}{search\+\_\+result} \hyperlink{aggregation_8c_a91490139be5ae263a0f79085353929d8}{A\+K\+\_\+search\+\_\+unsorted} (char $\ast$sz\+Relation, \hyperlink{structsearch__params}{search\+\_\+params} $\ast$asp\+Params, int i\+Num\+\_\+search\+\_\+params)
-\begin{DoxyCompactList}\small\item\em Searches through unsorted values of multiple attributes in a segment. Only tuples that are equal on all given attribute values are returned (A == 1 A\+N\+D B == 7 A\+N\+D ...). S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E is inclusive. Only one value (or range) per attribute allowed -\/ use \hyperlink{structsearch__params_a061c7b5e9a3163f19dac0d3a681d63d0}{search\+\_\+params.\+p\+Data\+\_\+lower} for S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+A\+R. Supported types for S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E\+: T\+Y\+P\+E\+\_\+\+I\+N\+T, T\+Y\+P\+E\+\_\+\+F\+L\+O\+A\+T, T\+Y\+P\+E\+\_\+\+N\+U\+M\+B\+E\+R, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E\+T\+I\+M\+E, T\+Y\+P\+E\+\_\+\+T\+I\+M\+E. Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access violation. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Searches through unsorted values of multiple attributes in a segment. Only tuples that are equal on all given attribute values are returned (A == 1 A\+ND B == 7 A\+ND ...). S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE is inclusive. Only one value (or range) per attribute allowed -\/ use \hyperlink{structsearch__params_a061c7b5e9a3163f19dac0d3a681d63d0}{search\+\_\+params.\+p\+Data\+\_\+lower} for S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+AR. Supported types for S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE\+: T\+Y\+P\+E\+\_\+\+I\+NT, T\+Y\+P\+E\+\_\+\+F\+L\+O\+AT, T\+Y\+P\+E\+\_\+\+N\+U\+M\+B\+ER, T\+Y\+P\+E\+\_\+\+D\+A\+TE, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E\+T\+I\+ME, T\+Y\+P\+E\+\_\+\+T\+I\+ME. Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access violation. \end{DoxyCompactList}\item 
 int \hyperlink{aggregation_8c_abace9faf5a77b69ad08b10086556b47b}{A\+K\+\_\+header\+\_\+size} (\hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$header)
 \begin{DoxyCompactList}\small\item\em Function calculates how meany attributes there are in a header with while loop. \end{DoxyCompactList}\item 
 void \hyperlink{aggregation_8c_af8db5150c0790b36ae56526280e47599}{A\+K\+\_\+agg\+\_\+input\+\_\+init} (\hyperlink{structAK__agg__input}{A\+K\+\_\+agg\+\_\+input} $\ast$input)
@@ -17,9 +17,9 @@ int \hyperlink{aggregation_8c_af98d6f8022efcff9d02f0b8b6f62b646}{A\+K\+\_\+agg\+
 int \hyperlink{aggregation_8c_a3c630754ec1a2714e3b04b5753b2d0f4}{A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning} (\hyperlink{structAK__header}{A\+K\+\_\+header} header, int agg\+\_\+task, \hyperlink{structAK__agg__input}{A\+K\+\_\+agg\+\_\+input} $\ast$input)
 \begin{DoxyCompactList}\small\item\em Function adds a header with a task on the beginning of the input object for aggregation so with for loop existing attributes and tasks are moved one place forward in input object. \end{DoxyCompactList}\item 
 void \hyperlink{aggregation_8c_aed4852916a839c07af5f820cc9efb2ba}{A\+K\+\_\+agg\+\_\+input\+\_\+fix} (\hyperlink{structAK__agg__input}{A\+K\+\_\+agg\+\_\+input} $\ast$input)
-\begin{DoxyCompactList}\small\item\em This function is used to handle A\+V\+G (average) aggregation. It goes through array of tasks in input object until it comes to task with value -\/1. While loop examines whether the task in array is equal to A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G. If so, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+C\+O\+U\+N\+T is put on the beginning of input object. After that, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+S\+U\+M is put on the begginig of input object. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em This function is used to handle A\+VG (average) aggregation. It goes through array of tasks in input object until it comes to task with value -\/1. While loop examines whether the task in array is equal to A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+VG. If so, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+C\+O\+U\+NT is put on the beginning of input object. After that, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+S\+UM is put on the begginig of input object. \end{DoxyCompactList}\item 
 int \hyperlink{aggregation_8c_ac09c7d8e90edcda6cd005cdd8d49c34b}{A\+K\+\_\+aggregation} (\hyperlink{structAK__agg__input}{A\+K\+\_\+agg\+\_\+input} $\ast$input, char $\ast$source\+\_\+table, char $\ast$agg\+\_\+table)
-\begin{DoxyCompactList}\small\item\em Function aggregates a given table by given attributes. Firstly, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+C\+O\+U\+N\+T and A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+S\+U\+M are put on the beginning of the input object. Then for loop iterates through input tasks and assignes the type of aggregation operation according to aggregation operation. New table has to be created. For loop goes through given table. G\+R\+O\+U\+P operation is executed separately from other operations. Addresses of records are put in needed\+\_\+values array and results are put in new table. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Function aggregates a given table by given attributes. Firstly, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+C\+O\+U\+NT and A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+S\+UM are put on the beginning of the input object. Then for loop iterates through input tasks and assignes the type of aggregation operation according to aggregation operation. New table has to be created. For loop goes through given table. G\+R\+O\+UP operation is executed separately from other operations. Addresses of records are put in needed\+\_\+values array and results are put in new table. \end{DoxyCompactList}\item 
 void \hyperlink{aggregation_8c_ac8ee72bc6de9361b817a78dba16ff03c}{Ak\+\_\+aggregation\+\_\+test} ()
 \end{DoxyCompactItemize}
 
@@ -28,15 +28,15 @@ void \hyperlink{aggregation_8c_ac8ee72bc6de9361b817a78dba16ff03c}{Ak\+\_\+aggreg
 Provides functions for aggregation and grouping 
 
 \subsection{Function Documentation}
-\hypertarget{aggregation_8c_af98d6f8022efcff9d02f0b8b6f62b646}{\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+agg\+\_\+input\+\_\+add@{A\+K\+\_\+agg\+\_\+input\+\_\+add}}
+\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+agg\+\_\+input\+\_\+add@{A\+K\+\_\+agg\+\_\+input\+\_\+add}}
 \index{A\+K\+\_\+agg\+\_\+input\+\_\+add@{A\+K\+\_\+agg\+\_\+input\+\_\+add}!aggregation.\+c@{aggregation.\+c}}
-\subsubsection[{A\+K\+\_\+agg\+\_\+input\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+agg\+\_\+input\+\_\+add (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+agg\+\_\+input\+\_\+add(\+A\+K\+\_\+header header, int agg\+\_\+task, A\+K\+\_\+agg\+\_\+input $\ast$input)}{AK_agg_input_add(AK_header header, int agg_task, AK_agg_input *input)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+agg\+\_\+input\+\_\+add (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+header}}]{header, }
 \item[{int}]{agg\+\_\+task, }
 \item[{{\bf A\+K\+\_\+agg\+\_\+input} $\ast$}]{input}
 \end{DoxyParamCaption}
-)}}\label{aggregation_8c_af98d6f8022efcff9d02f0b8b6f62b646}
+)}\hypertarget{aggregation_8c_af98d6f8022efcff9d02f0b8b6f62b646}{}\label{aggregation_8c_af98d6f8022efcff9d02f0b8b6f62b646}
 
 
 Function adds a header with a task in input object for aggregation. 
@@ -54,17 +54,17 @@ Dejan Frankovic
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-On success, returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S, otherwise E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E 
+On success, returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS, otherwise E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
 \end{DoxyReturn}
-\hypertarget{aggregation_8c_a3c630754ec1a2714e3b04b5753b2d0f4}{\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning@{A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning}}
+\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning@{A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning}}
 \index{A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning@{A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning}!aggregation.\+c@{aggregation.\+c}}
-\subsubsection[{A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning(\+A\+K\+\_\+header header, int agg\+\_\+task, A\+K\+\_\+agg\+\_\+input $\ast$input)}{AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *input)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+agg\+\_\+input\+\_\+add\+\_\+to\+\_\+beginning (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+header}}]{header, }
 \item[{int}]{agg\+\_\+task, }
 \item[{{\bf A\+K\+\_\+agg\+\_\+input} $\ast$}]{input}
 \end{DoxyParamCaption}
-)}}\label{aggregation_8c_a3c630754ec1a2714e3b04b5753b2d0f4}
+)}\hypertarget{aggregation_8c_a3c630754ec1a2714e3b04b5753b2d0f4}{}\label{aggregation_8c_a3c630754ec1a2714e3b04b5753b2d0f4}
 
 
 Function adds a header with a task on the beginning of the input object for aggregation so with for loop existing attributes and tasks are moved one place forward in input object. 
@@ -82,18 +82,18 @@ Dejan Frankovic
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-On success, returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S, otherwise E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+R\+E 
+On success, returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS, otherwise E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
 \end{DoxyReturn}
-\hypertarget{aggregation_8c_aed4852916a839c07af5f820cc9efb2ba}{\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+agg\+\_\+input\+\_\+fix@{A\+K\+\_\+agg\+\_\+input\+\_\+fix}}
+\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+agg\+\_\+input\+\_\+fix@{A\+K\+\_\+agg\+\_\+input\+\_\+fix}}
 \index{A\+K\+\_\+agg\+\_\+input\+\_\+fix@{A\+K\+\_\+agg\+\_\+input\+\_\+fix}!aggregation.\+c@{aggregation.\+c}}
-\subsubsection[{A\+K\+\_\+agg\+\_\+input\+\_\+fix}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+agg\+\_\+input\+\_\+fix (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+agg\+\_\+input\+\_\+fix(\+A\+K\+\_\+agg\+\_\+input $\ast$input)}{AK_agg_input_fix(AK_agg_input *input)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+agg\+\_\+input\+\_\+fix (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+agg\+\_\+input} $\ast$}]{input}
 \end{DoxyParamCaption}
-)}}\label{aggregation_8c_aed4852916a839c07af5f820cc9efb2ba}
+)}\hypertarget{aggregation_8c_aed4852916a839c07af5f820cc9efb2ba}{}\label{aggregation_8c_aed4852916a839c07af5f820cc9efb2ba}
 
 
-This function is used to handle A\+V\+G (average) aggregation. It goes through array of tasks in input object until it comes to task with value -\/1. While loop examines whether the task in array is equal to A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G. If so, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+C\+O\+U\+N\+T is put on the beginning of input object. After that, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+S\+U\+M is put on the begginig of input object. 
+This function is used to handle A\+VG (average) aggregation. It goes through array of tasks in input object until it comes to task with value -\/1. While loop examines whether the task in array is equal to A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+VG. If so, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+C\+O\+U\+NT is put on the beginning of input object. After that, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+S\+UM is put on the begginig of input object. 
 
 \begin{DoxyAuthor}{Author}
 Dejan Frankovic 
@@ -106,13 +106,13 @@ Dejan Frankovic
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{aggregation_8c_af8db5150c0790b36ae56526280e47599}{\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+agg\+\_\+input\+\_\+init@{A\+K\+\_\+agg\+\_\+input\+\_\+init}}
+\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+agg\+\_\+input\+\_\+init@{A\+K\+\_\+agg\+\_\+input\+\_\+init}}
 \index{A\+K\+\_\+agg\+\_\+input\+\_\+init@{A\+K\+\_\+agg\+\_\+input\+\_\+init}!aggregation.\+c@{aggregation.\+c}}
-\subsubsection[{A\+K\+\_\+agg\+\_\+input\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+agg\+\_\+input\+\_\+init (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+agg\+\_\+input\+\_\+init(\+A\+K\+\_\+agg\+\_\+input $\ast$input)}{AK_agg_input_init(AK_agg_input *input)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+agg\+\_\+input\+\_\+init (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+agg\+\_\+input} $\ast$}]{input}
 \end{DoxyParamCaption}
-)}}\label{aggregation_8c_af8db5150c0790b36ae56526280e47599}
+)}\hypertarget{aggregation_8c_af8db5150c0790b36ae56526280e47599}{}\label{aggregation_8c_af8db5150c0790b36ae56526280e47599}
 
 
 Function initializes the input object for aggregation whit init values. 
@@ -128,18 +128,18 @@ Dejan Frankovic
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{aggregation_8c_ac09c7d8e90edcda6cd005cdd8d49c34b}{\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+aggregation@{A\+K\+\_\+aggregation}}
+\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+aggregation@{A\+K\+\_\+aggregation}}
 \index{A\+K\+\_\+aggregation@{A\+K\+\_\+aggregation}!aggregation.\+c@{aggregation.\+c}}
-\subsubsection[{A\+K\+\_\+aggregation}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+aggregation (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+aggregation(\+A\+K\+\_\+agg\+\_\+input $\ast$input, char $\ast$source\+\_\+table, char $\ast$agg\+\_\+table)}{AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+aggregation (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+agg\+\_\+input} $\ast$}]{input, }
 \item[{char $\ast$}]{source\+\_\+table, }
 \item[{char $\ast$}]{agg\+\_\+table}
 \end{DoxyParamCaption}
-)}}\label{aggregation_8c_ac09c7d8e90edcda6cd005cdd8d49c34b}
+)}\hypertarget{aggregation_8c_ac09c7d8e90edcda6cd005cdd8d49c34b}{}\label{aggregation_8c_ac09c7d8e90edcda6cd005cdd8d49c34b}
 
 
-Function aggregates a given table by given attributes. Firstly, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+C\+O\+U\+N\+T and A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+S\+U\+M are put on the beginning of the input object. Then for loop iterates through input tasks and assignes the type of aggregation operation according to aggregation operation. New table has to be created. For loop goes through given table. G\+R\+O\+U\+P operation is executed separately from other operations. Addresses of records are put in needed\+\_\+values array and results are put in new table. 
+Function aggregates a given table by given attributes. Firstly, A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+C\+O\+U\+NT and A\+G\+G\+\_\+\+T\+A\+S\+K\+\_\+\+A\+V\+G\+\_\+\+S\+UM are put on the beginning of the input object. Then for loop iterates through input tasks and assignes the type of aggregation operation according to aggregation operation. New table has to be created. For loop goes through given table. G\+R\+O\+UP operation is executed separately from other operations. Addresses of records are put in needed\+\_\+values array and results are put in new table. 
 
 \begin{DoxyAuthor}{Author}
 Dejan Frankovic 
@@ -154,34 +154,34 @@ Dejan Frankovic
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S if continues succesfuly, when not E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if continues succesfuly, when not E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
 \end{DoxyReturn}
-T\+H\+I\+S S\+I\+N\+G\+L\+E L\+I\+N\+E B\+E\+L\+O\+W (memcpy) is the purpose of A\+L\+L evil in the world! This line is the reason why test function prints one extra empty row with \char`\"{}nulls\char`\"{} at the end! Trust me! Comment it, and you will see -\/ test function will not print extra row with nulls (but counts and averages in table will be all messed up!) After two days of hard research, I still have not found what is the reason behind printing extra row at the end! Fellow programmer, if you really really want to solve this issue, arm yourself with at least 2 liters of hot coffee!
+T\+H\+IS S\+I\+N\+G\+LE L\+I\+NE B\+E\+L\+OW (memcpy) is the purpose of A\+LL evil in the world! This line is the reason why test function prints one extra empty row with \char`\"{}nulls\char`\"{} at the end! Trust me! Comment it, and you will see -\/ test function will not print extra row with nulls (but counts and averages in table will be all messed up!) After two days of hard research, I still have not found what is the reason behind printing extra row at the end! Fellow programmer, if you really really want to solve this issue, arm yourself with at least 2 liters of hot coffee!
 
-What this line does? What is the purpose of this line in the universe? Well, fellow programmer, this line sets the initial count to 1. That means if name \char`\"{}\+Ivan\char`\"{} is found, it will have count of 1 because, well, that's the first Ivan that is found! If function finds another Ivan (which, actually, will happen), this part of code will not handle it (other part of code will).
+What this line does? What is the purpose of this line in the universe? Well, fellow programmer, this line sets the initial count to 1. That means if name \char`\"{}\+Ivan\char`\"{} is found, it will have count of 1 because, well, that\textquotesingle{}s the first Ivan that is found! If function finds another Ivan (which, actually, will happen), this part of code will not handle it (other part of code will).
 
-That actually means that this little piece of code (this line below) only (and O\+N\+L\+Y) sets count to 1! And besides that causes every other evil in the world. \+:O
+That actually means that this little piece of code (this line below) only (and O\+N\+LY) sets count to 1! And besides that causes every other evil in the world. \+:O
 
-P.\+S. The reason for that may be in linked list, or in A\+K\+\_\+insert\+\_\+row() You'll have to check every piece of A\+K\+D\+B code to find cause! I have found out that additional line is added when k == 25. There may be problem in linked lists or in A\+K\+\_\+insert\+\_\+row function or somewhere else. Who knows.
+P.\+S. The reason for that may be in linked list, or in A\+K\+\_\+insert\+\_\+row() You\textquotesingle{}ll have to check every piece of A\+K\+DB code to find cause! I have found out that additional line is added when k == 25. There may be problem in linked lists or in A\+K\+\_\+insert\+\_\+row function or somewhere else. Who knows.
 
-If I didn't handle that last row (which has one attribute of size 0), test would not pass!
+If I didn\textquotesingle{}t handle that last row (which has one attribute of size 0), test would not pass!
 
-Good luck, fellow programmer!\hypertarget{aggregation_8c_ac8ee72bc6de9361b817a78dba16ff03c}{\index{aggregation.\+c@{aggregation.\+c}!Ak\+\_\+aggregation\+\_\+test@{Ak\+\_\+aggregation\+\_\+test}}
+Good luck, fellow programmer!\index{aggregation.\+c@{aggregation.\+c}!Ak\+\_\+aggregation\+\_\+test@{Ak\+\_\+aggregation\+\_\+test}}
 \index{Ak\+\_\+aggregation\+\_\+test@{Ak\+\_\+aggregation\+\_\+test}!aggregation.\+c@{aggregation.\+c}}
-\subsubsection[{Ak\+\_\+aggregation\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+aggregation\+\_\+test (
+\subsubsection[{\texorpdfstring{Ak\+\_\+aggregation\+\_\+test()}{Ak_aggregation_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+aggregation\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{aggregation_8c_ac8ee72bc6de9361b817a78dba16ff03c}
+)}\hypertarget{aggregation_8c_ac8ee72bc6de9361b817a78dba16ff03c}{}\label{aggregation_8c_ac8ee72bc6de9361b817a78dba16ff03c}
 checking results
 
-This variable was added to handle bug described in this file.\hypertarget{aggregation_8c_abace9faf5a77b69ad08b10086556b47b}{\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+header\+\_\+size@{A\+K\+\_\+header\+\_\+size}}
+This variable was added to handle bug described in this file.\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+header\+\_\+size@{A\+K\+\_\+header\+\_\+size}}
 \index{A\+K\+\_\+header\+\_\+size@{A\+K\+\_\+header\+\_\+size}!aggregation.\+c@{aggregation.\+c}}
-\subsubsection[{A\+K\+\_\+header\+\_\+size}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+header\+\_\+size (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+header\+\_\+size(\+A\+K\+\_\+header $\ast$header)}{AK_header_size(AK_header *header)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+header\+\_\+size (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+header} $\ast$}]{header}
 \end{DoxyParamCaption}
-)}}\label{aggregation_8c_abace9faf5a77b69ad08b10086556b47b}
+)}\hypertarget{aggregation_8c_abace9faf5a77b69ad08b10086556b47b}{}\label{aggregation_8c_abace9faf5a77b69ad08b10086556b47b}
 
 
 Function calculates how meany attributes there are in a header with while loop. 
@@ -197,18 +197,18 @@ Dejan Frankovic
 \begin{DoxyReturn}{Returns}
 Number of attributes defined in header array 
 \end{DoxyReturn}
-\hypertarget{aggregation_8c_a91490139be5ae263a0f79085353929d8}{\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+search\+\_\+unsorted@{A\+K\+\_\+search\+\_\+unsorted}}
+\index{aggregation.\+c@{aggregation.\+c}!A\+K\+\_\+search\+\_\+unsorted@{A\+K\+\_\+search\+\_\+unsorted}}
 \index{A\+K\+\_\+search\+\_\+unsorted@{A\+K\+\_\+search\+\_\+unsorted}!aggregation.\+c@{aggregation.\+c}}
-\subsubsection[{A\+K\+\_\+search\+\_\+unsorted}]{\setlength{\rightskip}{0pt plus 5cm}{\bf search\+\_\+result} A\+K\+\_\+search\+\_\+unsorted (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+search\+\_\+unsorted(char $\ast$sz\+Relation, search\+\_\+params $\ast$asp\+Params, int i\+Num\+\_\+search\+\_\+params)}{AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf search\+\_\+result} A\+K\+\_\+search\+\_\+unsorted (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{sz\+Relation, }
 \item[{{\bf search\+\_\+params} $\ast$}]{asp\+Params, }
 \item[{int}]{i\+Num\+\_\+search\+\_\+params}
 \end{DoxyParamCaption}
-)}}\label{aggregation_8c_a91490139be5ae263a0f79085353929d8}
+)}\hypertarget{aggregation_8c_a91490139be5ae263a0f79085353929d8}{}\label{aggregation_8c_a91490139be5ae263a0f79085353929d8}
 
 
-Searches through unsorted values of multiple attributes in a segment. Only tuples that are equal on all given attribute values are returned (A == 1 A\+N\+D B == 7 A\+N\+D ...). S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E is inclusive. Only one value (or range) per attribute allowed -\/ use \hyperlink{structsearch__params_a061c7b5e9a3163f19dac0d3a681d63d0}{search\+\_\+params.\+p\+Data\+\_\+lower} for S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+A\+R. Supported types for S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E\+: T\+Y\+P\+E\+\_\+\+I\+N\+T, T\+Y\+P\+E\+\_\+\+F\+L\+O\+A\+T, T\+Y\+P\+E\+\_\+\+N\+U\+M\+B\+E\+R, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E\+T\+I\+M\+E, T\+Y\+P\+E\+\_\+\+T\+I\+M\+E. Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access violation. 
+Searches through unsorted values of multiple attributes in a segment. Only tuples that are equal on all given attribute values are returned (A == 1 A\+ND B == 7 A\+ND ...). S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE is inclusive. Only one value (or range) per attribute allowed -\/ use \hyperlink{structsearch__params_a061c7b5e9a3163f19dac0d3a681d63d0}{search\+\_\+params.\+p\+Data\+\_\+lower} for S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+AR. Supported types for S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE\+: T\+Y\+P\+E\+\_\+\+I\+NT, T\+Y\+P\+E\+\_\+\+F\+L\+O\+AT, T\+Y\+P\+E\+\_\+\+N\+U\+M\+B\+ER, T\+Y\+P\+E\+\_\+\+D\+A\+TE, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E\+T\+I\+ME, T\+Y\+P\+E\+\_\+\+T\+I\+ME. Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access violation. 
 
 \begin{DoxyAuthor}{Author}
 Miroslav Policki

@@ -1,6 +1,5 @@
-\hypertarget{hash_8h}{\section{file/idx/hash.h File Reference}
+\hypertarget{hash_8h}{}\section{file/idx/hash.h File Reference}
 \label{hash_8h}\index{file/idx/hash.\+h@{file/idx/hash.\+h}}
-}
 {\ttfamily \#include \char`\"{}index.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../../file/table.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../../auxi/constants.\+h\char`\"{}}\\*
@@ -8,7 +7,9 @@
 {\ttfamily \#include \char`\"{}../files.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../../auxi/mempro.\+h\char`\"{}}\\*
 Include dependency graph for hash.\+h\+:
+% FIG 0
 This graph shows which files directly or indirectly include this file\+:
+% FIG 1
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
@@ -45,7 +46,7 @@ void \hyperlink{hash_8h_ad42bf477f7c643371bab287e13c430ab}{A\+K\+\_\+delete\+\_\
 \begin{DoxyCompactList}\small\item\em Function for deleting record from hash index. \end{DoxyCompactList}\item 
 int \hyperlink{hash_8h_adf559d3c208e19ac2ca19994896c9ffe}{A\+K\+\_\+create\+\_\+hash\+\_\+index} (char $\ast$tbl\+Name, struct list\+\_\+node $\ast$attributes, char $\ast$index\+Name)
 \begin{DoxyCompactList}\small\item\em Function for creating hash index. \end{DoxyCompactList}\item 
-\hypertarget{hash_8h_a2d51fb23ca24903f33273f339a0a664f}{void {\bfseries A\+K\+\_\+delete\+\_\+hash\+\_\+index} (char $\ast$index\+Name)}\label{hash_8h_a2d51fb23ca24903f33273f339a0a664f}
+void {\bfseries A\+K\+\_\+delete\+\_\+hash\+\_\+index} (char $\ast$index\+Name)\hypertarget{hash_8h_a2d51fb23ca24903f33273f339a0a664f}{}\label{hash_8h_a2d51fb23ca24903f33273f339a0a664f}
 
 \item 
 void \hyperlink{hash_8h_a4a6bf9ecfb670d5438c17b6b1f142301}{Ak\+\_\+hash\+\_\+test} ()
@@ -56,16 +57,16 @@ void \hyperlink{hash_8h_a4a6bf9ecfb670d5438c17b6b1f142301}{Ak\+\_\+hash\+\_\+tes
 Header file that provides data structures for Hash indices 
 
 \subsection{Function Documentation}
-\hypertarget{hash_8h_aa45701fb9cb38d64c7b167197d04c42c}{\index{hash.\+h@{hash.\+h}!A\+K\+\_\+change\+\_\+hash\+\_\+info@{A\+K\+\_\+change\+\_\+hash\+\_\+info}}
+\index{hash.\+h@{hash.\+h}!A\+K\+\_\+change\+\_\+hash\+\_\+info@{A\+K\+\_\+change\+\_\+hash\+\_\+info}}
 \index{A\+K\+\_\+change\+\_\+hash\+\_\+info@{A\+K\+\_\+change\+\_\+hash\+\_\+info}!hash.\+h@{hash.\+h}}
-\subsubsection[{A\+K\+\_\+change\+\_\+hash\+\_\+info}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+change\+\_\+hash\+\_\+info (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+change\+\_\+hash\+\_\+info(char $\ast$index\+Name, int modulo, int main\+\_\+bucket\+\_\+num, int hash\+\_\+bucket\+\_\+num)}{AK_change_hash_info(char *indexName, int modulo, int main_bucket_num, int hash_bucket_num)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+change\+\_\+hash\+\_\+info (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{index\+Name, }
 \item[{int}]{modulo, }
 \item[{int}]{main\+\_\+bucket\+\_\+num, }
 \item[{int}]{hash\+\_\+bucket\+\_\+num}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_aa45701fb9cb38d64c7b167197d04c42c}
+)}\hypertarget{hash_8h_aa45701fb9cb38d64c7b167197d04c42c}{}\label{hash_8h_aa45701fb9cb38d64c7b167197d04c42c}
 
 
 Function for changing info of hash index. 
@@ -87,15 +88,15 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{hash_8h_adf559d3c208e19ac2ca19994896c9ffe}{\index{hash.\+h@{hash.\+h}!A\+K\+\_\+create\+\_\+hash\+\_\+index@{A\+K\+\_\+create\+\_\+hash\+\_\+index}}
+\index{hash.\+h@{hash.\+h}!A\+K\+\_\+create\+\_\+hash\+\_\+index@{A\+K\+\_\+create\+\_\+hash\+\_\+index}}
 \index{A\+K\+\_\+create\+\_\+hash\+\_\+index@{A\+K\+\_\+create\+\_\+hash\+\_\+index}!hash.\+h@{hash.\+h}}
-\subsubsection[{A\+K\+\_\+create\+\_\+hash\+\_\+index}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+create\+\_\+hash\+\_\+index (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+create\+\_\+hash\+\_\+index(char $\ast$tbl\+Name, struct list\+\_\+node $\ast$attributes, char $\ast$index\+Name)}{AK_create_hash_index(char *tblName, struct list_node *attributes, char *indexName)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+create\+\_\+hash\+\_\+index (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{tbl\+Name, }
 \item[{struct list\+\_\+node $\ast$}]{attributes, }
 \item[{char $\ast$}]{index\+Name}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_adf559d3c208e19ac2ca19994896c9ffe}
+)}\hypertarget{hash_8h_adf559d3c208e19ac2ca19994896c9ffe}{}\label{hash_8h_adf559d3c208e19ac2ca19994896c9ffe}
 
 
 Function for creating hash index. 
@@ -115,14 +116,14 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 success or error 
 \end{DoxyReturn}
-\hypertarget{hash_8h_ad42bf477f7c643371bab287e13c430ab}{\index{hash.\+h@{hash.\+h}!A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index}}
+\index{hash.\+h@{hash.\+h}!A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index}}
 \index{A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index}!hash.\+h@{hash.\+h}}
-\subsubsection[{A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index(char $\ast$index\+Name, struct list\+\_\+node $\ast$values)}{AK_delete_in_hash_index(char *indexName, struct list_node *values)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{index\+Name, }
 \item[{struct list\+\_\+node $\ast$}]{values}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_ad42bf477f7c643371bab287e13c430ab}
+)}\hypertarget{hash_8h_ad42bf477f7c643371bab287e13c430ab}{}\label{hash_8h_ad42bf477f7c643371bab287e13c430ab}
 
 
 Function for deleting record from hash index. 
@@ -140,13 +141,13 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{hash_8h_a4993435b8b1c7f27666baec3a6a95c1e}{\index{hash.\+h@{hash.\+h}!A\+K\+\_\+elem\+\_\+hash\+\_\+value@{A\+K\+\_\+elem\+\_\+hash\+\_\+value}}
+\index{hash.\+h@{hash.\+h}!A\+K\+\_\+elem\+\_\+hash\+\_\+value@{A\+K\+\_\+elem\+\_\+hash\+\_\+value}}
 \index{A\+K\+\_\+elem\+\_\+hash\+\_\+value@{A\+K\+\_\+elem\+\_\+hash\+\_\+value}!hash.\+h@{hash.\+h}}
-\subsubsection[{A\+K\+\_\+elem\+\_\+hash\+\_\+value}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+elem\+\_\+hash\+\_\+value (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+elem\+\_\+hash\+\_\+value(struct list\+\_\+node $\ast$elem)}{AK_elem_hash_value(struct list_node *elem)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+elem\+\_\+hash\+\_\+value (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{elem}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_a4993435b8b1c7f27666baec3a6a95c1e}
+)}\hypertarget{hash_8h_a4993435b8b1c7f27666baec3a6a95c1e}{}\label{hash_8h_a4993435b8b1c7f27666baec3a6a95c1e}
 
 
 Function for computing a hash value from varchar or integer. 
@@ -162,15 +163,15 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 hash value 
 \end{DoxyReturn}
-\hypertarget{hash_8h_a2611a987f25d6598fd416890acf65207}{\index{hash.\+h@{hash.\+h}!A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index}}
+\index{hash.\+h@{hash.\+h}!A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index}}
 \index{A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index}!hash.\+h@{hash.\+h}}
-\subsubsection[{A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index}]{\setlength{\rightskip}{0pt plus 5cm}{\bf struct\+\_\+add}$\ast$ A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index(char $\ast$index\+Name, struct list\+\_\+node $\ast$values, int delete)}{AK_find_delete_in_hash_index(char *indexName, struct list_node *values, int delete)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf struct\+\_\+add}$\ast$ A\+K\+\_\+find\+\_\+delete\+\_\+in\+\_\+hash\+\_\+index (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{index\+Name, }
 \item[{struct list\+\_\+node $\ast$}]{values, }
 \item[{int}]{delete}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_a2611a987f25d6598fd416890acf65207}
+)}\hypertarget{hash_8h_a2611a987f25d6598fd416890acf65207}{}\label{hash_8h_a2611a987f25d6598fd416890acf65207}
 
 
 Function for fetching or deleting record from hash index. 
@@ -184,20 +185,20 @@ Mislav Čakarić
 \hline
 {\em values} & list of values (one row) to search in hash index \\
 \hline
-{\em delete} & if delete is 0 then record is only read otherwise it's deleted from hash index \\
+{\em delete} & if delete is 0 then record is only read otherwise it\textquotesingle{}s deleted from hash index \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 address structure with data where the record is in table 
 \end{DoxyReturn}
-\hypertarget{hash_8h_a085387e1e800ef45a0c13dacfc3d6f92}{\index{hash.\+h@{hash.\+h}!A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index}}
+\index{hash.\+h@{hash.\+h}!A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index}}
 \index{A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index}!hash.\+h@{hash.\+h}}
-\subsubsection[{A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index}]{\setlength{\rightskip}{0pt plus 5cm}{\bf struct\+\_\+add}$\ast$ A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index(char $\ast$index\+Name, struct list\+\_\+node $\ast$values)}{AK_find_in_hash_index(char *indexName, struct list_node *values)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf struct\+\_\+add}$\ast$ A\+K\+\_\+find\+\_\+in\+\_\+hash\+\_\+index (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{index\+Name, }
 \item[{struct list\+\_\+node $\ast$}]{values}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_a085387e1e800ef45a0c13dacfc3d6f92}
+)}\hypertarget{hash_8h_a085387e1e800ef45a0c13dacfc3d6f92}{}\label{hash_8h_a085387e1e800ef45a0c13dacfc3d6f92}
 
 
 Function for fetching record from hash index. 
@@ -215,13 +216,13 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 address structure with data where the record is in table 
 \end{DoxyReturn}
-\hypertarget{hash_8h_a8f256967761ac5caa8b5d707ac80cb70}{\index{hash.\+h@{hash.\+h}!A\+K\+\_\+get\+\_\+hash\+\_\+info@{A\+K\+\_\+get\+\_\+hash\+\_\+info}}
+\index{hash.\+h@{hash.\+h}!A\+K\+\_\+get\+\_\+hash\+\_\+info@{A\+K\+\_\+get\+\_\+hash\+\_\+info}}
 \index{A\+K\+\_\+get\+\_\+hash\+\_\+info@{A\+K\+\_\+get\+\_\+hash\+\_\+info}!hash.\+h@{hash.\+h}}
-\subsubsection[{A\+K\+\_\+get\+\_\+hash\+\_\+info}]{\setlength{\rightskip}{0pt plus 5cm}{\bf hash\+\_\+info}$\ast$ A\+K\+\_\+get\+\_\+hash\+\_\+info (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+get\+\_\+hash\+\_\+info(char $\ast$index\+Name)}{AK_get_hash_info(char *indexName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf hash\+\_\+info}$\ast$ A\+K\+\_\+get\+\_\+hash\+\_\+info (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{index\+Name}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_a8f256967761ac5caa8b5d707ac80cb70}
+)}\hypertarget{hash_8h_a8f256967761ac5caa8b5d707ac80cb70}{}\label{hash_8h_a8f256967761ac5caa8b5d707ac80cb70}
 
 
 Function for fetching info for hash index. 
@@ -237,14 +238,14 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 info bucket with info data for hash index 
 \end{DoxyReturn}
-\hypertarget{hash_8h_a2d9953c1bf5c8d11413edf5f6f334408}{\index{hash.\+h@{hash.\+h}!Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add@{Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add}}
+\index{hash.\+h@{hash.\+h}!Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add@{Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add}}
 \index{Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add@{Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add}!hash.\+h@{hash.\+h}}
-\subsubsection[{Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add}]{\setlength{\rightskip}{0pt plus 5cm}{\bf struct\+\_\+add}$\ast$ Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add (
+\subsubsection[{\texorpdfstring{Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add(char $\ast$index\+Name, int n)}{Ak_get_nth_main_bucket_add(char *indexName, int n)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf struct\+\_\+add}$\ast$ Ak\+\_\+get\+\_\+nth\+\_\+main\+\_\+bucket\+\_\+add (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{index\+Name, }
 \item[{int}]{n}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_a2d9953c1bf5c8d11413edf5f6f334408}
+)}\hypertarget{hash_8h_a2d9953c1bf5c8d11413edf5f6f334408}{}\label{hash_8h_a2d9953c1bf5c8d11413edf5f6f334408}
 
 
 Function for fetching nth main bucket. 
@@ -262,13 +263,13 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 address structure with data where the bucket is stored 
 \end{DoxyReturn}
-\hypertarget{hash_8h_a4a6bf9ecfb670d5438c17b6b1f142301}{\index{hash.\+h@{hash.\+h}!Ak\+\_\+hash\+\_\+test@{Ak\+\_\+hash\+\_\+test}}
+\index{hash.\+h@{hash.\+h}!Ak\+\_\+hash\+\_\+test@{Ak\+\_\+hash\+\_\+test}}
 \index{Ak\+\_\+hash\+\_\+test@{Ak\+\_\+hash\+\_\+test}!hash.\+h@{hash.\+h}}
-\subsubsection[{Ak\+\_\+hash\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+hash\+\_\+test (
+\subsubsection[{\texorpdfstring{Ak\+\_\+hash\+\_\+test()}{Ak_hash_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+hash\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_a4a6bf9ecfb670d5438c17b6b1f142301}
+)}\hypertarget{hash_8h_a4a6bf9ecfb670d5438c17b6b1f142301}{}\label{hash_8h_a4a6bf9ecfb670d5438c17b6b1f142301}
 
 
 Function for testing hash index. 
@@ -279,15 +280,15 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{hash_8h_adba2a185d9669910b81e44fad31969b0}{\index{hash.\+h@{hash.\+h}!Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block@{Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block}}
+\index{hash.\+h@{hash.\+h}!Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block@{Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block}}
 \index{Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block@{Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block}!hash.\+h@{hash.\+h}}
-\subsubsection[{Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block}]{\setlength{\rightskip}{0pt plus 5cm}{\bf struct\+\_\+add}$\ast$ Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block (
+\subsubsection[{\texorpdfstring{Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block(char $\ast$index\+Name, char $\ast$data, int type)}{Ak_insert_bucket_to_block(char *indexName, char *data, int type)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf struct\+\_\+add}$\ast$ Ak\+\_\+insert\+\_\+bucket\+\_\+to\+\_\+block (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{index\+Name, }
 \item[{char $\ast$}]{data, }
 \item[{int}]{type}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_adba2a185d9669910b81e44fad31969b0}
+)}\hypertarget{hash_8h_adba2a185d9669910b81e44fad31969b0}{}\label{hash_8h_adba2a185d9669910b81e44fad31969b0}
 
 
 Function for inserting bucket to block. 
@@ -301,21 +302,21 @@ Mislav Čakarić
 \hline
 {\em data} & content of bucket stored in char array \\
 \hline
-{\em type} & type of bucket (M\+A\+I\+N\+\_\+\+B\+U\+C\+K\+E\+T or H\+A\+S\+H\+\_\+\+B\+U\+C\+K\+E\+T) \\
+{\em type} & type of bucket (M\+A\+I\+N\+\_\+\+B\+U\+C\+K\+ET or H\+A\+S\+H\+\_\+\+B\+U\+C\+K\+ET) \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 address structure with data where the bucket is stored 
 \end{DoxyReturn}
-\hypertarget{hash_8h_a5b5847d11ab828762559fa4d1c6e404a}{\index{hash.\+h@{hash.\+h}!A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index}}
+\index{hash.\+h@{hash.\+h}!A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index}}
 \index{A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index@{A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index}!hash.\+h@{hash.\+h}}
-\subsubsection[{A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index(char $\ast$index\+Name, int hash\+Value, struct\+\_\+add $\ast$add)}{AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+insert\+\_\+in\+\_\+hash\+\_\+index (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{index\+Name, }
 \item[{int}]{hash\+Value, }
 \item[{{\bf struct\+\_\+add} $\ast$}]{add}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_a5b5847d11ab828762559fa4d1c6e404a}
+)}\hypertarget{hash_8h_a5b5847d11ab828762559fa4d1c6e404a}{}\label{hash_8h_a5b5847d11ab828762559fa4d1c6e404a}
 
 
 Function for inserting record in hash bucket. 
@@ -335,14 +336,14 @@ Mislav Čakarić
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{hash_8h_acf5688161dfdbec61f8ef5026016f6a4}{\index{hash.\+h@{hash.\+h}!Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block@{Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block}}
+\index{hash.\+h@{hash.\+h}!Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block@{Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block}}
 \index{Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block@{Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block}!hash.\+h@{hash.\+h}}
-\subsubsection[{Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block (
+\subsubsection[{\texorpdfstring{Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block(struct\+\_\+add $\ast$add, char $\ast$data)}{Ak_update_bucket_in_block(struct_add *add, char *data)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+update\+\_\+bucket\+\_\+in\+\_\+block (
 \begin{DoxyParamCaption}
 \item[{{\bf struct\+\_\+add} $\ast$}]{add, }
 \item[{char $\ast$}]{data}
 \end{DoxyParamCaption}
-)}}\label{hash_8h_acf5688161dfdbec61f8ef5026016f6a4}
+)}\hypertarget{hash_8h_acf5688161dfdbec61f8ef5026016f6a4}{}\label{hash_8h_acf5688161dfdbec61f8ef5026016f6a4}
 
 
 Function for update bucket in block. 

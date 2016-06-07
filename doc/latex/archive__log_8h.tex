@@ -1,6 +1,5 @@
-\hypertarget{archive__log_8h}{\section{rec/archive\+\_\+log.h File Reference}
+\hypertarget{archive__log_8h}{}\section{rec/archive\+\_\+log.h File Reference}
 \label{archive__log_8h}\index{rec/archive\+\_\+log.\+h@{rec/archive\+\_\+log.\+h}}
-}
 {\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}sys/time.\+h\char`\"{}}\\*
 {\ttfamily \#include $<$sys/types.\+h$>$}\\*
@@ -8,7 +7,9 @@
 {\ttfamily \#include $<$fcntl.\+h$>$}\\*
 {\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
 Include dependency graph for archive\+\_\+log.\+h\+:
+% FIG 0
 This graph shows which files directly or indirectly include this file\+:
+% FIG 1
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -22,13 +23,13 @@ char $\ast$ \hyperlink{archive__log_8h_aeb31379a188616575d445bcb0fd6a982}{A\+K\+
 Header file that provides data structures for archive logging 
 
 \subsection{Function Documentation}
-\hypertarget{archive__log_8h_a196d56d3daa734a4817e78e5e62c6dd0}{\index{archive\+\_\+log.\+h@{archive\+\_\+log.\+h}!A\+K\+\_\+archive\+\_\+log@{A\+K\+\_\+archive\+\_\+log}}
+\index{archive\+\_\+log.\+h@{archive\+\_\+log.\+h}!A\+K\+\_\+archive\+\_\+log@{A\+K\+\_\+archive\+\_\+log}}
 \index{A\+K\+\_\+archive\+\_\+log@{A\+K\+\_\+archive\+\_\+log}!archive\+\_\+log.\+h@{archive\+\_\+log.\+h}}
-\subsubsection[{A\+K\+\_\+archive\+\_\+log}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+archive\+\_\+log (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+archive\+\_\+log()}{AK_archive_log()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+archive\+\_\+log (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{archive__log_8h_a196d56d3daa734a4817e78e5e62c6dd0}
+)}\hypertarget{archive__log_8h_a196d56d3daa734a4817e78e5e62c6dd0}{}\label{archive__log_8h_a196d56d3daa734a4817e78e5e62c6dd0}
 
 
 Function for making archive log. 
@@ -41,13 +42,13 @@ Dražen Bandić, update by Tomislav Turek
 \begin{DoxyReturn}{Returns}
 No retun value 
 \end{DoxyReturn}
-\hypertarget{archive__log_8h_aeb31379a188616575d445bcb0fd6a982}{\index{archive\+\_\+log.\+h@{archive\+\_\+log.\+h}!A\+K\+\_\+get\+\_\+timestamp@{A\+K\+\_\+get\+\_\+timestamp}}
+\index{archive\+\_\+log.\+h@{archive\+\_\+log.\+h}!A\+K\+\_\+get\+\_\+timestamp@{A\+K\+\_\+get\+\_\+timestamp}}
 \index{A\+K\+\_\+get\+\_\+timestamp@{A\+K\+\_\+get\+\_\+timestamp}!archive\+\_\+log.\+h@{archive\+\_\+log.\+h}}
-\subsubsection[{A\+K\+\_\+get\+\_\+timestamp}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+get\+\_\+timestamp (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+get\+\_\+timestamp()}{AK_get_timestamp()}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+get\+\_\+timestamp (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{archive__log_8h_aeb31379a188616575d445bcb0fd6a982}
+)}\hypertarget{archive__log_8h_aeb31379a188616575d445bcb0fd6a982}{}\label{archive__log_8h_aeb31379a188616575d445bcb0fd6a982}
 
 
 Function that returns the current timestamp. 
@@ -56,7 +57,7 @@ This function returns the current timestamp that could be concatenated to a log 
 Dražen Bandić main logic, replaced by Tomislav Turek 
 \end{DoxyAuthor}
 \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000002}{Todo}]Think about this in the future when creating multiple binary recovery files. Implementation gives the timestamp, but is not used anywhere for now. \begin{DoxyReturn}{Returns}
+\item[\hyperlink{todo__todo000002}{Todo}]Think about this in the future when creating multiple binary recovery files. Implementation gives the timestamp, but is not used anywhere for now. \end{DoxyRefDesc}
+\begin{DoxyReturn}{Returns}
 char array in format day.\+month.\+year-\/hour\+:min\+:sec.\+usecu.\+log 
 \end{DoxyReturn}
-\end{DoxyRefDesc}

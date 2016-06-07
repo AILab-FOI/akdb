@@ -1,8 +1,8 @@
-\hypertarget{reference_8c}{\section{sql/cs/reference.c File Reference}
+\hypertarget{reference_8c}{}\section{sql/cs/reference.c File Reference}
 \label{reference_8c}\index{sql/cs/reference.\+c@{sql/cs/reference.\+c}}
-}
 {\ttfamily \#include \char`\"{}reference.\+h\char`\"{}}\\*
 Include dependency graph for reference.\+c\+:
+% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -15,7 +15,7 @@ int \hyperlink{reference_8c_a4b180aec5b34a0d6341ca689931521cc}{A\+K\+\_\+referen
 int \hyperlink{reference_8c_a52e7e910e26cb4e1a3e6eb387e7305a5}{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed} (struct list\+\_\+node $\ast$lista, int action)
 \begin{DoxyCompactList}\small\item\em Funvction that quickly checks if there are any referential constraints that should be applied on a given list of changes. \end{DoxyCompactList}\item 
 int \hyperlink{reference_8c_aa8591a73d9dab9148274329a1683f909}{A\+K\+\_\+reference\+\_\+check\+\_\+restricion} (struct list\+\_\+node $\ast$lista, int action)
-\begin{DoxyCompactList}\small\item\em Function checks for R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+T\+R\+I\+C\+T references appliable to the operation of updating or deleting a row in a table. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Function checks for R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+T\+R\+I\+CT references appliable to the operation of updating or deleting a row in a table. \end{DoxyCompactList}\item 
 int \hyperlink{reference_8c_ac64028d9ef8bc674d737aa12a8065f49}{A\+K\+\_\+reference\+\_\+update} (struct list\+\_\+node $\ast$lista, int action)
 \begin{DoxyCompactList}\small\item\em Function updates child table entries according to ongoing update of parent table entries. \end{DoxyCompactList}\item 
 int \hyperlink{reference_8c_a015b40704f67d85d153eeda5e6b82088}{A\+K\+\_\+reference\+\_\+check\+\_\+entry} (struct list\+\_\+node $\ast$lista)
@@ -28,9 +28,9 @@ void \hyperlink{reference_8c_a93c889a460fe2392c4b81857c03aedf2}{A\+K\+\_\+refere
 Provides functions for referential integrity 
 
 \subsection{Function Documentation}
-\hypertarget{reference_8c_a5642d4715910a224460ee3ad66e866e6}{\index{reference.\+c@{reference.\+c}!A\+K\+\_\+add\+\_\+reference@{A\+K\+\_\+add\+\_\+reference}}
+\index{reference.\+c@{reference.\+c}!A\+K\+\_\+add\+\_\+reference@{A\+K\+\_\+add\+\_\+reference}}
 \index{A\+K\+\_\+add\+\_\+reference@{A\+K\+\_\+add\+\_\+reference}!reference.\+c@{reference.\+c}}
-\subsubsection[{A\+K\+\_\+add\+\_\+reference}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+add\+\_\+reference (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+add\+\_\+reference(char $\ast$child\+Table, char $\ast$child\+Att\+Names[], char $\ast$parent\+Table, char $\ast$parent\+Att\+Names[], int att\+Num, char $\ast$constraint\+Name, int type)}{AK_add_reference(char *childTable, char *childAttNames[], char *parentTable, char *parentAttNames[], int attNum, char *constraintName, int type)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+add\+\_\+reference (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{child\+Table, }
 \item[{char $\ast$}]{child\+Att\+Names\mbox{[}$\,$\mbox{]}, }
@@ -40,7 +40,7 @@ Provides functions for referential integrity
 \item[{char $\ast$}]{constraint\+Name, }
 \item[{int}]{type}
 \end{DoxyParamCaption}
-)}}\label{reference_8c_a5642d4715910a224460ee3ad66e866e6}
+)}\hypertarget{reference_8c_a5642d4715910a224460ee3ad66e866e6}{}\label{reference_8c_a5642d4715910a224460ee3ad66e866e6}
 
 
 Function adds a reference for a group of attributes over a given table to a group of attributes over another table with a given constraint name.. 
@@ -62,20 +62,20 @@ Dejan Frankovic
 \hline
 {\em name} & of the constraint \\
 \hline
-{\em type} & of the constraint, constants defined in '\hyperlink{reference_8h}{reference.\+h}' \\
+{\em type} & of the constraint, constants defined in \textquotesingle{}\hyperlink{reference_8h}{reference.\+h}\textquotesingle{} \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
 \end{DoxyReturn}
-\hypertarget{reference_8c_a649ec65739751d5504693e55184a98a9}{\index{reference.\+c@{reference.\+c}!A\+K\+\_\+get\+\_\+reference@{A\+K\+\_\+get\+\_\+reference}}
+\index{reference.\+c@{reference.\+c}!A\+K\+\_\+get\+\_\+reference@{A\+K\+\_\+get\+\_\+reference}}
 \index{A\+K\+\_\+get\+\_\+reference@{A\+K\+\_\+get\+\_\+reference}!reference.\+c@{reference.\+c}}
-\subsubsection[{A\+K\+\_\+get\+\_\+reference}]{\setlength{\rightskip}{0pt plus 5cm}{\bf A\+K\+\_\+ref\+\_\+item} A\+K\+\_\+get\+\_\+reference (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+get\+\_\+reference(char $\ast$table\+Name, char $\ast$constraint\+Name)}{AK_get_reference(char *tableName, char *constraintName)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf A\+K\+\_\+ref\+\_\+item} A\+K\+\_\+get\+\_\+reference (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{table\+Name, }
 \item[{char $\ast$}]{constraint\+Name}
 \end{DoxyParamCaption}
-)}}\label{reference_8c_a649ec65739751d5504693e55184a98a9}
+)}\hypertarget{reference_8c_a649ec65739751d5504693e55184a98a9}{}\label{reference_8c_a649ec65739751d5504693e55184a98a9}
 
 
 Function reads a reference entry from system table. 
@@ -93,15 +93,15 @@ Dejan Frankovic
 \begin{DoxyReturn}{Returns}
 \hyperlink{structAK__ref__item}{A\+K\+\_\+ref\+\_\+item} object with all neccessary information about the reference 
 \end{DoxyReturn}
-\hypertarget{reference_8c_a4b180aec5b34a0d6341ca689931521cc}{\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+check\+\_\+attribute@{A\+K\+\_\+reference\+\_\+check\+\_\+attribute}}
+\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+check\+\_\+attribute@{A\+K\+\_\+reference\+\_\+check\+\_\+attribute}}
 \index{A\+K\+\_\+reference\+\_\+check\+\_\+attribute@{A\+K\+\_\+reference\+\_\+check\+\_\+attribute}!reference.\+c@{reference.\+c}}
-\subsubsection[{A\+K\+\_\+reference\+\_\+check\+\_\+attribute}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+check\+\_\+attribute (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+reference\+\_\+check\+\_\+attribute(char $\ast$table\+Name, char $\ast$attribute, char $\ast$value)}{AK_reference_check_attribute(char *tableName, char *attribute, char *value)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+check\+\_\+attribute (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{table\+Name, }
 \item[{char $\ast$}]{attribute, }
 \item[{char $\ast$}]{value}
 \end{DoxyParamCaption}
-)}}\label{reference_8c_a4b180aec5b34a0d6341ca689931521cc}
+)}\hypertarget{reference_8c_a4b180aec5b34a0d6341ca689931521cc}{}\label{reference_8c_a4b180aec5b34a0d6341ca689931521cc}
 
 
 Function checks referential integrity for one attribute. 
@@ -115,19 +115,19 @@ Dejan Frankovic
 \hline
 {\em attribute} & name (foreign key attribute) \\
 \hline
-{\em value} & of the attribute we're checking \\
+{\em value} & of the attribute we\textquotesingle{}re checking \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T E\+R\+R\+O\+R if check failed, E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S if referential integrity is ok 
+E\+X\+IT E\+R\+R\+OR if check failed, E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if referential integrity is ok 
 \end{DoxyReturn}
-\hypertarget{reference_8c_a015b40704f67d85d153eeda5e6b82088}{\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+check\+\_\+entry@{A\+K\+\_\+reference\+\_\+check\+\_\+entry}}
+\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+check\+\_\+entry@{A\+K\+\_\+reference\+\_\+check\+\_\+entry}}
 \index{A\+K\+\_\+reference\+\_\+check\+\_\+entry@{A\+K\+\_\+reference\+\_\+check\+\_\+entry}!reference.\+c@{reference.\+c}}
-\subsubsection[{A\+K\+\_\+reference\+\_\+check\+\_\+entry}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+check\+\_\+entry (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+reference\+\_\+check\+\_\+entry(struct list\+\_\+node $\ast$lista)}{AK_reference_check_entry(struct list_node *lista)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+check\+\_\+entry (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{lista}
 \end{DoxyParamCaption}
-)}}\label{reference_8c_a015b40704f67d85d153eeda5e6b82088}
+)}\hypertarget{reference_8c_a015b40704f67d85d153eeda5e6b82088}{}\label{reference_8c_a015b40704f67d85d153eeda5e6b82088}
 
 
 Function checks new entry for referential integrity. 
@@ -141,16 +141,16 @@ Dejan Franković
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S if referential integrity is ok, E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R if it is compromised 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if referential integrity is ok, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if it is compromised 
 \end{DoxyReturn}
-\hypertarget{reference_8c_a52e7e910e26cb4e1a3e6eb387e7305a5}{\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed@{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed}}
+\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed@{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed}}
 \index{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed@{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed}!reference.\+c@{reference.\+c}}
-\subsubsection[{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed(struct list\+\_\+node $\ast$lista, int action)}{AK_reference_check_if_update_needed(struct list_node *lista, int action)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{lista, }
 \item[{int}]{action}
 \end{DoxyParamCaption}
-)}}\label{reference_8c_a52e7e910e26cb4e1a3e6eb387e7305a5}
+)}\hypertarget{reference_8c_a52e7e910e26cb4e1a3e6eb387e7305a5}{}\label{reference_8c_a52e7e910e26cb4e1a3e6eb387e7305a5}
 
 
 Funvction that quickly checks if there are any referential constraints that should be applied on a given list of changes. 
@@ -162,23 +162,23 @@ Dejan Frankovic
 \begin{DoxyParams}{Parameters}
 {\em list} & of elements for update \\
 \hline
-{\em is} & action U\+P\+D\+A\+T\+E or D\+E\+L\+E\+T\+E ? \\
+{\em is} & action U\+P\+D\+A\+TE or D\+E\+L\+E\+TE ? \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S if update is needed, E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R if not 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if update is needed, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if not 
 \end{DoxyReturn}
-\hypertarget{reference_8c_aa8591a73d9dab9148274329a1683f909}{\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+check\+\_\+restricion@{A\+K\+\_\+reference\+\_\+check\+\_\+restricion}}
+\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+check\+\_\+restricion@{A\+K\+\_\+reference\+\_\+check\+\_\+restricion}}
 \index{A\+K\+\_\+reference\+\_\+check\+\_\+restricion@{A\+K\+\_\+reference\+\_\+check\+\_\+restricion}!reference.\+c@{reference.\+c}}
-\subsubsection[{A\+K\+\_\+reference\+\_\+check\+\_\+restricion}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+check\+\_\+restricion (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+reference\+\_\+check\+\_\+restricion(struct list\+\_\+node $\ast$lista, int action)}{AK_reference_check_restricion(struct list_node *lista, int action)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+check\+\_\+restricion (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{lista, }
 \item[{int}]{action}
 \end{DoxyParamCaption}
-)}}\label{reference_8c_aa8591a73d9dab9148274329a1683f909}
+)}\hypertarget{reference_8c_aa8591a73d9dab9148274329a1683f909}{}\label{reference_8c_aa8591a73d9dab9148274329a1683f909}
 
 
-Function checks for R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+T\+R\+I\+C\+T references appliable to the operation of updating or deleting a row in a table. 
+Function checks for R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+T\+R\+I\+CT references appliable to the operation of updating or deleting a row in a table. 
 
 \begin{DoxyAuthor}{Author}
 Dejan Franković 
@@ -187,19 +187,19 @@ Dejan Franković
 \begin{DoxyParams}{Parameters}
 {\em list} & of elements for update \\
 \hline
-{\em is} & action U\+P\+D\+A\+T\+E or D\+E\+L\+E\+T\+E? \\
+{\em is} & action U\+P\+D\+A\+TE or D\+E\+L\+E\+TE? \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S if there is no restriction on this action, E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R if there is 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if there is no restriction on this action, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if there is 
 \end{DoxyReturn}
-\hypertarget{reference_8c_a93c889a460fe2392c4b81857c03aedf2}{\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+test@{A\+K\+\_\+reference\+\_\+test}}
+\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+test@{A\+K\+\_\+reference\+\_\+test}}
 \index{A\+K\+\_\+reference\+\_\+test@{A\+K\+\_\+reference\+\_\+test}!reference.\+c@{reference.\+c}}
-\subsubsection[{A\+K\+\_\+reference\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+reference\+\_\+test (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+reference\+\_\+test()}{AK_reference_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+reference\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{reference_8c_a93c889a460fe2392c4b81857c03aedf2}
+)}\hypertarget{reference_8c_a93c889a460fe2392c4b81857c03aedf2}{}\label{reference_8c_a93c889a460fe2392c4b81857c03aedf2}
 
 
 Function for testing referential integrity. 
@@ -210,14 +210,14 @@ Dejan Franković
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{reference_8c_ac64028d9ef8bc674d737aa12a8065f49}{\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+update@{A\+K\+\_\+reference\+\_\+update}}
+\index{reference.\+c@{reference.\+c}!A\+K\+\_\+reference\+\_\+update@{A\+K\+\_\+reference\+\_\+update}}
 \index{A\+K\+\_\+reference\+\_\+update@{A\+K\+\_\+reference\+\_\+update}!reference.\+c@{reference.\+c}}
-\subsubsection[{A\+K\+\_\+reference\+\_\+update}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+update (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+reference\+\_\+update(struct list\+\_\+node $\ast$lista, int action)}{AK_reference_update(struct list_node *lista, int action)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+reference\+\_\+update (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{lista, }
 \item[{int}]{action}
 \end{DoxyParamCaption}
-)}}\label{reference_8c_ac64028d9ef8bc674d737aa12a8065f49}
+)}\hypertarget{reference_8c_ac64028d9ef8bc674d737aa12a8065f49}{}\label{reference_8c_ac64028d9ef8bc674d737aa12a8065f49}
 
 
 Function updates child table entries according to ongoing update of parent table entries. 
@@ -229,9 +229,9 @@ Dejan Franković
 \begin{DoxyParams}{Parameters}
 {\em list} & of elements for update \\
 \hline
-{\em is} & action U\+P\+D\+A\+T\+E or D\+E\+L\+E\+T\+E ? \\
+{\em is} & action U\+P\+D\+A\+TE or D\+E\+L\+E\+TE ? \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
 \end{DoxyReturn}

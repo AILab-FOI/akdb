@@ -1,16 +1,17 @@
-\hypertarget{difference_8h}{\section{rel/difference.h File Reference}
+\hypertarget{difference_8h}{}\section{rel/difference.h File Reference}
 \label{difference_8h}\index{rel/difference.\+h@{rel/difference.\+h}}
-}
 {\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../file/fileio.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
 Include dependency graph for difference.\+h\+:
+% FIG 0
 This graph shows which files directly or indirectly include this file\+:
+% FIG 1
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \hyperlink{difference_8h_a44950aacd74183c5236b5454ee78ebd7}{A\+K\+\_\+difference} (char $\ast$src\+Table1, char $\ast$src\+Table2, char $\ast$dst\+Table)
-\begin{DoxyCompactList}\small\item\em Function to make difference of the two tables. Table addresses are get through names of tables. Speciallly start addresses are taken from them. They are used to allocate blocks for them. It is checked whether the tables have same table schemas. If not, it returns E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R. New segment for result of difference operation is initialized. Function compares every block in extent of first table with every block in extent of second table. If there is a difference between their rows, they are put in dst\+Table. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Function to make difference of the two tables. Table addresses are get through names of tables. Speciallly start addresses are taken from them. They are used to allocate blocks for them. It is checked whether the tables have same table schemas. If not, it returns E\+X\+I\+T\+\_\+\+E\+R\+R\+OR. New segment for result of difference operation is initialized. Function compares every block in extent of first table with every block in extent of second table. If there is a difference between their rows, they are put in dst\+Table. \end{DoxyCompactList}\item 
 void \hyperlink{difference_8h_a18b4b22c110eba7bb08ffca218460d59}{Ak\+\_\+op\+\_\+difference\+\_\+test} ()
 \begin{DoxyCompactList}\small\item\em Function for difference operator testing. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -19,18 +20,18 @@ void \hyperlink{difference_8h_a18b4b22c110eba7bb08ffca218460d59}{Ak\+\_\+op\+\_\
 Header file that provides data structures for relational difference operation 
 
 \subsection{Function Documentation}
-\hypertarget{difference_8h_a44950aacd74183c5236b5454ee78ebd7}{\index{difference.\+h@{difference.\+h}!A\+K\+\_\+difference@{A\+K\+\_\+difference}}
+\index{difference.\+h@{difference.\+h}!A\+K\+\_\+difference@{A\+K\+\_\+difference}}
 \index{A\+K\+\_\+difference@{A\+K\+\_\+difference}!difference.\+h@{difference.\+h}}
-\subsubsection[{A\+K\+\_\+difference}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+difference (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+difference(char $\ast$src\+Table1, char $\ast$src\+Table2, char $\ast$dst\+Table)}{AK_difference(char *srcTable1, char *srcTable2, char *dstTable)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+difference (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{src\+Table1, }
 \item[{char $\ast$}]{src\+Table2, }
 \item[{char $\ast$}]{dst\+Table}
 \end{DoxyParamCaption}
-)}}\label{difference_8h_a44950aacd74183c5236b5454ee78ebd7}
+)}\hypertarget{difference_8h_a44950aacd74183c5236b5454ee78ebd7}{}\label{difference_8h_a44950aacd74183c5236b5454ee78ebd7}
 
 
-Function to make difference of the two tables. Table addresses are get through names of tables. Speciallly start addresses are taken from them. They are used to allocate blocks for them. It is checked whether the tables have same table schemas. If not, it returns E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R. New segment for result of difference operation is initialized. Function compares every block in extent of first table with every block in extent of second table. If there is a difference between their rows, they are put in dst\+Table. 
+Function to make difference of the two tables. Table addresses are get through names of tables. Speciallly start addresses are taken from them. They are used to allocate blocks for them. It is checked whether the tables have same table schemas. If not, it returns E\+X\+I\+T\+\_\+\+E\+R\+R\+OR. New segment for result of difference operation is initialized. Function compares every block in extent of first table with every block in extent of second table. If there is a difference between their rows, they are put in dst\+Table. 
 
 \begin{DoxyAuthor}{Author}
 Dino Laktašić 
@@ -45,15 +46,15 @@ Dino Laktašić
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-if success returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S, else returns E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R 
+if success returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS, else returns E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
 \end{DoxyReturn}
-\hypertarget{difference_8h_a18b4b22c110eba7bb08ffca218460d59}{\index{difference.\+h@{difference.\+h}!Ak\+\_\+op\+\_\+difference\+\_\+test@{Ak\+\_\+op\+\_\+difference\+\_\+test}}
+\index{difference.\+h@{difference.\+h}!Ak\+\_\+op\+\_\+difference\+\_\+test@{Ak\+\_\+op\+\_\+difference\+\_\+test}}
 \index{Ak\+\_\+op\+\_\+difference\+\_\+test@{Ak\+\_\+op\+\_\+difference\+\_\+test}!difference.\+h@{difference.\+h}}
-\subsubsection[{Ak\+\_\+op\+\_\+difference\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+op\+\_\+difference\+\_\+test (
+\subsubsection[{\texorpdfstring{Ak\+\_\+op\+\_\+difference\+\_\+test()}{Ak_op_difference_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+op\+\_\+difference\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{difference_8h_a18b4b22c110eba7bb08ffca218460d59}
+)}\hypertarget{difference_8h_a18b4b22c110eba7bb08ffca218460d59}{}\label{difference_8h_a18b4b22c110eba7bb08ffca218460d59}
 
 
 Function for difference operator testing. 

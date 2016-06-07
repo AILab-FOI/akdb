@@ -1,8 +1,8 @@
-\hypertarget{theta__join_8c}{\section{rel/theta\+\_\+join.c File Reference}
+\hypertarget{theta__join_8c}{}\section{rel/theta\+\_\+join.c File Reference}
 \label{theta__join_8c}\index{rel/theta\+\_\+join.\+c@{rel/theta\+\_\+join.\+c}}
-}
 {\ttfamily \#include \char`\"{}theta\+\_\+join.\+h\char`\"{}}\\*
 Include dependency graph for theta\+\_\+join.\+c\+:
+% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -20,9 +20,9 @@ void \hyperlink{theta__join_8c_a79338e9866f3daa448b9154fcba844af}{A\+K\+\_\+op\+
 Provides functions for relational theta join operation 
 
 \subsection{Function Documentation}
-\hypertarget{theta__join_8c_a6cc06221d7a4b4d337236515ca4f11e4}{\index{theta\+\_\+join.\+c@{theta\+\_\+join.\+c}!A\+K\+\_\+check\+\_\+constraints@{A\+K\+\_\+check\+\_\+constraints}}
+\index{theta\+\_\+join.\+c@{theta\+\_\+join.\+c}!A\+K\+\_\+check\+\_\+constraints@{A\+K\+\_\+check\+\_\+constraints}}
 \index{A\+K\+\_\+check\+\_\+constraints@{A\+K\+\_\+check\+\_\+constraints}!theta\+\_\+join.\+c@{theta\+\_\+join.\+c}}
-\subsubsection[{A\+K\+\_\+check\+\_\+constraints}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+check\+\_\+constraints (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+constraints(\+A\+K\+\_\+block $\ast$tbl1\+\_\+temp\+\_\+block, A\+K\+\_\+block $\ast$tbl2\+\_\+temp\+\_\+block, int tbl1\+\_\+num\+\_\+att, int tbl2\+\_\+num\+\_\+att, struct list\+\_\+node $\ast$constraints, char $\ast$new\+\_\+table)}{AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, struct list_node *constraints, char *new_table)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+check\+\_\+constraints (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+block} $\ast$}]{tbl1\+\_\+temp\+\_\+block, }
 \item[{{\bf A\+K\+\_\+block} $\ast$}]{tbl2\+\_\+temp\+\_\+block, }
@@ -31,7 +31,7 @@ Provides functions for relational theta join operation
 \item[{struct list\+\_\+node $\ast$}]{constraints, }
 \item[{char $\ast$}]{new\+\_\+table}
 \end{DoxyParamCaption}
-)}}\label{theta__join_8c_a6cc06221d7a4b4d337236515ca4f11e4}
+)}\hypertarget{theta__join_8c_a6cc06221d7a4b4d337236515ca4f11e4}{}\label{theta__join_8c_a6cc06221d7a4b4d337236515ca4f11e4}
 
 
 Function iterates through blocks of the two tables and copies the rows which pass the constraint check into the new table. 
@@ -57,15 +57,15 @@ Tomislav Mikulček
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{theta__join_8c_a52fbdb3f076762aff6f2533b2c68a95b}{\index{theta\+\_\+join.\+c@{theta\+\_\+join.\+c}!A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header@{A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header}}
+\index{theta\+\_\+join.\+c@{theta\+\_\+join.\+c}!A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header@{A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header}}
 \index{A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header@{A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header}!theta\+\_\+join.\+c@{theta\+\_\+join.\+c}}
-\subsubsection[{A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header(char $\ast$src\+Table1, char $\ast$src\+Table2, char $\ast$new\+\_\+table)}{AK_create_theta_join_header(char *srcTable1, char *srcTable2, char *new_table)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+create\+\_\+theta\+\_\+join\+\_\+header (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{src\+Table1, }
 \item[{char $\ast$}]{src\+Table2, }
 \item[{char $\ast$}]{new\+\_\+table}
 \end{DoxyParamCaption}
-)}}\label{theta__join_8c_a52fbdb3f076762aff6f2533b2c68a95b}
+)}\hypertarget{theta__join_8c_a52fbdb3f076762aff6f2533b2c68a95b}{}\label{theta__join_8c_a52fbdb3f076762aff6f2533b2c68a95b}
 
 
 Function for creating the header of the new table for theta join. 
@@ -83,15 +83,15 @@ Tomislav Mikulček
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S if the header was successfully created and E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R if the renamed headers are too long 
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if the header was successfully created and E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if the renamed headers are too long 
 \end{DoxyReturn}
-\hypertarget{theta__join_8c_a79338e9866f3daa448b9154fcba844af}{\index{theta\+\_\+join.\+c@{theta\+\_\+join.\+c}!A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test@{A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test}}
+\index{theta\+\_\+join.\+c@{theta\+\_\+join.\+c}!A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test@{A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test}}
 \index{A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test@{A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test}!theta\+\_\+join.\+c@{theta\+\_\+join.\+c}}
-\subsubsection[{A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test()}{AK_op_theta_join_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+theta\+\_\+join\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{theta__join_8c_a79338e9866f3daa448b9154fcba844af}
+)}\hypertarget{theta__join_8c_a79338e9866f3daa448b9154fcba844af}{}\label{theta__join_8c_a79338e9866f3daa448b9154fcba844af}
 
 
 Function for testing the theta join. 
@@ -102,16 +102,16 @@ Tomislav Mikulček
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{theta__join_8c_ac229e6488e438dc8b81b21336f25b09c}{\index{theta\+\_\+join.\+c@{theta\+\_\+join.\+c}!A\+K\+\_\+theta\+\_\+join@{A\+K\+\_\+theta\+\_\+join}}
+\index{theta\+\_\+join.\+c@{theta\+\_\+join.\+c}!A\+K\+\_\+theta\+\_\+join@{A\+K\+\_\+theta\+\_\+join}}
 \index{A\+K\+\_\+theta\+\_\+join@{A\+K\+\_\+theta\+\_\+join}!theta\+\_\+join.\+c@{theta\+\_\+join.\+c}}
-\subsubsection[{A\+K\+\_\+theta\+\_\+join}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+theta\+\_\+join (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+theta\+\_\+join(char $\ast$src\+Table1, char $\ast$src\+Table2, char $\ast$dst\+Table, struct list\+\_\+node $\ast$constraints)}{AK_theta_join(char *srcTable1, char *srcTable2, char *dstTable, struct list_node *constraints)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+theta\+\_\+join (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{src\+Table1, }
 \item[{char $\ast$}]{src\+Table2, }
 \item[{char $\ast$}]{dst\+Table, }
 \item[{struct list\+\_\+node $\ast$}]{constraints}
 \end{DoxyParamCaption}
-)}}\label{theta__join_8c_ac229e6488e438dc8b81b21336f25b09c}
+)}\hypertarget{theta__join_8c_ac229e6488e438dc8b81b21336f25b09c}{}\label{theta__join_8c_ac229e6488e438dc8b81b21336f25b09c}
 
 
 Function for creating a theta join betwen two tables on specified conditions. Names of the attibutes in the constraints parameter must be prefixed with the table name followed by a dot if and only if they exist in both tables. This is left for the preprocessing. Also, for now the constraints must come from the two source tables and not from a third. 
@@ -131,5 +131,5 @@ Tomislav Mikulček,updated by Nikola Miljancic
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-if successful returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S and E\+X\+I\+T\+\_\+\+E\+R\+R\+O\+R otherwise 
+if successful returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS and E\+X\+I\+T\+\_\+\+E\+R\+R\+OR otherwise 
 \end{DoxyReturn}

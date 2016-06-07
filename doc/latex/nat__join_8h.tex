@@ -1,12 +1,13 @@
-\hypertarget{nat__join_8h}{\section{rel/nat\+\_\+join.h File Reference}
+\hypertarget{nat__join_8h}{}\section{rel/nat\+\_\+join.h File Reference}
 \label{nat__join_8h}\index{rel/nat\+\_\+join.\+h@{rel/nat\+\_\+join.\+h}}
-}
 {\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../file/fileio.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../rel/projection.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
 Include dependency graph for nat\+\_\+join.\+h\+:
+% FIG 0
 This graph shows which files directly or indirectly include this file\+:
+% FIG 1
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -26,16 +27,16 @@ void \hyperlink{nat__join_8h_a4e6087ed998a9d66eca0244981081b6e}{A\+K\+\_\+op\+\_
 Header file that provides data structures for relational natural join operation 
 
 \subsection{Function Documentation}
-\hypertarget{nat__join_8h_a63bd5daceea7ca20fbbbf01834e76519}{\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+copy\+\_\+blocks\+\_\+join@{A\+K\+\_\+copy\+\_\+blocks\+\_\+join}}
+\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+copy\+\_\+blocks\+\_\+join@{A\+K\+\_\+copy\+\_\+blocks\+\_\+join}}
 \index{A\+K\+\_\+copy\+\_\+blocks\+\_\+join@{A\+K\+\_\+copy\+\_\+blocks\+\_\+join}!nat\+\_\+join.\+h@{nat\+\_\+join.\+h}}
-\subsubsection[{A\+K\+\_\+copy\+\_\+blocks\+\_\+join}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+copy\+\_\+blocks\+\_\+join (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+copy\+\_\+blocks\+\_\+join(\+A\+K\+\_\+block $\ast$tbl1\+\_\+temp\+\_\+block, A\+K\+\_\+block $\ast$tbl2\+\_\+temp\+\_\+block, struct list\+\_\+node $\ast$att, char $\ast$new\+\_\+table)}{AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, struct list_node *att, char *new_table)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+copy\+\_\+blocks\+\_\+join (
 \begin{DoxyParamCaption}
 \item[{{\bf A\+K\+\_\+block} $\ast$}]{tbl1\+\_\+temp\+\_\+block, }
 \item[{{\bf A\+K\+\_\+block} $\ast$}]{tbl2\+\_\+temp\+\_\+block, }
 \item[{struct list\+\_\+node $\ast$}]{att, }
 \item[{char $\ast$}]{new\+\_\+table}
 \end{DoxyParamCaption}
-)}}\label{nat__join_8h_a63bd5daceea7ca20fbbbf01834e76519}
+)}\hypertarget{nat__join_8h_a63bd5daceea7ca20fbbbf01834e76519}{}\label{nat__join_8h_a63bd5daceea7ca20fbbbf01834e76519}
 
 
 Function iterates through block of the first table and copies data that needs for join, then it calls a merge function to merge with the second table. 
@@ -57,16 +58,16 @@ Matija Novak, optimized, and updated to work with A\+K\+\_\+list by Dino Laktaš
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{nat__join_8h_aaf3904b1254a982c94321e6dc5926a6d}{\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header@{A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header}}
+\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header@{A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header}}
 \index{A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header@{A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header}!nat\+\_\+join.\+h@{nat\+\_\+join.\+h}}
-\subsubsection[{A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header(int table\+\_\+address1, int table\+\_\+address2, char $\ast$new\+\_\+table, struct list\+\_\+node $\ast$att)}{AK_create_join_block_header(int table_address1, int table_address2, char *new_table, struct list_node *att)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+create\+\_\+join\+\_\+block\+\_\+header (
 \begin{DoxyParamCaption}
 \item[{int}]{table\+\_\+address1, }
 \item[{int}]{table\+\_\+address2, }
 \item[{char $\ast$}]{new\+\_\+table, }
 \item[{struct list\+\_\+node $\ast$}]{att}
 \end{DoxyParamCaption}
-)}}\label{nat__join_8h_aaf3904b1254a982c94321e6dc5926a6d}
+)}\hypertarget{nat__join_8h_aaf3904b1254a982c94321e6dc5926a6d}{}\label{nat__join_8h_aaf3904b1254a982c94321e6dc5926a6d}
 
 
 Function to make header for the new table and call the function to create the segment. 
@@ -88,16 +89,16 @@ Matija Novak, optimized, and updated to work with A\+K\+\_\+list by Dino Laktaš
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{nat__join_8h_afc618e324a27e5f39d94075c94e3ce61}{\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+join@{A\+K\+\_\+join}}
+\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+join@{A\+K\+\_\+join}}
 \index{A\+K\+\_\+join@{A\+K\+\_\+join}!nat\+\_\+join.\+h@{nat\+\_\+join.\+h}}
-\subsubsection[{A\+K\+\_\+join}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+join (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+join(char $\ast$src\+Table1, char $\ast$src\+Table2, char $\ast$dst\+Table, struct list\+\_\+node $\ast$att)}{AK_join(char *srcTable1, char *srcTable2, char *dstTable, struct list_node *att)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+join (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{src\+Table1, }
 \item[{char $\ast$}]{src\+Table2, }
 \item[{char $\ast$}]{dst\+Table, }
 \item[{struct list\+\_\+node $\ast$}]{att}
 \end{DoxyParamCaption}
-)}}\label{nat__join_8h_afc618e324a27e5f39d94075c94e3ce61}
+)}\hypertarget{nat__join_8h_afc618e324a27e5f39d94075c94e3ce61}{}\label{nat__join_8h_afc618e324a27e5f39d94075c94e3ce61}
 
 
 Function to make nat\+\_\+join betwen two tables on some attributes. 
@@ -117,18 +118,18 @@ Matija Novak, updated to work with A\+K\+\_\+list and support cacheing by Dino L
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-if success returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+S\+S 
+if success returns E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
 \end{DoxyReturn}
-\hypertarget{nat__join_8h_aa76f467e39e6f41b3a6aa4b2045824d1}{\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+merge\+\_\+block\+\_\+join@{A\+K\+\_\+merge\+\_\+block\+\_\+join}}
+\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+merge\+\_\+block\+\_\+join@{A\+K\+\_\+merge\+\_\+block\+\_\+join}}
 \index{A\+K\+\_\+merge\+\_\+block\+\_\+join@{A\+K\+\_\+merge\+\_\+block\+\_\+join}!nat\+\_\+join.\+h@{nat\+\_\+join.\+h}}
-\subsubsection[{A\+K\+\_\+merge\+\_\+block\+\_\+join}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+merge\+\_\+block\+\_\+join (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+merge\+\_\+block\+\_\+join(struct list\+\_\+node $\ast$row\+\_\+root, struct list\+\_\+node $\ast$row\+\_\+root\+\_\+insert, A\+K\+\_\+block $\ast$temp\+\_\+block, char $\ast$new\+\_\+table)}{AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_insert, AK_block *temp_block, char *new_table)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+merge\+\_\+block\+\_\+join (
 \begin{DoxyParamCaption}
 \item[{struct list\+\_\+node $\ast$}]{row\+\_\+root, }
 \item[{struct list\+\_\+node $\ast$}]{row\+\_\+root\+\_\+insert, }
 \item[{{\bf A\+K\+\_\+block} $\ast$}]{temp\+\_\+block, }
 \item[{char $\ast$}]{new\+\_\+table}
 \end{DoxyParamCaption}
-)}}\label{nat__join_8h_aa76f467e39e6f41b3a6aa4b2045824d1}
+)}\hypertarget{nat__join_8h_aa76f467e39e6f41b3a6aa4b2045824d1}{}\label{nat__join_8h_aa76f467e39e6f41b3a6aa4b2045824d1}
 
 
 Function searches the second block and when found matches with the first one makes a join and write row to join table. 
@@ -150,13 +151,13 @@ Matija Novak, updated by Dino Laktašić
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{nat__join_8h_a4e6087ed998a9d66eca0244981081b6e}{\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+op\+\_\+join\+\_\+test@{A\+K\+\_\+op\+\_\+join\+\_\+test}}
+\index{nat\+\_\+join.\+h@{nat\+\_\+join.\+h}!A\+K\+\_\+op\+\_\+join\+\_\+test@{A\+K\+\_\+op\+\_\+join\+\_\+test}}
 \index{A\+K\+\_\+op\+\_\+join\+\_\+test@{A\+K\+\_\+op\+\_\+join\+\_\+test}!nat\+\_\+join.\+h@{nat\+\_\+join.\+h}}
-\subsubsection[{A\+K\+\_\+op\+\_\+join\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+join\+\_\+test (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+op\+\_\+join\+\_\+test()}{AK_op_join_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+op\+\_\+join\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{nat__join_8h_a4e6087ed998a9d66eca0244981081b6e}
+)}\hypertarget{nat__join_8h_a4e6087ed998a9d66eca0244981081b6e}{}\label{nat__join_8h_a4e6087ed998a9d66eca0244981081b6e}
 
 
 Function for natural join testing. 

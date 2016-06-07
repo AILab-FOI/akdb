@@ -1,11 +1,12 @@
-\hypertarget{filesearch_8h}{\section{file/filesearch.h File Reference}
+\hypertarget{filesearch_8h}{}\section{file/filesearch.h File Reference}
 \label{filesearch_8h}\index{file/filesearch.\+h@{file/filesearch.\+h}}
-}
 {\ttfamily \#include \char`\"{}../mm/memoman.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}files.\+h\char`\"{}}\\*
 {\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
 Include dependency graph for filesearch.\+h\+:
+% FIG 0
 This graph shows which files directly or indirectly include this file\+:
+% FIG 1
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
@@ -16,23 +17,23 @@ struct \hyperlink{structsearch__result}{search\+\_\+result}
 \subsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{filesearch_8h_a290b386b3b560e12c57956fbc7fa2766}{\#define {\bfseries S\+E\+A\+R\+C\+H\+\_\+\+N\+U\+L\+L}~0}\label{filesearch_8h_a290b386b3b560e12c57956fbc7fa2766}
+\#define {\bfseries S\+E\+A\+R\+C\+H\+\_\+\+N\+U\+LL}~0\hypertarget{filesearch_8h_a290b386b3b560e12c57956fbc7fa2766}{}\label{filesearch_8h_a290b386b3b560e12c57956fbc7fa2766}
 
 \item 
-\hypertarget{filesearch_8h_ad8b5d425e3d8e4c242f2fbd4d245bcc7}{\#define {\bfseries S\+E\+A\+R\+C\+H\+\_\+\+A\+L\+L}~1}\label{filesearch_8h_ad8b5d425e3d8e4c242f2fbd4d245bcc7}
+\#define {\bfseries S\+E\+A\+R\+C\+H\+\_\+\+A\+LL}~1\hypertarget{filesearch_8h_ad8b5d425e3d8e4c242f2fbd4d245bcc7}{}\label{filesearch_8h_ad8b5d425e3d8e4c242f2fbd4d245bcc7}
 
 \item 
-\hypertarget{filesearch_8h_ad287c1ce9ddf07b1b1d4d332dffdab3a}{\#define {\bfseries S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+A\+R}~2}\label{filesearch_8h_ad287c1ce9ddf07b1b1d4d332dffdab3a}
+\#define {\bfseries S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+AR}~2\hypertarget{filesearch_8h_ad287c1ce9ddf07b1b1d4d332dffdab3a}{}\label{filesearch_8h_ad287c1ce9ddf07b1b1d4d332dffdab3a}
 
 \item 
-\hypertarget{filesearch_8h_a423099702bd97670e28b339b023e59cd}{\#define {\bfseries S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E}~3}\label{filesearch_8h_a423099702bd97670e28b339b023e59cd}
+\#define {\bfseries S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE}~3\hypertarget{filesearch_8h_a423099702bd97670e28b339b023e59cd}{}\label{filesearch_8h_a423099702bd97670e28b339b023e59cd}
 
 \end{DoxyCompactItemize}
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 \hyperlink{structsearch__result}{search\+\_\+result} \hyperlink{filesearch_8h_a91490139be5ae263a0f79085353929d8}{A\+K\+\_\+search\+\_\+unsorted} (char $\ast$sz\+Relation, \hyperlink{structsearch__params}{search\+\_\+params} $\ast$asp\+Params, int i\+Num\+\_\+search\+\_\+params)
-\begin{DoxyCompactList}\small\item\em Searches through unsorted values of multiple attributes in a segment. Only tuples that are equal on all given attribute values are returned (A == 1 A\+N\+D B == 7 A\+N\+D ...). S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E is inclusive. Only one value (or range) per attribute allowed -\/ use \hyperlink{structsearch__params_a061c7b5e9a3163f19dac0d3a681d63d0}{search\+\_\+params.\+p\+Data\+\_\+lower} for S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+A\+R. Supported types for S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E\+: T\+Y\+P\+E\+\_\+\+I\+N\+T, T\+Y\+P\+E\+\_\+\+F\+L\+O\+A\+T, T\+Y\+P\+E\+\_\+\+N\+U\+M\+B\+E\+R, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E\+T\+I\+M\+E, T\+Y\+P\+E\+\_\+\+T\+I\+M\+E. Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access violation. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Searches through unsorted values of multiple attributes in a segment. Only tuples that are equal on all given attribute values are returned (A == 1 A\+ND B == 7 A\+ND ...). S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE is inclusive. Only one value (or range) per attribute allowed -\/ use \hyperlink{structsearch__params_a061c7b5e9a3163f19dac0d3a681d63d0}{search\+\_\+params.\+p\+Data\+\_\+lower} for S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+AR. Supported types for S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE\+: T\+Y\+P\+E\+\_\+\+I\+NT, T\+Y\+P\+E\+\_\+\+F\+L\+O\+AT, T\+Y\+P\+E\+\_\+\+N\+U\+M\+B\+ER, T\+Y\+P\+E\+\_\+\+D\+A\+TE, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E\+T\+I\+ME, T\+Y\+P\+E\+\_\+\+T\+I\+ME. Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access violation. \end{DoxyCompactList}\item 
 void \hyperlink{filesearch_8h_aae778092223c35bcb62470e026b5156d}{A\+K\+\_\+deallocate\+\_\+search\+\_\+result} (\hyperlink{structsearch__result}{search\+\_\+result} sr\+Result)
 \begin{DoxyCompactList}\small\item\em Function deallocates memory used by search result returned by A\+K\+\_\+search\+\_\+unsorted. \end{DoxyCompactList}\item 
 void \hyperlink{filesearch_8h_aaf0180a1decdef8b54cdb1b34268493a}{Ak\+\_\+filesearch\+\_\+test} ()
@@ -43,13 +44,13 @@ void \hyperlink{filesearch_8h_aaf0180a1decdef8b54cdb1b34268493a}{Ak\+\_\+filesea
 Header file provides data structures for file searching 
 
 \subsection{Function Documentation}
-\hypertarget{filesearch_8h_aae778092223c35bcb62470e026b5156d}{\index{filesearch.\+h@{filesearch.\+h}!A\+K\+\_\+deallocate\+\_\+search\+\_\+result@{A\+K\+\_\+deallocate\+\_\+search\+\_\+result}}
+\index{filesearch.\+h@{filesearch.\+h}!A\+K\+\_\+deallocate\+\_\+search\+\_\+result@{A\+K\+\_\+deallocate\+\_\+search\+\_\+result}}
 \index{A\+K\+\_\+deallocate\+\_\+search\+\_\+result@{A\+K\+\_\+deallocate\+\_\+search\+\_\+result}!filesearch.\+h@{filesearch.\+h}}
-\subsubsection[{A\+K\+\_\+deallocate\+\_\+search\+\_\+result}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+deallocate\+\_\+search\+\_\+result (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+deallocate\+\_\+search\+\_\+result(search\+\_\+result sr\+Result)}{AK_deallocate_search_result(search_result srResult)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+deallocate\+\_\+search\+\_\+result (
 \begin{DoxyParamCaption}
 \item[{{\bf search\+\_\+result}}]{sr\+Result}
 \end{DoxyParamCaption}
-)}}\label{filesearch_8h_aae778092223c35bcb62470e026b5156d}
+)}\hypertarget{filesearch_8h_aae778092223c35bcb62470e026b5156d}{}\label{filesearch_8h_aae778092223c35bcb62470e026b5156d}
 
 
 Function deallocates memory used by search result returned by A\+K\+\_\+search\+\_\+unsorted. 
@@ -65,13 +66,13 @@ Miroslav Policki
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{filesearch_8h_aaf0180a1decdef8b54cdb1b34268493a}{\index{filesearch.\+h@{filesearch.\+h}!Ak\+\_\+filesearch\+\_\+test@{Ak\+\_\+filesearch\+\_\+test}}
+\index{filesearch.\+h@{filesearch.\+h}!Ak\+\_\+filesearch\+\_\+test@{Ak\+\_\+filesearch\+\_\+test}}
 \index{Ak\+\_\+filesearch\+\_\+test@{Ak\+\_\+filesearch\+\_\+test}!filesearch.\+h@{filesearch.\+h}}
-\subsubsection[{Ak\+\_\+filesearch\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+filesearch\+\_\+test (
+\subsubsection[{\texorpdfstring{Ak\+\_\+filesearch\+\_\+test()}{Ak_filesearch_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+filesearch\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{filesearch_8h_aaf0180a1decdef8b54cdb1b34268493a}
+)}\hypertarget{filesearch_8h_aaf0180a1decdef8b54cdb1b34268493a}{}\label{filesearch_8h_aaf0180a1decdef8b54cdb1b34268493a}
 
 
 Function for testing file search. 
@@ -82,18 +83,18 @@ Miroslav Policki
 \begin{DoxyReturn}{Returns}
 No return value 
 \end{DoxyReturn}
-\hypertarget{filesearch_8h_a91490139be5ae263a0f79085353929d8}{\index{filesearch.\+h@{filesearch.\+h}!A\+K\+\_\+search\+\_\+unsorted@{A\+K\+\_\+search\+\_\+unsorted}}
+\index{filesearch.\+h@{filesearch.\+h}!A\+K\+\_\+search\+\_\+unsorted@{A\+K\+\_\+search\+\_\+unsorted}}
 \index{A\+K\+\_\+search\+\_\+unsorted@{A\+K\+\_\+search\+\_\+unsorted}!filesearch.\+h@{filesearch.\+h}}
-\subsubsection[{A\+K\+\_\+search\+\_\+unsorted}]{\setlength{\rightskip}{0pt plus 5cm}{\bf search\+\_\+result} A\+K\+\_\+search\+\_\+unsorted (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+search\+\_\+unsorted(char $\ast$sz\+Relation, search\+\_\+params $\ast$asp\+Params, int i\+Num\+\_\+search\+\_\+params)}{AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf search\+\_\+result} A\+K\+\_\+search\+\_\+unsorted (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{sz\+Relation, }
 \item[{{\bf search\+\_\+params} $\ast$}]{asp\+Params, }
 \item[{int}]{i\+Num\+\_\+search\+\_\+params}
 \end{DoxyParamCaption}
-)}}\label{filesearch_8h_a91490139be5ae263a0f79085353929d8}
+)}\hypertarget{filesearch_8h_a91490139be5ae263a0f79085353929d8}{}\label{filesearch_8h_a91490139be5ae263a0f79085353929d8}
 
 
-Searches through unsorted values of multiple attributes in a segment. Only tuples that are equal on all given attribute values are returned (A == 1 A\+N\+D B == 7 A\+N\+D ...). S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E is inclusive. Only one value (or range) per attribute allowed -\/ use \hyperlink{structsearch__params_a061c7b5e9a3163f19dac0d3a681d63d0}{search\+\_\+params.\+p\+Data\+\_\+lower} for S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+A\+R. Supported types for S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+G\+E\+: T\+Y\+P\+E\+\_\+\+I\+N\+T, T\+Y\+P\+E\+\_\+\+F\+L\+O\+A\+T, T\+Y\+P\+E\+\_\+\+N\+U\+M\+B\+E\+R, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E\+T\+I\+M\+E, T\+Y\+P\+E\+\_\+\+T\+I\+M\+E. Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access violation. 
+Searches through unsorted values of multiple attributes in a segment. Only tuples that are equal on all given attribute values are returned (A == 1 A\+ND B == 7 A\+ND ...). S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE is inclusive. Only one value (or range) per attribute allowed -\/ use \hyperlink{structsearch__params_a061c7b5e9a3163f19dac0d3a681d63d0}{search\+\_\+params.\+p\+Data\+\_\+lower} for S\+E\+A\+R\+C\+H\+\_\+\+P\+A\+R\+T\+I\+C\+U\+L\+AR. Supported types for S\+E\+A\+R\+C\+H\+\_\+\+R\+A\+N\+GE\+: T\+Y\+P\+E\+\_\+\+I\+NT, T\+Y\+P\+E\+\_\+\+F\+L\+O\+AT, T\+Y\+P\+E\+\_\+\+N\+U\+M\+B\+ER, T\+Y\+P\+E\+\_\+\+D\+A\+TE, T\+Y\+P\+E\+\_\+\+D\+A\+T\+E\+T\+I\+ME, T\+Y\+P\+E\+\_\+\+T\+I\+ME. Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access violation. 
 
 \begin{DoxyAuthor}{Author}
 Miroslav Policki

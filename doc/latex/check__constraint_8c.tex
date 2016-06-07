@@ -1,8 +1,8 @@
-\hypertarget{check__constraint_8c}{\section{sql/cs/check\+\_\+constraint.c File Reference}
+\hypertarget{check__constraint_8c}{}\section{sql/cs/check\+\_\+constraint.c File Reference}
 \label{check__constraint_8c}\index{sql/cs/check\+\_\+constraint.\+c@{sql/cs/check\+\_\+constraint.\+c}}
-}
 {\ttfamily \#include \char`\"{}check\+\_\+constraint.\+h\char`\"{}}\\*
 Include dependency graph for check\+\_\+constraint.\+c\+:
+% FIG 0
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -20,15 +20,15 @@ void \hyperlink{check__constraint_8c_a8753e4d511fcb8d4b5ca0481c21a97d3}{A\+K\+\_
 Check constraint implementation file. 
 
 \subsection{Function Documentation}
-\hypertarget{check__constraint_8c_a83682bf0eae57646710d7821bfe4bba9}{\index{check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}!A\+K\+\_\+check\+\_\+constraint@{A\+K\+\_\+check\+\_\+constraint}}
+\index{check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}!A\+K\+\_\+check\+\_\+constraint@{A\+K\+\_\+check\+\_\+constraint}}
 \index{A\+K\+\_\+check\+\_\+constraint@{A\+K\+\_\+check\+\_\+constraint}!check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}}
-\subsubsection[{A\+K\+\_\+check\+\_\+constraint}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+constraint (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+constraint(char $\ast$table, char $\ast$attribute, void $\ast$value)}{AK_check_constraint(char *table, char *attribute, void *value)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+check\+\_\+constraint (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{table, }
 \item[{char $\ast$}]{attribute, }
 \item[{void $\ast$}]{value}
 \end{DoxyParamCaption}
-)}}\label{check__constraint_8c_a83682bf0eae57646710d7821bfe4bba9}
+)}\hypertarget{check__constraint_8c_a83682bf0eae57646710d7821bfe4bba9}{}\label{check__constraint_8c_a83682bf0eae57646710d7821bfe4bba9}
 
 
 Verifies if the value we want to insert satisfies the \char`\"{}check\char`\"{} constraint. 
@@ -48,13 +48,13 @@ Mislav Jurinić
 \begin{DoxyReturn}{Returns}
 1 -\/ success, 0 -\/ failure 
 \end{DoxyReturn}
-\hypertarget{check__constraint_8c_a8753e4d511fcb8d4b5ca0481c21a97d3}{\index{check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}!A\+K\+\_\+check\+\_\+constraint\+\_\+test@{A\+K\+\_\+check\+\_\+constraint\+\_\+test}}
+\index{check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}!A\+K\+\_\+check\+\_\+constraint\+\_\+test@{A\+K\+\_\+check\+\_\+constraint\+\_\+test}}
 \index{A\+K\+\_\+check\+\_\+constraint\+\_\+test@{A\+K\+\_\+check\+\_\+constraint\+\_\+test}!check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}}
-\subsubsection[{A\+K\+\_\+check\+\_\+constraint\+\_\+test}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+check\+\_\+constraint\+\_\+test (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+check\+\_\+constraint\+\_\+test()}{AK_check_constraint_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+check\+\_\+constraint\+\_\+test (
 \begin{DoxyParamCaption}
 {}
 \end{DoxyParamCaption}
-)}}\label{check__constraint_8c_a8753e4d511fcb8d4b5ca0481c21a97d3}
+)}\hypertarget{check__constraint_8c_a8753e4d511fcb8d4b5ca0481c21a97d3}{}\label{check__constraint_8c_a8753e4d511fcb8d4b5ca0481c21a97d3}
 
 
 Test function for \char`\"{}check\char`\"{} constraint. 
@@ -65,9 +65,9 @@ Mislav Jurinić
 \begin{DoxyReturn}{Returns}
 void 
 \end{DoxyReturn}
-\hypertarget{check__constraint_8c_ac826b7958b3ede6d90dcc10b10b7abef}{\index{check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}!A\+K\+\_\+set\+\_\+check\+\_\+constraint@{A\+K\+\_\+set\+\_\+check\+\_\+constraint}}
+\index{check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}!A\+K\+\_\+set\+\_\+check\+\_\+constraint@{A\+K\+\_\+set\+\_\+check\+\_\+constraint}}
 \index{A\+K\+\_\+set\+\_\+check\+\_\+constraint@{A\+K\+\_\+set\+\_\+check\+\_\+constraint}!check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}}
-\subsubsection[{A\+K\+\_\+set\+\_\+check\+\_\+constraint}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+set\+\_\+check\+\_\+constraint (
+\subsubsection[{\texorpdfstring{A\+K\+\_\+set\+\_\+check\+\_\+constraint(char $\ast$table\+\_\+name, char $\ast$constraint\+\_\+name, char $\ast$attribute\+\_\+name, char $\ast$condition, int type, void $\ast$value)}{AK_set_check_constraint(char *table_name, char *constraint_name, char *attribute_name, char *condition, int type, void *value)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+set\+\_\+check\+\_\+constraint (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{table\+\_\+name, }
 \item[{char $\ast$}]{constraint\+\_\+name, }
@@ -76,7 +76,7 @@ void
 \item[{int}]{type, }
 \item[{void $\ast$}]{value}
 \end{DoxyParamCaption}
-)}}\label{check__constraint_8c_ac826b7958b3ede6d90dcc10b10b7abef}
+)}\hypertarget{check__constraint_8c_ac826b7958b3ede6d90dcc10b10b7abef}{}\label{check__constraint_8c_ac826b7958b3ede6d90dcc10b10b7abef}
 
 
 Adds a new \char`\"{}check\char`\"{} constraint into the system table. 
@@ -92,7 +92,7 @@ Mislav Jurinić
 \hline
 {\em attribute\+\_\+name} & target attribute for \char`\"{}check\char`\"{} constraint evaluation \\
 \hline
-{\em condition} & logical operator \mbox{[}'$<$', '$>$', '!=', ...\mbox{]} \\
+{\em condition} & logical operator \mbox{[}\textquotesingle{}$<$\textquotesingle{}, \textquotesingle{}$>$\textquotesingle{}, \textquotesingle{}!=\textquotesingle{}, ...\mbox{]} \\
 \hline
 {\em type} & data type \mbox{[}int, float, varchar, datetime, ...\mbox{]} \\
 \hline
@@ -102,16 +102,16 @@ Mislav Jurinić
 \begin{DoxyReturn}{Returns}
 1 -\/ success, 0 -\/ failure 
 \end{DoxyReturn}
-\hypertarget{check__constraint_8c_aa98c91efd4fa083fb4da284dd30f3a3b}{\index{check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}!condition\+\_\+passed@{condition\+\_\+passed}}
+\index{check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}!condition\+\_\+passed@{condition\+\_\+passed}}
 \index{condition\+\_\+passed@{condition\+\_\+passed}!check\+\_\+constraint.\+c@{check\+\_\+constraint.\+c}}
-\subsubsection[{condition\+\_\+passed}]{\setlength{\rightskip}{0pt plus 5cm}int condition\+\_\+passed (
+\subsubsection[{\texorpdfstring{condition\+\_\+passed(char $\ast$condition, int type, void $\ast$value, void $\ast$row\+\_\+data)}{condition_passed(char *condition, int type, void *value, void *row_data)}}]{\setlength{\rightskip}{0pt plus 5cm}int condition\+\_\+passed (
 \begin{DoxyParamCaption}
 \item[{char $\ast$}]{condition, }
 \item[{int}]{type, }
 \item[{void $\ast$}]{value, }
 \item[{void $\ast$}]{row\+\_\+data}
 \end{DoxyParamCaption}
-)}}\label{check__constraint_8c_aa98c91efd4fa083fb4da284dd30f3a3b}
+)}\hypertarget{check__constraint_8c_aa98c91efd4fa083fb4da284dd30f3a3b}{}\label{check__constraint_8c_aa98c91efd4fa083fb4da284dd30f3a3b}
 
 
 For given value, checks if it satisfies the \char`\"{}check\char`\"{} constraint. 
@@ -121,7 +121,7 @@ Mislav Jurinić
 \end{DoxyAuthor}
 
 \begin{DoxyParams}{Parameters}
-{\em condition} & logical operator \mbox{[}'$<$', '$>$', '!=', ...\mbox{]} \\
+{\em condition} & logical operator \mbox{[}\textquotesingle{}$<$\textquotesingle{}, \textquotesingle{}$>$\textquotesingle{}, \textquotesingle{}!=\textquotesingle{}, ...\mbox{]} \\
 \hline
 {\em type} & data type \mbox{[}int, float, varchar, datetime, ...\mbox{]} \\
 \hline

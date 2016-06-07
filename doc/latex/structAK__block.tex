@@ -1,9 +1,8 @@
-\hypertarget{structAK__block}{\section{A\+K\+\_\+block Struct Reference}
+\hypertarget{structAK__block}{}\section{A\+K\+\_\+block Struct Reference}
 \label{structAK__block}\index{A\+K\+\_\+block@{A\+K\+\_\+block}}
-}
 
 
-Structure that defines a block of data inside a D\+B file. It contains address, type, chained\+\_\+with, A\+K\+\_\+free space, last\+\_\+tuple\+\_\+dict\+\_\+id, header and tuple\+\_\+dict and data.  
+Structure that defines a block of data inside a DB file. It contains address, type, chained\+\_\+with, A\+K\+\_\+free space, last\+\_\+tuple\+\_\+dict\+\_\+id, header and tuple\+\_\+dict and data.  
 
 
 
@@ -13,37 +12,38 @@ Structure that defines a block of data inside a D\+B file. It contains address, 
 
 
 Collaboration diagram for A\+K\+\_\+block\+:
+% FIG 0
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{structAK__block_a72691b8b4db638181adadd02c0a9c6af}{int \hyperlink{structAK__block_a72691b8b4db638181adadd02c0a9c6af}{address}}\label{structAK__block_a72691b8b4db638181adadd02c0a9c6af}
+int \hyperlink{structAK__block_a72691b8b4db638181adadd02c0a9c6af}{address}\hypertarget{structAK__block_a72691b8b4db638181adadd02c0a9c6af}{}\label{structAK__block_a72691b8b4db638181adadd02c0a9c6af}
 
-\begin{DoxyCompactList}\small\item\em block number (address) in D\+B file \end{DoxyCompactList}\item 
-\hypertarget{structAK__block_a7bc611836789dc2b045d768432efe184}{int \hyperlink{structAK__block_a7bc611836789dc2b045d768432efe184}{type}}\label{structAK__block_a7bc611836789dc2b045d768432efe184}
+\begin{DoxyCompactList}\small\item\em block number (address) in DB file \end{DoxyCompactList}\item 
+int \hyperlink{structAK__block_a7bc611836789dc2b045d768432efe184}{type}\hypertarget{structAK__block_a7bc611836789dc2b045d768432efe184}{}\label{structAK__block_a7bc611836789dc2b045d768432efe184}
 
-\begin{DoxyCompactList}\small\item\em block type (can be B\+L\+O\+C\+K\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+R\+E\+E, B\+L\+O\+C\+K\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+R\+M\+A\+L or B\+L\+O\+C\+K\+\_\+\+T\+Y\+P\+E\+\_\+\+C\+H\+A\+I\+N\+E\+D) \end{DoxyCompactList}\item 
-\hypertarget{structAK__block_a56692ada02b24c08e3be44da8504ad9b}{int \hyperlink{structAK__block_a56692ada02b24c08e3be44da8504ad9b}{chained\+\_\+with}}\label{structAK__block_a56692ada02b24c08e3be44da8504ad9b}
+\begin{DoxyCompactList}\small\item\em block type (can be B\+L\+O\+C\+K\+\_\+\+T\+Y\+P\+E\+\_\+\+F\+R\+EE, B\+L\+O\+C\+K\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+R\+M\+AL or B\+L\+O\+C\+K\+\_\+\+T\+Y\+P\+E\+\_\+\+C\+H\+A\+I\+N\+ED) \end{DoxyCompactList}\item 
+int \hyperlink{structAK__block_a56692ada02b24c08e3be44da8504ad9b}{chained\+\_\+with}\hypertarget{structAK__block_a56692ada02b24c08e3be44da8504ad9b}{}\label{structAK__block_a56692ada02b24c08e3be44da8504ad9b}
 
-\begin{DoxyCompactList}\small\item\em address of chained block; N\+O\+T\+\_\+\+C\+H\+A\+I\+N\+E\+D otherwise \end{DoxyCompactList}\item 
-\hypertarget{structAK__block_a5f3394eebe71ffc105b8f52af2155102}{int \hyperlink{structAK__block_a5f3394eebe71ffc105b8f52af2155102}{A\+K\+\_\+free\+\_\+space}}\label{structAK__block_a5f3394eebe71ffc105b8f52af2155102}
+\begin{DoxyCompactList}\small\item\em address of chained block; N\+O\+T\+\_\+\+C\+H\+A\+I\+N\+ED otherwise \end{DoxyCompactList}\item 
+int \hyperlink{structAK__block_a5f3394eebe71ffc105b8f52af2155102}{A\+K\+\_\+free\+\_\+space}\hypertarget{structAK__block_a5f3394eebe71ffc105b8f52af2155102}{}\label{structAK__block_a5f3394eebe71ffc105b8f52af2155102}
 
 \begin{DoxyCompactList}\small\item\em A\+K\+\_\+free space in block. \end{DoxyCompactList}\item 
-\hypertarget{structAK__block_a6dcee13f6c5c80530ae1376e0f3a399f}{int {\bfseries last\+\_\+tuple\+\_\+dict\+\_\+id}}\label{structAK__block_a6dcee13f6c5c80530ae1376e0f3a399f}
+int {\bfseries last\+\_\+tuple\+\_\+dict\+\_\+id}\hypertarget{structAK__block_a6dcee13f6c5c80530ae1376e0f3a399f}{}\label{structAK__block_a6dcee13f6c5c80530ae1376e0f3a399f}
 
 \item 
-\hypertarget{structAK__block_a291a49ea3dc9d972d3e1da46ba620903}{\hyperlink{structAK__header}{A\+K\+\_\+header} \hyperlink{structAK__block_a291a49ea3dc9d972d3e1da46ba620903}{header} \mbox{[}M\+A\+X\+\_\+\+A\+T\+T\+R\+I\+B\+U\+T\+E\+S\mbox{]}}\label{structAK__block_a291a49ea3dc9d972d3e1da46ba620903}
+\hyperlink{structAK__header}{A\+K\+\_\+header} \hyperlink{structAK__block_a291a49ea3dc9d972d3e1da46ba620903}{header} \mbox{[}M\+A\+X\+\_\+\+A\+T\+T\+R\+I\+B\+U\+T\+ES\mbox{]}\hypertarget{structAK__block_a291a49ea3dc9d972d3e1da46ba620903}{}\label{structAK__block_a291a49ea3dc9d972d3e1da46ba620903}
 
 \begin{DoxyCompactList}\small\item\em attribute definitions \end{DoxyCompactList}\item 
-\hypertarget{structAK__block_ad5eaa0ebdbeee5d5083d185c8b9ac3b4}{\hyperlink{structAK__tuple__dict}{A\+K\+\_\+tuple\+\_\+dict} \hyperlink{structAK__block_ad5eaa0ebdbeee5d5083d185c8b9ac3b4}{tuple\+\_\+dict} \mbox{[}D\+A\+T\+A\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E\mbox{]}}\label{structAK__block_ad5eaa0ebdbeee5d5083d185c8b9ac3b4}
+\hyperlink{structAK__tuple__dict}{A\+K\+\_\+tuple\+\_\+dict} \hyperlink{structAK__block_ad5eaa0ebdbeee5d5083d185c8b9ac3b4}{tuple\+\_\+dict} \mbox{[}D\+A\+T\+A\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE\mbox{]}\hypertarget{structAK__block_ad5eaa0ebdbeee5d5083d185c8b9ac3b4}{}\label{structAK__block_ad5eaa0ebdbeee5d5083d185c8b9ac3b4}
 
 \begin{DoxyCompactList}\small\item\em dictionary of data entries \end{DoxyCompactList}\item 
-\hypertarget{structAK__block_af66ba2bcc5d90ff18f09982975efb913}{unsigned char \hyperlink{structAK__block_af66ba2bcc5d90ff18f09982975efb913}{data} \mbox{[}D\+A\+T\+A\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+Z\+E $\ast$D\+A\+T\+A\+\_\+\+E\+N\+T\+R\+Y\+\_\+\+S\+I\+Z\+E\mbox{]}}\label{structAK__block_af66ba2bcc5d90ff18f09982975efb913}
+unsigned char \hyperlink{structAK__block_af66ba2bcc5d90ff18f09982975efb913}{data} \mbox{[}D\+A\+T\+A\+\_\+\+B\+L\+O\+C\+K\+\_\+\+S\+I\+ZE $\ast$D\+A\+T\+A\+\_\+\+E\+N\+T\+R\+Y\+\_\+\+S\+I\+ZE\mbox{]}\hypertarget{structAK__block_af66ba2bcc5d90ff18f09982975efb913}{}\label{structAK__block_af66ba2bcc5d90ff18f09982975efb913}
 
 \begin{DoxyCompactList}\small\item\em actual data entries \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-Structure that defines a block of data inside a D\+B file. It contains address, type, chained\+\_\+with, A\+K\+\_\+free space, last\+\_\+tuple\+\_\+dict\+\_\+id, header and tuple\+\_\+dict and data. 
+Structure that defines a block of data inside a DB file. It contains address, type, chained\+\_\+with, A\+K\+\_\+free space, last\+\_\+tuple\+\_\+dict\+\_\+id, header and tuple\+\_\+dict and data. 
 
 \begin{DoxyAuthor}{Author}
 Markus Schatten 
