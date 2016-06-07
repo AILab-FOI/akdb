@@ -35,14 +35,17 @@ pip install virtualenv
 ```
 You can also use a Python interpreter of your choice.
 ```
+cd my_project_folder
 virtualenv -p /usr/bin/python2.7 venv
 ```
 To begin using the virtual environment, it needs to be activated:
 ```
 source venv/bin/activate
 ```
-
-
+If you are done working in the virtual environment for the moment, you can deactivate it:
+```
+deactivate
+```
 ### Run the Application
 
 Build (builds bin/akdb, documentation in doc/ and swig interface)
