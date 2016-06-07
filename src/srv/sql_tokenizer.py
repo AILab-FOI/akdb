@@ -70,10 +70,10 @@ class sql_tokenizer:
       sequenceNameList = Group( delimitedList( sequenceName ) )
 
       dropStmt=Forward()
-      dropStmt << ( dropToken + Optional(optionalToken1.setResultsName("option1")) + objectToken.setResultsName("obj") +\
-                    Optional(optionalToken2.setResultsName("option2")) + objectNameList.setResultsName("obj_name") +\
-                    Optional(optionalToken3.setResultsName("option3")) + Optional(onToken.setResultsName("onToken") +\
-                    Optional(objectNameList2.setResultsName("obj_name2")))
+      dropStmt << ( dropToken + Optional(optionalToken1.setResultsName("opcija1")) + objectToken.setResultsName("objekt") +\
+                    Optional(optionalToken2.setResultsName("opcija2")) + objectNameList.setResultsName("ime_objekta") +\
+                    Optional(optionalToken3.setResultsName("opcija3")) + Optional(onToken.setResultsName("onToken") +\
+                    Optional(objectNameList2.setResultsName("ime_objekta2")))
                    
                   )
       try:
@@ -100,24 +100,23 @@ class sql_tokenizer:
       tableToken  = Keyword("table",caseless=True)
       columnToken = Keyword("column",caseless=True)
 
-      # grammar def
-      complexQ = LPAR + ZeroOrMore(CharsNotIn(")")) + RPAR
-      simpleQ = Word(alphas,alphanums+"_\"':-")
+      #definiranje gramatike
+      slozeni = LPAR + ZeroOrMore(CharsNotIn(")")) + RPAR
+      jednostavni = Word(alphas,alphanums+"_\"':-")
 
-      # aget table name and column
-      table_name = simpleQ.copy().setResultsName("table_name")       
-      column_name = simpleQ.copy().setResultsName("column_name")
+      #dohvacanje naziva tablice i stupca
+      table_name = jednostavni.copy().setResultsName("table_name")       
+      column_name = jednostavni.copy().setResultsName("column_name")
       #definiranje tipa podataka iz add naredbe
-      # def the data type from add command
-      field_def = OneOrMore(simpleQ | complexQ)
+      field_def = OneOrMore(jednostavni | slozeni)
       field_list_def = delimitedList(field_def).setResultsName("data_type")
 
-      # def the base of the query and adding and deleting table columns
+      #definiranje osnove upita te operacija dodavanja i uklanjanja stupca tablice
       alter_core = (alterToken + tableToken + table_name)
       adding = (addToken + column_name + field_list_def) 
       dropping = (dropToken + columnToken + column_name)
 
-      # tef the command
+      #definiranje same naredbe
       alter_stmt = Forward()        
       alter_def =  (dropping) | (adding)
       alter_stmt << (alter_core + alter_def)
@@ -138,21 +137,21 @@ class sql_tokenizer:
       '''
 
       ident = Word( alphas, alphanums + "_$").setName("identifier")
-      indexName = Word( alphas, alphanums + "_$").setName("identifier")
-      tableName = Word( alphas, alphanums + "_$").setName("identifier")
+      nazivIndexa = Word( alphas, alphanums + "_$").setName("identifier")
+      nazivTablice = Word( alphas, alphanums + "_$").setName("identifier")
       createToken = Keyword("create", caseless=True)
       indexToken = Keyword("index", caseless = True)
       onToken = Keyword("on", caseless = True)
       usingToken = Keyword("using", caseless=True)
       column = delimitedList(ident, ",", combine=True)
       columnList = Group(delimitedList(column))
-      lBracket = Suppress("(")
-      rBracket = Suppress(")")
+      lzagrada = Suppress("(")
+      dzagrada = Suppress(")")
 
       createIndexStmt = Forward()
-      createIndexStmt << (createToken + indexToken + indexName.setResultsName("indexName") + onToken +
-                          tableName.setResultsName("table") + lBracket + columnList.setResultsName("columns") + rBracket +
-                          usingToken + restOfLine.setResultsName("indexType"))
+      createIndexStmt << (createToken + indexToken + nazivIndexa.setResultsName("IndexIme") + onToken +
+                          nazivTablice.setResultsName("tablica") + lzagrada + columnList.setResultsName("stupci") + dzagrada +
+                          usingToken + restOfLine.setResultsName("IndexVrsta"))
       try:
           tokens = createIndexStmt.parseString( string )
       except ParseException, err:
@@ -178,28 +177,28 @@ class sql_tokenizer:
       identifier = ~keyword + Word(alphas, alphanums+"_")
       identifier2 = ~keyword + Word(nums)
 
-      sequence_name = identifier.copy().setResultsName("seq")
+      sequence_name = identifier.copy().setResultsName("sekvenca")
       as_value = identifier.copy().setResultsName("as_value")
       min_value     = identifier2.copy().setResultsName("min_value")
       max_value     = identifier2.copy().setResultsName("max_value")
       start_with    = identifier2.copy().setResultsName("start_with")
       increment_by  = identifier2.copy().setResultsName("increment_by")
       cache_value   = identifier2.copy().setResultsName("cache")
-            
+      	
       sequence_stmt = Forward()
       sequence_stmt << (CREATE + SEQUENCE + sequence_name +\
-            (Optional((AS),default=AS) + Optional((as_value),default="bigint")) +\
-            (Optional((START), default=START) + Optional((WITH),default=WITH) +\
-       Optional((start_with),default="no start")) +\
-      (Optional((INCREMENT),default=INCREMENT) + Optional((BY),default=BY) +\
-       Optional((increment_by),default="1")) +\
-            (Optional((MINVALUE),default=MINVALUE) +\
-             Optional((min_value),default="no minvalue")) +\
-            (Optional((MAXVALUE),default=MAXVALUE) +\
-       Optional((max_value),default="no maxvalue")) +\
-      (Optional((CACHE),default=CACHE) +\
-       Optional((cache_value),default="15")) +\
-      Optional((cycleToken),default="no cycle")) 
+      	(Optional((AS),default=AS) + Optional((as_value),default="bigint")) +\
+      	(Optional((START), default=START) + Optional((WITH),default=WITH) +\
+	 Optional((start_with),default="no start")) +\
+	(Optional((INCREMENT),default=INCREMENT) + Optional((BY),default=BY) +\
+	 Optional((increment_by),default="1")) +\
+      	(Optional((MINVALUE),default=MINVALUE) +\
+      	 Optional((min_value),default="no minvalue")) +\
+      	(Optional((MAXVALUE),default=MAXVALUE) +\
+	 Optional((max_value),default="no maxvalue")) +\
+	(Optional((CACHE),default=CACHE) +\
+	 Optional((cache_value),default="15")) +\
+	Optional((cycleToken),default="no cycle")) 
 
       try:
           tokens = sequence_stmt.parseString(string)
@@ -207,85 +206,85 @@ class sql_tokenizer:
           return " "*err.loc + "^\n" + err.msg
       print
       
-      # def min, max and start default value based on sequence type
+      #definiranje min, max i start default vrijednosti na temelju tipa sequence
       if(tokens.as_value[0]=="smallint"):
-            if(tokens.min_value=="no minvalue"):
-                  tokens.min_value = "-32768"
-                  if(tokens.start_with=="no start"):
-                        tokens.start_with = tokens.min_value
-            else:
-                  tokens.start_with = tokens.start_with[0]
-            else:
-                  tokens.min_value = tokens.min_value[0]
-                  if(tokens.start_with=="no start"):
-                        tokens.start_with = tokens.min_value[0]
-            else:
-                  tokens.start_with = tokens.start_with[0]
-            if(tokens.max_value=="no maxvalue"):
-                  tokens.max_value = "32767"
-            else:
-                  tokens.max_value = tokens.max_value[0]
+      	if(tokens.min_value=="no minvalue"):
+      		tokens.min_value = "-32768"
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	else:
+      		tokens.min_value = tokens.min_value[0]
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value[0]
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	if(tokens.max_value=="no maxvalue"):
+      		tokens.max_value = "32767"
+      	else:
+      		tokens.max_value = tokens.max_value[0]
       
       elif(tokens.as_value[0]=="int"):
-            if(tokens.min_value=="no minvalue"):
-                  tokens.min_value = "-2147483648"
-                  if(tokens.start_with=="no start"):
-                        tokens.start_with = tokens.min_value
-            else:
-                  tokens.start_with = tokens.start_with[0]
-            else:
-                  tokens.min_value = tokens.min_value[0]
-                  if(tokens.start_with=="no start"):
-                        tokens.start_with = tokens.min_value[0]
-            else:
-                  tokens.start_with = tokens.start_with[0]
-            if(tokens.max_value=="no maxvalue"):
-                  tokens.max_value = "2147483647"
-            else:
-                  tokens.max_value = tokens.max_value[0]
+      	if(tokens.min_value=="no minvalue"):
+      		tokens.min_value = "-2147483648"
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	else:
+      		tokens.min_value = tokens.min_value[0]
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value[0]
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	if(tokens.max_value=="no maxvalue"):
+      		tokens.max_value = "2147483647"
+      	else:
+      		tokens.max_value = tokens.max_value[0]
       
       elif(tokens.as_value[0]=="bigint" or tokens.as_value=="bigint"):
-            if(tokens.min_value=="no minvalue"):
-                  tokens.min_value = "-9223372036854775808"
-                  if(tokens.start_with=="no start"):
-                        tokens.start_with = tokens.min_value
-            else:
-                  tokens.start_with = tokens.start_with[0]
-            else:
-                  tokens.min_value = tokens.min_value[0]
-                  if(tokens.start_with=="no start"):
-                        tokens.start_with = tokens.min_value[0]
-            else:
-                  tokens.start_with = tokens.start_with[0]
-            if(tokens.max_value=="no maxvalue"):
-                  tokens.max_value = "9223372036854775807"
-            else:
-                  tokens.max_value = tokens.max_value[0]
+      	if(tokens.min_value=="no minvalue"):
+      		tokens.min_value = "-9223372036854775808"
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	else:
+      		tokens.min_value = tokens.min_value[0]
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value[0]
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	if(tokens.max_value=="no maxvalue"):
+      		tokens.max_value = "9223372036854775807"
+      	else:
+      		tokens.max_value = tokens.max_value[0]
       
       elif(tokens.as_value[0]=="tinyint" or tokens.as_value[0]=="numeric" or tokens.as_value[0]=="decimal"):
-            if(tokens.min_value=="no minvalue"):
-                  tokens.min_value = "0"
-                  if(tokens.start_with=="no start"):
-                        tokens.start_with = tokens.min_value
-            else:
-                  tokens.start_with = tokens.start_with[0]
-            else:
-                  tokens.min_value = tokens.min_value[0]
-                  if(tokens.start_with=="no start"):
-                        tokens.start_with = tokens.min_value[0]
-            else:
-                  tokens.start_with = tokens.start_with[0]
-            if(tokens.max_value=="no maxvalue"):
-                  tokens.max_value = "255"
-            else:
-                  tokens.max_value = tokens.max_value[0]
+      	if(tokens.min_value=="no minvalue"):
+      		tokens.min_value = "0"
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	else:
+      		tokens.min_value = tokens.min_value[0]
+      		if(tokens.start_with=="no start"):
+		      	tokens.start_with = tokens.min_value[0]
+		else:
+			tokens.start_with = tokens.start_with[0]
+      	if(tokens.max_value=="no maxvalue"):
+      		tokens.max_value = "255"
+      	else:
+      		tokens.max_value = tokens.max_value[0]
       
       if(tokens.cache!="15"):
-            tokens.cache = tokens.cache[0]
+      	tokens.cache = tokens.cache[0]
       if(tokens.increment_by!="1"):
-            tokens.increment_by = tokens.increment_by[0]
+      	tokens.increment_by = tokens.increment_by[0]
       if(tokens.as_value!="bigint"):
-            tokens.as_value = tokens.as_value[0]
+      	tokens.as_value = tokens.as_value[0]
       
       return tokens
 
@@ -678,11 +677,11 @@ class sql_tokenizer:
       
       tokens =Word( alphas, alphanums + "_$")
       
-      _body = tokens.copy().setResultsName("_body")
+      tijelo = tokens.copy().setResultsName("tijelo")
       
 
       transStmt = Forward()
-      transStmt << (beginToken+Optional(transToken)+Optional(isolationToken+transmodeToken)+_body+commitToken)
+      transStmt << (beginToken+Optional(transToken)+Optional(isolationToken+transmodeToken)+tijelo+commitToken)
 
      
       try:
@@ -907,8 +906,8 @@ class sql_tokenizer:
      commands=["DROP temporary table if exists tabela1231 cascade",
              "drop user matija, pero, jura",
              "Drop column kolona1, kolona_2",
-             "drop index bla on table",
-             "drop trigger bla on table2",
+             "drop index bla on tablica",
+             "drop trigger bla on tablica2",
              "drop role test",
              "drop function if exists funcija1",
              "drop procedure if exists procedurea_df489f"]
@@ -921,13 +920,13 @@ class sql_tokenizer:
          print token
        else:
           print "tokens = ", token
-          print "tokens.option1 = ", token.option1
-          print "tokens.obj = ", token.obj
-          print "tokens.obj_name = ", token.obj_name
-          print "tokens.option2 = ", token.option2
-          print "tokens.option3 = ", token.option3
+          print "tokens.opcija1 = ", token.opcija1
+          print "tokens.objekt = ", token.objekt
+          print "tokens.ime_objekta = ", token.ime_objekta
+          print "tokens.opcija2 = ", token.opcija2
+          print "tokens.opcija3 = ", token.opcija3
           print "tokens.onToken = ", token.onToken
-          print "tokens.obj_name2 = ", token.obj_name2      
+          print "tokens.ime_objekta2 = ", token.ime_objekta2      
 
   def AK_alter_table_test(self):
     
@@ -964,10 +963,10 @@ class sql_tokenizer:
      @brief testing of transaction
      '''
      print "\n---------------------------------TRANSACTION test---------------------------------\n"
-     commands = ["begin _body commit",\
-                 "begin _body rollback",\
-                 "begin work _body commit",\
-                 "begin transaction isolation level serializable _body rollback"]
+     commands = ["begin tijelo commit",\
+                 "begin tijelo rollback",\
+                 "begin work tijelo commit",\
+                 "begin transaction isolation level serializable tijelo rollback"]
         
      for command in commands:
         print "\n"+command
@@ -978,7 +977,7 @@ class sql_tokenizer:
           print token
         else:
           print "tokens =      ", token
-          print "_body =      ", token._body
+          print "tijelo =      ", token.tijelo
 
   def AK_parse_createIndex_test(self):
 
@@ -988,9 +987,9 @@ class sql_tokenizer:
      @return No return value
      '''
      print "\n---------------------------------CREATE INDEX test---------------------------------\n"
-     commands = ["CREATE INDEX Pindex ON table ( stupac1, stupac2 ) USING Btree",\
-                    "create index Pindex on table ( stupac1 ) USING Btree",\
-                    "create index Pindex on table ( stupac1, stupac2 ) USING Hash"]
+     commands = ["CREATE INDEX Pindex ON tablica ( stupac1, stupac2 ) USING Btree",\
+                    "create index Pindex on tablica ( stupac1 ) USING Btree",\
+                    "create index Pindex on tablica ( stupac1, stupac2 ) USING Hash"]
 
      for command in commands:
           print "\n"+command
@@ -999,10 +998,10 @@ class sql_tokenizer:
                 print "Error: " + token
           else:
                 print "token = ", token
-                print "indexName = ", token.indexName
-                print "table = ", token.table
-                print "columns = ", token.columns
-                print "indexType = ", token.indexType
+                print "IndexIme = ", token.IndexIme
+                print "tablica = ", token.tablica
+                print "stupci = ", token.stupci
+                print "IndexVrsta = ", token.IndexVrsta
 
   def AK_create_sequence_test(self):
 
@@ -1024,7 +1023,7 @@ class sql_tokenizer:
              print token
          else:
              print "tokens = ", token
-             print "seqIme = ", token.seq
+             print "SekvencaIme = ", token.sekvenca
              print "min value = ", token.min_value
              print "max value = ", token.max_value
              print "increment by = ", token.increment_by
@@ -1044,38 +1043,38 @@ class sql_tokenizer:
      print "\n"+sql_1
      token = test.AK_create_sequence(sql_1)
      if isinstance(token, str):
-      print "Error: "
-      print sql_1
-      print token
+     	print "Error: "
+     	print sql_1
+	print token
      else:
-      print "Tokens: ", token
-      print "\nSequence name: ", token.seq
-      print "'AS' definition: ", token.as_value
-      print "'Start with' value: ", token.start_with
-      print "'Increment by' value: ", token.increment_by
-      print "'MinValue' value: ", token.min_value
-      print "'MaxValue' value: ", token.max_value
-      print "'Cache' value: ", token.cache
-      print "'Cycle' value: ", token.cycle
-           
+	print "Tokens: ", token
+	print "\nSequence name: ", token.sekvenca
+	print "'AS' definition: ", token.as_value
+	print "'Start with' value: ", token.start_with
+	print "'Increment by' value: ", token.increment_by
+	print "'MinValue' value: ", token.min_value
+	print "'MaxValue' value: ", token.max_value
+	print "'Cache' value: ", token.cache
+	print "'Cycle' value: ", token.cycle
+	     
      sql_2 = "create sequence brojac_2"
      
      print "\n"+sql_2
      token = test.AK_create_sequence(sql_2)
      if isinstance(token, str):
-      print "Error:"
-      print sql_2
-      print token
+     	print "Error:"
+     	print sql_2
+     	print token
      else:
-      print "Tokens: ", token
-      print "\nSequence name: ", token.seq
-      print "'AS' definition: ", token.as_value
-      print "'Start with' value: ", token.start_with
-      print "'Increment by' value: ", token.increment_by
-            print "'MinValue' value: ", token.min_value
-      print "'MaxValue' value: ", token.max_value
-      print "'Cache' value: ", token.cache
-            print "'Cycle' value: ", token.cycle
+     	print "Tokens: ", token
+     	print "\nSequence name: ", token.sekvenca
+     	print "'AS' definition: ", token.as_value
+     	print "'Start with' value: ", token.start_with
+     	print "'Increment by' value: ", token.increment_by
+      	print "'MinValue' value: ", token.min_value
+     	print "'MaxValue' value: ", token.max_value
+     	print "'Cache' value: ", token.cache
+      	print "'Cycle' value: ", token.cycle
 
 
   def AK_parse_where_test(self):
@@ -1137,7 +1136,7 @@ class sql_tokenizer:
       @return No return value
       '''
       print "\n---------------------------------CREATE TABLE test---------------------------------\n"
-      commands = ["CREATE TABLE table (var1 INT NOT NULL, var2 INT PRIMARY KEY)", "CREATE TABLE tabla1 (v2 INT, v4 TEXT, v11 INT AUTO_INCREMENT)"]
+      commands = ["CREATE TABLE tablica (var1 INT NOT NULL, var2 INT PRIMARY KEY)", "CREATE TABLE tabla1 (v2 INT, v4 TEXT, v11 INT AUTO_INCREMENT)"]
             
       for command in commands:
         token = test.AK_parse_create_table(command)
@@ -1156,7 +1155,7 @@ class sql_tokenizer:
       @return No return value
       '''
       print "\n---------------------------------INSERT INTO test---------------------------------\n"
-      commands = ["INSERT INTO table(vr1, v2, ttt3) VALUES ('a1', 'ss2', 'a2')", "INSERT INTO table1 VALUES (11, 'kk2', 'j2')"]
+      commands = ["INSERT INTO tablica(vr1, v2, ttt3) VALUES ('a1', 'ss2', 'a2')", "INSERT INTO tablica1 VALUES (11, 'kk2', 'j2')"]
             
       for command in commands:
         token = test.AK_parse_insert_into(command)
@@ -1201,7 +1200,7 @@ class sql_tokenizer:
                   print "tokens.paramList = ",token.params
 
   def AKTokenizeCreateFunctionTest(self):
-      string1 = "CREATE FUNCTION myFunction(IN number INT DEFAULT 12) RETURNS TABLE(varijabla1 INT,  varijabla2 FLOAT) AS SELECT * FROM table"
+      string1 = "CREATE FUNCTION myFunction(IN number INT DEFAULT 12) RETURNS TABLE(varijabla1 INT,  varijabla2 FLOAT) AS SELECT * FROM tablica"
       print test.AKTokenizeCreateFunction(string1, "INT|FLOAT|DECIMAL")
   
   def AK_parse_CreateView_test(self):
@@ -1292,7 +1291,7 @@ class sql_tokenizer:
     for command in commands:
       token = test.AK_parse_alter_user(command)
       if isinstance(token, str):
-      print "Error:"
+	print "Error:"
         print command
         print token
       else:

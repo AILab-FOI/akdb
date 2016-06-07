@@ -840,8 +840,8 @@ class Update_command:
                 # This is Test Data!
                 # Iteration required for more than one attribute!
                 element = ak47.list_node()
-                ak47.Ak_Init_L3(&element)
-                ak47.Ak_DeleteAll_L3(&element)
+                ak47.Ak_Init_L3(id(element))
+                ak47.Ak_DeleteAll_L3(id(element))
 
                 updateColumn = token.columnNames[0]
                 whereColumn = token.condition[1][0]
