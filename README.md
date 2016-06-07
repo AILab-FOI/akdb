@@ -7,7 +7,7 @@ Varaždin, Croatia.
 http://kalashnikovdb.sourceforge.net/
 
 The system is currently in alpha development status and NOT fully functional!
-
+***
 ## Getting Started
 To get you started you can simply clone the repository and install the dependencies:
 
@@ -44,6 +44,7 @@ If you are done working in the virtual environment for the moment, you can deact
 ```
 deactivate
 ```
+***
 ### Build the Application
 Build (builds bin/akdb, documentation in doc/ and swig interface)
 ```
