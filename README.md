@@ -46,7 +46,7 @@ If you are done working in the virtual environment for the moment, you can deact
 ```
 deactivate
 ```
-## Run the Application
+## Build the Application
 
 Build (builds bin/akdb, documentation in doc/ and swig interface)
 ```
@@ -54,6 +54,12 @@ cd src
 make
 make doc
 make swig
+```
+## Run the Application
+```
+cd bin/
+./akdb help
+./akdb <option>
 ```
 ## Clean project
 Cleaning the project from files generated while compiling use this:
@@ -63,3 +69,23 @@ make clean-d
 ```
 
 ## Directory Layout
+## Testing
+1) Main engine
+```
+cd bin
+./akdb test
+```
+On first use DB file will be initialized. In case it hangs press 1 and Enter
+(don't ask why).
+
+2) Server (read README in src/srv)
+```
+cd src/srv
+python server.py
+```
+
+3) Client
+```
+cd src/srv
+python akdb_cli.py
+```
