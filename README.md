@@ -71,7 +71,7 @@ make clean-d
 ### Main engine
 ```
 cd bin
-./akdb test
+./akdb alltest
 ```
 On first use DB file will be initialized. In case it hangs press 1 and Enter
 (don't ask why).
