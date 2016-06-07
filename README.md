@@ -14,7 +14,7 @@ To get you started you can simply clone the repository and install the dependenc
 
 ### Prerequisites
 ```
-sudo apt-get install git build-essential swig make
+sudo apt-get install git build-essential swig make doxygen
 ```
 ### Clone Kalashnikov DB
 
