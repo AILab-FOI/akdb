@@ -59,8 +59,8 @@ int AK_table_empty(char *tblName);
 int AK_get_table_obj_id(char *table);
 int AK_check_tables_scheme(AK_mem_block *tbl1_temp_block, AK_mem_block *tbl2_temp_block, char *operator_name);
 
-char *get_row_attr_data();
-struct list_node *AK_get_table_row(int num, char * tblName);
+char *get_row_attr_data(int column, struct list_node *node);
+//struct list_node *AK_get_table_row(int num, char * tblName);
 void AK_table_test() ;
 
 int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *new_attr);
