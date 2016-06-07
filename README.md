@@ -56,6 +56,7 @@ make doc
 make swig
 ```
 ### Clean project
+Cleaning the project from files generated while compiling use this:
 ```
 make clean
 make clean-d
