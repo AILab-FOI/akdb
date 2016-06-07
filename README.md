@@ -46,7 +46,7 @@ If you are done working in the virtual environment for the moment, you can deact
 ```
 deactivate
 ```
-### Run the Application
+## Run the Application
 
 Build (builds bin/akdb, documentation in doc/ and swig interface)
 ```
@@ -55,7 +55,7 @@ make
 make doc
 make swig
 ```
-### Clean project
+## Clean project
 Cleaning the project from files generated while compiling use this:
 ```
 make clean
