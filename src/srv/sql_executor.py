@@ -468,21 +468,21 @@ class Insert_into_command:
                 print token
                 return False
         table_name = str(token.tableName)
-        # postoji li tablica
+        # does the table exist
         if (ak47.AK_table_exist(table_name) == 0):
                 print "Error: table '"+ table_name +"' does not exist"
                 return False
-        # vrijednosti podataka za unos
+        # data values for insert
         insert_attr_values = map(lambda x: x.replace("'",""),list(token.columnValues[0]))
-        # tipovi podataka za unos
+        # data types for insert
         insert_attr_types = map(lambda x: get_attr_type(x.replace("'","")),list(token.columnValues[0]))
-        #Dohvatiti listu atributa tablice
+        # get attributes array for table
         table_attr_names = str(ak47.AK_rel_eq_get_atrributes_char(table_name)).split(";")
-        #Dohvatiti tipove atributa tablice
+        # get attribute types for table
         table_attr_types = str(ak47.AK_get_table_atribute_types(table_name)).split(";")
-        # imena atributa za unos
+        # attribute names for insert
         insert_attr_names = table_attr_names
-        # navedeni su atributi za unos
+        # attributes for insert
         if(token.columns):
                 insert_attr_names = []
                 table_types_temp = table_attr_types
@@ -493,7 +493,7 @@ class Insert_into_command:
                                 print "\nError: table has no attribute '" + str(col) + "':"
                                 akdbError(expr,col)
                                 return False
-                #provjera atributa za unos
+                # check attributes for insert
                 for ic,col in enumerate(insert_columns):
                         for ia,tab in enumerate(table_attr_names):
                                 if col == tab:
@@ -517,7 +517,7 @@ class Insert_into_command:
                         print "\nError: attribute names number not matching attribute values number supplied for table '" + table_name + "':"
                         akdbError(expr,insert_columns[0])
                         return False
-        # navedene su samo vrijednosti za unos
+        # only values for insert
         elif (len(table_attr_names) < len(insert_attr_values)):
                 print "\nError: too many attibutes, table " + str(token.tableName) + " has " + str(len(table_attr_names)) 
                 return False
@@ -537,7 +537,6 @@ class Insert_into_command:
         else:
                 return False
         return False
-
 
 #
 '''
@@ -841,8 +840,8 @@ class Update_command:
                 # This is Test Data!
                 # Iteration required for more than one attribute!
                 element = ak47.list_node()
-                ak47.Ak_Init_L3(&element)
-                ak47.Ak_DeleteAll_L3(&element)
+                ak47.Ak_Init_L3(id(element))
+                ak47.Ak_DeleteAll_L3(id(element))
 
                 updateColumn = token.columnNames[0]
                 whereColumn = token.condition[1][0]
@@ -1031,21 +1030,21 @@ class sql_executor:
                         print token
                         return False
                 table_name = str(token.tableName)
-                # postoji li tablica
+                # is there a table
                 if (ak47.AK_table_exist(table_name) == 0):
                         print "Error: table '"+ table_name +"' does not exist"
                         return False
-                # vrijednosti podataka za unos
+                # data values for insert
                 insert_attr_values = map(lambda x: x.replace("'",""),list(token.columnValues[0]))
-                # tipovi podataka za unos
+                # data types for insert
                 insert_attr_types = map(lambda x: get_attr_type(x.replace("'","")),list(token.columnValues[0]))
-                #Dohvatiti listu atributa tablice
+                # get array of attributes for table
                 table_attr_names = str(ak47.AK_rel_eq_get_atrributes_char(table_name)).split(";")
-                #Dohvatiti tipove atributa tablice
+                # get attribute types for table
                 table_attr_types = str(ak47.AK_get_table_atribute_types(table_name)).split(";")
-                # imena atributa za unos
+                # attribute names for insert
                 insert_attr_names = table_attr_names
-                # navedeni su atributi za unos
+                # attributes for insert
                 if(token.columns):
                         insert_attr_names = []
                         table_types_temp = table_attr_types
@@ -1056,7 +1055,7 @@ class sql_executor:
                                         print "\nError: table has no attribute '" + str(col) + "':"
                                         akdbError(expr,col)
                                         return False
-                        #provjera atributa za unos
+                        # check attributes for insert
                         for ic,col in enumerate(insert_columns):
                                 for ia,tab in enumerate(table_attr_names):
                                         if col == tab:
@@ -1080,7 +1079,7 @@ class sql_executor:
                                 print "\nError: attribute names number not matching attribute values number supplied for table '" + table_name + "':"
                                 akdbError(expr,insert_columns[0])
                                 return False
-                # navedene su samo vrijednosti za unos
+                # values for insert
                 elif (len(table_attr_names) < len(insert_attr_values)):
                         print "\nError: too many attibutes, table " + str(token.tableName) + " has " + str(len(table_attr_names)) 
                         return False

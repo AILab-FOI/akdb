@@ -916,17 +916,17 @@ void AK_privileges_test() {
     
     printf("\nThis is PRIVILEGES test!\n\n");
     
-    int uspjesno[18] = {0};
+    int successfull[18] = {0};
     
     printf("1. Test for function AK_user_add - inserts users in table AK_user!\n");
-	printf("\n   Test data: proba 123; kitakac 321; mrvasedam 569; swallow 666; testtest 777; protest 888 \n   Result: ");
+	printf("\n   Test data: testing 123; kitakac 321; mrvasedam 569; swallow 666; testtest 777; protest 888 \n   Result: ");
 	if(
-		AK_user_add("proba", (int*) 123, NEW_ID) == EXIT_ERROR){
+		AK_user_add("testing", (int*) 123, NEW_ID) == EXIT_ERROR){
 		printf("Test 1. - Fail!\n");
 				
 	} else {
 		printf("Test 1. - Pass!\n");
-		uspjesno[0]=1;
+		successfull[0]=1;
 	}
 	// more users for testing
 	    AK_user_add("kritakac", (int*) 321, NEW_ID);
@@ -937,14 +937,14 @@ void AK_privileges_test() {
         AK_print_table("AK_user");
 
 	printf("\n\n2. Test for function AK_user_rename - renames the user in table AK_user!\n");
-	printf("\n   Test data: from user-proba to user-test\n   Result: ");
+	printf("\n   Test data: from user-testing to user-test\n   Result: ");
 	if(
-		AK_user_rename("proba", "test", (int*) 123) == EXIT_ERROR){
+		AK_user_rename("testing", "test", (int*) 123) == EXIT_ERROR){
 		printf("Test 2. - Fail!\n");
 				
 	} else {
 		printf("Test 2. - Pass!\n");
-		uspjesno[1]=1;
+		successfull[1]=1;
 	}
        AK_print_table("AK_user");
        
@@ -957,7 +957,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("Test 3. - Pass!\n");
-		uspjesno[2]=1;
+		successfull[2]=1;
 	}
     AK_print_table("AK_user");
 
@@ -969,7 +969,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("Test 4. - Pass!\n");
-		uspjesno[3]=1;
+		successfull[3]=1;
 	}
     //more groups for testing
     AK_group_add("group2", NEW_ID);
@@ -987,7 +987,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("Test 5. - Pass!\n");
-		uspjesno[4]=1;
+		successfull[4]=1;
 	}
     //more groups renaming for test
     AK_group_rename("group2", "group4");
@@ -1001,7 +1001,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("Test 6. - Pass!\n");
-		uspjesno[5]=1;
+		successfull[5]=1;
 	}
     AK_print_table("AK_group"); 
 
@@ -1013,10 +1013,10 @@ void AK_privileges_test() {
 				
 	}else if(AK_add_user_to_group("kritakac", "grupa") == EXIT_ERROR){
                 printf("Test 7. - Pass!\n");
-                uspjesno[6]=1;
+                successfull[6]=1;
         }else {
 		printf("Test 7. - Pass!\n");
-		uspjesno[6]=1;
+		successfull[6]=1;
 	}
     //more users to groups for testing
     AK_add_user_to_group("test", "group5");
@@ -1033,7 +1033,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("Test 8. - Pass!\n");
-		uspjesno[7]=1;
+		successfull[7]=1;
 	}
    //more privileges to groups for testing
     AK_grant_privilege_group("group5", "student", "ALL");
@@ -1050,7 +1050,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("\n   Test 9. - Pass!\n");
-		uspjesno[8]=1;
+		successfull[8]=1;
 	}
     AK_print_table("AK_group_right");
     // if tested data were for group4,student,all - test pass but revoke ALL privileges for group4 on ALL tables
@@ -1064,7 +1064,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("Test 10. - Pass!\n");
-		uspjesno[9]=1;
+		successfull[9]=1;
 	}
      AK_print_table("AK_group_right");
 	
@@ -1076,7 +1076,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("Test 11. - Pass!\n");
-		uspjesno[10]=1;
+		successfull[10]=1;
 	}	
 	//more privileges for user kritakac     
     AK_grant_privilege_user("kritakac", "student", "DELETE");
@@ -1095,7 +1095,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("\n   Test 12. - Pass!\n");
-		uspjesno[11]=1;
+		successfull[11]=1;
 	} 
 	// test pass but didnt revoke privilages for user test - Lidija Lastavec
     AK_print_table("AK_user_right");
@@ -1108,7 +1108,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("\n   Test 13. - Pass!\n");
-		uspjesno[12]=1;
+		successfull[12]=1;
 	} 
 	AK_print_table("AK_user_right");
 	// test pass but didnt revoke ALL privilages for user kritakac - Lidija Lastavec
@@ -1121,7 +1121,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("\n   Test 14. - Pass!\n");
-		uspjesno[13]=1;
+		successfull[13]=1;
 	}
 	// test for NO answer - test PASS!
 	printf("\n   Test data: check if user TEST has right SELECT on table PROFESSOR\n   Result: ");
@@ -1137,7 +1137,7 @@ void AK_privileges_test() {
 	printf("\n   Test data: group5-group_id 114 has privileges..\n   Result: ");
 	if(AK_check_group_privilege("group5") == EXIT_SUCCESS) {
 		printf("\n   Test 15. - Pass!\n");
-		uspjesno[14]=1;
+		successfull[14]=1;
 	} else {
 		printf("\n   Test 15. - Fail!\n");
 	}
@@ -1158,7 +1158,7 @@ void AK_privileges_test() {
 				
 	} else {
 		printf("\n   Test 16. - Pass!\n");
-		uspjesno[15]=1;
+		successfull[15]=1;
 	}
 	// test for NO answer - test PASS!
 	printf("\n   Test data: check if user SWALLOW has ANY privileges\n   Result: ");
@@ -1174,7 +1174,7 @@ void AK_privileges_test() {
 	printf("\n6. Test: Group that not exist..group6..\nResult: ");
 	if(AK_revoke_privilege_group("group6", "student", "ALL") == EXIT_SUCCESS) {
 		printf("Group '%s' has no more privileges '%s' upon table '%s'!\n", "group6", "ALL", "student");
-		uspjesno[5]=1;
+		successfull[5]=1;
 	} else {
 		printf("Error during removing privileges for group '%s'!\n", "group6");
 	}
@@ -1186,7 +1186,7 @@ void AK_privileges_test() {
 	if(AK_remove_all_users_from_group("group5") == EXIT_SUCCESS) {
 		//printf("Users deleted from group '%s'!\n", "group1");
 		printf("\n   Test 17. - Pass!\n");
-		uspjesno[16]=1;
+		successfull[16]=1;
 	} else {
 		//printf("Error deleting user from group '%s'!\n", "group1");
 		printf("\n   Test 17. - Fail!\n");
@@ -1196,7 +1196,7 @@ void AK_privileges_test() {
 	printf("\n   Test data: group9-NONexistent-without users..\n   Result: ");
 	if(AK_remove_all_users_from_group("group9") == EXIT_ERROR) {
 		//printf("Users deleted from group '%s'!\n", "group3");
-		//uspjesno[7]=1;
+		//successfull[7]=1;
 		printf("\n   Test 17. - Pass!\n");
 	} else {
 		//printf("Error deleting user from group '%s'!\n", "group3");
@@ -1211,7 +1211,7 @@ void AK_privileges_test() {
 	if(AK_remove_user_from_all_groups("testtest") == EXIT_SUCCESS) {
 		//printf("User '%s' is removed from all groups!\n", "kritakac");
 	printf("\n   Test 18. - Pass!\n");
-		uspjesno[17]=1;
+		successfull[17]=1;
 	} else {
 		//printf("Error deleting user '%s' from groups!\n", "kritakac");
 		printf("\n   Test 18. - Fail!\n");
@@ -1219,18 +1219,18 @@ void AK_privileges_test() {
 	
 	printf("\n   Test data: User whitout group - PROTEST..\n   Result: ");
 	if(AK_remove_user_from_all_groups("protest") == EXIT_ERROR) {
-		//printf("User '%s' is removed from all groups!\n", "proba");
-		//uspjesno[9]=1;
+		//printf("User '%s' is removed from all groups!\n", "testing");
+		//successfull[9]=1;
 		printf("\n   Test 18. - Pass!\n");
 	} else {
-		//printf("Error deleting user '%s' from groups!\n", "proba");
+		//printf("Error deleting user '%s' from groups!\n", "testing");
 		printf("\n   Test 18. - Fail!\n");
 	}
 	/*
 	printf("\n11. Test: User not in any group - mrvasedam..\nResult: ");
 	if(AK_remove_user_from_all_groups("mrvasedam") == EXIT_SUCCESS) {
 		printf("User '%s' is removed from all groups!\n", "mrvasedam");
-		uspjesno[10]=1;
+		successfull[10]=1;
 	} else {
 		printf("Error deleting user '%s' from groups!\n", "mrvasedam");
 	}
@@ -1242,14 +1242,14 @@ void AK_privileges_test() {
 	printf("\n12. Test: Group that exists..group3..\nResult: ");
 	if(AK_group_remove_by_name("group3") == EXIT_SUCCESS) {
 		printf("Group '%s' is removed!\n", "group3");
-		uspjesno[11]=1;
+		successfull[11]=1;
 	} else {
 		printf("Error deleting group '%s'!\n", "group3");
 	}
 	printf("\n13. Test: Group that not exists..group6..\nResult: ");
 	if(AK_group_remove_by_name("group6") == EXIT_SUCCESS) {
 		printf("Group '%s' is removed!\n", "group6");
-		uspjesno[12]=1;
+		successfull[12]=1;
 	} else {
 		printf("Error deleting group '%s'!\n", "group6");
 	}
@@ -1257,14 +1257,14 @@ void AK_privileges_test() {
 	*/
 
 	printf("\nSummary: \n");
-	int br=0;
-	int brFail=0;
-	for(br=0;br<18;br++){
-		printf("%i. Test: %s \n", (br+1),  (uspjesno[br]==1?"Pass":"Fail"));
-		if(uspjesno[br]==0) brFail++;
+	int num=0;
+	int numFail=0;
+	for(num=0;num<18;num++){
+		printf("%i. Test: %s \n", (num+1),  (successfull[num]==1?"Pass":"Fail"));
+		if(successfull[num]==0) numFail++;
 	}
 
-	if(brFail==0) printf("\nALL TESTS ARE PASSED! \n");
-	else printf("\nThere are %i tests that failed.. \n", brFail);
+	if(numFail==0) printf("\nALL TESTS ARE PASSED! \n");
+	else printf("\nThere are %i tests that failed.. \n", numFail);
     AK_EPI;
 }

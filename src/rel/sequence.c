@@ -334,19 +334,19 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
 void AK_sequence_test() {
     AK_PRO;
     printf("sequence.c: Present!\n");
-    AK_sequence_add("sekvenca1", 100, 5, 200, 100, 1);     
-    AK_sequence_add("sekvenca2", 200, 10, 205, 100, 1);
+    AK_sequence_add("sequence1", 100, 5, 200, 100, 1);     
+    AK_sequence_add("sequence2", 200, 10, 205, 100, 1);
     AK_print_table("AK_sequence");
-    int currval = AK_sequence_current_value("sekvenca1");
-    printf("\nCurrent value of sequence sekvenca1: %d\n", currval);
-    int nextval = AK_sequence_next_value("sekvenca1");
-    printf("\nNext value of sequence sekvenca1: %d\n", nextval);
+    int currval = AK_sequence_current_value("sequence1");
+    printf("\nCurrent value of sequence sequence1: %d\n", currval);
+    int nextval = AK_sequence_next_value("sequence1");
+    printf("\nNext value of sequence sequence1: %d\n", nextval);
     
-    AK_sequence_rename("sekvenca1", "sekvenca3");
+    AK_sequence_rename("sequence1", "sequence3");
     AK_print_table("AK_sequence"); 
 
-    AK_sequence_modify("sekvenca3", 200, 20, 300, 150, 0);
-    AK_sequence_remove("sekvenca1");
+    AK_sequence_modify("sequence3", 200, 20, 300, 150, 0);
+    AK_sequence_remove("sequence1");
     AK_print_table("AK_sequence");
     
     printf("\n Test is successful :) \n");

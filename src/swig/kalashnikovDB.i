@@ -333,6 +333,7 @@ extern struct list_node *AK_rel_eq_get_attributes(char *tblName);
 %include "../opti/query_optimization.c"
 %include "../opti/query_optimization.h"
 
+
 %include "../opti/rel_eq_comut.c"
 %include "../opti/rel_eq_comut.h"
 %include "../opti/rel_eq_assoc.c"
@@ -347,6 +348,13 @@ extern struct list_node *AK_rel_eq_get_attributes(char *tblName);
 %include "../rel/expression_check.h"
 %include "../file/id.c"
 %include "../file/id.h"
+
+%include "../sql/cs/unique.c"
+%include "../sql/cs/unique.h"
+
+%include "../sql/cs/check_constraint.c"
+%include "../sql/cs/check_constraint.h"
+
 %include "../sql/cs/nnull.c"
 %include "../sql/cs/nnull.h"
 %include "../sql/cs/between.c"
@@ -392,3 +400,10 @@ extern struct list_node *AK_rel_eq_get_attributes(char *tblName);
 
 %include "../rec/recovery.h"
 %include "../rec/recovery.c"
+
+
+
+%include "../sql/cs/constraint_names.c"
+%include "../sql/cs/constraint_names.h"
+
+extern int Ak_check_constraint_name(char *constraintName);

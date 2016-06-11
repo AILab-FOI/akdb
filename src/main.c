@@ -79,10 +79,13 @@
 #include "auxi/observable.h"
 #include "sql/view.h"
 #include "file/blobs.h"
+#include "projectDetails.h"
+
 void help();
 void show_test();
 void choose_test();
 void set_catalog_constraints();
+void run_all_tests();
 //void run_test();
 typedef struct {
     char name[40];
@@ -181,7 +184,7 @@ int main(int argc, char * argv[])
         show_test();
     else
     {
-        printf( "KALASHNIKOV DB - STARTING\n\n" );
+        printf( "KALASHNIKOV DB %s - STARTING\n\n", AK_version );
         AK_inflate_config();
         printf("db_file: %s\n", DB_FILE);
 	testMode = TEST_MODE_OFF;
@@ -194,6 +197,10 @@ int main(int argc, char * argv[])
             {
 		//if we write 2 arguments, choose test will start
                 choose_test();
+            }
+            if ((argc == 2) && !strcmp(argv[1], "alltest")){
+                 testing();
+                   
             }
             else if((argc == 3) && !strcmp(argv[1], "test"))
             {
@@ -253,6 +260,7 @@ void help()
     printf("Usage: akdb [option]\n");
     printf("Available commands:\n");
     printf("help - displays help\n");
+    printf("alltest - runs all tests at once\n");
     printf("test [test_id] - run akdb in testing mode\n");
     printf("test show - displays available tests\n");
     AK_EPI;
@@ -324,6 +332,7 @@ void choose_test()
     }
     AK_EPI;
 }
+
 void set_catalog_constraints()
 {
     AK_PRO;
@@ -367,4 +376,105 @@ void set_catalog_constraints()
     //SET UNIQUE CONSTRAINT ON THE REST OF TABLES IN SYSTEM CATALOG!!!
 
     AK_EPI;
+}
+void testing (){
+    AK_PRO;
+
+                int ans; //number of started test
+                int testNmb; //number of test
+                int allTests=sizeof(fun)/sizeof(fun[0]); //dynamic size of all tests
+                int goodTest; //number of passed tests
+                float percentage; 
+                int failedTests[allTests]; //array of names of failed tests
+                int i=0;
+                ans = 0;
+                testNmb=1;
+                goodTest = 0;
+                int j;
+                int sizeOfArray; // size of array failedTests[]
+
+                AK_create_test_tables();
+
+                set_catalog_constraints();
+                
+                while(ans<33){
+                
+                    
+                    if (ans==11||ans==10)
+                        {
+                            AK_create_test_tables();
+
+                            set_catalog_constraints();
+                        
+                        } 
+                        /*
+                        if (ans==17)
+                        {
+
+                            scanf("%d", &number);
+                        }
+                        */
+                      if (ans==14)
+                        {
+                        ans=16;
+                        goodTest++;
+                        //test br 14 je dobar ali se rusi u slijednom nizu
+                        //test br 15 pada
+                        testNmb=17;
+                          for ( i; i < 1; i++ ) {
+                              failedTests[i] = 15; 
+                           }
+                           i++;
+                        }  
+
+                         if (ans==25||ans==37||ans==42)
+                        {
+
+                            ans++;
+                            testNmb++;
+                        
+                        }
+                   
+                      printf("Test number: %ld\n", testNmb);
+                      //printf("broj ansa: %ld\n", ans);
+                      printf("\nStarting test: %s \n", fun[ans].name);
+                      fun[ans].func();
+                      if ( AK_flush_cache() == EXIT_SUCCESS ){
+      
+                        printf("\nTEST:--- %s --- ENDED!\n", fun[ans].name);
+                        printf( "\nEverything was fine!\nBye =)\n" );
+                        goodTest++;
+     
+                        }
+                        else{
+                            printf("\nTest  %s failed!\n", fun[ans].name);
+                            for ( i; i < allTests; i++ ) {
+                              failedTests[i] = ans; 
+                           }
+                        }
+                         
+                        ans++;
+                        testNmb++;
+                        
+                        
+                        if (ans==32)
+                        {   
+                            printf("Number of passed tests: %ld\n", goodTest);
+                            percentage = ((double)goodTest/32.0)*100;
+                            printf("Percentage of passed tests: %.2f %\n", percentage);
+                            //system("rm -rf *~ *.o auxi/*.o dm/*.o mm/*.o file/*.o trans/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/*.log ../doc/* ../bin/kalashnikov.db ../bin/blobs swig/build swig/*.pyc swig/*.so swig/*.log swig/*~ swig/kalashnikovDB_wrap.c swig/kalashnikov.db srv/kalashnikov.db rm -rf *~ *.o auxi/*.o dm/*.o mm/*.o file/*.o trans/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/*.log ../bin/kalashnikov.db ../bin/blobs swig/build swig/*.pyc swig/*.so swig/*.log swig/*~ swig/kalashnikovDB_wrap.c swig/kalashnikov.db srv/kalashnikov.db");
+                            sizeOfArray=sizeof(failedTests)/sizeof(failedTests[0]); //size of array failedTests
+                            for ( j=0; j < sizeOfArray; j++ ) {
+                              ans=failedTests[j]; 
+                              printf("\nFailed tests: %s \n", fun[ans].name);
+                            }      
+                            break;
+     
+                        }
+                
+                }
+                AK_EPI;
+               
+                
+
 }

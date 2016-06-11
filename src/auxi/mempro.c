@@ -1051,60 +1051,60 @@ void AK_debmod_function_prologue(const char *func_name,
 */
 void AK_mempro_test()
 {
-	AK_PRO;
-	int proslo_test = 0;
-	int palo_test = 0;
+    AK_PRO;
+    int passed_test = 0;
+    int failed_test = 0;
 
-	struct test_struktura {
-		int id;
-		char *naziv;
-		char *vrijednost;
-	};
+    struct test_struct {
+        int id;
+        char *name;
+        char *val;
+    };
 
-	typedef struct test_struktura test;
+    typedef struct test_struct test;
 
-	printf("\nAllocate memory test\nTry to allocate 35 bytes * size of structure test_struktura(id,naziv,vrijednost) into t_1\n");
-	test *t_1 = AK_malloc(sizeof(test)*(35));
-	if(t_1 != NULL) {
-		printf("SUCCESS\n");
-		proslo_test++;
-	} else {
-		printf("FAIL\n");
-		palo_test++;
-	}
+    printf("\nAllocate memory test\nTry to allocate 35 bytes * size of structure test_struct(id,name,val) into t_1\n");
+    test *t_1 = AK_malloc(sizeof(test)*(35));
+    if(t_1 != NULL) {
+        printf("SUCCESS\n");
+        passed_test++;
+    } else {
+        printf("FAIL\n");
+        failed_test++;
+    }
 
-	printf("\nInsert data into t_1\n");
-	t_1[0].id = 1;
-	t_1[0].naziv = "stuktura1";
-	t_1[0].vrijednost = "101";
-	printf("Data in t_1: %i, %s, %s \n",t_1[0].id,t_1[0].naziv,t_1[0].vrijednost);
+    printf("\nInsert data into t_1\n");
+    t_1[0].id = 1;
+    t_1[0].name = "stuktura1";
+    t_1[0].val = "101";
+    printf("Data in t_1: %i, %s, %s \n",t_1[0].id,t_1[0].name,t_1[0].val);
 
-	printf("\nReallocate memory test\nTry to reallocate t_1 into t_2\n");
-	test *t_2 = AK_realloc(t_1,sizeof(test)*(35));
+    printf("\nReallocate memory test\nTry to reallocate t_1 into t_2\n");
+    test *t_2 = AK_realloc(t_1,sizeof(test)*(35));
 
-	if(t_2 != NULL) {
-		printf("Data in t_2: %i, %s, %s \n",t_2[0].id,t_2[0].naziv,t_2[0].vrijednost);
-		printf("SUCCESS\n");
-		proslo_test++;
-	} else {
-		printf("FAIL\n");
-		palo_test++;
-	}	
+    if(t_2 != NULL) {
+        printf("Data in t_2: %i, %s, %s \n",t_2[0].id,t_2[0].name,t_2[0].val);
+        printf("SUCCESS\n");
+        passed_test++;
+    } else {
+        printf("FAIL\n");
+        failed_test++;
+    }   
 
-	printf("\nDeallocate memory test\nTry to deallocate created stuctures\n");
-	AK_free(t_2);
+    printf("\nDeallocate memory test\nTry to deallocate created stuctures\n");
+    AK_free(t_2);
 
-	if(t_2[0].id != 1) {
-		printf("SUCCESS\n");
-		proslo_test++;
-	} else {
-		printf("FAIL\n");
-		palo_test++;
-	}
+    if(t_2[0].id != 1) {
+        printf("SUCCESS\n");
+        passed_test++;
+    } else {
+        printf("FAIL\n");
+        failed_test++;
+    }
 
-	printf("\nSUMMARY:\n");
-	printf("Number of test that pass: %i\n", proslo_test);
-	printf("Number of test that fail: %i\n", palo_test);
+    printf("\nSUMMARY:\n");
+    printf("Number of test that pass: %i\n", passed_test);
+    printf("Number of test that fail: %i\n", failed_test);
 
-	AK_EPI;
+    AK_EPI;
 }

@@ -56,5 +56,7 @@
 #include "../rel/sequence.c"
 #include "../rel/intersect.c"
 #include "../rel/projection.c"
+#include "../sql/cs/constraint_names.c"
+
 
 #endif

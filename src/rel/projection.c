@@ -34,17 +34,17 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
 
     int startAddress = AK_initialize_new_segment(table, type_segment, header);
 
-    int broj = 8;
+    int num = 8;
     //insert object_id
-    AK_insert_entry(sys_block, TYPE_INT, &broj, 8);
+    AK_insert_entry(sys_block, TYPE_INT, &num, 8);
     //insert table name
     AK_insert_entry(sys_block, TYPE_VARCHAR, table, 9);
     //insert start address
-    broj = startAddress;
-    AK_insert_entry(sys_block, TYPE_INT, &broj, 10);
+    num = startAddress;
+    AK_insert_entry(sys_block, TYPE_INT, &num, 10);
     //insert end address
-    broj = startAddress + 19;
-    AK_insert_entry(sys_block, TYPE_INT, &broj, 11);
+    num = startAddress + 19;
+    AK_insert_entry(sys_block, TYPE_INT, &num, 11);
 
     AK_write_block(sys_block);
     AK_free(sys_block);

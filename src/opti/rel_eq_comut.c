@@ -379,7 +379,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 void AK_rel_eq_comut_test() {
     AK_PRO;
     printf("AK_rel_eq_commute_with_theta_join: Present!\n");
-    printf(AK_rel_eq_commute_with_theta_join("'mbr' 100 > 'firstname' 50 < AND 'id' 'A' > OR", "profesor"));
+    //printf(AK_rel_eq_commute_with_theta_join("'mbr' 100 > 'firstname' 50 < AND 'id' 'A' > OR", "profesor"));
     printf("\n");
 
     printf("rel_eq_comut.c: Present!\n");

@@ -86,7 +86,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 	AK_block *block = (AK_block*) AK_read_block(startAddress);
 	int adr_to_write = (int) AK_find_AK_free_space(AK_get_index_addresses(indexName));
 	int number_el = AK_get_num_records(tblName);			
-	root_info *korijen = (root_info*) AK_malloc(sizeof(root_info));
+	root_info *rootEl = (root_info*) AK_malloc(sizeof(root_info));
 
 	//number of LEAFS--------------------B=3---------------number_leaf
 	float x = (float) number_el;
@@ -96,7 +96,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 		y = y - 1;
 		number_leaf = number_leaf + 1;
 	}//instead of ceil function
-	korijen->level[0] = number_leaf;
+	rootEl->level[0] = number_leaf;
 
 	//number of NODES (level above leafs)--------(B+1)-----number_node
 	float m = (float) number_leaf;
@@ -106,7 +106,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 		node = node - 1;
 		number_node = number_node + 1;
 	}//instead of ceil function
-	korijen->level[1] = number_node;
+	rootEl->level[1] = number_node;
 
 	//number of NODES (remaining nodes)---------(B+1)------number_node
 	float temp_one = (float) number_node;
@@ -120,7 +120,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 			node = node - 1;
 			temp_two = temp_two + 1;
 		}
-		korijen->level[lvl] = temp_two;
+		rootEl->level[lvl] = temp_two;
 		lvl++;
 		number_node = number_node + temp_two;
 		temp_one = (float) temp_two;
@@ -128,8 +128,8 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 			go = 0;
 	}
 	//writing root_info
-	korijen->root = number_leaf + number_node;
-	memcpy(block->data, korijen, sizeof(root_info));
+	rootEl->root = number_leaf + number_node;
+	memcpy(block->data, rootEl, sizeof(root_info));
 	block->tuple_dict[0].address = 0;
 	block->tuple_dict[0].type = BLOCK_TYPE_NORMAL;
     	block->tuple_dict[0].size = sizeof (root_info);
@@ -139,7 +139,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 	//writting leafs
 	int id,lf,b,help=0,elements=0;
 	int help_two[number_el];
-	for(lf=1;lf<=(korijen->level[0]);lf++){
+	for(lf=1;lf<=(rootEl->level[0]);lf++){
 		btree_node *leaf = (btree_node*) AK_malloc(sizeof(btree_node));
 		i=0;
 		AK_block *temp = (AK_block*) AK_read_block(addresses->address_from[ i ]);
@@ -159,7 +159,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 				elements++;
 			}
 		}
-		if(lf<(korijen->level[0])){
+		if(lf<(rootEl->level[0])){
 			leaf->pointers[B].addBlock = addresses->address_from[ i ];
 			leaf->pointers[B].indexTd = lf+1;
 		}	
@@ -180,7 +180,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 			offset = offset*(B+1); 
 		diff = offset * B;//difference WITHIN node
 		offset = offset * B + 1;
-		for(d=0;d<(korijen->level[v]);d++){
+		for(d=0;d<(rootEl->level[v]);d++){
 			btree_node *nodes = (btree_node*) AK_malloc(sizeof(btree_node));
 			for(f=0;f<B;f++){
 				if((offset-1)<number_el){
@@ -192,7 +192,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 			}
 			offset += diff;//difference BETWEEN nodes is doubled
 			for(f=0;f<=B;f++){
-					if(check<(korijen->level[v-1])){
+					if(check<(rootEl->level[v-1])){
 						nodes->pointers[f].indexTd = skip;
 						nodes->pointers[f].addBlock = adr_to_write;
 						skip++;
@@ -208,7 +208,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 			AK_write_block(block);
 		}		
 		e++;
-		if(korijen->level[v] == 1)
+		if(rootEl->level[v] == 1)
 			no = 0;
 		v++;
 	}
@@ -746,5 +746,6 @@ void Ak_btree_test() {
 	int *toDo = &td;//0 search, 1 delete
 	AK_btree_search_delete(indexName, searchValue, endRange, toDo);
 	AK_EPI;
+	
 }
 

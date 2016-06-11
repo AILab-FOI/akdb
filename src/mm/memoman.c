@@ -370,7 +370,7 @@ AK_mem_block *AK_get_block(int num)
             if (AK_cache_block(num, db_cache->cache[ first_AK_free_mem_block ]) == EXIT_SUCCESS)
             {
                 cached_block = db_cache->cache[first_AK_free_mem_block];
-                printf("USPJEH!\n");
+                printf("SUCCESS!\n");
             }
         }
         else
@@ -387,7 +387,7 @@ AK_mem_block *AK_get_block(int num)
                 }
                 else
                 {
-                    //printf("BLOK NIJE ZAPISAN!\n");
+                    //printf("BLOCK NOT WRITTEN!\n");
                 }
             }
             if (AK_cache_block(num, db_cache->cache[ oldest_block ]) == EXIT_SUCCESS)
@@ -410,7 +410,7 @@ AK_mem_block *AK_get_block(int num)
             }
             else
             {
-                //printf("BLOK NIJE ZAPISAN!\n");
+                //printf("BLOCK NOT WRITTEN!\n");
             }
         }
     }
