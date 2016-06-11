@@ -647,7 +647,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 			}
 		}
 
-		AK_projection(new_table, agg_table, projection_att,NULL,NULL);
+		AK_projection(new_table, agg_table, projection_att,NULL);
 
 		
 		Ak_DeleteAll_L3(&projection_att);

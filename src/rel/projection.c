@@ -59,7 +59,7 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
  * @param att list of the attributes which should the projeciton table contain
  * @return No return value
  */
-void AK_create_block_header(int old_block, char *dstTable, struct list_node *att, struct list_node *att_operation) {
+void AK_create_block_header(int old_block, char *dstTable, struct list_node *att) {
 //void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
     AK_PRO;
     AK_block *temp_block = (AK_block *) AK_malloc(sizeof (AK_block));
@@ -189,7 +189,7 @@ char *AK_create_header_name(char * first,char *second, char * operator){
   * @param att list of the attributes which should the projeciton table contain
   * @retrun No return value
  */
-void AK_copy_block_projection(AK_block *old_block, struct list_node *att, struct list_node * att_operation, char *dstTable,struct list_node *expr) {
+void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable,struct list_node *expr) {
     AK_PRO;
     /*
     AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
@@ -257,7 +257,11 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, struct
                             int cached_head = head;
                             int j=i;
                             int size2 = old_block->tuple_dict[j].size;
+                            int positionFirst = strstr(list_elem->data,old_block->header[head].att_name) - list_elem->data;
+                            
+                            
                             //used to check if the data is correct
+                            
                             int overflow2 = old_block->tuple_dict[j].size + old_block->tuple_dict[j].address;
                             while(strcmp(old_block->header[cached_head].att_name,"")!=0){
                                 if((strstr(exp,old_block->header[cached_head].att_name)!=NULL)&& (size2 != 0)
@@ -266,9 +270,14 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, struct
                                 memset(second->value, 0, MAX_VARCHAR_LENGTH);
                                 memcpy(second->value, old_block->data + old_block->tuple_dict[j].address, old_block->tuple_dict[j].size);
                                 second->type = old_block->header[cached_head].type;
-                                
+                                int positionSecond = strstr(list_elem->data,old_block->header[cached_head].att_name) - list_elem->data;
+                               
                                 int type = AK_determine_header_type(first->type,second->type);
-                                Ak_Insert_New_Element(type, AK_perform_operatrion(AK_get_operator(list_elem->data),first,second,type), dstTable, list_elem->data, row_root);
+
+                                if(positionSecond<positionFirst)
+                                    Ak_Insert_New_Element(type, AK_perform_operatrion(AK_get_operator(list_elem->data),second,first,type), dstTable, list_elem->data, row_root);
+                                else
+                                    Ak_Insert_New_Element(type, AK_perform_operatrion(AK_get_operator(list_elem->data),first,second,type), dstTable, list_elem->data, row_root);
 
                                 break;
                         }
@@ -315,8 +324,8 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, struct
 char *AK_perform_operatrion(char *op,struct AK_operand *ab, struct AK_operand *bb,int type){
 
     char *entry_data_f[MAX_VARCHAR_LENGTH];
-    char *entry_data_i[MAX_VARCHAR_LENGTH];
-    char *entry_data_d[MAX_VARCHAR_LENGTH];
+    //char *entry_data_i[MAX_VARCHAR_LENGTH];
+    //char *entry_data_d[MAX_VARCHAR_LENGTH];
     void * test;
 
     if(type == TYPE_NUMBER){
@@ -417,14 +426,14 @@ char *AK_perform_operatrion(char *op,struct AK_operand *ab, struct AK_operand *b
  * @return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR
  */
 //int AK_projection(char *srcTable, char *dstTable, AK_list *att) {
-int AK_projection(char *srcTable, char *dstTable, struct list_node *att,struct list_node * att_operation, struct list_node *expr) {
+int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct list_node *expr) {
     //geting the table addresses from table on which we make projection
     AK_PRO;
     table_addresses *src_addr = (table_addresses *) AK_get_table_addresses(srcTable);
 
     if (src_addr->address_from[0] != 0) {
         //create new segmenet for the projection table
-        AK_create_block_header(src_addr->address_from[0], dstTable, att,att_operation);
+        AK_create_block_header(src_addr->address_from[0], dstTable, att);
 
         Ak_dbg_messg(LOW, REL_OP, "TABLE %s CREATED from %s!\n", dstTable, srcTable);
         Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: start copying data\n");
@@ -450,7 +459,7 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att,struct l
                     Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy block: %d\n", j);
 
                     //get projection tuples from block
-                    AK_copy_block_projection(temp->block, att,att_operation, dstTable,expr);
+                    AK_copy_block_projection(temp->block, att, dstTable,expr);
                 }
             } else break;
         }
@@ -469,7 +478,7 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att,struct l
 }
 
 /**
- *  @author Dino Laktašić
+ * @author Dino Laktašić
  * @brief  Function for projection operator testing
  * @return No return value
  */
@@ -487,14 +496,15 @@ void AK_op_projection_test() {
     printf("\nSelect firstname,lastname from student,weight,weight+year,weight-year\n\n");
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight+year", sizeof("weight+year"),att);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight-year", sizeof("weight-year"),att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year*year", sizeof("year*year"),att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year-weight", sizeof("year-weight"),att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year/weight", sizeof("year/weight"),att);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), att);
 
-    AK_projection("student", "projection_test", att, att_operation, NULL);
+    AK_projection("student", "projection_test", att,  NULL);
     AK_print_table("projection_test");
 
     strcpy(expr->table,destTable2);
@@ -504,7 +514,7 @@ void AK_op_projection_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
 
     printf("\nSelect firstname,lastname from student where firstname LIKE .*in.*\n\n");
-    AK_projection("student", "projection_test2", att, NULL, expr);
+    AK_projection("student", "projection_test2", att, expr);
     AK_print_table("projection_test2");
 
     Ak_DeleteAll_L3(&att);
