@@ -57,7 +57,7 @@ version:
 	latex -v
 	gcc -v
 	make -v
-dependencies:
+deps:
 	#sudo apt-get update
 	sudo apt-get install doxygen graphviz doxygen-gui texlive-full build-essential swig
 
