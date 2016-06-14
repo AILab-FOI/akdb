@@ -852,8 +852,9 @@ void AK_memoman_test2()
     int aa=406;
     AK_PRO;
     printf("\tPick up block from 0 to: %d \n",AK_allocationbit->last_allocated );
-
-    scanf("%d", &aa);
+    srand(time(NULL));// random generator
+    aa = rand()%AK_allocationbit->last_allocated; //random number between 0 and (AK_allocationbit->last_allocated-1)
+    //scanf("%d", &aa);
     if(aa>=0 && aa<AK_allocationbit->last_allocated)
     {
         printf("\n\tFirst goes dump of block from HDD:\n");
