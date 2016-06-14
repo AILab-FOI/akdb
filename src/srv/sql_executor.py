@@ -1009,7 +1009,7 @@ class sql_executor:
         # and call its execution if it matches
         def commands_for_input(self, command):
             for elem in self.commands:
-                if (elem.matches(command) is not None):
+                if elem.matches(command) is not None:
                     return elem.execute()
             return "Wrong command."
 
