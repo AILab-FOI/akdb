@@ -13,19 +13,15 @@ To get you started you can simply clone the repository and install the dependenc
 
 #### Prerequisites
 ```
-sudo apt-get install git build-essential swig make doxygen
+sudo apt-get install git build-essential swig make doxygen python2.7
 ```
 #### Clone Kalashnikov DB
-Clone the repository using [git][git]:
+Clone the repository using:
 
 ```
 git clone https://github.com/mschatten/akdb
 cd akdb
-```
-#### Install Dependencies
-```
-sudo apt-get install python2.7
-```
+
 #### Setting up virtualenv
 Install [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) via [pip](https://pip.pypa.io/en/stable/installing/):
 ```
@@ -44,7 +40,13 @@ If you are done working in the virtual environment for the moment, you can deact
 ```
 deactivate
 ```
+#### Install Dependencies in virtualenv
+```
+pip install -r src/requirements.txt
+```
+
 ***
+
 ### Build the Application
 Build (builds bin/akdb, documentation in doc/ and swig interface)
 ```
