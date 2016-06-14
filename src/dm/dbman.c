@@ -2465,6 +2465,7 @@ int AK_delete_block(int address) {
     block->type = BLOCK_TYPE_FREE;
     block->chained_with = NOT_CHAINED;
     block->AK_free_space = DATA_BLOCK_SIZE * DATA_ENTRY_SIZE * sizeof (int);
+    block->last_tuple_dict_id = 0;
     memcpy(block->header, head, sizeof (*head));
     memcpy(block->tuple_dict, tuple_dict, sizeof (*tuple_dict));
     memcpy(block->data, data, sizeof (*data));

@@ -382,6 +382,51 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 }
  
 /**
+ * @author Maja Vračan
+ * @brief Function for deleting specific unique constraint
+ * @param tableName name of table on which constraint refers
+ * @param attName name of attribute on which constraint is declared
+ * @param constraintName name of constraint 
+ * @return EXIT_SUCCESS when constraint is deleted, else EXIT_ERROR
+ */
+int AK_delete_constraint_unique(char* tableName, char attName[], char constraintName[]){
+    
+    AK_PRO;
+    int address, i, j, k, l, size;
+    int num_attr = AK_num_attr("AK_constraints_unique");
+    AK_header *t_header = (AK_header *) AK_get_header("AK_constraints_unique");
+    table_addresses *src_addr = (table_addresses*) AK_get_table_addresses("AK_constraints_unique");
+    for (i = 0; src_addr->address_from[i] != 0; i++) {
+        for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
+            AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
+            if (temp->block->last_tuple_dict_id == 0)
+                break;
+            for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+                if (temp->block->tuple_dict[k].type == FREE_INT)
+                    break;
+
+                for (l = 0; l < num_attr; l++) {
+                    if(strcmp(t_header[l].att_name, "constraintName") == 0) {
+                        size = temp->block->tuple_dict[k + l].size;
+                        address = temp->block->tuple_dict[k + l].address;
+                        char data[size];
+                        memcpy(data, &(temp->block->data[address]), size);
+                        data[size] = '\0';
+                        if(strcmp(data, constraintName) == 0) { 
+                            temp->block->tuple_dict[k].size = 0;
+                            AK_EPI;
+                            return EXIT_SUCCESS;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    AK_EPI;
+    return EXIT_ERROR;
+}
+
+/**
   * @author Domagoj Tuličić, updated by Nenad Makar 
   * @brief Function for testing UNIQUE constraint
   * @return No return value
@@ -458,6 +503,8 @@ void AK_unique_test() {
 	AK_print_table("AK_constraints_unique");
 	printf("\nTest table:\n\n");	
 	AK_print_table(tableName);
+        
+        printf("\n============== Running Test #1 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s...\n\n", attName0, tableName);
 	result = Ak_set_constraint_unique(tableName, attName0, constraintName0);
 	AK_print_table("AK_constraints_unique");
@@ -466,9 +513,22 @@ void AK_unique_test() {
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue0, attName0, tableName, AK_read_constraint_unique(tableName, attName0, newValue0));
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue00, attName0, tableName, AK_read_constraint_unique(tableName, attName0, newValue00));
 	}
+        
+        printf("\n============== Running Test #2 ==============\n");
+        printf("\nDelete test");
+        result = AK_delete_constraint_unique(tableName, attName0, constraintName0);
+        AK_print_table("AK_constraints_unique");
+        if(result == EXIT_SUCCESS) {
+            printf("\nSUCCESS");
+        }
+        printf("\nDelete test finish");
+        
+        printf("\n============== Running Test #3 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s AGAIN...\n\n", attName0, tableName);
 	result = Ak_set_constraint_unique(tableName, attName0, constraintName0);
 	AK_print_table("AK_constraints_unique");
+        
+        printf("\n============== Running Test #4 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s...\n\n", attName, tableName);
 	result = Ak_set_constraint_unique(tableName, attName, constraintName);
 	AK_print_table("AK_constraints_unique");
@@ -477,6 +537,8 @@ void AK_unique_test() {
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue, attName, tableName, AK_read_constraint_unique(tableName, attName, newValue));
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue2, attName, tableName, AK_read_constraint_unique(tableName, attName, newValue2));
 	}
+        
+        printf("\n============== Running Test #5 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s...\n\n", attName3, tableName);
 	result = Ak_set_constraint_unique(tableName, attName3, constraintName3);
 	AK_print_table("AK_constraints_unique");
@@ -486,17 +548,27 @@ void AK_unique_test() {
 		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue4, attName3, tableName, AK_read_constraint_unique(tableName, attName3, newValue4));
 		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue5, attName3, tableName, AK_read_constraint_unique(tableName, attName3, newValue5));
 	}
-	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s...\n\n", attName6, tableName);
+        
+        
+        printf("\n============== Running Test #6 ==============\n");
+	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s ...\n\n", attName6, tableName);
 	result = Ak_set_constraint_unique(tableName, attName6, constraintName6);
 	AK_print_table("AK_constraints_unique");
-	if(result == EXIT_SUCCESS)
+        /*
+        if(result == EXIT_SUCCESS)
 	{
 		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue6, attName6, tableName, AK_read_constraint_unique(tableName, attName6, newValue6));
 		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue7, attName6, tableName, AK_read_constraint_unique(tableName, attName6, newValue7));
 	}
+        */
+        
+        printf("\n============== Running Test #7 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s AGAIN...\n\n", attName6, tableName);
 	result = Ak_set_constraint_unique(tableName, attName6, constraintName6);
 	AK_print_table("AK_constraints_unique");
+	
+        
+        printf("\n============== Running Test #8 ==============\n");
 	printf("\nTrying to set UNIQUE constraint with name %s AGAIN...\n\n", constraintName6);
 	result = Ak_set_constraint_unique(tableName, attName7, constraintName6);
 	AK_print_table("AK_constraints_unique");
