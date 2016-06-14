@@ -21,7 +21,7 @@ Clone the repository using:
 ```
 git clone https://github.com/mschatten/akdb
 cd akdb
-
+```
 #### Setting up virtualenv
 Install [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) via [pip](https://pip.pypa.io/en/stable/installing/):
 ```
@@ -68,7 +68,6 @@ make clean
 make clean-d
 ```
 
-## Directory Layout
 ## Testing
 ### Main engine
 ```
