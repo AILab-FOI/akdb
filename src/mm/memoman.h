@@ -62,8 +62,9 @@ typedef struct {
  */
 typedef struct {
     int operation;
-    char *table_name;
-    char **arguments;
+    char table_name[MAX_VARCHAR_LENGTH];
+    char arguments[MAX_ATTRIBUTES][MAX_VARCHAR_LENGTH];
+    int finished;
 } AK_command_recovery_struct;
 
 /**
@@ -78,7 +79,7 @@ typedef struct {
  * @brief Structure that defines global redo log
  */
 typedef struct {
-    AK_command_recovery_struct *command_recovery;
+    AK_command_recovery_struct command_recovery[MAX_REDO_LOG_ENTRIES];
     int number;
 } AK_redo_log;
 

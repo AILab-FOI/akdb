@@ -11,17 +11,38 @@
  * @author Dražen Bandić, update by Tomislav Turek
  * @return No retun value
  */
-void AK_archive_log() {
-    AK_PRO;
+void AK_archive_log(int sig) {
+    //AK_PRO;
     FILE *fp;
-    
+    printf("AK_archive_log: Archiving redo log commands to separate file...\n");
+
     // open rec.bin in binary mode
     fp = fopen("../src/rec/rec.bin", "wb");
+    AK_redo_log log;
+    memcpy(log.command_recovery, redo_log->command_recovery, sizeof(log.command_recovery));
+    log.number = redo_log->number;
     // write redo_log structure to binary file
-    fwrite(&redo_log, sizeof(redo_log), 1, fp);
+    fwrite(&log, sizeof(log), 1, fp);
     
     fclose(fp);
-    AK_EPI;
+    //AK_EPI;
+    if(sig == SIGINT) {
+        exit(EXIT_SUCCESS);
+    }
+}
+
+/**
+ * Empties archive log
+ */
+void AK_empty_archive_log() {
+    //AK_PRO;
+    FILE *fp;
+    printf("AK_archive_log: emptying file...\n");
+
+    // open rec.bin in binary mode
+    fp = fopen("../src/rec/rec.bin", "wb");
+    // immediately close to delete contents
+    fclose(fp);
 }
 
 /**

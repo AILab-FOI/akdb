@@ -190,57 +190,59 @@ int main(int argc, char * argv[])
 	testMode = TEST_MODE_OFF;
         if( AK_init_disk_manager() == EXIT_SUCCESS )
         {
-                if( AK_memoman_init() == EXIT_SUCCESS )
+            if( AK_memoman_init() == EXIT_SUCCESS ) {
+                    
+                sigset(SIGINT, AK_archive_log);
+                AK_recover_archive_log("../src/rec/rec.bin"); // TODO hardcoded file name
+                /* component test area --- begin */
+                if((argc == 2) && !strcmp(argv[1], "test"))
                 {
-            /* component test area --- begin */
-            if((argc == 2) && !strcmp(argv[1], "test"))
-            {
-		//if we write 2 arguments, choose test will start
-                choose_test();
-            }
-            if ((argc == 2) && !strcmp(argv[1], "alltest")){
-                 testing();
-                   
-            }
-            else if((argc == 3) && !strcmp(argv[1], "test"))
-            {
-		// argc - number of arguments we inputin in the comand line, which we save in the argv []
-		// argv - [] pointer , 2D field in which we put and save arguments
-		//if we input ./akdb test "test number", the test we inputed will start
-                int ans;
-		//we define an integer wich we use later
-                ans = strtol(argv[2], NULL, 10)-1;
-		//long int strtol(const char *str, char **endptr, int base)
-		//str - string containing the representation of an integral numbe
-		//endptr - reference to an object of type char*
-		//base - which must be between 2 and 36 inclusive, or be the special value 0
-		//long int value - min 32 bit velicine, [−2147483647,+2147483647] 
-                AK_create_test_tables();
-		//when we start the inputed test, first the tables will be created
-                set_catalog_constraints();
-                fun[ans].func();
-		//after the created tables the test will start, and call the function of the test from fun[], which we defined at the begining
-            }
-            /*component test area --- end */
-            if ( AK_flush_cache() == EXIT_SUCCESS ){
-		int ans;
-                ans = strtol(argv[2], NULL, 10)-1;	
-		printf("\nTEST:--- %s --- ENDED!\n", fun[ans].name);
-		//if the test started and ended with a success, we will be informed with this message and with the name
-                printf( "\nEverything was fine!\nBye =)\n" );
+                    //if we write 2 arguments, choose test will start
+                    choose_test();
+                }
+                if ((argc == 2) && !strcmp(argv[1], "alltest")){
+                     testing();
 
-                /* For easyer debugging and GDB usage
-                AK_create_test_tables();
-                AK_view_test();
-                */
-                //            pthread_exit(NULL);
-		AK_EPI;
-                return ( EXIT_SUCCESS );
+                }
+                else if((argc == 3) && !strcmp(argv[1], "test"))
+                {
+                    // argc - number of arguments we inputin in the comand line, which we save in the argv []
+                    // argv - [] pointer , 2D field in which we put and save arguments
+                    //if we input ./akdb test "test number", the test we inputed will start
+                    int ans;
+                    //we define an integer wich we use later
+                    ans = strtol(argv[2], NULL, 10)-1;
+                    //long int strtol(const char *str, char **endptr, int base)
+                    //str - string containing the representation of an integral numbe
+                    //endptr - reference to an object of type char*
+                    //base - which must be between 2 and 36 inclusive, or be the special value 0
+                    //long int value - min 32 bit velicine, [−2147483647,+2147483647] 
+                    AK_create_test_tables();
+                    //when we start the inputed test, first the tables will be created
+                    set_catalog_constraints();
+                    fun[ans].func();
+                    //after the created tables the test will start, and call the function of the test from fun[], which we defined at the begining
+                }
+                /*component test area --- end */
+                if ( AK_flush_cache() == EXIT_SUCCESS ){
+                    int ans;
+                    ans = strtol(argv[2], NULL, 10)-1;	
+                    printf("\nTEST:--- %s --- ENDED!\n", fun[ans].name);
+                    //if the test started and ended with a success, we will be informed with this message and with the name
+                    printf( "\nEverything was fine!\nBye =)\n" );
+
+                    /* For easyer debugging and GDB usage
+                    AK_create_test_tables();
+                    AK_view_test();
+                    */
+                    //            pthread_exit(NULL);
+                    AK_EPI;
+                    return ( EXIT_SUCCESS );
+                }
             }
-        }
-                printf( "ERROR. Failed to initialize memory manager\n" );
-		AK_EPI;
-                return ( EXIT_ERROR );
+            printf( "ERROR. Failed to initialize memory manager\n" );
+            AK_EPI;
+            return ( EXIT_ERROR );
         }
         printf( "ERROR. Failed to initialize disk manager\n" );
 	AK_EPI;

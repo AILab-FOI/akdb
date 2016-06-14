@@ -156,6 +156,9 @@ int Ak_insert_row(struct list_node *row_root) {
     AK_PRO;
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Start testing reference integrity.\n");
 
+    // recovery checkpoint
+    AK_add_to_redolog(INSERT, row_root);
+
     if (AK_reference_check_entry(row_root) == EXIT_ERROR) {
         printf("Could not insert row. Reference integrity violation.\n");
         AK_EPI;
@@ -196,6 +199,10 @@ int Ak_insert_row(struct list_node *row_root) {
     //AK_add_to_redolog("INSERT", row_root);
 
     int end = (int) Ak_insert_row_to_block(row_root, mem_block->block);
+    
+    if(end == EXIT_SUCCESS) {
+        AK_redolog_commit();
+    }
 
     //AK_write_block(mem_block->block);
     AK_mem_block_modify(mem_block, BLOCK_DIRTY);
@@ -467,6 +474,12 @@ int Ak_delete_row(struct list_node *row_root) {
         Ak_dbg_messg(HIGH, FILE_MAN, "Could not delete row. Reference integrity violation (restricted).\n");
         return EXIT_ERROR;
     }
+
+/*
+    // recovery checkpoint
+    AK_add_to_redolog(DELETE, row_root);
+*/
+
     if (AK_reference_check_if_update_needed(row_root, DELETE) == EXIT_SUCCESS) {
         AK_reference_update(row_root, DELETE);
     }
@@ -515,6 +528,12 @@ int Ak_update_row(struct list_node *row_root) {
         AK_EPI;
         return EXIT_ERROR;
     }
+
+/*
+    // recovery checkpoint
+    AK_add_to_redolog(UPDATE, row_root);
+*/
+
     if (AK_reference_check_if_update_needed(row_root, UPDATE) == EXIT_SUCCESS) {
         AK_reference_update(row_root, UPDATE);
     }
@@ -527,7 +546,7 @@ int Ak_update_row(struct list_node *row_root) {
 void Ak_fileio_test() {
     AK_PRO;
     printf("\n\nThis is fileio test!\n");
-
+    
     AK_header t_header[4] = {
         {TYPE_INT, "Redni_broj", {0}, {{'\0'}}, {{'\0'}}},
         {TYPE_VARCHAR, "Ime", {0}, {{'\0'}}, {{'\0'}}},

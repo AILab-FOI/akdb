@@ -19,9 +19,11 @@
 #ifndef FILEIO
 #define FILEIO
 
+#include "../auxi/constants.h"
 #include "../sql/cs/reference.h"
 #include "../mm/memoman.h"
 #include "../rec/recovery.h"
+#include "../rec/archive_log.h"
 #include "../rec/redo_log.h"
 #include "files.h"
 #include "../auxi/mempro.h"
