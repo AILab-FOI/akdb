@@ -133,6 +133,14 @@ void AK_create_block_header(int old_block, char *dstTable, struct list_node *att
     AK_temp_create_table(dstTable, header, SEGMENT_TYPE_TABLE);
     AK_EPI;
 }
+
+/**
+    * @Author Leon Palaić
+    * @brief Function that fetches arithmetics operator
+    * @param exp input expression string
+    * @result operator 
+
+*/
 char *AK_get_operator(char *exp){
     if(strstr(exp,"+"))
         return "+";
@@ -146,6 +154,14 @@ char *AK_get_operator(char *exp){
         return "*";
 
 }
+/**
+    * @Author Leon Palaić
+    * @brief Function that removes specified part of string
+    * @param s input string 
+    * @param toremove remove string
+    * @result new sequence of charachters
+
+*/
 void removeSubstring(char *s,const char *toremove)
 {
   while( s=strstr(s,toremove) ){
@@ -153,7 +169,14 @@ void removeSubstring(char *s,const char *toremove)
     break;
     }
 }
+/**
+    * @Author Leon Palaić
+    * @brief Determines new header type
+    * @param a operand type
+    * @param b operand type
+    * @result header type
 
+*/
 int AK_determine_header_type(int a,int b){
 
     if(a == TYPE_VARCHAR || b == TYPE_VARCHAR){
@@ -170,7 +193,15 @@ int AK_determine_header_type(int a,int b){
     }
 
 }
+/**
+    * @Author Leon Palaić
+    * @brief Creates new header name from passed operand names and operator
+    * @param first operand name
+    * @param second operand name
+    * @param operator 
+    * @result new sequence of charachters
 
+*/
 char *AK_create_header_name(char * first,char *second, char * operator){
     
     char *name= (char *) malloc(1 + strlen(first)+strlen(operator));
@@ -319,13 +350,20 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
 }
 
 
+/**
+    * @Author Leon Palaić
+    * @brief Performes arithmetics operation on operand data
+    * @param ab first operand
+    * @param bb second operand 
+    * @param op operator 
+    * @result result of arithmetics
 
-
+*/
 char *AK_perform_operatrion(char *op,struct AK_operand *ab, struct AK_operand *bb,int type){
 
     char *entry_data_f[MAX_VARCHAR_LENGTH];
-    //char *entry_data_i[MAX_VARCHAR_LENGTH];
-    //char *entry_data_d[MAX_VARCHAR_LENGTH];
+    char *entry_data_i[MAX_VARCHAR_LENGTH];
+    char *entry_data_d[MAX_VARCHAR_LENGTH];
     void * test;
 
     if(type == TYPE_NUMBER){
