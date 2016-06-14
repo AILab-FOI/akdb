@@ -27,6 +27,7 @@
 
 int Ak_set_constraint_unique(char* tableName, char attName[], char constraintName[]);
 int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]);
+int AK_delete_constraint_unique(char* tableName, char attName[], char constraintName[]);
 void AK_unique_test();
 
 #endif

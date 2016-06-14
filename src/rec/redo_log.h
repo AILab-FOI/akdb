@@ -26,6 +26,7 @@
 
 int AK_add_to_redolog(int command, struct list_node *row_root);
 void AK_printout_redolog();
+void AK_redolog_commit();
 char* AK_check_attributes(char *attributes);
 
 #endif /* REDOLOG */

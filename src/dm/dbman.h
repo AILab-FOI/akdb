@@ -128,7 +128,7 @@ typedef struct {
     int address_to[MAX_EXTENTS_IN_SEGMENT]; //end adress of the extent
 } table_addresses;
 
-#define DB_FILE_SIZE_EX 40
+#define DB_FILE_SIZE_EX 200
 #define DB_FILE_BLOCKS_NUM_EX (int)(1024 * 1024 * DB_FILE_SIZE_EX / sizeof(AK_block))
 
 
