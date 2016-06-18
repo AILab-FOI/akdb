@@ -129,7 +129,7 @@ class AK_client():
 
 	##Checks for a command from the server
 	def AK_check_response(self):
-		return #self.sock.recv(buffer_size)
+		return self.sock.recv(buffer_size)
 	##Setter for finished vairable
 	def set_finished(self, val):
 		self.finished = val
