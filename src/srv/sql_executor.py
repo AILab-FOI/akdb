@@ -158,7 +158,7 @@ class Print_table_command:
         ## execute method
         # defines what is called when print command is invoked
         def execute(self):
-                ak47.AK_print_table(self.matcher.group(0))
+                ak47.AK_print_table(self.matcher.group(1))
                 return "OK"
 
 ## table_derails_command
