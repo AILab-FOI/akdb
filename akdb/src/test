@@ -1,0 +1,3 @@
+cd ../bin
+./akdb test
+cd ../src
