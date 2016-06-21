@@ -154,7 +154,6 @@ void Ak_Delete_L3(struct list_node **current, struct list_node **L);
 void Ak_DeleteAll_L3(struct list_node **L);
 int Ak_Size_L2(struct list_node *L);
 char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L);
-void Ak_InsertAtEnd_L4(struct list_node *new, struct list_node *L);
 //int Ak_GetType_L(AK_list_elem current, AK_list *L);
 //int Ak_GetSize_L(AK_list_elem current, AK_list *L);
 struct list_node * Ak_GetNth_L2(int pos, struct list_node *row);
