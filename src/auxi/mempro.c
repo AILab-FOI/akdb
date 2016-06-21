@@ -120,7 +120,6 @@ static void AK_debmod_signal_callback(int sig, siginfo_t* si, void* unused) {
         /* end program execution if the sigsegv was caused by non-protected
         memory access */
 	if(mprotect_sigsegv == 0){
-                AK_archive_log(-10);
 		printf("************* Real SIGSEGV occured *************\n");
                 printf("This means a memory address which is not under\n");
 		printf("our control has been accessed somewhere in your\n");

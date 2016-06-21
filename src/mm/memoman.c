@@ -288,20 +288,6 @@ int AK_memoman_init()
     }
 
 
-//AK_memoman_test();
-//AK_print_block(NULL, 0, "Memoman_75_cached");
-//AK_print_block(NULL, 1, "Memoman_78_cached");
-//AK_print_block(db_cache->cache[ 200 ]->block, 200, "Memoman_79_cached");
-//AK_print_block(db_cache->cache[ 1]->block, 1, "Memoman_80_cached");
-//AK_print_block(db_cache->cache[ 61]->block, 61, "Memoman_80_cached");
-//AK_print_block(db_cache->cache[2]->block, 2, "Memoman_80_cached");
-//AK_print_block(db_cache->cache[3]->block, 3, "Memoman_80_cached");
-//AK_print_block(db_cache->cache[4]->block, 4, "Memoman_80_cached");
-//AK_print_block(db_cache->cache[5]->block, 5, "Memoman_80_cached");
-//AK_print_block(db_cache->cache[6]->block, 6, "Memoman_80_cached",stdout);
-//AK_print_block(NULL, 5, "Memoman_77_cached");
-//AK_print_block(NULL, 61, "Memoman_78_cached");
-
     printf("AK_memoman_init: Memory manager initialized...\n");
     AK_EPI;
     return EXIT_SUCCESS;
@@ -342,7 +328,6 @@ AK_mem_block *AK_get_block(int num)
     }
     if (!found_in_cache)
     {
-        //printf("Blok NOT FOUND IN CACHE!\n");
         /* find first empty slot in cache for block to be read into */
         for (i = 0; i < MAX_CACHE_MEMORY; i++)
         {
@@ -402,7 +387,7 @@ AK_mem_block *AK_get_block(int num)
             }
         }
     }
-    /*i = 1;*/
+
     for (i = 0; i < MAX_CACHE_MEMORY; i++)
     {
         if (db_cache->cache[i]->timestamp_read != -1 &&
@@ -411,7 +396,7 @@ AK_mem_block *AK_get_block(int num)
             min = i;
         }
     }
-    //printf("KESANI BLOK %i \n",cached_block);
+
     db_cache->next_replace = min;
     AK_EPI;
     return cached_block;
@@ -479,7 +464,6 @@ table_addresses *AK_get_index_segment_addresses(char * segmentName)
     Ak_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table and %s \n\n\n\n", sys_table,segmentName);
     AK_mem_block *mem_block = AK_get_block(0);
 
-    //printf("get_segment_addresses: Serching for %s table and %s \n\n\n\n", sys_table,segmentName);
     for (i = 0; i < DATA_BLOCK_SIZE; i++)
     {
 
@@ -546,7 +530,7 @@ table_addresses *AK_get_index_segment_addresses(char * segmentName)
             i += 2;
 
     }
-    //printf("RESULTS FOR TABLE (%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
+
     AK_EPI;
     return addresses;
 }
@@ -598,8 +582,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName)
     }
     mem_block = AK_get_block(address_sys);
     table_addresses * addresses = (table_addresses *) AK_malloc(sizeof (table_addresses));
-//memset(addresses->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
-//memset(addresses->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
+
     for (AK_freeVar = 0; AK_freeVar < MAX_EXTENTS_IN_SEGMENT; AK_freeVar++)
     {
         addresses->address_from[AK_freeVar] = 0;
@@ -622,7 +605,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName)
         memcpy(&address_from, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
         i++;
         memcpy(&address_to, &(mem_block->block->data[mem_block->block->tuple_dict[i].address]), mem_block->block->tuple_dict[i].size);
-//if found the table that addresses we need
+	//if found the table that addresses we need
         if (strcmp(name, segmentName) == 0)
         {
             addresses->address_from[j] = address_from;
@@ -630,10 +613,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName)
             j++;
             Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
         }
-        /*if (segmentType == SEGMENT_TYPE_INDEX)
-        {
-            i += 2;
-        }*/
+
     }
     AK_EPI;
     return addresses;
@@ -854,15 +834,13 @@ void AK_memoman_test2()
     printf("\tPick up block from 0 to: %d \n",AK_allocationbit->last_allocated );
     srand(time(NULL));// random generator
     aa = rand()%AK_allocationbit->last_allocated; //random number between 0 and (AK_allocationbit->last_allocated-1)
-    //scanf("%d", &aa);
+
     if(aa>=0 && aa<AK_allocationbit->last_allocated)
     {
         printf("\n\tFirst goes dump of block from HDD:\n");
         AK_print_block(NULL, aa, "Memoman_test2_HDD",stdout);
         printf("\n\n\n");
 
-        //printf("\n\n\t Then dump of block from cache:\n");
-        //AK_print_block(db_cache->cache[aa]->block, aa, "Memoman_test2_Cache",stdout);
     }
     AK_EPI;
 }

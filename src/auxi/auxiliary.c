@@ -308,7 +308,6 @@ void Ak_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L) {
     AK_EPI;
 }
 
-
 /**
  * @author Ljiljana Pintarić.
  * @brief  Function inserts new element at the end of the list. It uses function Ak_InsertAfter_L2
@@ -327,6 +326,7 @@ void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L) {
 
     AK_EPI;
 }
+
 /**
  * @author Ljiljana Pintarić.
  * @brief  Function deletes the current element in the list

@@ -237,7 +237,7 @@ void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
             }
             memcpy(&data, temp_main_bucket, sizeof (main_bucket));
             main_add = Ak_insert_bucket_to_block(indexName, data, MAIN_BUCKET);
-            //printf("0. Block broj:%d, indexTd:%d\n", main_add->addBlock, main_add->indexTd);
+
             temp_hash_bucket->bucket_level = MAIN_BUCKET_SIZE;
             for (i = 0; i < HASH_BUCKET_SIZE; i++) {
                 temp_hash_bucket->element[i].value = -1;
@@ -245,7 +245,7 @@ void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
             memcpy(&data, temp_hash_bucket, sizeof (hash_bucket));
             for (i = 0; i < MAIN_BUCKET_SIZE; i++) {
                 hash_add = Ak_insert_bucket_to_block(indexName, data, HASH_BUCKET);
-                //printf("1. Block broj:%d, indexTd:%d\n", hash_add->addBlock, hash_add->indexTd);
+
                 memcpy(&temp_main_bucket->element[i].add, hash_add, sizeof (struct_add));
             }
             memcpy(&data, temp_main_bucket, sizeof (main_bucket));
@@ -256,14 +256,14 @@ void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
         int main_bucket_id = (int) (hash_bucket_id / MAIN_BUCKET_SIZE);
 
         main_add = Ak_get_nth_main_bucket_add(indexName, main_bucket_id);
-        //printf("2. Block broj:%d, indexTd:%d\n", main_add->addBlock, main_add->indexTd);
+
         AK_block *temp_block = (AK_block*) AK_read_block(main_add->addBlock);
         address = temp_block->tuple_dict[main_add->indexTd].address;
         size = temp_block->tuple_dict[main_add->indexTd].size;
         memcpy(temp_main_bucket, &temp_block->data[address], size);
 
         memcpy(hash_add, &temp_main_bucket->element[hash_bucket_id % MAIN_BUCKET_SIZE].add, sizeof (struct_add));
-        //printf("3. Block broj:%d, indexTd:%d\n", hash_add->addBlock, hash_add->indexTd);
+
 
         temp_block = (AK_block*) AK_read_block(hash_add->addBlock);
         address = temp_block->tuple_dict[hash_add->indexTd].address;
@@ -280,7 +280,7 @@ void AK_insert_in_hash_index(char *indexName, int hashValue, struct_add *add) {
             }
         }
         if (hash_AK_free_space == 0) {
-            //printf("Bucket splitting!\n");
+
             if (temp_hash_bucket->bucket_level == info->modulo) {
                 //adding new main buckets
                 for (i = 0; i < info->main_bucket_num; i++) {

@@ -147,14 +147,12 @@ void AK_agg_input_fix(AK_agg_input *input) {
 
  */
 int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
-    //int AK_aggregation (AK_header *att_root,int *att_tasks,char *source_table, char *new_table) {
     int i, j;
     AK_PRO;
     AK_agg_input_fix(input);
     AK_header *att_root = (*input).attributes;
     int *att_tasks = (*input).tasks;
     int num_aggregations = (*input).counter;
-    // int header_size = AK_header_size(att_root);
     AK_header agg_head[MAX_ATTRIBUTES];
     int agg_group_number = 0;
     int inttemp = 0;
@@ -226,11 +224,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", new_table);
 
-
-
-    // this was an optimisation or someting, so that sort works normally
+    // this was an optimisation or something, so that sort works normally
     //sort_segment(source_table,group_h_name);
-
 
     search_params search_parameters[agg_group_number];
     search_result sresult;
@@ -244,11 +239,6 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
     AK_block *temp;
     AK_mem_block *mem_block;
-
-    /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-````*/
 
     struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
@@ -654,7 +644,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		AK_free(projection_att);
     }
 
-    //@TODO zamijeniti ovaj segment sa AK_drop_table() jednom kad ga netko napravi
+        //TODO replace this segment with AK_drop_table() once when it's done
 	addresses = (table_addresses*) AK_get_table_addresses(new_table);
 	i = 0;
 	while (addresses->address_from[i] != 0) {

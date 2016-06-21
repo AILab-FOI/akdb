@@ -398,13 +398,13 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
 
         data_adr = mem_block2->block->tuple_dict[i].address;
         data_size = mem_block2->block->tuple_dict[i].size;
-        //data_type = mem_block2->block->tuple_dict[i].type;
+
         memcpy(name_sys, mem_block2->block->data + data_adr, data_size);
 
         i++;
         data_adr = mem_block2->block->tuple_dict[i].address;
         data_size = mem_block2->block->tuple_dict[i].size;
-        //data_type = mem_block2->block->tuple_dict[i].type;
+
         memcpy(&address_sys, mem_block2->block->data + data_adr, data_size);
 
         if (strcmp(name_sys, sys_table) == 0) {
@@ -415,11 +415,7 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
     mem_block2 = (AK_mem_block *) AK_get_block(address_sys);
     table_addresses *addresses2;
 
-    //addresses2 = (table_addresses *) AK_malloc(sizeof (table_addresses));
     addresses2 = (table_addresses*) AK_get_table_addresses(tblName);
-
-    //memset(addresses2->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
-    //memset(addresses2->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
 
     for (i = 0; i < MAX_EXTENTS_IN_SEGMENT; i++) {
         addresses2->address_from[i] = 0;
@@ -504,7 +500,7 @@ void AK_drop_test() {
     AK_print_table("AK_relation");
     drop_arguments->value = "department";
     results[1] = AK_drop(DROP_TABLE, drop_arguments);
-    // AK_print_table("department");
+
     AK_print_table("AK_relation");
 
     printf("\n-----DROP CATALOG TABLE-----\n");
@@ -522,16 +518,15 @@ void AK_drop_test() {
     printf("\n-----DROP HASH INDEX-----\n");
     drop_arguments->value = "student_hash_index";
     AK_print_table("AK_index");
-    // AK_print_table("student_hash_index");
+
     results[4] = AK_drop(DROP_INDEX, drop_arguments);
-    // AK_print_table("student_hash_index");
 
     printf("\n-----DROP BITMAP INDEX-----\n");
     drop_arguments->value = "assistantfirstname_bmapIndex";
     AK_print_table("AK_index");
-    // AK_print_table("assistantfirstname_bmapIndex");
+
     results[5] = AK_drop(DROP_INDEX, drop_arguments);
-    // AK_print_table("assistantfirstname_bmapIndex");
+
     AK_print_table("AK_index");
 
     printf("\n-----DROP SEQUENCE-----\n");
@@ -539,8 +534,6 @@ void AK_drop_test() {
     AK_print_table("AK_sequence");
     results[6] = AK_drop(DROP_SEQUENCE, drop_arguments);
     AK_print_table("AK_sequence");
-    //AK_free(drop_arguments);
-
 
     printf("\n-----DROP TRIGGER-----\n");
     AK_print_table("AK_trigger");
@@ -579,7 +572,7 @@ void AK_drop_test() {
 
     printf("\n-----DROP GROUP-----\n");
     drop_arguments->value = "grupa1";
-    //drop_arguments->next->value = "CASCADE";
+
     AK_print_table("AK_group");
     AK_print_table("AK_user_group");
     AK_print_table("AK_group_right");
@@ -638,20 +631,7 @@ void AK_drop_test() {
     results[13] = AK_drop(DROP_CONSTRAINT, drop_arguments);
     AK_print_constraints(tableName_3);
     
-     /*
-    // args: table, atribute, constraint name - if constraint name is "" all constraints for the atributes will be deleted
-    drop_arguments->value = "student";
-    drop_arguments->next->value = "firstname";
-    drop_arguments->next->next->value = "studentUnique";
 
-    AK_drop(DROP_CONSTRAINT, drop_arguments);
- 
-    AK_print_table("AK_constraints_unique");
-    AK_print_table("AK_constraints_not_null");
-    AK_print_constraints("AK_constraints_between");
-    
-    AK_free(drop_arguments);
-      * */
     printf("======================END_DROP_TEST======================\n");
     printf("Test results: \n");
     int x=1;

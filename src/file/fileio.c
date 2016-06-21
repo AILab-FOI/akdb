@@ -133,7 +133,6 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
         temp_block->tuple_dict[id].size = AK_type_size(type, entry_data);
 
         memcpy(entry_data, temp_block->data + temp_block->tuple_dict[id].address, temp_block->tuple_dict[id].size);
-        //printf("insert_row_to_block: Insert: data: %s, size: %d\n",entry_data, AK_type_size(type, entry_data));
 
         Ak_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Insert: data: %s, size: %d\n", entry_data, AK_type_size(type, entry_data));
         head++; //go to next header
@@ -176,7 +175,7 @@ int Ak_insert_row(struct list_node *row_root) {
 
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
-    //printf("INSERT u %s\n",some_element->table);
+
     adr_to_write = (int) AK_find_AK_free_space(AK_get_table_addresses(table));
 
 
@@ -192,11 +191,8 @@ int Ak_insert_row(struct list_node *row_root) {
         return EXIT_ERROR;
     }
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into block on adress: %d\n", adr_to_write);
-    //printf("insert_row: Insert into block on adress: %d\n", adr_to_write);
 
     AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(adr_to_write);
-
-    //AK_add_to_redolog("INSERT", row_root);
 
     int end = (int) Ak_insert_row_to_block(row_root, mem_block->block);
     
@@ -204,7 +200,6 @@ int Ak_insert_row(struct list_node *row_root) {
         AK_redolog_commit();
     }
 
-    //AK_write_block(mem_block->block);
     AK_mem_block_modify(mem_block, BLOCK_DIRTY);
     AK_EPI;
     return end;
@@ -240,7 +235,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
         overflow = address + size;
 
         while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers
-            //some_element = (struct list_node *) Ak_First_L2(row_root);
+
             some_element = row_root;
             while (some_element) {
                 if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (some_element->constraint == SEARCH_CONSTRAINT))
@@ -253,14 +248,14 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                         memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                         memcpy(entry_data, temp_block->data + address, size);
 
-                        // ako nisu jednaki podaci u tablici i u atributu po kojem se pretražuje, neće se ažurirati
+                        // if the data in table isn't equal to data in attribute which is used for search, it won't be updated
                         if (strcmp(entry_data, some_element->data) != 0)
                         {
                             del = 0;
                         }
                     } else del = 0;
                 }
-                //some_element = (struct list_node *) Ak_Next_L2(some_element);
+
 		  some_element = some_element->next;
             }
             head++; //next header
@@ -278,11 +273,10 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                 memset(entry_data, '\0', MAX_VARCHAR_LENGTH);
                 memcpy(entry_data, temp_block->data + a, s);
 
-                //some_element = (struct list_node *) Ak_First_L2(row_root);
 		some_element = row_root;
                 while(some_element)
                 {
-                    // podatke iz row_root spremiti u listu new_data u koju se umeće cijeli redak
+                    // save data from roow_root in a list new_data where whole row is being inserted 
                     Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[j].type, some_element->data, some_element->table, some_element->attribute_name, new_data, NEW_VALUE);
 
                     if (strcmp(some_element->attribute_name, temp_block->header[j % head].att_name) == 0 && some_element->constraint == NEW_VALUE)
@@ -364,7 +358,6 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) 
         overflow = address + size;
 
         while (strcmp(temp_block->header[head].att_name, "\0") != 0) { //going through headers
-            //some_element = (struct list_node *) Ak_First_L2(row_root);
 	      some_element = row_root;
 
             while (some_element) {
@@ -386,7 +379,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                         del = 0;
                     }
                 }
-                //some_element = (struct list_node *) Ak_Next_L2(some_element);
+
 		some_element = some_element->next;
             }
             head++;
@@ -428,7 +421,6 @@ int Ak_delete_update_segment(struct list_node *row_root, int del) {
     AK_PRO;
     struct list_node *some_element = (struct list_node *) Ak_First_L2(row_root);
 
-    //memset(table, '\0', MAX_ATT_NAME);
     strcpy(table, some_element->table);
     table[strlen(some_element->table)] = '\0';
     Ak_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: table to delete_update from: %s, source %s\n", table, some_element->table);
@@ -477,7 +469,6 @@ int Ak_delete_row(struct list_node *row_root) {
 
 /*
     // recovery checkpoint
-    AK_add_to_redolog(DELETE, row_root);
 */
 
     if (AK_reference_check_if_update_needed(row_root, DELETE) == EXIT_SUCCESS) {
@@ -531,7 +522,6 @@ int Ak_update_row(struct list_node *row_root) {
 
 /*
     // recovery checkpoint
-    AK_add_to_redolog(UPDATE, row_root);
 */
 
     if (AK_reference_check_if_update_needed(row_root, UPDATE) == EXIT_SUCCESS) {
@@ -587,7 +577,7 @@ void Ak_fileio_test() {
     Ak_insert_row(row_root);
 
     int i;
-    //for (i=5;i<50;i++)
+
     for (i = 5; i < 10; i++) {
         Ak_DeleteAll_L3(&row_root);
         broj = i;
@@ -636,8 +626,6 @@ void Ak_fileio_test() {
     Ak_update_row(row_root);
 
     AK_print_table("testna");
-
-    //AK_recover_archive_log("log.log");
 
     AK_print_table("testna");
 

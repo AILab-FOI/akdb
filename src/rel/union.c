@@ -48,13 +48,12 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
 	int address, type, size;
         char data[MAX_VARCHAR_LENGTH];
 
-		//initialize new segment
+	//initialize new segment
         AK_header *header = (AK_header *) AK_malloc(num_att * sizeof (AK_header));
         memcpy(header, tbl1_temp_block->block->header, num_att * sizeof (AK_header));
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
         AK_free(header);
 
-        //AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 		
 	//writing first block or table to new segment

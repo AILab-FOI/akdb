@@ -191,13 +191,8 @@ struct list_node *AK_rel_eq_comut(struct list_node *list_rel_eq) {
                                         data2 = AK_rel_eq_commute_with_theta_join(temp_elem->data, (temp_elem_next->next)->data);
                                         cond_attr2 = AK_rel_eq_cond_attributes(data2);
 
-                                        //Debug lines - can be removed later
-                                        //printf("CONDITION DATA : data: (%s),(%s), cond: (%s),(%s)\n", data1, data2, cond_attr1, cond_attr2);
-                                        //printf("SHARE ATTRIBUTE: (%i)\n", AK_rel_eq_share_attributes(cond_attr1, cond_attr2));
-
                                         if (AK_rel_eq_share_attributes(cond_attr1, cond_attr2)) {
                                             if (cond_attr1 != NULL) {
-                                                //memset(temp_elem->data, '\0', MAX_VARCHAR_LENGHT);
                                                 temp_elem->size = strlen(data1) + 1;
                                                 memcpy(temp_elem->data, data1, temp_elem->size);
                                                 memset(temp_elem->data + temp_elem->size, '\0', MAX_VARCHAR_LENGTH - temp_elem->size);
@@ -280,7 +275,7 @@ struct list_node *AK_rel_eq_comut(struct list_node *list_rel_eq) {
         list_elem = list_elem->next;
     }
 
-    //====================================> IMPROVMENTS <=======================================
+    //====================================> IMPROVEMENTS <=======================================
     //Recursive RA optimization (need to implement exit condition in place of each operator, ...)
     //If there is no new changes on the list return generated struct list_nodes
     //int iter_cond;
@@ -440,69 +435,26 @@ void AK_rel_eq_comut_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
     Ak_InsertAtEnd_L3(TYPE_CONDITION, "'mbr' 'job' =", sizeof ("'mbr' 'job' ="), expr); //theta join attribute
 
-    /*
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof ("L1;L2;L3;L4"), expr); //projection attribute
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "'L1' > 100 OR 'L2' < 50", sizeof ("'L1' > 100 OR 'L2' < 50"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr;firstname;job", sizeof ("mbr;firstname;job"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "'mbr' = 'id'", sizeof ("'mbr' = 'id'"), expr); //theta join attribute
-
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "mbr;job", sizeof ("mbr;job"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "mbr;job", sizeof ("mbr;job"), expr);
-    */
-
-    //printf("\nRA expr. before rel_eq optimization:\n");
-    //AK_print_rel_eq_comut(expr);
     AK_print_rel_eq_comut(AK_rel_eq_comut(expr));
 
     if (DEBUG_ALL) {
         printf("\n------------------> TEST_COMUT_FUNCTIONS <------------------\n\n");
 
-        //Initialize list elements...
-        //struct list_node list_elem_set, list_elem_subset;
-        //struct list_node list_elem_cond, list_elem_attr;
-
         char *test_cond1;//, *test_cond2;
         char *test_table;
-        //char *test_attribs;
-        //char *cond_attr1;, *cond_attr2;
 
         test_table = "profesor";
         test_cond1 = "'mbr' 100 > 'firstname' 'Markus' = AND 'id' 1000 > OR";
-        //test_cond2 = "'id' 100 > 'firstname' 50 < AND 'job' 'teacher' = AND";
-        //test_attribs = "id;mbr";
-
-        //cond_attr1 = AK_rel_eq_cond_attributes(test_cond1);
-        //cond_attr2 = AK_rel_eq_cond_attributes(test_cond2);
 
         printf("GET_ALL_TABLE_ATTRIBUTES_TEST   : (%s)\n\n", AK_rel_eq_get_atrributes_char(test_table));
         printf("GET_CONDITION_ATTRIBUTES_TEST   : (%s)\n\n", AK_rel_eq_cond_attributes(test_cond1));
-        //printf("COMMUTE_PROJECTION_SELECTION_TEST : (%i)\n\n", AK_rel_eq_can_commute(list_elem_attr, list_elem_cond));
         printf("COMMUTE_WITH_THETA_JOIN_TEST    : (%s)\n\n", AK_rel_eq_commute_with_theta_join(test_cond1, test_table));
-        /**/
+        
     } else {
         printf("...\n");
     }
 
     Ak_DeleteAll_L3(&expr);
-    //dealocate variables ;)
 
     AK_EPI;
 }

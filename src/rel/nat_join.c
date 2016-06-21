@@ -37,19 +37,18 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
 	//This is wrong and need to be corrected.
 	//If header doesn't fit in the first block than system must write the remain attributes from header to the new block.
 	//Correction must be handled in all functions that write, read or count header attributes.
-	AK_header header[MAX_ATTRIBUTES];
+    
+    AK_header header[MAX_ATTRIBUTES];
     memset(header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
 
     int head = 0; 		//counter of the heads
     int new_head = 0; 	//counter of heads to write
     int s_copy; 		//indicate if we copy these header or not
 
-    //AK_list_elem list_elem;
     struct list_node *list_elem;
 	
     while (strcmp(temp_block->header[head].att_name, "") != 0) {
         s_copy = 1;
-        //list_elem = (AK_list_elem) Ak_First_L2(att);
 	list_elem = Ak_First_L2(att);
 	
         while (list_elem != NULL) {
@@ -136,8 +135,8 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
                 //if isn't element in the list, and if data is correct, and size is not null
                 if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0) && (size != 0)
                         && (overflow < (temp_block->AK_free_space + 1)) && (overflow > -1)) {
+                    
                     memset(data, '\0', MAX_VARCHAR_LENGTH);
-                    //data[MAX_VARCHAR_LENGHT] = '\0';
                     memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
 
                     //if merge data is not equal
@@ -221,7 +220,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
                 if ((strcmp(list_elem->data, tbl1_temp_block->header[head].att_name) == 0) && (size != 0)
                         && (overflow < (tbl1_temp_block->AK_free_space + 1)) && (overflow > -1)) {
                     memset(data, '\0', MAX_VARCHAR_LENGTH);
-                    //data[MAX_VARCHAR_LENGHT] = '\0';
+
                     memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
                     //insert element into list on which we compare
                     Ak_Insert_New_Element_For_Update(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root, 0);

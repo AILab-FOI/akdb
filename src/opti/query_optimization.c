@@ -168,9 +168,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
 		//list_elem->data change value from view name to view query
 		
 		char* record = AK_get_rel_exp(list_elem->data);
-		//printf("**if petlja**\n%s\n", list_elem->data);
 		strcpy(list_elem->data, record);
-		//printf("**if petlja**\n%s\n", list_elem->data);
 	}
 	
     	list_elem = list_elem->next;
@@ -215,8 +213,6 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
         if (!DIFF_PLANS) {
             break;
         }
-
-     //   AK_free(perm);
     }
 
     if (DIFF_PLANS) {
@@ -302,28 +298,28 @@ void AK_query_optimization_test() {
     struct list_node *mylist2 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist2);
 
-struct list_node *mylist3 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *mylist3 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist3);
 
-struct list_node *mylist4 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *mylist4 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist4);
 
-struct list_node *mylist5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *mylist5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist5);
 
-struct list_node *mylist6 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *mylist6 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist6);
 
-struct list_node *mylist7 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *mylist7 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist7);
 
-struct list_node *mylist8 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *mylist8 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist8);
 
-struct list_node *mylist9 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *mylist9 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist9);
 
-struct list_node *mylist10 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    struct list_node *mylist10 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&mylist10);
 
 
@@ -336,12 +332,12 @@ struct list_node *mylist10 = (struct list_node *) AK_malloc(sizeof (struct list_
 
    
 
-  //*Commutativity of Selection and Projection
+    //*Commutativity of Selection and Projection
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist2);
     Ak_InsertAtEnd_L3(TYPE_CONDITION, "`firstname` = 'Dino'", sizeof ("`firstname` = 'Dino'"), mylist2);
     //...
 
-//*Cascade of Projection p[L1](p[L2](...p[Ln](R)...)) = p[L1](R)
+    //*Cascade of Projection p[L1](p[L2](...p[Ln](R)...)) = p[L1](R)
     //[L1,...] < [L2,...] < [...,Ln-1,Ln]
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), mylist3);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname;lastname", sizeof ("firstname;lastname"), mylist3);
@@ -373,7 +369,7 @@ struct list_node *mylist10 = (struct list_node *) AK_malloc(sizeof (struct list_
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "e", sizeof ("e"), mylist5); //u, i, e
     //*/
 
- //*Cascade of Selection and Commutativity of Selection
+    //*Cascade of Selection and Commutativity of Selection
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "i", sizeof ("u"), mylist6); //u, i, e
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist6);
     Ak_InsertAtEnd_L3(TYPE_CONDITION, "`year` 2008 <", sizeof ("`year` 2008 <"), mylist6);
@@ -416,22 +412,16 @@ struct list_node *mylist10 = (struct list_node *) AK_malloc(sizeof (struct list_
     Ak_InsertAtEnd_L3(TYPE_CONDITION, "`id_course` 7 < `mbr` 35891 > AND", sizeof ("`id_course` 7 < `mbr` 35891 > AND"), mylist10);
     //*/
 
- //time_t start = clock();
+    AK_print_optimized_query(AK_query_optimization(mylist, "a", 1));
+    AK_print_optimized_query(AK_query_optimization(mylist2, "c", 1));
+    AK_print_optimized_query(AK_query_optimization(mylist3, "p", 1));
+    AK_print_optimized_query(AK_query_optimization(mylist4, "cs", 1));
+    AK_print_optimized_query(AK_query_optimization(mylist5, "c", 1));
+    AK_print_optimized_query(AK_query_optimization(mylist6, "cs", 1));
+    AK_print_optimized_query(AK_query_optimization(mylist7, "cp", 2));
+    AK_print_optimized_query(AK_query_optimization(mylist8, "a", 1));
+    AK_print_optimized_query(AK_query_optimization(mylist9, "a", 1));
+    AK_print_optimized_query(AK_query_optimization(mylist10, "a", 1));
 
-   AK_print_optimized_query(AK_query_optimization(mylist, "a", 1));
- AK_print_optimized_query(AK_query_optimization(mylist2, "c", 1));
-   AK_print_optimized_query(AK_query_optimization(mylist3, "p", 1));
-   AK_print_optimized_query(AK_query_optimization(mylist4, "cs", 1));
-  AK_print_optimized_query(AK_query_optimization(mylist5, "c", 1));
-   AK_print_optimized_query(AK_query_optimization(mylist6, "cs", 1));
-   AK_print_optimized_query(AK_query_optimization(mylist7, "cp", 2));
-   AK_print_optimized_query(AK_query_optimization(mylist8, "a", 1));
-   AK_print_optimized_query(AK_query_optimization(mylist9, "a", 1));
-  AK_print_optimized_query(AK_query_optimization(mylist10, "a", 1));
-
-//    time_t end = clock();
-  
-
-  //printf("\n\nLOGIC PLAN GENERATED IN: %d μs, %d s\n", end - start, (end - start) / 1000000);
    AK_EPI;
 }

@@ -78,7 +78,7 @@ int AK_check_function_arguments(int function_id, struct list_node *arguments_lis
     int i = 0;
     int fid;
     AK_PRO;
-    //AK_list_elem arguments_list_current = arguments_list->next;
+
     struct list_node *arguments_list_current = arguments_list->next;
 
     char *argtype_catalog;
@@ -140,18 +140,12 @@ int AK_check_function_arguments_type(int function_id, struct list_node *args) {
 
         memcpy(&fid, current_elem->data, sizeof (int));
 
-        // printf("Function id: %d  fid: %d \n", function_id, fid);
-
         if (fid == function_id) {
             current_elem = Ak_Next_L2(current_elem);
             argtype = current_elem->data;
 
-            // printf("Argtype: %s \n", argtype);
-
             args_argtype = arguments_list_current->data;
             arguments_list_current = arguments_list_current->next;
-
-            // printf("Argtype: %s  Args_argtype: %s \n", argtype, args_argtype);
 
             if (strcmp(argtype, args_argtype) != 0) {
 		AK_EPI;
@@ -287,7 +281,7 @@ int AK_function_arguments_add(int function_id, int arg_number, int arg_type, cha
  */
 int AK_function_remove_by_obj_id(int obj_id) {
     AK_PRO;
-    // printf("***Remove function***\n");
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
@@ -489,8 +483,8 @@ void AK_function_test() {
     AK_function_add("test_funkcija2", 3, arguments_list4);
     AK_function_add("test_funkcija3", 1, arguments_list4);
 	
-	// Test bez argumenata
-	struct list_node *arguments_list5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    // Test bez argumenata
+    struct list_node *arguments_list5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&arguments_list5);
 	
     AK_function_add("test_without_arg", 1, arguments_list5);

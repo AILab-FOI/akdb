@@ -53,8 +53,6 @@
     // read command by command
     for(i = 0; i < log_file.number; i++) {
         memcpy(redo_log->command_recovery, log_file.command_recovery, sizeof(log_file.command_recovery));
-       //redo_log->command_recovery[i].finished = log_file.command_recovery[i].finished;
-        //redo_log->command_recovery[i].operation = log_file.command_recovery[i].operation;
     }
     redo_log->number = log_file.number;
     printf("AK_recover_archive_log: Checking for unfinished archived data commands...\nNumber of archived commands: %d\n", redo_log->number);

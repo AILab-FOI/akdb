@@ -220,7 +220,6 @@ int AK_delete_lock_entry_list(int blockAddress, pthread_t id) {
     }
     
     do {
-        /* printf("##########################\n# Lock Released		 #\n#------------------------#\n# Lock	ID:%lu		 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n", (unsigned long) elemDelete->TransactionId, elemListHolder->address); */
 
         (*elemDelete->prevLock).nextLock = elemDelete->nextLock;
         (*elemDelete->nextLock).prevLock = elemDelete->prevLock;
@@ -364,7 +363,6 @@ int AK_acquire_lock(int memoryAddress, int type, pthread_t transactionId) {
     AK_transaction_elem_P tmp = AK_search_existing_link_for_hook(memoryAddress);
 
     while (!lock->isWaiting) {
-        /* printf("################\n# Lock Waiting		 #\n#------------------------#\n# Lock	ID:%lu	TYPE:%i	 #\n#------------------------#\n# LockedAddress:%i	 #\n##########################\n\n",(unsigned long) lock->TransactionId, lock->lock_type, memoryAddress); */
         pthread_mutex_lock(&acquireLockMutex);
         pthread_cond_wait(&cond_lock, &acquireLockMutex);
         pthread_mutex_unlock(&acquireLockMutex);

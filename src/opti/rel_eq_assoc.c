@@ -42,7 +42,6 @@ int AK_compare(const void *a, const void *b) {
  * @return optimised RA expresion as the struct list_node
  */
 struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
-    //int exit_cond[5] = {0};
     int next_cost, i;
     AK_PRO;
     //Initialize temporary linked list
@@ -54,7 +53,6 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
 
     //Iterate through all the elements of RA linked list
     while (list_elem != NULL) {
-        //printf("read > %s\n", list_elem->data);
 
         switch (list_elem->type) {
 
@@ -87,10 +85,6 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                 strcpy(cost[1].data, temp_elem_prev->data);
                                 strcpy(cost[2].data, list_elem_next->data);
                                 qsort(cost, 3, sizeof (cost_eval), AK_compare);
-
-                                //printf("ROW_COUNT: (%s) %i rows\n", cost[0].data, cost[0].value);
-                                //printf("ROW_COUNT: (%s) %i rows\n", cost[1].data, cost[1].value);
-                                //printf("ROW_COUNT: (%s) %i rows\n", cost[2].data, cost[2].value);
 
                                 //Change inserted relation to largest table
 								Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem_prev->data, cost[2].data); 
@@ -382,7 +376,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
         list_elem = list_elem->next;
     }
 
-    //====================================> IMPROVMENTS <=======================================
+    //====================================> IMPROVEMENTS <=======================================
     //Recursive RA optimization (need to implement exit condition in place of each operator, ...)
     //If there is no new changes on the list return generated AK_lists
     //int iter_cond;
@@ -681,15 +675,12 @@ void AK_rel_eq_assoc_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"), expr);
     Ak_InsertAtEnd_L3(TYPE_CONDITION, "mbr;job", sizeof ("mbr;job"), expr);
 
-    //printf("\nRA expr. before rel_eq optimization:\n");
-    //AK_print_rel_eq_projection(expr);
     AK_print_rel_eq_assoc(AK_rel_eq_assoc(expr));
 
     printf("\n------------------> TEST_ASSOCIATIVITY_FUNCTIONS <------------------\n\n");
     printf("...");
 
     Ak_DeleteAll_L3(&expr);
-    //dealocate variables ;)
 
     AK_EPI;
 }

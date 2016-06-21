@@ -66,7 +66,6 @@ void AK_create_block_header(int old_block, char *dstTable, struct list_node *att
     temp_block = (AK_block *) AK_read_block(old_block);
     AK_header *temp;
 
-    //AK_list_elem list_elem;
     struct list_node *list_elem,*list_elem2;
     struct list_node *att_operation_elem,*a,*b,*c,*d,*operator,*cached_elem;
 
@@ -222,14 +221,10 @@ char *AK_create_header_name(char * first,char *second, char * operator){
  */
 void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *dstTable,struct list_node *expr) {
     AK_PRO;
-    /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-    */
+ 
     struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
 
-    //AK_list_elem list_elem;
     struct list_node * list_elem,*a,*c,*operator;
     struct list_node * end_list;
     int i; //tuple_dict counter
@@ -252,7 +247,6 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
 
         while (strcmp(old_block->header[head].att_name, "") != 0) {
         
-            //list_elem = (AK_list_elem) Ak_First_L2(att);
 	    list_elem = (struct list_node *) Ak_First_L2(att);
 
             while (list_elem != NULL) {
@@ -326,7 +320,7 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
             i++;
         }
 
-        //write row to the porojection table
+        //write row to the projection table
         if (something_to_copy) {
             Ak_dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
 
@@ -488,7 +482,6 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct 
                 //for each block in extent
                 for (j = startAddress; j <= src_addr->address_to[i]; j++) {
                     AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
-                    //AK_block *temp = (AK_block *) AK_read_block(j);
 
                     if (temp->block->last_tuple_dict_id == 0) {
                         break;

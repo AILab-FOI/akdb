@@ -84,15 +84,7 @@ int Ak_get_num_of_tuples(AK_block *iBlock) {
     AK_EPI;
     return (i / max_header_num);
 }
-/*
-AK_mem_block *get_next_block(int num) {
-    AK_mem_block *mem_block = (AK_mem_block *) AK_malloc(sizeof (AK_mem_block));
-    mem_block = (AK_mem_block *) AK_get_block(num);
 
-    //AK_block *temp_block = AK_read_block(num); // tu poslije komentirati
-    //memcpy(mem_block->block, temp_block, sizeof(AK_block));
-    return mem_block;
-}*/
 /*
  * @author Tomislav Bobinac
  * @brief Function sorts segment
@@ -244,8 +236,8 @@ void Ak_reset_block(AK_block * block) {
  */
 void AK_block_sort(AK_block * iBlock, char * atr_name) {
     register int i, j, k, n, t, q;
-    char x[DATA_ROW_SIZE]; //bas podatak koji nas zanima
-    char y[DATA_ROW_SIZE]; //bas podatak s kojim se uspoređuje
+    char x[DATA_ROW_SIZE]; //data which interests us
+    char y[DATA_ROW_SIZE]; //data used for comparison
     AK_PRO;
     AK_block * cTemp1 = (AK_block*) AK_malloc(sizeof (AK_block));
     cTemp1 = (AK_block *) AK_read_block(15);
@@ -259,15 +251,15 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
     AK_header *block_header = (AK_header *) AK_malloc(sizeof (AK_header));
     memcpy(block_header, iBlock->header, sizeof (AK_header));
 
-    int num_sort_header = Ak_get_header_number(iBlock, atr_name); //broj headera po kojem se sortira
-    //tu provjeriti još funkciju
-    int max_header_num = Ak_get_total_headers(iBlock); //ukupni broj headera za jedan zapis
+    int num_sort_header = Ak_get_header_number(iBlock, atr_name); //number of headers which are used for sort
+
+    int max_header_num = Ak_get_total_headers(iBlock); //total number of headers for one record
     int num_tuples = Ak_get_num_of_tuples(iBlock);
 
     Ak_dbg_messg(HIGH, FILE_MAN, "\n tu sam: %i, %i", num_sort_header, num_tuples);
 
     unsigned char data[MAX_VARCHAR_LENGTH]; //it was 2000 before MAX_VARCHAR_LENGHT
-    int ubr1 = num_tuples / 2; //ukupni broj 1. polovice
+    int ubr1 = num_tuples / 2; //total number of first half
     int ubr2 = num_tuples - ubr1;
 
     for (n = 1; n < num_tuples; n = n * 2) {
@@ -290,7 +282,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
         }
 
         memcpy(cTemp1->header, block_header, sizeof (AK_header));
-        AK_write_block(cTemp1); //tu treba nekaj napraviti
+        AK_write_block(cTemp1); 
         printf("   \n\n               in cTemp1        data, brtd: %i\n", broj_td);
 
         for (i = 0; i < broj_td; i++) {
@@ -300,7 +292,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
         }
         printf("\n\n");
 
-        //upis druge polovice u drugi temp blok
+        //writing other half in second temp block
         broj_td = 0;
         for (; t < num_tuples; t++) {
             Ak_dbg_messg(HIGH, FILE_MAN, "block_sort: 2) sada sam na %i / %i\n", t, num_tuples);
@@ -315,7 +307,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
             }
         }
         memcpy(cTemp2->header, block_header, sizeof (AK_header));
-        if (AK_write_block(cTemp2) == EXIT_ERROR) //tu isto treba nekaj napraviti
+        if (AK_write_block(cTemp2) == EXIT_ERROR) //TO DO
             printf("cTemp2 writing error\n");
 
         printf("   \n\n               in cTemp2        data, brtd: %i\n", broj_td);
@@ -393,7 +385,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
                     br2++;
                     k++;
 
-                    if (k < n && br2 < ubr2) { //još ima podataka u cTemp2
+                    if (k < n && br2 < ubr2) { //data left in cTemp2
                         printf("\nif(k<n){    //još ima podataka u cTemp1  k=%i , n=%i\n", k, n);
                         memset(y, '\0', DATA_ROW_SIZE);
                         memcpy(y, cTemp2->data + cTemp2->tuple_dict[br2 * max_header_num + num_sort_header].address,
@@ -407,7 +399,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
             }
 
             printf("\n\nmore data if(j<n) j=%i , n=%i, br1=%i, ubr1=%i\n\n", k, n, br1, ubr1);
-            if (j < n && br1 < ubr1) { //još ima podataka u cTemp1
+            if (j < n && br1 < ubr1) { //data left in cTemp1
                 if (!(br1 < ubr1))
                     break;
 
@@ -425,7 +417,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
             }
 
             printf("\n\nmore data if(k<n) k=%i , n=%i, br2=%i, ubr2=%i\n\n", k, n, br2, ubr2);
-            if (k < n && br2 < ubr2) { //još ima podataka u cTemp2
+            if (k < n && br2 < ubr2) { //data left in cTemp2
                 if (!(br2 < ubr2))
                     break;
                 //insert data
@@ -441,7 +433,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
                 k++;
             }
 
-            //ako je jedna od datoteka prazna
+            //if one of the files is empty
             for (; j < n; j++) {
                 if (!(br1 < ubr1))
                     break;
@@ -475,7 +467,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
             }
         }
         printf("\n\n KORAK ZAVRSIO \n\n");
-        AK_write_block(iBlock); //tu treba nekaj drugo
+        AK_write_block(iBlock); 
         printf("   \n\n               in iBlock        data, brtd: %i\n", broj_td);
 
         for (i = 0; i < broj_td; i++) {
@@ -486,9 +478,9 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
         printf("\n\n");
     }
     Ak_reset_block(cTemp1);
-    Ak_reset_block(cTemp2); //tu treba sad još spremiti
+    Ak_reset_block(cTemp2); 
 
-    AK_write_block(cTemp1); //ali mislim da samo ide dirty bit
+    AK_write_block(cTemp1); 
     AK_write_block(cTemp2);
     AK_EPI;
 }
@@ -502,13 +494,10 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
 void Ak_filesort_test() {
 	AK_PRO;
 	printf("filesort_test: Present!\n");
-	//ispis studenata sortiranih po prezimenu
+
 	AK_print_table("student");
 	AK_sort_segment("student", "lastname");
 	AK_print_table("SORT_TEMP_HELP_student");
-	//ispis profesora sortiranih po imenu
-	//AK_print_table("professor2");
-	//AK_sort_segment("professor2", "firstname");
-	//AK_print_table("SORT_TEMP_HELP_professor2");
+
 	AK_EPI;
 }

@@ -34,7 +34,6 @@
     Currentelement_op = L->next;
     while (Currentelement_op)
     {
-        //printf("iz liste: %s, iz tablice: %s \n", Currentelement_op->attribute_name, ele);
         if (strcmp(Currentelement_op->attribute_name, ele) == 0)
         {
             AK_EPI;
@@ -65,7 +64,7 @@
     AK_header *temp_head;
     int temp_int;
     char temp_char[ MAX_VARCHAR_LENGTH ];
-    //float temp_float;
+
     struct list_node *some_element;
     struct list_node *e, *ee;
     struct list_node *headerAtributes;
@@ -91,11 +90,8 @@
         some_element = Ak_First_L2(attributes);
         while (some_element != 0)
         {
-
-            //printf("atribut u listi: %s, atribut u zaglavlju: %s \n",some_element->attribute_name, (temp_head+i)->att_name);
             if (strcmp((temp_head + i)->att_name, some_element->attribute_name) == 0)
             {
-                //printf("Atribut %s postoji u tablici, nalazi se na poziciji: %d\n",(temp_head+i)->att_name,i);
                 indexed_attr_position = i;
                 Ak_Init_L3(&headerAtributes);
                 br = 0;
@@ -157,7 +153,6 @@
                                             Ak_Insert_New_Element(TYPE_VARCHAR, temp_char, "indexLista", temp_char, ee);
                                         }
                                     }
-                                    //printf("TEMP : %-10s \n", temp_char);
                                     break;
                                 }
 
@@ -180,7 +175,6 @@
                     e = (struct list_node *) Ak_First_L2(headerAtributes);
                     while (e != 0)
                     {
-                        //printf("%s : %s \n", (temp_head + i)->att_name, e->attribute_name);
                         tempHeader = (AK_header*) AK_create_header(e->attribute_name, TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
                         memcpy(t_header + brr, tempHeader, sizeof ( AK_header));
                         e = (struct list_node *) Ak_Next_L2(e);
@@ -222,13 +216,10 @@
 
                     tempHeader = (AK_header*) AK_create_header("indexTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                     memcpy(t_headerr + 1, tempHeader, sizeof ( AK_header));
-                    //tempHeader = (AK_header*)AK_create_header( "sizeTd", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
-                    //memcpy( t_headerr + 2 , tempHeader, sizeof( AK_header ));
 
                     e = (struct list_node *) Ak_First_L2(headerAtributes);
                     while (e != 0)
                     {
-                        //printf("%s : %s : %i \n", (temp_head + i)->att_name, e->attribute_name,brr);
                         tempHeader = (AK_header*) AK_create_header(e->attribute_name, TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
                         memcpy(t_headerr + brr, tempHeader, sizeof ( AK_header));
                         e = (struct list_node *) Ak_Next_L2(e);
@@ -285,13 +276,10 @@
     table_addresses *addresses;
     AK_block *temp;
 
-    //AK_header *t_header = AK_get_header( tblNameIndex );
-
     int i, j, k;
     int temp_int;
     int temp_indexTd;
     char temp_char[ MAX_VARCHAR_LENGTH ];
-//    float temp_float;
     i = 0;
     struct list_node *row_root;
 
@@ -328,7 +316,6 @@
                             Ak_insert_row(row_root);
                             Ak_DeleteAll_L3(&row_root);
                             AK_free(row_root);
-                                //printf( "%-10d", temp_int );
                         break;
 
 
@@ -598,15 +585,14 @@
                                     if ((temp_adr_block == addBlock) && (temp_adr_Td == addTd))
                                     {
                                         printf( "Block address: %d, Td address: %d segment:%i \n", temp_adr_block, temp_adr_Td, temp->address );
-                                    //temp->data[ temp->tuple_dict[ k+pos ].address] = NULL;
+
                                         memcpy(&(temp->data[ temp->tuple_dict[ k + pos ].address]), "n", 1);
-                                    //temp->data[ temp->tuple_dict[ k+posNew ].address] = NULL;
                                         memset(&(temp->data[ temp->tuple_dict[ k + posNew ].address]), 0, 4);
                                         memcpy(&(temp->data[ temp->tuple_dict[ k + posNew ].address]), "1", 1);                                
-                                        AK_PRO;
+                                        
+					AK_PRO;
 
                                         Ak_write_block(temp);
-                                    //Ak_update_row(temp);
                                     }
                                 }
                             }
@@ -631,7 +617,7 @@
  {
     /*Legacy method -> not really working
     AK_PRO;
-    //Method for updating should be imlemented or reused some existing one...wainting for feedback
+    //Method for updating should be implemented or reused some existing one...waiting for feedback
     if ((db = fopen(DB_FILE, "r+")) == NULL)
     {
         printf("AK_write_block: ERROR. Cannot open db file %s.\n", DB_FILE);
@@ -743,7 +729,6 @@
  * */
  void Ak_bitmap_test()
  {
-    //list_ad *list;
     int id_prof;
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 
@@ -768,11 +753,7 @@
 
     AK_print_table(tblName);
     AK_print_table("AK_index");
-    //AK_print_table("AK_relation");
-    //AK_print_table("AK_sequence");
 
-
-    //Ak_print_Header_Test("AK_index");
     printf("\n************Index tables******************\n\n");
     AK_print_index_table("assistantfirstname_bmapIndex");
     AK_print_index_table("assistanttel_bmapIndex");
@@ -800,10 +781,6 @@
     Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
 
-    //some old legacy code for updating, shoud be revised
-    //AK_update(346, 6, tblName, "firstname", "Markus", "Alen");
-    //
-
     AK_add_to_bitmap_index(tblName, "firstname");
 
     AK_print_table(tblName);
@@ -815,7 +792,7 @@
     
      printf("\n\n************Deleting bitmap index******************\n\n");
     AK_delete_bitmap_index("assistantfirstname_bmapIndex");
-    //AK_print_index_table("assistantfirstname_bmapIndex");
+
     AK_print_table("AK_index");
 
 

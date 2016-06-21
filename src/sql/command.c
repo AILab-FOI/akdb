@@ -134,8 +134,6 @@ void AK_test_command(){
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L3(&row_root);
 
-//  printf("\nQUERY: SELECT * FROM student WHERE firstname = 'Robert';\n\n");
-
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), row_root);
     Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), row_root);
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), row_root);

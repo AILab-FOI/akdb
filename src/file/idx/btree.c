@@ -614,7 +614,7 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 				block->tuple_dict[id].type = NODE;
 				block->AK_free_space += sizeof(btree_node);
 				block->last_tuple_dict_id = id;
-				//update root_info->level[updateIdx] number of nodes
+
 				root->level[updateIdx]++;
 				memcpy(&block->data[0],root,sizeof(root_info));
 				updateIdx++;
@@ -647,7 +647,7 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 					block->tuple_dict[id].type = NODE;
 					block->AK_free_space += sizeof(btree_node);
 					block->last_tuple_dict_id = id;
-					//update root_info->level[updateIdx] - new root
+
 					root->level[updateIdx] = 1;
 					root->root = id;
 					memcpy(&block->data[0],root,sizeof(root_info));

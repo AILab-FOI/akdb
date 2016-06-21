@@ -167,14 +167,6 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %s\n", upperBoundary);
                 Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
 
-                // DEBUG
-                // printf("\ninMemoryTable: %s\n", inMemoryTable);
-                // printf("Table name: %s\n", tableName);
-                // printf("Attribute name: %s\n", attName);
-                // printf("Constraint name: %s\n", constraintName);
-                // printf("Low boundary: %s\n", lowerBoundary);
-                // printf("High boundary: %s\n", upperBoundary);
-
                 if (strcmp(attName, attNamePar) == 0) {
                     if (strcmp(newValue, lowerBoundary) >= 0 && strcmp(newValue, upperBoundary) <= 0) {
                         printf("\nConstraint succeeded!\n\n");
