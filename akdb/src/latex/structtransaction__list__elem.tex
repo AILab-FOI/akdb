@@ -1,0 +1,52 @@
+\hypertarget{structtransaction__list__elem}{}\section{transaction\+\_\+list\+\_\+elem Struct Reference}
+\label{structtransaction__list__elem}\index{transaction\+\_\+list\+\_\+elem@{transaction\+\_\+list\+\_\+elem}}
+
+
+Structure that represents Lock\+Table entry about transaction lock holder.\+Element indexed by Hash table.  
+
+
+
+
+{\ttfamily \#include $<$transaction.\+h$>$}
+
+
+
+Collaboration diagram for transaction\+\_\+list\+\_\+elem\+:
+% FIG 0
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries address}\hypertarget{structtransaction__list__elem_abcf5dc09e2f778fed1d8a7cf7055004f}{}\label{structtransaction__list__elem_abcf5dc09e2f778fed1d8a7cf7055004f}
+
+\item 
+int {\bfseries lock\+\_\+type}\hypertarget{structtransaction__list__elem_accb49854309cdff0a157d4ab01ac43fc}{}\label{structtransaction__list__elem_accb49854309cdff0a157d4ab01ac43fc}
+
+\item 
+int {\bfseries is\+Waiting}\hypertarget{structtransaction__list__elem_a0a732924a2e5cbe3b8568e0e5212f36e}{}\label{structtransaction__list__elem_a0a732924a2e5cbe3b8568e0e5212f36e}
+
+\item 
+struct \hyperlink{structtransaction__locks__list__elem}{transaction\+\_\+locks\+\_\+list\+\_\+elem} $\ast$ {\bfseries D\+L\+L\+Locks\+Head}\hypertarget{structtransaction__list__elem_a441dcf09223b92668cadc49f88b08bc6}{}\label{structtransaction__list__elem_a441dcf09223b92668cadc49f88b08bc6}
+
+\item 
+struct \hyperlink{structtransaction__list__elem}{transaction\+\_\+list\+\_\+elem} $\ast$ {\bfseries next\+Bucket}\hypertarget{structtransaction__list__elem_a87886aa53e90ddd43a7b6c774c2b801f}{}\label{structtransaction__list__elem_a87886aa53e90ddd43a7b6c774c2b801f}
+
+\item 
+struct \hyperlink{structtransaction__list__elem}{transaction\+\_\+list\+\_\+elem} $\ast$ {\bfseries prev\+Bucket}\hypertarget{structtransaction__list__elem_aac101a113a925aa7e9dd75fc15563204}{}\label{structtransaction__list__elem_aac101a113a925aa7e9dd75fc15563204}
+
+\item 
+\hyperlink{structobserver__lock}{A\+K\+\_\+observer\+\_\+lock} $\ast$ {\bfseries observer\+\_\+lock}\hypertarget{structtransaction__list__elem_a419ed68310e5b4fffd6629af6512a320}{}\label{structtransaction__list__elem_a419ed68310e5b4fffd6629af6512a320}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Structure that represents Lock\+Table entry about transaction lock holder.\+Element indexed by Hash table. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+trans/\hyperlink{transaction_8h}{transaction.\+h}\end{DoxyCompactItemize}

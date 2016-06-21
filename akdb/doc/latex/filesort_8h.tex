@@ -1,0 +1,122 @@
+\hypertarget{filesort_8h}{}\section{file/filesort.h File Reference}
+\label{filesort_8h}\index{file/filesort.\+h@{file/filesort.\+h}}
+{\ttfamily \#include \char`\"{}../mm/memoman.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}table.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}files.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}fileio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
+Include dependency graph for filesort.\+h\+:
+% FIG 0
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{filesort_8h_afde9ea93d02dfa7cd765d9ed5e33ad6d}{D\+A\+T\+A\+\_\+\+R\+O\+W\+\_\+\+S\+I\+ZE}~200\hypertarget{filesort_8h_afde9ea93d02dfa7cd765d9ed5e33ad6d}{}\label{filesort_8h_afde9ea93d02dfa7cd765d9ed5e33ad6d}
+
+\begin{DoxyCompactList}\small\item\em Constatnt declaring size of data to be compared. \end{DoxyCompactList}\item 
+\#define \hyperlink{filesort_8h_ab9862de6b81917016478e1b6ed59a9d5}{D\+A\+T\+A\+\_\+\+T\+U\+P\+L\+E\+\_\+\+S\+I\+ZE}~500\hypertarget{filesort_8h_ab9862de6b81917016478e1b6ed59a9d5}{}\label{filesort_8h_ab9862de6b81917016478e1b6ed59a9d5}
+
+\begin{DoxyCompactList}\small\item\em Costant declaring size of data to be copied. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{filesort_8h_a6b6f428a30b26c65a4295c020c04d038}{Ak\+\_\+get\+\_\+total\+\_\+headers} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$i\+Block)
+\begin{DoxyCompactList}\small\item\em Function returns total number of headers in the block. \end{DoxyCompactList}\item 
+int \hyperlink{filesort_8h_ac75622f1a56ad5a551f5b8f190b33c13}{Ak\+\_\+get\+\_\+header\+\_\+number} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$i\+Block, char $\ast$attribute\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Function returns number of header in the block which to sort. \end{DoxyCompactList}\item 
+int \hyperlink{filesort_8h_ae82a2e5bd217cbce996d1a48beb376b4}{Ak\+\_\+get\+\_\+num\+\_\+of\+\_\+tuples} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$i\+Block)
+\begin{DoxyCompactList}\small\item\em Function returns tuples number in block. \end{DoxyCompactList}\item 
+void {\bfseries A\+K\+\_\+sort\+\_\+segment} (char $\ast$table\+\_\+name, char $\ast$attr)\hypertarget{filesort_8h_a69b3b7598ef91ca418d3f3c2cdd2f6dd}{}\label{filesort_8h_a69b3b7598ef91ca418d3f3c2cdd2f6dd}
+
+\item 
+void {\bfseries Ak\+\_\+reset\+\_\+block} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$block)\hypertarget{filesort_8h_ae594619cd28bbf308471c11913eb9634}{}\label{filesort_8h_ae594619cd28bbf308471c11913eb9634}
+
+\item 
+void \hyperlink{filesort_8h_a2fb3f3eaf7b043961834466064365e57}{A\+K\+\_\+block\+\_\+sort} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$i\+Block, char $\ast$atr\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Function sorts the given block. \end{DoxyCompactList}\item 
+void {\bfseries Ak\+\_\+filesort\+\_\+test} ()\hypertarget{filesort_8h_aaeabf5489919da0173c51b16d1104293}{}\label{filesort_8h_aaeabf5489919da0173c51b16d1104293}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header filr provides data structures for file sorting 
+
+\subsection{Function Documentation}
+\index{filesort.\+h@{filesort.\+h}!A\+K\+\_\+block\+\_\+sort@{A\+K\+\_\+block\+\_\+sort}}
+\index{A\+K\+\_\+block\+\_\+sort@{A\+K\+\_\+block\+\_\+sort}!filesort.\+h@{filesort.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+block\+\_\+sort(\+A\+K\+\_\+block $\ast$i\+Block, char $\ast$atr\+\_\+name)}{AK_block_sort(AK_block *iBlock, char *atr_name)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+block\+\_\+sort (
+\begin{DoxyParamCaption}
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{i\+Block, }
+\item[{char $\ast$}]{atr\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{filesort_8h_a2fb3f3eaf7b043961834466064365e57}{}\label{filesort_8h_a2fb3f3eaf7b043961834466064365e57}
+
+
+Function sorts the given block. 
+
+\begin{DoxyAuthor}{Author}
+Bakoš Nikola 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+v1.\+0 
+\end{DoxyVersion}
+
+\begin{DoxyParams}{Parameters}
+{\em i\+Block} & block to be sorted \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{filesort.\+h@{filesort.\+h}!Ak\+\_\+get\+\_\+header\+\_\+number@{Ak\+\_\+get\+\_\+header\+\_\+number}}
+\index{Ak\+\_\+get\+\_\+header\+\_\+number@{Ak\+\_\+get\+\_\+header\+\_\+number}!filesort.\+h@{filesort.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+get\+\_\+header\+\_\+number(\+A\+K\+\_\+block $\ast$i\+Block, char $\ast$attribute\+\_\+name)}{Ak_get_header_number(AK_block *iBlock, char *attribute_name)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+get\+\_\+header\+\_\+number (
+\begin{DoxyParamCaption}
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{i\+Block, }
+\item[{char $\ast$}]{attribute\+\_\+name}
+\end{DoxyParamCaption}
+)}\hypertarget{filesort_8h_ac75622f1a56ad5a551f5b8f190b33c13}{}\label{filesort_8h_ac75622f1a56ad5a551f5b8f190b33c13}
+
+
+Function returns number of header in the block which to sort. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+number of attribute in header (0 -\/ M\+A\+X\+\_\+\+A\+T\+T\+R\+I\+B\+U\+T\+ES). U\+SE in tuple\+\_\+dict\mbox{[}num\mbox{]}... 
+\end{DoxyReturn}
+\index{filesort.\+h@{filesort.\+h}!Ak\+\_\+get\+\_\+num\+\_\+of\+\_\+tuples@{Ak\+\_\+get\+\_\+num\+\_\+of\+\_\+tuples}}
+\index{Ak\+\_\+get\+\_\+num\+\_\+of\+\_\+tuples@{Ak\+\_\+get\+\_\+num\+\_\+of\+\_\+tuples}!filesort.\+h@{filesort.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+get\+\_\+num\+\_\+of\+\_\+tuples(\+A\+K\+\_\+block $\ast$i\+Block)}{Ak_get_num_of_tuples(AK_block *iBlock)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+get\+\_\+num\+\_\+of\+\_\+tuples (
+\begin{DoxyParamCaption}
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{i\+Block}
+\end{DoxyParamCaption}
+)}\hypertarget{filesort_8h_ae82a2e5bd217cbce996d1a48beb376b4}{}\label{filesort_8h_ae82a2e5bd217cbce996d1a48beb376b4}
+
+
+Function returns tuples number in block. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+tuples number in block 
+\end{DoxyReturn}
+\index{filesort.\+h@{filesort.\+h}!Ak\+\_\+get\+\_\+total\+\_\+headers@{Ak\+\_\+get\+\_\+total\+\_\+headers}}
+\index{Ak\+\_\+get\+\_\+total\+\_\+headers@{Ak\+\_\+get\+\_\+total\+\_\+headers}!filesort.\+h@{filesort.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+get\+\_\+total\+\_\+headers(\+A\+K\+\_\+block $\ast$i\+Block)}{Ak_get_total_headers(AK_block *iBlock)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+get\+\_\+total\+\_\+headers (
+\begin{DoxyParamCaption}
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{i\+Block}
+\end{DoxyParamCaption}
+)}\hypertarget{filesort_8h_a6b6f428a30b26c65a4295c020c04d038}{}\label{filesort_8h_a6b6f428a30b26c65a4295c020c04d038}
+
+
+Function returns total number of headers in the block. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+number of attribute in header (0 -\/ M\+A\+X\+\_\+\+A\+T\+T\+R\+I\+B\+U\+T\+ES). U\+SE in tuple\+\_\+dict\mbox{[}num\mbox{]}... 
+\end{DoxyReturn}

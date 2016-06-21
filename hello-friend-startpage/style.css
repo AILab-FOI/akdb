@@ -1,0 +1,135 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	background-color: #1b1b1b;
+	background-image: url('http://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-103929.png');
+	background-repeat: no-repeat ;
+	color: #FFFFFF;
+	font-size: 13px;
+}
+
+* {
+	font-family: 'Helvetica Neue';
+	font-weight: 300;
+}
+
+#container {
+	position: absolute;
+	padding: 0 20px 0 20px;
+	top: 25%;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 700px;
+	height: 400px;
+}
+
+#header {
+    -webkit-box-shadow: 1px 1px 20px 0px #000;
+    -moz-box-shadow: 1px 1px 20px 0px #000;
+    box-shadow: 1px 1px 20px 0px #000;
+	border: 1px solid rgba(0,0,0,0.3);
+	background-color: rgba(0,0,0,0.8);
+	margin: 4px;
+	padding: 8px;
+}
+
+#header:hover {
+	background-color: rgba(0,0,0,0.85);
+	border: 1px solid rgba(0,0,0,0.85);
+}
+
+
+#links {
+	display: -moz-box;
+	display: -webkit-box;
+	width: 100%;
+}
+
+.box {
+    -webkit-box-shadow: 1px 1px 20px 0px #000;
+    -moz-box-shadow: 1px 1px 20px 0px #000;
+    box-shadow: 1px 1px 20px 0px #000;
+    -moz-box-flex: 1;	
+	-webkit-box-flex: 1;
+	margin: 4px;
+	padding: 8px 8px 8px 8px;
+	background-color: rgba(0,0,0,0.8);
+	border: 1px solid rgba(0,0,0,0.3);
+}
+
+.box:hover {
+	background-color: rgba(0,0,0,0.85);
+	border: 1px solid rgba(0,0,0,0.85);
+}
+
+.box a {
+	display: block;
+	color: #6673BF;
+}
+
+h3 {
+	font-size: 15px;
+	/*font-variant: small-caps;*/
+	padding-bottom: 0;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+a {
+	font-size: 13px;
+	/*font-variant: small-caps;*/
+	text-decoration: none;
+}
+
+a:link {
+	color: rgba(255,255,255,0.3);
+}
+
+a:visited {
+	color: rgba(255,255,255,0.3);
+}
+
+a:hover {
+	color: rgba(255,255,255,0.45);
+}
+
+.green {
+	padding: 0;
+	color: rgba(255,255,255,0.45);
+}
+
+form {
+	display: inline;
+}
+
+input {
+	display: inline;
+	text-align: center;
+	margin-left: 30px;
+	border: none;
+	background: rgba(255,255,255,0.1);
+	color: #fff;
+	width: 70%;
+	font-size: 14px;
+}
+
+#clock {
+	position: absolute;
+	padding: 0 20px 0 20px;
+	top: 44%;
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 650px;
+	height: 140px;
+	background-color: rgba(0,0,0,0.8);
+	border: 1px solid rgba(0,0,0,0.3);
+	-webkit-box-shadow: 1px 1px 20px 0px #000;
+    -moz-box-shadow: 1px 1px 20px 0px #000;
+    box-shadow: 1px 1px 20px 0px #000;
+    -moz-box-flex: 1;	
+	-webkit-box-flex: 1;
+}

@@ -1,0 +1,355 @@
+\hypertarget{bitmap_8h}{}\section{file/idx/bitmap.h File Reference}
+\label{bitmap_8h}\index{file/idx/bitmap.\+h@{file/idx/bitmap.\+h}}
+{\ttfamily \#include \char`\"{}../../mm/memoman.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}index.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../file/table.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../file/fileio.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../file/files.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../../auxi/mempro.\+h\char`\"{}}\\*
+Include dependency graph for bitmap.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{bitmap_8h_a152b4fa63dee635ede9ad24e505ef067}{Ak\+\_\+\+If\+\_\+\+Exist\+Op} (struct list\+\_\+node $\ast$L, char $\ast$ele)
+\begin{DoxyCompactList}\small\item\em Function examines whether list L contains operator ele. \end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_ab9c0de3173de19c0b8949ea72ea88e20}{A\+K\+\_\+create\+\_\+\+Index\+\_\+\+Table} (char $\ast$tbl\+Name, struct list\+\_\+node $\ast$attributes)
+\begin{DoxyCompactList}\small\item\em Function reads table on which we create index and call functions for creating index Elements that will be in index are put in list index\+Lista and header\+Attributes. According to those elements new indexes are created. \end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_a7b8e08c0450f4a097adacb0b256da357}{Ak\+\_\+print\+\_\+\+Header\+\_\+\+Test} (char $\ast$tbl\+Name)
+\begin{DoxyCompactList}\small\item\em Function that tests printing header of table. \end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_ae957cfc7887fd0562b3866b6a96e8e3a}{Ak\+\_\+create\+\_\+\+Index} (char $\ast$tbl\+Name, char $\ast$tbl\+Name\+Index, char $\ast$attribute\+Name, int position\+Tbl, int num\+Atributes, \hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$header\+Index)
+\begin{DoxyCompactList}\small\item\em Function that loads index table with value of particulary atribute. \end{DoxyCompactList}\item 
+\hyperlink{structlist__structure__ad}{list\+\_\+ad} $\ast$ \hyperlink{bitmap_8h_a8f519f8428de887aa5d026019d7fe12d}{Ak\+\_\+get\+\_\+\+Attribute} (char $\ast$index\+Name, char $\ast$attribute)
+\begin{DoxyCompactList}\small\item\em Function gets adresses of the particuliary attribute from bitmap index. It fetches addresses of indexes and header of index table. Using while loop it goes through index and gets necessary data. Those data are put in list called add\+\_\+root. \end{DoxyCompactList}\item 
+void {\bfseries Ak\+\_\+create\+\_\+\+List\+\_\+\+Address\+\_\+\+Test} ()\hypertarget{bitmap_8h_ae7edf666885e210754c0f64c78c65a80}{}\label{bitmap_8h_ae7edf666885e210754c0f64c78c65a80}
+
+\item 
+void \hyperlink{bitmap_8h_a57df7327afc0491c8974aa1733d5c72a}{Ak\+\_\+print\+\_\+\+Att\+\_\+\+Test} (\hyperlink{structlist__structure__ad}{list\+\_\+ad} $\ast$list)
+\begin{DoxyCompactList}\small\item\em Function for printing list of adresses. \end{DoxyCompactList}\item 
+\hyperlink{structlist__structure__ad}{list\+\_\+ad} $\ast$ \hyperlink{bitmap_8h_a05c6fda2d2bb6a3dbb7a2cc29d9bc81b}{A\+K\+\_\+get\+\_\+\+Attribute} (char $\ast$table\+Name, char $\ast$attribute\+Name, char $\ast$attribute\+Value)
+\begin{DoxyCompactList}\small\item\em Function for getting values from the bitmap index if there is one for given table. It should be started when we are making selection on the table with bitmap index. \end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_a979b8b062fac097577c93f66ed2de339}{A\+K\+\_\+update} (int add\+Block, int add\+Td, char $\ast$table\+Name, char $\ast$attribute\+Name, char $\ast$attribute\+Value, char $\ast$new\+Attribute\+Value)
+\begin{DoxyCompactList}\small\item\em Function for updating the index, only on values that alredy exist. If there is no value in bitmap index or bitmap index on this value, warning is showed to the user. Otherwise, bitmap index is updated with new attribute value. \end{DoxyCompactList}\item 
+int \hyperlink{bitmap_8h_a4dcaf1c0e2c11f4323e489f9444da8c9}{Ak\+\_\+write\+\_\+block} (\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$block)
+\begin{DoxyCompactList}\small\item\em Function for writing new value in block when index is updated. \end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_a2cc7238af6f24be2aa3d9be4a67bec8d}{Ak\+\_\+bitmap\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function that creates test table and makes index on test table, also prints original tables indexes tables and indexes,tests updating into tables. \end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_ac79d9920e87b1081f19a0ce454d21fc9}{A\+K\+\_\+delete\+\_\+bitmap\+\_\+index} (char $\ast$index\+Name)
+\begin{DoxyCompactList}\small\item\em Function that deletes bitmap index based on name of index. \end{DoxyCompactList}\item 
+void \hyperlink{bitmap_8h_a654404d73c2a2faccdb4adc327175e4c}{A\+K\+\_\+add\+\_\+to\+\_\+bitmap\+\_\+index} (char $\ast$table\+Name, char $\ast$attribute\+Name)
+\begin{DoxyCompactList}\small\item\em Function for updating the index,function deletes and recrates index values again if different number of params is detected. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data structures for bitmap index 
+
+\subsection{Function Documentation}
+\index{bitmap.\+h@{bitmap.\+h}!A\+K\+\_\+add\+\_\+to\+\_\+bitmap\+\_\+index@{A\+K\+\_\+add\+\_\+to\+\_\+bitmap\+\_\+index}}
+\index{A\+K\+\_\+add\+\_\+to\+\_\+bitmap\+\_\+index@{A\+K\+\_\+add\+\_\+to\+\_\+bitmap\+\_\+index}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+add\+\_\+to\+\_\+bitmap\+\_\+index(char $\ast$table\+Name, char $\ast$attribute\+Name)}{AK_add_to_bitmap_index(char *tableName, char *attributeName)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+add\+\_\+to\+\_\+bitmap\+\_\+index (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table\+Name, }
+\item[{char $\ast$}]{attribute\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a654404d73c2a2faccdb4adc327175e4c}{}\label{bitmap_8h_a654404d73c2a2faccdb4adc327175e4c}
+
+
+Function for updating the index,function deletes and recrates index values again if different number of params is detected. 
+
+\begin{DoxyAuthor}{Author}
+Lovro Predovan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table\+Name} & name of table \\
+\hline
+{\em attribute\+Name} & name of attribute \\
+\hline
+{\em new\+Attribute\+Value} & new value of updated attribute \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!Ak\+\_\+bitmap\+\_\+test@{Ak\+\_\+bitmap\+\_\+test}}
+\index{Ak\+\_\+bitmap\+\_\+test@{Ak\+\_\+bitmap\+\_\+test}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+bitmap\+\_\+test()}{Ak_bitmap_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+bitmap\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a2cc7238af6f24be2aa3d9be4a67bec8d}{}\label{bitmap_8h_a2cc7238af6f24be2aa3d9be4a67bec8d}
+
+
+Function that creates test table and makes index on test table, also prints original tables indexes tables and indexes,tests updating into tables. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić updated by Lovro Predovan 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!Ak\+\_\+create\+\_\+\+Index@{Ak\+\_\+create\+\_\+\+Index}}
+\index{Ak\+\_\+create\+\_\+\+Index@{Ak\+\_\+create\+\_\+\+Index}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+create\+\_\+\+Index(char $\ast$tbl\+Name, char $\ast$tbl\+Name\+Index, char $\ast$attribute\+Name, int position\+Tbl, int num\+Atributes, A\+K\+\_\+header $\ast$header\+Index)}{Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+create\+\_\+\+Index (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{tbl\+Name, }
+\item[{char $\ast$}]{tbl\+Name\+Index, }
+\item[{char $\ast$}]{attribute\+Name, }
+\item[{int}]{position\+Tbl, }
+\item[{int}]{num\+Atributes, }
+\item[{{\bf A\+K\+\_\+header} $\ast$}]{header\+Index}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_ae957cfc7887fd0562b3866b6a96e8e3a}{}\label{bitmap_8h_ae957cfc7887fd0562b3866b6a96e8e3a}
+
+
+Function that loads index table with value of particulary atribute. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, Lovro Predovan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em tbl\+Name} & source table \\
+\hline
+{\em tbl\+Name\+Index} & new name of index table \\
+\hline
+{\em attribute\+Name} & attribute on which we make index \\
+\hline
+{\em position\+Tbl} & position of attribute in header of table \\
+\hline
+{\em num\+Atributes} & number of attributes in table \\
+\hline
+{\em header\+Index} & header of index table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!A\+K\+\_\+create\+\_\+\+Index\+\_\+\+Table@{A\+K\+\_\+create\+\_\+\+Index\+\_\+\+Table}}
+\index{A\+K\+\_\+create\+\_\+\+Index\+\_\+\+Table@{A\+K\+\_\+create\+\_\+\+Index\+\_\+\+Table}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+create\+\_\+\+Index\+\_\+\+Table(char $\ast$tbl\+Name, struct list\+\_\+node $\ast$attributes)}{AK_create_Index_Table(char *tblName, struct list_node *attributes)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+create\+\_\+\+Index\+\_\+\+Table (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{tbl\+Name, }
+\item[{struct list\+\_\+node $\ast$}]{attributes}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_ab9c0de3173de19c0b8949ea72ea88e20}{}\label{bitmap_8h_ab9c0de3173de19c0b8949ea72ea88e20}
+
+
+Function reads table on which we create index and call functions for creating index Elements that will be in index are put in list index\+Lista and header\+Attributes. According to those elements new indexes are created. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, Lovro Predovan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em tbl\+Name} & name of table \\
+\hline
+{\em attributes} & list of attributes on which we will create indexes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!A\+K\+\_\+delete\+\_\+bitmap\+\_\+index@{A\+K\+\_\+delete\+\_\+bitmap\+\_\+index}}
+\index{A\+K\+\_\+delete\+\_\+bitmap\+\_\+index@{A\+K\+\_\+delete\+\_\+bitmap\+\_\+index}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+delete\+\_\+bitmap\+\_\+index(char $\ast$index\+Name)}{AK_delete_bitmap_index(char *indexName)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+delete\+\_\+bitmap\+\_\+index (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{index\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_ac79d9920e87b1081f19a0ce454d21fc9}{}\label{bitmap_8h_ac79d9920e87b1081f19a0ce454d21fc9}
+
+
+Function that deletes bitmap index based on name of index. 
+
+\begin{DoxyAuthor}{Author}
+Lovro Predovan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em Bitmap} & index table name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!Ak\+\_\+get\+\_\+\+Attribute@{Ak\+\_\+get\+\_\+\+Attribute}}
+\index{Ak\+\_\+get\+\_\+\+Attribute@{Ak\+\_\+get\+\_\+\+Attribute}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+get\+\_\+\+Attribute(char $\ast$index\+Name, char $\ast$attribute)}{Ak_get_Attribute(char *indexName, char *attribute)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+ad}$\ast$ Ak\+\_\+get\+\_\+\+Attribute (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{index\+Name, }
+\item[{char $\ast$}]{attribute}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a8f519f8428de887aa5d026019d7fe12d}{}\label{bitmap_8h_a8f519f8428de887aa5d026019d7fe12d}
+
+
+Function gets adresses of the particuliary attribute from bitmap index. It fetches addresses of indexes and header of index table. Using while loop it goes through index and gets necessary data. Those data are put in list called add\+\_\+root. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, Lovro Predovan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em index\+Name} & name of index \\
+\hline
+{\em attribute} & name of attribute \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+list of adresses 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!A\+K\+\_\+get\+\_\+\+Attribute@{A\+K\+\_\+get\+\_\+\+Attribute}}
+\index{A\+K\+\_\+get\+\_\+\+Attribute@{A\+K\+\_\+get\+\_\+\+Attribute}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+get\+\_\+\+Attribute(char $\ast$table\+Name, char $\ast$attribute\+Name, char $\ast$attribute\+Value)}{AK_get_Attribute(char *tableName, char *attributeName, char *attributeValue)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf list\+\_\+ad}$\ast$ A\+K\+\_\+get\+\_\+\+Attribute (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table\+Name, }
+\item[{char $\ast$}]{attribute\+Name, }
+\item[{char $\ast$}]{attribute\+Value}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a05c6fda2d2bb6a3dbb7a2cc29d9bc81b}{}\label{bitmap_8h_a05c6fda2d2bb6a3dbb7a2cc29d9bc81b}
+
+
+Function for getting values from the bitmap index if there is one for given table. It should be started when we are making selection on the table with bitmap index. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table\+Name} & name of table \\
+\hline
+{\em attribute\+Value} & value of attribute \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+list of adresses 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!Ak\+\_\+\+If\+\_\+\+Exist\+Op@{Ak\+\_\+\+If\+\_\+\+Exist\+Op}}
+\index{Ak\+\_\+\+If\+\_\+\+Exist\+Op@{Ak\+\_\+\+If\+\_\+\+Exist\+Op}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+\+If\+\_\+\+Exist\+Op(struct list\+\_\+node $\ast$\+L, char $\ast$ele)}{Ak_If_ExistOp(struct list_node *L, char *ele)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+\+If\+\_\+\+Exist\+Op (
+\begin{DoxyParamCaption}
+\item[{struct list\+\_\+node $\ast$}]{L, }
+\item[{char $\ast$}]{ele}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a152b4fa63dee635ede9ad24e505ef067}{}\label{bitmap_8h_a152b4fa63dee635ede9ad24e505ef067}
+
+
+Function examines whether list L contains operator ele. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em L} & list of elements \\
+\hline
+{\em ele} & operator to be found in list \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if operator ele is found in list, otherwise 0 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!Ak\+\_\+print\+\_\+\+Att\+\_\+\+Test@{Ak\+\_\+print\+\_\+\+Att\+\_\+\+Test}}
+\index{Ak\+\_\+print\+\_\+\+Att\+\_\+\+Test@{Ak\+\_\+print\+\_\+\+Att\+\_\+\+Test}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+print\+\_\+\+Att\+\_\+\+Test(list\+\_\+ad $\ast$list)}{Ak_print_Att_Test(list_ad *list)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+print\+\_\+\+Att\+\_\+\+Test (
+\begin{DoxyParamCaption}
+\item[{{\bf list\+\_\+ad} $\ast$}]{list}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a57df7327afc0491c8974aa1733d5c72a}{}\label{bitmap_8h_a57df7327afc0491c8974aa1733d5c72a}
+
+
+Function for printing list of adresses. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, Lovro Predovan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em list} & list of adresses \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!Ak\+\_\+print\+\_\+\+Header\+\_\+\+Test@{Ak\+\_\+print\+\_\+\+Header\+\_\+\+Test}}
+\index{Ak\+\_\+print\+\_\+\+Header\+\_\+\+Test@{Ak\+\_\+print\+\_\+\+Header\+\_\+\+Test}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+print\+\_\+\+Header\+\_\+\+Test(char $\ast$tbl\+Name)}{Ak_print_Header_Test(char *tblName)}}]{\setlength{\rightskip}{0pt plus 5cm}void Ak\+\_\+print\+\_\+\+Header\+\_\+\+Test (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{tbl\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a7b8e08c0450f4a097adacb0b256da357}{}\label{bitmap_8h_a7b8e08c0450f4a097adacb0b256da357}
+
+
+Function that tests printing header of table. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em tbl\+Name} & name of table who\textquotesingle{}s header we are printing \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!A\+K\+\_\+update@{A\+K\+\_\+update}}
+\index{A\+K\+\_\+update@{A\+K\+\_\+update}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+update(int add\+Block, int add\+Td, char $\ast$table\+Name, char $\ast$attribute\+Name, char $\ast$attribute\+Value, char $\ast$new\+Attribute\+Value)}{AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+update (
+\begin{DoxyParamCaption}
+\item[{int}]{add\+Block, }
+\item[{int}]{add\+Td, }
+\item[{char $\ast$}]{table\+Name, }
+\item[{char $\ast$}]{attribute\+Name, }
+\item[{char $\ast$}]{attribute\+Value, }
+\item[{char $\ast$}]{new\+Attribute\+Value}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a979b8b062fac097577c93f66ed2de339}{}\label{bitmap_8h_a979b8b062fac097577c93f66ed2de339}
+
+
+Function for updating the index, only on values that alredy exist. If there is no value in bitmap index or bitmap index on this value, warning is showed to the user. Otherwise, bitmap index is updated with new attribute value. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em add\+Block} & adress of block \\
+\hline
+{\em add\+TD} & adress of tuple dict \\
+\hline
+{\em table\+Name} & name of table \\
+\hline
+{\em attribute\+Name} & name of attribute \\
+\hline
+{\em attribute\+Value} & value of atribute \\
+\hline
+{\em new\+Attribute\+Value} & new value of updated attribute \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{bitmap.\+h@{bitmap.\+h}!Ak\+\_\+write\+\_\+block@{Ak\+\_\+write\+\_\+block}}
+\index{Ak\+\_\+write\+\_\+block@{Ak\+\_\+write\+\_\+block}!bitmap.\+h@{bitmap.\+h}}
+\subsubsection[{\texorpdfstring{Ak\+\_\+write\+\_\+block(\+A\+K\+\_\+block $\ast$block)}{Ak_write_block(AK_block *block)}}]{\setlength{\rightskip}{0pt plus 5cm}int Ak\+\_\+write\+\_\+block (
+\begin{DoxyParamCaption}
+\item[{{\bf A\+K\+\_\+block} $\ast$}]{block}
+\end{DoxyParamCaption}
+)}\hypertarget{bitmap_8h_a4dcaf1c0e2c11f4323e489f9444da8c9}{}\label{bitmap_8h_a4dcaf1c0e2c11f4323e489f9444da8c9}
+
+
+Function for writing new value in block when index is updated. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em block} & block to write on \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+E\+SS when write operation is successful, otherwise E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello friend</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+	<div id="container">
+		<div id="header">
+			<h3 style="display: inline;"> <span class="green">&raquo; Search Google</span></h3>
+			<form method="get" action="https://www.google.com/search">
+				<input autofocus type="text" name="q" \> 
+			</form>
+		</div>
+			
+		<div id="links">
+
+			<div class="box">
+				<h3><span class="green">&raquo; Fun fun</span></h3>
+				<a href="http://www.tumblr.com">Tumblr</a>
+				<a href="http://www.coolinarika.com">Coolinarika</a>
+				<a href="http://www.youtube.com">Youtube</a>
+				<a href="https://web.whatsapp.com/">Whatsapp Web</a>
+				<a href="http://www.reddit.com">Reddit</a>
+			</div>
+
+			<div class="box">
+				<h3><span class="green">&raquo; College</span></span></h3>
+				<a href="http://www.foi.unizg.hr/">Foi index</a>	
+				<a href="http://elf.foi.hr/">Moodle</a>
+				<a href="https://webmail.foi.hr/webmail/src/login.php">FOI Mail</a>	
+			</div>
+
+			<div class="box">
+				<h3><span class="green">&raquo; Geek</span></span></h3>
+				<a href="http://hackr.io/">Hackr.io</a>	
+				<a href="https://github.com/">Github</a>
+			</div>
+
+			<div class="box">
+				<h3> <span class="green">&raquo; Stuff</span></h3>
+				<a href="http://prognoza.hr/">DHMZ</a>
+				<a href="http://thepiratebay.se">TPB</a>	
+				<a href="http://www.ebay.com/">ebay</a>
+				<a href="http://www.dropbox.com">Dropbox</a>
+				<a href="https://translate.google.hr/">Google Translate</a>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			function clock(){
+				d = new Date();
+				nhour  = d.getHours();
+				nmin   = d.getMinutes();
+				nsec   = d.getSeconds();
+
+				if(nmin <= 9) {nmin = "0" +nmin;}
+				if(nsec <= 9) {nsec = "0" +nsec;}
+
+
+			document.getElementById('clock').innerHTML=""+nhour+":"+nmin+":"+nsec+"";
+				setTimeout("clock()", 1000);
+			}
+			window.onload=clock;
+		</script>
+
+	<div id="clock" style="font:80pt Helvetica Neue; font-weight: 100; color: rgba(255,255,255,0.35);text-align: center;"></div>
+
+	</div>
+</body>
+<html>

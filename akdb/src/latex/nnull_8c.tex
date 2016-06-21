@@ -1,0 +1,93 @@
+\hypertarget{nnull_8c}{}\section{sql/cs/nnull.c File Reference}
+\label{nnull_8c}\index{sql/cs/nnull.\+c@{sql/cs/nnull.\+c}}
+{\ttfamily \#include \char`\"{}nnull.\+h\char`\"{}}\\*
+Include dependency graph for nnull.\+c\+:
+% FIG 0
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{nnull_8c_adc8fb9cdf9fe46eb5c053ebe09a6a24c}{A\+K\+\_\+set\+\_\+constraint\+\_\+not\+\_\+null} (char $\ast$table\+Name, char $\ast$att\+Name, char $\ast$constraint\+Name)
+\begin{DoxyCompactList}\small\item\em Function that sets N\+OT N\+U\+LL constraint on attribute. \end{DoxyCompactList}\item 
+int \hyperlink{nnull_8c_a14a376f6ee27e3eaa085d86b4a60bf7f}{A\+K\+\_\+read\+\_\+constraint\+\_\+not\+\_\+null} (char $\ast$table\+Name, char $\ast$att\+Name, char $\ast$new\+Value)
+\begin{DoxyCompactList}\small\item\em Function checks if there\textquotesingle{}s violation of N\+OT N\+U\+LL constraint. \end{DoxyCompactList}\item 
+void \hyperlink{nnull_8c_a7d2e332327557f74516d1b55f9549e60}{A\+K\+\_\+null\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for testing testing N\+OT N\+U\+LL constraint. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides functions for not null constraint 
+
+\subsection{Function Documentation}
+\index{nnull.\+c@{nnull.\+c}!A\+K\+\_\+null\+\_\+test@{A\+K\+\_\+null\+\_\+test}}
+\index{A\+K\+\_\+null\+\_\+test@{A\+K\+\_\+null\+\_\+test}!nnull.\+c@{nnull.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+null\+\_\+test()}{AK_null_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+null\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{nnull_8c_a7d2e332327557f74516d1b55f9549e60}{}\label{nnull_8c_a7d2e332327557f74516d1b55f9549e60}
+
+
+Function for testing testing N\+OT N\+U\+LL constraint. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, updated by Nenad Makar 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{nnull.\+c@{nnull.\+c}!A\+K\+\_\+read\+\_\+constraint\+\_\+not\+\_\+null@{A\+K\+\_\+read\+\_\+constraint\+\_\+not\+\_\+null}}
+\index{A\+K\+\_\+read\+\_\+constraint\+\_\+not\+\_\+null@{A\+K\+\_\+read\+\_\+constraint\+\_\+not\+\_\+null}!nnull.\+c@{nnull.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+read\+\_\+constraint\+\_\+not\+\_\+null(char $\ast$table\+Name, char $\ast$att\+Name, char $\ast$new\+Value)}{AK_read_constraint_not_null(char *tableName, char *attName, char *newValue)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+read\+\_\+constraint\+\_\+not\+\_\+null (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table\+Name, }
+\item[{char $\ast$}]{att\+Name, }
+\item[{char $\ast$}]{new\+Value}
+\end{DoxyParamCaption}
+)}\hypertarget{nnull_8c_a14a376f6ee27e3eaa085d86b4a60bf7f}{}\label{nnull_8c_a14a376f6ee27e3eaa085d86b4a60bf7f}
+
+
+Function checks if there\textquotesingle{}s violation of N\+OT N\+U\+LL constraint. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, updated by Nenad Makar 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em char$\ast$} & table\+Name name of table \\
+\hline
+{\em char$\ast$} & att\+Name name of attribute \\
+\hline
+{\em char$\ast$} & new\+Value new value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+E\+R\+R\+OR or E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+\index{nnull.\+c@{nnull.\+c}!A\+K\+\_\+set\+\_\+constraint\+\_\+not\+\_\+null@{A\+K\+\_\+set\+\_\+constraint\+\_\+not\+\_\+null}}
+\index{A\+K\+\_\+set\+\_\+constraint\+\_\+not\+\_\+null@{A\+K\+\_\+set\+\_\+constraint\+\_\+not\+\_\+null}!nnull.\+c@{nnull.\+c}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+set\+\_\+constraint\+\_\+not\+\_\+null(char $\ast$table\+Name, char $\ast$att\+Name, char $\ast$constraint\+Name)}{AK_set_constraint_not_null(char *tableName, char *attName, char *constraintName)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+set\+\_\+constraint\+\_\+not\+\_\+null (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{table\+Name, }
+\item[{char $\ast$}]{att\+Name, }
+\item[{char $\ast$}]{constraint\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{nnull_8c_adc8fb9cdf9fe46eb5c053ebe09a6a24c}{}\label{nnull_8c_adc8fb9cdf9fe46eb5c053ebe09a6a24c}
+
+
+Function that sets N\+OT N\+U\+LL constraint on attribute. 
+
+\begin{DoxyAuthor}{Author}
+Saša Vukšić, updated by Nenad Makar 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em char$\ast$} & table\+Name name of table \\
+\hline
+{\em char$\ast$} & att\+Name name of attribute \\
+\hline
+{\em char$\ast$} & constraint\+Name name of constraint \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+E\+R\+R\+OR or E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
