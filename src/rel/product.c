@@ -209,10 +209,24 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
  */
 void AK_op_product_test() {
 	AK_PRO;
-	printf("\n********** PRODUCT TEST **********\n\n");
+	char *sys_table = "AK_relation";
+    	char *destTable = "product_test";
+    	char *tblName1 = "employee";
+    	char *tblName2 = "department";
 
-	AK_product("employee", "department", "product_test");
-	AK_print_table("product_test");
+	printf("\n********** PRODUCT TEST **********\n\n");
+	
+	
+    	if (AK_if_exist(destTable, sys_table) == 0) {
+    		printf("Table %s does not exist!\n", destTable);
+		AK_product(tblName1, tblName2, destTable);
+    	}
+    	else {
+		printf("Table %s already exists!\n", destTable);
+   	}
+
+   	AK_print_table(destTable);
+
 	/**
 	 * How does this test work?
 	 * First, it reads all cells from both of the tables, employee and department.

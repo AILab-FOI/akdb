@@ -200,10 +200,21 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
  */
 void Ak_op_difference_test() {
     AK_PRO;
-    printf("\n********** DIFFERENCE TEST **********\n\n");
+    char *sys_table = "AK_relation";
+    char *destTable = "difference_test";
+    char *tblName1 = "professor";
+    char *tblName2 = "assistant";
 
-    AK_difference("professor", "assistant", "difference_test");
-    AK_print_table("difference_test");
+    printf("\n********** DIFFERENCE TEST **********\n\n");
+    if (AK_if_exist(destTable, sys_table) == 0) {
+    	printf("Table %s does not exist!\n", destTable);
+	AK_difference(tblName1, tblName2, destTable);
+    }
+    else {
+	printf("Table %s already exists!\n", destTable);
+    }
+
+    AK_print_table(destTable);
     AK_EPI;
 }
 

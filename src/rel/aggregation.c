@@ -661,21 +661,31 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 void Ak_aggregation_test() {
     AK_PRO;
     printf("aggregation.c: Present!\n");
-
+ 
+    char *sys_table = "AK_relation";
+    char *destTable = "agg";
     char *tblName = "student";
-    AK_header *t_header = (AK_header *) AK_get_header(tblName);  // header is array of attributes
+    
+    if (AK_if_exist(destTable, sys_table) == 0) {
+	    printf("Table %s does not exist!\n", destTable);
+	    AK_header *t_header = (AK_header *) AK_get_header(tblName);  // header is array of attributes
 
-    AK_agg_input aggregation;
-    AK_agg_input_init(&aggregation);
-    AK_agg_input_add(t_header[1], AGG_TASK_GROUP, &aggregation);  // group by second column (first name)
-    AK_agg_input_add(t_header[4], AGG_TASK_AVG, &aggregation);  // average by last (5th) column (weight)
-    AK_agg_input_add(t_header[2], AGG_TASK_COUNT, &aggregation);  // count of last names (for the same first name)
-    AK_agg_input_add(t_header[4], AGG_TASK_SUM, &aggregation);  // sum of weights by student's first name
-    AK_agg_input_add(t_header[4], AGG_TASK_MAX, &aggregation);  // max weight grouped by student's first name
-    AK_agg_input_add(t_header[4], AGG_TASK_MIN, &aggregation);  // min weight grouped by student's first name
-    AK_free(t_header);
+	    AK_agg_input aggregation;
+	    AK_agg_input_init(&aggregation);
+	    AK_agg_input_add(t_header[1], AGG_TASK_GROUP, &aggregation);  // group by second column (first name)
+	    AK_agg_input_add(t_header[4], AGG_TASK_AVG, &aggregation);  // average by last (5th) column (weight)
+	    AK_agg_input_add(t_header[2], AGG_TASK_COUNT, &aggregation);  // count of last names (for the same first name)
+	    AK_agg_input_add(t_header[4], AGG_TASK_SUM, &aggregation);  // sum of weights by student's first name
+	    AK_agg_input_add(t_header[4], AGG_TASK_MAX, &aggregation);  // max weight grouped by student's first name
+	    AK_agg_input_add(t_header[4], AGG_TASK_MIN, &aggregation);  // min weight grouped by student's first name
+	    AK_free(t_header);
 
-    AK_aggregation(&aggregation, tblName, "agg");
+	    AK_aggregation(&aggregation, tblName, "agg");
+    }
+    else {
+    	printf("Table %s already exists!\n", destTable);
+    }
+
     AK_print_table("agg");
 
     printf("\n\n\n");

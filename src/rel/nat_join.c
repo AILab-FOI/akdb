@@ -349,17 +349,29 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
  */
 void AK_op_join_test() {
     AK_PRO;
+    char *sys_table = "AK_relation";
+    char *destTable = "nat_join_test";
+    char *tblName1 = "employee";
+    char *tblName2 = "department";
+
     printf("\n********** NAT JOIN TEST **********\n\n");
 
-    struct list_node *att = (struct list_node *) AK_malloc(sizeof(struct list_node));
-    Ak_Init_L3(&att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);
+    if (AK_if_exist(destTable, sys_table) == 0) {
+    	printf("Table %s does not exist!\n", destTable);
+	struct list_node *att = (struct list_node *) AK_malloc(sizeof(struct list_node));
+    	Ak_Init_L3(&att);
+    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);
 
-    AK_join("employee", "department", "nat_join_test", att);
-    AK_print_table("nat_join_test");
+    	AK_join(tblName1, tblName2, destTable, att);
+	Ak_DeleteAll_L3(&att);
+    }
 
-    
-    Ak_DeleteAll_L3(&att);
+    else {
+	printf("Table %s already exists!\n", destTable);
+    }
+
+    AK_print_table(destTable);
+
     AK_EPI;
 }
 
