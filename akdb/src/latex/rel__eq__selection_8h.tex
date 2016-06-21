@@ -1,0 +1,262 @@
+\hypertarget{rel__eq__selection_8h}{}\section{opti/rel\+\_\+eq\+\_\+selection.h File Reference}
+\label{rel__eq__selection_8h}\index{opti/rel\+\_\+eq\+\_\+selection.\+h@{opti/rel\+\_\+eq\+\_\+selection.\+h}}
+{\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\\*
+Include dependency graph for rel\+\_\+eq\+\_\+selection.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{rel__eq__selection_8h_a4747dc2d66113460490e471a6190ec87}{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+attr\+\_\+subset} (char $\ast$set, char $\ast$subset)
+\begin{DoxyCompactList}\small\item\em Check if some set of attributes is subset of larger set. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{rel__eq__selection_8h_a383584db2cbfbfe0d00e43164c877cbe}{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+atrributes\+\_\+char} (char $\ast$tbl\+Name)
+\begin{DoxyCompactList}\small\item\em Get attributes for a given table and store them to the char array. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{rel__eq__selection_8h_a3c67f9ac79d5efab095fcbb91fa5d360}{A\+K\+\_\+rel\+\_\+eq\+\_\+cond\+\_\+attributes} (char $\ast$cond)
+\begin{DoxyCompactList}\small\item\em Function for filtering and returning attributes from condition. \end{DoxyCompactList}\item 
+int \hyperlink{rel__eq__selection_8h_abced4885bd3d7c33866401590cc6f3e5}{A\+K\+\_\+rel\+\_\+eq\+\_\+share\+\_\+attributes} (char $\ast$set, char $\ast$subset)
+\begin{DoxyCompactList}\small\item\em Check if two sets share one or more of it\textquotesingle{}s attributes. \end{DoxyCompactList}\item 
+struct list\+\_\+node $\ast$ \hyperlink{rel__eq__selection_8h_a73a9e2788dc91b5b2f44edb58a2b5860}{A\+K\+\_\+rel\+\_\+eq\+\_\+split\+\_\+condition} (char $\ast$cond)
+\begin{DoxyCompactList}\small\item\em Check if selection can commute with theta-\/join or product (if working with conditions in infix format use this function insteed -\/ also remember to change code at the other places) \end{DoxyCompactList}\item 
+struct list\+\_\+node $\ast$ \hyperlink{rel__eq__selection_8h_ab46b9b5ecd4988897d7dad2f830f3210}{A\+K\+\_\+rel\+\_\+eq\+\_\+selection} (struct list\+\_\+node $\ast$list\+\_\+rel\+\_\+eq)
+\begin{DoxyCompactList}\small\item\em Main function for generating RA expresion according to selection equivalence rules. \end{DoxyCompactList}\item 
+void \hyperlink{rel__eq__selection_8h_a8eb187cee8249659690dd0d9d128c7f6}{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+selection} (struct list\+\_\+node $\ast$list\+\_\+rel\+\_\+eq)
+\begin{DoxyCompactList}\small\item\em Function for printing struct list\+\_\+node to the screen. \end{DoxyCompactList}\item 
+void \hyperlink{rel__eq__selection_8h_ad0bdf05d491ea54acc271e855f349170}{A\+K\+\_\+rel\+\_\+eq\+\_\+selection\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for testing rel\+\_\+eq\+\_\+selection. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data structures for relational equivalences in selection 
+
+\subsection{Function Documentation}
+\index{rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}!A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+selection@{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+selection}}
+\index{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+selection@{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+selection}!rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+selection(struct list\+\_\+node $\ast$list\+\_\+rel\+\_\+eq)}{AK_print_rel_eq_selection(struct list_node *list_rel_eq)}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+selection (
+\begin{DoxyParamCaption}
+\item[{struct list\+\_\+node $\ast$}]{list\+\_\+rel\+\_\+eq}
+\end{DoxyParamCaption}
+)}\hypertarget{rel__eq__selection_8h_a8eb187cee8249659690dd0d9d128c7f6}{}\label{rel__eq__selection_8h_a8eb187cee8249659690dd0d9d128c7f6}
+
+
+Function for printing struct list\+\_\+node to the screen. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$list\+\_\+rel\+\_\+eq} & RA expresion as the struct list\+\_\+node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\index{rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+cond\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+cond\+\_\+attributes}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+cond\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+cond\+\_\+attributes}!rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+cond\+\_\+attributes(char $\ast$cond)}{AK_rel_eq_cond_attributes(char *cond)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+cond\+\_\+attributes (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{cond}
+\end{DoxyParamCaption}
+)}\hypertarget{rel__eq__selection_8h_a3c67f9ac79d5efab095fcbb91fa5d360}{}\label{rel__eq__selection_8h_a3c67f9ac79d5efab095fcbb91fa5d360}
+
+
+Function for filtering and returning attributes from condition. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$cond} & condition array that contains condition data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to array that contains attributes for a given condition 
+\end{DoxyReturn}
+\index{rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+atrributes\+\_\+char@{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+atrributes\+\_\+char}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+atrributes\+\_\+char@{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+atrributes\+\_\+char}!rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+atrributes\+\_\+char(char $\ast$tbl\+Name)}{AK_rel_eq_get_atrributes_char(char *tblName)}}]{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+atrributes\+\_\+char (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{tbl\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{rel__eq__selection_8h_a383584db2cbfbfe0d00e43164c877cbe}{}\label{rel__eq__selection_8h_a383584db2cbfbfe0d00e43164c877cbe}
+
+
+Get attributes for a given table and store them to the char array. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\begin{DoxyEnumerate}
+\item Get the number of attributes in a given table 
+\item If there is no attributes return N\+U\+LL 
+\item Get the table header for a given table 
+\item Initialize struct list\+\_\+node 
+\item For each attribute in table header, insert attribute in the array 
+\item Delimit each new attribute with \char`\"{};\char`\"{} (A\+T\+T\+R\+\_\+\+D\+E\+L\+I\+M\+I\+T\+ER) 
+\item return pointer to char array 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$tbl\+Name} & name of the table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to char array 
+\end{DoxyReturn}
+\index{rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+attr\+\_\+subset@{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+attr\+\_\+subset}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+attr\+\_\+subset@{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+attr\+\_\+subset}!rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+attr\+\_\+subset(char $\ast$set, char $\ast$subset)}{AK_rel_eq_is_attr_subset(char *set, char *subset)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+attr\+\_\+subset (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{set, }
+\item[{char $\ast$}]{subset}
+\end{DoxyParamCaption}
+)}\hypertarget{rel__eq__selection_8h_a4747dc2d66113460490e471a6190ec87}{}\label{rel__eq__selection_8h_a4747dc2d66113460490e471a6190ec87}
+
+
+Check if some set of attributes is subset of larger set. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\begin{DoxyEnumerate}
+\item Tokenize set and subset of projection attributes and store each of them to it\textquotesingle{}s own array 
+\item Check if the size of subset array is larger than the size of set array 
+\item if the subset array is larger return 0 
+\item else sort both arrays ascending 
+\item Compare the subset and set items at the same positions, starting from 0 
+\item if there is an item in the subset array that doesn\textquotesingle{}t match attribute at the same position in the set array return 0 
+\item else continue comparing until final item in the subset array is ritched 
+\item on loop exit return E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$set} & set array \\
+\hline
+{\em $\ast$subset} & subset array \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if some set of attributes is subset of larger set, else returns E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
+\end{DoxyReturn}
+\index{rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+selection@{A\+K\+\_\+rel\+\_\+eq\+\_\+selection}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+selection@{A\+K\+\_\+rel\+\_\+eq\+\_\+selection}!rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+selection(struct list\+\_\+node $\ast$list\+\_\+rel\+\_\+eq)}{AK_rel_eq_selection(struct list_node *list_rel_eq)}}]{\setlength{\rightskip}{0pt plus 5cm}struct list\+\_\+node$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+selection (
+\begin{DoxyParamCaption}
+\item[{struct list\+\_\+node $\ast$}]{list\+\_\+rel\+\_\+eq}
+\end{DoxyParamCaption}
+)}\hypertarget{rel__eq__selection_8h_ab46b9b5ecd4988897d7dad2f830f3210}{}\label{rel__eq__selection_8h_ab46b9b5ecd4988897d7dad2f830f3210}
+
+
+Main function for generating RA expresion according to selection equivalence rules. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$list\+\_\+rel\+\_\+eq} & RA expresion as the struct list\+\_\+node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+optimised RA expresion as the struct list\+\_\+node 
+\end{DoxyReturn}
+\index{rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+selection\+\_\+test@{A\+K\+\_\+rel\+\_\+eq\+\_\+selection\+\_\+test}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+selection\+\_\+test@{A\+K\+\_\+rel\+\_\+eq\+\_\+selection\+\_\+test}!rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+selection\+\_\+test()}{AK_rel_eq_selection_test()}}]{\setlength{\rightskip}{0pt plus 5cm}void A\+K\+\_\+rel\+\_\+eq\+\_\+selection\+\_\+test (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{rel__eq__selection_8h_ad0bdf05d491ea54acc271e855f349170}{}\label{rel__eq__selection_8h_ad0bdf05d491ea54acc271e855f349170}
+
+
+Function for testing rel\+\_\+eq\+\_\+selection. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\index{rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+share\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+share\+\_\+attributes}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+share\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+share\+\_\+attributes}!rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+share\+\_\+attributes(char $\ast$set, char $\ast$subset)}{AK_rel_eq_share_attributes(char *set, char *subset)}}]{\setlength{\rightskip}{0pt plus 5cm}int A\+K\+\_\+rel\+\_\+eq\+\_\+share\+\_\+attributes (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{set, }
+\item[{char $\ast$}]{subset}
+\end{DoxyParamCaption}
+)}\hypertarget{rel__eq__selection_8h_abced4885bd3d7c33866401590cc6f3e5}{}\label{rel__eq__selection_8h_abced4885bd3d7c33866401590cc6f3e5}
+
+
+Check if two sets share one or more of it\textquotesingle{}s attributes. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\begin{DoxyEnumerate}
+\item If is empty set or subset returns E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
+\item For each attribute in one set check if there is same attribute in the second set 
+\item If there is the same attribute return E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\item else remove unused pointers and return E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$set} & first set of attributes delimited by \char`\"{};\char`\"{} (A\+T\+T\+R\+\_\+\+D\+E\+L\+I\+M\+I\+T\+ER) \\
+\hline
+{\em $\ast$subset} & second set of attributes delimited by \char`\"{};\char`\"{} (A\+T\+T\+R\+\_\+\+D\+E\+L\+I\+M\+I\+T\+ER) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if set and subset share at least one attribute, else returns E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
+\end{DoxyReturn}
+\index{rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+split\+\_\+condition@{A\+K\+\_\+rel\+\_\+eq\+\_\+split\+\_\+condition}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+split\+\_\+condition@{A\+K\+\_\+rel\+\_\+eq\+\_\+split\+\_\+condition}!rel\+\_\+eq\+\_\+selection.\+h@{rel\+\_\+eq\+\_\+selection.\+h}}
+\subsubsection[{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+split\+\_\+condition(char $\ast$cond)}{AK_rel_eq_split_condition(char *cond)}}]{\setlength{\rightskip}{0pt plus 5cm}struct list\+\_\+node$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+split\+\_\+condition (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{cond}
+\end{DoxyParamCaption}
+)}\hypertarget{rel__eq__selection_8h_a73a9e2788dc91b5b2f44edb58a2b5860}{}\label{rel__eq__selection_8h_a73a9e2788dc91b5b2f44edb58a2b5860}
+
+
+Check if selection can commute with theta-\/join or product (if working with conditions in infix format use this function insteed -\/ also remember to change code at the other places) 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\begin{DoxyEnumerate}
+\item For each token (delimited by \char`\"{} \char`\"{}) in selection condition first check if token represents attribute/s and is subset in the given table 
+\item If token is a subset set variable id to 1 
+\item else check if token differs from \char`\"{}\+O\+R\char`\"{}, and if so, set id to 0, else make no changes to variable id 
+\item if token equals to \char`\"{}\+A\+N\+D\char`\"{} and id equals to 1 append collected conds to result condition 
+\item else if token equals to \char`\"{}\+A\+N\+D\char`\"{} and id equals to 0 discarge collected conds 
+\item else append token to collected data 
+\item When exits from loop if id greater then 0, append the last collected data to result 
+\item return pointer to char array that contains new condition for a given table 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$cond} & condition array that contains condition data \\
+\hline
+{\em $\ast$tbl\+Name} & name of the table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to char array that contains new condition for a given table 
+\end{DoxyReturn}
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. Break conjunctive conditions to individual conditions (currently not used -\/ commented in main A\+K\+\_\+rel\+\_\+eq\+\_\+selection function), it can be usefull in some optimization cases 
+\begin{DoxyEnumerate}
+\item For each delimited item (\textquotesingle{} A\+ND \textquotesingle{}) insert item to the struct list\+\_\+node 
+\item Remove unused pointers and return the conditions list 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$cond} & condition expression \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+conditions list 
+\end{DoxyReturn}
