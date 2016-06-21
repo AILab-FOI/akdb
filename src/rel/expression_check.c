@@ -69,23 +69,6 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 
 		}
 
-		/*switch (el->type) {
-
-			case TYPE_INT:
-				AK_EPI;
-				return strtol(a, numericStringEnd, 10)  > strtol(b, numericStringEnd, 10);
-			case TYPE_FLOAT:
-				AK_EPI;
-				return strtod(a, numericStringEnd) > strtod(b, numericStringEnd);
-			case TYPE_NUMBER:
-				AK_EPI;
-				return strtod(a, numericStringEnd) > strtod(b, numericStringEnd);
-			case TYPE_VARCHAR:
-				AK_EPI;
-				return strcmp((const char *) a, (const char *) b) > 0;
-
-		}*/
-
 
 	}else if(strcmp(op, "<=") == 0){		
 		switch (el->type) {
@@ -100,22 +83,7 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 				return strcmp((const char *) a, (const char *) b) <= 0;
 
 		}
-		/*
-		switch (el->type) {
-
-			case TYPE_INT:
-				AK_EPI;
-				return strtol(a, numericStringEnd, 10)  <= strtol(b, numericStringEnd, 10);
-			case TYPE_FLOAT:
-				AK_EPI;
-				return strtod(a, numericStringEnd) <= strtod(b, numericStringEnd);
-			case TYPE_NUMBER:
-				AK_EPI;
-				return strtod(a, numericStringEnd) <= strtod(b, numericStringEnd);
-			case TYPE_VARCHAR:
-				AK_EPI;
-				return strcmp((const char *) a, (const char *) b) <= 0;
-		}*/
+		
 	}else if(strcmp(op, ">=") == 0){
 	
 		switch (el->type) {
@@ -130,21 +98,7 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 					return strcmp((const char *) a, (const char *) b) >= 0;
 
 			}
-		/*switch (el->type) {
 
-			case TYPE_INT:
-				AK_EPI;
-				return strtol(a, numericStringEnd, 10)  >= strtol(b, numericStringEnd, 10);
-			case TYPE_FLOAT:
-				AK_EPI;
-				return strtod(a, numericStringEnd) >= strtod(b, numericStringEnd);
-			case TYPE_NUMBER:
-				AK_EPI;
-				return strtod(a, numericStringEnd) >= strtod(b, numericStringEnd);
-			case TYPE_VARCHAR:
-				AK_EPI;
-				return strcmp((const char *) a, (const char *) b) >= 0;
-		}*/
 	}else if(strcmp(op, "+") == 0){
 
 		switch (el->type) {
@@ -161,7 +115,7 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 			case TYPE_VARCHAR:
 				AK_EPI;
 				return EXIT_ERROR;
-//				return (int)memcpy((char *)a + sizeof(a), b, sizeof(b));
+
 		}
 	}else if(strcmp(op, "-") == 0){
 
@@ -224,9 +178,8 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 
 */
 char *AK_replace_wild_card(const char *s,char ch,const char *repl){
-
 	
-	int count = 0;
+    int count = 0;
     const char *t;
     for(t=s; *t; t++)
         count += (*t == ch);
@@ -541,7 +494,6 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
         el = el->next;
     }
 
-    //memcpy(&result, ((struct list_node *) Ak_First_L2(temp))->data, sizeof (int));
     memcpy(&result, ((struct list_node *) Ak_End_L2(temp_result))->data, sizeof (char));
     Ak_DeleteAll_L3(&temp);
     AK_free(temp);
@@ -554,7 +506,7 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
 void Ak_expression_check_test()
 {
     AK_PRO;
-    //AK_list_elem elem = AK_malloc(sizeof(AK_list_elem));
+
     struct list_node *elem = (struct list_node *) AK_malloc(sizeof(struct list_node));
     elem->type = TYPE_INT;
     const char *op = "+";

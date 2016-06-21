@@ -59,7 +59,6 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
         AK_free(header);
 
-        //AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
 	struct list_node *row_root = (struct list_node * ) AK_malloc(sizeof(struct list_node));
 
         //TABLE1: for each extent in table1
@@ -163,10 +162,23 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
  */
 void Ak_op_intersect_test() {
     AK_PRO;
+    char *sys_table = "AK_relation";
+    char *destTable = "intersect_test";
+    char *tblName1 = "professor";
+    char *tblName2 = "assistant";
+    
     printf("\n********** INTERSECT TEST **********\n\n");
 
-    AK_intersect("professor", "assistant", "intersect_test");
-    AK_print_table("intersect_test");
+    if (AK_if_exist(destTable, sys_table) == 0) {
+    	printf("Table %s does not exist!\n", destTable);
+	AK_intersect(tblName1, tblName2, destTable);
+    }
+    else {
+	printf("Table %s already exists!\n", destTable);
+    }
+
+    AK_print_table(destTable);
+    
     AK_EPI;
 }
 

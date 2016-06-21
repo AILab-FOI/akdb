@@ -27,10 +27,21 @@ command_list =  {'\q': 'Disconnect from the server and quit akdb client.',
 				 '\\t <table_name>?': 'Check whether the given table exists in database or not.',
 				 'create sequence <sequence_name> <sql_expression>' : 'Creating sequence in AK_sequence table',
 				 'create table <table_name> <sql_expression>' : 'Create table',
+				 'create view <view_name> as <sql_expression' : 'Create view',
 				 'create index <index_name> <sql_expression>' : 'Create index',
 				 'create trigger <trigger_name> <sql_expression>' : 'Create trigger',
+				 'create user <username> with password <password' : 'Create user',
+				 'create function <function_name> <args> returns <sql_expression> <language>' : 'Create function',
+				 'drop <sql_expression>' : 'Drop sql object',
+				 'grant <privilege_name> <sql_expression>' : 'Grant privilege',
 				 'select <sql_expression>' : 'Select data from table',
 				 'update <sql_expression>' : 'Update table',
+				 'insert into <table_name> <sql_expression>' : 'Insert command',
+				 'alter table <table_name> <sql_expression>' : 'Alter table',
+				 'alter index <index_name> <command>' : 'Alter index',
+				 'alter sequence <sequence_name> <command>' : 'Alter sequence',
+				 'alter view <view_name> <command>' : 'Alter view',
+				 'begin <sql_expression> commit' : 'Transaction',
 				 'history': 'List all previously typed commands.'
 				}
 
@@ -129,7 +140,7 @@ class AK_client():
 
 	##Checks for a command from the server
 	def AK_check_response(self):
-		return #self.sock.recv(buffer_size)
+		return self.sock.recv(buffer_size)
 	##Setter for finished vairable
 	def set_finished(self, val):
 		self.finished = val

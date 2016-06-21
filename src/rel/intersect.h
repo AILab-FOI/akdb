@@ -23,6 +23,7 @@
 #include "../file/fileio.h"
 #include "../rec/archive_log.h"
 #include "../auxi/mempro.h"
+#include "../sql/drop.h"
 
 /**
  * @author Dino Laktašić

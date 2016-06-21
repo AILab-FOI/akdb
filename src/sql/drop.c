@@ -47,15 +47,16 @@ char *system_catalog[NUM_SYS_TABLES] = {
 };
 
 /**
- * @author Unknown, Jurica Hlevnjak, updated by Tomislav Ilisevic
+ * @author Unknown, Jurica Hlevnjak, updated by Tomislav Ilisevic, Maja Vračan
  * @brief Function for DROP table, index, view, sequence, trigger, function, user, group and constraint.
  * @param type drop type
  * @param drop_arguments arguments of DROP command
  */
-void AK_drop(int type, AK_drop_arguments *drop_arguments) {
+int AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
     char *sys_table;
     char *name;
+    int result;
     AK_PRO;
     switch (type) {
         case DROP_TABLE:
@@ -73,13 +74,17 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
                     if (strcmp(name, system_catalog[x]) == 0) {
                         status = 1;
                         printf("Table %s is a System Catalog Table and can't be DROPPED!\n", name);
+                        AK_EPI;
+                        return EXIT_ERROR;
                         break;
                     }
                 }
-			if (status != 1) {
-				AK_drop_help_function(name, sys_table);
-				printf("TABLE %s DROPPED!\n", name);
-			}
+                if (status != 1) {
+                    AK_drop_help_function(name, sys_table);
+                    printf("TABLE %s DROPPED!\n", name);
+                    AK_EPI;
+                    return EXIT_SUCCESS;
+                }
 
             }
 
@@ -93,8 +98,12 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
             if (!AK_if_exist(name, sys_table) == 0) {
                 AK_drop_help_function(name, sys_table);
                 printf("INDEX %s DROPPED!\n", name);
+                AK_EPI;
+                return EXIT_SUCCESS;
             } else {
                 printf("Index %s does not exist!\n", name);
+                AK_EPI;
+                return EXIT_ERROR;
             }
 
             break;
@@ -106,9 +115,13 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
             if ((AK_table_empty(sys_table)) || (AK_if_exist(name, sys_table) == 0)) {
                 printf("View %s does not exist!\n", name);
+                AK_EPI;
+                return EXIT_ERROR;
             } else {
                 AK_view_remove_by_name(name);
                 printf("VIEW %s DROPPED!\n", name);
+                AK_EPI;
+                return EXIT_SUCCESS;
             }
 
             break;
@@ -120,9 +133,13 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
             if ((AK_table_empty(sys_table)) || (AK_if_exist(name, sys_table) == 0)) {
                 printf("Sequence %s does not exist!\n", name);
+                AK_EPI;
+                return EXIT_ERROR;
             } else {
                 AK_sequence_remove(name);
                 printf("SEQUENCE %s DROPPED!\n", name);
+                AK_EPI;
+                return EXIT_SUCCESS;
             }
 
             break;
@@ -137,11 +154,17 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
             if ((AK_table_empty(sys_table)) || (AK_if_exist(name, sys_table) == 0)) {
                 printf("Trigger %s does not exist!\n", name);
+                AK_EPI;
+                return EXIT_ERROR;
             } else if ((AK_table_empty(sys_tbl2)) || (AK_if_exist(tbl, sys_tbl2) == 0)) {
                 printf("Table %s does not exist!\n", tbl);
+                AK_EPI;
+                return EXIT_ERROR;
             } else {
                 AK_trigger_remove_by_name(name, tbl);
                 printf("TRIGGER %s DROPPED!\n", name);
+                AK_EPI;
+                return EXIT_SUCCESS;
             }
 
             break;
@@ -168,14 +191,20 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
             if ((AK_table_empty(sys_table)) || (AK_if_exist(name, sys_table) == 0)) {
                 printf("Function %s does not exist!\n", name);
+                AK_EPI;
+                return EXIT_ERROR;
             } else {
                 if (AK_function_remove_by_name(name, args) == EXIT_SUCCESS) {
                     printf("FUNCTION %s DROPPED!\n", name);
+                    AK_EPI;
+                    return EXIT_SUCCESS;
                 } else {
                     printf("Function does not exist!\n"); // returned EXIT_ERROR because the funcion with the given args was not found
+                    AK_EPI;
+                    return EXIT_ERROR;
                 }
             }
-			AK_free(args);
+            AK_free(args);
             break;
 
         case DROP_USER:
@@ -191,6 +220,8 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
             if ((AK_table_empty(sys_table)) || (AK_if_exist(name, sys_table) == 0)) {
                 printf("User %s does not exist!\n", name);
+                AK_EPI;
+                return EXIT_ERROR;
             } else {
                 // if CASCADE
                 if (status1 == 1) {
@@ -201,14 +232,20 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
                     AK_user_remove_by_name(name);
                     printf("USER %s DROPPED!\n", name);
+                    AK_EPI;
+                    return EXIT_SUCCESS;
 
                 } else { // if not CASCADE
                     // check if user has any privilege or belong to group
                     if (AK_check_user_privilege(name) == EXIT_SUCCESS) {
                         printf("User %s can not be dropped because it has related objects!\n", name);
+                        AK_EPI;
+                        return EXIT_ERROR;
                     } else {
                         AK_user_remove_by_name(name);
                         printf("USER %s DROPPED!\n", name);
+                        AK_EPI;
+                        return EXIT_SUCCESS;
                     }
                 }
             }
@@ -228,6 +265,8 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
             if ((AK_table_empty(sys_table)) || (AK_if_exist(name, sys_table) == 0)) {
                 printf("Group %s does not exist!\n", name);
+                AK_EPI;
+                return EXIT_ERROR;
             } else {
                 // if CASCADE
                 if (status2 == 1) {
@@ -238,13 +277,19 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
                     AK_group_remove_by_name(name);
                     printf("GROUP %s DROPPED!\n", name);
+                    AK_EPI;
+                    return EXIT_SUCCESS;
                 } else { // if not CASCADE
                     // check if group has any privilege or have users
                     if (AK_check_group_privilege(name) == EXIT_SUCCESS) {
                         printf("Group %s can not be dropped because it has related objects!\n", name);
+                        AK_EPI;
+                        return EXIT_ERROR;
                     } else {
                         AK_group_remove_by_name(name);
                         printf("GROUP %s DROPPED!\n", name);
+                        AK_EPI;
+                        return EXIT_SUCCESS;
                     }
                 }
             }
@@ -256,21 +301,39 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
             sys_table = (char*) drop_arguments->value; // table
             name = (char*) drop_arguments->next->value; // atribute
             char *constName = (char*) drop_arguments->next->next->value; // constraint name
+            char * newValue = drop_arguments->next->next->next->value; //new value
             int deleted = 0;
 
             if(AK_read_constraint_unique(sys_table, constName, name) == EXIT_SUCCESS){
-                // TODO: function for deleting unique constraints - implement inside unique.c
+                result = AK_delete_constraint_unique(sys_table, name, constName);
+                if(result == EXIT_SUCCESS) {
+                    printf("\nUnique constraint %s dropped", constName);
+                    AK_EPI;
+                    return EXIT_SUCCESS;
+                }
                 deleted = 1;
             }
             if(AK_read_constraint_not_null(sys_table, constName, name) == EXIT_SUCCESS){
-                // TODO: function for deleting not null constraints - implement inside nnull.c
+                result = AK_delete_constraint_not_null(sys_table, name, constName);
+                if(result == EXIT_SUCCESS) {
+                    printf("\nNot null constraint %s dropped", constName);
+                    AK_EPI;
+                    return EXIT_SUCCESS;
+                }
+                
                 deleted = 1;
             }
-            if(AK_read_constraint_between(sys_table, constName, name) == EXIT_SUCCESS){
-                // TODO: function for deleting between constraints - implement inside between.c
+            if(AK_read_constraint_between(sys_table, newValue, name) == EXIT_SUCCESS){
+                result = AK_delete_constraint_between(sys_table, constName, name);
+                if(result == EXIT_SUCCESS) {
+                    printf("\nBetween constraint %s dropped", constName);
+                    AK_EPI;
+                    return EXIT_SUCCESS;
+                }
                 deleted = 1;
             }
-
+            AK_EPI;
+            return EXIT_ERROR;
             // TODO: delete "check" constraints
 
             printf("Constraint '%s' in table '%s' %s!\n", (constName==""?name:constName), sys_table,(deleted==0?"does not exist":"DROPPED"));
@@ -280,7 +343,7 @@ void AK_drop(int type, AK_drop_arguments *drop_arguments) {
         default:
             break;
     }
-    AK_EPI;
+    
 }
 
 /**
@@ -335,13 +398,13 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
 
         data_adr = mem_block2->block->tuple_dict[i].address;
         data_size = mem_block2->block->tuple_dict[i].size;
-        //data_type = mem_block2->block->tuple_dict[i].type;
+
         memcpy(name_sys, mem_block2->block->data + data_adr, data_size);
 
         i++;
         data_adr = mem_block2->block->tuple_dict[i].address;
         data_size = mem_block2->block->tuple_dict[i].size;
-        //data_type = mem_block2->block->tuple_dict[i].type;
+
         memcpy(&address_sys, mem_block2->block->data + data_adr, data_size);
 
         if (strcmp(name_sys, sys_table) == 0) {
@@ -352,11 +415,7 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
     mem_block2 = (AK_mem_block *) AK_get_block(address_sys);
     table_addresses *addresses2;
 
-    //addresses2 = (table_addresses *) AK_malloc(sizeof (table_addresses));
     addresses2 = (table_addresses*) AK_get_table_addresses(tblName);
-
-    //memset(addresses2->address_from, 0, MAX_EXTENTS_IN_SEGMENT);
-    //memset(addresses2->address_to, 0, MAX_EXTENTS_IN_SEGMENT);
 
     for (i = 0; i < MAX_EXTENTS_IN_SEGMENT; i++) {
         addresses2->address_from[i] = 0;
@@ -417,73 +476,71 @@ int AK_if_exist(char *tblName, char *sys_table) {
 }
 
 /**
- * @author unknown, Jurica Hlevnjak - added all tests except drop table test, updated by Tomislav Ilisevic
+ * @author unknown, Jurica Hlevnjak - added all tests except drop table test, updated by Tomislav Ilisevic, Maja Vračan
  * @brief Function for testing all DROP functions
  */
 void AK_drop_test() {
     AK_PRO;
     printf("=========================================================\n");
     printf("========================DROP_TEST========================\n");
+    int results[114];
     AK_drop_arguments *drop_arguments = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
     drop_arguments->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
     drop_arguments->value=(char*)"\0";
 
-	drop_arguments->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
-	drop_arguments->next->value=(char*)"\0";
+    drop_arguments->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
+    drop_arguments->next->value=(char*)"\0";
 
-	drop_arguments->next->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
-	drop_arguments->next->next->value=(char*)"\0";
+    drop_arguments->next->next->next = (AK_drop_arguments *)AK_malloc(sizeof (AK_drop_arguments));
+    drop_arguments->next->next->value=(char*)"\0";
 
-	drop_arguments->next->next->next->next =NULL;
+    drop_arguments->next->next->next->next =NULL;
 
     printf("\n-----DROP TABLE-----\n");
     AK_print_table("AK_relation");
     drop_arguments->value = "department";
-    AK_drop(DROP_TABLE, drop_arguments);
-    // AK_print_table("department");
+    results[1] = AK_drop(DROP_TABLE, drop_arguments);
+
     AK_print_table("AK_relation");
 
     printf("\n-----DROP CATALOG TABLE-----\n");
     drop_arguments->value = "AK_attribute";
-    AK_drop(DROP_TABLE, drop_arguments);
+    results[2] = AK_drop(DROP_TABLE, drop_arguments);
     AK_print_table("AK_attribute");
     AK_print_table("AK_relation");
 
     printf("\n-----DROP VIEW-----\n");
     AK_print_table("AK_view");
     drop_arguments->value = "view300";
-    AK_drop(DROP_VIEW, drop_arguments);
+    results[3] = AK_drop(DROP_VIEW, drop_arguments);
     AK_print_table("AK_view");
 
     printf("\n-----DROP HASH INDEX-----\n");
     drop_arguments->value = "student_hash_index";
     AK_print_table("AK_index");
-    // AK_print_table("student_hash_index");
-    AK_drop(DROP_INDEX, drop_arguments);
-    // AK_print_table("student_hash_index");
+
+    results[4] = AK_drop(DROP_INDEX, drop_arguments);
 
     printf("\n-----DROP BITMAP INDEX-----\n");
     drop_arguments->value = "assistantfirstname_bmapIndex";
     AK_print_table("AK_index");
-    // AK_print_table("assistantfirstname_bmapIndex");
-    AK_drop(DROP_INDEX, drop_arguments);
-    // AK_print_table("assistantfirstname_bmapIndex");
+
+    results[5] = AK_drop(DROP_INDEX, drop_arguments);
+
     AK_print_table("AK_index");
 
     printf("\n-----DROP SEQUENCE-----\n");
     drop_arguments->value = "sekvenca5";
     AK_print_table("AK_sequence");
-    AK_drop(DROP_SEQUENCE, drop_arguments);
+    results[6] = AK_drop(DROP_SEQUENCE, drop_arguments);
     AK_print_table("AK_sequence");
-    //AK_free(drop_arguments);
-
 
     printf("\n-----DROP TRIGGER-----\n");
     AK_print_table("AK_trigger");
     AK_print_table("AK_trigger_conditions");
     drop_arguments->value = "trigg4";
     drop_arguments->next->value = "AK_reference";
-    AK_drop(DROP_TRIGGER, drop_arguments);
+    results[7] = AK_drop(DROP_TRIGGER, drop_arguments);
     AK_print_table("AK_trigger");
     AK_print_table("AK_trigger_conditions");
 
@@ -495,7 +552,7 @@ void AK_drop_test() {
     drop_arguments->next->next->value = "number";
     drop_arguments->next->next->next->value = "int";
     drop_arguments->next->next->next->next = NULL;
-    AK_drop(DROP_FUNCTION, drop_arguments);
+    results[8] = AK_drop(DROP_FUNCTION, drop_arguments);
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");
 
@@ -505,7 +562,7 @@ void AK_drop_test() {
     AK_print_table("AK_user");
     AK_print_table("AK_user_group");
     AK_print_table("AK_user_right");
-    AK_drop(DROP_USER, drop_arguments);
+    results[9] = AK_drop(DROP_USER, drop_arguments);
     AK_print_table("AK_user");
     AK_print_table("AK_user_group");
     AK_print_table("AK_user_right");
@@ -515,33 +572,76 @@ void AK_drop_test() {
 
     printf("\n-----DROP GROUP-----\n");
     drop_arguments->value = "grupa1";
-    //drop_arguments->next->value = "CASCADE";
+
     AK_print_table("AK_group");
     AK_print_table("AK_user_group");
     AK_print_table("AK_group_right");
-    AK_drop(DROP_GROUP, drop_arguments);
+    results[10] = AK_drop(DROP_GROUP, drop_arguments);
     AK_print_table("AK_group");
     AK_print_table("AK_user_group");
     AK_print_table("AK_group_right");
 
     printf("\n-----DROP CONSTRAINT-----\n");
+    
+    printf("\n-----UNIQUE-----\n");
+    char* tableName_1 = "student";
+    char* attName_1 = "year";
+    char* constraintName_1 = "yearUnique";
+    Ak_set_constraint_unique(tableName_1, attName_1, constraintName_1);
+    AK_print_table("AK_constraints_unique");
+    
+    drop_arguments->value = tableName_1;
+    drop_arguments->next->value = attName_1;
+    drop_arguments->next->next->value = constraintName_1;
+    
+    results[11] = AK_drop(DROP_CONSTRAINT, drop_arguments);
+    AK_print_table("AK_constraints_unique");
+    
+    
+    printf("\n-----NOT NULL-----\n");
+    char* tableName_2 = "student";
+    char* attName_2 = "firstname";
+    char* constraintName_2 = "firstnameNotNull";
+    AK_set_constraint_not_null(tableName_2, attName_2, constraintName_2);
+    AK_print_table("AK_constraints_not_null");
+    
+    drop_arguments->value = tableName_2;
+    drop_arguments->next->value = attName_2;
+    drop_arguments->next->next->value = constraintName_2;
+    
+    results[12] = AK_drop(DROP_CONSTRAINT, drop_arguments);
+    AK_print_table("AK_constraints_not_null");
+    
+    
+    printf("\n-----BETWEEN-----\n");
+    char* tableName_3 = "department";
+    char* attName_3 = "manager";
+    char* constraintName_3 = "manager_between";
+    char* newValue_3 = "Kero";
+    char* startValue_3 = "Hutinski";    
+    char* endValue_3 = "Redep";
+    AK_set_constraint_between(tableName_3, constraintName_3, attName_3, startValue_3, endValue_3);
+    AK_print_constraints(tableName_3);
+    
+    drop_arguments->value = tableName_3;
+    drop_arguments->next->value = attName_3;
+    drop_arguments->next->next->value = constraintName_3;
+    drop_arguments->next->next->next->value = newValue_3;
+    
+    results[13] = AK_drop(DROP_CONSTRAINT, drop_arguments);
+    AK_print_constraints(tableName_3);
+    
 
-    Ak_set_constraint_unique("student", "studentUnique", "firstname");
-    AK_set_constraint_not_null("student", "studentNotNull", "firstname");
-
-    // args: table, atribute, constraint name - if constraint name is "" all constraints for the atributes will be deleted
-    drop_arguments->value = "student";
-	drop_arguments->next->value = "firstname";
-	drop_arguments->next->next->value = "studentUnique";
-
-	AK_drop(DROP_CONSTRAINT, drop_arguments);
-
-	AK_print_table("AK_constraints_between");
-	AK_print_table("AK_constraints_not_null");
-	AK_print_table("AK_constraints_unique");
-
-
-	AK_free(drop_arguments);
     printf("======================END_DROP_TEST======================\n");
+    printf("Test results: \n");
+    int x=1;
+    for (x; x<14; x++){
+        if(results[x]== EXIT_SUCCESS){
+            printf("Test %d: EXIT_SUCCESS \n", x);
+        }
+        else{
+            printf("Test %d: EXIT_ERROR \n", x);
+        }
+    }
     AK_EPI;
 }

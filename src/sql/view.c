@@ -56,7 +56,7 @@ char* AK_get_view_query(char *name){
     
     struct list_node *row;
     AK_PRO;
-    //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
+
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
         struct list_node *name_elem = Ak_GetNth_L2(2,row);
         if (!strcmp(name_elem->data, name)) {
@@ -81,8 +81,8 @@ char* AK_get_rel_exp(char *name){
    char *rel_exp;
    
     struct list_node *row;
-   AK_PRO;
-    //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
+    AK_PRO;
+
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
         struct list_node *name_elem = Ak_GetNth_L2(2,row);
         if (!strcmp(name_elem->data, name)) {
@@ -108,16 +108,14 @@ char* AK_get_rel_exp(char *name){
 int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
     char *tblName = "AK_view";
     AK_PRO;
-    /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-    */
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     
     int view_id = AK_get_id();
     if(set_id!=0) view_id = set_id;
     Ak_Insert_New_Element(TYPE_INT, &view_id, tblName, "obj_id", row_root);
+
     //adding prefics '_view' to view name for integration of view relation expression (used in query_optimization.c for now) by Danko Sacer NOT SET
     //char set_name[strlen(name)];
     //strcpy(set_name, name);
@@ -214,7 +212,7 @@ int AK_view_rename(char *name, char *new_name){
 int AK_view_change_query(char *name, char *query, char *rel_exp){
    AK_PRO;
    int view_id = AK_get_view_obj_id(name);
-   //char *rel_exp = AK_get_rel_exp(name);
+
    int result = AK_view_remove_by_name(name);
    result = AK_view_add(name, query, rel_exp, view_id);
    AK_EPI;
@@ -238,9 +236,7 @@ void AK_view_test() {
    AK_print_table("AK_view");
 
    printf("Obj_id za view1: %d\n", AK_get_view_obj_id("view1"));
-   //added query strings and rel_exp string result by Danko Sacer
    printf("Query za view1: %s\n\n", AK_get_view_query("view1"));
-   //printf("Rel_exp za view1: %s\n\n", AK_get_rel_exp("view1"));
 
    printf("Obj_id za view2: %d\n", AK_get_view_obj_id("view2"));
    printf("Query za view2: %s\n\n", AK_get_view_query("view2"));

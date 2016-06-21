@@ -451,13 +451,6 @@ void AK_print_row(int col_len[], struct list_node *row) {
                 printf("%*.3f |", col_len[i] + TBL_BOX_OFFSET, *((float *) data));
                 break;
                 //Currently this header types are handled like TYPE_VARCHAR (print as string left aligned)
-                //case TYPE_INTERNAL:
-                //case TYPE_NUMBER:
-                //case TYPE_DATE:
-                //case TYPE_DATETIME:
-                //case TYPE_TIME:
-                //case TYPE_BLOB:
-                //case TYPE_BOOL:
             case TYPE_VARCHAR:
             default:
                 memcpy(data, el->data, el->size);
@@ -488,7 +481,7 @@ int AK_table_exist(char *tblName) {
     for (a = 0; a < num_rows; a++) {
         struct list_node *el;
         el = AK_get_tuple(a, 1, sys_table);
-        // printf("  Element %s !", el->data);
+
         if (!strcmp(tblName, el->data)) {
             exist = 1;
             break;
@@ -615,18 +608,8 @@ void AK_print_table(char *tblName) {
                 }
                 i++;
             }
-            printf("\n");
 
-            /*
-            //print table rows
-            for (i = 0; i < num_rows; i++) {
-                    struct list_node *row = AK_get_row(i, tblName);
-                    AK_print_row(len, row);
-                    AK_print_row_spacer(len, length);
-                    DeleteAllL(row);
-            }
-            printf("\n");*/
-            //print table rows number and time spent to generate table
+            printf("\n");
             t = clock() - t;
 
             if ((((double) t) / CLOCKS_PER_SEC) < 0.1) {

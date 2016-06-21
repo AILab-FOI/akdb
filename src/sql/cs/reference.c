@@ -38,10 +38,7 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
 	AK_EPI;
 	return 0;
     }
-/*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-    */
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
@@ -71,7 +68,7 @@ int AK_add_reference(char *childTable, char *childAttNames[], char *parentTable,
  */
 AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
     int i = 0;
-    //AK_list *list;
+
     struct list_node *list;
     AK_ref_item reference;
     AK_PRO;
@@ -105,7 +102,7 @@ AK_ref_item AK_get_reference(char *tableName, char *constraintName) {
 int AK_reference_check_attribute(char *tableName, char *attribute, char *value) {
     int i;
     int att_index;
-//    AK_list *list_row, *list_col;
+
     struct list_node *list_row, *list_col;
     AK_PRO;
     while ((list_row = AK_get_row(i, "AK_reference")) != NULL) {
@@ -134,17 +131,16 @@ int AK_reference_check_attribute(char *tableName, char *attribute, char *value) 
  * @param is action UPDATE or DELETE ?
  * @return EXIT_SUCCESS if update is needed, EXIT_ERROR if not
  */
-//int AK_reference_check_if_update_needed(AK_list *lista, int action) {
+
 int AK_reference_check_if_update_needed(struct list_node *lista, int action) {
-    //AK_list_elem temp;
+
     struct list_node *temp;
     int i = 0;
-//    AK_list *row;
+
     struct list_node *row;
-   AK_PRO;
+    AK_PRO;
     while ((row = AK_get_row(i, "AK_reference")) != NULL) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
-            //temp = Ak_First_L2(lista);
 	    temp = Ak_First_L2(lista);
             while (temp != NULL) {
                 if (action == UPDATE && temp->constraint == 0 && strcmp(row->next->next->next->next->next->data, temp->attribute_name) == 0){
@@ -155,7 +151,6 @@ int AK_reference_check_if_update_needed(struct list_node *lista, int action) {
 		    AK_EPI;
                     return EXIT_SUCCESS;
 		}
-                //temp = Ak_Next_L2(temp);
 		temp = Ak_Next_L2(temp);
             }
         }
@@ -172,19 +167,16 @@ int AK_reference_check_if_update_needed(struct list_node *lista, int action) {
  * @param is action UPDATE or DELETE?
  * @return EXIT_SUCCESS if there is no restriction on this action, EXIT_ERROR if there is
  */
-//int AK_reference_check_restricion(AK_list *lista, int action) {    
+
 int AK_reference_check_restricion(struct list_node *lista, int action) {    
     int i = 0;
-    /*
-    AK_list_elem temp;
-    AK_list *row;
-    */
+
     struct list_node *temp;
     struct list_node *row;
     AK_PRO;
     while ((row = AK_get_row(i, "AK_reference")) != NULL) {
         if (strcmp(row->next->next->next->next->data, lista->next->table) == 0) {
-            //temp = Ak_First_L2(lista);
+
 	    temp = Ak_First_L2(lista);
             while (temp != NULL) {
                 if (action == UPDATE && temp->constraint == 0 && memcmp(row->next->next->next->next->next->data, temp->attribute_name, row->next->next->next->next->next->size) == 0 && (int) * row->next->next->next->next->next->next->data == REF_TYPE_RESTRICT){
@@ -195,7 +187,6 @@ int AK_reference_check_restricion(struct list_node *lista, int action) {
 		    AK_EPI;
                     return EXIT_ERROR;
 		}
-//                temp = Ak_Next_L2(temp);
 		temp = Ak_Next_L2(temp);
             }
         }
@@ -213,15 +204,10 @@ int AK_reference_check_restricion(struct list_node *lista, int action) {
  * @param is action UPDATE or DELETE ?
  * @return EXIT_SUCCESS
  */
-//int AK_reference_update(AK_list *lista, int action) {
+
 int AK_reference_update(struct list_node *lista, int action) {
     int parent_i, i, j, ref_i, con_num = 0;
-    /*
-    AK_list *parent_row;
-    AK_list *ref_row;
-    AK_list_elem temp;
-    AK_list_elem tempcell;
-    */
+
     struct list_node *parent_row;
     struct list_node *ref_row;
     struct list_node *temp;
@@ -232,10 +218,7 @@ int AK_reference_update(struct list_node *lista, int action) {
 
     char tempData[MAX_VARCHAR_LENGTH];
     AK_PRO;
-    /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-    */
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
@@ -353,8 +336,6 @@ int AK_reference_update(struct list_node *lista, int action) {
         parent_i++;
     }
 
-    //AK_delete_table("ref_update_temp");
-    //AK_delete_table(tempTable);
     AK_delete_segment(tempTable, SEGMENT_TYPE_TABLE);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -376,9 +357,8 @@ int AK_reference_check_entry(struct list_node *lista) {
     
     AK_ref_item reference;
 
-   // AK_list_elem temp1;
     AK_PRO;
-    //temp = Ak_First_L2(lista);
+
     temp = Ak_First_L2(lista);
     while (temp != NULL) {
         if (temp->constraint == 1){
@@ -397,7 +377,6 @@ int AK_reference_check_entry(struct list_node *lista) {
                 }
             }
             if (j == con_num) {
-                //constraints[con_num] = AK_malloc(sizeof(char)*MAX_VARCHAR_LENGHT);
                 strcpy(constraints[con_num], row->next->next->data);
                 con_num++;
             }
@@ -453,13 +432,11 @@ int AK_reference_check_entry(struct list_node *lista) {
                 }
             }
             if (success == 1) {
-                //AK_free(attributes);
 		AK_EPI;
                 return EXIT_SUCCESS;
             }
             j++;
         }
-        // AK_free(attributes);
     }
     AK_EPI;
     return EXIT_ERROR;
@@ -501,7 +478,6 @@ void AK_reference_test() {
     patt[1] = AK_malloc(sizeof (char) *20);
     strcpy(patt[1], "firstname");
 
-    //AK_create_reference_table();
     AK_add_reference("ref_test", att, "student", patt, 2, "constraint", REF_TYPE_SET_NULL);
     AK_print_table("AK_reference");
     AK_print_table("student");

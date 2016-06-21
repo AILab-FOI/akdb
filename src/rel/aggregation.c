@@ -147,14 +147,12 @@ void AK_agg_input_fix(AK_agg_input *input) {
 
  */
 int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
-    //int AK_aggregation (AK_header *att_root,int *att_tasks,char *source_table, char *new_table) {
     int i, j;
     AK_PRO;
     AK_agg_input_fix(input);
     AK_header *att_root = (*input).attributes;
     int *att_tasks = (*input).tasks;
     int num_aggregations = (*input).counter;
-    // int header_size = AK_header_size(att_root);
     AK_header agg_head[MAX_ATTRIBUTES];
     int agg_group_number = 0;
     int inttemp = 0;
@@ -226,11 +224,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", new_table);
 
-
-
-    // this was an optimisation or someting, so that sort works normally
+    // this was an optimisation or something, so that sort works normally
     //sort_segment(source_table,group_h_name);
-
 
     search_params search_parameters[agg_group_number];
     search_result sresult;
@@ -244,11 +239,6 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 
     AK_block *temp;
     AK_mem_block *mem_block;
-
-    /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-````*/
 
     struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
@@ -654,7 +644,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		AK_free(projection_att);
     }
 
-    //@TODO zamijeniti ovaj segment sa AK_drop_table() jednom kad ga netko napravi
+        //TODO replace this segment with AK_drop_table() once when it's done
 	addresses = (table_addresses*) AK_get_table_addresses(new_table);
 	i = 0;
 	while (addresses->address_from[i] != 0) {
@@ -671,21 +661,31 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 void Ak_aggregation_test() {
     AK_PRO;
     printf("aggregation.c: Present!\n");
-
+ 
+    char *sys_table = "AK_relation";
+    char *destTable = "agg";
     char *tblName = "student";
-    AK_header *t_header = (AK_header *) AK_get_header(tblName);  // header is array of attributes
+    
+    if (AK_if_exist(destTable, sys_table) == 0) {
+	    printf("Table %s does not exist!\n", destTable);
+	    AK_header *t_header = (AK_header *) AK_get_header(tblName);  // header is array of attributes
 
-    AK_agg_input aggregation;
-    AK_agg_input_init(&aggregation);
-    AK_agg_input_add(t_header[1], AGG_TASK_GROUP, &aggregation);  // group by second column (first name)
-    AK_agg_input_add(t_header[4], AGG_TASK_AVG, &aggregation);  // average by last (5th) column (weight)
-    AK_agg_input_add(t_header[2], AGG_TASK_COUNT, &aggregation);  // count of last names (for the same first name)
-    AK_agg_input_add(t_header[4], AGG_TASK_SUM, &aggregation);  // sum of weights by student's first name
-    AK_agg_input_add(t_header[4], AGG_TASK_MAX, &aggregation);  // max weight grouped by student's first name
-    AK_agg_input_add(t_header[4], AGG_TASK_MIN, &aggregation);  // min weight grouped by student's first name
-    AK_free(t_header);
+	    AK_agg_input aggregation;
+	    AK_agg_input_init(&aggregation);
+	    AK_agg_input_add(t_header[1], AGG_TASK_GROUP, &aggregation);  // group by second column (first name)
+	    AK_agg_input_add(t_header[4], AGG_TASK_AVG, &aggregation);  // average by last (5th) column (weight)
+	    AK_agg_input_add(t_header[2], AGG_TASK_COUNT, &aggregation);  // count of last names (for the same first name)
+	    AK_agg_input_add(t_header[4], AGG_TASK_SUM, &aggregation);  // sum of weights by student's first name
+	    AK_agg_input_add(t_header[4], AGG_TASK_MAX, &aggregation);  // max weight grouped by student's first name
+	    AK_agg_input_add(t_header[4], AGG_TASK_MIN, &aggregation);  // min weight grouped by student's first name
+	    AK_free(t_header);
 
-    AK_aggregation(&aggregation, tblName, "agg");
+	    AK_aggregation(&aggregation, tblName, "agg");
+    }
+    else {
+    	printf("Table %s already exists!\n", destTable);
+    }
+
     AK_print_table("agg");
 
     printf("\n\n\n");

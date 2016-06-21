@@ -162,18 +162,14 @@ int AK_rel_eq_can_commute(struct list_node *list_elem_attribs, struct list_node 
 
     for (next_chr = 0; next_chr < list_elem_conds->size; next_chr++) {
         if (list_elem_conds->data[next_chr] == ATTR_ESCAPE) {
-            //printf("Next attributes group at index: %i\n", next_chr);
 
             memcpy(temp, list_elem_conds->data + next_chr + 1, list_elem_conds->size - next_chr);
             memmove(temp_cond, temp, strcspn(temp, "`")); //ATTR_ESCAPE
-            //printf("\n-->temp_cond: %s, size: %i\n", temp_cond, next_chr);
             next_chr += strlen(temp_cond) + 1;
 
-            //printf("\tCondition: %s\n", temp_cond);
             valid_cond_attribs = 0;
 
             for (token_id = 0; tokens[token_id] != NULL; token_id++) {
-                //printf("\tAttribute: %s\n", tokens[token_id]);
 
                 if (strcmp(temp_cond, tokens[token_id]) == 0) {
                     valid_cond_attribs++;
@@ -213,7 +209,7 @@ struct list_node *AK_rel_eq_get_attributes(char *tblName) {
     int num_attr = AK_num_attr(tblName);
     char *attr_name;
     AK_PRO;
-    //AK_header *table_header = (AK_header*)AK_calloc(num_attr, sizeof(AK_header));
+
     AK_header *table_header = (AK_header *) AK_get_header(tblName);
 
     struct list_node *list_attr = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -230,10 +226,10 @@ struct list_node *AK_rel_eq_get_attributes(char *tblName) {
     return list_attr;
 }
 
-/* Another function to retreive and store table attributes, but in the array (may be usefull somewhere later)
+/* Another function to retreive and store table attributes, but in the array (may be useful somewhere later)
 const char *AK_rel_eq_get_attributes(char *tblName) {
         int next_attr, num_attr = AK_num_attr(tblName);
-    char *attributes[MAX_ATTRIBUTES] = {NULL};
+        char *attributes[MAX_ATTRIBUTES] = {NULL};
         //char *attributes = (char *)AK_malloc(sizeof(MAX_ATTRIBUTES));
 	
         //AK_header *table_header = (AK_header*)AK_calloc(num_attr, sizeof(AK_header));
@@ -302,7 +298,6 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
 
         while (list_el) {
             if (strcmp(list_el->data, tokens_attribs[token_id]) == 0) {
-                //ret_attributes = (char *)AK_realloc(ret_attributes, (strlen(list_el->data) + strlen(ret_attributes)));
                 if (strlen(ret_attributes) > 0) {
                     strcat(ret_attributes, ATTR_DELIMITER);
                 }
@@ -335,7 +330,6 @@ char *AK_rel_eq_collect_cond_attributes(struct list_node *list_elem) {
     strcpy(temp_cond, list_elem->data);
 
     char *attr = (char *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (char));
-    //memset(attr, '\0', MAX_VARCHAR_LENGHT);
 
     while (next_chr < list_elem->size) {
         if (temp_cond[next_chr] == ATTR_ESCAPE) { //'`'
@@ -345,16 +339,12 @@ char *AK_rel_eq_collect_cond_attributes(struct list_node *list_elem) {
             } else {
                 if (next_address > 0) {
                     strcpy(attr + next_address++, ATTR_DELIMITER);
-                    //memcpy(attr + next_address++, ATTR_DELIMITER, 1);
-                    //attr = (char *)AK_realloc(attr, next_address + 1);
                 }
             }
         }
 
         if (!attr_end) {
             strcpy(attr + next_address++, &temp_cond[next_chr]);
-            //memcpy(attr + next_address++, &temp_cond[next_chr], 1);
-            //attr = (char *)AK_realloc(attr, next_address + 1);
         }
         next_chr++;
     }
@@ -428,7 +418,6 @@ struct list_node *AK_rel_eq_projection(struct list_node *list_rel_eq) {
 
     //Iterate through all the elements of RA linked list
     while (list_elem != NULL) {
-        //printf("read > %s\n", list_elem->data);
 
         switch (list_elem->type) {
 
@@ -580,7 +569,6 @@ struct list_node *AK_rel_eq_projection(struct list_node *list_rel_eq) {
                                                 strcat(data1, AK_rel_eq_projection_attributes(AK_rel_eq_collect_cond_attributes(list_elem_next), temp_elem_next->data));
                                                 data1 = AK_rel_eq_remove_duplicates(data1);
 
-                                                //memset(data2 + strlen(data1), '\0', 1);
                                                 Ak_InsertAfter_L2(temp_elem->type, data1, strlen(data1) + 1, &tmp, &temp);
                                                 Ak_InsertAfter_L2(temp_elem_prev->type, temp_elem_prev->data, temp_elem_prev->size, &tmp, &temp);
                                                 Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", temp_elem_prev->data, data1);
@@ -658,7 +646,7 @@ struct list_node *AK_rel_eq_projection(struct list_node *list_rel_eq) {
         list_elem = list_elem->next;
     }
 
-    //====================================> IMPROVMENTS <=======================================
+    //====================================> IMPROVEMENTS <=======================================
     //Recursive RA optimization (need to implement exit condition in place of each operator, ...)
     //If there is no new changes on the list return generated AK_lists
     //int iter_cond;
@@ -688,13 +676,6 @@ void AK_print_rel_eq_projection(struct list_node *list_rel_eq) {
 
     printf("\n");
     while (list_elem != NULL) {
-        /*if (list_elem->type == TYPE_ATTRIBS || list_elem->type == TYPE_CONDITION) {
-                printf("[%s]", list_elem->data);
-        } else if (list_elem->type == TYPE_OPERAND){
-                printf("(%s)", list_elem->data);
-        } else {
-                printf("%s", list_elem->data);
-        }*/
         printf("Type: %i, size: %i, data: %s\n", list_elem->type, list_elem->size, list_elem->data);
         list_elem = list_elem->next;
     }
@@ -741,9 +722,8 @@ void AK_rel_eq_projection_test() {
     Ak_Init_L3(&expr);
 
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    /*
-     * The projection is only made up of a one or more of attributes
-     */
+    
+    //The projection is only made up of a one or more of attributes
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof ("L1;L2;L3;L4"), expr); //projection attribute
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
@@ -767,15 +747,7 @@ void AK_rel_eq_projection_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
     Ak_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` `job` =", sizeof ("`mbr` `job` ="), expr); //theta join attribute
 
-    /*
-InsertAtEndL( TYPE_OPERATOR, "s", sizeof("s"), &expr );
-    InsertAtEndL( TYPE_CONDITION, "`L1` > 100", sizeof("`L1` > 100"), &expr );
-InsertAtEndL( TYPE_OPERAND, "R", sizeof("R"), &expr );
-    InsertAtEndL( TYPE_OPERATOR, "u", sizeof("u"), &expr );
-InsertAtEndL( TYPE_OPERAND, "S", sizeof("S"), &expr );
-     */
-    //printf("\nRA expr. before rel_eq optimization:\n");
-    //AK_print_rel_eq_projection(expr);
+
     AK_print_rel_eq_projection(AK_rel_eq_projection(expr));
 
     if (DEBUG_ALL) {

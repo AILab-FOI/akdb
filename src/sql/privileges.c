@@ -29,9 +29,6 @@ int AK_user_add(char *username, int *password, int set_id) {
 
     char *tblName = "AK_user";
     AK_PRO;
-    /*AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-    */
     
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
@@ -57,7 +54,7 @@ int AK_user_get_id(char *username) {
     
     struct list_node *row;
     AK_PRO;
-    //while ((row = (AK_list *) AK_get_row(i, "AK_user")) != NULL) {
+
     while ((row = (struct list_node *) AK_get_row(i, "AK_user")) != NULL) {
 	struct list_node *elem_in_strcmp = Ak_GetNth_L2(2,row);
         if (strcmp(elem_in_strcmp->data, username) == 0) {
@@ -81,9 +78,7 @@ int AK_user_get_id(char *username) {
  */
 int AK_user_remove_by_name(char *name) {
     AK_PRO;
-    /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3((AK_list_elem) row_root);*/
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_user", "username", row_root, 1);
@@ -123,9 +118,7 @@ int AK_user_rename(char *old_name, char *new_name, int *password) {
 int AK_group_add(char *name, int set_id) {
     char *tblName = "AK_group";
     AK_PRO;
-    /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);*/
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     int group_id = AK_get_id();
@@ -145,10 +138,10 @@ int AK_group_add(char *name, int set_id) {
  */
 int AK_group_get_id(char *name) {
     int i = 0;
-//    AK_list *row;
+
     struct list_node *row;
     AK_PRO;
-    //while ((row = (AK_list *) AK_get_row(i, "AK_group")) != NULL) {
+
     while ((row = (struct list_node *) AK_get_row(i, "AK_group")) != NULL) {
 	struct list_node *elem_in_strcmp = Ak_GetNth_L2(2,row);
         if (strcmp(elem_in_strcmp->data, name) == 0) {
@@ -226,8 +219,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
         strcpy(&rights[30], "SELECT\0");
         int i;
         for (i = 0; i < 4; i++) {
-            /*AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-            Ak_Init_L3(&row_root);*/
+
 	    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
             Ak_Init_L3(&row_root);
             privilege_id = AK_get_id();
@@ -241,8 +233,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
             AK_free(row_root);
         }
     } else {
-        /*AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-        Ak_Init_L3(&row_root);*/
+
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
         Ak_Init_L3(&row_root);
 
@@ -273,8 +264,7 @@ int AK_revoke_privilege_user(char *username, char *table, char *right) {
     int user_id = AK_user_get_id(username);
     int result;
     if (strcmp(right, "ALL") == 0) {
-        /*AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-        Ak_Init_L3(&row_root);*/
+
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
         Ak_Init_L3(&row_root);
         int i = 0;
@@ -1208,53 +1198,28 @@ void AK_privileges_test() {
 
 	printf("\n\n18. Test for function AK_remove_user_from_all_groups - removes all users from all groups\n");
 	printf("\n   Test data: user in group: testtest-group11..\n   Result: ");
+	
 	if(AK_remove_user_from_all_groups("testtest") == EXIT_SUCCESS) {
-		//printf("User '%s' is removed from all groups!\n", "kritakac");
-	printf("\n   Test 18. - Pass!\n");
+		printf("\n   Test 18. - Pass!\n");
 		successfull[17]=1;
-	} else {
-		//printf("Error deleting user '%s' from groups!\n", "kritakac");
+	} 
+	
+	else {
 		printf("\n   Test 18. - Fail!\n");
 	}
 	
 	printf("\n   Test data: User whitout group - PROTEST..\n   Result: ");
+	
 	if(AK_remove_user_from_all_groups("protest") == EXIT_ERROR) {
-		//printf("User '%s' is removed from all groups!\n", "testing");
-		//successfull[9]=1;
 		printf("\n   Test 18. - Pass!\n");
-	} else {
+	} 
+	
+	else {
 		//printf("Error deleting user '%s' from groups!\n", "testing");
 		printf("\n   Test 18. - Fail!\n");
 	}
-	/*
-	printf("\n11. Test: User not in any group - mrvasedam..\nResult: ");
-	if(AK_remove_user_from_all_groups("mrvasedam") == EXIT_SUCCESS) {
-		printf("User '%s' is removed from all groups!\n", "mrvasedam");
-		successfull[10]=1;
-	} else {
-		printf("Error deleting user '%s' from groups!\n", "mrvasedam");
-	}
-	*/
-	AK_print_table("AK_user_group");
 
-	/*
-	printf("Test for function AK_group_remove_by_name - removes group by name\n");
-	printf("\n12. Test: Group that exists..group3..\nResult: ");
-	if(AK_group_remove_by_name("group3") == EXIT_SUCCESS) {
-		printf("Group '%s' is removed!\n", "group3");
-		successfull[11]=1;
-	} else {
-		printf("Error deleting group '%s'!\n", "group3");
-	}
-	printf("\n13. Test: Group that not exists..group6..\nResult: ");
-	if(AK_group_remove_by_name("group6") == EXIT_SUCCESS) {
-		printf("Group '%s' is removed!\n", "group6");
-		successfull[12]=1;
-	} else {
-		printf("Error deleting group '%s'!\n", "group6");
-	}
-	AK_print_table("AK_group");
-	*/
+	AK_print_table("AK_user_group");
 
 	printf("\nSummary: \n");
 	int num=0;

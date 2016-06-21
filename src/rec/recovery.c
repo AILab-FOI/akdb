@@ -33,6 +33,7 @@
     FILE * fp;
     AK_PRO;
     
+    printf("AK_recover_archive_log: reading file contents to redo log\n");
     // open recovery file
     fp = fopen(fileName, "rb");
 
@@ -44,12 +45,24 @@
     }
     
     // read structure from file
-    fread(&redo_log, sizeof(redo_log), 1, fp);
+    AK_redo_log log_file;
+    log_file.number = 0;
+    int i = 0;
+    fread(&log_file, sizeof(log_file), 1, fp);
+    
     // read command by command
-    int i;
-    for(i = 0; i < redo_log->number; i++) {
-        AK_recovery_insert_row(redo_log->command_recovery[i].table_name, redo_log->command_recovery[i].arguments);
+    for(i = 0; i < log_file.number; i++) {
+        memcpy(redo_log->command_recovery, log_file.command_recovery, sizeof(log_file.command_recovery));
     }
+    redo_log->number = log_file.number;
+    printf("AK_recover_archive_log: Checking for unfinished archived data commands...\nNumber of archived commands: %d\n", redo_log->number);
+    for(i = 0; i < redo_log->number; i++) {
+        printf("%s", redo_log->command_recovery[i].table_name);
+        if(redo_log->command_recovery[i].finished != 1) 
+            AK_recovery_insert_row(redo_log->command_recovery[i].table_name, redo_log->command_recovery[i].arguments);
+    }
+    
+    AK_empty_archive_log();
     
     // close
     fclose(fp);
@@ -70,6 +83,7 @@
 void AK_recovery_insert_row(char* table, char** attributes){
     AK_PRO;
     
+    printf("AK_recovery: found unfinished archived data commands for %s, executing...\n", table);
     int i;
     // retrieve table attributes names
     char* table_attr_names = AK_rel_eq_get_atrributes_char(table);
@@ -176,39 +190,42 @@ void AK_recovery_test() {
     
     // allocate the needed space
     AK_command_recovery_struct *command = AK_malloc(sizeof(AK_command_recovery_struct));
-    command->arguments = AK_malloc(sizeof(char*));
     int i;
-    for(i = 0; i < MAX_ATTRIBUTES; i++) {
-        command->arguments[i] = AK_malloc(sizeof(char));
-    }
-    for(i = 0; i < MAX_VARCHAR_LENGTH; i++) {
-        command->table_name[i] = AK_malloc(sizeof(char));
-    }
     
     // build first command
     command->operation = INSERT;
-    command->table_name = "student";
-    command->arguments = (char *[]){"35898", "Matija", "Novak", "2000","180"};
+    sprintf(command->table_name, "student");
+    sprintf(command->arguments[0], "35898");
+    sprintf(command->arguments[1], "Matija");
+    sprintf(command->arguments[2], "Novak");
+    sprintf(command->arguments[3], "2000");
+    sprintf(command->arguments[4], "180");
+    command->finished = 1;
     
     // save first command to redo_log
     redo_log->command_recovery[0] = *command;
     redo_log->number++;
     
     // build second command
-    command->arguments = (char *[]){"36996", "Pero", "Peric", "2004", "88"};
+    sprintf(command->arguments[0], "36996");
+    sprintf(command->arguments[1], "Pero");
+    sprintf(command->arguments[2], "Peric");
+    sprintf(command->arguments[3], "2004");
+    sprintf(command->arguments[4], "88");
+    command->finished = 1;
     
     // save second command to redo_log
     redo_log->command_recovery[1] = *command;
     redo_log->number++;
     
     // write commands to file
-    AK_archive_log();
+    AK_archive_log(-10);
     // print instructions
     printf("Working... use Ctrl+C to destabilize the system\n");
     // register handler function
-    sigset(SIGINT, AK_recover_operation);
+    // sigset(SIGINT, AK_recover_operation); <-- uncomment for testing
     
     // do nothing
-    while(!grandfailure);
+    // while(!grandfailure);                 <-- uncomment for testing
     AK_EPI;
 }

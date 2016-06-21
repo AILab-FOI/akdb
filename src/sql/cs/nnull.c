@@ -135,6 +135,51 @@ int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue) 
 }
 
 /**
+ * @author Maja Vračan
+ * @brief Function for deleting specific not null constraint
+ * @param tableName name of table on which constraint refers
+ * @param attName name of attribute on which constraint is declared
+ * @param constraintName name of constraint 
+ * @return EXIT_SUCCESS when constraint is deleted, else EXIT_ERROR
+ */
+int AK_delete_constraint_not_null(char* tableName, char attName[], char constraintName[]){
+    
+    AK_PRO;
+    int address, i, j, k, l, size;
+    int num_attr = AK_num_attr("AK_constraints_not_null");
+    AK_header *t_header = (AK_header *) AK_get_header("AK_constraints_not_null");
+    table_addresses *src_addr = (table_addresses*) AK_get_table_addresses("AK_constraints_not_null");
+    for (i = 0; src_addr->address_from[i] != 0; i++) {
+        for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
+            AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
+            if (temp->block->last_tuple_dict_id == 0)
+                break;
+            for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+                if (temp->block->tuple_dict[k].type == FREE_INT)
+                    break;
+
+                for (l = 0; l < num_attr; l++) {
+                    if(strcmp(t_header[l].att_name, "constraintName") == 0) {
+                        size = temp->block->tuple_dict[k + l].size;
+                        address = temp->block->tuple_dict[k + l].address;
+                        char data[size];
+                        memcpy(data, &(temp->block->data[address]), size);
+                        data[size] = '\0';
+                        if(strcmp(data, constraintName) == 0) { 
+                            temp->block->tuple_dict[k].size = 0;
+                            AK_EPI;
+                            return EXIT_SUCCESS;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    AK_EPI;
+    return EXIT_ERROR;
+}
+
+/**
   * @author Saša Vukšić, updated by Nenad Makar
   * @brief Function for testing testing NOT NULL constraint
   * @return No return value
@@ -158,6 +203,14 @@ void AK_null_test() {
 	{
 		printf("\nChecking if attribute %s of table %s can contain NULL sign...\nYes (0) No (-1): %d\n\n", attName, tableName, AK_read_constraint_not_null(tableName, attName, newValue));
 	}
+        // delete test
+        printf("\nDelete test");
+        result = AK_delete_constraint_not_null(tableName, attName, constraintName);
+        AK_print_table("AK_constraints_not_null");
+        if(result == EXIT_SUCCESS) {
+            printf("\nSUCCESS");
+        }
+        printf("\nDelete test finish");
 	printf("\nTrying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attName, tableName);
 	result = AK_set_constraint_not_null(tableName, attName, constraintName);
 	AK_print_table("AK_constraints_not_null");

@@ -1084,22 +1084,11 @@ void AK_create_test_tables() {
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
-    //AK_rel_eq_comut_test();	
+
     Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
-    //------------------------------------------------------------------------------------------------------
-    //AK_op_rename_test();
-    
-  //  AK_sequence_test();
 
-//AK_drop_test();
-
-/*******************************/
-//printf("\n\n----------------View test----------------\n\n");
-//	AK_view_test();
-/*******************************/
-
-   AK_EPI;
+    AK_EPI;
 }
 
 

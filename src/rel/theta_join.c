@@ -327,7 +327,6 @@ void AK_op_theta_join_test() {
 
     Ak_DeleteAll_L3(&constraints);
     
-    //printf("SELECT * FROM student, professor2 WHERE id_prof = mbr;\n");
     printf("SELECT * FROM student, professor2 WHERE id_prof=mbr;\n");
 
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);

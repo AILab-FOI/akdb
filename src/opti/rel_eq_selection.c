@@ -409,7 +409,6 @@ struct list_node *AK_rel_eq_split_condition(char *cond) {
 
     //it's much safe to allocate MAX_VARCHAR_LENGHT, and remove all AK_realloc from function
     char *temp_attr = (char *) AK_calloc(1, sizeof (char));
-    //memset(temp_attr, '\0', MAX_VARCHAR_LENGHT);
 
     char *temp_cond = (char *) AK_calloc(strlen(cond), sizeof (char));
     memcpy(temp_cond, cond, strlen(cond));
@@ -428,22 +427,18 @@ struct list_node *AK_rel_eq_split_condition(char *cond) {
             } else {
                 if (attr_address > 0) {
                     temp_attr = (char *) AK_realloc(temp_attr, attr_address + len_token + 2);
-                    //memcpy(temp_attr + attr_address, " ", 1);
                     strcpy(temp_attr + attr_address, " ");
-                    //memcpy(temp_attr + ++attr_address, "\0", 1);
                     attr_address++;
                 } else {
                     temp_attr = (char *) AK_realloc(temp_attr, attr_address + len_token + 1);
                 }
 
                 strcpy(temp_attr + attr_address, token_cond);
-                //memcpy(temp_attr + attr_address, token_cond, len_token);
                 attr_address += len_token;
             }
         }
     }
 
-    //memcpy(temp_attr + attr_address, "\0", 1);
     Ak_InsertAtEnd_L3(TYPE_CONDITION, temp_attr, strlen(temp_attr), list_attr);
 
     AK_free(temp_cond);
@@ -465,7 +460,6 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
     struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&temp);
 
-//    struct list_node *list_split_sel;
     struct list_node *tmp, *temp_elem, *temp_elem_prev, *temp_elem_next;
     struct list_node *list_elem_next, *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
 
@@ -482,7 +476,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                 list_elem_next = (struct list_node *) Ak_Next_L2(list_elem);
 
                 switch (list_elem->data[0]) {
-                        //Commutativity of Selection and Projection.
+                    //Commutativity of Selection and Projection.
                     case RO_PROJECTION:
                         step = -1;
 
@@ -541,7 +535,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                             Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         }
 
-                        /*//Divide selection condition (slower than upper solution but can be useful in certain cases)
+                        /* Divide selection condition (slower than upper solution but can be useful in certain cases)
                         list_split_sel = AK_rel_eq_split_condition(list_elem_next->data);
                         struct list_node *list_elem_split = (struct list_node *)FirstL(list_split_sel);
 						
@@ -642,13 +636,8 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
                                         data2 = AK_rel_eq_commute_with_theta_join(temp_elem->data, (temp_elem_next->next)->data);
                                         cond_attr2 = AK_rel_eq_cond_attributes(data2);
 
-                                        //Debug lines - can be removed later
-                                        //printf("CONDITION DATA : data: (%s),(%s), cond: (%s),(%s)\n", data1, data2, cond_attr1, cond_attr2);
-                                        //printf("SHARE ATTRIBUTE: (%i)\n", AK_rel_eq_share_attributes(cond_attr1, cond_attr2));
-
                                         if (AK_rel_eq_share_attributes(cond_attr1, cond_attr2)) {
                                             if (cond_attr1 != NULL) {
-                                                //memset(temp_elem->data, '\0', MAX_VARCHAR_LENGHT);
                                                 temp_elem->size = strlen(data1) + 1;
                                                 memcpy(temp_elem->data, data1, temp_elem->size);
                                                 memset(temp_elem->data + temp_elem->size, '\0', MAX_VARCHAR_LENGTH - temp_elem->size);
@@ -731,7 +720,7 @@ struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq) {
         list_elem = list_elem->next;
     }
 
-    //====================================> IMPROVMENTS <=======================================
+    //====================================> IMPROVEMENTS <=======================================
     //Recursive RA optimization (need to implement exit condition in place of each operator, ...)
     //If there is no new changes on the list return generated struct list_nodes
     //int iter_cond;
@@ -861,8 +850,6 @@ void AK_rel_eq_selection_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
     Ak_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` 50 = `job` 'teacher' = AND", sizeof ("`mbr` 50 = `job` 'teacher' = AND"), expr); //theta join attribute
 
-    //printf("\nRA expr. before rel_eq optimization:\n");
-    //AK_print_rel_eq_projection(expr);
     AK_print_rel_eq_selection(AK_rel_eq_selection(expr));
 
     if (DEBUG_ALL) {
@@ -890,6 +877,6 @@ void AK_rel_eq_selection_test() {
     }
 
     Ak_DeleteAll_L3(&expr);
-    //dealocate variables ;)
+
     AK_EPI;
 }

@@ -49,6 +49,20 @@ doc:
 	doxygen doxygen.config
 	cd ../doc/latex && make
 	cp ../doc/latex/refman.pdf ../doc/
+open:
+	cd ../doc/html;\
+    ./open_html.sh
+version:
+	doxygen -v
+	latex -v
+	gcc -v
+	make -v
+deps:
+	#sudo apt-get update
+	sudo apt-get install doxygen graphviz doxygen-gui texlive-full build-essential swig
+
+
+	
 
 swig:
 	cd swig && swig -python kalashnikovDB.i && python setup.py build_ext --inplace && cd ..

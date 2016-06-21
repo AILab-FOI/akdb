@@ -43,11 +43,6 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 		Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
 		table_addresses *src_addr = (table_addresses*) AK_get_table_addresses(srcTable);
 		
-		/*
-		AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-		Ak_Init_L3(&row_root);
-		*/
-		
 		struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
 		Ak_Init_L3(&row_root);
 		
@@ -119,11 +114,11 @@ void AK_op_selection_test() {
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
 	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
-	//Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
 	printf("\nQUERY: SELECT * FROM student WHERE year > 2005 AND firstname = 'Robert';\n\n");
 	AK_selection(srcTable, destTable, expr);
 	Ak_DeleteAll_L3(&expr);
 	AK_free(expr);
+
 	/*
 	struct list_node *expr1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
 	Ak_Init_L3(&expr1);
@@ -144,6 +139,7 @@ void AK_op_selection_test() {
 	Ak_DeleteAll_L3(&expr1);
 	AK_free(expr1);
 	*/
+
 	AK_EPI;
 }
 
@@ -220,22 +216,11 @@ void AK_op_selection_test2() {
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "~", sizeof ("~"), expr);
 
     printf("\nQUERY: SELECT * FROM student WHERE firstname ~ '^D' ;\n\n");
-	AK_selection(srcTable, destTable5, expr);
+    AK_selection(srcTable, destTable5, expr);
 
-
-	/*
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Mislav", sizeof ("Mislav"), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
-	*/
-
-	//printf("\nQUERY: SELECT * FROM student WHERE year BETWEEN 2000 AND 2006';\n\n");
-	
-
-	Ak_DeleteAll_L3(&expr);
-	AK_free(expr);
-	AK_EPI;
+    Ak_DeleteAll_L3(&expr);
+    AK_free(expr);
+    AK_EPI;
 }
 
 /**
@@ -245,7 +230,7 @@ void AK_op_selection_test2() {
  */
 void AK_op_selection_test_redolog(){
 	AK_PRO;
-/*
+
 	int brojac = 0;
 	printf("\n********** REDO LOG TEST ************\n");
 	for (brojac = 0; brojac < 10; brojac ++){
@@ -275,10 +260,10 @@ void AK_op_selection_test_redolog(){
 
 		}
 
-		//naizmjenicno testiranje dohvaćanja tablice
+		//alternately testing of fetching table
 		if (brojac%2==0) AK_op_selection_test();
 		else AK_op_selection_test2();
 
-	}*/
+	}
 	AK_EPI;
 }

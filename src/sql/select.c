@@ -50,7 +50,6 @@ int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct
 	///making a new header for the final result from the selected ones from the subscore
 	while(strcmp(temp_block->header[head].att_name, "") != 0) {
 
-		//list_attributes=(AK_list_elem) Ak_First_L2(attributes);
 		list_attributes = Ak_First_L2(attributes);
 		int create=0;
 		while(list_attributes!=NULL){
@@ -73,7 +72,6 @@ int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct
 	
 	AK_free(temp_block);
 
-	//AK_list* row_root = (AK_list *) AK_malloc(sizeof (AK_list));
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 
     int i, j, k, l, type, size, address;
@@ -115,7 +113,6 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 					b=0;
 				}
 				Ak_insert_row(row_root);
-//				Ak_DeleteAll_L3(&row_root);
 				Ak_DeleteAll_L3(&row_root);
 	}
 	

@@ -2,6 +2,7 @@
 
 from sql_tokenizer import *
 import time
+from random import randint
 
 import sys
 sys.path.append('../swig/')
@@ -206,7 +207,42 @@ class Table_exists_command:
                 else:
                         result = "Table exists. You can see it by typing \p <table_name>."
                 return result
-
+            
+##create user command
+class Create_user_command:
+    id = randint(1, 10000)
+    create_user_regex = r"^create user ([a-zA-Z0-9_]+) with password ([a-zA-Z0-9_]+)"
+    pattern = None
+    matcher = None
+    
+    ##matches method
+    #checks whether given input matches create_user command sintax
+    def matches(self, input):
+        self.pattern = re.compile(self.create_user_regex)
+        self.matcher = self.pattern.match(input)
+        return self.matcher != None
+    
+    def execute(self):
+        AK_user_add(self.matcher.group(1), self.matcher.group(2), id)
+        return "User has been created"
+        
+class Drop_user_command:
+    drop_user_regex = r"^drop user ([a-zA-Z0-9_]+)"
+    pattern = None
+    matcher = None
+    
+    ##matches method
+    #checks whether given input matches create_user command sintax
+    def matches(self, input):
+        self.pattern = re.compile(self.drop_user_regex)
+        self.matcher = self.pattern.match(input)
+        return self.matcher != None
+    
+    def execute(self):
+        AK_user_remove_by_name(self.matcher.group(1))
+        return "User has been removed"
+    
+    
 ## create sequence
 # developd by Danko Sacer
 class Create_sequence_command:  
@@ -330,7 +366,7 @@ class Create_table_command:
 ## create index command
 # @author Franjo Kovacic
 class Create_index_command:
-        create_table_regex = r"^(?i)create index(\s([a-zA-Z0-9_]+))+?$"
+        create_index_regex = r"^(?i)create index(\s([a-zA-Z0-9_]+))+?$"
         pattern = None
         matcher = None
         expr = None
@@ -840,8 +876,8 @@ class Update_command:
                 # This is Test Data!
                 # Iteration required for more than one attribute!
                 element = ak47.list_node()
-                ak47.Ak_Init_L3(&element)
-                ak47.Ak_DeleteAll_L3(&element)
+                ak47.Ak_Init_L3(id(element))
+                ak47.Ak_DeleteAll_L3(id(element))
 
                 updateColumn = token.columnNames[0]
                 whereColumn = token.condition[1][0]
@@ -999,9 +1035,11 @@ class sql_executor:
         select_command = Select_command()
         update_command = Update_command()
         drop_command = Drop_command()
+        create_user_command = Create_user_command()
+        drop_user_command = Drop_user_command()
 
         ##add command instances to the commands array
-        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, grant_command, select_command, update_command,drop_command]
+        commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command, create_index_command, create_trigger_command,insert_into_command, grant_command, select_command, update_command,drop_command, create_user_command, drop_user_command]
 
         ## commands for input
         # checks whether received command matches any of the defined commands for kalashnikovdb, 

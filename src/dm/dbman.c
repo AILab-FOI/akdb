@@ -1556,7 +1556,7 @@ AK_header * AK_create_header(char * name, int type, int integrity, char * constr
 
     //AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
 
-    Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", name, strlen(name));
+    Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", name, strlen(name));    
     catalog_header->type = type;
     memcpy(catalog_header->att_name, name, strlen(name));
 
@@ -2465,6 +2465,7 @@ int AK_delete_block(int address) {
     block->type = BLOCK_TYPE_FREE;
     block->chained_with = NOT_CHAINED;
     block->AK_free_space = DATA_BLOCK_SIZE * DATA_ENTRY_SIZE * sizeof (int);
+    block->last_tuple_dict_id = 0;
     memcpy(block->header, head, sizeof (*head));
     memcpy(block->tuple_dict, tuple_dict, sizeof (*tuple_dict));
     memcpy(block->data, data, sizeof (*data));

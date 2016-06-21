@@ -67,7 +67,6 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
         AK_free(header);
 
-        //AK_list *row_root = (AK_list *) AK_malloc(sizeof (AK_list));
 	struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
 	
 	for (i = 0; src_addr1->address_from[i] != 0; i++) {
@@ -155,7 +154,6 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 											}
 											//if there is a difference between tuple_dicts
 											if (summ == 0) {
-												//printf("Num_rows: %i, Different_rows: %i\n", num_rows, different);
 												
 												Ak_DeleteAll_L3(&row_root);	
 												for (o = 0; o < num_att; o++) {
@@ -202,10 +200,21 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
  */
 void Ak_op_difference_test() {
     AK_PRO;
-    printf("\n********** DIFFERENCE TEST **********\n\n");
+    char *sys_table = "AK_relation";
+    char *destTable = "difference_test";
+    char *tblName1 = "professor";
+    char *tblName2 = "assistant";
 
-    AK_difference("professor", "assistant", "difference_test");
-    AK_print_table("difference_test");
+    printf("\n********** DIFFERENCE TEST **********\n\n");
+    if (AK_if_exist(destTable, sys_table) == 0) {
+    	printf("Table %s does not exist!\n", destTable);
+	AK_difference(tblName1, tblName2, destTable);
+    }
+    else {
+	printf("Table %s already exists!\n", destTable);
+    }
+
+    AK_print_table(destTable);
     AK_EPI;
 }
 

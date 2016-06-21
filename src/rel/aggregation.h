@@ -24,6 +24,7 @@
 #include "projection.h"
 #include "../file/filesearch.h"
 #include "../auxi/mempro.h"
+#include "../sql/drop.h"
 
 #define AGG_TASK_GROUP 1
 #define AGG_TASK_COUNT 2

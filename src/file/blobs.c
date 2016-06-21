@@ -301,7 +301,7 @@ AK_File_Metadata AK_read_metadata(char *oid) {
 
   if (meta->new_name == 0x0)
     return 0x0;
-  //printf("[INFO] new_name:  %s\n", meta->new_name);
+
 
   fgets( line, sizeof(line), fp);
   strcpy(meta->new_path, line);
@@ -309,7 +309,6 @@ AK_File_Metadata AK_read_metadata(char *oid) {
 
   if (meta->new_path == 0x0)
     return 0x0;
-  //printf("[INFO] new_path: %s\n", meta->new_path);
 
   fgets( line, sizeof(line), fp);
   strcpy(meta->old_name, line);
@@ -317,16 +316,13 @@ AK_File_Metadata AK_read_metadata(char *oid) {
 
   if (meta->old_name == 0x0)
     return 0x0;
-  //printf("[INFO] old_name:  %s\n", meta->old_name);
 
   fgets( line, sizeof(line), fp);
   strcpy(meta->old_path, line);
   meta->old_path = AK_clear_all_newline(meta->old_path);
 
-
   if (meta->old_path == 0x0)
     return 0x0;
-  //printf("[INFO] old_path:  %s\n", line);
 
   fclose(fp);
   printf("\t[+] File closed.\n");

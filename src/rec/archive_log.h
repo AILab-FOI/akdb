@@ -27,7 +27,8 @@
 #include <fcntl.h>
 #include "../auxi/mempro.h"
 
-void AK_archive_log();
+void AK_archive_log(int sig);
+void AK_empty_archive_log();
 char* AK_get_timestamp();
 
 #endif

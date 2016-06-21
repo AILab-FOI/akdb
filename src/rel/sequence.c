@@ -34,10 +34,7 @@
 int AK_sequence_add(char *name, int start_value, int increment, int max_value, int min_value, int cycle){
     AK_PRO;
     printf("\n***Add sequence***");
-   /*
-    AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-    */
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
     
@@ -74,9 +71,7 @@ int AK_sequence_add(char *name, int start_value, int increment, int max_value, i
 int AK_sequence_remove(char *name){
     AK_PRO;
     printf("\n***Remove sequence***");
-   /* AK_list_elem row_root = (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root);
-    */
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
     
@@ -109,8 +104,6 @@ int AK_sequence_current_value(char *name){
     struct list_node *row;
     AK_PRO;
 
-    
-    //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
     while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
         if (strcmp(get_row_attr_data(1,row), name) == 0) {
             memcpy(&current_value, get_row_attr_data(2,row), sizeof (int));
@@ -145,7 +138,7 @@ int AK_sequence_next_value(char *name){
     
     struct list_node *row;
     AK_PRO;
-    //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+
     while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
         if(strcmp( get_row_attr_data(1,row) ,name) == 0) {
         memcpy(&obj_id, get_row_attr_data(0,row), sizeof (int));
@@ -250,10 +243,7 @@ int AK_sequence_rename(char *old_name, char *new_name){
     int i = 0;
     
     int seq_id = AK_sequence_get_id(old_name);
-    /*
-    AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root); 
-*/
+
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     
@@ -291,7 +281,7 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
     int seq_id = -1;
     
     struct list_node *row;
-    //while ((row = (AK_list *)AK_get_row(i, "AK_sequence")) != NULL){
+
     while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
         if (strcmp(get_row_attr_data(1,row) ,name) == 0){
             memcpy(&seq_id, get_row_attr_data(0,row), sizeof (int));
@@ -299,10 +289,7 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
         }
         i++;
     }
-    /*
-    AK_list_elem row_root= (AK_list_elem) AK_malloc(sizeof (AK_list));
-    Ak_Init_L3(&row_root); 
-*/
+    
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
     
