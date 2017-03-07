@@ -66,6 +66,12 @@ make clean
 make clean-d
 ```
 
+### Find Croatian comments
+See if there are some leftover Croatian comments in the code:
+```
+make comments
+```
+
 ## Directory Layout
 ## Testing
 ### Main engine
