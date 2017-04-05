@@ -392,8 +392,8 @@ extern struct list_node *AK_rel_eq_get_attributes(char *tblName);
 %include "../sql/function.h"
 %include "../sql/function.c"
 
-%include "../rel/sequence.h"
-%include "../rel/sequence.c"
+%include "../file/sequence.h"
+%include "../file/sequence.c"
 
 %include "../rec/redo_log.h"
 %include "../rec/redo_log.c"

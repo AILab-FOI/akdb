@@ -20,9 +20,9 @@
 #ifndef SEQUENCE
 #define SEQUENCE
 
-#include "../file/table.h"
-#include "../file/id.h"
-#include "../file/fileio.h"
+#include "table.h"
+#include "id.h"
+#include "fileio.h"
 #include "../auxi/mempro.h"
 
 int AK_sequence_add(char *name, int start_value, int increment, int max_value, int min_value, int cycle);

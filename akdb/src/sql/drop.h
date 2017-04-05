@@ -22,7 +22,7 @@
 
 #include "../file/table.h"
 #include "../file/fileio.h"
-#include "../rel/sequence.h"
+#include "../file/sequence.h"
 #include "view.h"
 #include "trigger.h"
 #include "function.h"
