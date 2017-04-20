@@ -112,6 +112,8 @@ function fun[] = {
 {"file: Ak_filesort", &Ak_filesort_test}, //file/filesort.c
 {"file: Ak_filesearch", &Ak_filesearch_test}, //file/filesearch.c
 {"file: AK_sequence", &AK_sequence_test}, //file/sequence.c 
+{"file: AK_op_table", &AK_table_test}, //file/table.c
+
 //file/idx:
 //-------------
 {"idx: Ak_bitmap", &Ak_bitmap_test}, //file/idx/bitmap.c
