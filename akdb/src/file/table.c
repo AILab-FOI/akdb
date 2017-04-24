@@ -58,7 +58,7 @@ void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int a
  * @brief  Determine the number of attributes in the table
  * <ol>
  * <li>Read addresses of extents</li>
- * <li>If there is no extents in the table, return -1</li>
+ * <li>If there is no extents in the table, return EXIT_ERROR</li>
  * <li>else read the first block</li>
  * <li>while  header tuple exists in the block, increment num_attr</li>
  * </ol>
@@ -89,7 +89,7 @@ int AK_num_attr(char * tblName) {
  * @brief  Determine number of rows in the table
  * <ol>
  * <li>Read addresses of extents</li>
- * <li>If there is no extents in the table, return -1</li>
+ * <li>If there is no extents in the table, return EXIT_ERROR</li>
  * <li>For each extent from table</li>
  * <li>For each block in the extent</li>
  * <li>Get a block</li>
@@ -106,7 +106,7 @@ int AK_get_num_records(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0){
         AK_EPI;
-        return -1;
+        return EXIT_ERROR;
     }
     int i = 0, j, k;
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
@@ -193,7 +193,7 @@ int AK_get_attr_index(char *tblName, char *attrName) {
     AK_PRO;
     if (tblName == NULL || attrName == NULL){
         AK_EPI;
-        return -1;
+        return EXIT_ERROR;
     }
     int num_attr = AK_num_attr(tblName);
     AK_header *header = AK_get_header(tblName);
@@ -206,7 +206,7 @@ int AK_get_attr_index(char *tblName, char *attrName) {
         index++;
     }
     AK_EPI;
-    return -1;
+    return EXIT_ERROR;
 }
 
 /**
