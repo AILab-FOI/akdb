@@ -135,7 +135,7 @@ AK_free(addresses);
  * @brief  Function that getts table header
  * <ol>
  * <li>Read addresses of extents</li>
- * <li>If there is no extents in the table, return -1</li>
+ * <li>If there is no extents in the table, return 0</li>
  * <li>else read the first block</li>
  * <li>allocate array</li>
  * <li>copy table header to the array</li>
