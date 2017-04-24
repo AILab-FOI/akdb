@@ -665,7 +665,7 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
  * @param *row  list with row elements
  * @return atribute data
  */
-char *get_row_attr_data(int column, struct list_node *node){
+/*char *get_row_attr_data(int column, struct list_node *node){
     
     struct list_node *nodee = node;
     int i=0;
@@ -679,6 +679,7 @@ char *get_row_attr_data(int column, struct list_node *node){
             }
         }
 }
+*/
 
 /**
  * @author Dino Laktašić
