@@ -38,6 +38,7 @@
 #include "file/filesort.h"
 #include "file/table.h"
 #include "file/test.h"
+#include "file/sequence.h"
 //Logging
 #include "rec/archive_log.h" //ARCHIVE LOG
 // Indices
@@ -54,7 +55,6 @@
 #include "rel/union.h"
 #include "rel/aggregation.h"
 #include "rel/product.h"
-#include "rel/sequence.h"
 //Command
 #include "sql/command.h"
 #include "sql/select.h"
@@ -111,6 +111,9 @@ function fun[] = {
 {"file: AK_op_rename", &AK_op_rename_test}, //file/table.c
 {"file: Ak_filesort", &Ak_filesort_test}, //file/filesort.c
 {"file: Ak_filesearch", &Ak_filesearch_test}, //file/filesearch.c
+{"file: AK_sequence", &AK_sequence_test}, //file/sequence.c 
+{"file: AK_op_table", &AK_table_test}, //file/table.c
+
 //file/idx:
 //-------------
 {"idx: Ak_bitmap", &Ak_bitmap_test}, //file/idx/bitmap.c
@@ -131,7 +134,6 @@ function fun[] = {
 //--------
 {"rel: AK_op_union", &AK_op_union_test}, //rel/union.c
 {"rel: AK_op_join", &AK_op_join_test}, // rel/nat_join.c
-{"rel: AK_sequence", &AK_sequence_test}, 
 {"rel: AK_op_product", &AK_op_product_test}, //rel/product.c
 {"rel: Ak_aggregation", &Ak_aggregation_test}, //rel/aggregation.c
 {"rel: AK_op_intersect", &Ak_op_intersect_test}, //rel/intersect.c
