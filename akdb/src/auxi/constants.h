@@ -127,6 +127,14 @@
   * @brief Constant declaring unsuccesfull exit
  */
 #define EXIT_ERROR -1
+
+
+/**
+ * @def EXIT_WARNING -2
+ * @brief Constant declaring warning exit
+ */
+#define EXIT_WARNING -2
+
 /**
   * @def BLOCK_TYPE_FREE
   * @brief Constant declaring AK_free block type (used in AK_block->type)
