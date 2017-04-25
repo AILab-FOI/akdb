@@ -34,14 +34,17 @@ of Kalashnikov DB
 
 
 #include <sys/stat.h>   /* for stat structure*/
-#include <limits.h>        /* for CHAR_BIT */
+#include <limits.h>     /* for CHAR_BIT */
 
-#define BITMASK(b) (1 << ((b) % CHAR_BIT))
-#define BITSLOT(b) ((int)((b) / CHAR_BIT))
-#define BITSET(a, b) ((a)[BITSLOT(b)] |= BITMASK(b))
-#define BITCLEAR(a, b) ((a)[BITSLOT(b)] &= ~BITMASK(b))
-#define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
-#define BITNSLOTS(nb) ((int)(nb + CHAR_BIT - 1) / CHAR_BIT)
+//#define false 0
+//#define true  !false
+
+#define BITMASK(b)      (1 << ((b) % CHAR_BIT))
+#define BITSLOT(b)      ((int)((b) / CHAR_BIT))
+#define BITSET(a, b)    ((a)[BITSLOT(b)] |=  BITMASK(b))
+#define BITCLEAR(a, b)  ((a)[BITSLOT(b)] &= ~BITMASK(b))
+#define BITTEST(a, b)   ((a)[BITSLOT(b)] &   BITMASK(b))
+#define BITNSLOTS(nb)   ((int)(nb + CHAR_BIT - 1) / CHAR_BIT)
 #define SEGMENTLENGTH() (BITNSLOTS(DB_FILE_BLOCKS_NUM) + 2*sizeof(int))
 
 
@@ -151,7 +154,7 @@ typedef struct {
  * @var AK_allocationbit
  * @brief Global variable that holds allocation bit-vector
  */
-AK_blocktable * AK_allocationbit;
+AK_blocktable *AK_allocationbit;
 
 
 
@@ -180,9 +183,9 @@ AK_blocktable * AK_allocationbit;
  * @author dv
  * @brief Different modes to obtain allocation indexes:
  * SEQUENCE - first found set of sequence indexes
- * UPPER - set tries to place itself to upper part od allocation table
- * LOWER - set tries to place itself to lower part od allocation table
- * AROUND - set tries to place itself around targeted index
+ * UPPER    - set tries to place itself to upper part od allocation table
+ * LOWER    - set tries to place itself to lower part od allocation table
+ * AROUND   - set tries to place itself around targeted index
  */
 typedef enum{
     allocationSEQUENCE = 10001,
@@ -232,13 +235,12 @@ AK_block_activity *AK_block_activity_info;
  */
 AK_synchronization_info* dbmanFileLock;
 
-
 int AK_print_block(AK_block * block, int num, char* gg, FILE *fpp);
 void AK_allocationbit_test();
 void AK_allocationtable_test();
 int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header, int gl);
 int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header, int gl);
-int * AK_get_allocation_set(int* bitsetbs, int fromWhere, int gaplength, int num, AK_allocation_set_mode mode, int target);
+int AK_get_allocation_set(int* bitsetbs, int fromWhere, int gaplength, int num, AK_allocation_set_mode mode, int target);
 int AK_copy_header(AK_header *header, int * blocknum, int num);
 int  AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany);
 AK_block *  AK_init_block();
