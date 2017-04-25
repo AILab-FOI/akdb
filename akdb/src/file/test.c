@@ -39,6 +39,7 @@ char* AK_get_table_atribute_types(char* tblName){
     AK_PRO;
     num_attr = AK_num_attr(tblName);
 
+
     if (num_attr == EXIT_WARNING) {
         AK_EPI;
         return NULL;
