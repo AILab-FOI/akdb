@@ -133,7 +133,7 @@ char *AK_rel_eq_get_atrributes_char(char *tblName) {
     AK_PRO;
     num_attr = AK_num_attr(tblName);
 
-    if (num_attr == -2) {
+    if (num_attr == EXIT_WARNING) {
         AK_EPI;
         return NULL;
     }
