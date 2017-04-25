@@ -292,6 +292,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
 }
 
 /**
+ * NOTICE: Test 12 isn't currently revoking a privilege since the obj_id in the AK_group_right table is passing the value of 127.
      Once the issue #87 on GitHub concerning the data type is solved, the test should be working as expected.
  * @author Kristina Takač, updated by Mario Peroković - added comparing by table id, and use of user_id in AK_user_right
  * @brief Revokes user's privilege on the given table
@@ -478,6 +479,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right) {
 }
 
 /**
+ * NOTICE: Test 9 isn't currently revoking a privilege since the obj_id in the AK_group_right table is passing the value of 127.
      Once the issue #87 on GitHub concerning the data type is solved, the test should be working as expected.
  * @author Kristina Takač, updated by Mario Peroković - added comparing by table id
  * @brief Revokes group's privilege on the given table 
@@ -1215,6 +1217,7 @@ void AK_privileges_test() {
     /* 9. AK_revoke_privilege_group */
     /********************************/
 
+    /* NOTICE: This test isn't currently revoking a privilege since the obj_id in the AK_group_right table is passing the value of 127.
      Once the issue #87 on GitHub concerning the data type is solved, the test should be working as expected. */
     
     printf("\n\n9. Test - AK_revoke_privilege_group function - Revokes privilege for a group on a given table\n");
@@ -1288,6 +1291,7 @@ void AK_privileges_test() {
     /* 12. AK_revoke_privilege_user */
     /********************************/
     
+    /* NOTICE: This test isn't currently revoking a privilege since the obj_id in the AK_user_right is passing the value of 127.
      Once the issue #87 on GitHub concerning the data type is solved, the test should be working as expected. */
 
     printf("\n\n12. Test - AK_revoke_privilege_user function - Revokes user's privilege(s) on a given table\n");
