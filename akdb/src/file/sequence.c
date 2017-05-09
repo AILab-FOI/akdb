@@ -200,7 +200,6 @@ int AK_sequence_next_value(char *name){
    
     AK_EPI;
     return next_value;
-	//return 100;
 }
 
 /**
@@ -277,18 +276,8 @@ int AK_sequence_rename(char *old_name, char *new_name){
 int AK_sequence_modify(char *name, int start_value, int increment, int max_value, int min_value, int cycle){
     AK_PRO;
     printf("\n***Edit sequence***");
-    int i = 0;
-    int seq_id = -1;
-    
-    struct list_node *row;
 
-    while ((row = (struct list_node *)AK_get_row(i, "AK_sequence")) != NULL){
-        if (strcmp(get_row_attr_data(1,row) ,name) == 0){
-            memcpy(&seq_id, get_row_attr_data(0,row), sizeof (int));
-	    break;
-        }
-        i++;
-    }
+    int seq_id = AK_sequence_get_id(name);
     
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
@@ -321,21 +310,71 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
 void AK_sequence_test() {
     AK_PRO;
     printf("sequence.c: Present!\n");
-    AK_sequence_add("sequence1", 100, 5, 200, 100, 1);     
-    AK_sequence_add("sequence2", 200, 10, 205, 100, 1);
+    printf("\n***Adding sequences***\n");
+    int add1 = AK_sequence_add("sequence1", 100, 5, 200, 100, 1);     
+    int add2 = AK_sequence_add("sequence2", 200, 10, 205, 100, 1);
     AK_print_table("AK_sequence");
+
+    printf("\n***Getting sequence id***\n");
+    int id = AK_sequence_get_id("sequence1");
+    printf("\nValue of 'sequence1' id: %d\n", id);
+
+    printf("\n***Current & next value check***\n");
     int currval = AK_sequence_current_value("sequence1");
-    printf("\nCurrent value of sequence sequence1: %d\n", currval);
+    printf("\nCurrent value of sequence sequence1: %d", currval);
     int nextval = AK_sequence_next_value("sequence1");
     printf("\nNext value of sequence sequence1: %d\n", nextval);
     
-    AK_sequence_rename("sequence1", "sequence3");
+    int rename = AK_sequence_rename("sequence1", "sequence3");
+    printf("\nRenaming 'sequence 1' to 'sequence2'.\n");
     AK_print_table("AK_sequence"); 
 
-    AK_sequence_modify("sequence3", 200, 20, 300, 150, 0);
-    AK_sequence_remove("sequence1");
+    int modify = AK_sequence_modify("sequence3", 200, 20, 300, 150, 0);
+    printf("\nModifying 'sequence3.'\n");
+    AK_print_table("AK_sequence"); 
+
+    int remove = AK_sequence_remove("sequence2");
+    printf("\nRemoving 'sequence2'.\n");
     AK_print_table("AK_sequence");
-    
-    printf("\n Test is successful :) \n");
+
+    int failed = 0;
+    if (add1 == EXIT_ERROR) {
+    	printf("\nError while adding 'sequence1'.\n");
+        failed = 1;
+    }
+    if (add2 == EXIT_ERROR) {
+    	printf("\nError while adding 'sequence2'.\n");
+	failed = 1;
+    }
+    if (id == EXIT_ERROR) {
+    	printf("\nError while getting id value 'sequence1'.\n");
+	failed = 1;
+    }
+    if (currval == EXIT_ERROR || currval != 100) {
+    	printf("\nError while getting current value of 'sequence1'.\n");
+	failed = 1;
+    }
+    if (nextval == EXIT_ERROR || nextval != 105) {
+    	printf("\nError while getting next value 'sequence1'.\n");
+	failed = 1;
+    }
+    if (rename == EXIT_ERROR) {
+    	printf("\nError while renaming 'sequence1'.\n");
+	failed = 1;
+    }
+    if (modify == EXIT_ERROR) {
+    	printf("\nError while modifying 'sequence3'.\n");
+	failed = 1;
+    }   
+    if (remove == EXIT_ERROR) {
+    	printf("\nError removing 'sequence2'.\n");
+	failed = 1;
+    } 
+    if (failed == 0) {
+    	printf("\n Test is successful :) \n");
+    }
+    else {
+    	printf("\n Test failed :( \n");
+    }
     AK_EPI
 }

@@ -97,49 +97,109 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
  * @brief  Function for selection operator testing
  *
  */
-void AK_op_selection_test() {
+void AK_op_selection_test() { // test 31
 	AK_PRO;
 	printf("\n********** SELECTION TEST **********\n");
+	int failed = 0;
 
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
 	Ak_Init_L3(&expr);	
 	char *srcTable = "student";
-	char *destTable = "selection_test";
+
+	char *destTable = "selection_test1";
 	int num = 2005;
 	strcpy(expr->table,destTable);
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
 	Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr);
-	Ak_InsertAtEnd_L3( TYPE_OPERATOR, "OR", sizeof("OR"), expr );
+	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof("OR"), expr );
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
 	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
 	printf("\nQUERY: SELECT * FROM student WHERE year > 2005 AND firstname = 'Robert';\n\n");
-	AK_selection(srcTable, destTable, expr);
+	int sel1 = AK_selection(srcTable, destTable, expr);
+	
 	Ak_DeleteAll_L3(&expr);
+
+	int num_rows1;
+	int num_rows2;
+	struct list_node *row1;
+	struct list_node *row2;
+	int mbr;	
+
+	if (sel1 == EXIT_ERROR) {
+		printf("\n Selection test 1 failed.\n");
+		failed = 1;	
+	}
+	else { //checking exact row data
+		num_rows1 = AK_get_num_records(destTable);
+		if (num_rows1 == 1) {
+			row1 = (struct list_node*)AK_get_row(0,destTable);
+			memcpy(&mbr, get_row_attr_data(0,row1), sizeof(int));
+			if (mbr == 35907){
+				printf("\n Selection test 1 succeeded.\n");
+			}
+			else {
+				printf("\n Selection test 1 failed: Wrong data.\n");
+				failed = 1;
+			}		
+		}
+		else {
+			printf("\n Selection test 1 failed: Wrong number of rows.\n");
+			failed = 1;
+		}
+	}	
+
+        char *destTable2 = "selection_test2";
+	strcpy(expr->table,destTable2);
+	int a = 2000;
+    	int b = 2006;
+    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
+    	Ak_InsertAtEnd_L3(TYPE_INT, &a, sizeof (int), expr);
+    	Ak_InsertAtEnd_L3(TYPE_INT, &b, sizeof (int), expr);
+    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "BETWEEN", sizeof ("BETWEEN"), expr);
+    	printf("\nQUERY: SELECT * FROM student WHERE year BETWEEN 2000 AND 2006';\n\n");
+    	int sel2 = AK_selection(srcTable, destTable2, expr);
+    	Ak_DeleteAll_L3(&expr);
+
+	int mbr2;
+	if (sel2 == EXIT_ERROR) {
+		printf("\n Selection test 2 failed.\n");
+		failed = 1;	
+	}
+	else { //checking exact row data
+		num_rows2 = AK_get_num_records(destTable2);
+		if (num_rows2 == 7) {
+			int i=0;
+			int local_fail = 0;
+			while ((row2 = (struct list_node*)AK_get_row(i,destTable2)) != NULL) {
+				memcpy(&mbr2, get_row_attr_data(0,row2), sizeof(int));
+				if (mbr2 < 35891 || mbr2> 35897) {
+					failed = 1;
+					local_fail = 1;
+					break;
+				}
+				i++;
+			} 
+			if (!local_fail) {
+				printf("\n Selection test 2 succeded.\n");
+			}
+			else {
+				printf("\n Selection test 2 failed: Wrong data. \n");
+			}
+					
+		}
+		else {
+			printf("\n Selection test 2 failed: Wrong number of rows.\n");
+			failed = 1;
+		}
+	}
+
+	if (failed == 0) {
+		printf("\n All tests finished successfully. :)\n");
+	}
+
 	AK_free(expr);
-
-	/*
-	struct list_node *expr1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&expr1);
-	char *srcTable1 = "student";
-        char *destTable1 = "selection_test1";
-	float weight = 83.750;
-	strcpy(expr1->table,destTable1);
-	Ak_InsertAtEnd_L3( TYPE_ATTRIBS, "weight", sizeof("weight"), expr1 );
-	Ak_InsertAtEnd_L3( TYPE_FLOAT, &weight, sizeof(float), expr1 );
-	Ak_InsertAtEnd_L3( TYPE_OPERATOR, ">", sizeof(">"), expr1 );
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr1);
-	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Dino", sizeof ("Robert"), expr1);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr1);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr1);
-	printf("\nQUERY: SELECT * FROM student WHERE weight > 83.750 OR firstname = 'Dino';\n\n");
-	AK_selection(srcTable1, destTable1, expr1);
-	printf("\n Test is successful :) \n");
-	Ak_DeleteAll_L3(&expr1);
-	AK_free(expr1);
-	*/
-
 	AK_EPI;
 }
 
@@ -148,79 +208,199 @@ void AK_op_selection_test() {
  * @brief  Function for selection operator testing
  *
  */
-void AK_op_selection_test2() {
+void AK_op_selection_test_pattern() { //test 32
 	AK_PRO;
-	printf("\n********** SELECTION TEST 2**********\n");
+	printf("\n********** SELECTION TEST 2 - PATTERN MATCH **********\n");
 	
 
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
 	Ak_Init_L3(&expr);
 	
 	char *srcTable = "student";
-	char *destTable = "selection_test2";
-	char *destTable2 = "selection_test3";
-	char *destTable3 = "selection_test4";
-	char *destTable4 = "selection_test5";
-	char *destTable5 = "selection_test6";
-	strcpy(expr->table,destTable);
+	char *destTable3 = "selection_test3";
+	char *destTable4 = "selection_test4";
+	char *destTable5 = "selection_test5";
+	char *destTable6 = "selection_test6";
 
-	int a = 2000;
-    int b = 2006;
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("id_prof"), expr);
-    Ak_InsertAtEnd_L3(TYPE_INT, &a, sizeof (int), expr);
-    Ak_InsertAtEnd_L3(TYPE_INT, &b, sizeof (int), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "BETWEEN", sizeof ("BETWEEN"), expr);
-    
-
-    printf("\nQUERY: SELECT * FROM student WHERE firstname=Dino ADN year BETWEEN 2000 AND 2006';\n\n");
-    AK_selection(srcTable, destTable, expr);
-    Ak_DeleteAll_L3(&expr);
-
-    strcpy(expr->table,destTable2);
-    char expression []= "%in%";
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression, sizeof (char), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
-
-    printf("\nQUERY: SELECT * FROM student WHERE firstname Like .*in.*;\n\n");
-	AK_selection(srcTable, destTable2, expr);
-
+    	strcpy(expr->table,destTable3);
+    	char expression []= "%in%";
+    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    	Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression, sizeof (char), expr);
+    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
+    	printf("\nQUERY: SELECT * FROM student WHERE firstname Like .*in.*;\n\n");
+	int sel3 = AK_selection(srcTable, destTable3, expr);
 	Ak_DeleteAll_L3(&expr);
 
-    strcpy(expr->table,destTable3);
-    char expression2 []= "%dino%";
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression2, sizeof (char), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "ILIKE", sizeof ("ILIKE"), expr);
+	int mbr;
+	int num_rows;
+	struct list_node *row;
+	int failed = 0;
+	if (sel3 == EXIT_ERROR) {
+		printf("\n Selection test 3 failed.\n");
+		failed = 1;	
+	}
+	else { //checking exact row data
+		num_rows = AK_get_num_records(destTable3);
+		if (num_rows == 3) {
+			int i=0;
+			int local_fail = 0;
+			while ((row = (struct list_node*)AK_get_row(i,destTable3)) != NULL) {
+				memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
+				if (mbr != 35891 && mbr != 35900 && mbr != 35913) {
+					failed = 1;
+					local_fail = 1;
+					break;
+				}
+				i++;
+			} 
+			if (!local_fail) {
+				printf("\n Selection test 3 succeded.\n");
+			}
+			else {
+				printf("\n Selection test 3 failed: Wrong data. \n");
+			}
+					
+		}
+		else {
+			printf("\n Selection test 3 failed: Wrong number of rows.\n");
+			failed = 1;
+		}
+	}
 
-    printf("\nQUERY: SELECT * FROM student WHERE firstname ILike .*dino.*;\n\n");
-	AK_selection(srcTable, destTable3, expr);
+	
 
+    	strcpy(expr->table,destTable4);
+    	char expression2 []= "%dino%";
+    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    	Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression2, sizeof (char), expr);
+    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "ILIKE", sizeof ("ILIKE"), expr);
+    	printf("\nQUERY: SELECT * FROM student WHERE firstname ILIKE .*dino.*;\n\n");
+	int sel4 = AK_selection(srcTable, destTable4, expr);
 	Ak_DeleteAll_L3(&expr);
 
-    strcpy(expr->table,destTable4);
-    char expression3 []= "%(d|i)%";
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression3, sizeof (char), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "SIMILAR TO", sizeof ("SIMILAR TO"), expr);
+	if (sel4 == EXIT_ERROR) {
+		printf("\n Selection test 4 failed.\n");
+		failed = 1;	
+	}
+	else { //checking exact row data
+		num_rows = AK_get_num_records(destTable4);
+		if (num_rows == 1) {
+			int i=0;
+			int local_fail = 0;
+			while ((row = (struct list_node*)AK_get_row(i,destTable4)) != NULL) {
+				memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
+				if (mbr != 35891) {
+					failed = 1;
+					local_fail = 1;
+					break;
+				}
+				i++;
+			} 
+			if (!local_fail) {
+				printf("\n Selection test 4 succeded.\n");
+			}
+			else {
+				printf("\n Selection test 4 failed: Wrong data. \n");
+			}
+					
+		}
+		else {
+			printf("\n Selection test 4 failed: Wrong number of rows.\n");
+			failed = 1;
+		}
+	}
 
-    printf("\nQUERY: SELECT * FROM student WHERE firstname SIMILAR TO .*(d|i).*;\n\n");
-	AK_selection(srcTable, destTable4, expr);
 
+    	strcpy(expr->table,destTable5);
+    	char expression3 []= "%(d|i)%";
+    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+   	Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression3, sizeof (char), expr);
+    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "SIMILAR TO", sizeof ("SIMILAR TO"), expr);
+    	printf("\nQUERY: SELECT * FROM student WHERE firstname SIMILAR TO .*(d|i).*;\n\n");
+	int sel5 = AK_selection(srcTable, destTable5, expr);
 	Ak_DeleteAll_L3(&expr);
 
-    strcpy(expr->table,destTable5);
-    char expression4 []= "^D";
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression4, sizeof (char), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "~", sizeof ("~"), expr);
+	if (sel5 == EXIT_ERROR) {
+		printf("\n Selection test 5 failed.\n");
+		failed = 1;	
+	}
+	else { //checking exact row data
+		num_rows = AK_get_num_records(destTable5);
+		if (num_rows == 11) {
+			int i=0;
+			int local_fail = 0;
+			while ((row = (struct list_node*)AK_get_row(i,destTable5)) != NULL) {
+				memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
+				if (mbr != 35891 && mbr != 35893 && mbr != 35898 && mbr != 35900
+				&& mbr != 35901 && mbr != 35902 && mbr != 35905 && mbr != 35906
+				&& mbr != 35911 && mbr != 35912 && mbr != 35913) {
+					failed = 1;
+					local_fail = 1;
+					break;
+				}
+				i++;
+			} 
+			if (!local_fail) {
+				printf("\n Selection test 5 succeded.\n");
+			}
+			else {
+				printf("\n Selection test 5 failed: Wrong data. \n");
+			}
+					
+		}
+		else {
+			printf("\n Selection test 5 failed: Wrong number of rows.\n");
+			failed = 1;
+		}
+	}
 
-    printf("\nQUERY: SELECT * FROM student WHERE firstname ~ '^D' ;\n\n");
-    AK_selection(srcTable, destTable5, expr);
 
-    Ak_DeleteAll_L3(&expr);
-    AK_free(expr);
-    AK_EPI;
+    	strcpy(expr->table,destTable6);
+    	char expression4 []= "^D";
+    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    	Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression4, sizeof (char), expr);
+    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "~", sizeof ("~"), expr);
+    	printf("\nQUERY: SELECT * FROM student WHERE firstname ~ '^D' ;\n\n");
+    	int sel6 = AK_selection(srcTable, destTable6, expr);
+    	Ak_DeleteAll_L3(&expr);
+
+	if (sel6 == EXIT_ERROR) {
+		printf("\n Selection test 6 failed.\n");
+		failed = 1;	
+	}
+	else { //checking exact row data
+		num_rows = AK_get_num_records(destTable6);
+		if (num_rows == 3) {
+			int i=0;
+			int local_fail = 0;
+			while ((row = (struct list_node*)AK_get_row(i,destTable6)) != NULL) {
+				memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
+				if (mbr != 35891 && mbr != 35906 && mbr != 35912) {
+					failed = 1;
+					local_fail = 1;
+					break;
+				}
+				i++;
+			} 
+			if (!local_fail) {
+				printf("\n Selection test 6 succeded.\n");
+			}
+			else {
+				printf("\n Selection test 6 failed: Wrong data. \n");
+			}
+					
+		}
+		else {
+			printf("\n Selection test 6 failed: Wrong number of rows.\n");
+			failed = 1;
+		}
+	}
+
+    	if (failed == 0) {
+		printf("\n All tests finished successfully. :)\n");
+	}
+    	AK_free(expr);
+   	AK_EPI;
 }
 
 /**
@@ -228,7 +408,7 @@ void AK_op_selection_test2() {
  * @brief  Function for redolog testing
  *
  */
-void AK_op_selection_test_redolog(){
+void AK_op_selection_test_redolog(){ // test 37
 	AK_PRO;
 
 	int brojac = 0;
@@ -262,7 +442,7 @@ void AK_op_selection_test_redolog(){
 
 		//alternately testing of fetching table
 		if (brojac%2==0) AK_op_selection_test();
-		else AK_op_selection_test2();
+		else AK_op_selection_test_pattern();
 
 	}
 	AK_EPI;

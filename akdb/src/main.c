@@ -137,13 +137,13 @@ function fun[] = {
 {"rel: AK_op_product", &AK_op_product_test}, //rel/product.c
 {"rel: Ak_aggregation", &Ak_aggregation_test}, //rel/aggregation.c
 {"rel: AK_op_intersect", &Ak_op_intersect_test}, //rel/intersect.c
-{"rel: AK_op_selection", &AK_op_selection_test},
-{"rel: AK_op_selection_ext", &AK_op_selection_test2}, //rel/selection.c with extended ops
+{"rel: AK_op_selection", &AK_op_selection_test}, //rel/selection.c
+{"rel: AK_op_selection_pattern", &AK_op_selection_test_pattern}, //rel/selection.c with pattern match selections
+{"rel: AK_op_selection_redolog", &AK_op_selection_test_redolog}, //rel/selection.c redolog
 {"rel: Ak_expression_check_test" , &Ak_expression_check_test},
 {"rel: AK_op_difference", &Ak_op_difference_test}, //rel/difference.c
 {"rel: AK_op_projection", &AK_op_projection_test}, //rel/projection.c
 {"rel: AK_op_theta_join", &AK_op_theta_join_test}, //rel/theta_join.c
-{"rel: AK_op_selection_test_redolog", &AK_op_selection_test_redolog}, //rel/selection.c
 //sql:
 //--------
 {"sql: AK_command", &AK_test_command}, //sql/command.c
