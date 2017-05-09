@@ -19,6 +19,7 @@
  */
 
 #include "check_constraint.h"
+#include "../drop.h"
 
 /**
  * @author Mislav Jurinić
@@ -274,6 +275,7 @@ int AK_check_constraint(char *table, char *attribute, void *value) {
  * @return void
  */
 void AK_check_constraint_test() {
+	int br = 0;
     // Test 3 data
     float weight_one = 105.5, weight_three = 105.6;
     float *p_weight_one = &weight_one;
@@ -292,7 +294,9 @@ void AK_check_constraint_test() {
     success = AK_set_check_constraint("student", "check_student_year", "year", ">", TYPE_INT, 2005);
 
     if (success == EXIT_ERROR) {
+	br++;
         printf("*** TEST 1 Successful! ***\n");
+	AK_drop("DROP_CONSTRAINT","check_student_year");
     } else {
         printf("*** TEST 1 Failed! ***\n");
     }
@@ -316,6 +320,7 @@ void AK_check_constraint_test() {
 
         if (success == EXIT_ERROR) {
             printf("*** TEST 2.2 Successful! ***\n");
+	    br++;	
         } else {
             printf("*** TEST 2.2 Failed! ***\n");
         }
@@ -333,6 +338,7 @@ void AK_check_constraint_test() {
         success = AK_check_constraint("student", "weight", p_weight_one);
 
         if (success == EXIT_SUCCESS) {
+		
             printf("*** TEST 3.1 Successful! ***\n");
         } else {
             printf("*** TEST 3.1 Failed! ***\n");
@@ -342,6 +348,7 @@ void AK_check_constraint_test() {
         success = AK_check_constraint("student", "weight", p_weight_three);
 
         if (success == EXIT_ERROR) {
+		br++;
             printf("*** TEST 3.2 Successful! ***\n");
         } else {
             printf("*** TEST 3.2 Failed! ***\n");
@@ -355,6 +362,7 @@ void AK_check_constraint_test() {
     success = AK_set_check_constraint("student", "check_student_weight", "weight", ">", TYPE_FLOAT, p_weight_two);
 
     if (success == EXIT_ERROR) {
+	br++;
         printf("*** TEST 4 Successful! ***\n");
     } else {
         printf("*** TEST 4 Failed! ***\n");
@@ -378,6 +386,7 @@ void AK_check_constraint_test() {
         success = AK_check_constraint("student", "lastname", "Abdullah");
 
         if (success == EXIT_ERROR) {
+		br++;
             printf("*** TEST 5.2 Successful! ***\n");
         } else {
             printf("*** TEST 5.2 Failed! ***\n");
@@ -391,8 +400,11 @@ void AK_check_constraint_test() {
     success = AK_set_check_constraint("student", "check_student_lastname", "lastname", ">", TYPE_VARCHAR, "Smith");
 
     if (success == EXIT_ERROR) {
+	br++;
         printf("*** TEST 6 Successful! ***\n");
     } else {
         printf("*** TEST 6 Failed! ***\n");
     }
+
+	printf("\n\n***uspjesno %d/6 testova ***\n\n",br);
 }
