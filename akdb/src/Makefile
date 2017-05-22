@@ -45,11 +45,11 @@ clean: clean-d
 	rm -rf *~ *.o auxi/*.o dm/*.o mm/*.o file/*.o trans/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/*.log ../bin/kalashnikov.db ../bin/blobs swig/build swig/*.pyc swig/*.so swig/*.log swig/*~ swig/kalashnikovDB_wrap.c swig/kalashnikov.db srv/kalashnikov.db
 
 comments: 
-	./getFiles.sh
+	./tools/getFiles.sh
 	python comments.py
 
 doc:
-	./updateVersion.sh
+	./tools/updateVersion.sh
 	doxygen doxygen.config
 	cd ../doc/latex && make
 	cp ../doc/latex/refman.pdf ../doc/
