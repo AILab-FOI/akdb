@@ -32,7 +32,7 @@ int AK_trigger_save_conditions(int trigger, AK_list* condition);
 int AK_trigger_add(char *name, char* event, AK_list *condition, char* table, char* function);
 */
 int AK_trigger_save_conditions(int trigger, struct list_node *condition);
-int AK_trigger_add(char *name, char* event, struct list_node *condition, char* table, char* function);
+int AK_trigger_add(char *name, char* event, struct list_node *condition, char* table, char* function, struct list_node *arguments_list);
 int AK_trigger_get_id(char *name, char *table);
 int AK_trigger_remove_by_name(char *name, char *table) ;
 int AK_trigger_remove_by_obj_id(int obj_id);

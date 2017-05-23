@@ -118,8 +118,10 @@ int AK_check_function_arguments(int function_id, struct list_node *arguments_lis
     return EXIT_SUCCESS;
 }
 
+
+
 /**
- * @author Jurica Hlevnjak
+ * @author Jurica Hlevnjak updated by Aleksandra Polak
  * @brief Function that checks whether arguments belong to function but only checks argument type (not name). Used for drop function.
  * @param function_id id of the function
  * @param args function arguments 
@@ -131,10 +133,10 @@ int AK_check_function_arguments_type(int function_id, struct list_node *args) {
     int fid;
     AK_PRO;
     struct list_node *arguments_list_current = args->next;
+    int tip = 0;
 
     char *argtype;
     char *args_argtype;
-
     while ((row = (struct list_node *) AK_get_row(i, "AK_function_arguments")) != NULL) {
 	struct list_node *current_elem = Ak_First_L2(row);
 
@@ -142,10 +144,16 @@ int AK_check_function_arguments_type(int function_id, struct list_node *args) {
 
         if (fid == function_id) {
             current_elem = Ak_Next_L2(current_elem);
-            argtype = current_elem->data;
-
-            args_argtype = arguments_list_current->data;
-            arguments_list_current = arguments_list_current->next;
+	    current_elem = Ak_Next_L2(current_elem);
+            
+	    argtype = current_elem->data;
+            
+	    arguments_list_current = arguments_list_current->next;
+	    args_argtype = arguments_list_current->data;
+	    
+	    argtype = AK_convert_type(argtype);
+            
+	    arguments_list_current = arguments_list_current->next;
 
             if (strcmp(argtype, args_argtype) != 0) {
 		AK_EPI;
@@ -430,7 +438,10 @@ int AK_function_change_return_type(char *name, struct list_node *arguments_list,
  */
 void AK_function_test() {
     AK_PRO;
+
     printf("function.c: Present!\n");
+
+    int flag = 0;
 
     struct list_node *arguments_list1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&arguments_list1);
@@ -438,9 +449,17 @@ void AK_function_test() {
     Ak_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list1);
     Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list1);
     Ak_InsertAtEnd_L3(TYPE_INT, "3", sizeof (int), arguments_list1);
-    AK_function_add("test_funkcija", 1, arguments_list1);
-    AK_function_add("test_funkcija2", 3, arguments_list1);
-    AK_function_add("test_funkcija3", 4, arguments_list1);
+    
+    int fun_add1 = AK_function_add("test_funkcija", 1, arguments_list1);
+    int fun_add2 = AK_function_add("test_funkcija2", 3, arguments_list1);
+    int fun_add3 = AK_function_add("test_funkcija3", 4, arguments_list1);
+
+    if (fun_add1 != EXIT_ERROR || fun_add2 != EXIT_ERROR  || fun_add3 != EXIT_ERROR ){
+	printf("\n\nSuccessfully added 'arguments_list1' to 'test_funkcija', 'test_funkcija2' and 'test_funkcija3'\n\n");
+    }else{
+	flag = 1;
+    }
+
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");
 
@@ -458,9 +477,16 @@ void AK_function_test() {
     Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument3", sizeof ("argument3"), arguments_list3);
     Ak_InsertAtEnd_L3(TYPE_INT, "1", sizeof (int), arguments_list3);
 
-    AK_function_add("test_funkcija", 1, arguments_list3);
-    AK_function_add("test_funkcija2", 2, arguments_list3);
-    AK_function_add("test_funkcija3", 1, arguments_list3);
+    int fun_add4 = AK_function_add("test_funkcija", 1, arguments_list3);
+    int fun_add5 = AK_function_add("test_funkcija2", 2, arguments_list3);
+    int fun_add6 = AK_function_add("test_funkcija3", 1, arguments_list3);
+
+    if (fun_add4 != EXIT_ERROR || fun_add5 != EXIT_ERROR  || fun_add6 != EXIT_ERROR ){
+	printf("\n\nSuccessfully added 'arguments_list3' to 'test_funkcija', 'test_funkcija2' and 'test_funkcija3'\n\n");
+    }else{
+	flag = 1;
+    }
+
     AK_print_table("AK_function");
     AK_print_table("AK_function_arguments");
 
@@ -479,17 +505,24 @@ void AK_function_test() {
     Ak_InsertAtEnd_L3(TYPE_INT, "2", sizeof (int), arguments_list4);
     
 
-    AK_function_add("test_funkcija", 2, arguments_list4);
-    AK_function_add("test_funkcija2", 3, arguments_list4);
-    AK_function_add("test_funkcija3", 1, arguments_list4);
+    int fun_add7 = AK_function_add("test_funkcija", 2, arguments_list4);
+    int fun_add8 = AK_function_add("test_funkcija2", 3, arguments_list4);
+    int fun_add9 = AK_function_add("test_funkcija3", 1, arguments_list4);
 	
+
+    if (fun_add7 != EXIT_ERROR || fun_add8 != EXIT_ERROR  || fun_add9 != EXIT_ERROR ){
+	printf("\n\nSuccessfully added 'arguments_list4' to 'test_funkcija', 'test_funkcija2' and 'test_funkcija3'\n\n");
+    }else{
+	flag = 1;
+    }
+
     // Test bez argumenata
     struct list_node *arguments_list5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&arguments_list5);
 	
     AK_function_add("test_without_arg", 1, arguments_list5);
     
-    int get = AK_get_function_obj_id("test_bez_arg", arguments_list5);
+    int get = AK_get_function_obj_id("test_without_arg", arguments_list5);
     printf("ID test_without_arg: %i \n", get);
 	
     AK_print_table("AK_function");
@@ -498,7 +531,12 @@ void AK_function_test() {
     
     Ak_DeleteAll_L3(&arguments_list4);
     AK_free(arguments_list4);
-	Ak_DeleteAll_L3(&arguments_list5);
+    Ak_DeleteAll_L3(&arguments_list5);
+
+    if (flag == 0){
+	printf("\n\nAll tests has successfully completed!!\n\n");
+    }
+
     AK_free(arguments_list5);	
     AK_EPI;
 }

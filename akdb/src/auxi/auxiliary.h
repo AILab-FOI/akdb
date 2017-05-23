@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
 
+
 #ifndef AUXILIARY
 #define AUXILIARY
 
@@ -43,6 +44,16 @@
  * But don't forget to turn this mode off, after you are done (within test function for example)!
  */
 int testMode;
+
+
+/**
+ * @author Aleksandra Polak
+ * @brief Function that change type of argument from string to integer
+ * @param *arg_type type of an argument
+ * @return EXIT_SUCCESS of the function (return type of argument in value of integer) or EXIT_ERROR
+*/
+char* AK_convert_type(char* arg_type);
+
 
 /**
  * @author Ljiljana Pintarić
