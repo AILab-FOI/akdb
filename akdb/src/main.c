@@ -173,6 +173,8 @@ Main program function
 */
 int main(int argc, char * argv[])
 {
+    /*FILE *archiveLog;
+    char archiveLogFilename[30];*/ //--uncomment when AK_recover_archive_log is fixed
     AK_PRO;
     // initialize critical sections
     dbmanFileLock = AK_init_critical_section();
@@ -193,9 +195,25 @@ int main(int argc, char * argv[])
         if( AK_init_disk_manager() == EXIT_SUCCESS )
         {
             if( AK_memoman_init() == EXIT_SUCCESS ) {
-                    
-                sigset(SIGINT, AK_archive_log);
-                AK_recover_archive_log("../src/rec/rec.bin"); // TODO hardcoded file name
+
+		// retrieve last archive log filename 
+
+                /*char *latest = malloc(strlen(ARCHIVELOG_PATH)+strlen("/latest.txt")+1);
+    		strcpy(latest, ARCHIVELOG_PATH);
+    		strcat(latest, "/latest.txt");
+
+    		archiveLog = fopen(latest, "r");
+    		fscanf(fp, "%s", archiveLogFilename);
+    		fclose(fp);
+    		AK_free(latest);
+
+    		char *destination = malloc(strlen(ARCHIVELOG_PATH)+strlen(archiveLogFilename)+2);
+    		strcpy(destination, ARCHIVELOG_PATH);
+    		strcat(destination, "/");
+    		strcat(destination, archiveLogFilename);    */  //--uncomment when AK_recover_archive_log is fixed
+                
+		sigset(SIGINT, AK_archive_log);
+                AK_recover_archive_log("../src/rec/rec.bin");  // "../src/rec/rec.bin" needs to be replaced with destination when AK_recover_archive_log is fixed
                 /* component test area --- begin */
                 if((argc == 2) && !strcmp(argv[1], "test"))
                 {
