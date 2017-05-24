@@ -1,4 +1,9 @@
-# encoding=utf8  
+# encoding=utf8
+"""@package docstring
+Documentation comments.py module.
+
+Basically this module is detecting a language of a file and making comments for the same. 
+"""
 import re, sys, time, codecs
 from langdetect import detect
 import subprocess
@@ -8,6 +13,12 @@ commentsFile = "all_comments.tmp"
 cFiles = []
 pyFiles= []
 
+"""
+Documentation for getcommentsFiles() function
+
+This function is searching for file that ends with either .py extension or .c extension and 
+ appending the same in constant cFiles/pyFiles.
+"""
 def getcommentsFiles():
 	with open("files.txt", "r") as fi:
 		for f in fi:
@@ -16,7 +27,11 @@ def getcommentsFiles():
 			else:
 				cFiles.append(f.rstrip()[2:])
 				
-
+"""
+Documentation for a function detectLanguage().
+ 
+ Function is detecting language (is ti croatian od sl) of a newly created commentsFile.
+"""
 def detectLanguage():
 	print "Analyzing " + str( len(cFiles) + len(pyFiles) ) + " files. This may take a while."
 	
@@ -48,7 +63,11 @@ def detectLanguage():
 
 	# return len(failed)
 
+"""
+Documentation for makeComentsFile() function.
 
+Function is parsing comments from file with .c extension and .py extension
+"""
 def makeCommentsFile():
 	print "Making comments file..."
 
