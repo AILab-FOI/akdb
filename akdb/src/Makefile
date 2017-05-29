@@ -46,7 +46,7 @@ clean: clean-d
 
 comments: 
 	./tools/getFiles.sh
-	python comments.py
+	python /tools/comments.py
 
 doc:
 	./tools/updateVersion.sh
