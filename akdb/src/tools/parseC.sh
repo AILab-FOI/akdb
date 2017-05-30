@@ -1,4 +1,7 @@
- #!/bin/sh
+#!/bin/sh
+##@file parseC.sh
+##
+##Parsing every C file
 ##
 for var in "$@"
 do
