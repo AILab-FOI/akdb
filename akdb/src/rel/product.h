@@ -27,6 +27,7 @@
 
 
 int AK_product(char *srcTable1, char * srcTable2, char * dstTable);
+void AK_product_procedure(char *srcTable1, char * srcTable2, char * dstTable, AK_header header[MAX_ATTRIBUTES]);
 void AK_op_product_test();
 
 #endif

@@ -20,38 +20,6 @@
 #include "projection.h"
 
 /**
- * @author Matija Novak, updated by Dino Laktašić 
- * @brief  Temporaly function to create table, and insert entry to the system_relation catalog
- * @param table table name
- * @param header AK_header of the new table
- * @param type_segment type of the new segment
- * @return No return value
- */
-void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
-    AK_PRO;
-    AK_block *sys_block = (AK_block *) AK_malloc(sizeof (AK_block));
-    sys_block = (AK_block *) AK_read_block(1);
-
-    int startAddress = AK_initialize_new_segment(table, type_segment, header);
-
-    int num = 8;
-    //insert object_id
-    AK_insert_entry(sys_block, TYPE_INT, &num, 8);
-    //insert table name
-    AK_insert_entry(sys_block, TYPE_VARCHAR, table, 9);
-    //insert start address
-    num = startAddress;
-    AK_insert_entry(sys_block, TYPE_INT, &num, 10);
-    //insert end address
-    num = startAddress + 19;
-    AK_insert_entry(sys_block, TYPE_INT, &num, 11);
-
-    AK_write_block(sys_block);
-    AK_free(sys_block);
-    AK_EPI;
-}
-
-/**
  * @author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list  
  * @brief  Function to create a new header for the projection table
  * @param old_block_add address of the block from which we copy headers we need

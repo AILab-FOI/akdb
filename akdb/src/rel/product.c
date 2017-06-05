@@ -6,12 +6,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -21,7 +21,7 @@
 
 /**
  * @author Dino Laktašić
- * @brief  Function to make product of two tables 
+ * @brief  Function to make product of two tables
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table
  * @param dstTable name of the product table
@@ -43,26 +43,26 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 		register int i, j, k,   m, n, o,   u;
 
 		int address, type, size;
-		
+
 		// will be needed later as a place to hold cell data
 		char celldata[MAX_VARCHAR_LENGTH];
-	
+
 		AK_block *tbl1_temp_block = (AK_block *) AK_read_block(startAddress1);
 		AK_block *tbl2_temp_block = (AK_block *) AK_read_block(startAddress2);
-		
+
 		//Currently it works with headers no longer than MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
 		//This is wrong and need to be corrected.
 		//If header doesn't fit in the first block than system must write the remain attributes from header to the new block.
 		//Correction must be handled in all functions that write, read or count header attributes.
 		int head = 0;
 		AK_header header[MAX_ATTRIBUTES];
-		
+
 		/* Adding header to new aggregation table */
 		while (strcmp(tbl1_temp_block->header[head].att_name, "") != 0) {
 			memcpy(&header[head], &tbl1_temp_block->header[head], sizeof (tbl1_temp_block->header[head]));
 			head++;
 		}
-		
+
 		head = 0;
 		while (strcmp(tbl2_temp_block->header[head].att_name, "") != 0) {
 			memcpy(&header[head + num_att1], &tbl2_temp_block->header[head], sizeof (tbl2_temp_block->header[head]));
@@ -88,24 +88,60 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 				}
 			}
 		}
-		
+
 		/* initializing new table with header */
 		AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
 
 		Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
 		Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_product: start copying data\n");
 
-		/* Creating list which will hold data about ONE row */
+		/*product procedure function */
+		AK_product_procedure(srcTable1,srcTable2,dstTable,header);
 
-		struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
-		Ak_Init_L3(&row_root);
-	
+		Ak_dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
+		AK_EPI;
+		return EXIT_SUCCESS;
+	} else {
+		Ak_dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");
+		AK_free(src_addr1);
+		AK_free(src_addr2);
+		AK_EPI;
+		return EXIT_ERROR;
+	}
+}
+
+/**
+ * @author Dino Laktašić
+ * @brief  Product procedure (iterating trough both tables and concating rows)
+ * @param srcTable1 name of the first table
+ * @param srcTable2 name of the second table
+ * @param dstTable name of the product table
+ * @param header header of product table
+ */
+void AK_product_procedure(char *srcTable1, char * srcTable2, char * dstTable, AK_header header[MAX_ATTRIBUTES]){
+	table_addresses *src_addr1 = (table_addresses *) AK_get_table_addresses(srcTable1);
+	table_addresses *src_addr2 = (table_addresses *) AK_get_table_addresses(srcTable2);
+
+	AK_block *tbl1_temp_block = (AK_block *) AK_read_block(src_addr1->address_from[0]);
+	AK_block *tbl2_temp_block = (AK_block *) AK_read_block(src_addr2->address_from[0]);
+
+	//initialize new segment
+		int num_att1 = AK_num_attr(srcTable1);
+		int num_att2 = AK_num_attr(srcTable2);
+
+	// will be needed later as a place to hold cell data
+		char celldata[MAX_VARCHAR_LENGTH];
+
+	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+	Ak_Init_L3(&row_root);
+
+	register  j, k, l, m, n, o,   u;
 		/**
 		 * Product procedure
 		 * Going through one table, and for each row in it, going through another table,
 		 * and joining rows that way!
 		 */
-		i = 0;
+		register i = 0;
 		/* for each extent in first table */
 		while ( src_addr1->address_from[i] != 0 ) {
 			/* for each block in extent (first table) */
@@ -130,21 +166,21 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 								 * Sorry about indentations, but it is necessary to do it this way,
 								 * until someone creates function to iterate through table rows
 								 * (which would be pretty neat, btw.)
-								 * At this level of code, we have access to rows from the first 
+								 * At this level of code, we have access to rows from the first
 								 * and from the second table.
-								 * Then we do it this way: for each row in first table, 
+								 * Then we do it this way: for each row in first table,
 								 * read row from second table. And concatenate them!
 								 * Since we have loop hierarchy here, each row from first table
 								 * will be concatenated with each row from second table.
 								 * End of story! Let's get back to work...
-								 * BTW. Please comment your code in the future. 
+								 * BTW. Please comment your code in the future.
 								 * It is a lot easier when someone explains to you what
 								 * he or she was thinking that moment.
 								 * Write comments in english. Write 'em in croatian.
-								 * It does not matter! Just explain yourself! 
+								 * It does not matter! Just explain yourself!
 								 * And share the idea about comments among others, please. Thank you!
 								 */
-								
+
 								/* now we just have to copy cell data from one and from another row */
 								int cellid, celltype, celladdress, cellsize;
 								/* first table first */
@@ -157,8 +193,8 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 							 		if ( celltype == TYPE_VARCHAR ) {
 							 			celldata[ cellsize ] = '\0';
 							 		}
-							 		
-							 		Ak_Insert_New_Element( celltype, celldata, dstTable, 
+
+							 		Ak_Insert_New_Element( celltype, celldata, dstTable,
 							 			header[ u ].att_name, row_root);
 							 	}
 
@@ -172,8 +208,8 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 							 		if ( celltype == TYPE_VARCHAR ) {
 							 			celldata[ cellsize ] = '\0';
 							 		}
-							 		
-							 		Ak_Insert_New_Element( celltype, celldata, dstTable, 
+
+							 		Ak_Insert_New_Element( celltype, celldata, dstTable,
 							 			header[ num_att1 + u ].att_name, row_root);
 							 	}
 
@@ -188,18 +224,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 			}
 			i++;
 		}
-		
-		AK_free(row_root);
-		Ak_dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
-		AK_EPI;
-		return EXIT_SUCCESS;
-	} else {
-		Ak_dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");
-		AK_free(src_addr1);
-		AK_free(src_addr2);
-		AK_EPI;
-		return EXIT_ERROR;
-	}
+	AK_free(row_root);
 }
 
 /**
@@ -215,8 +240,8 @@ void AK_op_product_test() {
     	char *tblName2 = "department";
 
 	printf("\n********** PRODUCT TEST **********\n\n");
-	
-	
+
+
     	if (AK_if_exist(destTable, sys_table) == 0) {
     		printf("Table %s does not exist!\n", destTable);
 		AK_product(tblName1, tblName2, destTable);
@@ -233,7 +258,7 @@ void AK_op_product_test() {
 	 * After that, it reads all cells from product_test table and compares
 	 * the data.
 	 */
-	
+
 	int i,j,k, current_row, num_errors = 0;
 	int employee_numrows = AK_get_num_records("employee"),
 		department_numrows = AK_get_num_records("department"),
@@ -320,7 +345,7 @@ void AK_op_product_test() {
 
 
 	/**
-	 * Now reading data from product table 
+	 * Now reading data from product table
 	 * and comparing it to the data in first two tables
 	 */
 	// first declaring variables which will hold temporary cell data, to be compared with original data
@@ -367,31 +392,31 @@ void AK_op_product_test() {
 				if ( prod_idprof != t1_idprof[ first_table_current_row ] ) {
 					num_errors++;
 					printf("Error in product table, row: %d! Wrong id_prof!\n", current_row+1);
-	            	printf("Table showed value: '%d', but it should show: '%d'\n\n", 
+	            	printf("Table showed value: '%d', but it should show: '%d'\n\n",
 	            		prod_idprof, t1_idprof[ first_table_current_row ] );
 				}
 				if ( prod_iddept_t1 != t1_iddept[ first_table_current_row ] ) {
 					num_errors++;
 					printf("Error in product table, row: %d! Wrong id_department (2nd column)!\n", current_row+1);
-	            	printf("Table showed value: '%d', but it should show: '%d'\n\n", 
+	            	printf("Table showed value: '%d', but it should show: '%d'\n\n",
 	            		prod_iddept_t1, t1_iddept[ first_table_current_row ] );
 				}
 				if ( prod_iddept_t2 != t2_iddept[ second_table_current_row ] ) {
 					num_errors++;
 					printf("Error in product table, row: %d! Wrong id_department (3rd column)!\n", current_row+1);
-	            	printf("Table showed value: '%d', but it should show: '%d'\n\n", 
+	            	printf("Table showed value: '%d', but it should show: '%d'\n\n",
 	            		prod_iddept_t2, t2_iddept[ second_table_current_row ] );
 				}
 				if ( strcmp( prod_deptname, t2_deptname[ second_table_current_row ] ) != 0 ) {
 					num_errors++;
 					printf("Error in product table, row: %d! Wrong dep_name!\n", current_row+1);
-	            	printf("Table showed value: '%s', but it should show: '%s'\n\n", 
+	            	printf("Table showed value: '%s', but it should show: '%s'\n\n",
 	            		prod_deptname, t2_deptname[ second_table_current_row ] );
 				}
 				if ( strcmp( prod_manager, t2_manager[ second_table_current_row ] ) != 0 ) {
 					num_errors++;
 					printf("Error in product table, row: %d! Wrong manager!\n", current_row+1);
-	            	printf("Table showed value: '%s', but it should show: '%s'\n\n", 
+	            	printf("Table showed value: '%s', but it should show: '%s'\n\n",
 	            		prod_manager, t2_manager[ second_table_current_row ] );
 				}
 
