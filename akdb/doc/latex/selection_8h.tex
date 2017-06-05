@@ -1,0 +1,103 @@
+\hypertarget{selection_8h}{}\section{rel/selection.h File Reference}
+\label{selection_8h}\index{rel/selection.\+h@{rel/selection.\+h}}
+{\ttfamily \#include \char`\"{}expression\+\_\+check.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../rec/redo\+\_\+log.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/constants.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/configuration.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../file/files.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\newline
+Include dependency graph for selection.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{selection_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{selection_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{selection_8h_a48193253bfd1b2a279a5772303acba58}{A\+K\+\_\+selection} (char $\ast$src\+Table, char $\ast$dst\+Table, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$expr)
+\begin{DoxyCompactList}\small\item\em Function which implements selection. \end{DoxyCompactList}\item 
+void \hyperlink{selection_8h_ad073a405c21171f0cdb3b3d262404912}{A\+K\+\_\+op\+\_\+selection\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for selection operator testing. \end{DoxyCompactList}\item 
+void \hyperlink{selection_8h_a1dd5b86172fbc219d9bbf84081c3b3dd}{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+pattern} ()
+\begin{DoxyCompactList}\small\item\em Function for selection operator testing. \end{DoxyCompactList}\item 
+void \hyperlink{selection_8h_a6bf9677a5f138f8c205142f1c916d0c4}{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+redolog} ()
+\begin{DoxyCompactList}\small\item\em Function for redolog testing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data structures for relational selection operation 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{selection_8h_ad073a405c21171f0cdb3b3d262404912}\label{selection_8h_ad073a405c21171f0cdb3b3d262404912}} 
+\index{selection.\+h@{selection.\+h}!A\+K\+\_\+op\+\_\+selection\+\_\+test@{A\+K\+\_\+op\+\_\+selection\+\_\+test}}
+\index{A\+K\+\_\+op\+\_\+selection\+\_\+test@{A\+K\+\_\+op\+\_\+selection\+\_\+test}!selection.\+h@{selection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+op\+\_\+selection\+\_\+test()}{AK\_op\_selection\_test()}}
+{\footnotesize\ttfamily void A\+K\+\_\+op\+\_\+selection\+\_\+test (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for selection operator testing. 
+
+\begin{DoxyAuthor}{Author}
+Matija Šestak, updated by Dino Laktašić,Nikola Miljancic 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{selection_8h_a1dd5b86172fbc219d9bbf84081c3b3dd}\label{selection_8h_a1dd5b86172fbc219d9bbf84081c3b3dd}} 
+\index{selection.\+h@{selection.\+h}!A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+pattern@{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+pattern}}
+\index{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+pattern@{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+pattern}!selection.\+h@{selection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+pattern()}{AK\_op\_selection\_test\_pattern()}}
+{\footnotesize\ttfamily void A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+pattern (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for selection operator testing. 
+
+\begin{DoxyAuthor}{Author}
+Krunoslav Bilić 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{selection_8h_a6bf9677a5f138f8c205142f1c916d0c4}\label{selection_8h_a6bf9677a5f138f8c205142f1c916d0c4}} 
+\index{selection.\+h@{selection.\+h}!A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+redolog@{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+redolog}}
+\index{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+redolog@{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+redolog}!selection.\+h@{selection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+redolog()}{AK\_op\_selection\_test\_redolog()}}
+{\footnotesize\ttfamily void A\+K\+\_\+op\+\_\+selection\+\_\+test\+\_\+redolog (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for redolog testing. 
+
+\begin{DoxyAuthor}{Author}
+Krunoslav Bilić 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{selection_8h_a48193253bfd1b2a279a5772303acba58}\label{selection_8h_a48193253bfd1b2a279a5772303acba58}} 
+\index{selection.\+h@{selection.\+h}!A\+K\+\_\+selection@{A\+K\+\_\+selection}}
+\index{A\+K\+\_\+selection@{A\+K\+\_\+selection}!selection.\+h@{selection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+selection()}{AK\_selection()}}
+{\footnotesize\ttfamily int A\+K\+\_\+selection (\begin{DoxyParamCaption}\item[{char $\ast$}]{src\+Table,  }\item[{char $\ast$}]{dst\+Table,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{expr }\end{DoxyParamCaption})}
+
+
+
+Function which implements selection. 
+
+\begin{DoxyAuthor}{Author}
+Matija Šestak. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$src\+Table} & source table name \\
+\hline
+{\em $\ast$dst\+Table} & destination table name \\
+\hline
+{\em $\ast$expr} & list with posfix notation of the logical expression \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}

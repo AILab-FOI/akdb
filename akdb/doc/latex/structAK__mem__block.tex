@@ -1,0 +1,48 @@
+\hypertarget{structAK__mem__block}{}\section{A\+K\+\_\+mem\+\_\+block Struct Reference}
+\label{structAK__mem__block}\index{A\+K\+\_\+mem\+\_\+block@{A\+K\+\_\+mem\+\_\+block}}
+
+
+Structure that defines a block of data in memory.  
+
+
+
+
+{\ttfamily \#include $<$memoman.\+h$>$}
+
+
+
+Collaboration diagram for A\+K\+\_\+mem\+\_\+block\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=250pt]{structAK__mem__block__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structAK__mem__block_afe6bab88220d9357348e69f812d024b4}\label{structAK__mem__block_afe6bab88220d9357348e69f812d024b4}} 
+\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$ \hyperlink{structAK__mem__block_afe6bab88220d9357348e69f812d024b4}{block}
+\begin{DoxyCompactList}\small\item\em pointer to block from DB file \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structAK__mem__block_a9d5dce682d27f9916b9e42d7ca159e68}\label{structAK__mem__block_a9d5dce682d27f9916b9e42d7ca159e68}} 
+int \hyperlink{structAK__mem__block_a9d5dce682d27f9916b9e42d7ca159e68}{dirty}
+\begin{DoxyCompactList}\small\item\em dirty bit (B\+L\+O\+C\+K\+\_\+\+C\+L\+E\+AN if unchanged; B\+L\+O\+C\+K\+\_\+\+D\+I\+R\+TY if changed but not yet written to file) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structAK__mem__block_a2ad2ddb6c30f91bdff3af10886ab9e7a}\label{structAK__mem__block_a2ad2ddb6c30f91bdff3af10886ab9e7a}} 
+unsigned long \hyperlink{structAK__mem__block_a2ad2ddb6c30f91bdff3af10886ab9e7a}{timestamp\+\_\+read}
+\begin{DoxyCompactList}\small\item\em timestamp when the block has lastly been read \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structAK__mem__block_ad575095cfe45be3ed7f466c4239d6bda}\label{structAK__mem__block_ad575095cfe45be3ed7f466c4239d6bda}} 
+unsigned long \hyperlink{structAK__mem__block_ad575095cfe45be3ed7f466c4239d6bda}{timestamp\+\_\+last\+\_\+change}
+\begin{DoxyCompactList}\small\item\em timestamp when the block has lastly been changed \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Structure that defines a block of data in memory. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+mm/\hyperlink{memoman_8h}{memoman.\+h}\end{DoxyCompactItemize}

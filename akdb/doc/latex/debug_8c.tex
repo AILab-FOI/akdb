@@ -1,0 +1,48 @@
+\hypertarget{debug_8c}{}\section{auxi/debug.c File Reference}
+\label{debug_8c}\index{auxi/debug.\+c@{auxi/debug.\+c}}
+{\ttfamily \#include \char`\"{}debug.\+h\char`\"{}}\newline
+Include dependency graph for debug.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{debug_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{debug_8c_af0ee1982e892cafff69ec9cb1c0d4760}{Ak\+\_\+dbg\+\_\+messg} (\hyperlink{structDEBUG__LEVEL}{D\+E\+B\+U\+G\+\_\+\+L\+E\+V\+EL} level, \hyperlink{structDEBUG__TYPE}{D\+E\+B\+U\+G\+\_\+\+T\+Y\+PE} type, const char $\ast$format,...)
+\begin{DoxyCompactList}\small\item\em Function for printing debug message. Provides debug level, debug type and message with corresponding variables for the output. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides functions for debuging 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{debug_8c_af0ee1982e892cafff69ec9cb1c0d4760}\label{debug_8c_af0ee1982e892cafff69ec9cb1c0d4760}} 
+\index{debug.\+c@{debug.\+c}!Ak\+\_\+dbg\+\_\+messg@{Ak\+\_\+dbg\+\_\+messg}}
+\index{Ak\+\_\+dbg\+\_\+messg@{Ak\+\_\+dbg\+\_\+messg}!debug.\+c@{debug.\+c}}
+\subsubsection{\texorpdfstring{Ak\+\_\+dbg\+\_\+messg()}{Ak\_dbg\_messg()}}
+{\footnotesize\ttfamily int Ak\+\_\+dbg\+\_\+messg (\begin{DoxyParamCaption}\item[{\hyperlink{structDEBUG__LEVEL}{D\+E\+B\+U\+G\+\_\+\+L\+E\+V\+EL}}]{level,  }\item[{\hyperlink{structDEBUG__TYPE}{D\+E\+B\+U\+G\+\_\+\+T\+Y\+PE}}]{type,  }\item[{const char $\ast$}]{format,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+Function for printing debug message. Provides debug level, debug type and message with corresponding variables for the output. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em level} & level of debug information for a given DB module \\
+\hline
+{\em type} & the name of DB module for which to print debug information \\
+\hline
+{\em format} & format for the output message \\
+\hline
+{\em ...} & variable number of (different) type args used in printf \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+if debug message is printed return 1, else return 0 
+\end{DoxyReturn}

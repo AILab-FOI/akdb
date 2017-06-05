@@ -1,0 +1,22 @@
+<map id="sql/view.c" name="sql/view.c">
+<area shape="rect" id="node2" href="$view_8h_source.html" title="view.h" alt="" coords="923,80,989,107"/>
+<area shape="rect" id="node3" href="$table_8h.html" title="../file/table.h" alt="" coords="612,453,716,480"/>
+<area shape="rect" id="node16" href="$mempro_8h.html" title="mempro.h" alt="" coords="883,976,973,1003"/>
+<area shape="rect" id="node29" href="$id_8h.html" title="../file/id.h" alt="" coords="565,155,648,181"/>
+<area shape="rect" id="node30" href="$fileio_8h.html" title="fileio.h" alt="" coords="1171,229,1237,256"/>
+<area shape="rect" id="node4" href="$memoman_8h.html" title="../mm/memoman.h" alt="" coords="1208,528,1355,555"/>
+<area shape="rect" id="node5" href="$dbman_8h.html" title="../dm/dbman.h" alt="" coords="893,603,1009,629"/>
+<area shape="rect" id="node6" href="$auxiliary_8h.html" title="../auxi/auxiliary.h" alt="" coords="1434,677,1569,704"/>
+<area shape="rect" id="node7" href="$constants_8h.html" title="constants.h" alt="" coords="1793,752,1890,779"/>
+<area shape="rect" id="node8" href="$configuration_8h_source.html" title="configuration.h" alt="" coords="1547,752,1667,779"/>
+<area shape="rect" id="node22" href="$debug_8h.html" title="debug.h" alt="" coords="1851,901,1925,928"/>
+<area shape="rect" id="node9" href="$iniparser_8h.html" title="Parser for ini files. " alt="" coords="1525,827,1616,853"/>
+<area shape="rect" id="node14" href="$dictionary_8h.html" title="Implements a dictionary for string variables. " alt="" coords="1576,901,1675,928"/>
+<area shape="rect" id="node31" href="$reference_8h.html" title="../sql/cs/reference.h" alt="" coords="745,379,895,405"/>
+<area shape="rect" id="node32" href="$recovery_8h_source.html" title="../rec/recovery.h" alt="" coords="1141,304,1267,331"/>
+<area shape="rect" id="node33" href="$archive__log_8h.html" title="../rec/archive_log.h" alt="" coords="1021,379,1166,405"/>
+<area shape="rect" id="node35" href="$files_8h.html" title="files.h" alt="" coords="118,453,181,480"/>
+<area shape="rect" id="node38" href="$redo__log_8h_source.html" title="../rec/redo_log.h" alt="" coords="1771,304,1898,331"/>
+<area shape="rect" id="node34" href="$test_8h.html" title="../file/test.h" alt="" coords="217,379,313,405"/>
+<area shape="rect" id="node36" href="$rel__eq__selection_8h.html" title="../opti/rel_eq_selection.h" alt="" coords="439,379,620,405"/>
+</map>

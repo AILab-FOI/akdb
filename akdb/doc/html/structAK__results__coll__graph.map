@@ -1,0 +1,5 @@
+<map id="AK_results" name="AK_results">
+<area shape="rect" id="node2" href="$structAK__header.html" title="Structure that represents header structure of blocks (describes an attribute inside an object)..." alt="" coords="5,5,97,32"/>
+<area shape="rect" id="node3" href="$structAK__block.html" title="Structure that defines a block of data inside a DB file. It contains address, type, chained_with, AK_free space, last_tuple_dict_id, header and tuple_dict and data. " alt="" coords="125,95,207,121"/>
+<area shape="rect" id="node4" href="$structAK__tuple__dict.html" title="Structure that defines a mapping in a header of an object to the actual entries (data). It contains type, address and size. " alt="" coords="121,5,232,32"/>
+</map>

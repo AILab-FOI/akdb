@@ -1,0 +1,270 @@
+\hypertarget{rel__eq__projection_8h}{}\section{opti/rel\+\_\+eq\+\_\+projection.h File Reference}
+\label{rel__eq__projection_8h}\index{opti/rel\+\_\+eq\+\_\+projection.\+h@{opti/rel\+\_\+eq\+\_\+projection.\+h}}
+{\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\newline
+Include dependency graph for rel\+\_\+eq\+\_\+projection.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rel__eq__projection_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rel__eq__projection_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{rel__eq__projection_8h_ac71c6ae50ac9b8161b9ab1457d8d2f2c}{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+subset} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$list\+\_\+elem\+\_\+set, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$list\+\_\+elem\+\_\+subset)
+\begin{DoxyCompactList}\small\item\em Check if some set of attributes is subset of larger set, used in cascading of the projections. \end{DoxyCompactList}\item 
+int \hyperlink{rel__eq__projection_8h_a85f0e38150c06c135fb3eafa84f75b2a}{A\+K\+\_\+rel\+\_\+eq\+\_\+can\+\_\+commute} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$list\+\_\+elem\+\_\+attribs, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$list\+\_\+elem\+\_\+conds)
+\begin{DoxyCompactList}\small\item\em Check if selection uses only attributes retained by the projection before commuting. \end{DoxyCompactList}\item 
+struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$ \hyperlink{rel__eq__projection_8h_a04b12c1996f02962809255da1da1e910}{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+attributes} (char $\ast$tbl\+Name)
+\begin{DoxyCompactList}\small\item\em Get attributes for a given table and store them to the struct \hyperlink{structlist__node}{list\+\_\+node}. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{rel__eq__projection_8h_a7ce7aa45ad93095ccf2ed16b610c838d}{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+attributes} (char $\ast$attribs, char $\ast$tbl\+Name)
+\begin{DoxyCompactList}\small\item\em Filtering and returning only those attributes from list of projection attributes that exist in the given table. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{rel__eq__projection_8h_a01c830d904a6bd0c5cbe0a8a03003dda}{A\+K\+\_\+rel\+\_\+eq\+\_\+collect\+\_\+cond\+\_\+attributes} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$list\+\_\+elem)
+\begin{DoxyCompactList}\small\item\em Filtering and returning only attributes from selection or theta\+\_\+join condition. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{rel__eq__projection_8h_a97714bc2869587a4eb85d5a160a96783}{A\+K\+\_\+rel\+\_\+eq\+\_\+remove\+\_\+duplicates} (char $\ast$attribs)
+\begin{DoxyCompactList}\small\item\em Function which removes duplicate attributes from attributes expresion. \end{DoxyCompactList}\item 
+struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$ \hyperlink{rel__eq__projection_8h_af724a82e2b86d1c5d62442457d0da935}{A\+K\+\_\+rel\+\_\+eq\+\_\+projection} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$list\+\_\+rel\+\_\+eq)
+\begin{DoxyCompactList}\small\item\em Main function for generating RA expresion according to projection equivalence rules. \end{DoxyCompactList}\item 
+void \hyperlink{rel__eq__projection_8h_ad04ed1b8911219099bc3a6d340108130}{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+projection} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$list\+\_\+rel\+\_\+eq)
+\begin{DoxyCompactList}\small\item\em Function for printing A\+K\+\_\+list to the screen. \end{DoxyCompactList}\item 
+void \hyperlink{rel__eq__projection_8h_a3bcd40b38f703c43c282e9343bf39bae}{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for testing rel\+\_\+eq\+\_\+selection. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data structures for relational equivalences in projection 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{rel__eq__projection_8h_ad04ed1b8911219099bc3a6d340108130}\label{rel__eq__projection_8h_ad04ed1b8911219099bc3a6d340108130}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+projection@{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+projection}}
+\index{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+projection@{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+projection}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+projection()}{AK\_print\_rel\_eq\_projection()}}
+{\footnotesize\ttfamily void A\+K\+\_\+print\+\_\+rel\+\_\+eq\+\_\+projection (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{list\+\_\+rel\+\_\+eq }\end{DoxyParamCaption})}
+
+
+
+Function for printing A\+K\+\_\+list to the screen. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$list\+\_\+rel\+\_\+eq} & RA expresion as the A\+K\+\_\+list \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rel__eq__projection_8h_a85f0e38150c06c135fb3eafa84f75b2a}\label{rel__eq__projection_8h_a85f0e38150c06c135fb3eafa84f75b2a}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+can\+\_\+commute@{A\+K\+\_\+rel\+\_\+eq\+\_\+can\+\_\+commute}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+can\+\_\+commute@{A\+K\+\_\+rel\+\_\+eq\+\_\+can\+\_\+commute}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+can\+\_\+commute()}{AK\_rel\_eq\_can\_commute()}}
+{\footnotesize\ttfamily int A\+K\+\_\+rel\+\_\+eq\+\_\+can\+\_\+commute (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{list\+\_\+elem\+\_\+attribs,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{list\+\_\+elem\+\_\+conds }\end{DoxyParamCaption})}
+
+
+
+Check if selection uses only attributes retained by the projection before commuting. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\begin{DoxyEnumerate}
+\item Tokenize set of projection attributes and store them to the array 
+\item For each attribute in selection condition check if exists in array of projection attributes 
+\item if exists increment match variable and break 
+\item else continue checking until the final attribute is checked 
+\item if match variable value equals 0 than return 0 
+\item else if match variable value greater than E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS, return E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em list\+\_\+elem\+\_\+attribs} & list element containing projection data \\
+\hline
+{\em list\+\_\+elem\+\_\+conds} & list element containing selection condition data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if selection uses only attributes retained by projection, else returns E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rel__eq__projection_8h_a01c830d904a6bd0c5cbe0a8a03003dda}\label{rel__eq__projection_8h_a01c830d904a6bd0c5cbe0a8a03003dda}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+collect\+\_\+cond\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+collect\+\_\+cond\+\_\+attributes}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+collect\+\_\+cond\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+collect\+\_\+cond\+\_\+attributes}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+collect\+\_\+cond\+\_\+attributes()}{AK\_rel\_eq\_collect\_cond\_attributes()}}
+{\footnotesize\ttfamily char$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+collect\+\_\+cond\+\_\+attributes (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{list\+\_\+elem }\end{DoxyParamCaption})}
+
+
+
+Filtering and returning only attributes from selection or theta\+\_\+join condition. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em list\+\_\+elem} & list element that contains selection or theta\+\_\+join condition data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+only attributes from selection or theta\+\_\+join condition as the A\+K\+\_\+list 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rel__eq__projection_8h_a04b12c1996f02962809255da1da1e910}\label{rel__eq__projection_8h_a04b12c1996f02962809255da1da1e910}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+attributes}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+attributes}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+attributes()}{AK\_rel\_eq\_get\_attributes()}}
+{\footnotesize\ttfamily struct \hyperlink{structlist__node}{list\+\_\+node}$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+get\+\_\+attributes (\begin{DoxyParamCaption}\item[{char $\ast$}]{tbl\+Name }\end{DoxyParamCaption})}
+
+
+
+Get attributes for a given table and store them to the struct \hyperlink{structlist__node}{list\+\_\+node}. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\begin{DoxyEnumerate}
+\item Get the number of attributes in a given table 
+\item Get the table header for a given table 
+\item Initialize struct \hyperlink{structlist__node}{list\+\_\+node} 
+\item For each attribute in table header, insert attribute in struct \hyperlink{structlist__node}{list\+\_\+node} as new struct \hyperlink{structlist__node}{list\+\_\+node} element 
+\item return struct \hyperlink{structlist__node}{list\+\_\+node} 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$tbl\+Name} & name of the table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+struct \hyperlink{structlist__node}{list\+\_\+node} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rel__eq__projection_8h_ac71c6ae50ac9b8161b9ab1457d8d2f2c}\label{rel__eq__projection_8h_ac71c6ae50ac9b8161b9ab1457d8d2f2c}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+subset@{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+subset}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+subset@{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+subset}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+subset()}{AK\_rel\_eq\_is\_subset()}}
+{\footnotesize\ttfamily int A\+K\+\_\+rel\+\_\+eq\+\_\+is\+\_\+subset (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{list\+\_\+elem\+\_\+set,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{list\+\_\+elem\+\_\+subset }\end{DoxyParamCaption})}
+
+
+
+Check if some set of attributes is subset of larger set, used in cascading of the projections. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. ============$>$ Optimization plan using Relational Algebra Equivalences $<$============== Equivalence rule that apply on every equivalent expresion generated by Query optimizer
+\end{DoxyAuthor}
+Rules to implement Rule 1. projection comutes with selection that only uses attributes retained by the projection p\mbox{[}L\mbox{]}(s\mbox{[}L1\mbox{]}(R)) = s\mbox{[}L1\mbox{]}(p\mbox{[}L\mbox{]}(R)) Rule 2. only the last in a sequence of projection operations is needed, the others can be omitted. p\href{p[L2](...p[Ln](R)...)}{\tt L1} = p\mbox{[}L1\mbox{]}(R) Rule 3a. distribution according to theta join, only if join includes attributes from L1 u L2 p\mbox{[}L1 u L2\mbox{]}(R1 t R2) = (p\mbox{[}L1\mbox{]}(R1)) t (p\mbox{[}L2\mbox{]}(R2)) Rule 3b. Let L1 u L2 be attributes from R1 and R2, respectively. Let L3 be attributes from R1, but are not in L1 u L2 and let L4 be attributes from R2, but are not in L1 u L2. p\mbox{[}L1 u L2\mbox{]}(R1 t R2) = p\mbox{[}L1 u L2\mbox{]}((p\mbox{[}L1 u L3\mbox{]}(R1)) t (p\mbox{[}L2 u L4\mbox{]}(R2))) Rule 4. distribution according to union p\mbox{[}L\mbox{]}(R1 u R2) = (p\mbox{[}L\mbox{]}(R1)) u (p\mbox{[}L\mbox{]}(R2)) \begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\begin{DoxyEnumerate}
+\item Tokenize set and subset of projection attributes and store each of them to it\textquotesingle{}s own array 
+\item Check if the size of subset array is larger than the size of set array 
+\item if the subset array is larger return 0 
+\item else sort both arrays ascending 
+\item Compare the subset and set items at the same positions, starting from 0 
+\item if there is an item in the subset array that doesn\textquotesingle{}t match attribute at the same position in the set array return 0 
+\item else continue comparing until final item in the subset array is ritched 
+\item on loop exit return E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em list\+\_\+elem\+\_\+set} & first list element containing projection attributes \\
+\hline
+{\em list\+\_\+elem\+\_\+subset} & second list element containing projection attributes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if some set of attributes is subset of larger set, else returns E\+X\+I\+T\+\_\+\+F\+A\+I\+L\+U\+RE 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rel__eq__projection_8h_af724a82e2b86d1c5d62442457d0da935}\label{rel__eq__projection_8h_af724a82e2b86d1c5d62442457d0da935}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+projection@{A\+K\+\_\+rel\+\_\+eq\+\_\+projection}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+projection@{A\+K\+\_\+rel\+\_\+eq\+\_\+projection}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+projection()}{AK\_rel\_eq\_projection()}}
+{\footnotesize\ttfamily struct \hyperlink{structlist__node}{list\+\_\+node}$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+projection (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{list\+\_\+rel\+\_\+eq }\end{DoxyParamCaption})}
+
+
+
+Main function for generating RA expresion according to projection equivalence rules. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$list\+\_\+rel\+\_\+eq} & RA expresion as the A\+K\+\_\+list \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+optimised RA expresion as the A\+K\+\_\+list 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rel__eq__projection_8h_a7ce7aa45ad93095ccf2ed16b610c838d}\label{rel__eq__projection_8h_a7ce7aa45ad93095ccf2ed16b610c838d}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+attributes}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+attributes@{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+attributes}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+attributes()}{AK\_rel\_eq\_projection\_attributes()}}
+{\footnotesize\ttfamily char$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+attributes (\begin{DoxyParamCaption}\item[{char $\ast$}]{attribs,  }\item[{char $\ast$}]{tbl\+Name }\end{DoxyParamCaption})}
+
+
+
+Filtering and returning only those attributes from list of projection attributes that exist in the given table. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\begin{DoxyEnumerate}
+\item Get the attributes for a given table and store them to the A\+K\+\_\+list 
+\item Tokenize set of projection attributes and store them to the array 
+\item For each attribute in the array check if exists in the previously created A\+K\+\_\+list 
+\item if exists append attribute to the dynamic atributes char array 
+\item return pointer to char array with stored attribute/s 
+\end{DoxyEnumerate}
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$attribs} & projection attributes delimited by \char`\"{};\char`\"{} (A\+T\+T\+R\+\_\+\+D\+E\+L\+I\+M\+I\+T\+ER) \\
+\hline
+{\em $\ast$tbl\+Name} & name of the table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+filtered list of projection attributes as the A\+K\+\_\+list 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rel__eq__projection_8h_a3bcd40b38f703c43c282e9343bf39bae}\label{rel__eq__projection_8h_a3bcd40b38f703c43c282e9343bf39bae}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+test@{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+test}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+test@{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+test}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+test()}{AK\_rel\_eq\_projection\_test()}}
+{\footnotesize\ttfamily void A\+K\+\_\+rel\+\_\+eq\+\_\+projection\+\_\+test (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for testing rel\+\_\+eq\+\_\+selection. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{rel__eq__projection_8h_a97714bc2869587a4eb85d5a160a96783}\label{rel__eq__projection_8h_a97714bc2869587a4eb85d5a160a96783}} 
+\index{rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}!A\+K\+\_\+rel\+\_\+eq\+\_\+remove\+\_\+duplicates@{A\+K\+\_\+rel\+\_\+eq\+\_\+remove\+\_\+duplicates}}
+\index{A\+K\+\_\+rel\+\_\+eq\+\_\+remove\+\_\+duplicates@{A\+K\+\_\+rel\+\_\+eq\+\_\+remove\+\_\+duplicates}!rel\+\_\+eq\+\_\+projection.\+h@{rel\+\_\+eq\+\_\+projection.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+rel\+\_\+eq\+\_\+remove\+\_\+duplicates()}{AK\_rel\_eq\_remove\_duplicates()}}
+{\footnotesize\ttfamily char$\ast$ A\+K\+\_\+rel\+\_\+eq\+\_\+remove\+\_\+duplicates (\begin{DoxyParamCaption}\item[{char $\ast$}]{attribs }\end{DoxyParamCaption})}
+
+
+
+Function which removes duplicate attributes from attributes expresion. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$attribs} & attributes from which to remove duplicates \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to char array without duplicate attributes 
+\end{DoxyReturn}

@@ -1,0 +1,446 @@
+\hypertarget{memoman_8h}{}\section{mm/memoman.h File Reference}
+\label{memoman_8h}\index{mm/memoman.\+h@{mm/memoman.\+h}}
+{\ttfamily \#include \char`\"{}../dm/dbman.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\newline
+Include dependency graph for memoman.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{memoman_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{memoman_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structAK__mem__block}{A\+K\+\_\+mem\+\_\+block}
+\begin{DoxyCompactList}\small\item\em Structure that defines a block of data in memory. \end{DoxyCompactList}\item 
+struct \hyperlink{structAK__db__cache}{A\+K\+\_\+db\+\_\+cache}
+\begin{DoxyCompactList}\small\item\em Structure that defines global cache memory. \end{DoxyCompactList}\item 
+struct \hyperlink{structAK__command__recovery__struct}{A\+K\+\_\+command\+\_\+recovery\+\_\+struct}
+\begin{DoxyCompactList}\small\item\em recovery structure used to recover commands from binary file \end{DoxyCompactList}\item 
+struct \hyperlink{structAK__redo__log}{A\+K\+\_\+redo\+\_\+log}
+\begin{DoxyCompactList}\small\item\em Structure that defines global redo log. \end{DoxyCompactList}\item 
+struct \hyperlink{structAK__query__mem__lib}{A\+K\+\_\+query\+\_\+mem\+\_\+lib}
+\begin{DoxyCompactList}\small\item\em Structure that defines global query memory for libraries. \end{DoxyCompactList}\item 
+struct \hyperlink{structAK__query__mem__dict}{A\+K\+\_\+query\+\_\+mem\+\_\+dict}
+\begin{DoxyCompactList}\small\item\em Structure that defines global query memory for data dictionaries. \end{DoxyCompactList}\item 
+struct \hyperlink{structAK__results}{A\+K\+\_\+results}
+\begin{DoxyCompactList}\small\item\em Structure used for in-\/memory result caching. \end{DoxyCompactList}\item 
+struct \hyperlink{structAK__query__mem__result}{A\+K\+\_\+query\+\_\+mem\+\_\+result}
+\begin{DoxyCompactList}\small\item\em Structure that defines global query memory for results. \end{DoxyCompactList}\item 
+struct \hyperlink{structAK__query__mem}{A\+K\+\_\+query\+\_\+mem}
+\begin{DoxyCompactList}\small\item\em Structure that defines global query memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{memoman_8h_aa91cae56c46d590937bec5ebe52b5fb6}{A\+K\+\_\+cache\+\_\+result} (char $\ast$src\+Table, \hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$temp\+\_\+block, \hyperlink{structAK__header}{A\+K\+\_\+header} header\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Cache fetched result block in memory. \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_ade99412b4e4a4bf221ed9a530aaf632b}{A\+K\+\_\+find\+\_\+available\+\_\+result\+\_\+block} ()
+\begin{DoxyCompactList}\small\item\em Function find available block for result caching in circular array. \end{DoxyCompactList}\item 
+unsigned long \hyperlink{memoman_8h_abb21199f31ed38d983992dd22d96e5e9}{A\+K\+\_\+generate\+\_\+result\+\_\+id} (unsigned char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Generate unique hash identifier for each cached result by using djb2 algorithm. \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_a2317b44ce55736ad837edf3ad71a1c7c}{A\+K\+\_\+cache\+\_\+block} (int num, \hyperlink{structAK__mem__block}{A\+K\+\_\+mem\+\_\+block} $\ast$mem\+\_\+block)
+\begin{DoxyCompactList}\small\item\em Function caches block into memory. \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_a8995ab22740ed96890c67a7a35f4abc0}{A\+K\+\_\+cache\+\_\+\+A\+K\+\_\+malloc} ()
+\begin{DoxyCompactList}\small\item\em Function initializes the global cache memory (variable db\+\_\+cache) \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_a86a8b7ffd296d01d9a3ed5de5379250d}{A\+K\+\_\+redo\+\_\+log\+\_\+\+A\+K\+\_\+malloc} ()
+\begin{DoxyCompactList}\small\item\em Function initializes the global redo log memory (variable redo\+\_\+log) \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_a12abfe4f312e3bf23162a6e46ed11cd3}{A\+K\+\_\+query\+\_\+mem\+\_\+\+A\+K\+\_\+malloc} ()
+\begin{DoxyCompactList}\small\item\em Function initializes the global query memory (variable query\+\_\+mem) \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_aaacdc6d364a3c59c428e5fa330d7be7a}{A\+K\+\_\+memoman\+\_\+init} ()
+\begin{DoxyCompactList}\small\item\em Function initializes memory manager (cache, redo log and query memory) \end{DoxyCompactList}\item 
+\hyperlink{structAK__mem__block}{A\+K\+\_\+mem\+\_\+block} $\ast$ \hyperlink{memoman_8h_a6b391872c1c7b90dcefca2e7c1159110}{A\+K\+\_\+get\+\_\+block} (int num)
+\begin{DoxyCompactList}\small\item\em Function reads a block from memory. If the block is cached returns the cached block. Else uses A\+K\+\_\+cache\+\_\+block to read the block to cache and then returns it. \end{DoxyCompactList}\item 
+void \hyperlink{memoman_8h_a652aaa510c39733a4b5ec883aadefa61}{A\+K\+\_\+mem\+\_\+block\+\_\+modify} (\hyperlink{structAK__mem__block}{A\+K\+\_\+mem\+\_\+block} $\ast$mem\+\_\+block, int dirty)
+\begin{DoxyCompactList}\small\item\em Modify the \char`\"{}dirty\char`\"{} bit of a block, and update timestamps accordingly. \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_a2859df8812fd67dba864b998fb845557}{A\+K\+\_\+refresh\+\_\+cache} ()
+\begin{DoxyCompactList}\small\item\em Function re-\/read all the blocks from disk. \end{DoxyCompactList}\item 
+\hyperlink{structtable__addresses}{table\+\_\+addresses} $\ast$ \hyperlink{memoman_8h_a43e0e529fdca2514e5f0f0bb6f711805}{A\+K\+\_\+get\+\_\+segment\+\_\+addresses} (char $\ast$segment\+Name)
+\begin{DoxyCompactList}\small\item\em Function for geting addresses of some table. \end{DoxyCompactList}\item 
+\hyperlink{structtable__addresses}{table\+\_\+addresses} $\ast$ \hyperlink{memoman_8h_afeb8d902fa14040c84e49ddd78ad1594}{A\+K\+\_\+get\+\_\+index\+\_\+segment\+\_\+addresses} (char $\ast$segment\+Name)
+\begin{DoxyCompactList}\small\item\em Function for geting addresses of some table. \end{DoxyCompactList}\item 
+\hyperlink{structtable__addresses}{table\+\_\+addresses} $\ast$ \hyperlink{memoman_8h_a76376b866e541ab3783f36d3afa49488}{A\+K\+\_\+get\+\_\+table\+\_\+addresses} (char $\ast$table)
+\begin{DoxyCompactList}\small\item\em function for geting addresses of some table \end{DoxyCompactList}\item 
+\hyperlink{structtable__addresses}{table\+\_\+addresses} $\ast$ \hyperlink{memoman_8h_af27cfa075e52693d78bf1b1a1e4f8269}{A\+K\+\_\+get\+\_\+index\+\_\+addresses} (char $\ast$index)
+\begin{DoxyCompactList}\small\item\em Function for geting addresses of some index. \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_a1220ee67178ea5e067767ff485c60838}{A\+K\+\_\+find\+\_\+\+A\+K\+\_\+free\+\_\+space} (\hyperlink{structtable__addresses}{table\+\_\+addresses} $\ast$addresses)
+\begin{DoxyCompactList}\small\item\em Function to find A\+K\+\_\+free space in some block betwen block addresses. It\textquotesingle{}s made for insert\+\_\+row() \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_a6979c35f6af3093da999d7d2f82a110d}{A\+K\+\_\+init\+\_\+new\+\_\+extent} (char $\ast$table\+\_\+name, int extent\+\_\+type)
+\begin{DoxyCompactList}\small\item\em Function that extends the segment. \end{DoxyCompactList}\item 
+int \hyperlink{memoman_8h_ae8513b8ebd5d256202d0c4a475f59768}{A\+K\+\_\+flush\+\_\+cache} ()
+\begin{DoxyCompactList}\small\item\em Function that flushes memory blocks to disk file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{memoman_8h_a15757d621434a649d9366d21d89656dc}\label{memoman_8h_a15757d621434a649d9366d21d89656dc}} 
+void {\bfseries A\+K\+\_\+memoman\+\_\+test} ()
+\item 
+\mbox{\Hypertarget{memoman_8h_aa4243a069ee82f46b9b8adcb75570cf5}\label{memoman_8h_aa4243a069ee82f46b9b8adcb75570cf5}} 
+void {\bfseries A\+K\+\_\+memoman\+\_\+test2} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{memoman_8h_ad4589099c517a64d8766aff8dfb221aa}\label{memoman_8h_ad4589099c517a64d8766aff8dfb221aa}} 
+\hyperlink{structAK__db__cache}{A\+K\+\_\+db\+\_\+cache} $\ast$ \hyperlink{memoman_8h_ad4589099c517a64d8766aff8dfb221aa}{db\+\_\+cache}
+\begin{DoxyCompactList}\small\item\em Variable that defines the db cache. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{memoman_8h_acbf9ff513245b079451855016a89da6c}\label{memoman_8h_acbf9ff513245b079451855016a89da6c}} 
+\hyperlink{structAK__redo__log}{A\+K\+\_\+redo\+\_\+log} $\ast$ \hyperlink{memoman_8h_acbf9ff513245b079451855016a89da6c}{redo\+\_\+log}
+\begin{DoxyCompactList}\small\item\em Variable that defines the global redo log. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{memoman_8h_a97fc4cd06d4e91c4f77e694034bbaac2}\label{memoman_8h_a97fc4cd06d4e91c4f77e694034bbaac2}} 
+\hyperlink{structAK__query__mem}{A\+K\+\_\+query\+\_\+mem} $\ast$ \hyperlink{memoman_8h_a97fc4cd06d4e91c4f77e694034bbaac2}{query\+\_\+mem}
+\begin{DoxyCompactList}\small\item\em Variable that defines the global query memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that defines includes and datastructures for the memory manager of Kalashnikov DB 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{memoman_8h_a8995ab22740ed96890c67a7a35f4abc0}\label{memoman_8h_a8995ab22740ed96890c67a7a35f4abc0}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+cache\+\_\+\+A\+K\+\_\+malloc@{A\+K\+\_\+cache\+\_\+\+A\+K\+\_\+malloc}}
+\index{A\+K\+\_\+cache\+\_\+\+A\+K\+\_\+malloc@{A\+K\+\_\+cache\+\_\+\+A\+K\+\_\+malloc}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+cache\+\_\+\+A\+K\+\_\+malloc()}{AK\_cache\_AK\_malloc()}}
+{\footnotesize\ttfamily int A\+K\+\_\+cache\+\_\+\+A\+K\+\_\+malloc (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function initializes the global cache memory (variable db\+\_\+cache) 
+
+\begin{DoxyAuthor}{Author}
+Markus Schatten, Matija Šestak(revised) 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if the cache memory has been initialized, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_a2317b44ce55736ad837edf3ad71a1c7c}\label{memoman_8h_a2317b44ce55736ad837edf3ad71a1c7c}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+cache\+\_\+block@{A\+K\+\_\+cache\+\_\+block}}
+\index{A\+K\+\_\+cache\+\_\+block@{A\+K\+\_\+cache\+\_\+block}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+cache\+\_\+block()}{AK\_cache\_block()}}
+{\footnotesize\ttfamily int A\+K\+\_\+cache\+\_\+block (\begin{DoxyParamCaption}\item[{int}]{num,  }\item[{\hyperlink{structAK__mem__block}{A\+K\+\_\+mem\+\_\+block} $\ast$}]{mem\+\_\+block }\end{DoxyParamCaption})}
+
+
+
+Function caches block into memory. 
+
+\begin{DoxyAuthor}{Author}
+Nikola Bakoš, Matija Šestak(revised) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em num} & block number (address) \\
+\hline
+{\em mem\+\_\+block} & address of memmory block \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if the block has been successfully read into memory, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR otherwise 
+\end{DoxyReturn}
+read the block from the given address
+
+set dirty bit in mem\+\_\+block struct
+
+get the timestamp
+
+set timestamp\+\_\+read
+
+set timestamp\+\_\+last\+\_\+change \mbox{\Hypertarget{memoman_8h_aa91cae56c46d590937bec5ebe52b5fb6}\label{memoman_8h_aa91cae56c46d590937bec5ebe52b5fb6}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+cache\+\_\+result@{A\+K\+\_\+cache\+\_\+result}}
+\index{A\+K\+\_\+cache\+\_\+result@{A\+K\+\_\+cache\+\_\+result}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+cache\+\_\+result()}{AK\_cache\_result()}}
+{\footnotesize\ttfamily void A\+K\+\_\+cache\+\_\+result (\begin{DoxyParamCaption}\item[{char $\ast$}]{src\+Table,  }\item[{\hyperlink{structAK__block}{A\+K\+\_\+block} $\ast$}]{temp\+\_\+block,  }\item[{\hyperlink{structAK__header}{A\+K\+\_\+header}}]{header\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Cache fetched result block in memory. 
+
+\begin{DoxyAuthor}{Author}
+Mario Novoselec 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{memoman_8h_a1220ee67178ea5e067767ff485c60838}\label{memoman_8h_a1220ee67178ea5e067767ff485c60838}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+find\+\_\+\+A\+K\+\_\+free\+\_\+space@{A\+K\+\_\+find\+\_\+\+A\+K\+\_\+free\+\_\+space}}
+\index{A\+K\+\_\+find\+\_\+\+A\+K\+\_\+free\+\_\+space@{A\+K\+\_\+find\+\_\+\+A\+K\+\_\+free\+\_\+space}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+find\+\_\+\+A\+K\+\_\+free\+\_\+space()}{AK\_find\_AK\_free\_space()}}
+{\footnotesize\ttfamily int A\+K\+\_\+find\+\_\+\+A\+K\+\_\+free\+\_\+space (\begin{DoxyParamCaption}\item[{\hyperlink{structtable__addresses}{table\+\_\+addresses} $\ast$}]{addresses }\end{DoxyParamCaption})}
+
+
+
+Function to find A\+K\+\_\+free space in some block betwen block addresses. It\textquotesingle{}s made for insert\+\_\+row() 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Matija Šestak( function now uses caching) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em address} & addresses of extents \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+address of the block to write in 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_ade99412b4e4a4bf221ed9a530aaf632b}\label{memoman_8h_ade99412b4e4a4bf221ed9a530aaf632b}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+find\+\_\+available\+\_\+result\+\_\+block@{A\+K\+\_\+find\+\_\+available\+\_\+result\+\_\+block}}
+\index{A\+K\+\_\+find\+\_\+available\+\_\+result\+\_\+block@{A\+K\+\_\+find\+\_\+available\+\_\+result\+\_\+block}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+find\+\_\+available\+\_\+result\+\_\+block()}{AK\_find\_available\_result\_block()}}
+{\footnotesize\ttfamily int A\+K\+\_\+find\+\_\+available\+\_\+result\+\_\+block (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function find available block for result caching in circular array. 
+
+\begin{DoxyAuthor}{Author}
+Mario Novoselec 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+available\+\_\+index 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_ae8513b8ebd5d256202d0c4a475f59768}\label{memoman_8h_ae8513b8ebd5d256202d0c4a475f59768}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+flush\+\_\+cache@{A\+K\+\_\+flush\+\_\+cache}}
+\index{A\+K\+\_\+flush\+\_\+cache@{A\+K\+\_\+flush\+\_\+cache}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+flush\+\_\+cache()}{AK\_flush\_cache()}}
+{\footnotesize\ttfamily int A\+K\+\_\+flush\+\_\+cache (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function that flushes memory blocks to disk file. 
+
+\begin{DoxyAuthor}{Author}
+Matija Šestak 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+if block form cache can not be writed to DB file -\/$>$ E\+X\+I\+T\+\_\+\+E\+R\+R\+OR \mbox{\Hypertarget{memoman_8h_abb21199f31ed38d983992dd22d96e5e9}\label{memoman_8h_abb21199f31ed38d983992dd22d96e5e9}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+generate\+\_\+result\+\_\+id@{A\+K\+\_\+generate\+\_\+result\+\_\+id}}
+\index{A\+K\+\_\+generate\+\_\+result\+\_\+id@{A\+K\+\_\+generate\+\_\+result\+\_\+id}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+generate\+\_\+result\+\_\+id()}{AK\_generate\_result\_id()}}
+{\footnotesize\ttfamily unsigned long A\+K\+\_\+generate\+\_\+result\+\_\+id (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{str }\end{DoxyParamCaption})}
+
+
+
+Generate unique hash identifier for each cached result by using djb2 algorithm. 
+
+\begin{DoxyAuthor}{Author}
+Mario Novoselec 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+hash 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_a6b391872c1c7b90dcefca2e7c1159110}\label{memoman_8h_a6b391872c1c7b90dcefca2e7c1159110}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+get\+\_\+block@{A\+K\+\_\+get\+\_\+block}}
+\index{A\+K\+\_\+get\+\_\+block@{A\+K\+\_\+get\+\_\+block}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+get\+\_\+block()}{AK\_get\_block()}}
+{\footnotesize\ttfamily \hyperlink{structAK__mem__block}{A\+K\+\_\+mem\+\_\+block}$\ast$ A\+K\+\_\+get\+\_\+block (\begin{DoxyParamCaption}\item[{int}]{num }\end{DoxyParamCaption})}
+
+
+
+Function reads a block from memory. If the block is cached returns the cached block. Else uses A\+K\+\_\+cache\+\_\+block to read the block to cache and then returns it. 
+
+\begin{DoxyAuthor}{Author}
+Tomislav Fotak, updated by Matija Šestak 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em num} & block number (address) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+segment start address 
+\end{DoxyReturn}
+if block form cache can not be writed to DB file -\/$>$ E\+X\+I\+T\+\_\+\+E\+R\+R\+OR
+
+if block form cache can not be writed to DB file -\/$>$ E\+X\+I\+T\+\_\+\+E\+R\+R\+OR \mbox{\Hypertarget{memoman_8h_af27cfa075e52693d78bf1b1a1e4f8269}\label{memoman_8h_af27cfa075e52693d78bf1b1a1e4f8269}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+get\+\_\+index\+\_\+addresses@{A\+K\+\_\+get\+\_\+index\+\_\+addresses}}
+\index{A\+K\+\_\+get\+\_\+index\+\_\+addresses@{A\+K\+\_\+get\+\_\+index\+\_\+addresses}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+get\+\_\+index\+\_\+addresses()}{AK\_get\_index\_addresses()}}
+{\footnotesize\ttfamily \hyperlink{structtable__addresses}{table\+\_\+addresses}$\ast$ A\+K\+\_\+get\+\_\+index\+\_\+addresses (\begin{DoxyParamCaption}\item[{char $\ast$}]{index }\end{DoxyParamCaption})}
+
+
+
+Function for geting addresses of some index. 
+
+\begin{DoxyAuthor}{Author}
+Mislav Čakarić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em index} & index name that you search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \hyperlink{structtable__addresses}{table\+\_\+addresses} witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_afeb8d902fa14040c84e49ddd78ad1594}\label{memoman_8h_afeb8d902fa14040c84e49ddd78ad1594}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+get\+\_\+index\+\_\+segment\+\_\+addresses@{A\+K\+\_\+get\+\_\+index\+\_\+segment\+\_\+addresses}}
+\index{A\+K\+\_\+get\+\_\+index\+\_\+segment\+\_\+addresses@{A\+K\+\_\+get\+\_\+index\+\_\+segment\+\_\+addresses}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+get\+\_\+index\+\_\+segment\+\_\+addresses()}{AK\_get\_index\_segment\_addresses()}}
+{\footnotesize\ttfamily \hyperlink{structtable__addresses}{table\+\_\+addresses}$\ast$ A\+K\+\_\+get\+\_\+index\+\_\+segment\+\_\+addresses (\begin{DoxyParamCaption}\item[{char $\ast$}]{segment\+Name }\end{DoxyParamCaption})}
+
+
+
+Function for geting addresses of some table. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić,Lovro Predovan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table} & table name that you search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \hyperlink{structtable__addresses}{table\+\_\+addresses} witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_a43e0e529fdca2514e5f0f0bb6f711805}\label{memoman_8h_a43e0e529fdca2514e5f0f0bb6f711805}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+get\+\_\+segment\+\_\+addresses@{A\+K\+\_\+get\+\_\+segment\+\_\+addresses}}
+\index{A\+K\+\_\+get\+\_\+segment\+\_\+addresses@{A\+K\+\_\+get\+\_\+segment\+\_\+addresses}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+get\+\_\+segment\+\_\+addresses()}{AK\_get\_segment\_addresses()}}
+{\footnotesize\ttfamily \hyperlink{structtable__addresses}{table\+\_\+addresses}$\ast$ A\+K\+\_\+get\+\_\+segment\+\_\+addresses (\begin{DoxyParamCaption}\item[{char $\ast$}]{segment\+Name }\end{DoxyParamCaption})}
+
+
+
+Function for geting addresses of some table. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Matija Šestak(function now uses caching), modified and renamed by Mislav Čakarić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table} & table name that you search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \hyperlink{structtable__addresses}{table\+\_\+addresses} witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_a76376b866e541ab3783f36d3afa49488}\label{memoman_8h_a76376b866e541ab3783f36d3afa49488}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+get\+\_\+table\+\_\+addresses@{A\+K\+\_\+get\+\_\+table\+\_\+addresses}}
+\index{A\+K\+\_\+get\+\_\+table\+\_\+addresses@{A\+K\+\_\+get\+\_\+table\+\_\+addresses}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+get\+\_\+table\+\_\+addresses()}{AK\_get\_table\_addresses()}}
+{\footnotesize\ttfamily \hyperlink{structtable__addresses}{table\+\_\+addresses}$\ast$ A\+K\+\_\+get\+\_\+table\+\_\+addresses (\begin{DoxyParamCaption}\item[{char $\ast$}]{table }\end{DoxyParamCaption})}
+
+
+
+function for geting addresses of some table 
+
+\begin{DoxyAuthor}{Author}
+Mislav Čakarić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table} & table name that you search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+structure \hyperlink{structtable__addresses}{table\+\_\+addresses} witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_a6979c35f6af3093da999d7d2f82a110d}\label{memoman_8h_a6979c35f6af3093da999d7d2f82a110d}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+init\+\_\+new\+\_\+extent@{A\+K\+\_\+init\+\_\+new\+\_\+extent}}
+\index{A\+K\+\_\+init\+\_\+new\+\_\+extent@{A\+K\+\_\+init\+\_\+new\+\_\+extent}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+init\+\_\+new\+\_\+extent()}{AK\_init\_new\_extent()}}
+{\footnotesize\ttfamily int A\+K\+\_\+init\+\_\+new\+\_\+extent (\begin{DoxyParamCaption}\item[{char $\ast$}]{table\+\_\+name,  }\item[{int}]{extent\+\_\+type }\end{DoxyParamCaption})}
+
+
+
+Function that extends the segment. 
+
+\begin{DoxyAuthor}{Author}
+Nikola Bakoš, updated by Matija Šestak (function now uses caching), updated by Mislav Čakarić, updated by Dino Laktašić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em table\+\_\+name} & name of segment to extent \\
+\hline
+{\em extent\+\_\+type} & type of extent (can be one of\+: S\+E\+G\+M\+E\+N\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+S\+Y\+S\+T\+E\+M\+\_\+\+T\+A\+B\+LE, S\+E\+G\+M\+E\+N\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+T\+A\+B\+LE, S\+E\+G\+M\+E\+N\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+I\+N\+D\+EX, S\+E\+G\+M\+E\+N\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+T\+R\+A\+N\+S\+A\+C\+T\+I\+ON, S\+E\+G\+M\+E\+N\+T\+\_\+\+T\+Y\+P\+E\+\_\+\+T\+E\+MP \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+address of new extent, otherwise E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+!! to correct header B\+UG iterate through header from 0 to N-\/th block while there is \mbox{\Hypertarget{memoman_8h_a652aaa510c39733a4b5ec883aadefa61}\label{memoman_8h_a652aaa510c39733a4b5ec883aadefa61}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+mem\+\_\+block\+\_\+modify@{A\+K\+\_\+mem\+\_\+block\+\_\+modify}}
+\index{A\+K\+\_\+mem\+\_\+block\+\_\+modify@{A\+K\+\_\+mem\+\_\+block\+\_\+modify}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+mem\+\_\+block\+\_\+modify()}{AK\_mem\_block\_modify()}}
+{\footnotesize\ttfamily void A\+K\+\_\+mem\+\_\+block\+\_\+modify (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__mem__block}{A\+K\+\_\+mem\+\_\+block} $\ast$}]{mem\+\_\+block,  }\item[{int}]{dirty }\end{DoxyParamCaption})}
+
+
+
+Modify the \char`\"{}dirty\char`\"{} bit of a block, and update timestamps accordingly. 
+
+\begin{DoxyAuthor}{Author}
+Alen Novosel. 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{memoman_8h_aaacdc6d364a3c59c428e5fa330d7be7a}\label{memoman_8h_aaacdc6d364a3c59c428e5fa330d7be7a}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+memoman\+\_\+init@{A\+K\+\_\+memoman\+\_\+init}}
+\index{A\+K\+\_\+memoman\+\_\+init@{A\+K\+\_\+memoman\+\_\+init}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+memoman\+\_\+init()}{AK\_memoman\_init()}}
+{\footnotesize\ttfamily int A\+K\+\_\+memoman\+\_\+init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function initializes memory manager (cache, redo log and query memory) 
+
+\begin{DoxyAuthor}{Author}
+Miroslav Policki 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if the query memory manager has been initialized, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_a12abfe4f312e3bf23162a6e46ed11cd3}\label{memoman_8h_a12abfe4f312e3bf23162a6e46ed11cd3}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+query\+\_\+mem\+\_\+\+A\+K\+\_\+malloc@{A\+K\+\_\+query\+\_\+mem\+\_\+\+A\+K\+\_\+malloc}}
+\index{A\+K\+\_\+query\+\_\+mem\+\_\+\+A\+K\+\_\+malloc@{A\+K\+\_\+query\+\_\+mem\+\_\+\+A\+K\+\_\+malloc}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+query\+\_\+mem\+\_\+\+A\+K\+\_\+malloc()}{AK\_query\_mem\_AK\_malloc()}}
+{\footnotesize\ttfamily int A\+K\+\_\+query\+\_\+mem\+\_\+\+A\+K\+\_\+malloc (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function initializes the global query memory (variable query\+\_\+mem) 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if the query memory has been initialized, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR otherwise 
+\end{DoxyReturn}
+allocate memory for global variable query\+\_\+mem
+
+allocate memory for variable query\+\_\+mem\+\_\+lib which is used in query\+\_\+mem-\/$>$parsed
+
+allocate memory for variable query\+\_\+mem\+\_\+dict which is used in query\+\_\+mem-\/$>$dictionary
+
+allocate memory for variable query\+\_\+mem\+\_\+result which is used in query\+\_\+mem-\/$>$result
+
+allocate memory for variable tuple\+\_\+dict which is used in query\+\_\+mem-\/$>$dictionary-\/$>$dictionary\mbox{[}\mbox{]} \mbox{\Hypertarget{memoman_8h_a86a8b7ffd296d01d9a3ed5de5379250d}\label{memoman_8h_a86a8b7ffd296d01d9a3ed5de5379250d}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+redo\+\_\+log\+\_\+\+A\+K\+\_\+malloc@{A\+K\+\_\+redo\+\_\+log\+\_\+\+A\+K\+\_\+malloc}}
+\index{A\+K\+\_\+redo\+\_\+log\+\_\+\+A\+K\+\_\+malloc@{A\+K\+\_\+redo\+\_\+log\+\_\+\+A\+K\+\_\+malloc}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+redo\+\_\+log\+\_\+\+A\+K\+\_\+malloc()}{AK\_redo\_log\_AK\_malloc()}}
+{\footnotesize\ttfamily int A\+K\+\_\+redo\+\_\+log\+\_\+\+A\+K\+\_\+malloc (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function initializes the global redo log memory (variable redo\+\_\+log) 
+
+\begin{DoxyAuthor}{Author}
+Dejan Sambolić updated by Dražen Bandić, updated by Tomislav Turek 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if the redo log memory has been initialized, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{memoman_8h_a2859df8812fd67dba864b998fb845557}\label{memoman_8h_a2859df8812fd67dba864b998fb845557}} 
+\index{memoman.\+h@{memoman.\+h}!A\+K\+\_\+refresh\+\_\+cache@{A\+K\+\_\+refresh\+\_\+cache}}
+\index{A\+K\+\_\+refresh\+\_\+cache@{A\+K\+\_\+refresh\+\_\+cache}!memoman.\+h@{memoman.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+refresh\+\_\+cache()}{AK\_refresh\_cache()}}
+{\footnotesize\ttfamily int A\+K\+\_\+refresh\+\_\+cache (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function re-\/read all the blocks from disk. 
+
+\begin{DoxyAuthor}{Author}
+Matija Šestak. 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}

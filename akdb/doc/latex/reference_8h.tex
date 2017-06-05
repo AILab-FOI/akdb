@@ -1,0 +1,461 @@
+\hypertarget{reference_8h}{}\section{sql/cs/reference.h File Reference}
+\label{reference_8h}\index{sql/cs/reference.\+h@{sql/cs/reference.\+h}}
+{\ttfamily \#include \char`\"{}../../dm/dbman.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../../file/table.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../../auxi/mempro.\+h\char`\"{}}\newline
+Include dependency graph for reference.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{reference_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{reference_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structAK__ref__item}{A\+K\+\_\+ref\+\_\+item}
+\begin{DoxyCompactList}\small\item\em Structure that represents reference item. It contains of table, attributes, parent table and it\textquotesingle{}s attributes, number of attributes, constraint and type of reference. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{reference_8h_a16fa9e833db3ea311a33f8f886faaeca}\label{reference_8h_a16fa9e833db3ea311a33f8f886faaeca}} 
+\#define \hyperlink{reference_8h_a16fa9e833db3ea311a33f8f886faaeca}{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+NE}~-\/1
+\begin{DoxyCompactList}\small\item\em Constant declaring none reference type. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{reference_8h_a3f60a580c7b5104d851df9f64523439e}\label{reference_8h_a3f60a580c7b5104d851df9f64523439e}} 
+\#define \hyperlink{reference_8h_a3f60a580c7b5104d851df9f64523439e}{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+S\+E\+T\+\_\+\+N\+U\+LL}~1
+\begin{DoxyCompactList}\small\item\em Constant declaring set null reference type. \end{DoxyCompactList}\item 
+\#define \hyperlink{reference_8h_ab683b166173b43a5f4720875815b4ef5}{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+\_\+\+A\+C\+T\+I\+ON}~2
+\begin{DoxyCompactList}\small\item\em Constant declaring no action reference type. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{reference_8h_a29a098b4ecd7d12a51c514a772d8de13}\label{reference_8h_a29a098b4ecd7d12a51c514a772d8de13}} 
+\#define {\bfseries R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+C\+A\+S\+C\+A\+DE}~3
+\item 
+\mbox{\Hypertarget{reference_8h_a9d4cfbd066207dc5d883d127ba3d43bc}\label{reference_8h_a9d4cfbd066207dc5d883d127ba3d43bc}} 
+\#define \hyperlink{reference_8h_a9d4cfbd066207dc5d883d127ba3d43bc}{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+T\+R\+I\+CT}~4
+\begin{DoxyCompactList}\small\item\em Constant declaring restrict reference type. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{reference_8h_af53c34e0a0d74cad52736788088e7079}\label{reference_8h_af53c34e0a0d74cad52736788088e7079}} 
+\#define \hyperlink{reference_8h_af53c34e0a0d74cad52736788088e7079}{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+S\+E\+T\+\_\+\+D\+E\+F\+A\+U\+LT}~5
+\begin{DoxyCompactList}\small\item\em Constant declaring set default reference type. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{reference_8h_a1892ca5d8fd96ba1813befff40c84ebd}\label{reference_8h_a1892ca5d8fd96ba1813befff40c84ebd}} 
+\#define \hyperlink{reference_8h_a1892ca5d8fd96ba1813befff40c84ebd}{M\+A\+X\+\_\+\+R\+E\+F\+E\+R\+E\+N\+C\+E\+\_\+\+A\+T\+T\+R\+I\+B\+U\+T\+ES}~10
+\begin{DoxyCompactList}\small\item\em Constant declaring maximum number of reference attributes. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{reference_8h_abe41d26ee4ca5bfb12ffeb14b6d6f72a}\label{reference_8h_abe41d26ee4ca5bfb12ffeb14b6d6f72a}} 
+\#define \hyperlink{reference_8h_abe41d26ee4ca5bfb12ffeb14b6d6f72a}{M\+A\+X\+\_\+\+C\+H\+I\+L\+D\+\_\+\+C\+O\+N\+S\+T\+R\+A\+I\+N\+TS}~20
+\begin{DoxyCompactList}\small\item\em Constant declaring maximum number of child constraints. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{reference_8h_a5642d4715910a224460ee3ad66e866e6}{A\+K\+\_\+add\+\_\+reference} (char $\ast$child\+Table, char $\ast$child\+Att\+Names\mbox{[}$\,$\mbox{]}, char $\ast$parent\+Table, char $\ast$parent\+Att\+Names\mbox{[}$\,$\mbox{]}, int att\+Num, char $\ast$constraint\+Name, int type)
+\begin{DoxyCompactList}\small\item\em Function adds a reference for a group of attributes over a given table to a group of attributes over another table with a given constraint name.. \end{DoxyCompactList}\item 
+\hyperlink{structAK__ref__item}{A\+K\+\_\+ref\+\_\+item} \hyperlink{reference_8h_a649ec65739751d5504693e55184a98a9}{A\+K\+\_\+get\+\_\+reference} (char $\ast$table\+Name, char $\ast$constraint\+Name)
+\begin{DoxyCompactList}\small\item\em Function reads a reference entry from system table. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_a4b180aec5b34a0d6341ca689931521cc}{A\+K\+\_\+reference\+\_\+check\+\_\+attribute} (char $\ast$table\+Name, char $\ast$attribute, char $\ast$value)
+\begin{DoxyCompactList}\small\item\em Function checks referential integrity for one attribute. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_a52e7e910e26cb4e1a3e6eb387e7305a5}{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$lista, int action)
+\begin{DoxyCompactList}\small\item\em Funvction that quickly checks if there are any referential constraints that should be applied on a given list of changes. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_aa8591a73d9dab9148274329a1683f909}{A\+K\+\_\+reference\+\_\+check\+\_\+restricion} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$lista, int action)
+\begin{DoxyCompactList}\small\item\em Function checks for R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+T\+R\+I\+CT references appliable to the operation of updating or deleting a row in a table. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_ac64028d9ef8bc674d737aa12a8065f49}{A\+K\+\_\+reference\+\_\+update} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$lista, int action)
+\begin{DoxyCompactList}\small\item\em Function updates child table entries according to ongoing update of parent table entries. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_a015b40704f67d85d153eeda5e6b82088}{A\+K\+\_\+reference\+\_\+check\+\_\+entry} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$lista)
+\begin{DoxyCompactList}\small\item\em Function checks new entry for referential integrity. \end{DoxyCompactList}\item 
+void \hyperlink{reference_8h_a93c889a460fe2392c4b81857c03aedf2}{A\+K\+\_\+reference\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for testing referential integrity. \end{DoxyCompactList}\item 
+void \hyperlink{reference_8h_ad2f99778d1325dba20d27bfee2fe106c}{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element} (int newtype, void $\ast$data, char $\ast$table, char $\ast$attribute\+\_\+name, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$Element\+Before)
+\begin{DoxyCompactList}\small\item\em Function inserts new element after some element, to insert on first place give list as before element. It calls function Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_a83f0975e1d6d62009b5c9190e9e4be28}{Ak\+\_\+insert\+\_\+row} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$row\+\_\+root)
+\begin{DoxyCompactList}\small\item\em Function inserts a one row into table. Firstly it is checked whether inserted row would violite reference integrity. Then it is checked in which table should row be inserted. If there is no A\+K\+\_\+free space for new table, new extent is allocated. New block is allocated on given address. Row is inserted in this block and dirty flag is set to B\+L\+O\+C\+K\+\_\+\+D\+I\+R\+TY. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_a48193253bfd1b2a279a5772303acba58}{A\+K\+\_\+selection} (char $\ast$src\+Table, char $\ast$dst\+Table, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$expr)
+\begin{DoxyCompactList}\small\item\em Function which implements selection. \end{DoxyCompactList}\item 
+void \hyperlink{reference_8h_ad2e954029e28dcf3149c6d9a76b960ab}{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update} (int newtype, void $\ast$data, char $\ast$table, char $\ast$attribute\+\_\+name, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$Element\+Before, int newconstraint)
+\begin{DoxyCompactList}\small\item\em Function inserts new element after some element, to insert on first place give list as before element. New element is allocated. Type, data, attribute name and constraint of new elemets are set according to function arguments. Pointers are changed so that before element points to new element. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_afa7b8d65fef8057c0b47502606a34994}{Ak\+\_\+delete\+\_\+row} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$row\+\_\+root)
+\begin{DoxyCompactList}\small\item\em Function deletes rows. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_a978a5fc0afeea6ec045977d886647ae3}{Ak\+\_\+update\+\_\+row} (struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$row\+\_\+root)
+\begin{DoxyCompactList}\small\item\em Function updates rows of some table. \end{DoxyCompactList}\item 
+int \hyperlink{reference_8h_ac6dbc1d4356e635929f3f7e30de2ff3b}{A\+K\+\_\+initialize\+\_\+new\+\_\+segment} (char $\ast$name, int type, \hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$header)
+\begin{DoxyCompactList}\small\item\em Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, etc. call this function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+đ Provides data structures for referential integrity 
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{reference_8h_ab683b166173b43a5f4720875815b4ef5}\label{reference_8h_ab683b166173b43a5f4720875815b4ef5}} 
+\index{reference.\+h@{reference.\+h}!R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+\_\+\+A\+C\+T\+I\+ON@{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+\_\+\+A\+C\+T\+I\+ON}}
+\index{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+\_\+\+A\+C\+T\+I\+ON@{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+\_\+\+A\+C\+T\+I\+ON}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+\_\+\+A\+C\+T\+I\+ON}{REF\_TYPE\_NO\_ACTION}}
+{\footnotesize\ttfamily \#define R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+N\+O\+\_\+\+A\+C\+T\+I\+ON~2}
+
+
+
+Constant declaring no action reference type. 
+
+Constant declaring cascade reference type. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{reference_8h_a5642d4715910a224460ee3ad66e866e6}\label{reference_8h_a5642d4715910a224460ee3ad66e866e6}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+add\+\_\+reference@{A\+K\+\_\+add\+\_\+reference}}
+\index{A\+K\+\_\+add\+\_\+reference@{A\+K\+\_\+add\+\_\+reference}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+add\+\_\+reference()}{AK\_add\_reference()}}
+{\footnotesize\ttfamily int A\+K\+\_\+add\+\_\+reference (\begin{DoxyParamCaption}\item[{char $\ast$}]{child\+Table,  }\item[{char $\ast$}]{child\+Att\+Names\mbox{[}$\,$\mbox{]},  }\item[{char $\ast$}]{parent\+Table,  }\item[{char $\ast$}]{parent\+Att\+Names\mbox{[}$\,$\mbox{]},  }\item[{int}]{att\+Num,  }\item[{char $\ast$}]{constraint\+Name,  }\item[{int}]{type }\end{DoxyParamCaption})}
+
+
+
+Function adds a reference for a group of attributes over a given table to a group of attributes over another table with a given constraint name.. 
+
+\begin{DoxyAuthor}{Author}
+Dejan Frankovic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of the child table \\
+\hline
+{\em array} & of child table attribute names (foreign key attributes) \\
+\hline
+{\em name} & of the parent table \\
+\hline
+{\em array} & of parent table attribute names (primary key attributes) \\
+\hline
+{\em number} & of attributes in foreign key \\
+\hline
+{\em name} & of the constraint \\
+\hline
+{\em type} & of the constraint, constants defined in \textquotesingle{}\hyperlink{reference_8h}{reference.\+h}\textquotesingle{} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_afa7b8d65fef8057c0b47502606a34994}\label{reference_8h_afa7b8d65fef8057c0b47502606a34994}} 
+\index{reference.\+h@{reference.\+h}!Ak\+\_\+delete\+\_\+row@{Ak\+\_\+delete\+\_\+row}}
+\index{Ak\+\_\+delete\+\_\+row@{Ak\+\_\+delete\+\_\+row}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{Ak\+\_\+delete\+\_\+row()}{Ak\_delete\_row()}}
+{\footnotesize\ttfamily int Ak\+\_\+delete\+\_\+row (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{row\+\_\+root }\end{DoxyParamCaption})}
+
+
+
+Function deletes rows. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, Dejan Frankovic (added referential integrity) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+root} & elements of one row  E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if success \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{reference_8h_a649ec65739751d5504693e55184a98a9}\label{reference_8h_a649ec65739751d5504693e55184a98a9}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+get\+\_\+reference@{A\+K\+\_\+get\+\_\+reference}}
+\index{A\+K\+\_\+get\+\_\+reference@{A\+K\+\_\+get\+\_\+reference}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+get\+\_\+reference()}{AK\_get\_reference()}}
+{\footnotesize\ttfamily \hyperlink{structAK__ref__item}{A\+K\+\_\+ref\+\_\+item} A\+K\+\_\+get\+\_\+reference (\begin{DoxyParamCaption}\item[{char $\ast$}]{table\+Name,  }\item[{char $\ast$}]{constraint\+Name }\end{DoxyParamCaption})}
+
+
+
+Function reads a reference entry from system table. 
+
+\begin{DoxyAuthor}{Author}
+Dejan Frankovic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & of the table with reference (with foreign key) \\
+\hline
+{\em name} & of the reference constraint \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{structAK__ref__item}{A\+K\+\_\+ref\+\_\+item} object with all neccessary information about the reference 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_ac6dbc1d4356e635929f3f7e30de2ff3b}\label{reference_8h_ac6dbc1d4356e635929f3f7e30de2ff3b}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+initialize\+\_\+new\+\_\+segment@{A\+K\+\_\+initialize\+\_\+new\+\_\+segment}}
+\index{A\+K\+\_\+initialize\+\_\+new\+\_\+segment@{A\+K\+\_\+initialize\+\_\+new\+\_\+segment}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+initialize\+\_\+new\+\_\+segment()}{AK\_initialize\_new\_segment()}}
+{\footnotesize\ttfamily int A\+K\+\_\+initialize\+\_\+new\+\_\+segment (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{int}]{type,  }\item[{\hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$}]{header }\end{DoxyParamCaption})}
+
+
+
+Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, etc. call this function. 
+
+\begin{DoxyAuthor}{Author}
+Tomislav Fotak, updated by Matija Šestak (function now uses caching) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & segment name \\
+\hline
+{\em type} & segment type \\
+\hline
+{\em header} & pointer to header that should be written to the new extent (all blocks) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+start address of new segment 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_ad2f99778d1325dba20d27bfee2fe106c}\label{reference_8h_ad2f99778d1325dba20d27bfee2fe106c}} 
+\index{reference.\+h@{reference.\+h}!Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element@{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element}}
+\index{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element@{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element()}{Ak\_Insert\_New\_Element()}}
+{\footnotesize\ttfamily void Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element (\begin{DoxyParamCaption}\item[{int}]{newtype,  }\item[{void $\ast$}]{data,  }\item[{char $\ast$}]{table,  }\item[{char $\ast$}]{attribute\+\_\+name,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{Element\+Before }\end{DoxyParamCaption})}
+
+
+
+Function inserts new element after some element, to insert on first place give list as before element. It calls function Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, changed by Dino Laktašić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em newtype} & type of the data \\
+\hline
+{\em data} & the data \\
+\hline
+{\em table} & table name \\
+\hline
+{\em attribute\+\_\+name} & attribute name \\
+\hline
+{\em element} & element after we which insert the new element \\
+\hline
+{\em constraint} & is N\+E\+W\+\_\+\+V\+A\+L\+UE \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_ad2e954029e28dcf3149c6d9a76b960ab}\label{reference_8h_ad2e954029e28dcf3149c6d9a76b960ab}} 
+\index{reference.\+h@{reference.\+h}!Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update@{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update}}
+\index{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update@{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update()}{Ak\_Insert\_New\_Element\_For\_Update()}}
+{\footnotesize\ttfamily void Ak\+\_\+\+Insert\+\_\+\+New\+\_\+\+Element\+\_\+\+For\+\_\+\+Update (\begin{DoxyParamCaption}\item[{int}]{newtype,  }\item[{void $\ast$}]{data,  }\item[{char $\ast$}]{table,  }\item[{char $\ast$}]{attribute\+\_\+name,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{Element\+Before,  }\item[{int}]{newconstraint }\end{DoxyParamCaption})}
+
+
+
+Function inserts new element after some element, to insert on first place give list as before element. New element is allocated. Type, data, attribute name and constraint of new elemets are set according to function arguments. Pointers are changed so that before element points to new element. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em newtype} & type of the data \\
+\hline
+{\em data} & the data \\
+\hline
+{\em table} & table name \\
+\hline
+{\em attribute\+\_\+name} & attribute name \\
+\hline
+{\em element} & element after we which insert the new element \\
+\hline
+{\em constraint} & N\+E\+W\+\_\+\+V\+A\+L\+UE if data is new value, S\+E\+A\+R\+C\+H\+\_\+\+C\+O\+N\+S\+T\+R\+A\+I\+NT if data is constraint to search for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_a83f0975e1d6d62009b5c9190e9e4be28}\label{reference_8h_a83f0975e1d6d62009b5c9190e9e4be28}} 
+\index{reference.\+h@{reference.\+h}!Ak\+\_\+insert\+\_\+row@{Ak\+\_\+insert\+\_\+row}}
+\index{Ak\+\_\+insert\+\_\+row@{Ak\+\_\+insert\+\_\+row}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{Ak\+\_\+insert\+\_\+row()}{Ak\_insert\_row()}}
+{\footnotesize\ttfamily int Ak\+\_\+insert\+\_\+row (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{row\+\_\+root }\end{DoxyParamCaption})}
+
+
+
+Function inserts a one row into table. Firstly it is checked whether inserted row would violite reference integrity. Then it is checked in which table should row be inserted. If there is no A\+K\+\_\+free space for new table, new extent is allocated. New block is allocated on given address. Row is inserted in this block and dirty flag is set to B\+L\+O\+C\+K\+\_\+\+D\+I\+R\+TY. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, updated by Matija Šestak (function now uses caching), updated by Dejan Frankovic (added reference check), updated by Dino Laktašić (removed variable A\+K\+\_\+free, variable table initialized using memset) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+root} & list of elements which contain data of one row \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if success else E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_a4b180aec5b34a0d6341ca689931521cc}\label{reference_8h_a4b180aec5b34a0d6341ca689931521cc}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+reference\+\_\+check\+\_\+attribute@{A\+K\+\_\+reference\+\_\+check\+\_\+attribute}}
+\index{A\+K\+\_\+reference\+\_\+check\+\_\+attribute@{A\+K\+\_\+reference\+\_\+check\+\_\+attribute}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+reference\+\_\+check\+\_\+attribute()}{AK\_reference\_check\_attribute()}}
+{\footnotesize\ttfamily int A\+K\+\_\+reference\+\_\+check\+\_\+attribute (\begin{DoxyParamCaption}\item[{char $\ast$}]{table\+Name,  }\item[{char $\ast$}]{attribute,  }\item[{char $\ast$}]{value }\end{DoxyParamCaption})}
+
+
+
+Function checks referential integrity for one attribute. 
+
+\begin{DoxyAuthor}{Author}
+Dejan Frankovic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em child} & table name \\
+\hline
+{\em attribute} & name (foreign key attribute) \\
+\hline
+{\em value} & of the attribute we\textquotesingle{}re checking \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+IT E\+R\+R\+OR if check failed, E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if referential integrity is ok 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_a015b40704f67d85d153eeda5e6b82088}\label{reference_8h_a015b40704f67d85d153eeda5e6b82088}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+reference\+\_\+check\+\_\+entry@{A\+K\+\_\+reference\+\_\+check\+\_\+entry}}
+\index{A\+K\+\_\+reference\+\_\+check\+\_\+entry@{A\+K\+\_\+reference\+\_\+check\+\_\+entry}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+reference\+\_\+check\+\_\+entry()}{AK\_reference\_check\_entry()}}
+{\footnotesize\ttfamily int A\+K\+\_\+reference\+\_\+check\+\_\+entry (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{lista }\end{DoxyParamCaption})}
+
+
+
+Function checks new entry for referential integrity. 
+
+\begin{DoxyAuthor}{Author}
+Dejan Franković 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em list} & of elements for insert row \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if referential integrity is ok, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if it is compromised 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_a52e7e910e26cb4e1a3e6eb387e7305a5}\label{reference_8h_a52e7e910e26cb4e1a3e6eb387e7305a5}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed@{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed}}
+\index{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed@{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed()}{AK\_reference\_check\_if\_update\_needed()}}
+{\footnotesize\ttfamily int A\+K\+\_\+reference\+\_\+check\+\_\+if\+\_\+update\+\_\+needed (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{lista,  }\item[{int}]{action }\end{DoxyParamCaption})}
+
+
+
+Funvction that quickly checks if there are any referential constraints that should be applied on a given list of changes. 
+
+\begin{DoxyAuthor}{Author}
+Dejan Frankovic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em list} & of elements for update \\
+\hline
+{\em is} & action U\+P\+D\+A\+TE or D\+E\+L\+E\+TE ? \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if update is needed, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if not 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_aa8591a73d9dab9148274329a1683f909}\label{reference_8h_aa8591a73d9dab9148274329a1683f909}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+reference\+\_\+check\+\_\+restricion@{A\+K\+\_\+reference\+\_\+check\+\_\+restricion}}
+\index{A\+K\+\_\+reference\+\_\+check\+\_\+restricion@{A\+K\+\_\+reference\+\_\+check\+\_\+restricion}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+reference\+\_\+check\+\_\+restricion()}{AK\_reference\_check\_restricion()}}
+{\footnotesize\ttfamily int A\+K\+\_\+reference\+\_\+check\+\_\+restricion (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{lista,  }\item[{int}]{action }\end{DoxyParamCaption})}
+
+
+
+Function checks for R\+E\+F\+\_\+\+T\+Y\+P\+E\+\_\+\+R\+E\+S\+T\+R\+I\+CT references appliable to the operation of updating or deleting a row in a table. 
+
+\begin{DoxyAuthor}{Author}
+Dejan Franković 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em list} & of elements for update \\
+\hline
+{\em is} & action U\+P\+D\+A\+TE or D\+E\+L\+E\+TE? \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if there is no restriction on this action, E\+X\+I\+T\+\_\+\+E\+R\+R\+OR if there is 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_a93c889a460fe2392c4b81857c03aedf2}\label{reference_8h_a93c889a460fe2392c4b81857c03aedf2}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+reference\+\_\+test@{A\+K\+\_\+reference\+\_\+test}}
+\index{A\+K\+\_\+reference\+\_\+test@{A\+K\+\_\+reference\+\_\+test}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+reference\+\_\+test()}{AK\_reference\_test()}}
+{\footnotesize\ttfamily void A\+K\+\_\+reference\+\_\+test (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for testing referential integrity. 
+
+\begin{DoxyAuthor}{Author}
+Dejan Franković 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_ac64028d9ef8bc674d737aa12a8065f49}\label{reference_8h_ac64028d9ef8bc674d737aa12a8065f49}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+reference\+\_\+update@{A\+K\+\_\+reference\+\_\+update}}
+\index{A\+K\+\_\+reference\+\_\+update@{A\+K\+\_\+reference\+\_\+update}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+reference\+\_\+update()}{AK\_reference\_update()}}
+{\footnotesize\ttfamily int A\+K\+\_\+reference\+\_\+update (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{lista,  }\item[{int}]{action }\end{DoxyParamCaption})}
+
+
+
+Function updates child table entries according to ongoing update of parent table entries. 
+
+\begin{DoxyAuthor}{Author}
+Dejan Franković 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em list} & of elements for update \\
+\hline
+{\em is} & action U\+P\+D\+A\+TE or D\+E\+L\+E\+TE ? \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_a48193253bfd1b2a279a5772303acba58}\label{reference_8h_a48193253bfd1b2a279a5772303acba58}} 
+\index{reference.\+h@{reference.\+h}!A\+K\+\_\+selection@{A\+K\+\_\+selection}}
+\index{A\+K\+\_\+selection@{A\+K\+\_\+selection}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+selection()}{AK\_selection()}}
+{\footnotesize\ttfamily int A\+K\+\_\+selection (\begin{DoxyParamCaption}\item[{char $\ast$}]{src\+Table,  }\item[{char $\ast$}]{dst\+Table,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{expr }\end{DoxyParamCaption})}
+
+
+
+Function which implements selection. 
+
+\begin{DoxyAuthor}{Author}
+Matija Šestak. 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$src\+Table} & source table name \\
+\hline
+{\em $\ast$dst\+Table} & destination table name \\
+\hline
+{\em $\ast$expr} & list with posfix notation of the logical expression \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS 
+\end{DoxyReturn}
+\mbox{\Hypertarget{reference_8h_a978a5fc0afeea6ec045977d886647ae3}\label{reference_8h_a978a5fc0afeea6ec045977d886647ae3}} 
+\index{reference.\+h@{reference.\+h}!Ak\+\_\+update\+\_\+row@{Ak\+\_\+update\+\_\+row}}
+\index{Ak\+\_\+update\+\_\+row@{Ak\+\_\+update\+\_\+row}!reference.\+h@{reference.\+h}}
+\subsubsection{\texorpdfstring{Ak\+\_\+update\+\_\+row()}{Ak\_update\_row()}}
+{\footnotesize\ttfamily int Ak\+\_\+update\+\_\+row (\begin{DoxyParamCaption}\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{row\+\_\+root }\end{DoxyParamCaption})}
+
+
+
+Function updates rows of some table. 
+
+\begin{DoxyAuthor}{Author}
+Matija Novak, Dejan Frankovic (added referential integrity) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+root} & elements of one row \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS if success 
+\end{DoxyReturn}

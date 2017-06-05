@@ -1,0 +1,255 @@
+\hypertarget{trigger_8h}{}\section{sql/trigger.h File Reference}
+\label{trigger_8h}\index{sql/trigger.\+h@{sql/trigger.\+h}}
+{\ttfamily \#include \char`\"{}../rec/archive\+\_\+log.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../file/fileio.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../file/id.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../sql/function.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../rel/selection.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\newline
+Include dependency graph for trigger.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{trigger_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{trigger_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{trigger_8h_a38811626ecbd7e6bb1cc8820ead9199f}{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions} (int trigger, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$condition)
+\begin{DoxyCompactList}\small\item\em Saves conditions for a trigger. \end{DoxyCompactList}\item 
+int \hyperlink{trigger_8h_aab7b601863091d0708653c8f817b3cf8}{A\+K\+\_\+trigger\+\_\+add} (char $\ast$name, char $\ast$event, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$condition, char $\ast$table, char $\ast$function)
+\begin{DoxyCompactList}\small\item\em Function that adds a trigger to system table. \end{DoxyCompactList}\item 
+int \hyperlink{trigger_8h_a49f3375c2693be93bd370895bea42b0a}{A\+K\+\_\+trigger\+\_\+get\+\_\+id} (char $\ast$name, char $\ast$table)
+\begin{DoxyCompactList}\small\item\em Function that gets obj\+\_\+id of a trigger defined by name and table. \end{DoxyCompactList}\item 
+int \hyperlink{trigger_8h_a256bc5cfe1886dba1310fc849668a635}{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name} (char $\ast$name, char $\ast$table)
+\begin{DoxyCompactList}\small\item\em Function that removes a trigger from system table by name. \end{DoxyCompactList}\item 
+int \hyperlink{trigger_8h_a5580f5dfc669b80c2c5f2f482d784494}{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id} (int obj\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Function removes a trigger by its obj\+\_\+id. \end{DoxyCompactList}\item 
+int \hyperlink{trigger_8h_aa5218f2c11756674db7080b6ba62ebe4}{A\+K\+\_\+trigger\+\_\+edit} (char $\ast$name, char $\ast$event, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$condition, char $\ast$table, char $\ast$function)
+\begin{DoxyCompactList}\small\item\em Function edits information about the trigger in system table. In order to identify the trigger, either obj\+\_\+id or table and name parameters should be defined. The other options should be set to N\+U\+LL. Values of parameters that aren\textquotesingle{}t changing can be left N\+U\+LL. If conditions are to be removed, condition parameter should hold an empty list. \end{DoxyCompactList}\item 
+struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$ \hyperlink{trigger_8h_a1b6b1d8b82240230cca2a8d570d2f03e}{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions} (int trigger)
+\begin{DoxyCompactList}\small\item\em Function gets postfix list of conditions for the trigger (compatible with selection) \end{DoxyCompactList}\item 
+int \hyperlink{trigger_8h_a54b8df0db010c361c9d110521f896c81}{A\+K\+\_\+trigger\+\_\+rename} (char $\ast$old\+\_\+name, char $\ast$new\+\_\+name, char $\ast$table)
+\begin{DoxyCompactList}\small\item\em Function renames the trigger. \end{DoxyCompactList}\item 
+void \hyperlink{trigger_8h_a25769445eb63fbe7d8aaee161b463a9a}{A\+K\+\_\+trigger\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for trigger testing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data structures triggers 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{trigger_8h_aab7b601863091d0708653c8f817b3cf8}\label{trigger_8h_aab7b601863091d0708653c8f817b3cf8}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+add@{A\+K\+\_\+trigger\+\_\+add}}
+\index{A\+K\+\_\+trigger\+\_\+add@{A\+K\+\_\+trigger\+\_\+add}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+add()}{AK\_trigger\_add()}}
+{\footnotesize\ttfamily int A\+K\+\_\+trigger\+\_\+add (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{event,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{condition,  }\item[{char $\ast$}]{table,  }\item[{char $\ast$}]{function }\end{DoxyParamCaption})}
+
+
+
+Function that adds a trigger to system table. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of the trigger \\
+\hline
+{\em $\ast$event} & event that calls the trigger -\/ this should perhaps be an integer with defined constants... \\
+\hline
+{\em $\ast$condition} & A\+K\+\_\+list list of conditions in postfix \\
+\hline
+{\em $\ast$table} & name of the table trigger is hooked on \\
+\hline
+{\em $\ast$function} & function that is being called by the trigger \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+trigger id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{trigger_8h_aa5218f2c11756674db7080b6ba62ebe4}\label{trigger_8h_aa5218f2c11756674db7080b6ba62ebe4}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+edit@{A\+K\+\_\+trigger\+\_\+edit}}
+\index{A\+K\+\_\+trigger\+\_\+edit@{A\+K\+\_\+trigger\+\_\+edit}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+edit()}{AK\_trigger\_edit()}}
+{\footnotesize\ttfamily int A\+K\+\_\+trigger\+\_\+edit (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{event,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{condition,  }\item[{char $\ast$}]{table,  }\item[{char $\ast$}]{function }\end{DoxyParamCaption})}
+
+
+
+Function edits information about the trigger in system table. In order to identify the trigger, either obj\+\_\+id or table and name parameters should be defined. The other options should be set to N\+U\+LL. Values of parameters that aren\textquotesingle{}t changing can be left N\+U\+LL. If conditions are to be removed, condition parameter should hold an empty list. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of the trigger (or N\+U\+LL if using obj\+\_\+id) \\
+\hline
+{\em $\ast$event} & event of the trigger (or N\+U\+LL if it isn\textquotesingle{}t changing) \\
+\hline
+{\em $\ast$condition} & list of conditions for trigger (or N\+U\+LL if it isn\textquotesingle{}t changing; empty list if all conditions are to be removed) \\
+\hline
+{\em $\ast$table} & name of the connected table (or N\+U\+LL id using obj\+\_\+id) \\
+\hline
+{\em $\ast$function} & name of the connected function (or N\+U\+LL if it isn\textquotesingle{}t changing) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{trigger_8h_a1b6b1d8b82240230cca2a8d570d2f03e}\label{trigger_8h_a1b6b1d8b82240230cca2a8d570d2f03e}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+get\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions}}
+\index{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+get\+\_\+conditions()}{AK\_trigger\_get\_conditions()}}
+{\footnotesize\ttfamily struct \hyperlink{structlist__node}{list\+\_\+node}$\ast$ A\+K\+\_\+trigger\+\_\+get\+\_\+conditions (\begin{DoxyParamCaption}\item[{int}]{trigger }\end{DoxyParamCaption})}
+
+
+
+Function gets postfix list of conditions for the trigger (compatible with selection) 
+
+\begin{DoxyAuthor}{Author}
+Unknown, updated by Mario Peroković 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em trigger} & obj\+\_\+id of the trigger \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+list of conditions for the trigger 
+\end{DoxyReturn}
+\mbox{\Hypertarget{trigger_8h_a49f3375c2693be93bd370895bea42b0a}\label{trigger_8h_a49f3375c2693be93bd370895bea42b0a}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+get\+\_\+id@{A\+K\+\_\+trigger\+\_\+get\+\_\+id}}
+\index{A\+K\+\_\+trigger\+\_\+get\+\_\+id@{A\+K\+\_\+trigger\+\_\+get\+\_\+id}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+get\+\_\+id()}{AK\_trigger\_get\_id()}}
+{\footnotesize\ttfamily int A\+K\+\_\+trigger\+\_\+get\+\_\+id (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{table }\end{DoxyParamCaption})}
+
+
+
+Function that gets obj\+\_\+id of a trigger defined by name and table. 
+
+\begin{DoxyAuthor}{Author}
+
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of the trigger \\
+\hline
+{\em $\ast$table} & name of the table on which the trigger is hooked \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+obj\+\_\+id of the trigger or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{trigger_8h_a256bc5cfe1886dba1310fc849668a635}\label{trigger_8h_a256bc5cfe1886dba1310fc849668a635}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name}}
+\index{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name()}{AK\_trigger\_remove\_by\_name()}}
+{\footnotesize\ttfamily int A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+name (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{table }\end{DoxyParamCaption})}
+
+
+
+Function that removes a trigger from system table by name. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em $\ast$name} & name of the trigger \\
+\hline
+{\em $\ast$table} & name of the table \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{trigger_8h_a5580f5dfc669b80c2c5f2f482d784494}\label{trigger_8h_a5580f5dfc669b80c2c5f2f482d784494}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}}
+\index{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id@{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id()}{AK\_trigger\_remove\_by\_obj\_id()}}
+{\footnotesize\ttfamily int A\+K\+\_\+trigger\+\_\+remove\+\_\+by\+\_\+obj\+\_\+id (\begin{DoxyParamCaption}\item[{int}]{obj\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Function removes a trigger by its obj\+\_\+id. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em obj\+\_\+id} & obj\+\_\+id of the trigger \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{trigger_8h_a54b8df0db010c361c9d110521f896c81}\label{trigger_8h_a54b8df0db010c361c9d110521f896c81}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+rename@{A\+K\+\_\+trigger\+\_\+rename}}
+\index{A\+K\+\_\+trigger\+\_\+rename@{A\+K\+\_\+trigger\+\_\+rename}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+rename()}{AK\_trigger\_rename()}}
+{\footnotesize\ttfamily int A\+K\+\_\+trigger\+\_\+rename (\begin{DoxyParamCaption}\item[{char $\ast$}]{old\+\_\+name,  }\item[{char $\ast$}]{new\+\_\+name,  }\item[{char $\ast$}]{table }\end{DoxyParamCaption})}
+
+
+
+Function renames the trigger. 
+
+\begin{DoxyAuthor}{Author}
+Ljubo Barać 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em old\+\_\+name} & Name of the trigger to be renamed \\
+\hline
+{\em new\+\_\+name} & New name of the trigger \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{trigger_8h_a38811626ecbd7e6bb1cc8820ead9199f}\label{trigger_8h_a38811626ecbd7e6bb1cc8820ead9199f}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+save\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions}}
+\index{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions@{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+save\+\_\+conditions()}{AK\_trigger\_save\_conditions()}}
+{\footnotesize\ttfamily int A\+K\+\_\+trigger\+\_\+save\+\_\+conditions (\begin{DoxyParamCaption}\item[{int}]{trigger,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{condition }\end{DoxyParamCaption})}
+
+
+
+Saves conditions for a trigger. 
+
+\begin{DoxyAuthor}{Author}
+Unknown, updated by Mario Peroković, check if data is T\+Y\+P\+E\+\_\+\+I\+NT 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em trigger} & obj\+\_\+id of the trigger in question \\
+\hline
+{\em $\ast$condition} & A\+K\+\_\+list list of conditions \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{trigger_8h_a25769445eb63fbe7d8aaee161b463a9a}\label{trigger_8h_a25769445eb63fbe7d8aaee161b463a9a}} 
+\index{trigger.\+h@{trigger.\+h}!A\+K\+\_\+trigger\+\_\+test@{A\+K\+\_\+trigger\+\_\+test}}
+\index{A\+K\+\_\+trigger\+\_\+test@{A\+K\+\_\+trigger\+\_\+test}!trigger.\+h@{trigger.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+trigger\+\_\+test()}{AK\_trigger\_test()}}
+{\footnotesize\ttfamily void A\+K\+\_\+trigger\+\_\+test (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for trigger testing. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}

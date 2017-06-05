@@ -1,0 +1,812 @@
+\hypertarget{transaction_8h}{}\section{trans/transaction.h File Reference}
+\label{transaction_8h}\index{trans/transaction.\+h@{trans/transaction.\+h}}
+{\ttfamily \#include $<$pthread.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../auxi/constants.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/configuration.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../mm/memoman.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../sql/command.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/observable.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../file/table.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../file/fileio.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\newline
+Include dependency graph for transaction.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{transaction_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=268pt]{transaction_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structobservable__transaction__struct}{observable\+\_\+transaction\+\_\+struct}
+\item 
+struct \hyperlink{structobserver__lock}{observer\+\_\+lock}
+\begin{DoxyCompactList}\small\item\em Structure which defines transaction lock observer type. \end{DoxyCompactList}\item 
+struct \hyperlink{structtransaction__locks__list__elem}{transaction\+\_\+locks\+\_\+list\+\_\+elem}
+\begin{DoxyCompactList}\small\item\em Structure that represents Lock\+Table entry about transaction resource lock. \end{DoxyCompactList}\item 
+struct \hyperlink{structtransaction__list__elem}{transaction\+\_\+list\+\_\+elem}
+\begin{DoxyCompactList}\small\item\em Structure that represents Lock\+Table entry about transaction lock holder.\+Element indexed by Hash table. \end{DoxyCompactList}\item 
+struct \hyperlink{structtransaction__list__head}{transaction\+\_\+list\+\_\+head}
+\begin{DoxyCompactList}\small\item\em Structure that represents Lock\+Table entry about doubly linked list of collision in Hash table. \end{DoxyCompactList}\item 
+struct \hyperlink{structmemoryAddresses}{memory\+Addresses}
+\begin{DoxyCompactList}\small\item\em Structure that represents a linked list of locked addresses. \end{DoxyCompactList}\item 
+struct \hyperlink{structtransactionData}{transaction\+Data}
+\begin{DoxyCompactList}\small\item\em Structure used to transport transaction data to the thread. \end{DoxyCompactList}\item 
+struct \hyperlink{structthreadContainer}{thread\+Container}
+\begin{DoxyCompactList}\small\item\em Structure that represents a linked list of threads. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{transaction_8h_ae3b43c09aaa18452ce32ec213a71c9e0}\label{transaction_8h_ae3b43c09aaa18452ce32ec213a71c9e0}} 
+typedef struct \hyperlink{structobservable__transaction__struct}{observable\+\_\+transaction\+\_\+struct} {\bfseries A\+K\+\_\+observable\+\_\+transaction}
+\item 
+\mbox{\Hypertarget{transaction_8h_a0d6ea9503933ddfa8557141c70654ebc}\label{transaction_8h_a0d6ea9503933ddfa8557141c70654ebc}} 
+typedef struct \hyperlink{structobserver__lock}{observer\+\_\+lock} {\bfseries A\+K\+\_\+observer\+\_\+lock}
+\item 
+\mbox{\Hypertarget{transaction_8h_a80709a3d475c804bb0dd4185add301c0}\label{transaction_8h_a80709a3d475c804bb0dd4185add301c0}} 
+typedef struct \hyperlink{structtransactionData}{transaction\+Data} {\bfseries A\+K\+\_\+transaction\+\_\+data}
+\item 
+\mbox{\Hypertarget{transaction_8h_a099a3a29eeb128c8fb6c2583092ed60c}\label{transaction_8h_a099a3a29eeb128c8fb6c2583092ed60c}} 
+typedef struct \hyperlink{structmemoryAddresses}{memory\+Addresses} {\bfseries A\+K\+\_\+memory\+Addresses}
+\item 
+\mbox{\Hypertarget{transaction_8h_add97eb618e6cf14ebd5ac32ffca158c8}\label{transaction_8h_add97eb618e6cf14ebd5ac32ffca158c8}} 
+typedef struct \hyperlink{structmemoryAddresses}{memory\+Addresses} $\ast$ {\bfseries A\+K\+\_\+memory\+Addresses\+\_\+link}
+\item 
+\mbox{\Hypertarget{transaction_8h_a0dd3d12f304a9ffdd25688edeb0c0edc}\label{transaction_8h_a0dd3d12f304a9ffdd25688edeb0c0edc}} 
+typedef struct \hyperlink{structtransaction__list__head}{transaction\+\_\+list\+\_\+head} {\bfseries A\+K\+\_\+transaction\+\_\+list}
+\item 
+\mbox{\Hypertarget{transaction_8h_a8d54aa8bdd79b87421ccc3202f1a35b8}\label{transaction_8h_a8d54aa8bdd79b87421ccc3202f1a35b8}} 
+typedef struct \hyperlink{structtransaction__list__elem}{transaction\+\_\+list\+\_\+elem} $\ast$ {\bfseries A\+K\+\_\+transaction\+\_\+elem\+\_\+P}
+\item 
+\mbox{\Hypertarget{transaction_8h_a036b916ddd8aea3fe3d4928b7c75acde}\label{transaction_8h_a036b916ddd8aea3fe3d4928b7c75acde}} 
+typedef struct \hyperlink{structtransaction__list__elem}{transaction\+\_\+list\+\_\+elem} {\bfseries A\+K\+\_\+transaction\+\_\+elem}
+\item 
+\mbox{\Hypertarget{transaction_8h_a78445d6bf1ff5698a7fddd447188d2d4}\label{transaction_8h_a78445d6bf1ff5698a7fddd447188d2d4}} 
+typedef struct \hyperlink{structtransaction__locks__list__elem}{transaction\+\_\+locks\+\_\+list\+\_\+elem} $\ast$ {\bfseries A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P}
+\item 
+\mbox{\Hypertarget{transaction_8h_a3791fc0783d5e2fdfa8c90e9cb89779c}\label{transaction_8h_a3791fc0783d5e2fdfa8c90e9cb89779c}} 
+typedef struct \hyperlink{structtransaction__locks__list__elem}{transaction\+\_\+locks\+\_\+list\+\_\+elem} {\bfseries A\+K\+\_\+transaction\+\_\+lock\+\_\+elem}
+\item 
+\mbox{\Hypertarget{transaction_8h_ad2455fcd3d9e1a022fc014a6fb36d877}\label{transaction_8h_ad2455fcd3d9e1a022fc014a6fb36d877}} 
+typedef struct \hyperlink{structthreadContainer}{thread\+Container} $\ast$ {\bfseries A\+K\+\_\+thread\+\_\+elem}
+\item 
+\mbox{\Hypertarget{transaction_8h_a96b9c1bdb638c7292bc9ae09273f70a7}\label{transaction_8h_a96b9c1bdb638c7292bc9ae09273f70a7}} 
+typedef struct \hyperlink{structthreadContainer}{thread\+Container} {\bfseries A\+K\+\_\+thread\+\_\+\+Container}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{transaction_8h_af363a9693a3fb910ac7c54199a89c570}{Notice\+Type} \{ {\bfseries A\+K\+\_\+\+L\+O\+C\+K\+\_\+\+R\+E\+L\+E\+A\+S\+ED}, 
+{\bfseries A\+K\+\_\+\+T\+R\+A\+N\+S\+A\+C\+T\+I\+O\+N\+\_\+\+F\+I\+N\+I\+S\+H\+ED}, 
+{\bfseries A\+K\+\_\+\+A\+L\+L\+\_\+\+T\+R\+A\+N\+S\+A\+C\+T\+I\+O\+N\+\_\+\+F\+I\+N\+I\+S\+H\+ED}
+ \}\begin{DoxyCompactList}\small\item\em Enumeration which define notice types for transactions. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{transaction_8h_a13fcff2b52d3512807dedb55ce61e735}{A\+K\+\_\+memory\+\_\+block\+\_\+hash} (int)
+\begin{DoxyCompactList}\small\item\em Calculates hash value for a given memory address. Hash values are used to identify location of locked resources. \end{DoxyCompactList}\item 
+\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P} \hyperlink{transaction_8h_ab23b7394766fbb7fb3daacf7c9e5f707}{A\+K\+\_\+search\+\_\+existing\+\_\+link\+\_\+for\+\_\+hook} (int)
+\begin{DoxyCompactList}\small\item\em Searches for a existing entry in hash list of active blocks. \end{DoxyCompactList}\item 
+\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P} \hyperlink{transaction_8h_aca4230b67fc403da11c1f054051c906e}{A\+K\+\_\+search\+\_\+empty\+\_\+link\+\_\+for\+\_\+hook} (int)
+\begin{DoxyCompactList}\small\item\em Searches for a empty link for new active block, helper method in case of address collision. \end{DoxyCompactList}\item 
+\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P} \hyperlink{transaction_8h_a270d52ee294414c09cf229c33d9be9ea}{A\+K\+\_\+add\+\_\+hash\+\_\+entry\+\_\+list} (int, int)
+\begin{DoxyCompactList}\small\item\em Adds an element to the doubly linked list. \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_a41cb494afe3f4970034ca7b47bb68a9f}{A\+K\+\_\+delete\+\_\+hash\+\_\+entry\+\_\+list} (int)
+\begin{DoxyCompactList}\small\item\em Deletes a specific element in the lock\+Table doubly linked list. \end{DoxyCompactList}\item 
+\hyperlink{structtransaction__locks__list__elem}{A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P} \hyperlink{transaction_8h_a964a34f382b696b67592c0e4cec3510b}{A\+K\+\_\+search\+\_\+lock\+\_\+entry\+\_\+list\+\_\+by\+\_\+key} (\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P}, int, pthread\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Searches for a specific entry in the Locks doubly linked list using the transaction id as it\textquotesingle{}s key. \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_abfe28e67d52621b0f81a440d9d27290f}{A\+K\+\_\+delete\+\_\+lock\+\_\+entry\+\_\+list} (int, pthread\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Deletes a specific entry in the Locks doubly linked list using the transaction id as it\textquotesingle{}s key. \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_a98cc851da2f619848d082dde07e002aa}{A\+K\+\_\+is\+Lock\+\_\+waiting} (\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P}, int, pthread\+\_\+t, \hyperlink{structtransaction__locks__list__elem}{A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P})
+\begin{DoxyCompactList}\small\item\em Based on the parameters puts an transaction action in waiting phase or let\textquotesingle{}s the transaction do it\textquotesingle{}s actions. \end{DoxyCompactList}\item 
+\hyperlink{structtransaction__locks__list__elem}{A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P} \hyperlink{transaction_8h_aa61d95d31d56fdcee06c6737c8dfadbb}{A\+K\+\_\+add\+\_\+lock} (\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P}, int, pthread\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Adds an element to the locks doubly linked list. \end{DoxyCompactList}\item 
+\hyperlink{structtransaction__locks__list__elem}{A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P} \hyperlink{transaction_8h_a163bbd0d3e4e3c0a7ceecab558c88f42}{A\+K\+\_\+create\+\_\+lock} (int, int, pthread\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Helper function that determines if there is a hash Lock\+Table entry that corresponds to the given memory address. And if there isn\textquotesingle{}t an entry the function calls for the creation of the Locks list holder. \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_a32d2de9c87a4523887516bba8308ab34}{A\+K\+\_\+acquire\+\_\+lock} (int, int, pthread\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Main interface function for the transaction A\+PI. It is responsible for the whole process of creating a new lock. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a6cf18902d9a85bf6c13cb185e56f9655}{A\+K\+\_\+release\+\_\+locks} (\hyperlink{structmemoryAddresses}{A\+K\+\_\+memory\+Addresses\+\_\+link}, pthread\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Main interface function for the transaction A\+PI. It is responsible for the whole process releasing locks acquired by a transaction. The locks are released either by C\+O\+M\+M\+IT or A\+B\+O\+RT . \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_ad1e582b430365635e1d7d09157718f55}{A\+K\+\_\+get\+\_\+memory\+\_\+blocks} (char $\ast$, \hyperlink{structmemoryAddresses}{A\+K\+\_\+memory\+Addresses\+\_\+link})
+\begin{DoxyCompactList}\small\item\em Method that appends all addresses affected by the transaction. \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_ae63e0defc409bd7cd8b12f0fe44739c8}{A\+K\+\_\+execute\+\_\+commands} (\hyperlink{structAK__command__struct}{command} $\ast$, int)
+\begin{DoxyCompactList}\small\item\em Method that is called in a separate thread that is responsible for acquiring locks releasing them and finding the associated block addresses. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{transaction_8h_aa86bb5540bbe3e2e350b1fb13bfb45dd}{A\+K\+\_\+execute\+\_\+transaction} (void $\ast$)
+\begin{DoxyCompactList}\small\item\em thread start point all relevant functions are called from this function. It acts as an intermediary between the main thread and other threads \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a1e1de43b5ac5c70fc85ca9c265b14957}{A\+K\+\_\+transaction\+\_\+manager} (\hyperlink{structAK__command__struct}{command} $\ast$, int)
+\begin{DoxyCompactList}\small\item\em method that receives all the data and gives an id to that data and starts a thread that executes the transaction \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{transaction_8h_a26e10179645800222911cc8aafde43ab}\label{transaction_8h_a26e10179645800222911cc8aafde43ab}} 
+void {\bfseries A\+K\+\_\+test\+\_\+\+Transaction} ()
+\item 
+int \hyperlink{transaction_8h_ace82b2bb23ee945a80c40be5a9cfce2d}{A\+K\+\_\+create\+\_\+new\+\_\+transaction\+\_\+thread} (\hyperlink{structtransactionData}{A\+K\+\_\+transaction\+\_\+data} $\ast$)
+\begin{DoxyCompactList}\small\item\em Function for creating new thread. Function also adds thread ID to pthread\+\_\+t array. \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_ace3c93fc57928c6ee10305526637c34e}{A\+K\+\_\+remove\+\_\+transaction\+\_\+thread} (pthread\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Function for deleting one of active threads from array of all active transactions threads. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a0254313c2d580058c6228f9f093c8264}{handle\+\_\+transaction\+\_\+notify} (\hyperlink{structobserver__lock}{A\+K\+\_\+observer\+\_\+lock} $\ast$)
+\begin{DoxyCompactList}\small\item\em Function for handling A\+K\+\_\+observable\+\_\+transaction notify. Function is associated to some observer instance. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a30eaec7f9ecc33e300f1397dc1205834}{A\+K\+\_\+on\+\_\+observable\+\_\+notify} (void $\ast$, void $\ast$, A\+K\+\_\+\+Observable\+Type\+\_\+\+Enum)
+\begin{DoxyCompactList}\small\item\em Function for handling notify from some observable type. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_afbbba70629c9f2d821209194016f563e}{A\+K\+\_\+on\+\_\+transaction\+\_\+end} (pthread\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Function for handling event when some transaction is finished. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a91d34b70a8157ea155daf204fa2d48c7}{A\+K\+\_\+on\+\_\+lock\+\_\+release} ()
+\begin{DoxyCompactList}\small\item\em Function for handling event when one of lock is released. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a1b2f8e7d272faa940000129a9f1a13d9}{A\+K\+\_\+on\+\_\+all\+\_\+transactions\+\_\+end} ()
+\begin{DoxyCompactList}\small\item\em Function for handling event when all transactions are finished. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a635620833cd3722d4232d5743b9a9a8a}{A\+K\+\_\+handle\+\_\+observable\+\_\+transaction\+\_\+action} (\hyperlink{transaction_8h_af363a9693a3fb910ac7c54199a89c570}{Notice\+Type} $\ast$)
+\begin{DoxyCompactList}\small\item\em Function for handling action which is called from \hyperlink{structobservable__transaction}{observable\+\_\+transaction} type. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_aed53225e2ac1e7664c9a35a4a582f7e4}{A\+K\+\_\+lock\+\_\+released} ()
+\begin{DoxyCompactList}\small\item\em Function which is called when lock is released. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a3dc6146100502ea64534733ee1c85234}{A\+K\+\_\+transaction\+\_\+finished} ()
+\begin{DoxyCompactList}\small\item\em Function which is called when some transaction is finished. \end{DoxyCompactList}\item 
+void \hyperlink{transaction_8h_a3a2da5c5043e127da53a4ad2f24252cb}{A\+K\+\_\+all\+\_\+transactions\+\_\+finished} ()
+\begin{DoxyCompactList}\small\item\em Function which is called when all transactions are finished. \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_a9b8be48881e7438a45a2f512cfa2cf79}{A\+K\+\_\+transaction\+\_\+register\+\_\+observer} (\hyperlink{structobservable__transaction__struct}{A\+K\+\_\+observable\+\_\+transaction} $\ast$, \hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$)
+\begin{DoxyCompactList}\small\item\em Function for registering new observer of A\+K\+\_\+observable\+\_\+transaction type. \end{DoxyCompactList}\item 
+int \hyperlink{transaction_8h_a85658bc2b5c0570ded98ed4c63e93f24}{A\+K\+\_\+transaction\+\_\+unregister\+\_\+observer} (\hyperlink{structobservable__transaction__struct}{A\+K\+\_\+observable\+\_\+transaction} $\ast$, \hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$)
+\begin{DoxyCompactList}\small\item\em Function for unregistering observer from A\+K\+\_\+observable\+\_\+transction type. \end{DoxyCompactList}\item 
+\hyperlink{structobservable__transaction__struct}{A\+K\+\_\+observable\+\_\+transaction} $\ast$ \hyperlink{transaction_8h_a5253e8f784ee4bb6bf28bb3a02b22a70}{A\+K\+\_\+init\+\_\+observable\+\_\+transaction} ()
+\begin{DoxyCompactList}\small\item\em Function for initialization of A\+K\+\_\+observable\+\_\+transaction type. \end{DoxyCompactList}\item 
+\hyperlink{structobserver__lock}{A\+K\+\_\+observer\+\_\+lock} $\ast$ \hyperlink{transaction_8h_a6d33d2f7494a9497ace0067d40f8a343}{A\+K\+\_\+init\+\_\+observer\+\_\+lock} ()
+\begin{DoxyCompactList}\small\item\em Function for initialization of A\+K\+\_\+observer\+\_\+lock type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that defines includes and datastructures for the transaction execution 
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{transaction_8h_af363a9693a3fb910ac7c54199a89c570}\label{transaction_8h_af363a9693a3fb910ac7c54199a89c570}} 
+\index{transaction.\+h@{transaction.\+h}!Notice\+Type@{Notice\+Type}}
+\index{Notice\+Type@{Notice\+Type}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{Notice\+Type}{NoticeType}}
+{\footnotesize\ttfamily enum \hyperlink{transaction_8h_af363a9693a3fb910ac7c54199a89c570}{Notice\+Type}}
+
+
+
+Enumeration which define notice types for transactions. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{transaction_8h_a32d2de9c87a4523887516bba8308ab34}\label{transaction_8h_a32d2de9c87a4523887516bba8308ab34}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+acquire\+\_\+lock@{A\+K\+\_\+acquire\+\_\+lock}}
+\index{A\+K\+\_\+acquire\+\_\+lock@{A\+K\+\_\+acquire\+\_\+lock}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+acquire\+\_\+lock()}{AK\_acquire\_lock()}}
+{\footnotesize\ttfamily int A\+K\+\_\+acquire\+\_\+lock (\begin{DoxyParamCaption}\item[{int}]{memory\+Address,  }\item[{int}]{type,  }\item[{pthread\+\_\+t}]{transaction\+Id }\end{DoxyParamCaption})}
+
+
+
+Main interface function for the transaction A\+PI. It is responsible for the whole process of creating a new lock. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić updated by Ivan Pusic 
+\end{DoxyAuthor}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000004}{Todo}]Implement a better deadlock detection. This method uses a very simple approach. It waits for 60sec before it restarts a transaction. \end{DoxyRefDesc}
+
+\begin{DoxyParams}{Parameters}
+{\em memory\+Address} & integer representation of memory address. \\
+\hline
+{\em type} & of lock issued to the provided memory address. \\
+\hline
+{\em transaction\+Id} & integer representation of transaction id. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK or N\+O\+T\+\_\+\+OK based on the success of the function. 
+\end{DoxyReturn}
+\subparagraph*{\#\#\#\#\#\#\#\#\# Lock Granted after wait\#\#-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/------\#\# Lock ID\+:lu T\+Y\+PE\+:i \#\#-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/------\#\# Locked\+Address\+:i \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#", (unsigned long)lock-\/$>$Transaction\+Id, lock-\/$>$lock\+\_\+type, memory\+Address); $\ast$/}
+
+\subparagraph*{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\# Lock Granted \#\#-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---\#\# Lock ID\+:lu T\+Y\+PE\+:i \#\#-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---\#\# Locked\+Address\+:i \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#", (unsigned long)lock-\/$>$Transaction\+Id, lock-\/$>$lock\+\_\+type, memory\+Address); $\ast$/}\mbox{\Hypertarget{transaction_8h_a270d52ee294414c09cf229c33d9be9ea}\label{transaction_8h_a270d52ee294414c09cf229c33d9be9ea}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+add\+\_\+hash\+\_\+entry\+\_\+list@{A\+K\+\_\+add\+\_\+hash\+\_\+entry\+\_\+list}}
+\index{A\+K\+\_\+add\+\_\+hash\+\_\+entry\+\_\+list@{A\+K\+\_\+add\+\_\+hash\+\_\+entry\+\_\+list}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+add\+\_\+hash\+\_\+entry\+\_\+list()}{AK\_add\_hash\_entry\_list()}}
+{\footnotesize\ttfamily \hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P} A\+K\+\_\+add\+\_\+hash\+\_\+entry\+\_\+list (\begin{DoxyParamCaption}\item[{int}]{block\+Address,  }\item[{int}]{type }\end{DoxyParamCaption})}
+
+
+
+Adds an element to the doubly linked list. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em block\+Address} & integer representation of memory address. \\
+\hline
+{\em type} & of lock issued to the provided memory address. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the newly created doubly linked element. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_aa61d95d31d56fdcee06c6737c8dfadbb}\label{transaction_8h_aa61d95d31d56fdcee06c6737c8dfadbb}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+add\+\_\+lock@{A\+K\+\_\+add\+\_\+lock}}
+\index{A\+K\+\_\+add\+\_\+lock@{A\+K\+\_\+add\+\_\+lock}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+add\+\_\+lock()}{AK\_add\_lock()}}
+{\footnotesize\ttfamily \hyperlink{structtransaction__locks__list__elem}{A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P} A\+K\+\_\+add\+\_\+lock (\begin{DoxyParamCaption}\item[{\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P}}]{Hash\+List,  }\item[{int}]{type,  }\item[{pthread\+\_\+t}]{transaction\+Id }\end{DoxyParamCaption})}
+
+
+
+Adds an element to the locks doubly linked list. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em memory\+Address} & integer representation of memory address. \\
+\hline
+{\em type} & of lock issued to the provided memory address. \\
+\hline
+{\em transaction\+Id} & integer representation of transaction id. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the newly created Locks doubly linked element. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a3a2da5c5043e127da53a4ad2f24252cb}\label{transaction_8h_a3a2da5c5043e127da53a4ad2f24252cb}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+all\+\_\+transactions\+\_\+finished@{A\+K\+\_\+all\+\_\+transactions\+\_\+finished}}
+\index{A\+K\+\_\+all\+\_\+transactions\+\_\+finished@{A\+K\+\_\+all\+\_\+transactions\+\_\+finished}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+all\+\_\+transactions\+\_\+finished()}{AK\_all\_transactions\_finished()}}
+{\footnotesize\ttfamily void A\+K\+\_\+all\+\_\+transactions\+\_\+finished (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function which is called when all transactions are finished. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{transaction_8h_a163bbd0d3e4e3c0a7ceecab558c88f42}\label{transaction_8h_a163bbd0d3e4e3c0a7ceecab558c88f42}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+create\+\_\+lock@{A\+K\+\_\+create\+\_\+lock}}
+\index{A\+K\+\_\+create\+\_\+lock@{A\+K\+\_\+create\+\_\+lock}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+create\+\_\+lock()}{AK\_create\_lock()}}
+{\footnotesize\ttfamily \hyperlink{structtransaction__locks__list__elem}{A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P} A\+K\+\_\+create\+\_\+lock (\begin{DoxyParamCaption}\item[{int}]{block\+Address,  }\item[{int}]{type,  }\item[{pthread\+\_\+t}]{transaction\+Id }\end{DoxyParamCaption})}
+
+
+
+Helper function that determines if there is a hash Lock\+Table entry that corresponds to the given memory address. And if there isn\textquotesingle{}t an entry the function calls for the creation of the Locks list holder. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em memory\+Address} & integer representation of memory address. \\
+\hline
+{\em type} & of lock issued to the provided memory address. \\
+\hline
+{\em transaction\+Id} & integer representation of transaction id. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the newly created Locks doubly linked element. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_ace82b2bb23ee945a80c40be5a9cfce2d}\label{transaction_8h_ace82b2bb23ee945a80c40be5a9cfce2d}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+create\+\_\+new\+\_\+transaction\+\_\+thread@{A\+K\+\_\+create\+\_\+new\+\_\+transaction\+\_\+thread}}
+\index{A\+K\+\_\+create\+\_\+new\+\_\+transaction\+\_\+thread@{A\+K\+\_\+create\+\_\+new\+\_\+transaction\+\_\+thread}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+create\+\_\+new\+\_\+transaction\+\_\+thread()}{AK\_create\_new\_transaction\_thread()}}
+{\footnotesize\ttfamily int A\+K\+\_\+create\+\_\+new\+\_\+transaction\+\_\+thread (\begin{DoxyParamCaption}\item[{\hyperlink{structtransactionData}{A\+K\+\_\+transaction\+\_\+data} $\ast$}]{transaction\+\_\+data }\end{DoxyParamCaption})}
+
+
+
+Function for creating new thread. Function also adds thread ID to pthread\+\_\+t array. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em transaction\+\_\+data} & Data for executing transaction\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exit status (OK or N\+O\+T\+\_\+\+OK) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a41cb494afe3f4970034ca7b47bb68a9f}\label{transaction_8h_a41cb494afe3f4970034ca7b47bb68a9f}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+delete\+\_\+hash\+\_\+entry\+\_\+list@{A\+K\+\_\+delete\+\_\+hash\+\_\+entry\+\_\+list}}
+\index{A\+K\+\_\+delete\+\_\+hash\+\_\+entry\+\_\+list@{A\+K\+\_\+delete\+\_\+hash\+\_\+entry\+\_\+list}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+delete\+\_\+hash\+\_\+entry\+\_\+list()}{AK\_delete\_hash\_entry\_list()}}
+{\footnotesize\ttfamily int A\+K\+\_\+delete\+\_\+hash\+\_\+entry\+\_\+list (\begin{DoxyParamCaption}\item[{int}]{block\+Address }\end{DoxyParamCaption})}
+
+
+
+Deletes a specific element in the lock\+Table doubly linked list. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em block\+Address} & integer representation of memory address. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+integer OK or N\+O\+T\+\_\+\+OK based on success of finding the specific element in the list. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_abfe28e67d52621b0f81a440d9d27290f}\label{transaction_8h_abfe28e67d52621b0f81a440d9d27290f}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+delete\+\_\+lock\+\_\+entry\+\_\+list@{A\+K\+\_\+delete\+\_\+lock\+\_\+entry\+\_\+list}}
+\index{A\+K\+\_\+delete\+\_\+lock\+\_\+entry\+\_\+list@{A\+K\+\_\+delete\+\_\+lock\+\_\+entry\+\_\+list}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+delete\+\_\+lock\+\_\+entry\+\_\+list()}{AK\_delete\_lock\_entry\_list()}}
+{\footnotesize\ttfamily int A\+K\+\_\+delete\+\_\+lock\+\_\+entry\+\_\+list (\begin{DoxyParamCaption}\item[{int}]{block\+Address,  }\item[{pthread\+\_\+t}]{id }\end{DoxyParamCaption})}
+
+
+
+Deletes a specific entry in the Locks doubly linked list using the transaction id as it\textquotesingle{}s key. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em block\+Address} & integer representation of memory address. \\
+\hline
+{\em id} & integer representation of transaction id. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int OK or N\+O\+T\+\_\+\+OK based on success of finding the specific element in the list. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_ae63e0defc409bd7cd8b12f0fe44739c8}\label{transaction_8h_ae63e0defc409bd7cd8b12f0fe44739c8}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+execute\+\_\+commands@{A\+K\+\_\+execute\+\_\+commands}}
+\index{A\+K\+\_\+execute\+\_\+commands@{A\+K\+\_\+execute\+\_\+commands}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+execute\+\_\+commands()}{AK\_execute\_commands()}}
+{\footnotesize\ttfamily int A\+K\+\_\+execute\+\_\+commands (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__command__struct}{command} $\ast$}]{command\+Array,  }\item[{int}]{length\+Of\+Array }\end{DoxyParamCaption})}
+
+
+
+Method that is called in a separate thread that is responsible for acquiring locks releasing them and finding the associated block addresses. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić updated by Ivan Pusic 
+\end{DoxyAuthor}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000005}{Todo}]Check multithreading, check if it\textquotesingle{}s working correctly \end{DoxyRefDesc}
+
+\begin{DoxyParams}{Parameters}
+{\em command\+Array} & array filled with commands that need to be secured using transactions \\
+\hline
+{\em length\+Of\+Array} & length of command\+Array \\
+\hline
+{\em transaction\+Id} & associated with the transaction \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A\+B\+O\+RT or C\+O\+M\+M\+IT based on the success of the function. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_aa86bb5540bbe3e2e350b1fb13bfb45dd}\label{transaction_8h_aa86bb5540bbe3e2e350b1fb13bfb45dd}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+execute\+\_\+transaction@{A\+K\+\_\+execute\+\_\+transaction}}
+\index{A\+K\+\_\+execute\+\_\+transaction@{A\+K\+\_\+execute\+\_\+transaction}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+execute\+\_\+transaction()}{AK\_execute\_transaction()}}
+{\footnotesize\ttfamily void$\ast$ A\+K\+\_\+execute\+\_\+transaction (\begin{DoxyParamCaption}\item[{void $\ast$}]{params }\end{DoxyParamCaption})}
+
+
+
+thread start point all relevant functions are called from this function. It acts as an intermediary between the main thread and other threads 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić updated by Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em data} & transmitted to the thread from the main thread \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{transaction_8h_ad1e582b430365635e1d7d09157718f55}\label{transaction_8h_ad1e582b430365635e1d7d09157718f55}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+get\+\_\+memory\+\_\+blocks@{A\+K\+\_\+get\+\_\+memory\+\_\+blocks}}
+\index{A\+K\+\_\+get\+\_\+memory\+\_\+blocks@{A\+K\+\_\+get\+\_\+memory\+\_\+blocks}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+get\+\_\+memory\+\_\+blocks()}{AK\_get\_memory\_blocks()}}
+{\footnotesize\ttfamily int A\+K\+\_\+get\+\_\+memory\+\_\+blocks (\begin{DoxyParamCaption}\item[{char $\ast$}]{tbl\+Name,  }\item[{\hyperlink{structmemoryAddresses}{A\+K\+\_\+memory\+Addresses\+\_\+link}}]{address\+List }\end{DoxyParamCaption})}
+
+
+
+Method that appends all addresses affected by the transaction. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em address\+List} & pointer to the linked list where the addresses are stored. \\
+\hline
+{\em tbl\+Name} & table name used in the transaction \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+OK or N\+O\+T\+\_\+\+OK based on the success of the function. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a635620833cd3722d4232d5743b9a9a8a}\label{transaction_8h_a635620833cd3722d4232d5743b9a9a8a}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+handle\+\_\+observable\+\_\+transaction\+\_\+action@{A\+K\+\_\+handle\+\_\+observable\+\_\+transaction\+\_\+action}}
+\index{A\+K\+\_\+handle\+\_\+observable\+\_\+transaction\+\_\+action@{A\+K\+\_\+handle\+\_\+observable\+\_\+transaction\+\_\+action}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+handle\+\_\+observable\+\_\+transaction\+\_\+action()}{AK\_handle\_observable\_transaction\_action()}}
+{\footnotesize\ttfamily void A\+K\+\_\+handle\+\_\+observable\+\_\+transaction\+\_\+action (\begin{DoxyParamCaption}\item[{\hyperlink{transaction_8h_af363a9693a3fb910ac7c54199a89c570}{Notice\+Type} $\ast$}]{notice\+Type }\end{DoxyParamCaption})}
+
+
+
+Function for handling action which is called from \hyperlink{structobservable__transaction}{observable\+\_\+transaction} type. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em notice\+Type} & Type of action (event) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{transaction_8h_a5253e8f784ee4bb6bf28bb3a02b22a70}\label{transaction_8h_a5253e8f784ee4bb6bf28bb3a02b22a70}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+init\+\_\+observable\+\_\+transaction@{A\+K\+\_\+init\+\_\+observable\+\_\+transaction}}
+\index{A\+K\+\_\+init\+\_\+observable\+\_\+transaction@{A\+K\+\_\+init\+\_\+observable\+\_\+transaction}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+init\+\_\+observable\+\_\+transaction()}{AK\_init\_observable\_transaction()}}
+{\footnotesize\ttfamily \hyperlink{structobservable__transaction__struct}{A\+K\+\_\+observable\+\_\+transaction}$\ast$ A\+K\+\_\+init\+\_\+observable\+\_\+transaction (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for initialization of A\+K\+\_\+observable\+\_\+transaction type. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+Pointer to new A\+K\+\_\+observable\+\_\+transaction instance 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a6d33d2f7494a9497ace0067d40f8a343}\label{transaction_8h_a6d33d2f7494a9497ace0067d40f8a343}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+init\+\_\+observer\+\_\+lock@{A\+K\+\_\+init\+\_\+observer\+\_\+lock}}
+\index{A\+K\+\_\+init\+\_\+observer\+\_\+lock@{A\+K\+\_\+init\+\_\+observer\+\_\+lock}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+init\+\_\+observer\+\_\+lock()}{AK\_init\_observer\_lock()}}
+{\footnotesize\ttfamily \hyperlink{structobserver__lock}{A\+K\+\_\+observer\+\_\+lock}$\ast$ A\+K\+\_\+init\+\_\+observer\+\_\+lock (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for initialization of A\+K\+\_\+observer\+\_\+lock type. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+Pointer to new A\+K\+\_\+observer\+\_\+lock instance 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a98cc851da2f619848d082dde07e002aa}\label{transaction_8h_a98cc851da2f619848d082dde07e002aa}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+is\+Lock\+\_\+waiting@{A\+K\+\_\+is\+Lock\+\_\+waiting}}
+\index{A\+K\+\_\+is\+Lock\+\_\+waiting@{A\+K\+\_\+is\+Lock\+\_\+waiting}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+is\+Lock\+\_\+waiting()}{AK\_isLock\_waiting()}}
+{\footnotesize\ttfamily int A\+K\+\_\+is\+Lock\+\_\+waiting (\begin{DoxyParamCaption}\item[{\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P}}]{lock\+Holder,  }\item[{int}]{type,  }\item[{pthread\+\_\+t}]{transaction\+Id,  }\item[{\hyperlink{structtransaction__locks__list__elem}{A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P}}]{lock }\end{DoxyParamCaption})}
+
+
+
+Based on the parameters puts an transaction action in waiting phase or let\textquotesingle{}s the transaction do it\textquotesingle{}s actions. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić updated by Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em lock\+Holder} & pointer to the hash list entry that is entitled to the specific memory address. \\
+\hline
+{\em type} & of lock issued to the provided memory address. \\
+\hline
+{\em transaction\+Id} & integer representation of transaction id. \\
+\hline
+{\em lock} & pointer to the lock element that is being tested. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int P\+A\+S\+S\+\_\+\+L\+O\+C\+K\+\_\+\+Q\+U\+E\+UE or W\+A\+I\+T\+\_\+\+F\+O\+R\+\_\+\+U\+N\+L\+O\+CK based on the rules described inside the function. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_aed53225e2ac1e7664c9a35a4a582f7e4}\label{transaction_8h_aed53225e2ac1e7664c9a35a4a582f7e4}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+lock\+\_\+released@{A\+K\+\_\+lock\+\_\+released}}
+\index{A\+K\+\_\+lock\+\_\+released@{A\+K\+\_\+lock\+\_\+released}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+lock\+\_\+released()}{AK\_lock\_released()}}
+{\footnotesize\ttfamily void A\+K\+\_\+lock\+\_\+released (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function which is called when lock is released. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{transaction_8h_a13fcff2b52d3512807dedb55ce61e735}\label{transaction_8h_a13fcff2b52d3512807dedb55ce61e735}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+memory\+\_\+block\+\_\+hash@{A\+K\+\_\+memory\+\_\+block\+\_\+hash}}
+\index{A\+K\+\_\+memory\+\_\+block\+\_\+hash@{A\+K\+\_\+memory\+\_\+block\+\_\+hash}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+memory\+\_\+block\+\_\+hash()}{AK\_memory\_block\_hash()}}
+{\footnotesize\ttfamily int A\+K\+\_\+memory\+\_\+block\+\_\+hash (\begin{DoxyParamCaption}\item[{int}]{block\+Memory\+Address }\end{DoxyParamCaption})}
+
+
+
+Calculates hash value for a given memory address. Hash values are used to identify location of locked resources. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000003}{Todo}]The current implementation is very limited it doesn\textquotesingle{}t cope well with collision. recommendation use some better version of hash calculation. Maybe Knuth\textquotesingle{}s memory address hashing function. \end{DoxyRefDesc}
+
+\begin{DoxyParams}{Parameters}
+{\em block\+Memory\+Address} & integer representation of memory address, the hash value is calculated from this parameter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+integer containing the hash value of the passed memory address 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a1b2f8e7d272faa940000129a9f1a13d9}\label{transaction_8h_a1b2f8e7d272faa940000129a9f1a13d9}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+on\+\_\+all\+\_\+transactions\+\_\+end@{A\+K\+\_\+on\+\_\+all\+\_\+transactions\+\_\+end}}
+\index{A\+K\+\_\+on\+\_\+all\+\_\+transactions\+\_\+end@{A\+K\+\_\+on\+\_\+all\+\_\+transactions\+\_\+end}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+on\+\_\+all\+\_\+transactions\+\_\+end()}{AK\_on\_all\_transactions\_end()}}
+{\footnotesize\ttfamily void A\+K\+\_\+on\+\_\+all\+\_\+transactions\+\_\+end (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for handling event when all transactions are finished. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{transaction_8h_a91d34b70a8157ea155daf204fa2d48c7}\label{transaction_8h_a91d34b70a8157ea155daf204fa2d48c7}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+on\+\_\+lock\+\_\+release@{A\+K\+\_\+on\+\_\+lock\+\_\+release}}
+\index{A\+K\+\_\+on\+\_\+lock\+\_\+release@{A\+K\+\_\+on\+\_\+lock\+\_\+release}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+on\+\_\+lock\+\_\+release()}{AK\_on\_lock\_release()}}
+{\footnotesize\ttfamily void A\+K\+\_\+on\+\_\+lock\+\_\+release (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for handling event when one of lock is released. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{transaction_8h_a30eaec7f9ecc33e300f1397dc1205834}\label{transaction_8h_a30eaec7f9ecc33e300f1397dc1205834}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+on\+\_\+observable\+\_\+notify@{A\+K\+\_\+on\+\_\+observable\+\_\+notify}}
+\index{A\+K\+\_\+on\+\_\+observable\+\_\+notify@{A\+K\+\_\+on\+\_\+observable\+\_\+notify}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+on\+\_\+observable\+\_\+notify()}{AK\_on\_observable\_notify()}}
+{\footnotesize\ttfamily void A\+K\+\_\+on\+\_\+observable\+\_\+notify (\begin{DoxyParamCaption}\item[{void $\ast$}]{observer,  }\item[{void $\ast$}]{observable,  }\item[{A\+K\+\_\+\+Observable\+Type\+\_\+\+Enum}]{type }\end{DoxyParamCaption})}
+
+
+
+Function for handling notify from some observable type. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em observer} & \hyperlink{structObserver}{Observer} type \\
+\hline
+{\em observable} & \hyperlink{structObservable}{Observable} type \\
+\hline
+{\em type} & Type of observable who sent some notice \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{transaction_8h_afbbba70629c9f2d821209194016f563e}\label{transaction_8h_afbbba70629c9f2d821209194016f563e}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+on\+\_\+transaction\+\_\+end@{A\+K\+\_\+on\+\_\+transaction\+\_\+end}}
+\index{A\+K\+\_\+on\+\_\+transaction\+\_\+end@{A\+K\+\_\+on\+\_\+transaction\+\_\+end}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+on\+\_\+transaction\+\_\+end()}{AK\_on\_transaction\_end()}}
+{\footnotesize\ttfamily void A\+K\+\_\+on\+\_\+transaction\+\_\+end (\begin{DoxyParamCaption}\item[{pthread\+\_\+t}]{transaction\+\_\+thread }\end{DoxyParamCaption})}
+
+
+
+Function for handling event when some transaction is finished. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em transaction\+\_\+thread} & Thread ID of transaction which is finished \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{transaction_8h_a6cf18902d9a85bf6c13cb185e56f9655}\label{transaction_8h_a6cf18902d9a85bf6c13cb185e56f9655}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+release\+\_\+locks@{A\+K\+\_\+release\+\_\+locks}}
+\index{A\+K\+\_\+release\+\_\+locks@{A\+K\+\_\+release\+\_\+locks}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+release\+\_\+locks()}{AK\_release\_locks()}}
+{\footnotesize\ttfamily void A\+K\+\_\+release\+\_\+locks (\begin{DoxyParamCaption}\item[{\hyperlink{structmemoryAddresses}{A\+K\+\_\+memory\+Addresses\+\_\+link}}]{addresses\+Tmp,  }\item[{pthread\+\_\+t}]{transaction\+Id }\end{DoxyParamCaption})}
+
+
+
+Main interface function for the transaction A\+PI. It is responsible for the whole process releasing locks acquired by a transaction. The locks are released either by C\+O\+M\+M\+IT or A\+B\+O\+RT . 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić updated by Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em adresses} & linked list of memory addresses locked by the transaction. \\
+\hline
+{\em transaction\+Id} & integer representation of transaction id. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{transaction_8h_ace3c93fc57928c6ee10305526637c34e}\label{transaction_8h_ace3c93fc57928c6ee10305526637c34e}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+remove\+\_\+transaction\+\_\+thread@{A\+K\+\_\+remove\+\_\+transaction\+\_\+thread}}
+\index{A\+K\+\_\+remove\+\_\+transaction\+\_\+thread@{A\+K\+\_\+remove\+\_\+transaction\+\_\+thread}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+remove\+\_\+transaction\+\_\+thread()}{AK\_remove\_transaction\_thread()}}
+{\footnotesize\ttfamily int A\+K\+\_\+remove\+\_\+transaction\+\_\+thread (\begin{DoxyParamCaption}\item[{pthread\+\_\+t}]{transaction\+\_\+thread }\end{DoxyParamCaption})}
+
+
+
+Function for deleting one of active threads from array of all active transactions threads. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em transaction\+\_\+thread} & Active thread to delete\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exit status (OK or N\+O\+T\+\_\+\+OK) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_aca4230b67fc403da11c1f054051c906e}\label{transaction_8h_aca4230b67fc403da11c1f054051c906e}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+search\+\_\+empty\+\_\+link\+\_\+for\+\_\+hook@{A\+K\+\_\+search\+\_\+empty\+\_\+link\+\_\+for\+\_\+hook}}
+\index{A\+K\+\_\+search\+\_\+empty\+\_\+link\+\_\+for\+\_\+hook@{A\+K\+\_\+search\+\_\+empty\+\_\+link\+\_\+for\+\_\+hook}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+search\+\_\+empty\+\_\+link\+\_\+for\+\_\+hook()}{AK\_search\_empty\_link\_for\_hook()}}
+{\footnotesize\ttfamily \hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P} A\+K\+\_\+search\+\_\+empty\+\_\+link\+\_\+for\+\_\+hook (\begin{DoxyParamCaption}\item[{int}]{block\+Address }\end{DoxyParamCaption})}
+
+
+
+Searches for a empty link for new active block, helper method in case of address collision. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em block\+Address} & integer representation of memory address. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to empty location to store new active address 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_ab23b7394766fbb7fb3daacf7c9e5f707}\label{transaction_8h_ab23b7394766fbb7fb3daacf7c9e5f707}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+search\+\_\+existing\+\_\+link\+\_\+for\+\_\+hook@{A\+K\+\_\+search\+\_\+existing\+\_\+link\+\_\+for\+\_\+hook}}
+\index{A\+K\+\_\+search\+\_\+existing\+\_\+link\+\_\+for\+\_\+hook@{A\+K\+\_\+search\+\_\+existing\+\_\+link\+\_\+for\+\_\+hook}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+search\+\_\+existing\+\_\+link\+\_\+for\+\_\+hook()}{AK\_search\_existing\_link\_for\_hook()}}
+{\footnotesize\ttfamily \hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P} A\+K\+\_\+search\+\_\+existing\+\_\+link\+\_\+for\+\_\+hook (\begin{DoxyParamCaption}\item[{int}]{block\+Address }\end{DoxyParamCaption})}
+
+
+
+Searches for a existing entry in hash list of active blocks. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em block\+Address} & integer representation of memory address. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to the existing hash list entry 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a964a34f382b696b67592c0e4cec3510b}\label{transaction_8h_a964a34f382b696b67592c0e4cec3510b}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+search\+\_\+lock\+\_\+entry\+\_\+list\+\_\+by\+\_\+key@{A\+K\+\_\+search\+\_\+lock\+\_\+entry\+\_\+list\+\_\+by\+\_\+key}}
+\index{A\+K\+\_\+search\+\_\+lock\+\_\+entry\+\_\+list\+\_\+by\+\_\+key@{A\+K\+\_\+search\+\_\+lock\+\_\+entry\+\_\+list\+\_\+by\+\_\+key}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+search\+\_\+lock\+\_\+entry\+\_\+list\+\_\+by\+\_\+key()}{AK\_search\_lock\_entry\_list\_by\_key()}}
+{\footnotesize\ttfamily \hyperlink{structtransaction__locks__list__elem}{A\+K\+\_\+transaction\+\_\+lock\+\_\+elem\+\_\+P} A\+K\+\_\+search\+\_\+lock\+\_\+entry\+\_\+list\+\_\+by\+\_\+key (\begin{DoxyParamCaption}\item[{\hyperlink{structtransaction__list__elem}{A\+K\+\_\+transaction\+\_\+elem\+\_\+P}}]{Lockslist,  }\item[{int}]{memory\+Address,  }\item[{pthread\+\_\+t}]{id }\end{DoxyParamCaption})}
+
+
+
+Searches for a specific entry in the Locks doubly linked list using the transaction id as it\textquotesingle{}s key. 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em memory\+Address} & integer representation of memory address. \\
+\hline
+{\em id} & integer representation of transaction id. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+N\+U\+LL pointer if the element is not found otherwise it returns a pointer to the found element 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a3dc6146100502ea64534733ee1c85234}\label{transaction_8h_a3dc6146100502ea64534733ee1c85234}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+transaction\+\_\+finished@{A\+K\+\_\+transaction\+\_\+finished}}
+\index{A\+K\+\_\+transaction\+\_\+finished@{A\+K\+\_\+transaction\+\_\+finished}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+transaction\+\_\+finished()}{AK\_transaction\_finished()}}
+{\footnotesize\ttfamily void A\+K\+\_\+transaction\+\_\+finished (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function which is called when some transaction is finished. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{transaction_8h_a1e1de43b5ac5c70fc85ca9c265b14957}\label{transaction_8h_a1e1de43b5ac5c70fc85ca9c265b14957}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+transaction\+\_\+manager@{A\+K\+\_\+transaction\+\_\+manager}}
+\index{A\+K\+\_\+transaction\+\_\+manager@{A\+K\+\_\+transaction\+\_\+manager}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+transaction\+\_\+manager()}{AK\_transaction\_manager()}}
+{\footnotesize\ttfamily void A\+K\+\_\+transaction\+\_\+manager (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__command__struct}{command} $\ast$}]{command\+Array,  }\item[{int}]{length\+Of\+Array }\end{DoxyParamCaption})}
+
+
+
+method that receives all the data and gives an id to that data and starts a thread that executes the transaction 
+
+\begin{DoxyAuthor}{Author}
+Frane Jakelić updated by Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em command\+Array} & array filled with commands that need to be secured using transactions \\
+\hline
+{\em length\+Of\+Array} & length of command\+Array \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{transaction_8h_a9b8be48881e7438a45a2f512cfa2cf79}\label{transaction_8h_a9b8be48881e7438a45a2f512cfa2cf79}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+transaction\+\_\+register\+\_\+observer@{A\+K\+\_\+transaction\+\_\+register\+\_\+observer}}
+\index{A\+K\+\_\+transaction\+\_\+register\+\_\+observer@{A\+K\+\_\+transaction\+\_\+register\+\_\+observer}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+transaction\+\_\+register\+\_\+observer()}{AK\_transaction\_register\_observer()}}
+{\footnotesize\ttfamily int A\+K\+\_\+transaction\+\_\+register\+\_\+observer (\begin{DoxyParamCaption}\item[{\hyperlink{structobservable__transaction__struct}{A\+K\+\_\+observable\+\_\+transaction} $\ast$}]{observable\+\_\+transaction,  }\item[{\hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$}]{observer }\end{DoxyParamCaption})}
+
+
+
+Function for registering new observer of A\+K\+\_\+observable\+\_\+transaction type. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{structobservable__transaction}{observable\+\_\+transaction}} & \hyperlink{structObservable}{Observable} type instance \\
+\hline
+{\em observer} & \hyperlink{structObserver}{Observer} instance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exit status (OK or N\+O\+T\+\_\+\+OK) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a85658bc2b5c0570ded98ed4c63e93f24}\label{transaction_8h_a85658bc2b5c0570ded98ed4c63e93f24}} 
+\index{transaction.\+h@{transaction.\+h}!A\+K\+\_\+transaction\+\_\+unregister\+\_\+observer@{A\+K\+\_\+transaction\+\_\+unregister\+\_\+observer}}
+\index{A\+K\+\_\+transaction\+\_\+unregister\+\_\+observer@{A\+K\+\_\+transaction\+\_\+unregister\+\_\+observer}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+transaction\+\_\+unregister\+\_\+observer()}{AK\_transaction\_unregister\_observer()}}
+{\footnotesize\ttfamily int A\+K\+\_\+transaction\+\_\+unregister\+\_\+observer (\begin{DoxyParamCaption}\item[{\hyperlink{structobservable__transaction__struct}{A\+K\+\_\+observable\+\_\+transaction} $\ast$}]{observable\+\_\+transaction,  }\item[{\hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$}]{observer }\end{DoxyParamCaption})}
+
+
+
+Function for unregistering observer from A\+K\+\_\+observable\+\_\+transction type. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{structobservable__transaction}{observable\+\_\+transaction}} & \hyperlink{structObservable}{Observable} type instance \\
+\hline
+{\em observer} & \hyperlink{structObserver}{Observer} instance\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exit status (OK or N\+O\+T\+\_\+\+OK) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{transaction_8h_a0254313c2d580058c6228f9f093c8264}\label{transaction_8h_a0254313c2d580058c6228f9f093c8264}} 
+\index{transaction.\+h@{transaction.\+h}!handle\+\_\+transaction\+\_\+notify@{handle\+\_\+transaction\+\_\+notify}}
+\index{handle\+\_\+transaction\+\_\+notify@{handle\+\_\+transaction\+\_\+notify}!transaction.\+h@{transaction.\+h}}
+\subsubsection{\texorpdfstring{handle\+\_\+transaction\+\_\+notify()}{handle\_transaction\_notify()}}
+{\footnotesize\ttfamily void handle\+\_\+transaction\+\_\+notify (\begin{DoxyParamCaption}\item[{\hyperlink{structobserver__lock}{A\+K\+\_\+observer\+\_\+lock} $\ast$}]{observer\+\_\+lock }\end{DoxyParamCaption})}
+
+
+
+Function for handling A\+K\+\_\+observable\+\_\+transaction notify. Function is associated to some observer instance. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{structobserver__lock}{observer\+\_\+lock}} & \hyperlink{structObserver}{Observer} type instance \\
+\hline
+\end{DoxyParams}

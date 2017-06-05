@@ -1,0 +1,12 @@
+<map id="opti/rel_eq_selection.h" name="opti/rel_eq_selection.h">
+<area shape="rect" id="node2" href="$table_8h.html" title="../file/table.h" alt="" coords="1332,80,1436,107"/>
+<area shape="rect" id="node15" href="$mempro_8h.html" title="mempro.h" alt="" coords="1189,603,1278,629"/>
+<area shape="rect" id="node3" href="$memoman_8h.html" title="../mm/memoman.h" alt="" coords="1143,155,1289,181"/>
+<area shape="rect" id="node4" href="$dbman_8h.html" title="../dm/dbman.h" alt="" coords="451,229,567,256"/>
+<area shape="rect" id="node5" href="$auxiliary_8h.html" title="../auxi/auxiliary.h" alt="" coords="890,304,1025,331"/>
+<area shape="rect" id="node6" href="$constants_8h.html" title="constants.h" alt="" coords="995,379,1093,405"/>
+<area shape="rect" id="node7" href="$configuration_8h_source.html" title="configuration.h" alt="" coords="749,379,869,405"/>
+<area shape="rect" id="node21" href="$debug_8h.html" title="debug.h" alt="" coords="1012,528,1087,555"/>
+<area shape="rect" id="node8" href="$iniparser_8h.html" title="Parser for ini files. " alt="" coords="764,453,855,480"/>
+<area shape="rect" id="node13" href="$dictionary_8h.html" title="Implements a dictionary for string variables. " alt="" coords="792,528,891,555"/>
+</map>

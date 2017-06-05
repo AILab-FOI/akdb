@@ -1,0 +1,111 @@
+\hypertarget{btree_8h}{}\section{file/idx/btree.h File Reference}
+\label{btree_8h}\index{file/idx/btree.\+h@{file/idx/btree.\+h}}
+{\ttfamily \#include \char`\"{}index.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../../file/table.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../../auxi/constants.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../../auxi/configuration.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../../auxi/mempro.\+h\char`\"{}}\newline
+Include dependency graph for btree.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{btree_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=168pt]{btree_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structbtree__node}{btree\+\_\+node}
+\item 
+struct \hyperlink{structroot__info}{root\+\_\+info}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{btree_8h_a111da81ae5883147168bbb8366377b10}\label{btree_8h_a111da81ae5883147168bbb8366377b10}} 
+\#define {\bfseries B}~3
+\item 
+\mbox{\Hypertarget{btree_8h_a826715579f0649bd271fb6702a175dbc}\label{btree_8h_a826715579f0649bd271fb6702a175dbc}} 
+\#define {\bfseries O\+R\+D\+ER}~6
+\item 
+\mbox{\Hypertarget{btree_8h_a62e90d5c1b5aad7ab60823163cc2f2d7}\label{btree_8h_a62e90d5c1b5aad7ab60823163cc2f2d7}} 
+\#define {\bfseries L\+E\+AF}~0
+\item 
+\mbox{\Hypertarget{btree_8h_a9a2bbc66102de668efe5e9c7feb23eaa}\label{btree_8h_a9a2bbc66102de668efe5e9c7feb23eaa}} 
+\#define {\bfseries N\+O\+DE}~1
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{btree_8h_a757d18fc29cae9dfcf18e73b7e60d707}{A\+K\+\_\+btree\+\_\+create} (char $\ast$tbl\+Name, struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$attributes, char $\ast$index\+Name)
+\begin{DoxyCompactList}\small\item\em Function for creating new btree index on integer attribute in table. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{btree_8h_a4e10b7d4faca5feb439dad26db98b791}\label{btree_8h_a4e10b7d4faca5feb439dad26db98b791}} 
+int {\bfseries A\+K\+\_\+btree\+\_\+delete} (char $\ast$index\+Name)
+\item 
+void \hyperlink{btree_8h_afa508bce63f62899a47eed86a94bda1a}{A\+K\+\_\+btree\+\_\+search\+\_\+delete} (char $\ast$index\+Name, int $\ast$search\+Value, int $\ast$end\+Range, int $\ast$to\+Do)
+\begin{DoxyCompactList}\small\item\em Function for searching or deleting a value in btree index. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{btree_8h_a9d1f212b791fc3e2455f492301d0f23d}\label{btree_8h_a9d1f212b791fc3e2455f492301d0f23d}} 
+int {\bfseries A\+K\+\_\+btree\+\_\+insert} (char $\ast$index\+Name, int $\ast$insert\+Value, int $\ast$insert\+Td, int $\ast$insert\+Block)
+\item 
+\mbox{\Hypertarget{btree_8h_a7ea5afae3c76675a9f283118292d8748}\label{btree_8h_a7ea5afae3c76675a9f283118292d8748}} 
+void {\bfseries Ak\+\_\+btree\+\_\+test} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data strucures for B\+Tree indices 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{btree_8h_a757d18fc29cae9dfcf18e73b7e60d707}\label{btree_8h_a757d18fc29cae9dfcf18e73b7e60d707}} 
+\index{btree.\+h@{btree.\+h}!A\+K\+\_\+btree\+\_\+create@{A\+K\+\_\+btree\+\_\+create}}
+\index{A\+K\+\_\+btree\+\_\+create@{A\+K\+\_\+btree\+\_\+create}!btree.\+h@{btree.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+btree\+\_\+create()}{AK\_btree\_create()}}
+{\footnotesize\ttfamily int A\+K\+\_\+btree\+\_\+create (\begin{DoxyParamCaption}\item[{char $\ast$}]{tbl\+Name,  }\item[{struct \hyperlink{structlist__node}{list\+\_\+node} $\ast$}]{attributes,  }\item[{char $\ast$}]{index\+Name }\end{DoxyParamCaption})}
+
+
+
+Function for creating new btree index on integer attribute in table. 
+
+\begin{DoxyAuthor}{Author}
+Anđelko Spevec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em tbl\+Name} & -\/ name of the table on which we are creating index \\
+\hline
+{\em attributes} & -\/ attribute on which we are creating index \\
+\hline
+{\em index\+Name} & -\/ name of the index \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{btree_8h_afa508bce63f62899a47eed86a94bda1a}\label{btree_8h_afa508bce63f62899a47eed86a94bda1a}} 
+\index{btree.\+h@{btree.\+h}!A\+K\+\_\+btree\+\_\+search\+\_\+delete@{A\+K\+\_\+btree\+\_\+search\+\_\+delete}}
+\index{A\+K\+\_\+btree\+\_\+search\+\_\+delete@{A\+K\+\_\+btree\+\_\+search\+\_\+delete}!btree.\+h@{btree.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+btree\+\_\+search\+\_\+delete()}{AK\_btree\_search\_delete()}}
+{\footnotesize\ttfamily void A\+K\+\_\+btree\+\_\+search\+\_\+delete (\begin{DoxyParamCaption}\item[{char $\ast$}]{index\+Name,  }\item[{int $\ast$}]{search\+Value,  }\item[{int $\ast$}]{end\+Range,  }\item[{int $\ast$}]{to\+Do }\end{DoxyParamCaption})}
+
+
+
+Function for searching or deleting a value in btree index. 
+
+\begin{DoxyAuthor}{Author}
+Anđelko Spevec 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em index\+Name} & -\/ name of the index \\
+\hline
+{\em search\+Value} & -\/ value that we are searching in the index \\
+\hline
+{\em end\+Range} & -\/ if 0 search is for 0 value, else searching in range \\
+\hline
+{\em to\+Do} & -\/ if 0 we just search else we delete the element if we find it \\
+\hline
+\end{DoxyParams}

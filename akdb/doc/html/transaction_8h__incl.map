@@ -1,0 +1,25 @@
+<map id="trans/transaction.h" name="trans/transaction.h">
+<area shape="rect" id="node3" href="$constants_8h.html" title="../auxi/constants.h" alt="" coords="435,976,576,1003"/>
+<area shape="rect" id="node4" href="$configuration_8h_source.html" title="../auxi/configuration.h" alt="" coords="246,976,410,1003"/>
+<area shape="rect" id="node11" href="$mempro_8h.html" title="mempro.h" alt="" coords="2133,1200,2222,1227"/>
+<area shape="rect" id="node16" href="$memoman_8h.html" title="../mm/memoman.h" alt="" coords="1335,752,1481,779"/>
+<area shape="rect" id="node27" href="$command_8h_source.html" title="../sql/command.h" alt="" coords="1923,80,2058,107"/>
+<area shape="rect" id="node28" href="$table_8h.html" title="../file/table.h" alt="" coords="2417,677,2521,704"/>
+<area shape="rect" id="node29" href="$fileio_8h.html" title="../file/fileio.h" alt="" coords="1624,304,1728,331"/>
+<area shape="rect" id="node42" href="$observable_8h.html" title="../auxi/observable.h" alt="" coords="803,901,954,928"/>
+<area shape="rect" id="node5" href="$iniparser_8h.html" title="Parser for ini files. " alt="" coords="637,1051,728,1077"/>
+<area shape="rect" id="node9" href="$dictionary_8h.html" title="Implements a dictionary for string variables. " alt="" coords="672,1125,771,1152"/>
+<area shape="rect" id="node17" href="$dbman_8h.html" title="../dm/dbman.h" alt="" coords="1641,827,1757,853"/>
+<area shape="rect" id="node18" href="$auxiliary_8h.html" title="../auxi/auxiliary.h" alt="" coords="1131,901,1266,928"/>
+<area shape="rect" id="node20" href="$debug_8h.html" title="debug.h" alt="" coords="1111,1051,1185,1077"/>
+<area shape="rect" id="node39" href="$selection_8h.html" title="../rel/selection.h" alt="" coords="1826,155,1953,181"/>
+<area shape="rect" id="node30" href="$reference_8h.html" title="../sql/cs/reference.h" alt="" coords="2181,603,2331,629"/>
+<area shape="rect" id="node31" href="$recovery_8h_source.html" title="../rec/recovery.h" alt="" coords="1307,379,1434,405"/>
+<area shape="rect" id="node32" href="$archive__log_8h.html" title="../rec/archive_log.h" alt="" coords="1603,603,1749,629"/>
+<area shape="rect" id="node34" href="$files_8h.html" title="files.h" alt="" coords="2481,528,2543,555"/>
+<area shape="rect" id="node38" href="$redo__log_8h_source.html" title="../rec/redo_log.h" alt="" coords="979,528,1106,555"/>
+<area shape="rect" id="node33" href="$test_8h.html" title="../file/test.h" alt="" coords="2131,453,2227,480"/>
+<area shape="rect" id="node36" href="$rel__eq__selection_8h.html" title="../opti/rel_eq_selection.h" alt="" coords="1875,603,2056,629"/>
+<area shape="rect" id="node35" href="$id_8h.html" title="id.h" alt="" coords="2558,603,2605,629"/>
+<area shape="rect" id="node40" href="$expression__check_8h.html" title="expression_check.h" alt="" coords="2325,229,2475,256"/>
+</map>

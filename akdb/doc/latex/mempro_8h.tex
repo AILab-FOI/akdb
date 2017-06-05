@@ -1,0 +1,743 @@
+\hypertarget{mempro_8h}{}\section{auxi/mempro.h File Reference}
+\label{mempro_8h}\index{auxi/mempro.\+h@{auxi/mempro.\+h}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+Include dependency graph for mempro.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{mempro_8h__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state}
+\begin{DoxyCompactList}\small\item\em Global structure that holds all relevant information for the debug mode and related functionality. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{mempro_8h_af3e76514867fc6160c993768570a6627}\label{mempro_8h_af3e76514867fc6160c993768570a6627}} 
+\#define {\bfseries N\+EW}(type,  type\+\_\+size)~(calloc(type\+\_\+size, sizeof(type)))
+\item 
+\mbox{\Hypertarget{mempro_8h_a08495eeaa8c98e0fcf66c427b62945e8}\label{mempro_8h_a08495eeaa8c98e0fcf66c427b62945e8}} 
+\#define {\bfseries A\+K\+\_\+\+I\+N\+L\+I\+NE}~\+\_\+\+\_\+inline\+\_\+\+\_\+
+\item 
+\mbox{\Hypertarget{mempro_8h_ad6dfe8131167c1fe4a2fd709d366f9ea}\label{mempro_8h_ad6dfe8131167c1fe4a2fd709d366f9ea}} 
+\#define \hyperlink{mempro_8h_ad6dfe8131167c1fe4a2fd709d366f9ea}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+ON}~0
+\begin{DoxyCompactList}\small\item\em Zero to switch memory protection and debug mode off. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{mempro_8h_ad7b0e9716501e505ad384b69e52952e5}\label{mempro_8h_ad7b0e9716501e505ad384b69e52952e5}} 
+\#define \hyperlink{mempro_8h_ad7b0e9716501e505ad384b69e52952e5}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+P\+R\+I\+NT}~0
+\begin{DoxyCompactList}\small\item\em Defines if debug mode messages are going to be printed. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{mempro_8h_a51cd45bb30d86f207631ecef36db7f14}\label{mempro_8h_a51cd45bb30d86f207631ecef36db7f14}} 
+\#define \hyperlink{mempro_8h_a51cd45bb30d86f207631ecef36db7f14}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+P\+A\+G\+E\+S\+\_\+\+N\+UM}~8192
+\begin{DoxyCompactList}\small\item\em Defines the total of available memory pages for allocation. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{mempro_8h_a61320b513a48a4a9adf445dbe289a156}\label{mempro_8h_a61320b513a48a4a9adf445dbe289a156}} 
+\#define \hyperlink{mempro_8h_a61320b513a48a4a9adf445dbe289a156}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+M\+A\+X\+\_\+\+W\+R\+I\+T\+E\+\_\+\+D\+E\+T\+E\+C\+T\+I\+O\+NS}~(\hyperlink{mempro_8h_a51cd45bb30d86f207631ecef36db7f14}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+P\+A\+G\+E\+S\+\_\+\+N\+UM} $\ast$ 10)
+\begin{DoxyCompactList}\small\item\em Defines the maximum number of memory write detections. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{mempro_8h_a8628cfbef864832e90cffe391a583494}\label{mempro_8h_a8628cfbef864832e90cffe391a583494}} 
+\#define \hyperlink{mempro_8h_a8628cfbef864832e90cffe391a583494}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+S\+T\+A\+C\+K\+S\+I\+ZE}~\hyperlink{mempro_8h_a51cd45bb30d86f207631ecef36db7f14}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+P\+A\+G\+E\+S\+\_\+\+N\+UM}
+\begin{DoxyCompactList}\small\item\em Defines the monitored functions stack. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{mempro_8h_a3bc510cef53200a73266e5cb88c9a91b}\label{mempro_8h_a3bc510cef53200a73266e5cb88c9a91b}} 
+\#define \hyperlink{mempro_8h_a3bc510cef53200a73266e5cb88c9a91b}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C\+T\+I\+O\+NS}~500
+\begin{DoxyCompactList}\small\item\em Defines the maximum number of function names in the application. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{mempro_8h_a9505b476b379260a14d3c88e601fd536}\label{mempro_8h_a9505b476b379260a14d3c88e601fd536}} 
+\#define \hyperlink{mempro_8h_a9505b476b379260a14d3c88e601fd536}{A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+M\+A\+X\+\_\+\+F\+U\+N\+C\+\_\+\+N\+A\+ME}~80
+\begin{DoxyCompactList}\small\item\em Defines maximum function name length possible. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{mempro_8h_a7d13c9771c67aea062ea49881bd30a6d}\label{mempro_8h_a7d13c9771c67aea062ea49881bd30a6d}} 
+\#define \hyperlink{mempro_8h_a7d13c9771c67aea062ea49881bd30a6d}{A\+K\+\_\+\+P\+RO}~\hyperlink{mempro_8h_a03199eb964662b069bcb8bf040a1cfdf}{A\+K\+\_\+debmod\+\_\+function\+\_\+prologue}(\+\_\+\+\_\+func\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+);
+\begin{DoxyCompactList}\small\item\em Mandatory function prologue for all functions (A\+K\+\_\+debmod and related functions are excluded). Put this macro after variable declarations, before any function instruction. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{mempro_8h_acf877689b11a47d1be31fe903749e482}\label{mempro_8h_acf877689b11a47d1be31fe903749e482}} 
+\#define \hyperlink{mempro_8h_acf877689b11a47d1be31fe903749e482}{A\+K\+\_\+\+E\+PI}~\hyperlink{mempro_8h_abe2c05e81c803a4e81da84bb78095a24}{A\+K\+\_\+debmod\+\_\+function\+\_\+epilogue}(\+\_\+\+\_\+func\+\_\+\+\_\+, \+\_\+\+\_\+\+F\+I\+L\+E\+\_\+\+\_\+, \+\_\+\+\_\+\+L\+I\+N\+E\+\_\+\+\_\+);
+\begin{DoxyCompactList}\small\item\em Mandatory function epilogue for all functions (A\+K\+\_\+debmod and related functions are excluded). Put this macro after last function instruction, before every return statement. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{mempro_8h_a7e4889429b3ed3481926044ae790e445}{A\+K\+\_\+debmod\+\_\+d} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, const char $\ast$)
+\begin{DoxyCompactList}\small\item\em Function prints debug message \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a3ad39d0ab9cbc1c7d449a9b0ec1f3dee}{A\+K\+\_\+debmod\+\_\+dv} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, const char $\ast$,...)
+\begin{DoxyCompactList}\small\item\em Function prints debug message \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_aed92fd1cc340008cb1a60fe6459aab4a}{A\+K\+\_\+debmod\+\_\+enter\+\_\+critical\+\_\+sec} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$)
+\begin{DoxyCompactList}\small\item\em Reserves ds for use \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_afa2a274e27eeee273838b416845142e4}{A\+K\+\_\+debmod\+\_\+leave\+\_\+critical\+\_\+sec} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$)
+\begin{DoxyCompactList}\small\item\em Makes ds available \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$ \hyperlink{mempro_8h_a1243b0dffb8d5af86d0dacff211dee16}{A\+K\+\_\+debmod\+\_\+init} (void)
+\begin{DoxyCompactList}\small\item\em Initializes debug mode structure \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a1bcc7e42bcfe0455cfa464e5c89852f9}{A\+K\+\_\+debmod\+\_\+die} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$)
+\begin{DoxyCompactList}\small\item\em Destroy debug mode state (call before main() exit) \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{mempro_8h_a70bcbd89efd6354010873de0f0c15459}{A\+K\+\_\+debmod\+\_\+calloc} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, uint32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Allocates memory \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_aee181847809ccd65131ff98baae752a6}{A\+K\+\_\+debmod\+\_\+free} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, void $\ast$)
+\begin{DoxyCompactList}\small\item\em Frees memory allocated with debmod\+\_\+alloc \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{mempro_8h_a55e6d563c69fbe350a18a8d8cd7307d9}{A\+K\+\_\+calloc} (size\+\_\+t, size\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Allocates memory (see calloc) \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{mempro_8h_ae527b2198b79a7bbc4210af17df6a13a}{A\+K\+\_\+malloc} (size\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Allocate memory (see malloc) \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_aa644f37618008bc7b295ee28649ce523}{A\+K\+\_\+free} (void $\ast$)
+\begin{DoxyCompactList}\small\item\em Free memory at ptr (see free) \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{mempro_8h_a5a090f1c8f3b580508667e884b153265}{A\+K\+\_\+realloc} (void $\ast$, size\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Reallocates memory (see realloc) \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_ab62f5dee72e52880eea8929e592c2c5a}{A\+K\+\_\+write\+\_\+protect} (void $\ast$)
+\begin{DoxyCompactList}\small\item\em Function write-\/protects memory \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_ad0b1fbb507b01b15effb8ecae1f084c0}{A\+K\+\_\+write\+\_\+unprotect} (void $\ast$)
+\begin{DoxyCompactList}\small\item\em Function write-\/unprotects memory \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a0f12d410df86a67a42f7802cb7d45dcd}{A\+K\+\_\+check\+\_\+for\+\_\+writes} (void)
+\begin{DoxyCompactList}\small\item\em Marks pages dirty if there were writes between calls to this function. \end{DoxyCompactList}\item 
+int32\+\_\+t \hyperlink{mempro_8h_aaeea6685392021f7175b60ba6fbd99f3}{A\+K\+\_\+debmod\+\_\+func\+\_\+id} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, const char $\ast$)
+\begin{DoxyCompactList}\small\item\em Returns function id for given func\+\_\+name. \end{DoxyCompactList}\item 
+const char $\ast$ \hyperlink{mempro_8h_ad27782488ec016418c1b475077cf5ee5}{A\+K\+\_\+debmod\+\_\+func\+\_\+get\+\_\+name} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, int32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Lookup function name \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+int32\+\_\+t \hyperlink{mempro_8h_acabdf62aec603510c04fbd489be76149}{A\+K\+\_\+debmod\+\_\+func\+\_\+add} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, const char $\ast$)
+\begin{DoxyCompactList}\small\item\em Adds function name to list \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_ac9182d2f296d55cda37948234ce4bf96}{A\+K\+\_\+debmod\+\_\+fstack\+\_\+push} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, int32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Push function id on stack \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+int32\+\_\+t \hyperlink{mempro_8h_a9cc0154a2bdecef2adc8a42e7c6ddcf0}{A\+K\+\_\+debmod\+\_\+fstack\+\_\+pop} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$)
+\begin{DoxyCompactList}\small\item\em Pops function id from stack \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a2c6943e280d7e6acebbad43d6403a813}{A\+K\+\_\+debmod\+\_\+function\+\_\+current} (\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$, int32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Sets current function \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a03199eb964662b069bcb8bf040a1cfdf}{A\+K\+\_\+debmod\+\_\+function\+\_\+prologue} (const char $\ast$, const char $\ast$, int)
+\begin{DoxyCompactList}\small\item\em Not for direct use (only with macro A\+K\+\_\+\+P\+RO). Marks function prologue. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_abe2c05e81c803a4e81da84bb78095a24}{A\+K\+\_\+debmod\+\_\+function\+\_\+epilogue} (const char $\ast$, const char $\ast$, int)
+\begin{DoxyCompactList}\small\item\em Not for direct use (only with macro A\+K\+\_\+\+E\+PI). Marks function epilogue. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_af2fa9cc9f849c6f31af9f8e73321cb4d}{A\+K\+\_\+debmod\+\_\+log\+\_\+memory\+\_\+alloc} (int32\+\_\+t)
+\begin{DoxyCompactList}\small\item\em print debmod information on function \mbox{[}private function\mbox{]} \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_ac88e85a6c42a271ec686b83f481b4395}{A\+K\+\_\+debmod\+\_\+print\+\_\+function\+\_\+use} (const char $\ast$, uint8\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Print function dependency \mbox{[}private function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a6202490ef95e6641189378cf6abe36e7}{A\+K\+\_\+print\+\_\+function\+\_\+use} (const char $\ast$)
+\begin{DoxyCompactList}\small\item\em Print function dependency \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a6617b2cc4b97a935e1e6624e72bd13b2}{A\+K\+\_\+print\+\_\+function\+\_\+uses} ()
+\begin{DoxyCompactList}\small\item\em Print function dependency for all functions \mbox{[}public function\mbox{]}. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a765ebdc6b607edc01997f0d4a5de0777}{A\+K\+\_\+print\+\_\+active\+\_\+functions} ()
+\begin{DoxyCompactList}\small\item\em Print all detected functions. \end{DoxyCompactList}\item 
+void \hyperlink{mempro_8h_a1bb7e0879e171de32fc74caf1597f417}{A\+K\+\_\+mempro\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Test function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{mempro_8h_ade7353dfe800bf55ca94af4c1fde255a}\label{mempro_8h_ade7353dfe800bf55ca94af4c1fde255a}} 
+\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$ {\bfseries A\+K\+\_\+\+D\+E\+B\+M\+O\+D\+\_\+\+S\+T\+A\+TE}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Data structures, includes, macros and declarations for the memory wrappers and debug mode of Kalashnikov DB. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{mempro_8h_a55e6d563c69fbe350a18a8d8cd7307d9}\label{mempro_8h_a55e6d563c69fbe350a18a8d8cd7307d9}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+calloc@{A\+K\+\_\+calloc}}
+\index{A\+K\+\_\+calloc@{A\+K\+\_\+calloc}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+calloc()}{AK\_calloc()}}
+{\footnotesize\ttfamily void$\ast$ A\+K\+\_\+calloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{num,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Allocates memory (see calloc) \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em num} & number of elements \\
+\hline
+{\em size} & of element in bytes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+allocated memory or N\+U\+LL 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a0f12d410df86a67a42f7802cb7d45dcd}\label{mempro_8h_a0f12d410df86a67a42f7802cb7d45dcd}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+check\+\_\+for\+\_\+writes@{A\+K\+\_\+check\+\_\+for\+\_\+writes}}
+\index{A\+K\+\_\+check\+\_\+for\+\_\+writes@{A\+K\+\_\+check\+\_\+for\+\_\+writes}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+check\+\_\+for\+\_\+writes()}{AK\_check\_for\_writes()}}
+{\footnotesize\ttfamily void A\+K\+\_\+check\+\_\+for\+\_\+writes (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Marks pages dirty if there were writes between calls to this function. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a70bcbd89efd6354010873de0f0c15459}\label{mempro_8h_a70bcbd89efd6354010873de0f0c15459}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+calloc@{A\+K\+\_\+debmod\+\_\+calloc}}
+\index{A\+K\+\_\+debmod\+\_\+calloc@{A\+K\+\_\+debmod\+\_\+calloc}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+calloc()}{AK\_debmod\_calloc()}}
+{\footnotesize\ttfamily void$\ast$ A\+K\+\_\+debmod\+\_\+calloc (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{uint32\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Allocates memory \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em size} & in bytes to allocate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to allocated memory or N\+U\+LL 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a7e4889429b3ed3481926044ae790e445}\label{mempro_8h_a7e4889429b3ed3481926044ae790e445}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+d@{A\+K\+\_\+debmod\+\_\+d}}
+\index{A\+K\+\_\+debmod\+\_\+d@{A\+K\+\_\+debmod\+\_\+d}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+d()}{AK\_debmod\_d()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+d (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{const char $\ast$}]{message }\end{DoxyParamCaption})}
+
+
+
+Function prints debug message \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em message} & string to print \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a1bcc7e42bcfe0455cfa464e5c89852f9}\label{mempro_8h_a1bcc7e42bcfe0455cfa464e5c89852f9}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+die@{A\+K\+\_\+debmod\+\_\+die}}
+\index{A\+K\+\_\+debmod\+\_\+die@{A\+K\+\_\+debmod\+\_\+die}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+die()}{AK\_debmod\_die()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+die (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds }\end{DoxyParamCaption})}
+
+
+
+Destroy debug mode state (call before main() exit) \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a3ad39d0ab9cbc1c7d449a9b0ec1f3dee}\label{mempro_8h_a3ad39d0ab9cbc1c7d449a9b0ec1f3dee}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+dv@{A\+K\+\_\+debmod\+\_\+dv}}
+\index{A\+K\+\_\+debmod\+\_\+dv@{A\+K\+\_\+debmod\+\_\+dv}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+dv()}{AK\_debmod\_dv()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+dv (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{const char $\ast$}]{format,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+Function prints debug message \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em format} & format string like printf \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_aed92fd1cc340008cb1a60fe6459aab4a}\label{mempro_8h_aed92fd1cc340008cb1a60fe6459aab4a}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+enter\+\_\+critical\+\_\+sec@{A\+K\+\_\+debmod\+\_\+enter\+\_\+critical\+\_\+sec}}
+\index{A\+K\+\_\+debmod\+\_\+enter\+\_\+critical\+\_\+sec@{A\+K\+\_\+debmod\+\_\+enter\+\_\+critical\+\_\+sec}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+enter\+\_\+critical\+\_\+sec()}{AK\_debmod\_enter\_critical\_sec()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+enter\+\_\+critical\+\_\+sec (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds }\end{DoxyParamCaption})}
+
+
+
+Reserves ds for use \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_aee181847809ccd65131ff98baae752a6}\label{mempro_8h_aee181847809ccd65131ff98baae752a6}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+free@{A\+K\+\_\+debmod\+\_\+free}}
+\index{A\+K\+\_\+debmod\+\_\+free@{A\+K\+\_\+debmod\+\_\+free}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+free()}{AK\_debmod\_free()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+free (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{void $\ast$}]{memory }\end{DoxyParamCaption})}
+
+
+
+Frees memory allocated with debmod\+\_\+alloc \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em memory} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a9cc0154a2bdecef2adc8a42e7c6ddcf0}\label{mempro_8h_a9cc0154a2bdecef2adc8a42e7c6ddcf0}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+fstack\+\_\+pop@{A\+K\+\_\+debmod\+\_\+fstack\+\_\+pop}}
+\index{A\+K\+\_\+debmod\+\_\+fstack\+\_\+pop@{A\+K\+\_\+debmod\+\_\+fstack\+\_\+pop}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+fstack\+\_\+pop()}{AK\_debmod\_fstack\_pop()}}
+{\footnotesize\ttfamily int32\+\_\+t A\+K\+\_\+debmod\+\_\+fstack\+\_\+pop (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds }\end{DoxyParamCaption})}
+
+
+
+Pops function id from stack \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function id popped 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_ac9182d2f296d55cda37948234ce4bf96}\label{mempro_8h_ac9182d2f296d55cda37948234ce4bf96}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+fstack\+\_\+push@{A\+K\+\_\+debmod\+\_\+fstack\+\_\+push}}
+\index{A\+K\+\_\+debmod\+\_\+fstack\+\_\+push@{A\+K\+\_\+debmod\+\_\+fstack\+\_\+push}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+fstack\+\_\+push()}{AK\_debmod\_fstack\_push()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+fstack\+\_\+push (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{int32\+\_\+t}]{func\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Push function id on stack \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em func\+\_\+id} & function id \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_acabdf62aec603510c04fbd489be76149}\label{mempro_8h_acabdf62aec603510c04fbd489be76149}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+func\+\_\+add@{A\+K\+\_\+debmod\+\_\+func\+\_\+add}}
+\index{A\+K\+\_\+debmod\+\_\+func\+\_\+add@{A\+K\+\_\+debmod\+\_\+func\+\_\+add}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+func\+\_\+add()}{AK\_debmod\_func\_add()}}
+{\footnotesize\ttfamily int32\+\_\+t A\+K\+\_\+debmod\+\_\+func\+\_\+add (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{const char $\ast$}]{func\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Adds function name to list \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em func\+\_\+name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+id for added function name 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_ad27782488ec016418c1b475077cf5ee5}\label{mempro_8h_ad27782488ec016418c1b475077cf5ee5}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+func\+\_\+get\+\_\+name@{A\+K\+\_\+debmod\+\_\+func\+\_\+get\+\_\+name}}
+\index{A\+K\+\_\+debmod\+\_\+func\+\_\+get\+\_\+name@{A\+K\+\_\+debmod\+\_\+func\+\_\+get\+\_\+name}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+func\+\_\+get\+\_\+name()}{AK\_debmod\_func\_get\_name()}}
+{\footnotesize\ttfamily const char$\ast$ A\+K\+\_\+debmod\+\_\+func\+\_\+get\+\_\+name (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{int32\+\_\+t}]{function\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Lookup function name \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em function\+\_\+id} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function name for given function\+\_\+id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_aaeea6685392021f7175b60ba6fbd99f3}\label{mempro_8h_aaeea6685392021f7175b60ba6fbd99f3}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+func\+\_\+id@{A\+K\+\_\+debmod\+\_\+func\+\_\+id}}
+\index{A\+K\+\_\+debmod\+\_\+func\+\_\+id@{A\+K\+\_\+debmod\+\_\+func\+\_\+id}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+func\+\_\+id()}{AK\_debmod\_func\_id()}}
+{\footnotesize\ttfamily int32\+\_\+t A\+K\+\_\+debmod\+\_\+func\+\_\+id (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{const char $\ast$}]{func\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Returns function id for given func\+\_\+name. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em func\+\_\+name} & function name \mbox{[}private function\mbox{]} \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function id 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a2c6943e280d7e6acebbad43d6403a813}\label{mempro_8h_a2c6943e280d7e6acebbad43d6403a813}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+function\+\_\+current@{A\+K\+\_\+debmod\+\_\+function\+\_\+current}}
+\index{A\+K\+\_\+debmod\+\_\+function\+\_\+current@{A\+K\+\_\+debmod\+\_\+function\+\_\+current}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+function\+\_\+current()}{AK\_debmod\_function\_current()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+function\+\_\+current (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds,  }\item[{int32\+\_\+t}]{new\+\_\+function\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Sets current function \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+{\em new\+\_\+function\+\_\+id} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_abe2c05e81c803a4e81da84bb78095a24}\label{mempro_8h_abe2c05e81c803a4e81da84bb78095a24}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+function\+\_\+epilogue@{A\+K\+\_\+debmod\+\_\+function\+\_\+epilogue}}
+\index{A\+K\+\_\+debmod\+\_\+function\+\_\+epilogue@{A\+K\+\_\+debmod\+\_\+function\+\_\+epilogue}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+function\+\_\+epilogue()}{AK\_debmod\_function\_epilogue()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+function\+\_\+epilogue (\begin{DoxyParamCaption}\item[{const char $\ast$}]{func\+\_\+name,  }\item[{const char $\ast$}]{source\+\_\+file,  }\item[{int}]{source\+\_\+line }\end{DoxyParamCaption})}
+
+
+
+Not for direct use (only with macro A\+K\+\_\+\+E\+PI). Marks function epilogue. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em func\+\_\+name} & function name as in source \\
+\hline
+{\em source\+\_\+file} & file name where function is defined \\
+\hline
+{\em source\+\_\+line} & line from which this function is called \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a03199eb964662b069bcb8bf040a1cfdf}\label{mempro_8h_a03199eb964662b069bcb8bf040a1cfdf}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+function\+\_\+prologue@{A\+K\+\_\+debmod\+\_\+function\+\_\+prologue}}
+\index{A\+K\+\_\+debmod\+\_\+function\+\_\+prologue@{A\+K\+\_\+debmod\+\_\+function\+\_\+prologue}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+function\+\_\+prologue()}{AK\_debmod\_function\_prologue()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+function\+\_\+prologue (\begin{DoxyParamCaption}\item[{const char $\ast$}]{func\+\_\+name,  }\item[{const char $\ast$}]{source\+\_\+file,  }\item[{int}]{source\+\_\+line }\end{DoxyParamCaption})}
+
+
+
+Not for direct use (only with macro A\+K\+\_\+\+P\+RO). Marks function prologue. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em func\+\_\+name} & function name as in source \\
+\hline
+{\em source\+\_\+file} & file name where function is defined \\
+\hline
+{\em source\+\_\+line} & line from which this function is called \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a1243b0dffb8d5af86d0dacff211dee16}\label{mempro_8h_a1243b0dffb8d5af86d0dacff211dee16}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+init@{A\+K\+\_\+debmod\+\_\+init}}
+\index{A\+K\+\_\+debmod\+\_\+init@{A\+K\+\_\+debmod\+\_\+init}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+init()}{AK\_debmod\_init()}}
+{\footnotesize\ttfamily \hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state}$\ast$ A\+K\+\_\+debmod\+\_\+init (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Initializes debug mode structure \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+initialized debug mode state 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_afa2a274e27eeee273838b416845142e4}\label{mempro_8h_afa2a274e27eeee273838b416845142e4}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+leave\+\_\+critical\+\_\+sec@{A\+K\+\_\+debmod\+\_\+leave\+\_\+critical\+\_\+sec}}
+\index{A\+K\+\_\+debmod\+\_\+leave\+\_\+critical\+\_\+sec@{A\+K\+\_\+debmod\+\_\+leave\+\_\+critical\+\_\+sec}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+leave\+\_\+critical\+\_\+sec()}{AK\_debmod\_leave\_critical\_sec()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+leave\+\_\+critical\+\_\+sec (\begin{DoxyParamCaption}\item[{\hyperlink{structAK__debmod__state}{A\+K\+\_\+debmod\+\_\+state} $\ast$}]{ds }\end{DoxyParamCaption})}
+
+
+
+Makes ds available \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ds} & debug mode state \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_af2fa9cc9f849c6f31af9f8e73321cb4d}\label{mempro_8h_af2fa9cc9f849c6f31af9f8e73321cb4d}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+log\+\_\+memory\+\_\+alloc@{A\+K\+\_\+debmod\+\_\+log\+\_\+memory\+\_\+alloc}}
+\index{A\+K\+\_\+debmod\+\_\+log\+\_\+memory\+\_\+alloc@{A\+K\+\_\+debmod\+\_\+log\+\_\+memory\+\_\+alloc}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+log\+\_\+memory\+\_\+alloc()}{AK\_debmod\_log\_memory\_alloc()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+log\+\_\+memory\+\_\+alloc (\begin{DoxyParamCaption}\item[{int32\+\_\+t}]{func\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+print debmod information on function \mbox{[}private function\mbox{]} 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em func\+\_\+id} & calling function id \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_ac88e85a6c42a271ec686b83f481b4395}\label{mempro_8h_ac88e85a6c42a271ec686b83f481b4395}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+debmod\+\_\+print\+\_\+function\+\_\+use@{A\+K\+\_\+debmod\+\_\+print\+\_\+function\+\_\+use}}
+\index{A\+K\+\_\+debmod\+\_\+print\+\_\+function\+\_\+use@{A\+K\+\_\+debmod\+\_\+print\+\_\+function\+\_\+use}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+debmod\+\_\+print\+\_\+function\+\_\+use()}{AK\_debmod\_print\_function\_use()}}
+{\footnotesize\ttfamily void A\+K\+\_\+debmod\+\_\+print\+\_\+function\+\_\+use (\begin{DoxyParamCaption}\item[{const char $\ast$}]{func\+\_\+name,  }\item[{uint8\+\_\+t}]{in\+\_\+recur }\end{DoxyParamCaption})}
+
+
+
+Print function dependency \mbox{[}private function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em func\+\_\+name} & function name \\
+\hline
+{\em in\+\_\+recur} & called in recursion \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_aa644f37618008bc7b295ee28649ce523}\label{mempro_8h_aa644f37618008bc7b295ee28649ce523}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+free@{A\+K\+\_\+free}}
+\index{A\+K\+\_\+free@{A\+K\+\_\+free}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+free()}{AK\_free()}}
+{\footnotesize\ttfamily void A\+K\+\_\+free (\begin{DoxyParamCaption}\item[{void $\ast$}]{ptr }\end{DoxyParamCaption})}
+
+
+
+Free memory at ptr (see free) \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & pointer to memory \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_ae527b2198b79a7bbc4210af17df6a13a}\label{mempro_8h_ae527b2198b79a7bbc4210af17df6a13a}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+malloc@{A\+K\+\_\+malloc}}
+\index{A\+K\+\_\+malloc@{A\+K\+\_\+malloc}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+malloc()}{AK\_malloc()}}
+{\footnotesize\ttfamily void$\ast$ A\+K\+\_\+malloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Allocate memory (see malloc) \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em size} & of memory to allocate in bytes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+allocated memory or N\+U\+LL 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a1bb7e0879e171de32fc74caf1597f417}\label{mempro_8h_a1bb7e0879e171de32fc74caf1597f417}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+mempro\+\_\+test@{A\+K\+\_\+mempro\+\_\+test}}
+\index{A\+K\+\_\+mempro\+\_\+test@{A\+K\+\_\+mempro\+\_\+test}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+mempro\+\_\+test()}{AK\_mempro\_test()}}
+{\footnotesize\ttfamily void A\+K\+\_\+mempro\+\_\+test (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Test function. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Kristo 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{mempro_8h_a765ebdc6b607edc01997f0d4a5de0777}\label{mempro_8h_a765ebdc6b607edc01997f0d4a5de0777}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+print\+\_\+active\+\_\+functions@{A\+K\+\_\+print\+\_\+active\+\_\+functions}}
+\index{A\+K\+\_\+print\+\_\+active\+\_\+functions@{A\+K\+\_\+print\+\_\+active\+\_\+functions}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+print\+\_\+active\+\_\+functions()}{AK\_print\_active\_functions()}}
+{\footnotesize\ttfamily void A\+K\+\_\+print\+\_\+active\+\_\+functions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Print all detected functions. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a6202490ef95e6641189378cf6abe36e7}\label{mempro_8h_a6202490ef95e6641189378cf6abe36e7}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+print\+\_\+function\+\_\+use@{A\+K\+\_\+print\+\_\+function\+\_\+use}}
+\index{A\+K\+\_\+print\+\_\+function\+\_\+use@{A\+K\+\_\+print\+\_\+function\+\_\+use}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+print\+\_\+function\+\_\+use()}{AK\_print\_function\_use()}}
+{\footnotesize\ttfamily void A\+K\+\_\+print\+\_\+function\+\_\+use (\begin{DoxyParamCaption}\item[{const char $\ast$}]{func\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Print function dependency \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em func\+\_\+name} & function name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a6617b2cc4b97a935e1e6624e72bd13b2}\label{mempro_8h_a6617b2cc4b97a935e1e6624e72bd13b2}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+print\+\_\+function\+\_\+uses@{A\+K\+\_\+print\+\_\+function\+\_\+uses}}
+\index{A\+K\+\_\+print\+\_\+function\+\_\+uses@{A\+K\+\_\+print\+\_\+function\+\_\+uses}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+print\+\_\+function\+\_\+uses()}{AK\_print\_function\_uses()}}
+{\footnotesize\ttfamily void A\+K\+\_\+print\+\_\+function\+\_\+uses (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Print function dependency for all functions \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_a5a090f1c8f3b580508667e884b153265}\label{mempro_8h_a5a090f1c8f3b580508667e884b153265}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+realloc@{A\+K\+\_\+realloc}}
+\index{A\+K\+\_\+realloc@{A\+K\+\_\+realloc}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+realloc()}{AK\_realloc()}}
+{\footnotesize\ttfamily void$\ast$ A\+K\+\_\+realloc (\begin{DoxyParamCaption}\item[{void $\ast$}]{ptr,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Reallocates memory (see realloc) \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & old memory \\
+\hline
+{\em size} & new size \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+reallocated memory or N\+U\+LL 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_ab62f5dee72e52880eea8929e592c2c5a}\label{mempro_8h_ab62f5dee72e52880eea8929e592c2c5a}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+write\+\_\+protect@{A\+K\+\_\+write\+\_\+protect}}
+\index{A\+K\+\_\+write\+\_\+protect@{A\+K\+\_\+write\+\_\+protect}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+write\+\_\+protect()}{AK\_write\_protect()}}
+{\footnotesize\ttfamily void A\+K\+\_\+write\+\_\+protect (\begin{DoxyParamCaption}\item[{void $\ast$}]{memory }\end{DoxyParamCaption})}
+
+
+
+Function write-\/protects memory \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em memory} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{mempro_8h_ad0b1fbb507b01b15effb8ecae1f084c0}\label{mempro_8h_ad0b1fbb507b01b15effb8ecae1f084c0}} 
+\index{mempro.\+h@{mempro.\+h}!A\+K\+\_\+write\+\_\+unprotect@{A\+K\+\_\+write\+\_\+unprotect}}
+\index{A\+K\+\_\+write\+\_\+unprotect@{A\+K\+\_\+write\+\_\+unprotect}!mempro.\+h@{mempro.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+write\+\_\+unprotect()}{AK\_write\_unprotect()}}
+{\footnotesize\ttfamily void A\+K\+\_\+write\+\_\+unprotect (\begin{DoxyParamCaption}\item[{void $\ast$}]{memory }\end{DoxyParamCaption})}
+
+
+
+Function write-\/unprotects memory \mbox{[}public function\mbox{]}. 
+
+\begin{DoxyAuthor}{Author}
+Marin Rukavina, Mislav Bozicevic 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em memory} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}

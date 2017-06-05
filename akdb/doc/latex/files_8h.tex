@@ -1,0 +1,99 @@
+\hypertarget{files_8h}{}\section{file/files.h File Reference}
+\label{files_8h}\index{file/files.\+h@{file/files.\+h}}
+{\ttfamily \#include \char`\"{}id.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../auxi/mempro.\+h\char`\"{}}\newline
+Include dependency graph for files.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{files_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{files_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{files_8h_ac6dbc1d4356e635929f3f7e30de2ff3b}{A\+K\+\_\+initialize\+\_\+new\+\_\+segment} (char $\ast$name, int type, \hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$header)
+\begin{DoxyCompactList}\small\item\em Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, etc. call this function. \end{DoxyCompactList}\item 
+int \hyperlink{files_8h_ae42509783140acb39431a05f7f01aa0d}{A\+K\+\_\+initialize\+\_\+new\+\_\+index\+\_\+segment} (char $\ast$name, char $\ast$table\+\_\+id, int attr\+\_\+id, \hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$header)
+\begin{DoxyCompactList}\small\item\em Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, etc. call this function. \end{DoxyCompactList}\item 
+void \hyperlink{files_8h_a4a7ebf6f363e2b0454a46bac67dfef5b}{Ak\+\_\+files\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Test function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that provides data structures for file management 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{files_8h_a4a7ebf6f363e2b0454a46bac67dfef5b}\label{files_8h_a4a7ebf6f363e2b0454a46bac67dfef5b}} 
+\index{files.\+h@{files.\+h}!Ak\+\_\+files\+\_\+test@{Ak\+\_\+files\+\_\+test}}
+\index{Ak\+\_\+files\+\_\+test@{Ak\+\_\+files\+\_\+test}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{Ak\+\_\+files\+\_\+test()}{Ak\_files\_test()}}
+{\footnotesize\ttfamily void Ak\+\_\+files\+\_\+test (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Test function. 
+
+\begin{DoxyAuthor}{Author}
+Unknown 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{files_8h_ae42509783140acb39431a05f7f01aa0d}\label{files_8h_ae42509783140acb39431a05f7f01aa0d}} 
+\index{files.\+h@{files.\+h}!A\+K\+\_\+initialize\+\_\+new\+\_\+index\+\_\+segment@{A\+K\+\_\+initialize\+\_\+new\+\_\+index\+\_\+segment}}
+\index{A\+K\+\_\+initialize\+\_\+new\+\_\+index\+\_\+segment@{A\+K\+\_\+initialize\+\_\+new\+\_\+index\+\_\+segment}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+initialize\+\_\+new\+\_\+index\+\_\+segment()}{AK\_initialize\_new\_index\_segment()}}
+{\footnotesize\ttfamily int A\+K\+\_\+initialize\+\_\+new\+\_\+index\+\_\+segment (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{char $\ast$}]{table\+\_\+id,  }\item[{int}]{attr\+\_\+id,  }\item[{\hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$}]{header }\end{DoxyParamCaption})}
+
+
+
+Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, etc. call this function. 
+
+\begin{DoxyAuthor}{Author}
+Tomislav Fotak, updated by Matija Šestak (function now uses caching), reused by Lovro Predovan 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & segment name \\
+\hline
+{\em type} & segment type \\
+\hline
+{\em header} & pointer to header that should be written to the new extent (all blocks) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+start address of new segment 
+\end{DoxyReturn}
+\mbox{\Hypertarget{files_8h_ac6dbc1d4356e635929f3f7e30de2ff3b}\label{files_8h_ac6dbc1d4356e635929f3f7e30de2ff3b}} 
+\index{files.\+h@{files.\+h}!A\+K\+\_\+initialize\+\_\+new\+\_\+segment@{A\+K\+\_\+initialize\+\_\+new\+\_\+segment}}
+\index{A\+K\+\_\+initialize\+\_\+new\+\_\+segment@{A\+K\+\_\+initialize\+\_\+new\+\_\+segment}!files.\+h@{files.\+h}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+initialize\+\_\+new\+\_\+segment()}{AK\_initialize\_new\_segment()}}
+{\footnotesize\ttfamily int A\+K\+\_\+initialize\+\_\+new\+\_\+segment (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{int}]{type,  }\item[{\hyperlink{structAK__header}{A\+K\+\_\+header} $\ast$}]{header }\end{DoxyParamCaption})}
+
+
+
+Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, etc. call this function. 
+
+\begin{DoxyAuthor}{Author}
+Tomislav Fotak, updated by Matija Šestak (function now uses caching) 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & segment name \\
+\hline
+{\em type} & segment type \\
+\hline
+{\em header} & pointer to header that should be written to the new extent (all blocks) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+start address of new segment 
+\end{DoxyReturn}

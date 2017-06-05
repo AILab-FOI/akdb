@@ -1,0 +1,24 @@
+<map id="rel/selection.h" name="rel/selection.h">
+<area shape="rect" id="node2" href="$command_8h_source.html" title="sql/command.h" alt="" coords="335,80,458,107"/>
+<area shape="rect" id="node6" href="$trigger_8h.html" title="sql/trigger.h" alt="" coords="663,80,763,107"/>
+<area shape="rect" id="node9" href="$aggregation_8h.html" title="rel/aggregation.h" alt="" coords="1138,229,1271,256"/>
+<area shape="rect" id="node21" href="$selection_8c.html" title="rel/selection.c" alt="" coords="839,80,952,107"/>
+<area shape="rect" id="node22" href="$select_8h_source.html" title="sql/select.h" alt="" coords="977,80,1073,107"/>
+<area shape="rect" id="node3" href="$transaction_8h.html" title="trans/transaction.h" alt="" coords="142,155,286,181"/>
+<area shape="rect" id="node4" href="$test_8c.html" title="file/test.c" alt="" coords="173,229,255,256"/>
+<area shape="rect" id="node5" href="$transaction_8c.html" title="trans/transaction.c" alt="" coords="5,229,148,256"/>
+<area shape="rect" id="node7" href="$drop_8h.html" title="sql/drop.h" alt="" coords="673,155,760,181"/>
+<area shape="rect" id="node20" href="$trigger_8c.html" title="sql/trigger.c" alt="" coords="550,155,649,181"/>
+<area shape="rect" id="node8" href="$check__constraint_8c.html" title="sql/cs/check_constraint.c" alt="" coords="783,229,967,256"/>
+<area shape="rect" id="node11" href="$difference_8h.html" title="rel/difference.h" alt="" coords="992,229,1113,256"/>
+<area shape="rect" id="node13" href="$intersect_8h.html" title="rel/intersect.h" alt="" coords="279,229,391,256"/>
+<area shape="rect" id="node15" href="$nat__join_8h.html" title="rel/nat_join.h" alt="" coords="415,229,522,256"/>
+<area shape="rect" id="node17" href="$product_8h.html" title="rel/product.h" alt="" coords="546,229,650,256"/>
+<area shape="rect" id="node19" href="$drop_8c.html" title="sql/drop.c" alt="" coords="674,229,759,256"/>
+<area shape="rect" id="node10" href="$aggregation_8c.html" title="rel/aggregation.c" alt="" coords="1139,304,1271,331"/>
+<area shape="rect" id="node12" href="$difference_8c.html" title="rel/difference.c" alt="" coords="993,304,1113,331"/>
+<area shape="rect" id="node14" href="$intersect_8c.html" title="rel/intersect.c" alt="" coords="280,304,391,331"/>
+<area shape="rect" id="node16" href="$nat__join_8c.html" title="rel/nat_join.c" alt="" coords="415,304,522,331"/>
+<area shape="rect" id="node18" href="$product_8c.html" title="rel/product.c" alt="" coords="547,304,649,331"/>
+<area shape="rect" id="node23" href="$select_8c.html" title="sql/select.c" alt="" coords="977,155,1072,181"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="transaction_list_head" name="transaction_list_head">
+<area shape="rect" id="node2" href="$structtransaction__list__elem.html" title="Structure that represents LockTable entry about transaction lock holder.Element indexed by Hash table..." alt="" coords="160,188,323,215"/>
+<area shape="rect" id="node3" href="$structtransaction__locks__list__elem.html" title="Structure that represents LockTable entry about transaction resource lock. " alt="" coords="5,96,208,123"/>
+<area shape="rect" id="node4" href="$structobserver__lock.html" title="Structure which defines transaction lock observer type. " alt="" coords="321,96,434,123"/>
+<area shape="rect" id="node5" href="$structObserver.html" title="Structure defines functions for observer object. " alt="" coords="337,5,418,32"/>
+</map>

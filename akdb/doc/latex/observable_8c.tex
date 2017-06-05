@@ -1,0 +1,136 @@
+\hypertarget{observable_8c}{}\section{auxi/observable.c File Reference}
+\label{observable_8c}\index{auxi/observable.\+c@{auxi/observable.\+c}}
+{\ttfamily \#include \char`\"{}./observable.\+h\char`\"{}}\newline
+Include dependency graph for observable.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{observable_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct__notifyDetails}{\+\_\+notify\+Details}
+\item 
+struct \hyperlink{structTypeObservable}{Type\+Observable}
+\item 
+struct \hyperlink{structTypeObserver}{Type\+Observer}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{observable_8c_adab69e9bbd70451f3372f827e42eb54a}\label{observable_8c_adab69e9bbd70451f3372f827e42eb54a}} 
+typedef struct \hyperlink{struct__notifyDetails}{\+\_\+notify\+Details} {\bfseries Notify\+Details}
+\item 
+\mbox{\Hypertarget{observable_8c_a94939431877a7544a1580ec0683fa21e}\label{observable_8c_a94939431877a7544a1580ec0683fa21e}} 
+typedef struct \hyperlink{structTypeObservable}{Type\+Observable} {\bfseries A\+K\+\_\+\+Type\+Observable}
+\item 
+\mbox{\Hypertarget{observable_8c_a702f31fafd8026a8b2880b7d88d95f3c}\label{observable_8c_a702f31fafd8026a8b2880b7d88d95f3c}} 
+typedef struct \hyperlink{structTypeObserver}{Type\+Observer} {\bfseries A\+K\+\_\+\+Type\+Observer}
+\item 
+\mbox{\Hypertarget{observable_8c_a99690317fd7c22b9c19f39c5b34a7983}\label{observable_8c_a99690317fd7c22b9c19f39c5b34a7983}} 
+typedef struct \hyperlink{structTypeObserver}{Type\+Observer} {\bfseries A\+K\+\_\+\+Type\+Observer\+\_\+\+Second}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{observable_8c_addc4b6302e217e9dffab38d9dd5c02f8}\label{observable_8c_addc4b6302e217e9dffab38d9dd5c02f8}} 
+enum {\bfseries Notify\+Type} \{ {\bfseries E\+R\+R\+OR}, 
+{\bfseries I\+N\+FO}, 
+{\bfseries W\+A\+R\+M\+I\+NG}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{structObservable}{A\+K\+\_\+observable} $\ast$ \hyperlink{observable_8c_a8c05ee6033d772259f8a130951555c58}{A\+K\+\_\+init\+\_\+observable} (void $\ast$A\+K\+\_\+observable\+\_\+type, A\+K\+\_\+\+Observable\+Type\+\_\+\+Enum A\+K\+\_\+\+Observable\+Type\+\_\+\+Def, void $\ast$A\+K\+\_\+custom\+\_\+action)
+\begin{DoxyCompactList}\small\item\em Function for initializing observable object. \end{DoxyCompactList}\item 
+\hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$ \hyperlink{observable_8c_acdbd03df501d757a28fe2374caec3b38}{A\+K\+\_\+init\+\_\+observer} (void $\ast$observer\+\_\+type, void($\ast$observer\+\_\+type\+\_\+event\+\_\+handler)(void $\ast$, void $\ast$, A\+K\+\_\+\+Observable\+Type\+\_\+\+Enum))
+\begin{DoxyCompactList}\small\item\em Function for initializing observer object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{observable_8c_ac89659a24ffe3af8621bfdf904ea029a}\label{observable_8c_ac89659a24ffe3af8621bfdf904ea029a}} 
+char $\ast$ {\bfseries A\+K\+\_\+get\+\_\+message} (\hyperlink{structTypeObservable}{A\+K\+\_\+\+Type\+Observable} $\ast$self)
+\item 
+\mbox{\Hypertarget{observable_8c_aecb59a5bdfe89ac8098e4969952b8cd4}\label{observable_8c_aecb59a5bdfe89ac8098e4969952b8cd4}} 
+int {\bfseries A\+K\+\_\+custom\+\_\+register\+\_\+observer} (\hyperlink{structTypeObservable}{A\+K\+\_\+\+Type\+Observable} $\ast$self, \hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$observer)
+\item 
+\mbox{\Hypertarget{observable_8c_a6c66334503cecac0bc17282445670624}\label{observable_8c_a6c66334503cecac0bc17282445670624}} 
+int {\bfseries A\+K\+\_\+custom\+\_\+unregister\+\_\+observer} (\hyperlink{structTypeObservable}{A\+K\+\_\+\+Type\+Observable} $\ast$self, \hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$observer)
+\item 
+\mbox{\Hypertarget{observable_8c_a1bf6dc8492cf7fb32101a99cb6772b7c}\label{observable_8c_a1bf6dc8492cf7fb32101a99cb6772b7c}} 
+void {\bfseries A\+K\+\_\+set\+\_\+notify\+\_\+info\+\_\+details} (\hyperlink{structTypeObservable}{A\+K\+\_\+\+Type\+Observable} $\ast$self, Notify\+Type type, char $\ast$message)
+\item 
+\mbox{\Hypertarget{observable_8c_a9a5228084fa75849c51d474a9969b1a9}\label{observable_8c_a9a5228084fa75849c51d474a9969b1a9}} 
+int {\bfseries A\+K\+\_\+custom\+\_\+action} (void $\ast$data)
+\item 
+\mbox{\Hypertarget{observable_8c_a85d3495e0c412a7b121c53d81a55ce09}\label{observable_8c_a85d3495e0c412a7b121c53d81a55ce09}} 
+\hyperlink{structTypeObservable}{A\+K\+\_\+\+Type\+Observable} $\ast$ {\bfseries init\+\_\+observable\+\_\+type} ()
+\item 
+\mbox{\Hypertarget{observable_8c_acb89637e29bbf1077eea19bbf069b525}\label{observable_8c_acb89637e29bbf1077eea19bbf069b525}} 
+void {\bfseries handle\+\_\+ak\+\_\+custom\+\_\+type} (\hyperlink{structTypeObserver}{A\+K\+\_\+\+Type\+Observer} $\ast$observer, \hyperlink{structTypeObservable}{A\+K\+\_\+\+Type\+Observable} $\ast$observable)
+\item 
+\mbox{\Hypertarget{observable_8c_a865b8e0719534a83b895cddbeaa50a9b}\label{observable_8c_a865b8e0719534a83b895cddbeaa50a9b}} 
+void {\bfseries custom\+\_\+observer\+\_\+event\+\_\+handler} (void $\ast$observer, void $\ast$observable, A\+K\+\_\+\+Observable\+Type\+\_\+\+Enum A\+K\+\_\+\+Observable\+Type\+\_\+\+Def)
+\item 
+\mbox{\Hypertarget{observable_8c_ae84b1f64509de267a7f429c5f0de412a}\label{observable_8c_ae84b1f64509de267a7f429c5f0de412a}} 
+\hyperlink{structTypeObserver}{A\+K\+\_\+\+Type\+Observer} $\ast$ {\bfseries init\+\_\+observer\+\_\+type} (void $\ast$observable)
+\item 
+\mbox{\Hypertarget{observable_8c_a6f20088880422a2ebee8f5f3ff75102a}\label{observable_8c_a6f20088880422a2ebee8f5f3ff75102a}} 
+\hyperlink{structTypeObserver}{A\+K\+\_\+\+Type\+Observer} $\ast$ {\bfseries init\+\_\+observer\+\_\+type\+\_\+second} ()
+\item 
+void \hyperlink{observable_8c_af3b4cd70c4479588cdf82b2cfa0c15e4}{A\+K\+\_\+observable\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function that runs tests for observable pattern. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{observable_8c_a5b5e98fffe3e7e01da38adad20bff546}\label{observable_8c_a5b5e98fffe3e7e01da38adad20bff546}} 
+void {\bfseries A\+K\+\_\+observable\+\_\+pattern} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File that provides implementations of functions for observable pattern 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{observable_8c_a8c05ee6033d772259f8a130951555c58}\label{observable_8c_a8c05ee6033d772259f8a130951555c58}} 
+\index{observable.\+c@{observable.\+c}!A\+K\+\_\+init\+\_\+observable@{A\+K\+\_\+init\+\_\+observable}}
+\index{A\+K\+\_\+init\+\_\+observable@{A\+K\+\_\+init\+\_\+observable}!observable.\+c@{observable.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+init\+\_\+observable()}{AK\_init\_observable()}}
+{\footnotesize\ttfamily \hyperlink{structObservable}{A\+K\+\_\+observable}$\ast$ A\+K\+\_\+init\+\_\+observable (\begin{DoxyParamCaption}\item[{void $\ast$}]{A\+K\+\_\+observable\+\_\+type,  }\item[{A\+K\+\_\+\+Observable\+Type\+\_\+\+Enum}]{A\+K\+\_\+\+Observable\+Type\+\_\+\+Def,  }\item[{void $\ast$}]{A\+K\+\_\+custom\+\_\+action }\end{DoxyParamCaption})}
+
+
+
+Function for initializing observable object. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+Pointer to new observable object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{observable_8c_acdbd03df501d757a28fe2374caec3b38}\label{observable_8c_acdbd03df501d757a28fe2374caec3b38}} 
+\index{observable.\+c@{observable.\+c}!A\+K\+\_\+init\+\_\+observer@{A\+K\+\_\+init\+\_\+observer}}
+\index{A\+K\+\_\+init\+\_\+observer@{A\+K\+\_\+init\+\_\+observer}!observable.\+c@{observable.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+init\+\_\+observer()}{AK\_init\_observer()}}
+{\footnotesize\ttfamily \hyperlink{structObserver}{A\+K\+\_\+observer}$\ast$ A\+K\+\_\+init\+\_\+observer (\begin{DoxyParamCaption}\item[{void $\ast$}]{observer\+\_\+type,  }\item[{void($\ast$)(void $\ast$, void $\ast$, A\+K\+\_\+\+Observable\+Type\+\_\+\+Enum)}]{observer\+\_\+type\+\_\+event\+\_\+handler }\end{DoxyParamCaption})}
+
+
+
+Function for initializing observer object. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+Pointer to new observer object 
+\end{DoxyReturn}
+\mbox{\Hypertarget{observable_8c_af3b4cd70c4479588cdf82b2cfa0c15e4}\label{observable_8c_af3b4cd70c4479588cdf82b2cfa0c15e4}} 
+\index{observable.\+c@{observable.\+c}!A\+K\+\_\+observable\+\_\+test@{A\+K\+\_\+observable\+\_\+test}}
+\index{A\+K\+\_\+observable\+\_\+test@{A\+K\+\_\+observable\+\_\+test}!observable.\+c@{observable.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+observable\+\_\+test()}{AK\_observable\_test()}}
+{\footnotesize\ttfamily void A\+K\+\_\+observable\+\_\+test (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function that runs tests for observable pattern. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}

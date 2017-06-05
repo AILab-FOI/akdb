@@ -1,0 +1,39 @@
+\hypertarget{structAK__command__recovery__struct}{}\section{A\+K\+\_\+command\+\_\+recovery\+\_\+struct Struct Reference}
+\label{structAK__command__recovery__struct}\index{A\+K\+\_\+command\+\_\+recovery\+\_\+struct@{A\+K\+\_\+command\+\_\+recovery\+\_\+struct}}
+
+
+recovery structure used to recover commands from binary file  
+
+
+
+
+{\ttfamily \#include $<$memoman.\+h$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structAK__command__recovery__struct_a18dc268f00bb5f619e36f2f9fda39dc9}\label{structAK__command__recovery__struct_a18dc268f00bb5f619e36f2f9fda39dc9}} 
+int {\bfseries operation}
+\item 
+\mbox{\Hypertarget{structAK__command__recovery__struct_abf5ccb78d890b9b22ac09c9d7f5d33a4}\label{structAK__command__recovery__struct_abf5ccb78d890b9b22ac09c9d7f5d33a4}} 
+char {\bfseries table\+\_\+name} \mbox{[}\hyperlink{constants_8h_a9de30df5b4220028fba997e5def2e9d7}{M\+A\+X\+\_\+\+V\+A\+R\+C\+H\+A\+R\+\_\+\+L\+E\+N\+G\+TH}\mbox{]}
+\item 
+\mbox{\Hypertarget{structAK__command__recovery__struct_aa60b19195568d63f8d2f13622cd60f88}\label{structAK__command__recovery__struct_aa60b19195568d63f8d2f13622cd60f88}} 
+char {\bfseries arguments} \mbox{[}\hyperlink{constants_8h_a4d992a1f9192388588184753115f6c03}{M\+A\+X\+\_\+\+A\+T\+T\+R\+I\+B\+U\+T\+ES}\mbox{]}\mbox{[}\hyperlink{constants_8h_a9de30df5b4220028fba997e5def2e9d7}{M\+A\+X\+\_\+\+V\+A\+R\+C\+H\+A\+R\+\_\+\+L\+E\+N\+G\+TH}\mbox{]}
+\item 
+\mbox{\Hypertarget{structAK__command__recovery__struct_afd3e63cdc5e49ff2f3b3ed73d73e2a96}\label{structAK__command__recovery__struct_afd3e63cdc5e49ff2f3b3ed73d73e2a96}} 
+int {\bfseries finished}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+recovery structure used to recover commands from binary file 
+
+Structure that contains all vital information for the command that is about to execute. It is defined by the operation (I\+N\+S\+E\+RT, U\+P\+D\+A\+TE, D\+E\+L\+E\+TE that are defined inside the const.\+c file), table where the data is stored, and certain data that will be stored. \begin{DoxyAuthor}{Author}
+Tomislav Turek 
+\end{DoxyAuthor}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+mm/\hyperlink{memoman_8h}{memoman.\+h}\end{DoxyCompactItemize}

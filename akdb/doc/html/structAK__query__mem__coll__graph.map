@@ -1,0 +1,9 @@
+<map id="AK_query_mem" name="AK_query_mem">
+<area shape="rect" id="node2" href="$structAK__query__mem__result.html" title="Structure that defines global query memory for results. " alt="" coords="35,285,204,312"/>
+<area shape="rect" id="node3" href="$structAK__results.html" title="Structure used for in&#45;memory result caching. " alt="" coords="39,196,130,223"/>
+<area shape="rect" id="node4" href="$structAK__header.html" title="Structure that represents header structure of blocks (describes an attribute inside an object)..." alt="" coords="5,5,97,32"/>
+<area shape="rect" id="node5" href="$structAK__block.html" title="Structure that defines a block of data inside a DB file. It contains address, type, chained_with, AK_free space, last_tuple_dict_id, header and tuple_dict and data. " alt="" coords="103,95,186,121"/>
+<area shape="rect" id="node6" href="$structAK__tuple__dict.html" title="Structure that defines a mapping in a header of an object to the actual entries (data). It contains type, address and size. " alt="" coords="160,5,271,32"/>
+<area shape="rect" id="node8" href="$structAK__query__mem__dict.html" title="Structure that defines global query memory for data dictionaries. " alt="" coords="176,145,332,172"/>
+<area shape="rect" id="node7" href="$structAK__query__mem__lib.html" title="Structure that defines global query memory for libraries. " alt="" coords="285,285,433,312"/>
+</map>

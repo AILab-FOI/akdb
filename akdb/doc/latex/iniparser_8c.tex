@@ -1,0 +1,488 @@
+\hypertarget{iniparser_8c}{}\section{auxi/iniparser.c File Reference}
+\label{iniparser_8c}\index{auxi/iniparser.\+c@{auxi/iniparser.\+c}}
+
+
+Parser for ini files.  
+
+
+{\ttfamily \#include $<$ctype.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}iniparser.\+h\char`\"{}}\newline
+Include dependency graph for iniparser.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{iniparser_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{iniparser_8c_aeb84e295ec3307b215991d4bf88bceb7}\label{iniparser_8c_aeb84e295ec3307b215991d4bf88bceb7}} 
+\#define {\bfseries A\+S\+C\+I\+I\+L\+I\+N\+E\+SZ}~(1024)
+\item 
+\mbox{\Hypertarget{iniparser_8c_afd7ba4a10fc951dcb65fa2b001afb7a4}\label{iniparser_8c_afd7ba4a10fc951dcb65fa2b001afb7a4}} 
+\#define {\bfseries I\+N\+I\+\_\+\+I\+N\+V\+A\+L\+I\+D\+\_\+\+K\+EY}~((char$\ast$)-\/1)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \hyperlink{iniparser_8c_a2fdd0675424601a39f3534cf0088822c}{\+\_\+line\+\_\+status\+\_\+} \hyperlink{iniparser_8c_adc101255f1686a23210fb9ea88394d46}{line\+\_\+status}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{iniparser_8c_a2fdd0675424601a39f3534cf0088822c}{\+\_\+line\+\_\+status\+\_\+} \{ \newline
+{\bfseries L\+I\+N\+E\+\_\+\+U\+N\+P\+R\+O\+C\+E\+S\+S\+ED}, 
+{\bfseries L\+I\+N\+E\+\_\+\+E\+R\+R\+OR}, 
+{\bfseries L\+I\+N\+E\+\_\+\+E\+M\+P\+TY}, 
+{\bfseries L\+I\+N\+E\+\_\+\+C\+O\+M\+M\+E\+NT}, 
+\newline
+{\bfseries L\+I\+N\+E\+\_\+\+S\+E\+C\+T\+I\+ON}, 
+{\bfseries L\+I\+N\+E\+\_\+\+V\+A\+L\+UE}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{iniparser_8c_a0b5d6cdc7587e2d27a30f5cdc4a91931}{iniparser\+\_\+getnsec} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Get number of sections in a dictionary. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{iniparser_8c_a393212be805f395bbfdeb1bafa8bb72a}{iniparser\+\_\+getsecname} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, int n)
+\begin{DoxyCompactList}\small\item\em Get name for section n in a dictionary. \end{DoxyCompactList}\item 
+void \hyperlink{iniparser_8c_a046436b3489cd8854ba8e29109250324}{iniparser\+\_\+dump} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, F\+I\+LE $\ast$f)
+\begin{DoxyCompactList}\small\item\em Dump a dictionary to an opened file pointer. \end{DoxyCompactList}\item 
+void \hyperlink{iniparser_8c_aece0e32de371c9e9592d8333f816dfac}{iniparser\+\_\+dump\+\_\+ini} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, F\+I\+LE $\ast$f)
+\begin{DoxyCompactList}\small\item\em Save a dictionary to a loadable ini file. \end{DoxyCompactList}\item 
+void \hyperlink{iniparser_8c_ae037bbf0b0b93119d3aef53b00b12fd4}{iniparser\+\_\+dumpsection\+\_\+ini} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, char $\ast$s, F\+I\+LE $\ast$f)
+\begin{DoxyCompactList}\small\item\em Save a dictionary section to a loadable ini file. \end{DoxyCompactList}\item 
+int \hyperlink{iniparser_8c_a609be63b67a93e1cd3b558c3de28ddae}{iniparser\+\_\+getsecnkeys} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Get the number of keys in a section of a dictionary. \end{DoxyCompactList}\item 
+char $\ast$$\ast$ \hyperlink{iniparser_8c_afa12556355442c567c4b123446f3b309}{iniparser\+\_\+getseckeys} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Get the number of keys in a section of a dictionary. \end{DoxyCompactList}\item 
+char $\ast$ \hyperlink{iniparser_8c_a7894f8480e1f254d4a1b4a31bdc51b46}{iniparser\+\_\+getstring} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, const char $\ast$key, char $\ast$def)
+\begin{DoxyCompactList}\small\item\em Get the string associated to a key. \end{DoxyCompactList}\item 
+int \hyperlink{iniparser_8c_a694eb1110f4200db8648820a0bb405fa}{iniparser\+\_\+getint} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, const char $\ast$key, int notfound)
+\begin{DoxyCompactList}\small\item\em Get the string associated to a key, convert to an int. \end{DoxyCompactList}\item 
+double \hyperlink{iniparser_8c_a804f414936e4ba4524a358a8d898880e}{iniparser\+\_\+getdouble} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, const char $\ast$key, double notfound)
+\begin{DoxyCompactList}\small\item\em Get the string associated to a key, convert to a double. \end{DoxyCompactList}\item 
+int \hyperlink{iniparser_8c_aeb93c13fcbb75efaa396f53bfd73ff4d}{iniparser\+\_\+getboolean} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d, const char $\ast$key, int notfound)
+\begin{DoxyCompactList}\small\item\em Get the string associated to a key, convert to a boolean. \end{DoxyCompactList}\item 
+int \hyperlink{iniparser_8c_ab7607c8fe708cfe16b4fb1debce529fb}{iniparser\+\_\+find\+\_\+entry} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$ini, const char $\ast$entry)
+\begin{DoxyCompactList}\small\item\em Finds out if a given entry exists in a dictionary. \end{DoxyCompactList}\item 
+int \hyperlink{iniparser_8c_ad526324b54dbfe04d636360883f4f874}{iniparser\+\_\+set} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$ini, const char $\ast$entry, const char $\ast$val)
+\begin{DoxyCompactList}\small\item\em Set an entry in a dictionary. \end{DoxyCompactList}\item 
+void \hyperlink{iniparser_8c_a2ecced40f104f8d629748bb12c1f6b6b}{iniparser\+\_\+unset} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$ini, const char $\ast$entry)
+\begin{DoxyCompactList}\small\item\em Delete an entry in a dictionary. \end{DoxyCompactList}\item 
+\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$ \hyperlink{iniparser_8c_ab0be559bfb769224b3f1b75e26242a67}{iniparser\+\_\+load} (const char $\ast$ininame)
+\begin{DoxyCompactList}\small\item\em Parse an ini file and return an allocated dictionary object. \end{DoxyCompactList}\item 
+void \hyperlink{iniparser_8c_a6b3e9d7a412de5cc6dbe5e6707cf48d2}{iniparser\+\_\+\+A\+K\+\_\+freedict} (\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$d)
+\begin{DoxyCompactList}\small\item\em Free all memory associated to an ini dictionary. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{iniparser_8c_ab1674b507509d666cc79ca40080618aa}\label{iniparser_8c_ab1674b507509d666cc79ca40080618aa}} 
+void {\bfseries A\+K\+\_\+inflate\+\_\+config} ()
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{iniparser_8c_a7a9f3476e3892e3b1edfe31f3d39150c}\label{iniparser_8c_a7a9f3476e3892e3b1edfe31f3d39150c}} 
+pthread\+\_\+mutex\+\_\+t {\bfseries ini\+Parser\+Mutex} = P\+T\+H\+R\+E\+A\+D\+\_\+\+M\+U\+T\+E\+X\+\_\+\+I\+N\+I\+T\+I\+A\+L\+I\+Z\+ER
+\item 
+\mbox{\Hypertarget{iniparser_8c_a01296c974c95b45f24c91b04f0ae0b13}\label{iniparser_8c_a01296c974c95b45f24c91b04f0ae0b13}} 
+\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$ {\bfseries A\+K\+\_\+config}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Parser for ini files. 
+
+\begin{DoxyAuthor}{Author}
+N. Devillard 
+\end{DoxyAuthor}
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{iniparser_8c_adc101255f1686a23210fb9ea88394d46}\label{iniparser_8c_adc101255f1686a23210fb9ea88394d46}} 
+\index{iniparser.\+c@{iniparser.\+c}!line\+\_\+status@{line\+\_\+status}}
+\index{line\+\_\+status@{line\+\_\+status}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{line\+\_\+status}{line\_status}}
+{\footnotesize\ttfamily typedef enum \hyperlink{iniparser_8c_a2fdd0675424601a39f3534cf0088822c}{\+\_\+line\+\_\+status\+\_\+}  \hyperlink{iniparser_8c_adc101255f1686a23210fb9ea88394d46}{line\+\_\+status}}
+
+This enum stores the status for each parsed line (internal use only). 
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{iniparser_8c_a2fdd0675424601a39f3534cf0088822c}\label{iniparser_8c_a2fdd0675424601a39f3534cf0088822c}} 
+\index{iniparser.\+c@{iniparser.\+c}!\+\_\+line\+\_\+status\+\_\+@{\+\_\+line\+\_\+status\+\_\+}}
+\index{\+\_\+line\+\_\+status\+\_\+@{\+\_\+line\+\_\+status\+\_\+}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{\+\_\+line\+\_\+status\+\_\+}{\_line\_status\_}}
+{\footnotesize\ttfamily enum \hyperlink{iniparser_8c_a2fdd0675424601a39f3534cf0088822c}{\+\_\+line\+\_\+status\+\_\+}}
+
+This enum stores the status for each parsed line (internal use only). 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{iniparser_8c_a6b3e9d7a412de5cc6dbe5e6707cf48d2}\label{iniparser_8c_a6b3e9d7a412de5cc6dbe5e6707cf48d2}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+\+A\+K\+\_\+freedict@{iniparser\+\_\+\+A\+K\+\_\+freedict}}
+\index{iniparser\+\_\+\+A\+K\+\_\+freedict@{iniparser\+\_\+\+A\+K\+\_\+freedict}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+\+A\+K\+\_\+freedict()}{iniparser\_AK\_freedict()}}
+{\footnotesize\ttfamily void iniparser\+\_\+\+A\+K\+\_\+freedict (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d }\end{DoxyParamCaption})}
+
+
+
+Free all memory associated to an ini dictionary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to A\+K\+\_\+free \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+Free all memory associated to an ini dictionary. It is mandatory to call this function before the dictionary object gets out of the current context. \mbox{\Hypertarget{iniparser_8c_a046436b3489cd8854ba8e29109250324}\label{iniparser_8c_a046436b3489cd8854ba8e29109250324}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+dump@{iniparser\+\_\+dump}}
+\index{iniparser\+\_\+dump@{iniparser\+\_\+dump}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+dump()}{iniparser\_dump()}}
+{\footnotesize\ttfamily void iniparser\+\_\+dump (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{F\+I\+LE $\ast$}]{f }\end{DoxyParamCaption})}
+
+
+
+Dump a dictionary to an opened file pointer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to dump. \\
+\hline
+{\em f} & Opened file pointer to dump to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+This function prints out the contents of a dictionary, one element by line, onto the provided file pointer. It is OK to specify {\ttfamily stderr} or {\ttfamily stdout} as output files. This function is meant for debugging purposes mostly. \mbox{\Hypertarget{iniparser_8c_aece0e32de371c9e9592d8333f816dfac}\label{iniparser_8c_aece0e32de371c9e9592d8333f816dfac}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+dump\+\_\+ini@{iniparser\+\_\+dump\+\_\+ini}}
+\index{iniparser\+\_\+dump\+\_\+ini@{iniparser\+\_\+dump\+\_\+ini}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+dump\+\_\+ini()}{iniparser\_dump\_ini()}}
+{\footnotesize\ttfamily void iniparser\+\_\+dump\+\_\+ini (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{F\+I\+LE $\ast$}]{f }\end{DoxyParamCaption})}
+
+
+
+Save a dictionary to a loadable ini file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to dump \\
+\hline
+{\em f} & Opened file pointer to dump to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+This function dumps a given dictionary into a loadable ini file. It is Ok to specify {\ttfamily stderr} or {\ttfamily stdout} as output files. \mbox{\Hypertarget{iniparser_8c_ae037bbf0b0b93119d3aef53b00b12fd4}\label{iniparser_8c_ae037bbf0b0b93119d3aef53b00b12fd4}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+dumpsection\+\_\+ini@{iniparser\+\_\+dumpsection\+\_\+ini}}
+\index{iniparser\+\_\+dumpsection\+\_\+ini@{iniparser\+\_\+dumpsection\+\_\+ini}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+dumpsection\+\_\+ini()}{iniparser\_dumpsection\_ini()}}
+{\footnotesize\ttfamily void iniparser\+\_\+dumpsection\+\_\+ini (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{char $\ast$}]{s,  }\item[{F\+I\+LE $\ast$}]{f }\end{DoxyParamCaption})}
+
+
+
+Save a dictionary section to a loadable ini file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to dump \\
+\hline
+{\em s} & Section name of dictionary to dump \\
+\hline
+{\em f} & Opened file pointer to dump to \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+This function dumps a given section of a given dictionary into a loadable ini file. It is Ok to specify {\ttfamily stderr} or {\ttfamily stdout} as output files. \mbox{\Hypertarget{iniparser_8c_ab7607c8fe708cfe16b4fb1debce529fb}\label{iniparser_8c_ab7607c8fe708cfe16b4fb1debce529fb}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+find\+\_\+entry@{iniparser\+\_\+find\+\_\+entry}}
+\index{iniparser\+\_\+find\+\_\+entry@{iniparser\+\_\+find\+\_\+entry}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+find\+\_\+entry()}{iniparser\_find\_entry()}}
+{\footnotesize\ttfamily int iniparser\+\_\+find\+\_\+entry (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{ini,  }\item[{const char $\ast$}]{entry }\end{DoxyParamCaption})}
+
+
+
+Finds out if a given entry exists in a dictionary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ini} & Dictionary to search \\
+\hline
+{\em entry} & Name of the entry to look for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+integer 1 if entry exists, 0 otherwise
+\end{DoxyReturn}
+Finds out if a given entry exists in the dictionary. Since sections are stored as keys with N\+U\+LL associated values, this is the only way of querying for the presence of sections in a dictionary. \mbox{\Hypertarget{iniparser_8c_aeb93c13fcbb75efaa396f53bfd73ff4d}\label{iniparser_8c_aeb93c13fcbb75efaa396f53bfd73ff4d}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+getboolean@{iniparser\+\_\+getboolean}}
+\index{iniparser\+\_\+getboolean@{iniparser\+\_\+getboolean}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+getboolean()}{iniparser\_getboolean()}}
+{\footnotesize\ttfamily int iniparser\+\_\+getboolean (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{const char $\ast$}]{key,  }\item[{int}]{notfound }\end{DoxyParamCaption})}
+
+
+
+Get the string associated to a key, convert to a boolean. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to search \\
+\hline
+{\em key} & Key string to look for \\
+\hline
+{\em notfound} & Value to return in case of error \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+integer
+\end{DoxyReturn}
+This function queries a dictionary for a key. A key as read from an ini file is given as \char`\"{}section\+:key\char`\"{}. If the key cannot be found, the notfound value is returned.
+
+A true boolean is found if one of the following is matched\+:
+
+
+\begin{DoxyItemize}
+\item A string starting with \textquotesingle{}y\textquotesingle{}
+\item A string starting with \textquotesingle{}Y\textquotesingle{}
+\item A string starting with \textquotesingle{}t\textquotesingle{}
+\item A string starting with \textquotesingle{}T\textquotesingle{}
+\item A string starting with \textquotesingle{}1\textquotesingle{}
+\end{DoxyItemize}
+
+A false boolean is found if one of the following is matched\+:
+
+
+\begin{DoxyItemize}
+\item A string starting with \textquotesingle{}n\textquotesingle{}
+\item A string starting with \textquotesingle{}N\textquotesingle{}
+\item A string starting with \textquotesingle{}f\textquotesingle{}
+\item A string starting with \textquotesingle{}F\textquotesingle{}
+\item A string starting with \textquotesingle{}0\textquotesingle{}
+\end{DoxyItemize}
+
+The notfound value returned if no boolean is identified, does not necessarily have to be 0 or 1. \mbox{\Hypertarget{iniparser_8c_a804f414936e4ba4524a358a8d898880e}\label{iniparser_8c_a804f414936e4ba4524a358a8d898880e}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+getdouble@{iniparser\+\_\+getdouble}}
+\index{iniparser\+\_\+getdouble@{iniparser\+\_\+getdouble}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+getdouble()}{iniparser\_getdouble()}}
+{\footnotesize\ttfamily double iniparser\+\_\+getdouble (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{const char $\ast$}]{key,  }\item[{double}]{notfound }\end{DoxyParamCaption})}
+
+
+
+Get the string associated to a key, convert to a double. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to search \\
+\hline
+{\em key} & Key string to look for \\
+\hline
+{\em notfound} & Value to return in case of error \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double
+\end{DoxyReturn}
+This function queries a dictionary for a key. A key as read from an ini file is given as \char`\"{}section\+:key\char`\"{}. If the key cannot be found, the notfound value is returned. \mbox{\Hypertarget{iniparser_8c_a694eb1110f4200db8648820a0bb405fa}\label{iniparser_8c_a694eb1110f4200db8648820a0bb405fa}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+getint@{iniparser\+\_\+getint}}
+\index{iniparser\+\_\+getint@{iniparser\+\_\+getint}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+getint()}{iniparser\_getint()}}
+{\footnotesize\ttfamily int iniparser\+\_\+getint (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{const char $\ast$}]{key,  }\item[{int}]{notfound }\end{DoxyParamCaption})}
+
+
+
+Get the string associated to a key, convert to an int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to search \\
+\hline
+{\em key} & Key string to look for \\
+\hline
+{\em notfound} & Value to return in case of error \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+integer
+\end{DoxyReturn}
+This function queries a dictionary for a key. A key as read from an ini file is given as \char`\"{}section\+:key\char`\"{}. If the key cannot be found, the notfound value is returned.
+
+Supported values for integers include the usual C notation so decimal, octal (starting with 0) and hexadecimal (starting with 0x) are supported. Examples\+:
+
+\char`\"{}42\char`\"{} -\/$>$ 42 \char`\"{}042\char`\"{} -\/$>$ 34 (octal -\/$>$ decimal) \char`\"{}0x42\char`\"{} -\/$>$ 66 (hexa -\/$>$ decimal)
+
+Warning\+: the conversion may overflow in various ways. Conversion is totally outsourced to strtol(), see the associated man page for overflow handling.
+
+Credits\+: Thanks to A. Becker for suggesting strtol() \mbox{\Hypertarget{iniparser_8c_a0b5d6cdc7587e2d27a30f5cdc4a91931}\label{iniparser_8c_a0b5d6cdc7587e2d27a30f5cdc4a91931}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+getnsec@{iniparser\+\_\+getnsec}}
+\index{iniparser\+\_\+getnsec@{iniparser\+\_\+getnsec}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+getnsec()}{iniparser\_getnsec()}}
+{\footnotesize\ttfamily int iniparser\+\_\+getnsec (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d }\end{DoxyParamCaption})}
+
+
+
+Get number of sections in a dictionary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to examine \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int Number of sections found in dictionary
+\end{DoxyReturn}
+This function returns the number of sections found in a dictionary. The test to recognize sections is done on the string stored in the dictionary\+: a section name is given as \char`\"{}section\char`\"{} whereas a key is stored as \char`\"{}section\+:key\char`\"{}, thus the test looks for entries that do not contain a colon.
+
+This clearly fails in the case a section name contains a colon, but this should simply be avoided.
+
+This function returns -\/1 in case of error. \mbox{\Hypertarget{iniparser_8c_afa12556355442c567c4b123446f3b309}\label{iniparser_8c_afa12556355442c567c4b123446f3b309}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+getseckeys@{iniparser\+\_\+getseckeys}}
+\index{iniparser\+\_\+getseckeys@{iniparser\+\_\+getseckeys}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+getseckeys()}{iniparser\_getseckeys()}}
+{\footnotesize\ttfamily char$\ast$$\ast$ iniparser\+\_\+getseckeys (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{char $\ast$}]{s }\end{DoxyParamCaption})}
+
+
+
+Get the number of keys in a section of a dictionary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to examine \\
+\hline
+{\em s} & Section name of dictionary to examine \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to statically allocated character strings
+\end{DoxyReturn}
+This function queries a dictionary and finds all keys in a given section. Each pointer in the returned char pointer-\/to-\/pointer is pointing to a string allocated in the dictionary; do not A\+K\+\_\+free or modify them.
+
+This function returns N\+U\+LL in case of error. \mbox{\Hypertarget{iniparser_8c_a393212be805f395bbfdeb1bafa8bb72a}\label{iniparser_8c_a393212be805f395bbfdeb1bafa8bb72a}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+getsecname@{iniparser\+\_\+getsecname}}
+\index{iniparser\+\_\+getsecname@{iniparser\+\_\+getsecname}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+getsecname()}{iniparser\_getsecname()}}
+{\footnotesize\ttfamily char$\ast$ iniparser\+\_\+getsecname (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{int}]{n }\end{DoxyParamCaption})}
+
+
+
+Get name for section n in a dictionary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to examine \\
+\hline
+{\em n} & Section number (from 0 to nsec-\/1). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to char string
+\end{DoxyReturn}
+This function locates the n-\/th section in a dictionary and returns its name as a pointer to a string statically allocated inside the dictionary. Do not A\+K\+\_\+free or modify the returned string!
+
+This function returns N\+U\+LL in case of error. \mbox{\Hypertarget{iniparser_8c_a609be63b67a93e1cd3b558c3de28ddae}\label{iniparser_8c_a609be63b67a93e1cd3b558c3de28ddae}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+getsecnkeys@{iniparser\+\_\+getsecnkeys}}
+\index{iniparser\+\_\+getsecnkeys@{iniparser\+\_\+getsecnkeys}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+getsecnkeys()}{iniparser\_getsecnkeys()}}
+{\footnotesize\ttfamily int iniparser\+\_\+getsecnkeys (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{char $\ast$}]{s }\end{DoxyParamCaption})}
+
+
+
+Get the number of keys in a section of a dictionary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to examine \\
+\hline
+{\em s} & Section name of dictionary to examine \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of keys in section 
+\end{DoxyReturn}
+\mbox{\Hypertarget{iniparser_8c_a7894f8480e1f254d4a1b4a31bdc51b46}\label{iniparser_8c_a7894f8480e1f254d4a1b4a31bdc51b46}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+getstring@{iniparser\+\_\+getstring}}
+\index{iniparser\+\_\+getstring@{iniparser\+\_\+getstring}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+getstring()}{iniparser\_getstring()}}
+{\footnotesize\ttfamily char$\ast$ iniparser\+\_\+getstring (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{d,  }\item[{const char $\ast$}]{key,  }\item[{char $\ast$}]{def }\end{DoxyParamCaption})}
+
+
+
+Get the string associated to a key. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em d} & Dictionary to search \\
+\hline
+{\em key} & Key string to look for \\
+\hline
+{\em def} & Default value to return if key not found. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to statically allocated character string
+\end{DoxyReturn}
+This function queries a dictionary for a key. A key as read from an ini file is given as \char`\"{}section\+:key\char`\"{}. If the key cannot be found, the pointer passed as \textquotesingle{}def\textquotesingle{} is returned. The returned char pointer is pointing to a string allocated in the dictionary, do not A\+K\+\_\+free or modify it. \mbox{\Hypertarget{iniparser_8c_ab0be559bfb769224b3f1b75e26242a67}\label{iniparser_8c_ab0be559bfb769224b3f1b75e26242a67}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+load@{iniparser\+\_\+load}}
+\index{iniparser\+\_\+load@{iniparser\+\_\+load}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+load()}{iniparser\_load()}}
+{\footnotesize\ttfamily \hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary}$\ast$ iniparser\+\_\+load (\begin{DoxyParamCaption}\item[{const char $\ast$}]{ininame }\end{DoxyParamCaption})}
+
+
+
+Parse an ini file and return an allocated dictionary object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ininame} & Name of the ini file to read. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to newly allocated dictionary
+\end{DoxyReturn}
+This is the parser for ini files. This function is called, providing the name of the file to be read. It returns a dictionary object that should not be accessed directly, but through accessor functions instead.
+
+The returned dictionary must be A\+K\+\_\+freed using \hyperlink{iniparser_8c_a6b3e9d7a412de5cc6dbe5e6707cf48d2}{iniparser\+\_\+\+A\+K\+\_\+freedict()}. \mbox{\Hypertarget{iniparser_8c_ad526324b54dbfe04d636360883f4f874}\label{iniparser_8c_ad526324b54dbfe04d636360883f4f874}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+set@{iniparser\+\_\+set}}
+\index{iniparser\+\_\+set@{iniparser\+\_\+set}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+set()}{iniparser\_set()}}
+{\footnotesize\ttfamily int iniparser\+\_\+set (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{ini,  }\item[{const char $\ast$}]{entry,  }\item[{const char $\ast$}]{val }\end{DoxyParamCaption})}
+
+
+
+Set an entry in a dictionary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ini} & Dictionary to modify. \\
+\hline
+{\em entry} & Entry to modify (entry name) \\
+\hline
+{\em val} & New value to associate to the entry. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 0 if Ok, -\/1 otherwise.
+\end{DoxyReturn}
+If the given entry can be found in the dictionary, it is modified to contain the provided value. If it cannot be found, -\/1 is returned. It is Ok to set val to N\+U\+LL. \mbox{\Hypertarget{iniparser_8c_a2ecced40f104f8d629748bb12c1f6b6b}\label{iniparser_8c_a2ecced40f104f8d629748bb12c1f6b6b}} 
+\index{iniparser.\+c@{iniparser.\+c}!iniparser\+\_\+unset@{iniparser\+\_\+unset}}
+\index{iniparser\+\_\+unset@{iniparser\+\_\+unset}!iniparser.\+c@{iniparser.\+c}}
+\subsubsection{\texorpdfstring{iniparser\+\_\+unset()}{iniparser\_unset()}}
+{\footnotesize\ttfamily void iniparser\+\_\+unset (\begin{DoxyParamCaption}\item[{\hyperlink{dictionary_8h_a5bd3b2ce42b776c76755ec65642f43af}{dictionary} $\ast$}]{ini,  }\item[{const char $\ast$}]{entry }\end{DoxyParamCaption})}
+
+
+
+Delete an entry in a dictionary. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ini} & Dictionary to modify \\
+\hline
+{\em entry} & Entry to delete (entry name) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void
+\end{DoxyReturn}
+If the given entry can be found, it is deleted from the dictionary. 

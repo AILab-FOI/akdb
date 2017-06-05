@@ -1,0 +1,220 @@
+\hypertarget{sequence_8c}{}\section{file/sequence.c File Reference}
+\label{sequence_8c}\index{file/sequence.\+c@{file/sequence.\+c}}
+{\ttfamily \#include \char`\"{}sequence.\+h\char`\"{}}\newline
+Include dependency graph for sequence.\+c\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sequence_8c__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{sequence_8c_ae333090b0f83c0364dda9812e47006fc}{A\+K\+\_\+sequence\+\_\+add} (char $\ast$name, int start\+\_\+value, int increment, int max\+\_\+value, int min\+\_\+value, int cycle)
+\begin{DoxyCompactList}\small\item\em Function for adding sequence. \end{DoxyCompactList}\item 
+int \hyperlink{sequence_8c_a04fe4fc22652e997deabd1e4b62d3258}{A\+K\+\_\+sequence\+\_\+remove} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Function for removing sequence. \end{DoxyCompactList}\item 
+int \hyperlink{sequence_8c_af81d4022d04e474e9a583b0477424d49}{A\+K\+\_\+sequence\+\_\+current\+\_\+value} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Function returns the current value of the sequence. \end{DoxyCompactList}\item 
+int \hyperlink{sequence_8c_a40b46cc766c36956dbfbe0af97e8cbec}{A\+K\+\_\+sequence\+\_\+next\+\_\+value} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Function returns the next value of the sequence and writes it in a system table as current value. \end{DoxyCompactList}\item 
+int \hyperlink{sequence_8c_a41d402be52cd0fb03c87e70b5a3278af}{A\+K\+\_\+sequence\+\_\+get\+\_\+id} (char $\ast$name)
+\begin{DoxyCompactList}\small\item\em Function gets sequence id. \end{DoxyCompactList}\item 
+int \hyperlink{sequence_8c_ac6f8145f8b67b738cf3819bcdf028f6f}{A\+K\+\_\+sequence\+\_\+rename} (char $\ast$old\+\_\+name, char $\ast$new\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Function renames the sequence. \end{DoxyCompactList}\item 
+int \hyperlink{sequence_8c_aa7bda4f3cd09d29294f701fae97bad11}{A\+K\+\_\+sequence\+\_\+modify} (char $\ast$name, int start\+\_\+value, int increment, int max\+\_\+value, int min\+\_\+value, int cycle)
+\begin{DoxyCompactList}\small\item\em Function for modifying sequence. \end{DoxyCompactList}\item 
+void \hyperlink{sequence_8c_aa1786b537b73fad898ce37ad79636795}{A\+K\+\_\+sequence\+\_\+test} ()
+\begin{DoxyCompactList}\small\item\em Function for sequences testing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides functions for sequences 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{sequence_8c_ae333090b0f83c0364dda9812e47006fc}\label{sequence_8c_ae333090b0f83c0364dda9812e47006fc}} 
+\index{sequence.\+c@{sequence.\+c}!A\+K\+\_\+sequence\+\_\+add@{A\+K\+\_\+sequence\+\_\+add}}
+\index{A\+K\+\_\+sequence\+\_\+add@{A\+K\+\_\+sequence\+\_\+add}!sequence.\+c@{sequence.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+sequence\+\_\+add()}{AK\_sequence\_add()}}
+{\footnotesize\ttfamily int A\+K\+\_\+sequence\+\_\+add (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{int}]{start\+\_\+value,  }\item[{int}]{increment,  }\item[{int}]{max\+\_\+value,  }\item[{int}]{min\+\_\+value,  }\item[{int}]{cycle }\end{DoxyParamCaption})}
+
+
+
+Function for adding sequence. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the sequence \\
+\hline
+{\em start\+\_\+value} & start value of the sequence \\
+\hline
+{\em increment} & increment of the sequence \\
+\hline
+{\em max\+\_\+value} & maximium value of the sequence \\
+\hline
+{\em min\+\_\+value} & minimum value of the sequence \\
+\hline
+{\em cycle} & 0\+:non-\/cyclic sequence, 1\+:cyclic sequence \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+sequence\+\_\+id or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sequence_8c_af81d4022d04e474e9a583b0477424d49}\label{sequence_8c_af81d4022d04e474e9a583b0477424d49}} 
+\index{sequence.\+c@{sequence.\+c}!A\+K\+\_\+sequence\+\_\+current\+\_\+value@{A\+K\+\_\+sequence\+\_\+current\+\_\+value}}
+\index{A\+K\+\_\+sequence\+\_\+current\+\_\+value@{A\+K\+\_\+sequence\+\_\+current\+\_\+value}!sequence.\+c@{sequence.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+sequence\+\_\+current\+\_\+value()}{AK\_sequence\_current\_value()}}
+{\footnotesize\ttfamily int A\+K\+\_\+sequence\+\_\+current\+\_\+value (\begin{DoxyParamCaption}\item[{char $\ast$}]{name }\end{DoxyParamCaption})}
+
+
+
+Function returns the current value of the sequence. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the sequence \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+current\+\_\+value or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sequence_8c_a41d402be52cd0fb03c87e70b5a3278af}\label{sequence_8c_a41d402be52cd0fb03c87e70b5a3278af}} 
+\index{sequence.\+c@{sequence.\+c}!A\+K\+\_\+sequence\+\_\+get\+\_\+id@{A\+K\+\_\+sequence\+\_\+get\+\_\+id}}
+\index{A\+K\+\_\+sequence\+\_\+get\+\_\+id@{A\+K\+\_\+sequence\+\_\+get\+\_\+id}!sequence.\+c@{sequence.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+sequence\+\_\+get\+\_\+id()}{AK\_sequence\_get\_id()}}
+{\footnotesize\ttfamily int A\+K\+\_\+sequence\+\_\+get\+\_\+id (\begin{DoxyParamCaption}\item[{char $\ast$}]{name }\end{DoxyParamCaption})}
+
+
+
+Function gets sequence id. 
+
+\begin{DoxyAuthor}{Author}
+Ljubo Barać 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of the sequence \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sequence_8c_aa7bda4f3cd09d29294f701fae97bad11}\label{sequence_8c_aa7bda4f3cd09d29294f701fae97bad11}} 
+\index{sequence.\+c@{sequence.\+c}!A\+K\+\_\+sequence\+\_\+modify@{A\+K\+\_\+sequence\+\_\+modify}}
+\index{A\+K\+\_\+sequence\+\_\+modify@{A\+K\+\_\+sequence\+\_\+modify}!sequence.\+c@{sequence.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+sequence\+\_\+modify()}{AK\_sequence\_modify()}}
+{\footnotesize\ttfamily int A\+K\+\_\+sequence\+\_\+modify (\begin{DoxyParamCaption}\item[{char $\ast$}]{name,  }\item[{int}]{start\+\_\+value,  }\item[{int}]{increment,  }\item[{int}]{max\+\_\+value,  }\item[{int}]{min\+\_\+value,  }\item[{int}]{cycle }\end{DoxyParamCaption})}
+
+
+
+Function for modifying sequence. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić fixed by Ljubo Barać 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of the sequence \\
+\hline
+{\em start\+\_\+value} & start value of the sequence \\
+\hline
+{\em increment} & increment of the sequence \\
+\hline
+{\em max\+\_\+value} & maximium value of the sequence \\
+\hline
+{\em min\+\_\+value} & minimum value of the sequence \\
+\hline
+{\em cycle} & 0\+:non-\/cyclic sequence, 1\+:cyclic sequence \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sequence_8c_a40b46cc766c36956dbfbe0af97e8cbec}\label{sequence_8c_a40b46cc766c36956dbfbe0af97e8cbec}} 
+\index{sequence.\+c@{sequence.\+c}!A\+K\+\_\+sequence\+\_\+next\+\_\+value@{A\+K\+\_\+sequence\+\_\+next\+\_\+value}}
+\index{A\+K\+\_\+sequence\+\_\+next\+\_\+value@{A\+K\+\_\+sequence\+\_\+next\+\_\+value}!sequence.\+c@{sequence.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+sequence\+\_\+next\+\_\+value()}{AK\_sequence\_next\_value()}}
+{\footnotesize\ttfamily int A\+K\+\_\+sequence\+\_\+next\+\_\+value (\begin{DoxyParamCaption}\item[{char $\ast$}]{name }\end{DoxyParamCaption})}
+
+
+
+Function returns the next value of the sequence and writes it in a system table as current value. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the sequence \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+next\+\_\+value or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sequence_8c_a04fe4fc22652e997deabd1e4b62d3258}\label{sequence_8c_a04fe4fc22652e997deabd1e4b62d3258}} 
+\index{sequence.\+c@{sequence.\+c}!A\+K\+\_\+sequence\+\_\+remove@{A\+K\+\_\+sequence\+\_\+remove}}
+\index{A\+K\+\_\+sequence\+\_\+remove@{A\+K\+\_\+sequence\+\_\+remove}!sequence.\+c@{sequence.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+sequence\+\_\+remove()}{AK\_sequence\_remove()}}
+{\footnotesize\ttfamily int A\+K\+\_\+sequence\+\_\+remove (\begin{DoxyParamCaption}\item[{char $\ast$}]{name }\end{DoxyParamCaption})}
+
+
+
+Function for removing sequence. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em name} & name of the sequence \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sequence_8c_ac6f8145f8b67b738cf3819bcdf028f6f}\label{sequence_8c_ac6f8145f8b67b738cf3819bcdf028f6f}} 
+\index{sequence.\+c@{sequence.\+c}!A\+K\+\_\+sequence\+\_\+rename@{A\+K\+\_\+sequence\+\_\+rename}}
+\index{A\+K\+\_\+sequence\+\_\+rename@{A\+K\+\_\+sequence\+\_\+rename}!sequence.\+c@{sequence.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+sequence\+\_\+rename()}{AK\_sequence\_rename()}}
+{\footnotesize\ttfamily int A\+K\+\_\+sequence\+\_\+rename (\begin{DoxyParamCaption}\item[{char $\ast$}]{old\+\_\+name,  }\item[{char $\ast$}]{new\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Function renames the sequence. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em old\+\_\+name} & Name of the sequence to be renamed \\
+\hline
+{\em new\+\_\+name} & New name of the sequence \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+E\+X\+I\+T\+\_\+\+S\+U\+C\+C\+E\+SS or E\+X\+I\+T\+\_\+\+E\+R\+R\+OR 
+\end{DoxyReturn}
+\mbox{\Hypertarget{sequence_8c_aa1786b537b73fad898ce37ad79636795}\label{sequence_8c_aa1786b537b73fad898ce37ad79636795}} 
+\index{sequence.\+c@{sequence.\+c}!A\+K\+\_\+sequence\+\_\+test@{A\+K\+\_\+sequence\+\_\+test}}
+\index{A\+K\+\_\+sequence\+\_\+test@{A\+K\+\_\+sequence\+\_\+test}!sequence.\+c@{sequence.\+c}}
+\subsubsection{\texorpdfstring{A\+K\+\_\+sequence\+\_\+test()}{AK\_sequence\_test()}}
+{\footnotesize\ttfamily void A\+K\+\_\+sequence\+\_\+test (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Function for sequences testing. 
+
+\begin{DoxyAuthor}{Author}
+Boris Kišić fixed by Ljubo Barać 
+\end{DoxyAuthor}
+\begin{DoxyReturn}{Returns}
+No return value 
+\end{DoxyReturn}

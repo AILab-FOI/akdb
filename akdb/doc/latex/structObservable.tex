@@ -1,0 +1,69 @@
+\hypertarget{structObservable}{}\section{Observable Struct Reference}
+\label{structObservable}\index{Observable@{Observable}}
+
+
+Structure defines functions for observable object.  
+
+
+
+
+{\ttfamily \#include $<$observable.\+h$>$}
+
+
+
+Collaboration diagram for Observable\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{structObservable__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structObservable_aaf1c78b6fa8ab64b0831548f01a40a8d}\label{structObservable_aaf1c78b6fa8ab64b0831548f01a40a8d}} 
+\hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$ {\bfseries observers} \mbox{[}\hyperlink{constants_8h_a21b0a9aeec5879330e9e72236546b1bf}{M\+A\+X\+\_\+\+O\+B\+S\+E\+R\+V\+A\+B\+L\+E\+\_\+\+O\+B\+S\+E\+R\+V\+E\+RS}\mbox{]}
+\item 
+\mbox{\Hypertarget{structObservable_aad1b43fa6d3981416983c2e3fd51c189}\label{structObservable_aad1b43fa6d3981416983c2e3fd51c189}} 
+int {\bfseries observer\+\_\+id\+\_\+counter}
+\item 
+\mbox{\Hypertarget{structObservable_a406f82d9d46d032cc3563a5819779c7d}\label{structObservable_a406f82d9d46d032cc3563a5819779c7d}} 
+void $\ast$ {\bfseries A\+K\+\_\+observable\+\_\+type}
+\item 
+\mbox{\Hypertarget{structObservable_ac26b2477eecd32a2abcd55785b962948}\label{structObservable_ac26b2477eecd32a2abcd55785b962948}} 
+int {\bfseries A\+K\+\_\+\+Observable\+Type\+\_\+\+Def}
+\item 
+\mbox{\Hypertarget{structObservable_adaf56ebad6c6ab392bb83f14edade728}\label{structObservable_adaf56ebad6c6ab392bb83f14edade728}} 
+int($\ast$ {\bfseries A\+K\+\_\+destroy\+\_\+observable} )(struct \hyperlink{structObservable}{Observable} $\ast$)
+\item 
+\mbox{\Hypertarget{structObservable_a82189d03a81ed2f8020828dc72699d8e}\label{structObservable_a82189d03a81ed2f8020828dc72699d8e}} 
+int($\ast$ {\bfseries A\+K\+\_\+register\+\_\+observer} )(struct \hyperlink{structObservable}{Observable} $\ast$, \hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$)
+\item 
+\mbox{\Hypertarget{structObservable_a557da5ed3eb4a8a2a31ea9a0bb4d734a}\label{structObservable_a557da5ed3eb4a8a2a31ea9a0bb4d734a}} 
+int($\ast$ {\bfseries A\+K\+\_\+unregister\+\_\+observer} )(struct \hyperlink{structObservable}{Observable} $\ast$, \hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$)
+\item 
+\mbox{\Hypertarget{structObservable_a1f1d9c796b5cd83ed0d6d64ff8ccc402}\label{structObservable_a1f1d9c796b5cd83ed0d6d64ff8ccc402}} 
+int($\ast$ {\bfseries A\+K\+\_\+notify\+\_\+observer} )(struct \hyperlink{structObservable}{Observable} $\ast$, \hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$)
+\item 
+\mbox{\Hypertarget{structObservable_a05f19383999e5e859135f61a72f5b8b1}\label{structObservable_a05f19383999e5e859135f61a72f5b8b1}} 
+int($\ast$ {\bfseries A\+K\+\_\+notify\+\_\+observers} )(struct \hyperlink{structObservable}{Observable} $\ast$)
+\item 
+\mbox{\Hypertarget{structObservable_a9e6446ce8ac25456c0fbad20b6f6487b}\label{structObservable_a9e6446ce8ac25456c0fbad20b6f6487b}} 
+int($\ast$ {\bfseries A\+K\+\_\+run\+\_\+custom\+\_\+action} )(void $\ast$)
+\item 
+\mbox{\Hypertarget{structObservable_a0786d94e8d985def36feb5893b0cc7ae}\label{structObservable_a0786d94e8d985def36feb5893b0cc7ae}} 
+\hyperlink{structObserver}{A\+K\+\_\+observer} $\ast$($\ast$ {\bfseries A\+K\+\_\+get\+\_\+observer\+\_\+by\+\_\+id} )(struct \hyperlink{structObservable}{Observable} $\ast$, int id)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Structure defines functions for observable object. 
+
+\begin{DoxyAuthor}{Author}
+Ivan Pusic 
+\end{DoxyAuthor}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+auxi/\hyperlink{observable_8h}{observable.\+h}\end{DoxyCompactItemize}

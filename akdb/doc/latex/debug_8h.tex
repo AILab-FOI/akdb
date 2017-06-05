@@ -1,0 +1,117 @@
+\hypertarget{debug_8h}{}\section{auxi/debug.h File Reference}
+\label{debug_8h}\index{auxi/debug.\+h@{auxi/debug.\+h}}
+{\ttfamily \#include \char`\"{}stdarg.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stdio.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stdlib.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}mempro.\+h\char`\"{}}\newline
+Include dependency graph for debug.\+h\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{debug_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{debug_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{debug_8h_a41d588ee907c299c7a790964deeef02d}{D\+E\+B\+U\+G\+\_\+\+A\+LL}~0
+\begin{DoxyCompactList}\small\item\em Set constant to 1 for complete project debug, else set constant to 0. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{debug_8h_a60347ff5e6a95366839f514d8d26a15a}\label{debug_8h_a60347ff5e6a95366839f514d8d26a15a}} 
+typedef enum debug\+\_\+level {\bfseries D\+E\+B\+U\+G\+\_\+\+L\+E\+V\+EL}
+\item 
+\mbox{\Hypertarget{debug_8h_a3057cf7be690339ad9bec9b4d7585b03}\label{debug_8h_a3057cf7be690339ad9bec9b4d7585b03}} 
+typedef enum debug\+\_\+type {\bfseries D\+E\+B\+U\+G\+\_\+\+T\+Y\+PE}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{debug_8h_a4ac568348fbda3f2ce37f4cfc14c9598}\label{debug_8h_a4ac568348fbda3f2ce37f4cfc14c9598}} 
+enum {\bfseries debug\+\_\+level} \{ {\bfseries L\+OW} = 1, 
+{\bfseries M\+I\+D\+D\+LE} = 0, 
+{\bfseries H\+I\+GH} = 0
+ \}
+\item 
+\mbox{\Hypertarget{debug_8h_afa15f519d43f35f35676db4d1adee122}\label{debug_8h_afa15f519d43f35f35676db4d1adee122}} 
+enum {\bfseries debug\+\_\+type} \{ \newline
+{\bfseries G\+L\+O\+B\+AL} = 0, 
+{\bfseries D\+B\+\_\+\+M\+AN} = 0, 
+{\bfseries F\+I\+L\+E\+\_\+\+M\+AN} = 1, 
+{\bfseries M\+E\+M\+O\+\_\+\+M\+AN} = 0, 
+\newline
+{\bfseries I\+N\+D\+I\+C\+ES} = 0, 
+{\bfseries T\+A\+B\+L\+ES} = 0, 
+{\bfseries R\+E\+L\+\_\+\+OP} = 0, 
+{\bfseries R\+E\+L\+\_\+\+EQ} = 1, 
+\newline
+{\bfseries C\+O\+N\+S\+T\+R\+A\+I\+N\+TS} = 0, 
+{\bfseries F\+U\+N\+C\+T\+I\+O\+NS} = 0, 
+{\bfseries S\+E\+Q\+U\+E\+N\+C\+ES} = 0, 
+{\bfseries T\+R\+I\+G\+G\+E\+RS} = 0, 
+\newline
+{\bfseries R\+E\+DO} = 0
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{debug_8h_af0ee1982e892cafff69ec9cb1c0d4760}{Ak\+\_\+dbg\+\_\+messg} (\hyperlink{structDEBUG__LEVEL}{D\+E\+B\+U\+G\+\_\+\+L\+E\+V\+EL} level, \hyperlink{structDEBUG__TYPE}{D\+E\+B\+U\+G\+\_\+\+T\+Y\+PE} type, const char $\ast$format,...)
+\begin{DoxyCompactList}\small\item\em Function for printing debug message. Provides debug level, debug type and message with corresponding variables for the output. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Header file that defines global macros, constants and variables for debuging 
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{debug_8h_a41d588ee907c299c7a790964deeef02d}\label{debug_8h_a41d588ee907c299c7a790964deeef02d}} 
+\index{debug.\+h@{debug.\+h}!D\+E\+B\+U\+G\+\_\+\+A\+LL@{D\+E\+B\+U\+G\+\_\+\+A\+LL}}
+\index{D\+E\+B\+U\+G\+\_\+\+A\+LL@{D\+E\+B\+U\+G\+\_\+\+A\+LL}!debug.\+h@{debug.\+h}}
+\subsubsection{\texorpdfstring{D\+E\+B\+U\+G\+\_\+\+A\+LL}{DEBUG\_ALL}}
+{\footnotesize\ttfamily \#define D\+E\+B\+U\+G\+\_\+\+A\+LL~0}
+
+
+
+Set constant to 1 for complete project debug, else set constant to 0. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{debug_8h_af0ee1982e892cafff69ec9cb1c0d4760}\label{debug_8h_af0ee1982e892cafff69ec9cb1c0d4760}} 
+\index{debug.\+h@{debug.\+h}!Ak\+\_\+dbg\+\_\+messg@{Ak\+\_\+dbg\+\_\+messg}}
+\index{Ak\+\_\+dbg\+\_\+messg@{Ak\+\_\+dbg\+\_\+messg}!debug.\+h@{debug.\+h}}
+\subsubsection{\texorpdfstring{Ak\+\_\+dbg\+\_\+messg()}{Ak\_dbg\_messg()}}
+{\footnotesize\ttfamily int Ak\+\_\+dbg\+\_\+messg (\begin{DoxyParamCaption}\item[{\hyperlink{structDEBUG__LEVEL}{D\+E\+B\+U\+G\+\_\+\+L\+E\+V\+EL}}]{level,  }\item[{\hyperlink{structDEBUG__TYPE}{D\+E\+B\+U\+G\+\_\+\+T\+Y\+PE}}]{type,  }\item[{const char $\ast$}]{format,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+Function for printing debug message. Provides debug level, debug type and message with corresponding variables for the output. 
+
+\begin{DoxyAuthor}{Author}
+Dino Laktašić 
+\end{DoxyAuthor}
+
+\begin{DoxyParams}{Parameters}
+{\em level} & level of debug information for a given DB module \\
+\hline
+{\em type} & the name of DB module for which to print debug information \\
+\hline
+{\em format} & format for the output message \\
+\hline
+{\em ...} & variable number of (different) type args used in printf \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+if debug message is printed return 1, else return 0 
+\end{DoxyReturn}
