@@ -26,7 +26,7 @@
 #include "signal.h"
 
 void AK_recover_archive_log(char* fileName);
-void AK_recovery_insert_row(char* table, char** attributes);
+void AK_recovery_insert_row(char* table, int commandNumber);
 char** AK_recovery_tokenize(char* input, char* delimiter, int valuesOrNot);
 void AK_recovery_test();
 void AK_recover_operation(int sig);
