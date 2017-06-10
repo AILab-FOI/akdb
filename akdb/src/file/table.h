@@ -40,6 +40,7 @@ typedef struct AK_create_table_struct AK_create_table_parameter;
 
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name);
 void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) ;
+void AK_temp_create_table(char *table, AK_header *header, int type_segment);
 int AK_num_attr(char * tblName);
 int AK_get_num_records(char *tblName);
 AK_header *AK_get_header(char *tblName);

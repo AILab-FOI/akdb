@@ -49,20 +49,23 @@
     log_file.number = 0;
     int i = 0;
     fread(&log_file, sizeof(log_file), 1, fp);
-    
+
     // read command by command
     for(i = 0; i < log_file.number; i++) {
         memcpy(redo_log->command_recovery, log_file.command_recovery, sizeof(log_file.command_recovery));
     }
+
     redo_log->number = log_file.number;
+
     printf("AK_recover_archive_log: Checking for unfinished archived data commands...\nNumber of archived commands: %d\n", redo_log->number);
+
     for(i = 0; i < redo_log->number; i++) {
-        printf("%s", redo_log->command_recovery[i].table_name);
-        if(redo_log->command_recovery[i].finished != 1) 
-            AK_recovery_insert_row(redo_log->command_recovery[i].table_name, redo_log->command_recovery[i].arguments);
+        if(redo_log->command_recovery[i].finished != 1) {
+            AK_recovery_insert_row(redo_log->command_recovery[i].table_name, i);
+	}
     }
     
-    AK_empty_archive_log();
+    //AK_empty_archive_log(); //- no need when archive log has dynamic name
     
     // close
     fclose(fp);
@@ -77,23 +80,28 @@
  * @author Dražen Bandić, updated by Tomislav Turek
  * @brief Inserts a new row in table with attributes
  * @param table - table name to insert to
- * @param attributes - attribute to insert
+ * @param commandNumber - number of current command
  * @return no value
  */
-void AK_recovery_insert_row(char* table, char** attributes){
+void AK_recovery_insert_row(char* table, int commandNumber){
     AK_PRO;
     
     printf("AK_recovery: found unfinished archived data commands for %s, executing...\n", table);
     int i;
+
     // retrieve table attributes names
+
     char* table_attr_names = AK_rel_eq_get_atrributes_char(table);
     char** attr_name = AK_recovery_tokenize(table_attr_names, ";", 0);
+    
     // retrieve table attribute types
+
     char* table_attr_types = AK_get_table_atribute_types(table);
     char** attr_types = AK_recovery_tokenize(table_attr_types, ";", 0);
-    
+
     // convert all attribute types to integers
     int type[MAX_ATTRIBUTES];
+
     for(i = 0; i < MAX_ATTRIBUTES; i++){
         if(attr_types[i] == NULL){
             break;
@@ -101,11 +109,20 @@ void AK_recovery_insert_row(char* table, char** attributes){
         type[i] = atoi(attr_types[i]);
     }
 
+    char** attributes = AK_malloc(MAX_ATTRIBUTES*sizeof(*attributes));
     int n = i;
+    
     // insert data to table
-    printf("Executing recovered command: %d, %s, %s %s\n", INSERT,
-            table, attributes[1], attributes[2]);
+
+    for(i=0;i<n;i++){
+	attributes[i]=redo_log->command_recovery[commandNumber].arguments[i];
+    }
+
     insert_data_test(table, attr_name, attributes, n, type);
+    
+    //mark command as finished
+    redo_log->command_recovery[commandNumber].finished=1;
+	
     AK_EPI;
 }
 
@@ -127,17 +144,17 @@ char** AK_recovery_tokenize(char* input, char* delimiter, int valuesOrNot){
 
     while(1){
         result[count++] = tok? strdup(tok) : tok;
-
         if (!tok) break;
 
         tok = strtok(NULL, delimiter);
     } 
     AK_free(str);
-
+    
     int i = 0;
     int j = 0;
 
     char** values = AK_malloc(MAX_ATTRIBUTES*sizeof(*result));
+
     if(valuesOrNot == 1){
         for(i = count - 2, j = 0; i >= 0 && j < count - 1; i--, j++){
             values[j] = result[i];
@@ -165,13 +182,31 @@ short grandfailure = 0;
  * @param sig required integer parameter for SIGINT handler functions
  */
 void AK_recover_operation(int sig) {
+    FILE *fp;
+    char filename[30];
     AK_PRO;
     // set flag that system failed
     grandfailure = 1;
     // acknowledge that the system has failed
     printf("\nUnexpected system failure, trying to recover...\n");
+
+    // retrieve last archive log filename
+    char *latest = malloc(strlen(ARCHIVELOG_PATH)+strlen("/latest.txt")+1);
+    strcpy(latest, ARCHIVELOG_PATH);
+    strcat(latest, "/latest.txt");
+
+    fp = fopen(latest, "r");
+    fscanf(fp, "%s", filename);
+    fclose(fp);
+    AK_free(latest);
+
+    char *destination = malloc(strlen(ARCHIVELOG_PATH)+strlen(filename)+2);
+    strcpy(destination, ARCHIVELOG_PATH);
+    strcat(destination, "/");
+    strcat(destination, filename);
+
     // recover from failure
-    AK_recover_archive_log("../src/rec/rec.bin");
+    AK_recover_archive_log(destination);
     AK_EPI;
 }
 
@@ -190,8 +225,7 @@ void AK_recovery_test() {
     
     // allocate the needed space
     AK_command_recovery_struct *command = AK_malloc(sizeof(AK_command_recovery_struct));
-    int i;
-    
+
     // build first command
     command->operation = INSERT;
     sprintf(command->table_name, "student");
@@ -200,7 +234,7 @@ void AK_recovery_test() {
     sprintf(command->arguments[2], "Novak");
     sprintf(command->arguments[3], "2000");
     sprintf(command->arguments[4], "180");
-    command->finished = 1;
+    command->finished = 0;
     
     // save first command to redo_log
     redo_log->command_recovery[0] = *command;
@@ -212,20 +246,20 @@ void AK_recovery_test() {
     sprintf(command->arguments[2], "Peric");
     sprintf(command->arguments[3], "2004");
     sprintf(command->arguments[4], "88");
-    command->finished = 1;
+    command->finished = 0;
     
     // save second command to redo_log
     redo_log->command_recovery[1] = *command;
     redo_log->number++;
-    
+
     // write commands to file
     AK_archive_log(-10);
     // print instructions
     printf("Working... use Ctrl+C to destabilize the system\n");
     // register handler function
-    // sigset(SIGINT, AK_recover_operation); <-- uncomment for testing
+    sigset(SIGINT, AK_recover_operation); 
     
     // do nothing
-    // while(!grandfailure);                 <-- uncomment for testing
+    while(!grandfailure);                 
     AK_EPI;
 }

@@ -42,6 +42,82 @@ int AK_chars_num_from_number(int number, int base) {
     return len;
 }
 
+
+/**
+ * @author Aleksandra Polak
+ * @brief Function that change type of argument from string to integer
+ * @param *arg_type type of an argument
+ * @return EXIT_SUCCESS of the function (return type of argument in value of integer) or EXIT_ERROR
+*/
+char* AK_convert_type(char* arg_type)
+{
+	AK_PRO;
+	if(arg_type == NULL) {
+		AK_EPI;
+		return "-1";
+	}
+	if(strcmp(arg_type, "internal") == 0) {
+		AK_EPI;
+		return "0";
+	}
+	if (strcmp(arg_type, "int") == 0) {
+		AK_EPI;
+		return "1";
+	}
+	if (strcmp(arg_type, "float") == 0) {
+		AK_EPI;
+		return "2";
+	}
+	if (strcmp(arg_type, "number") == 0) {
+		AK_EPI;
+		return "3";
+	}
+	if (strcmp(arg_type, "varchar") == 0) {
+		AK_EPI;
+		return "4";
+	}
+	if (strcmp(arg_type, "date") == 0) {
+		AK_EPI;
+		return "5";
+	}
+	if (strcmp(arg_type, "datetime") == 0) {
+		AK_EPI;
+		return "6";
+	}
+	if (strcmp(arg_type, "time") == 0) {
+		AK_EPI;
+		return "7";
+	}
+	if (strcmp(arg_type, "blob") == 0) {
+		AK_EPI;
+		return "8";
+	}
+	if (strcmp(arg_type, "bool") == 0) {
+		AK_EPI;
+		return "9";
+	}
+	if (strcmp(arg_type, "operand") == 0) {
+		AK_EPI;
+		return "10";
+	}
+	if (strcmp(arg_type, "operator") == 0) {
+		AK_EPI;
+		return "11";
+	}
+	if (strcmp(arg_type, "attribs") == 0) {
+		AK_EPI;
+		return "12";
+	}
+	if (strcmp(arg_type, "condition") == 0) {
+		AK_EPI;
+		return "13";
+	}
+	AK_EPI;
+	return EXIT_ERROR;
+
+}
+
+
 /**
  * @author Miroslav Policki
  * @brief Function returns size in bytes of the provided database type

@@ -71,6 +71,11 @@
  */
 #define EXTENT_GROWTH_TEMP (iniparser_getdouble(AK_config,"extents:extent_growth_temp",0.5))
 /**
+ * @def ARCHIVELOG_PATH
+ * @brief Constant declaring the path of archivelog folder
+*/
+#define ARCHIVELOG_PATH (iniparser_getstring(AK_config, "redolog:archivelog_folder", "./archivelog"))
+/**
  * @def MAX_REDO_LOG_MEMORY
  * @brief maximum size of REDO log memory
  */

@@ -34,6 +34,8 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
         AK_PRO;
 	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
 	int num_attr = AK_num_attr(srcTable);
+	
+	AK_delete_segment(dstTable, SEGMENT_TYPE_TABLE);
 
 		int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
 		if (startAddress == EXIT_ERROR) {
