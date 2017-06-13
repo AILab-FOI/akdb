@@ -136,7 +136,6 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
  */
 int AK_view_remove_by_obj_id(int obj_id) {
     AK_PRO;
-    obj_id+=1;
       
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
@@ -220,6 +219,42 @@ int AK_view_change_query(char *name, char *query, char *rel_exp){
 }
 
 /**
+ * @author Darko Hranic
+ * @brief shows data from test view query only for test purpose
+ * @param rel_exp conditions as string
+ */
+int AK_test_get_view_data(char *rel_exp){
+	int primero = 1;
+	char *str = strdup(rel_exp);
+	char *part;
+	struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	Ak_Init_L3(&expr);
+	char *srcTable;
+	char *destTable = "resultTable";
+	strcpy(expr->table,destTable);
+	while ((part = strsep(&str, ";"))){
+
+		if(primero==1){
+			srcTable = part;
+			primero=0;
+
+		}else{
+			if(!strcmp(part, "<")||!strcmp(part, ">")||!strcmp(part, "=")||!strcmp(part, "OR")||!strcmp(part, "AND")){
+				 Ak_InsertAtEnd_L3(TYPE_OPERATOR, part, sizeof (part), expr);
+			}
+			else if(!strcmp(part, "firstname")){
+				Ak_InsertAtEnd_L3(TYPE_ATTRIBS, part, sizeof (part), expr);	
+			}
+			else{
+				Ak_InsertAtEnd_L3(TYPE_VARCHAR, part, sizeof (part), expr);
+			}
+		}		 
+		
+        }
+	int sel1 = AK_selection(srcTable, destTable, expr);
+}
+
+/**
  * @author Kresimir Ivkovic, updated by Lidija Lastavec
  * @brief A testing function for view.c functions.
  */
@@ -230,7 +265,7 @@ void AK_view_test() {
    AK_view_add("view2", "query2","firstname;", 0);
    AK_view_add("view3", "query3","*;profesor;", 0);
    AK_view_add("view4", "query4","2 >;", 0);
-   AK_view_add("view5", "query5","id_object;", 0);
+   AK_view_add("view5", "select * from student where firstname=Robert","student;firstname;Robert;=", 0);
    AK_view_add("view6", "query6","lastname", 0);
    AK_view_add("view7", "query7","student;firstname", 0);
    AK_print_table("AK_view");
@@ -255,13 +290,11 @@ void AK_view_test() {
    AK_view_remove_by_name("view2");
    AK_print_table("AK_view");
    
-   printf("\nRemoving view 'view6' and 'view7' by Obj_id...\n");
-   printf("Obj_id for view6: %d\n", AK_get_view_obj_id("view6"));
-   printf("Obj_id for view7: %d\n", AK_get_view_obj_id("view7"));
-    printf("\nTEST FALED!!!\n\n");   
-   AK_view_remove_by_obj_id(AK_malloc(sizeof(AK_get_view_obj_id("view6"))));
-   AK_view_remove_by_obj_id(AK_malloc(sizeof(AK_get_view_obj_id("view7"))));
-   // Function AK_view_remove_by_obj_id does not work!_tested by Lidija Lastavec   
+   printf("\nRemoving view 'view2' and 'view6' by Obj_id...\n");
+   printf("Obj_id for view2: %d\n", AK_get_view_obj_id("view2"));
+   printf("Obj_id for view6: %d\n", AK_get_view_obj_id("view6"));  
+   AK_view_remove_by_obj_id(AK_get_view_obj_id("view2"));
+   AK_view_remove_by_obj_id(AK_get_view_obj_id("view6"));   
    AK_print_table("AK_view");
   
 
@@ -272,5 +305,7 @@ void AK_view_test() {
    printf("\nChanging 'view4' query to '44query44'...\n");
    AK_view_change_query("view4","44query44","student;id");
    AK_print_table("AK_view");
+   printf("\nShow test view data for view5'...\n");
+   AK_test_get_view_data("student;firstname;Robert;=");
    AK_EPI;
 }
