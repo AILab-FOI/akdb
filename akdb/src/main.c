@@ -337,10 +337,12 @@ void choose_test()
         show_test();
         printf("Test: ");
         scanf("%d", &ans);
-        while(ans<0 && ans>32)
+	if(!ans) exit( EXIT_SUCCESS );
+        while(ans<0 || ans>52)
         {
             printf("\nTest: ");
             scanf("%d", &ans);
+	    if(!ans) exit( EXIT_SUCCESS );
         }
         if(ans)
         {
