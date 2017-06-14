@@ -37,7 +37,7 @@
 #include "../auxi/configuration.h" // blobs folder path is specified here
 #include "blobs.h"
 
-
+int test_success = 0;
 
 AK_File_Metadata AK_File_Metadata_malloc() {
 
@@ -366,6 +366,7 @@ char *AK_lo_import(char *filepath) {
 
     if (AK_write_metadata(oid, meta) == 0) {
       printf("[INFO] Success\n");
+      test_success++;
     } else {
       printf("[INFO] There was an error writing metadata\n");
     }
@@ -401,6 +402,7 @@ int AK_lo_export(char *oid, char *filepath) {
     if ( AK_copy(metadata->new_path, filepath) == 0 )
     {
       printf("[INFO] File exported successfully.\n");
+      test_success++;
     } else
     {
       printf("[INFO] There was an error exporting a file.\n");
@@ -432,6 +434,7 @@ int AK_lo_unlink(char *oid) {
     remove(metadata->new_path);
     remove(AK_concat(metadata->new_path, ".meta"));
     printf("[INFO] File removed successfully\n");
+    test_success++;
   }
 
   return 0;
@@ -475,6 +478,13 @@ long size2;
   if (f2 == f) 
   {
      printf("config.ini in temp and orginal are same\n");
+  }
+  
+  if (test_success==3){
+	  printf("\nTest succeeded!\n");
+  }
+  else{
+	  printf("\nTest failed!\n");
   }
 
 }

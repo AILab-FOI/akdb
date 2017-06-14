@@ -23,6 +23,8 @@
 
 #include "memoman.h"
 
+int test_error=0;
+
 /**
   * @author Nikola Bakoš, Matija Šestak(revised)
   * @brief Function caches block into memory.
@@ -64,6 +66,7 @@ int AK_cache_AK_malloc()
     if ((db_cache = (AK_db_cache *) AK_malloc(sizeof(AK_db_cache))) == NULL)
     {
         AK_EPI;
+		test_error++;
         return EXIT_ERROR;
     }
 
@@ -76,6 +79,7 @@ int AK_cache_AK_malloc()
         if ((AK_cache_block(i, db_cache->cache[ i ])) == EXIT_ERROR)
         {
             AK_EPI;
+			test_error++;
             return EXIT_ERROR;
         }
         //printf( "Cached block %d with address %d\n", i,  &db_cache->cache[ i ]->block->address );
@@ -95,6 +99,7 @@ int AK_redo_log_AK_malloc()
     if ((redo_log = (AK_redo_log *) AK_malloc(sizeof ( AK_redo_log))) == NULL)
     {
         AK_EPI;
+		test_error++;
         return EXIT_ERROR;
     }
 
@@ -195,6 +200,7 @@ int AK_query_mem_AK_malloc()
     {
         printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query memory \n");
         AK_EPI;
+		test_error++;
         exit(EXIT_ERROR);
     }
 
@@ -204,6 +210,7 @@ int AK_query_mem_AK_malloc()
     {
         printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query library memory \n");
         AK_EPI;
+		test_error++;
         exit(EXIT_ERROR);
     }
 
@@ -213,6 +220,7 @@ int AK_query_mem_AK_malloc()
     {
         printf("AK_query_mem_AK_malloc: ERROR. Cannot allocate query dictionary memory \n");
         AK_EPI;
+		test_error++;
         exit(EXIT_ERROR);
     }
 
@@ -222,6 +230,7 @@ int AK_query_mem_AK_malloc()
     {
         printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate query result memory \n");
         AK_EPI;
+		test_error++;
         exit(EXIT_ERROR);
     }
 	query_mem_result->results=AK_malloc(MAX_QUERY_RESULT_MEMORY*sizeof(*query_mem_result->results));
@@ -232,6 +241,7 @@ int AK_query_mem_AK_malloc()
     {
         printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple dictionary memory \n");
         AK_EPI;
+		test_error++;
         exit(EXIT_ERROR);
     }
 
@@ -270,6 +280,7 @@ int AK_memoman_init()
     {
         printf("AK_memoman_init: ERROR. AK_cache_AK_malloc() failed.\n");
         AK_EPI;
+		test_error++;
         return EXIT_ERROR;
     }
 
@@ -277,6 +288,7 @@ int AK_memoman_init()
     {
         printf("AK_memoman_init: ERROR. AK_redo_log_AK_malloc() failed.\n");
         AK_EPI;
+		test_error++;
         return EXIT_ERROR;
     }
 
@@ -284,6 +296,7 @@ int AK_memoman_init()
     {
         AK_EPI;
         printf("AK_memoman_init: ERROR. AK_query_mem_AK_malloc() failed.\n");
+		test_error++;
         return EXIT_ERROR;
     }
 
@@ -356,6 +369,7 @@ AK_mem_block *AK_get_block(int num)
                 if (block_written != EXIT_SUCCESS)
                 {
                     AK_EPI;
+					test_error++;
                     exit(EXIT_ERROR);
                 }
                 else
@@ -379,6 +393,7 @@ AK_mem_block *AK_get_block(int num)
             if (block_written != EXIT_SUCCESS)
             {
                 AK_EPI;
+				test_error++;
                 exit(EXIT_ERROR);
             }
             else
@@ -746,6 +761,7 @@ int AK_init_new_extent(char *table_name, int extent_type)
     {
         printf("AK_init_new_extent: Could not allocate the new extent\n");
         AK_EPI;
+		test_error++;
         return EXIT_ERROR;
     }
     Ak_dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", start_address, old_size, extent_type);
@@ -806,6 +822,7 @@ int AK_flush_cache()
             if (block_written != EXIT_SUCCESS)
             {
                 AK_EPI;
+				test_error++;
                 exit(EXIT_ERROR);
             }
         }
@@ -822,6 +839,14 @@ void AK_memoman_test()
 
     for (i = 0; i < MAX_CACHE_MEMORY; i++)
         printf("Block: %d \t l_address: %d \t c_address: %x\n",i,db_cache->cache[i]->block->address, &db_cache->cache[i]->block );
+	
+	if (test_error==0){
+	  printf("\nTest succeeded!\n");
+    }
+    else{
+	  printf("\nTest failed!\n");
+    }
+	
     AK_EPI;
 }
 
@@ -842,5 +867,13 @@ void AK_memoman_test2()
         printf("\n\n\n");
 
     }
+	
+	if (test_error==0){
+	  printf("\nTest succeeded!\n");
+    }
+    else{
+	  printf("\nTest failed!\n");
+    }
+	
     AK_EPI;
 }

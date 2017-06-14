@@ -1079,9 +1079,10 @@ void AK_table_test() {
     printf("Table \"student\": AK_num_attr: ");
     printf("%d\n", AK_num_attr("student"));
     printf("\n");
-
+	
+    int get_num_records;
     printf("Table \"student\": AK_get_num_records: ");
-    printf("%d\n", AK_get_num_records("student"));
+    printf("%d\n", get_num_records = AK_get_num_records("student"));
     printf("\n");
 
     printf("Table \"student\": AK_get_row: ");
@@ -1099,15 +1100,26 @@ void AK_table_test() {
     printf("\n");
 
     printf("Table \"student\": AK_get_attr_name for index 3: ");
-    printf("%s\n", AK_get_attr_name("student", 3));
+    int get_attr_name;
+    printf("%s\n", get_attr_name = AK_get_attr_name("student", 3));
     printf("\n");
 
+    int get_attr_index;
     printf("Table \"student\": AK_get_attr_index of \"year\": ");
-    printf("%d\n", AK_get_attr_index("student", "year"));
+    printf("%d\n", get_attr_index = AK_get_attr_index("student", "year"));
     printf("\n");
-
+	
+    int tuple_to_string;
     printf("Table \"student\": AK_get_tuple for row=0, column=1:");
-    printf("%s\n", AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
+    printf("%s\n", tuple_to_string = AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
+	
+	if (get_num_records != EXIT_WARNING & get_attr_name != NULL & get_attr_index != EXIT_WARNING & tuple_to_string != NULL) {
+	  printf("\nTest succeeded!\n");
+    }
+    else{
+	  printf("\nTest failed!\n");
+    }
+	
     AK_EPI;
 }
 /**
@@ -1121,10 +1133,17 @@ void AK_op_rename_test() {
     printf("\n********** RENAME TEST **********\n\n");
 
     AK_print_table("AK_relation");
-    AK_rename("student", "weight", "student2", "weight");
+    int rename = AK_rename("student", "weight", "student2", "weight");
     AK_print_table("student2");
     //AK_print_table("student2");
 
     AK_print_table("AK_relation");
+	
+	if (rename != EXIT_ERROR ){
+	  printf("\nTest succeeded!\n");
+    }
+    else{
+	  printf("\nTest failed!\n");
+    }
     AK_EPI;
 }

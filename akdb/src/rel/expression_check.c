@@ -541,6 +541,13 @@ void Ak_expression_check_test()
     printf("ILike   thomas - expression .*Thomas.* outcome is: %d\n", likeOutcome4);
     printf("Like thomas - expression .*thomas.* outcome is %d\n", likeOutcome5);
 
+    if (likeOutcome1==1 & likeOutcome2==1 & likeOutcome3==1 & likeOutcome4==1 & likeOutcome5==1){
+	printf("\nTest succeeded!\n");
+    }
+    else{
+	printf("\nTest failed!\n");
+    }
+	
     AK_free(elem);
     AK_EPI;
 }

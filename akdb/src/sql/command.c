@@ -144,8 +144,15 @@ void AK_test_command(){
 
 
     // execute commands
-    AK_command(commands, commandNum);
+    int test_command = AK_command(commands, commandNum);
     Ak_DeleteAll_L3(&row_root);
 
+	if (test_command == EXIT_SUCCESS){
+		printf("\n\nTest succeeded!\n");
+    }
+    else{
+		printf("\n\nTest failed!\n");
+    }
+	
     AK_EPI;
 }

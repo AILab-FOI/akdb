@@ -150,7 +150,15 @@ void AK_op_union_test() {
     printf("\n********** UNION TEST **********\n\n");
     AK_print_table("professor");
     AK_print_table("assistant");
-    AK_union("professor", "assistant", "union_test");
+    int test = AK_union("professor", "assistant", "union_test");
     AK_print_table("union_test");
+	
+	if (test == EXIT_SUCCESS){
+	printf("\nTest succeeded!\n");
+    }
+    else{
+	printf("\nTest failed!\n");
+    }	
+	
     AK_EPI;
 }

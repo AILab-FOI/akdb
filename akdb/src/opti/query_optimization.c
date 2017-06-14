@@ -19,6 +19,7 @@
 
 #include "query_optimization.h"
 
+int error_message=0;
 
 /**
  * @author Dino Laktašić.
@@ -124,6 +125,7 @@ struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel
 
             default:
                 Ak_dbg_messg(LOW, REL_EQ, "Invalid relational equivalence flag: %c", rel_eq);
+				error_message++;
                 AK_EPI;
                 return list_query;
                 break;
@@ -183,6 +185,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
 
     if (num_perms > MAX_PERMUTATION) {
         Ak_dbg_messg(LOW, REL_EQ, "ERROR: max four flags are allowed!\n");
+		error_message++;
         AK_EPI;
         return temp;
     }
@@ -423,5 +426,12 @@ void AK_query_optimization_test() {
     AK_print_optimized_query(AK_query_optimization(mylist9, "a", 1));
     AK_print_optimized_query(AK_query_optimization(mylist10, "a", 1));
 
+	if (error_message==0){
+	printf("\n\n\nTest succeeded!\n");
+    }
+    else{
+	printf("\n\n\nTest failed!\n");
+    }
+	
    AK_EPI;
 }

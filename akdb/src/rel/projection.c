@@ -503,7 +503,7 @@ void AK_op_projection_test() {
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year/weight", sizeof("year/weight"),att);
     Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), att);
 
-    AK_projection("student", "projection_test", att,  NULL);
+    int test_projection1 = AK_projection("student", "projection_test", att,  NULL);
     AK_print_table("projection_test");
 
     strcpy(expr->table,destTable2);
@@ -513,9 +513,16 @@ void AK_op_projection_test() {
     Ak_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
 
     printf("\nSelect firstname,lastname from student where firstname LIKE .*in.*\n\n");
-    AK_projection("student", "projection_test2", att, expr);
+    int test_projection2 = AK_projection("student", "projection_test2", att, expr);
     AK_print_table("projection_test2");
 
+	if (test_projection1 == EXIT_SUCCESS & test_projection2 == EXIT_SUCCESS){
+		printf("\n\nTest succeeded!\n");
+    }
+    else{
+		printf("\n\nTest failed!\n");
+    }
+	
     Ak_DeleteAll_L3(&att);
     AK_EPI;
 }

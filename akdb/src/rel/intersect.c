@@ -166,18 +166,27 @@ void Ak_op_intersect_test() {
     char *destTable = "intersect_test";
     char *tblName1 = "professor";
     char *tblName2 = "assistant";
+	int test_intersect;
     
     printf("\n********** INTERSECT TEST **********\n\n");
 
     if (AK_if_exist(destTable, sys_table) == 0) {
     	printf("Table %s does not exist!\n", destTable);
-	AK_intersect(tblName1, tblName2, destTable);
+		test_intersect = AK_intersect(tblName1, tblName2, destTable);
     }
     else {
 	printf("Table %s already exists!\n", destTable);
+	test_intersect = EXIT_SUCCESS;
     }
 
     AK_print_table(destTable);
+	
+    if (test_intersect==EXIT_SUCCESS){
+	printf("\nTest succeeded!\n");
+    }
+    else{
+	printf("\nTest failed!\n");
+    }
     
     AK_EPI;
 }
