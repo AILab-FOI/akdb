@@ -22,6 +22,7 @@
  */
 
 #include "memoman.h"
+#include "../dm/dbman.h"
 
 /**
   * @author Nikola Bakoš, Matija Šestak(revised)
@@ -346,7 +347,6 @@ AK_mem_block *AK_get_block(int num)
         }
     }
 
-
     /// no free cache blocks found, we need to clear some now
     free_pos = AK_release_oldest_cache_block();
 
@@ -410,15 +410,19 @@ int AK_release_oldest_cache_block() {
         db_cache->cache[oldest_block]->dirty = BLOCK_CLEAN;
     }
 
+    db_cache->cache[oldest_block]->timestamp_read = clock();
+
+    min = 0;
     for (i = 0; i < MAX_CACHE_MEMORY; i++)
     {
         if (db_cache->cache[i]->timestamp_read != -1 &&
-            db_cache->cache[i]->timestamp_read  < db_cache->cache[ min ]->timestamp_read)
+            db_cache->cache[i]->timestamp_read < db_cache->cache[ min ]->timestamp_read)
         {
             min = i;
         }
     }
     db_cache->next_replace = min;
+
     AK_EPI;
 
     return oldest_block;
@@ -802,10 +806,73 @@ int AK_flush_cache()
 void AK_memoman_test()
 {
     int i;
+    int released_block;
+    int min = 0;
+    int ok = 0;
     AK_PRO;
 
-    for (i = 0; i < MAX_CACHE_MEMORY; i++)
-        printf("Block: %d \t l_address: %d \t c_address: %x\n",i,db_cache->cache[i]->block->address, &db_cache->cache[i]->block );
+	for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+		printf("Block: %d \t l_address: %d \t c_address: %x\t last_read: %i\t last_change %i\t\n", i,
+			   db_cache->cache[i]->block->address, &db_cache->cache[i]->block, &db_cache->cache[i]->timestamp_read,
+				db_cache->cache[i]->timestamp_last_change);
+
+		if(db_cache->cache[i]->block == NULL) {
+			printf("\nTEST FAILED! Cache should be full, block %i, points to NULL\n", i);
+			return;
+		}
+	}
+
+    for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+//        printf("\nINDEX: %i oldest is %i, current is %i, comparison %s\n",i, db_cache->cache[ min ]->timestamp_read,
+//               db_cache->cache[ i ]->timestamp_read,
+//               db_cache->cache[i]->timestamp_read < db_cache->cache[ min ]->timestamp_read ? "true" : "false");
+
+        if (db_cache->cache[i]->timestamp_read != -1 &&
+            db_cache->cache[i]->timestamp_read < db_cache->cache[ min ]->timestamp_read)
+        {
+            min = i;
+        }
+    }
+
+    if(AK_allocationbit->last_allocated == db_cache->next_replace)
+    {
+        printf("\nTEST FAILED! Next block to replace can not be last allocated block, is %i, should be %i\n",
+               AK_allocationbit->last_allocated, min);
+        return;
+    }
+
+    if(min != db_cache->next_replace)
+    {
+        printf("\nTEST FAILED! next_replace is not set to oldest block, is %i, should be %i\n",
+               db_cache->next_replace, min);
+        return;
+    }
+
+    released_block = AK_release_oldest_cache_block();
+
+    if(released_block != min)
+    {
+        printf("\nTEST FAILED! released block not oldest, is %i, should be %i\n", released_block, min);
+        return;
+    }
+
+    // randomly setting 5 blocks to dirty state to ensure AK_flush_cache() has something to do
+    for(i = 0; i < 5; i++)
+    {
+        AK_mem_block_modify(db_cache->cache[rand()%MAX_CACHE_MEMORY], BLOCK_DIRTY);
+    }
+
+    AK_flush_cache();
+
+    for(i = 0; i < MAX_CACHE_MEMORY; i++) {
+        if(db_cache->cache[i]->dirty != BLOCK_CLEAN)
+        {
+            printf("\nTEST FAILED! block %i has not been flushed to disk\n", i);
+            return;
+        }
+    }
+
+    printf("\nTEST PASSED!\n");
     AK_EPI;
 }
 
@@ -814,6 +881,11 @@ void AK_memoman_test2()
     int i;
     //int aa=0;
     int aa=406;
+    int read_block = 0;
+    int ok;
+    int flushed_pos;
+    table_addresses *addrs;
+    AK_mem_block *cache_block;
     AK_PRO;
     printf("\tPick up block from 0 to: %d \n",AK_allocationbit->last_allocated );
     srand(time(NULL));// random generator
@@ -826,5 +898,47 @@ void AK_memoman_test2()
         printf("\n\n\n");
 
     }
+
+    //find a block that is not loaded in cache
+    while(1) {
+        //select a random block from range 0 to last block allocated on disk
+        read_block = rand() % AK_allocationbit->last_allocated;
+        ok = 1;
+        for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+            if(db_cache->cache[i]->block->address == read_block) {
+                ok = 0;
+                break;
+            }
+        }
+
+        if(ok) break;
+    }
+
+    for (i = 0; i < MAX_CACHE_MEMORY; i++) {
+        if(db_cache->cache[i]->block->address == read_block) {
+            printf("\nTEST FAILED! block with address %i already cached at position %i\n", read_block, i);
+            return;
+        }
+    }
+
+    flushed_pos = AK_release_oldest_cache_block();
+    AK_cache_block(read_block, db_cache->cache[flushed_pos]);
+
+    if(db_cache->cache[flushed_pos]->block->address != read_block) {
+        printf("\nTEST FAILED! block with address %i is not cached at position %i\n", read_block, flushed_pos);
+        return;
+    }
+
+    char *ak_relation_name = "AK_relation";
+    addrs = AK_get_segment_addresses_internal(ak_relation_name, AK_REFERENCE);
+
+    cache_block = AK_get_block(addrs->address_from[i]);
+
+    if(!strcmp(cache_block->block->data, ak_relation_name)) {
+        printf("\nTEST FAILED! returned wrong cache block, is %s, should be %s\n", cache_block->block->data, "AK_relation");
+        return;
+    }
+
+    printf("\nTEST PASSED!\n");
     AK_EPI;
 }
