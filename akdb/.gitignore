@@ -9,3 +9,6 @@ kalasnjikov.workspace
 src/swig/kalashnikovDB_wrap.c
 src/swig/_kalashnikovDB.so
 src/swig/kalashnikovDB.py
+.idea/
+CMakeLists.txt
+cmake-build-debug/
