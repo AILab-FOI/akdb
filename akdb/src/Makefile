@@ -55,7 +55,7 @@ doc:
 	cp ../doc/latex/refman.pdf ../doc/
 
 swig:
-	cd swig && swig -python kalashnikovDB.i && python setup.py build_ext --inplace && cd ..
+	export CFLAGS="-Wno-error"; cd swig && swig -python kalashnikovDB.i && python setup.py build_ext --inplace && cd ..
 
 .DEFAULT_GOAL := all
 
