@@ -1,4 +1,5 @@
 # Kalashnikov DB 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/92d1b22c17054c36931b033bac1a7c52)](https://www.codacy.com/app/TheWildHorse/akdb?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mschatten/akdb&amp;utm_campaign=Badge_Grade)
 
 AK (Автомат Калашникова) DB is a simple relational database management system 
 developed by students of the Faculty of Organization and Informatics in 
