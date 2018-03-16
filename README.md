@@ -1,0 +1,2 @@
+# akdb
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/92a30aef9177400ea215b2fb4026e230)](https://app.codacy.com/app/TheWildHorse/akdb?utm_source=github.com&utm_medium=referral&utm_content=mschatten/akdb&utm_campaign=badger)
