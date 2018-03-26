@@ -55,8 +55,8 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	if(newConstraint == EXIT_ERROR)
 	{
 		printf("\nFAILURE!\nUNIQUE constraint already exists on (combination of) attribute(s): %s\nof table: %s\n\n", attName, tableName);
-	    AK_EPI;
-        return EXIT_ERROR;
+		AK_EPI;
+		return EXIT_ERROR;
 	}
 	
 	numRows = AK_get_num_records(tableName);
@@ -115,7 +115,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 				{
 					printf("\nFAILURE!\nExisting values in table: %s\nwould violate UNIQUE constraint which You would like to set on (combination of) attribute(s): %s\n\n", tableName, attName);
 					AK_EPI;
-                    return EXIT_ERROR;
+					return EXIT_ERROR;
 				}
 			}
 		}
@@ -126,8 +126,8 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	if(uniqueConstraintName == EXIT_ERROR)
 	{
 		printf("\nFAILURE!\nConstraint name: %s\nalready exists in database\n\n", constraintName);
-	    AK_EPI;
-        return EXIT_ERROR;
+		AK_EPI;
+		return EXIT_ERROR;
 	}
 
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -142,8 +142,8 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	Ak_DeleteAll_L3(&row_root);
 	AK_free(row_root);
 	printf("\nUNIQUE constraint is set on (combination of) attribute(s): %s\nof table: %s\n\n", attName, tableName);
-    AK_EPI;
-    return EXIT_SUCCESS;
+	AK_EPI;
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -225,7 +225,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 					if(numRows == 0)
 					{
 						AK_EPI;
-                        return EXIT_SUCCESS;
+						return EXIT_SUCCESS;
 					}
 					
 					struct list_node *row2 = AK_get_row(0, table->data);
@@ -291,17 +291,17 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 						if(match == 1)
 						{
 							AK_EPI;
-                            return EXIT_ERROR;
+							return EXIT_ERROR;
 						}
 					}
 					
-				    AK_EPI;
-                    return EXIT_SUCCESS;
+					AK_EPI;
+					return EXIT_SUCCESS;
 				}
 			}
 		}
 		
-        AK_EPI;
+		AK_EPI;
 		return EXIT_SUCCESS;
 	}
 	else if(numRecords !=0 && strcmpTableName==0 && strcmpAttName!=0)
@@ -367,18 +367,18 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 			
 			if(match == 1)
 			{
-			    AK_EPI;
-                return EXIT_ERROR;
+				AK_EPI;
+				return EXIT_ERROR;
 			}
 		}
 		
 		AK_EPI;
-        return EXIT_SUCCESS;
+		return EXIT_SUCCESS;
 	}
 	else
 	{
-	    AK_EPI;
-        return EXIT_SUCCESS;
+		AK_EPI;
+		return EXIT_SUCCESS;
 	}
 }
  
@@ -392,7 +392,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
  */
 int AK_delete_constraint_unique(char* tableName, char attName[], char constraintName[]){
     int address, i, j, k, l, size;
-    AK_PRO;
+	AK_PRO;
     int num_attr = AK_num_attr("AK_constraints_unique");
     AK_header *t_header = (AK_header *) AK_get_header("AK_constraints_unique");
     table_addresses *src_addr = (table_addresses*) AK_get_table_addresses("AK_constraints_unique");
@@ -414,16 +414,16 @@ int AK_delete_constraint_unique(char* tableName, char attName[], char constraint
                         data[size] = '\0';
                         if(strcmp(data, constraintName) == 0) { 
                             temp->block->tuple_dict[k].size = 0;
-                            AK_EPI;
-                            return EXIT_SUCCESS;
+							AK_EPI;
+							return EXIT_SUCCESS;
                         }
                     }
                 }
             }
         }
     }
-    AK_EPI;
-    return EXIT_ERROR;
+	AK_EPI;
+	return EXIT_ERROR;
 }
 
 /**
