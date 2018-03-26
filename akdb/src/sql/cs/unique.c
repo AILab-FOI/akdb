@@ -55,8 +55,8 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	if(newConstraint == EXIT_ERROR)
 	{
 		printf("\nFAILURE!\nUNIQUE constraint already exists on (combination of) attribute(s): %s\nof table: %s\n\n", attName, tableName);
-		return EXIT_ERROR;
-		AK_EPI;
+	    AK_EPI;
+        return EXIT_ERROR;
 	}
 	
 	numRows = AK_get_num_records(tableName);
@@ -114,8 +114,8 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 				if(match == 1)
 				{
 					printf("\nFAILURE!\nExisting values in table: %s\nwould violate UNIQUE constraint which You would like to set on (combination of) attribute(s): %s\n\n", tableName, attName);
-					return EXIT_ERROR;
 					AK_EPI;
+                    return EXIT_ERROR;
 				}
 			}
 		}
@@ -126,8 +126,8 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	if(uniqueConstraintName == EXIT_ERROR)
 	{
 		printf("\nFAILURE!\nConstraint name: %s\nalready exists in database\n\n", constraintName);
-		return EXIT_ERROR;
-		AK_EPI;
+	    AK_EPI;
+        return EXIT_ERROR;
 	}
 
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -142,8 +142,8 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	Ak_DeleteAll_L3(&row_root);
 	AK_free(row_root);
 	printf("\nUNIQUE constraint is set on (combination of) attribute(s): %s\nof table: %s\n\n", attName, tableName);
-	return EXIT_SUCCESS;
-	AK_EPI;
+    AK_EPI;
+    return EXIT_SUCCESS;
 }
 
 /**
@@ -224,8 +224,8 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 					
 					if(numRows == 0)
 					{
-						return EXIT_SUCCESS;
-						AK_EPI;	
+						AK_EPI;
+                        return EXIT_SUCCESS;
 					}
 					
 					struct list_node *row2 = AK_get_row(0, table->data);
@@ -290,19 +290,19 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 						
 						if(match == 1)
 						{
-							return EXIT_ERROR;
 							AK_EPI;
+                            return EXIT_ERROR;
 						}
 					}
 					
-					return EXIT_SUCCESS;
-					AK_EPI;
+				    AK_EPI;
+                    return EXIT_SUCCESS;
 				}
 			}
 		}
 		
+        AK_EPI;
 		return EXIT_SUCCESS;
-		AK_EPI;
 	}
 	else if(numRecords !=0 && strcmpTableName==0 && strcmpAttName!=0)
 	{
@@ -367,18 +367,18 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 			
 			if(match == 1)
 			{
-				return EXIT_ERROR;
-				AK_EPI;
+			    AK_EPI;
+                return EXIT_ERROR;
 			}
 		}
 		
-		return EXIT_SUCCESS;
 		AK_EPI;
+        return EXIT_SUCCESS;
 	}
 	else
 	{
-		return EXIT_SUCCESS;
-		AK_EPI;			
+	    AK_EPI;
+        return EXIT_SUCCESS;
 	}
 }
  
@@ -391,9 +391,8 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
  * @return EXIT_SUCCESS when constraint is deleted, else EXIT_ERROR
  */
 int AK_delete_constraint_unique(char* tableName, char attName[], char constraintName[]){
-    
-    AK_PRO;
     int address, i, j, k, l, size;
+    AK_PRO;
     int num_attr = AK_num_attr("AK_constraints_unique");
     AK_header *t_header = (AK_header *) AK_get_header("AK_constraints_unique");
     table_addresses *src_addr = (table_addresses*) AK_get_table_addresses("AK_constraints_unique");
@@ -441,7 +440,7 @@ void AK_unique_test() {
 	char attNames2[MAX_VARCHAR_LENGTH]="";
 	char attNames3[MAX_VARCHAR_LENGTH]="mbr";
 	char constraintYear[] = "yearUnique";
-        char constraintMbr[] = "mbrUnique";
+    char constraintMbr[] = "mbrUnique";
 	char constraintName[] = "firstnameUnique";
 	char constraintName1[MAX_VARCHAR_LENGTH]="";
 	char constraintName2[MAX_VARCHAR_LENGTH]="";
@@ -506,7 +505,7 @@ void AK_unique_test() {
 	printf("\nTest table:\n\n");	
 	AK_print_table(tableName);
         
-        printf("\n============== Running Test #1 ==============\n");
+    printf("\n============== Running Test #1 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s...\n\n", attYear, tableName);
 	result = Ak_set_constraint_unique(tableName, attYear, constraintYear);
 	AK_print_table("AK_constraints_unique");
