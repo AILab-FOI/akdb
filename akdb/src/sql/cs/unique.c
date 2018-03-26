@@ -40,6 +40,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	struct list_node *row2;
 	struct list_node *attribute;
 	struct list_node *attribute2;
+	dictionary* dict;
 	AK_PRO;
 
 	strcat(attributeName, "tableName");
@@ -87,39 +88,42 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 		int match;
 		int impoIndexInArray;
 		
+
+		dict = dictionary_new(0);
+		if(!dict) {
+			printf("ERROR: Dictionary initialization failed.");
+			AK_EPI;
+			return EXIT_ERROR;
+		}
 		for(i=0; i<numRows-1; i++)
 		{
 			row = AK_get_row(i, tableName);
-			
-			for(j=i+1; j<numRows; j++)
+				
+			match = 1;
+			for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
 			{
-				row2 = AK_get_row(j, tableName);
-				match = 1;
-				
-				for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
+				attribute = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
+				if(AK_tuple_to_string(attribute)==NULL)
 				{
-					attribute = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
-					attribute2 = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row2);
-					if(AK_tuple_to_string(attribute)==NULL || AK_tuple_to_string(attribute2)==NULL)
-					{
-						match = 0;
-					}
-					else if(strcmp(AK_tuple_to_string(attribute), AK_tuple_to_string(attribute2)) != 0)
-					{
-						match = 0 ;
-					}
-
+					match = 0;
 				}
-				
-				if(match == 1)
+				else if(dictionary_get(dict, AK_tuple_to_string(attribute), NULL) == NULL)
 				{
-					printf("\nFAILURE!\nExisting values in table: %s\nwould violate UNIQUE constraint which You would like to set on (combination of) attribute(s): %s\n\n", tableName, attName);
-					AK_EPI;
-					return EXIT_ERROR;
+					dictionary_set(dict, AK_tuple_to_string(attribute), AK_tuple_to_string(attribute));
+					match = 0;
 				}
+			}
+				
+			if(match == 1)
+			{
+				printf("\nFAILURE!\nExisting values in table: %s\nwould violate UNIQUE constraint which You would like to set on (combination of) attribute(s): %s\n\n", tableName, attName);
+				AK_EPI;
+				return EXIT_ERROR;
 			}
 		}
 	}
+
+	dictionary_del(dict);
 
 	uniqueConstraintName = Ak_check_constraint_name(constraintName);
 
