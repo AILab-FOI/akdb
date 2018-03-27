@@ -182,26 +182,8 @@ int AK_trigger_get_id(char *name, char *table) {
 int AK_trigger_remove_by_name(char *name, char *table) {
     AK_PRO;
     int trigg_id = AK_trigger_get_id(name, table);
-
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
-    
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_trigger", "name", row_root, SEARCH_CONSTRAINT);
-
-    int result = Ak_delete_row(row_root);
-
-    if (result == EXIT_ERROR) {
-        Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_remove_by_name: Could not delete trigger.\n");
 	AK_EPI;
-        return EXIT_ERROR;
-    }
-
-    // the following can be avoided if foreign key is declared...
-    
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &trigg_id, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
-    AK_EPI;
-    return Ak_delete_row(row_root);
+	return AK_trigger_remove_by_obj_id(trigg_id);
 }
 
 /**
@@ -222,7 +204,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
 
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, TRIGGERS, "AK_trigger_remove_by_name: Could not delete trigger.\n");
-	AK_EPI;
+		AK_EPI;
         return EXIT_ERROR;
     }
 
