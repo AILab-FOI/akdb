@@ -832,7 +832,7 @@ int MIN(int X, int Y) {
  * @brief Tarjan algorithm that looks for a strongly connected component inside all subgraphs; using DFS
  * @param id of the element on which the algorithm looks for a id of a strongly connected component
  */
-void AK_tarjan(int id) {
+TestResult AK_tarjan(int id) {
     AK_vertex node;
     AK_succesor succ;
     AK_PRO;
@@ -870,6 +870,7 @@ void AK_tarjan(int id) {
         printf("############\n");
     }
     AK_EPI;
+    return TEST_result();
 }
 
 void AK_tarjan_test() {
