@@ -491,7 +491,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
  * @brief Function for file sorting
  * @return No return value
  */
-void Ak_filesort_test() {
+TestResult Ak_filesort_test() {
 	AK_PRO;
 	printf("filesort_test: Present!\n");
 
@@ -500,4 +500,5 @@ void Ak_filesort_test() {
 	AK_print_table("SORT_TEMP_HELP_student");
 
 	AK_EPI;
+    return TEST_result(0,0);
 }

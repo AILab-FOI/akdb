@@ -371,7 +371,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
  * @brief relational equivalences regarding commutativity
  * @return No return vlaue
  */
-void AK_rel_eq_comut_test() {
+TestResult AK_rel_eq_comut_test() {
     AK_PRO;
     printf("AK_rel_eq_commute_with_theta_join: Present!\n");
     //printf(AK_rel_eq_commute_with_theta_join("'mbr' 100 > 'firstname' 50 < AND 'id' 'A' > OR", "profesor"));
@@ -457,5 +457,6 @@ void AK_rel_eq_comut_test() {
     Ak_DeleteAll_L3(&expr);
 
     AK_EPI;
+    return TEST_result(0,0);
 }
 

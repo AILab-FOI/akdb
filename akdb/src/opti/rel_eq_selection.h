@@ -20,6 +20,7 @@
 #ifndef REL_EQ_SELECTION
 #define REL_EQ_SELECTION
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../auxi/mempro.h"
 
@@ -30,7 +31,7 @@ int AK_rel_eq_share_attributes(char *set, char *subset) ;
 struct list_node *AK_rel_eq_split_condition(char *cond) ;
 struct list_node *AK_rel_eq_selection(struct list_node *list_rel_eq);
 void AK_print_rel_eq_selection(struct list_node *list_rel_eq) ;
-void AK_rel_eq_selection_test();
+TestResult AK_rel_eq_selection_test();
 
 #endif
 

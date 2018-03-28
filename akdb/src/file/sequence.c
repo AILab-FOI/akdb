@@ -307,7 +307,7 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
  * @brief Function for sequences testing.
  * @return No return value
  */
-void AK_sequence_test() {
+TestResult AK_sequence_test() {
     AK_PRO;
     printf("sequence.c: Present!\n");
     printf("\n***Adding sequences***\n");
@@ -340,41 +340,36 @@ void AK_sequence_test() {
     int failed = 0;
     if (add1 == EXIT_ERROR) {
     	printf("\nError while adding 'sequence1'.\n");
-        failed = 1;
+        failed++;
     }
     if (add2 == EXIT_ERROR) {
     	printf("\nError while adding 'sequence2'.\n");
-	failed = 1;
+	    failed++;
     }
     if (id == EXIT_ERROR) {
     	printf("\nError while getting id value 'sequence1'.\n");
-	failed = 1;
+        failed++;
     }
     if (currval == EXIT_ERROR || currval != 100) {
     	printf("\nError while getting current value of 'sequence1'.\n");
-	failed = 1;
+        failed++;
     }
     if (nextval == EXIT_ERROR || nextval != 105) {
     	printf("\nError while getting next value 'sequence1'.\n");
-	failed = 1;
+        failed++;
     }
     if (rename == EXIT_ERROR) {
     	printf("\nError while renaming 'sequence1'.\n");
-	failed = 1;
+        failed++;
     }
     if (modify == EXIT_ERROR) {
     	printf("\nError while modifying 'sequence3'.\n");
-	failed = 1;
+        failed++;
     }   
     if (remove == EXIT_ERROR) {
     	printf("\nError removing 'sequence2'.\n");
-	failed = 1;
+        failed++;
     } 
-    if (failed == 0) {
-    	printf("\n Test is successful :) \n");
-    }
-    else {
-    	printf("\n Test failed :( \n");
-    }
-    AK_EPI
+    AK_EPI;
+    return TEST_result(8-failed,failed);
 }

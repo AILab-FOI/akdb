@@ -20,6 +20,7 @@
 #ifndef FILESORT
 #define FILESORT
 
+#include "../auxi/test.h"
 #include "../mm/memoman.h"
 #include "table.h"
 #include "files.h"
@@ -46,7 +47,7 @@ int Ak_get_num_of_tuples(AK_block *iBlock);
 void AK_sort_segment(char *table_name, char *attr);
 void Ak_reset_block(AK_block * block);
 void AK_block_sort(AK_block * iBlock, char * atr_name);
-void Ak_filesort_test();
+TestResult Ak_filesort_test();
 
 #endif
 

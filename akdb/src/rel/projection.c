@@ -482,7 +482,7 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct 
  * @return No return value
  */
 
-void AK_op_projection_test() {
+TestResult AK_op_projection_test() {
     AK_PRO;
     printf("\n********** PROJECTION TEST **********\n\n");
 
@@ -525,4 +525,5 @@ void AK_op_projection_test() {
 	
     Ak_DeleteAll_L3(&att);
     AK_EPI;
+    return TEST_result(0,0);
 }

@@ -20,6 +20,7 @@
 #ifndef AGGREGATION
 #define AGGREGATION
 
+#include "../auxi/test.h"
 #include "selection.h"
 #include "projection.h"
 #include "../file/filesearch.h"
@@ -62,6 +63,6 @@ int AK_agg_input_add(AK_header header, int agg_task, AK_agg_input *input);
 int AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *input);
 void AK_agg_input_fix(AK_agg_input *input);
 int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table);
-void Ak_aggregation_test();
+TestResult Ak_aggregation_test();
 
 #endif

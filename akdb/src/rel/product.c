@@ -232,7 +232,7 @@ void AK_product_procedure(char *srcTable1, char * srcTable2, char * dstTable, AK
  * @brief  Function for product operator testing
  *
  */
-void AK_op_product_test() {
+TestResult AK_op_product_test() {
 	AK_PRO;
 	char *sys_table = "AK_relation";
     	char *destTable = "product_test";
@@ -443,4 +443,5 @@ void AK_op_product_test() {
 	AK_free(t2_deptname);
 	AK_free(t2_manager);
 	AK_EPI;
+	return TEST_result(0,0);
 }

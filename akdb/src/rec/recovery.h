@@ -9,6 +9,7 @@
 #ifndef RECOVERY
 #define RECOVERY
 
+#include "../auxi/test.h"
 #include "../auxi/auxiliary.h"
 #include "../mm/memoman.h"
 #include "../auxi/constants.h"
@@ -28,7 +29,7 @@
 void AK_recover_archive_log(char* fileName);
 void AK_recovery_insert_row(char* table, int commandNumber);
 char** AK_recovery_tokenize(char* input, char* delimiter, int valuesOrNot);
-void AK_recovery_test();
+TestResult AK_recovery_test();
 void AK_recover_operation(int sig);
 
 #endif /* RECOVERY */

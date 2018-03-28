@@ -20,6 +20,7 @@
 #ifndef QUERY_OPTIMIZATION
 #define QUERY_OPTIMIZATION
 
+#include "../auxi/test.h"
 #include "rel_eq_comut.h"
 #include "rel_eq_assoc.h"
 #include "rel_eq_projection.h"
@@ -38,6 +39,6 @@
 void AK_print_optimized_query(struct list_node *list_query);
 struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel_eq, const char *FLAGS);
 struct list_node *AK_query_optimization(struct list_node *list_query, const char *FLAGS, const int DIFF_PLANS);
-void AK_query_optimization_test() ; // (struct list_node *list_query)
+TestResult AK_query_optimization_test() ; // (struct list_node *list_query)
 
 #endif

@@ -20,6 +20,7 @@
 #ifndef SELECTION
 #define SELECTION
 
+#include "../auxi/test.h"
 #include "expression_check.h"
 #include "../rec/redo_log.h"
 #include "../auxi/constants.h"
@@ -29,9 +30,9 @@
 
 //int AK_selection(char *srcTable, char *dstTable, AK_list *expr);
 int AK_selection(char *srcTable, char *dstTable, struct list_node *expr);
-void AK_op_selection_test();
-void AK_op_selection_test_pattern();
-void AK_op_selection_test_redolog();
+TestResult AK_op_selection_test();
+TestResult AK_op_selection_test_pattern();
+TestResult AK_op_selection_test_redolog();
 
 #endif
 

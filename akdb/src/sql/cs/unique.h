@@ -20,6 +20,7 @@
 #ifndef UNIQUE
 #define UNIQUE
 
+#include "../../auxi/test.h"
 #include "../../file/table.h"
 #include "../../file/fileio.h"
 #include "../../auxi/mempro.h"
@@ -29,6 +30,6 @@
 int Ak_set_constraint_unique(char* tableName, char attName[], char constraintName[]);
 int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]);
 int AK_delete_constraint_unique(char* tableName, char attName[], char constraintName[]);
-void AK_unique_test();
+TestResult AK_unique_test();
 
 #endif

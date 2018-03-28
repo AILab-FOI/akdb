@@ -19,12 +19,13 @@
 #ifndef DIFFERENCE
 #define DIFFERENCE
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../auxi/mempro.h"
 #include "../sql/drop.h"
 
 int AK_difference(char *srcTable1, char *srcTable2, char *dstTable);
-void Ak_op_difference_test();
+TestResult Ak_op_difference_test();
 
 #endif

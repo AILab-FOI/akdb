@@ -20,6 +20,7 @@
 #ifndef PROJECTION
 #define PROJECTION
 
+#include "../auxi/test.h"
 #include "expression_check.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
@@ -43,7 +44,7 @@ int AK_determine_header_type(int a,int b);
 char *AK_create_header_name(char * first,char *operator, char * second);
 char *AK_perform_operatrion(char *op,struct AK_operand *a, struct AK_operand *b,int type);
 void removeSubstring(char *s,const char *toremove);
-void AK_op_projection_test();
+TestResult AK_op_projection_test();
 char *AK_get_operator(char *exp);
 
 #endif

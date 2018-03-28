@@ -533,7 +533,7 @@ int Ak_update_row(struct list_node *row_root) {
 }
 
 
-void Ak_fileio_test() {
+TestResult Ak_fileio_test() {
     AK_PRO;
     printf("\n\nThis is fileio test!\n");
     
@@ -632,5 +632,5 @@ void Ak_fileio_test() {
     Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
     AK_EPI;
-    return ( EXIT_SUCCESS );
+    return TEST_result(0,0);
 }

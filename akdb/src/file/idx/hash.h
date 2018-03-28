@@ -20,6 +20,7 @@
 #ifndef HASH
 #define HASH
 
+#include "../../auxi/test.h"
 #include "index.h"
 #include "../../file/table.h"
 #include "../../auxi/constants.h"
@@ -87,6 +88,6 @@ struct_add * AK_find_in_hash_index(char *indexName, struct list_node *values);
 void AK_delete_in_hash_index(char *indexName, struct list_node *values);
 int AK_create_hash_index(char *tblName, struct list_node *attributes, char *indexName);
 void AK_delete_hash_index(char *indexName) ;
-void Ak_hash_test();
+TestResult Ak_hash_test();
 
 #endif

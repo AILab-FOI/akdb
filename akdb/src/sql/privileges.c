@@ -1016,7 +1016,7 @@ int AK_check_group_privilege(char *group) {
  * @brief Function that tests all the previous functions
  * @return no return value                                                     
  */
-void AK_privileges_test() {
+TestResult AK_privileges_test() {
     AK_PRO;
 
     int successful[18] = {0};
@@ -1487,4 +1487,6 @@ void AK_privileges_test() {
     else printf("\nNumber of failed tests: %d\n", numFail);
 
     AK_EPI;
+
+    return TEST_result(0,0);
 }

@@ -109,7 +109,7 @@ char AK_get_table_id(char *tableName) {
  * @brief  Function for testing getting ID's
  * @return No retun value
  */
-void Ak_id_test() {
+TestResult Ak_id_test() {
     AK_PRO;
     printf("\nCurrent value of objectID (depends on number of AK_get_id() calls (when objects are created...) before call of Ak_id_test()):\n\n");
     AK_print_table("AK_sequence");
@@ -121,4 +121,5 @@ void Ak_id_test() {
     AK_print_table("AK_sequence");
     printf("\nTest succeeded.\nIt's clear that objectID was created after first call of AK_get_id() function (when ./akdb test created first DB object) then incremented after other calls.");
     AK_EPI;
+    return TEST_result(0,0);
 }

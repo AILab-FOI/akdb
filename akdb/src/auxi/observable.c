@@ -417,7 +417,7 @@ AK_TypeObserver * init_observer_type_second() {
  * @author Ivan Pusic
  * @brief Function that runs tests for observable pattern
  */
-void AK_observable_test()
+TestResult AK_observable_test()
 {
     AK_PRO;
     printf ("\n========== OBSERVABLE PATTERN BEGIN ==========\n");
@@ -454,9 +454,10 @@ void AK_observable_test()
     
     printf ("========== OBSERVABLE PATTERN END ==========\n");
     AK_EPI;
+    return TEST_result(0,0);
 }
 
-void AK_observable_pattern(){
+TestResult AK_observable_pattern(){
     AK_PRO;
     printf ("\n========== OBSERVABLE PATTERN BEGIN ==========\n");
     
@@ -495,6 +496,6 @@ void AK_observable_pattern(){
     printf ("========== OBSERVABLE PATTERN END ==========\n");
 
     AK_EPI;
-
+    return TEST_result(0,0);
 }
 

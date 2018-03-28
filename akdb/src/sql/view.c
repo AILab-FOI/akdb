@@ -258,7 +258,7 @@ int AK_test_get_view_data(char *rel_exp){
  * @author Kresimir Ivkovic, updated by Lidija Lastavec
  * @brief A testing function for view.c functions.
  */
-void AK_view_test() {
+TestResult AK_view_test() {
    AK_PRO;
    printf("\n*******View test**********\n\n");
    AK_view_add("view1", "SELECT lastname FROM profesor","profesor;lastname;", 0);
@@ -308,4 +308,6 @@ void AK_view_test() {
    printf("\nShow test view data for view5'...\n");
    AK_test_get_view_data("student;firstname;Robert;=");
    AK_EPI;
+
+   return TEST_result(0,0);
 }

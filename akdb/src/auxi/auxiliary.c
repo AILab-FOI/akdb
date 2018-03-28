@@ -872,7 +872,7 @@ void AK_tarjan(int id) {
     AK_EPI;
 }
 
-void AK_tarjan_test() {
+TestResult AK_tarjan_test() {
     AK_vertex root;
     AK_vertex ro_ot;
     AK_PRO;
@@ -891,6 +891,7 @@ void AK_tarjan_test() {
         root = root->nextVertex;
     }
     AK_EPI;
+	return TEST_result(0,0);
 }
 
 /**

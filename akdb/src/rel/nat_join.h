@@ -19,6 +19,7 @@
 #ifndef NATJOIN
 #define NATJOIN
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rel/projection.h"
@@ -33,6 +34,6 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
 void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, struct list_node *att, char *new_table);
 //int AK_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *att);
 int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node *att);
-void AK_op_join_test();
+TestResult AK_op_join_test();
 
 #endif

@@ -761,7 +761,7 @@ void AK_print_rel_eq_selection(struct list_node *list_rel_eq) {
  * @brief Function for testing rel_eq_selection
  * @return No return value
  */
-void AK_rel_eq_selection_test() {
+TestResult AK_rel_eq_selection_test() {
     AK_PRO;
     printf("rel_eq_selection.c: Present!\n");
     printf("\n********** REL_EQ_SELECTION TEST by Dino Laktašić **********\n");
@@ -879,4 +879,5 @@ void AK_rel_eq_selection_test() {
     Ak_DeleteAll_L3(&expr);
 
     AK_EPI;
+    return TEST_result(0,0);
 }

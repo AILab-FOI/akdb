@@ -309,7 +309,7 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct lis
  * @brief Function for testing the theta join
  * @return No return value
  */
-void AK_op_theta_join_test() {
+TestResult AK_op_theta_join_test() {
     AK_PRO;
     printf("\n********** THETA JOIN TEST **********\n\n");
 
@@ -363,5 +363,6 @@ void AK_op_theta_join_test() {
     
     AK_free(constraints);
     AK_EPI;
+    return TEST_result(0,0);
 }
 

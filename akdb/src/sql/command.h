@@ -1,6 +1,7 @@
 #ifndef COMMAND
 #define COMMAND
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rel/selection.h"
@@ -15,7 +16,7 @@ struct AK_command_struct {
 typedef struct AK_command_struct command;
 
 int AK_command(command * komande, int brojkomandi);
-void AK_test_command();
+TestResult AK_test_command();
 
 #endif
 

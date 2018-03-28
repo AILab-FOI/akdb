@@ -21,6 +21,7 @@
 #ifndef THETA_JOIN
 #define THETA_JOIN
 
+#include "../auxi/test.h"
 #include "expression_check.h"
 #include "../file/fileio.h"
 #include "../auxi/mempro.h"
@@ -32,6 +33,6 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
 int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, AK_list *constraints);*/
 void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, struct list_node *constraints, char *new_table);
 int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node *constraints);
-void AK_op_theta_join_test();
+TestResult AK_op_theta_join_test();
 
 #endif /* THETA_JOIN */

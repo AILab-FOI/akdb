@@ -20,6 +20,7 @@
 #ifndef REL_EQ_COMUT
 #define REL_EQ_COMUT
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "./rel_eq_selection.h"
 #include "../auxi/mempro.h"
@@ -28,7 +29,7 @@
 void AK_print_rel_eq_comut(struct list_node *list_rel_eq);
 struct list_node *AK_rel_eq_comut(struct list_node *list_rel_eq);
 char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName);
-void AK_rel_eq_comut_test();
+TestResult AK_rel_eq_comut_test();
 
 #endif
 

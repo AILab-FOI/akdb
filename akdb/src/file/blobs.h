@@ -21,6 +21,7 @@
 #ifndef BLOBS
 #define BLOBS
 
+#include "../auxi/test.h"
 #include "table.h"
 #include "fileio.h"
 
@@ -61,6 +62,6 @@ char *AK_lo_import(char *filepath);
 int AK_lo_export(char *oid, char *filepath);
 int AK_lo_unlink(char *oid);
 
-void AK_lo_test();
+TestResult AK_lo_test();
 
 #endif

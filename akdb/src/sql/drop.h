@@ -20,6 +20,7 @@
 #ifndef DROP
 #define DROP
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../file/sequence.h"
@@ -40,7 +41,7 @@ typedef struct drop_arguments AK_drop_arguments;
 
 
 int AK_drop(int type, AK_drop_arguments *drop_arguments);
-void AK_drop_test();
+TestResult AK_drop_test();
 int AK_if_exist(char *tblName, char *sys_table);
 
 #endif

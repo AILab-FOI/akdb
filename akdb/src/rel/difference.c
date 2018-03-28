@@ -198,7 +198,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
  * @brief  Function for difference operator testing
  * @author Dino Laktašić
  */
-void Ak_op_difference_test() {
+TestResult Ak_op_difference_test() {
     AK_PRO;
     char *sys_table = "AK_relation";
     char *destTable = "difference_test";
@@ -226,5 +226,6 @@ void Ak_op_difference_test() {
     }
 	
     AK_EPI;
+    return TEST_result(0,0);
 }
 

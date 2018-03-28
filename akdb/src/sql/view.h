@@ -20,6 +20,7 @@
 #ifndef VIEW
 #define VIEW
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/id.h"
 #include "../file/fileio.h"
@@ -32,7 +33,7 @@ int AK_view_remove_by_obj_id(int obj_id);
 int AK_view_remove_by_name(char *name);
 int AK_view_rename(char *name, char *new_name);
 int AK_view_change_query(char *name, char *query, char *rel_exp);
-void AK_view_test();
+TestResult AK_view_test();
 
 char* AK_get_view_query(char *name);
 char* AK_get_rel_exp(char *name);

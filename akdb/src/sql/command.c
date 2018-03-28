@@ -64,7 +64,7 @@ int AK_command(command * commands, int commandNum) {
  * @brief  Function for testing commands
  *
  */
-void AK_test_command(){
+TestResult AK_test_command(){
     AK_PRO;
     printf("***Test Command***\n");
     int commandNum = 4;
@@ -155,4 +155,5 @@ void AK_test_command(){
     }
 	
     AK_EPI;
+    return TEST_result(0,0);
 }

@@ -19,6 +19,7 @@
 #ifndef INTERSECT
 #define INTERSECT
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rec/archive_log.h"
@@ -38,6 +39,6 @@ typedef struct {
 } intersect_attr;
 
 int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable);
-void Ak_op_intersect_test();
+TestResult Ak_op_intersect_test();
 
 #endif

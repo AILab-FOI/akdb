@@ -20,6 +20,7 @@
 #ifndef REL_EQ_PROJECTION
 #define REL_EQ_PROJECTION
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../auxi/mempro.h"
 
@@ -31,6 +32,6 @@ char *AK_rel_eq_collect_cond_attributes(struct list_node *list_elem) ;
 char *AK_rel_eq_remove_duplicates(char *attribs);
 struct list_node *AK_rel_eq_projection(struct list_node *list_rel_eq) ;
 void AK_print_rel_eq_projection(struct list_node *list_rel_eq) ;
-void AK_rel_eq_projection_test();
+TestResult AK_rel_eq_projection_test();
 
 #endif

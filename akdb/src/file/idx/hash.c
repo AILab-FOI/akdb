@@ -593,7 +593,7 @@ void AK_delete_hash_index(char *indexName) {
   * @return No return value 
 
  */
-void Ak_hash_test() {
+TestResult Ak_hash_test() {
     char *tblName = "student";
     char *indexName = "student_hash_index";
     //AK_print_table("AK_relation");
@@ -634,5 +634,6 @@ void Ak_hash_test() {
     }
     printf("hash_test: Present!\n");
     AK_EPI;
+    return TEST_result(0,0);
 }
 

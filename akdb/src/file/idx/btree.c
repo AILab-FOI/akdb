@@ -713,7 +713,7 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 	return EXIT_SUCCESS;
 }
 
-void Ak_btree_test() {
+TestResult Ak_btree_test() {
 	char *tblName = "student";
 	char *indexName = "student_btree_index";
 	AK_PRO;
@@ -746,6 +746,6 @@ void Ak_btree_test() {
 	int *toDo = &td;//0 search, 1 delete
 	AK_btree_search_delete(indexName, searchValue, endRange, toDo);
 	AK_EPI;
-	
+	return TEST_result(0,0);
 }
 

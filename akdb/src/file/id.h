@@ -20,6 +20,7 @@
 #ifndef ID
 #define ID
 
+#include "../auxi/test.h"
 #include "table.h"
 #include "fileio.h"
 #include "../auxi/mempro.h"
@@ -31,6 +32,6 @@
 #define ID_START_VALUE 100
 
 int AK_get_id();
-void Ak_id_test();
+TestResult Ak_id_test();
 
 #endif

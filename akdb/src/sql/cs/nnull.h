@@ -20,6 +20,7 @@
 #ifndef NNULL
 #define NNULL
 
+#include "../../auxi/test.h"
 #include "../../file/table.h"
 #include "../../file/fileio.h"
 #include "../../auxi/mempro.h"
@@ -28,6 +29,6 @@
 int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName);
 int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue);
 int AK_delete_constraint_not_null(char* tableName, char attName[], char constraintName[]);
-void AK_null_test();
+TestResult AK_null_test();
 
 #endif
