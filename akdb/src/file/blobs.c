@@ -487,5 +487,5 @@ long size2;
 	  printf("\nTest failed!\n");
   }
 
-  return TestResult(0,0);
+  return TEST_result(0,0);
 }

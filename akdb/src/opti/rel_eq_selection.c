@@ -879,5 +879,5 @@ TestResult AK_rel_eq_selection_test() {
     Ak_DeleteAll_L3(&expr);
 
     AK_EPI;
-    return TestResult(0,0);
+    return TEST_result(0,0);
 }

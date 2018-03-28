@@ -124,7 +124,7 @@ int AK_initialize_new_index_segment(char *name, char *table_id, int attr_id , AK
   * @brief Test function
   * @return No return value
   */
-void Ak_files_test() {
+TestResult Ak_files_test() {
     AK_header header[MAX_ATTRIBUTES], header1[MAX_ATTRIBUTES];
     AK_PRO;
     memset(header, '\0', MAX_ATTRIBUTES);
