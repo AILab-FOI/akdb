@@ -20,11 +20,12 @@
 #ifndef CONSTRAINT_NAMES
 #define CONSTRAINT_NAMES
 
+#include "../../auxi/test.h"
 #include "../../file/table.h"
 #include "../../file/fileio.h"
 #include "../../auxi/mempro.h"
 
 int Ak_check_constraint_name(char *constraintName);
-void AK_constraint_names_test();
+TestResult AK_constraint_names_test();
 
 #endif

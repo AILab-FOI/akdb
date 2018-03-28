@@ -20,6 +20,7 @@
 #ifndef TRIGGER
 #define TRIGGER
 
+#include "../auxi/test.h"
 #include "../rec/archive_log.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
@@ -41,6 +42,6 @@ int AK_trigger_edit(char *name, char* event, struct list_node* condition, char* 
 //AK_list *AK_trigger_get_conditions(int trigger);
 struct list_node *AK_trigger_get_conditions(int trigger);
 int AK_trigger_rename(char *old_name, char *new_name, char *table);
-void AK_trigger_test();
+TestResult AK_trigger_test();
 
 #endif

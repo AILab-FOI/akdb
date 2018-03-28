@@ -21,6 +21,7 @@
 #ifndef CHECK_CONSTRAINT
 #define CHECK_CONSTRAINT
 
+#include "../../auxi/test.h"
 #include "../../file/table.h"
 #include "../../file/fileio.h"
 #include "../../rel/expression_check.h"
@@ -29,6 +30,6 @@
 int condition_passed(char *condition, int type, void *value, void *row_data);
 int AK_set_check_constraint(char *table_name, char *constraint_name, char *attribute_name, char *condition, int type, void *value);
 int AK_check_constraint(char *table, char *attribute, void *value);
-void AK_check_constraint_test();
+TestResult AK_check_constraint_test();
 
 #endif

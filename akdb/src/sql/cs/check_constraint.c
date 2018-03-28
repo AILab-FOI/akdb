@@ -274,7 +274,7 @@ int AK_check_constraint(char *table, char *attribute, void *value) {
  * @brief Test function for "check" constraint.
  * @return void
  */
-void AK_check_constraint_test() {
+TestResult AK_check_constraint_test() {
 	int br = 0;
     // Test 3 data
     float weight_one = 105.5, weight_three = 105.6;
@@ -407,4 +407,7 @@ void AK_check_constraint_test() {
     }
 
 	printf("\n\n***uspjesno %d/6 testova ***\n\n",br);
+    AK_EPI;
+
+    return TEST_result(0,0);
 }

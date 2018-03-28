@@ -160,7 +160,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
  * @brief  Function for intersect operator testing
  * @return No return value
  */
-void Ak_op_intersect_test() {
+TestResult Ak_op_intersect_test() {
     AK_PRO;
     char *sys_table = "AK_relation";
     char *destTable = "intersect_test";
@@ -189,5 +189,6 @@ void Ak_op_intersect_test() {
     }
     
     AK_EPI;
+    return TEST_result(0,0);
 }
 

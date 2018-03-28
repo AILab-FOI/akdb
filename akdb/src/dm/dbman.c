@@ -2667,7 +2667,7 @@ TestResult AK_thread_safe_block_access_test()
   printf("\n%d out of 50 tests succeeded.", sum_of_suceeded_tests);
     
   AK_EPI;
-  return TEST_result();
+  return TEST_result(0,0);
 }
 
 

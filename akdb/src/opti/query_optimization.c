@@ -235,7 +235,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
   * @param *list_query query to be optimized
   * @return No return value
   */
-void AK_query_optimization_test() { 
+TestResult AK_query_optimization_test() { 
     AK_PRO;
     printf("query_optimization.c: Present!\n");
     printf("\n********** QUERY OPTIMIZATION TEST by Dino Laktašić **********\n");
@@ -434,4 +434,5 @@ void AK_query_optimization_test() {
     }
 	
    AK_EPI;
+   return TEST_result(0,0);
 }

@@ -791,7 +791,7 @@ AK_observer_lock * AK_init_observer_lock() {
     return self;
 }
 
-void AK_test_Transaction() {
+TestResult AK_test_Transaction() {
     AK_PRO;
     printf("***Test Transaction***\n");
     pthread_mutex_lock(&endTransationTestLockMutex);
@@ -891,4 +891,6 @@ void AK_test_Transaction() {
     
     printf("***End test Transaction***\n");
     AK_EPI;
+
+    return TEST_result(0,0);
 }

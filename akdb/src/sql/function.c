@@ -436,7 +436,7 @@ int AK_function_change_return_type(char *name, struct list_node *arguments_list,
  * @brief Function for functions testing.
  * @return No return value
  */
-void AK_function_test() {
+TestResult AK_function_test() {
     AK_PRO;
 
     printf("function.c: Present!\n");
@@ -539,6 +539,7 @@ void AK_function_test() {
 
     AK_free(arguments_list5);	
     AK_EPI;
+    return TEST_result(0,0);
 }
 
 

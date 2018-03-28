@@ -20,6 +20,7 @@
 #ifndef REFERENCE
 #define REFERENCE
 
+#include "../../auxi/test.h"
 #include "../../dm/dbman.h"
 #include "../../file/table.h"
 #include "../../auxi/mempro.h"
@@ -93,7 +94,7 @@ int AK_reference_check_restricion(struct list_node *lista, int action) ;
 int AK_reference_update(struct list_node *lista, int action) ;
 int AK_reference_check_entry(struct list_node *lista) ;
 
-void AK_reference_test();
+TestResult AK_reference_test();
 /*
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore);
 int Ak_insert_row(AK_list *row_root);

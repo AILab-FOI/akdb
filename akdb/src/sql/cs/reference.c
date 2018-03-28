@@ -447,7 +447,7 @@ int AK_reference_check_entry(struct list_node *lista) {
  * @brief Function for testing referential integrity.
  * @return No return value
  */
-void AK_reference_test() {
+TestResult AK_reference_test() {
     AK_PRO;
     printf("reference.c: Present!\n");
 
@@ -514,4 +514,6 @@ void AK_reference_test() {
     AK_print_table("student");
     AK_print_table("ref_test");
     AK_EPI;
+
+    return TEST_result(0,0);
 }

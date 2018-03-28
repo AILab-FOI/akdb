@@ -347,7 +347,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
  * @brief Function for natural join testing
  * @return No return value
  */
-void AK_op_join_test() {
+TestResult AK_op_join_test() {
     AK_PRO;
     char *sys_table = "AK_relation";
     char *destTable = "nat_join_test";
@@ -373,5 +373,6 @@ void AK_op_join_test() {
     AK_print_table(destTable);
 
     AK_EPI;
+    return TEST_result(0,0);
 }
 

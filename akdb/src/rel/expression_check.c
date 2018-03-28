@@ -503,7 +503,7 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
     return result;
 }
 
-void Ak_expression_check_test()
+TestResult Ak_expression_check_test()
 {
     AK_PRO;
 
@@ -515,6 +515,7 @@ void Ak_expression_check_test()
     int outcome;
     int outcome2;
     int outcome3;
+    int successful = 0;
 
     int likeOutcome1,likeOutcome2,likeOutcome3,likeOutcome4,likeOutcome5;
 
@@ -528,11 +529,11 @@ void Ak_expression_check_test()
  	const char * expression4 = "%Thomas%";
  	const char * expression5 = "%thomas%";
 
- 	likeOutcome1 = Ak_check_regex_expression(value,expression,1,1);
- 	likeOutcome2 = Ak_check_regex_expression(value,expression2,1,1);
- 	likeOutcome3 = Ak_check_regex_expression(value,expression3,1,1);
- 	likeOutcome4 = Ak_check_regex_expression(value2, expression4,0,1);
- 	likeOutcome5 = Ak_check_regex_expression(value2, expression5,1,1);
+ 	successful += Ak_check_regex_expression(value,expression,1,1);
+ 	successful += Ak_check_regex_expression(value,expression2,1,1);
+ 	successful += Ak_check_regex_expression(value,expression3,1,1);
+ 	successful += Ak_check_regex_expression(value2, expression4,0,1);
+ 	successful += Ak_check_regex_expression(value2, expression5,1,1);
 
  	printf("Test for like,Ilike with wildcards \n");
     printf("abc - expression 'abc' outcome is: %d\n", likeOutcome1);
@@ -540,14 +541,8 @@ void Ak_expression_check_test()
     printf("abc - expression  _b_ outcome is: %d\n", likeOutcome3);
     printf("ILike   thomas - expression .*Thomas.* outcome is: %d\n", likeOutcome4);
     printf("Like thomas - expression .*thomas.* outcome is %d\n", likeOutcome5);
-
-    if (likeOutcome1==1 & likeOutcome2==1 & likeOutcome3==1 & likeOutcome4==1 & likeOutcome5==1){
-	printf("\nTest succeeded!\n");
-    }
-    else{
-	printf("\nTest failed!\n");
-    }
 	
     AK_free(elem);
     AK_EPI;
+    return TEST_result(successful, 5-successful);
 }

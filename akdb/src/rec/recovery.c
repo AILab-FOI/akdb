@@ -219,7 +219,7 @@ void AK_recover_operation(int sig) {
  * @brief Function for recovery testing.
  * @author Tomislav Turek
  */
-void AK_recovery_test() {
+TestResult AK_recovery_test() {
     AK_PRO;
     printf("Initiating recovery test\n");
     
@@ -262,4 +262,6 @@ void AK_recovery_test() {
     // do nothing
     while(!grandfailure);                 
     AK_EPI;
+
+    return TEST_result(0,0);
 }

@@ -20,11 +20,12 @@
 #ifndef UNION
 #define UNION
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../auxi/mempro.h"
 
 int AK_union(char *srcTable1, char *srcTable2, char *dstTable);
-void AK_op_union_test();
+TestResult AK_op_union_test();
 
 #endif

@@ -99,7 +99,7 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
  * @brief  Function for selection operator testing
  *
  */
-void AK_op_selection_test() { // test 31
+TestResult AK_op_selection_test() { // test 31
 	AK_PRO;
 	printf("\n********** SELECTION TEST **********\n");
 	int failed = 0;
@@ -203,6 +203,7 @@ void AK_op_selection_test() { // test 31
 
 	AK_free(expr);
 	AK_EPI;
+	return TEST_result(0,0);
 }
 
 /**
@@ -210,7 +211,7 @@ void AK_op_selection_test() { // test 31
  * @brief  Function for selection operator testing
  *
  */
-void AK_op_selection_test_pattern() { //test 32
+TestResult AK_op_selection_test_pattern() { //test 32
 	AK_PRO;
 	printf("\n********** SELECTION TEST 2 - PATTERN MATCH **********\n");
 	
@@ -403,6 +404,7 @@ void AK_op_selection_test_pattern() { //test 32
 	}
     	AK_free(expr);
    	AK_EPI;
+   	return TEST_result(0,0);
 }
 
 /**
@@ -410,7 +412,7 @@ void AK_op_selection_test_pattern() { //test 32
  * @brief  Function for redolog testing
  *
  */
-void AK_op_selection_test_redolog(){ // test 37
+TestResult AK_op_selection_test_redolog(){ // test 37
 	AK_PRO;
 
 	int brojac = 0;
@@ -448,4 +450,5 @@ void AK_op_selection_test_redolog(){ // test 37
 
 	}
 	AK_EPI;
+	return TEST_result(0,0);
 }

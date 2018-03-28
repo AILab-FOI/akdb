@@ -318,7 +318,7 @@ int AK_delete_constraint_between(char* tableName, char* constraintNamePar, char*
   * @brief Tests the functionality of implemented between constraint.
   * @return No return value
   */
-void Ak_constraint_between_test() {
+TestResult Ak_constraint_between_test() {
     // TEST #1
     char* tableName_1 = "department";
     char* attName_1 = "dep_name";
@@ -401,4 +401,5 @@ void Ak_constraint_between_test() {
     }
 
     AK_EPI;
+    return TEST_result(0,0);
 }

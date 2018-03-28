@@ -20,6 +20,7 @@
 #ifndef TRANSACTION_H_
 #define TRANSACTION_H_
 #include <pthread.h> //TRANSACTIONS
+#include "../auxi/test.h"
 #include "../auxi/constants.h"
 #include "../auxi/configuration.h"
 #include "../mm/memoman.h"
@@ -166,7 +167,7 @@ int AK_get_memory_blocks(char*, AK_memoryAddresses_link);
 int AK_execute_commands(command* , int);
 void * AK_execute_transaction(void*);
 void AK_transaction_manager(command*, int);
-void AK_test_Transaction();
+TestResult AK_test_Transaction();
 int AK_create_new_transaction_thread(AK_transaction_data*);
 int AK_remove_transaction_thread(pthread_t);
 void handle_transaction_notify(AK_observer_lock*);

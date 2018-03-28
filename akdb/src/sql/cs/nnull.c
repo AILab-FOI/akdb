@@ -184,7 +184,7 @@ int AK_delete_constraint_not_null(char* tableName, char attName[], char constrai
   * @brief Function for testing testing NOT NULL constraint
   * @return No return value
   */
-void AK_null_test() {
+TestResult AK_null_test() {
 	char* tableName = "student";
 	char* attName = "firstname";
 	char* attName2 = "lastname";
@@ -219,4 +219,6 @@ void AK_null_test() {
 	AK_print_table("AK_constraints_not_null");
 	printf("\nTest succeeded.");
 	AK_EPI;
+
+	return TEST_result(0,0);
 }

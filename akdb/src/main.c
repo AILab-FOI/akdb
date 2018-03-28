@@ -125,14 +125,14 @@ function fun[] = {
 {"mm: AK_block", &AK_memoman_test2}, //mm/memoman.c
 //opti:
 //---------
-/*{"opti: AK_rel_eq_assoc", &AK_rel_eq_assoc_test}, //opti/rel_eq_assoc.c
+{"opti: AK_rel_eq_assoc", &AK_rel_eq_assoc_test}, //opti/rel_eq_assoc.c
 {"opti: AK_rel_eq_comut", &AK_rel_eq_comut_test}, //opti/rel_eq_comut.c
 {"opti: AK_rel_eq_selection", &AK_rel_eq_selection_test}, //opti/rel_eq_selection.c
 {"opti: AK_rel_eq_projection", &AK_rel_eq_projection_test}, //opti/rel_eq_projection.c
 {"opti: AK_query_optimization", &AK_query_optimization_test}, //opti/query_optimization.c
-*///rel:
+//rel:
 //--------
-/*{"rel: AK_op_union", &AK_op_union_test}, //rel/union.c
+{"rel: AK_op_union", &AK_op_union_test}, //rel/union.c
 {"rel: AK_op_join", &AK_op_join_test}, // rel/nat_join.c
 {"rel: AK_op_product", &AK_op_product_test}, //rel/product.c
 {"rel: Ak_aggregation", &Ak_aggregation_test}, //rel/aggregation.c
@@ -144,9 +144,9 @@ function fun[] = {
 {"rel: AK_op_difference", &Ak_op_difference_test}, //rel/difference.c
 {"rel: AK_op_projection", &AK_op_projection_test}, //rel/projection.c
 {"rel: AK_op_theta_join", &AK_op_theta_join_test}, //rel/theta_join.c
-*///sql:
+//sql:
 //--------
-/*{"sql: AK_command", &AK_test_command}, //sql/command.c
+{"sql: AK_command", &AK_test_command}, //sql/command.c
 {"sql: AK_drop", &AK_drop_test}, //sql/drop.c
 {"sql: AK_view", &AK_view_test}, //sql/view.c
 {"sql: AK_null", &AK_null_test}, //sql/cs/nnull.c
@@ -159,12 +159,12 @@ function fun[] = {
 {"sql: Ak_constraint_between", &Ak_constraint_between_test}, //sql/cs/between.c
 {"sql: AK_check_constraint", &AK_check_constraint_test}, //sql/cs/check_constraint.c
 {"sql: AK_constraint_names", &AK_constraint_names_test}, //sql/cs/constraint_names.c
-*///trans:
+//trans:
 //----------
-//{"trans: AK_transaction", &AK_test_Transaction}, //src/trans/transaction.c
+{"trans: AK_transaction", &AK_test_Transaction}, //src/trans/transaction.c
 //rec:
 //----------
-//{"rec: AK_recovery", &AK_recovery_test} //rec/recovery.c
+{"rec: AK_recovery", &AK_recovery_test} //rec/recovery.c
 };
 //here are all tests in a order like in the folders from the github
 /**

@@ -366,7 +366,7 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
  * @author Unknown updated by Aleksandra Polak
  * @brief Function for trigger testing
  */
-void AK_trigger_test() {
+TestResult AK_trigger_test() {
     AK_PRO;
 
     printf("trigger.c: Present!\n");
@@ -464,6 +464,6 @@ void AK_trigger_test() {
     AK_free(expr);
     AK_EPI;
 
-    
+    return TEST_result(0,0);    
 }
 

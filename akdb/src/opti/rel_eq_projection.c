@@ -687,7 +687,7 @@ void AK_print_rel_eq_projection(struct list_node *list_rel_eq) {
  * @brief Function for testing rel_eq_selection
  * @return No return value 
  */
-void AK_rel_eq_projection_test() {
+TestResult AK_rel_eq_projection_test() {
     AK_PRO;
     printf("rel_eq_projection.c: Present!\n");
     printf("\n********** REL_EQ_PROJECTION TEST by Dino Laktašić **********\n");
@@ -780,4 +780,5 @@ void AK_rel_eq_projection_test() {
     Ak_DeleteAll_L3(&expr);
     //dealocate variables ;)
     AK_EPI;
+    return TEST_result(0,0);
 }

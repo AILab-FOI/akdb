@@ -658,7 +658,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     return EXIT_SUCCESS;
 }
 
-void Ak_aggregation_test() {
+TestResult Ak_aggregation_test() {
     AK_PRO;
     printf("aggregation.c: Present!\n");
  

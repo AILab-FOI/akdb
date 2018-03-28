@@ -1,6 +1,7 @@
 #ifndef PRIVILEGES
 #define PRIVILEGES
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../file/id.h"
@@ -26,6 +27,6 @@ int AK_check_group_privilege(char *group);
 int AK_group_remove_by_name(char *name);
 int AK_user_rename(char *old_name, char *new_name, int *password);
 int AK_group_rename(char *old_name, char *new_name);
-void AK_privileges_test();
+TestResult AK_privileges_test();
 
 #endif

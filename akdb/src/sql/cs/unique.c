@@ -436,7 +436,7 @@ int AK_delete_constraint_unique(char* tableName, char attName[], char constraint
   * @return No return value
   */
 
-void AK_unique_test() {
+TestResult AK_unique_test() {
 	char* tableName = "student";
 	char attYear[] = "year";
 	char attFirstname[] = "firstname";
@@ -573,4 +573,6 @@ void AK_unique_test() {
 	AK_print_table("AK_constraints_unique");
 	printf("\nTest succeeded.");
 	AK_EPI;
+
+	return TEST_result(0,0);
 }

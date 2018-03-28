@@ -134,7 +134,7 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
  * @author Renata Mesaros
  * @brief Function for testing the implementation
  */
-void AK_select_test(){
+TestResult AK_select_test(){
 	AK_PRO;
 
 
@@ -175,4 +175,6 @@ void AK_select_test(){
 	Ak_DeleteAll_L3(&condition);
 	AK_free(condition);
 	AK_EPI;
+
+	return TEST_result(0,0);
 }

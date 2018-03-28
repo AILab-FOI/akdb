@@ -77,7 +77,7 @@ int Ak_check_constraint_name(char *constraintName) {
   * @brief Function tests if constraint name would be unique in database
   * @return No return value
   */
-void AK_constraint_names_test() {
+TestResult AK_constraint_names_test() {
 	char *constraintName1 = "nameUnique";
 	char *constraintName2 = "nameUNIQUE";
 	int result;
@@ -101,4 +101,5 @@ void AK_constraint_names_test() {
 	printf("\nTest succeeded.");
 
 	AK_EPI;
+	return TEST_result(0,0);
 }

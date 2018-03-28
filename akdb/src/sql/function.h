@@ -20,6 +20,7 @@
 #ifndef FUNCTION
 #define FUNCTION
 
+#include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../auxi/mempro.h"
@@ -35,6 +36,6 @@ int AK_function_arguments_remove_by_obj_id(int *obj_id);
 int AK_function_remove_by_name(char *name, struct list_node *arguments_list);
 int AK_function_rename(char *name, struct list_node *arguments_list, char *new_name);
 int AK_function_change_return_type(char *name, struct list_node *arguments_list, int new_return_type);
-void AK_function_test();
+TestResult AK_function_test();
 
 #endif

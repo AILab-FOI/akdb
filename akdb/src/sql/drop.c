@@ -479,7 +479,7 @@ int AK_if_exist(char *tblName, char *sys_table) {
  * @author unknown, Jurica Hlevnjak - added all tests except drop table test, updated by Tomislav Ilisevic, Maja Vračan
  * @brief Function for testing all DROP functions
  */
-void AK_drop_test() {
+TestResult AK_drop_test() {
     AK_PRO;
     printf("=========================================================\n");
     printf("========================DROP_TEST========================\n");
@@ -644,4 +644,5 @@ void AK_drop_test() {
         }
     }
     AK_EPI;
+    return TEST_result(0,0);
 }

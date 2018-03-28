@@ -145,7 +145,7 @@ int AK_union(char *srcTable1, char *srcTable2, char *dstTable) {
  * @return No return value
  * 
  */
-void AK_op_union_test() {
+TestResult AK_op_union_test() {
     AK_PRO;
     printf("\n********** UNION TEST **********\n\n");
     AK_print_table("professor");
@@ -153,12 +153,11 @@ void AK_op_union_test() {
     int test = AK_union("professor", "assistant", "union_test");
     AK_print_table("union_test");
 	
+	AK_EPI;
 	if (test == EXIT_SUCCESS){
-	printf("\nTest succeeded!\n");
+		return TEST_result(1,0);
     }
     else{
-	printf("\nTest failed!\n");
+		return TEST_result(0,1);
     }	
-	
-    AK_EPI;
 }
