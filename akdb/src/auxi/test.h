@@ -2,8 +2,8 @@
 * Provides services for reporting test results.
 */
 
-#ifndef TEST
-#define TEST
+#ifndef TESTLIB
+#define TESTLIB
 
 #define RESET   "\033[0m"
 #define BLACK   "\033[30m"      /* Black */
@@ -23,7 +23,8 @@
 #define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
 #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
-#include <sdgstd.h>
+#include <stdio.h>
+#include <unistd.h>
 
 /**
 * This struct is used so tests can report the amount of successful tests.
@@ -33,15 +34,14 @@
 * @brief Used so tests can report the amount of successful tests.
 * @struct TestResult
 */
-typedef struct {
-	int testSucceded = 0;
-	int testFailed = 0;
-	bool implemented = false;
+typedef struct TestResult {
+	int testSucceded;
+	int testFailed;
+	char implemented;
 } TestResult;
 
 
 TestResult TEST_result(int successfulAmount, int failedAmount);
-TestResult TEST_result();
 
 void TEST_output_results(TestResult result);
 

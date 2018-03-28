@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <string.h> //ARCHIVE LOG
 #include <stdlib.h>
+#include "auxi/test.h"
 // Memory wrappers and debug mode
 #include "auxi/mempro.h"
 // Global configuration
@@ -80,7 +81,6 @@
 #include "sql/view.h"
 #include "file/blobs.h"
 #include "projectDetails.h"
-#include "auxi/test.h"
 
 void help();
 void show_test();
@@ -90,22 +90,23 @@ void run_all_tests();
 //void run_test();
 typedef struct {
     char name[40];
-    void (*func)(void);
+    TestResult (*func)(void);
 } function;
 function fun[] = {
 //src/auxi:
 //---------
 {"auxi: AK_tarjan", &AK_tarjan_test},  //auxi/auxiliary.c
-{"auxi: AK_observable", &AK_observable_test}, //auxi/observable.c
+/*{"auxi: AK_observable", &AK_observable_test}, //auxi/observable.c
 {"auxi: AK_observable_pattern", &AK_observable_pattern},//auxi/observable.c
+*/
 //dm:
 //-------
-{"dm: AK_allocationbit", &AK_allocationbit_test}, //dm/dbman.c
+/*{"dm: AK_allocationbit", &AK_allocationbit_test}, //dm/dbman.c
 {"dm: AK_allocationtable", &AK_allocationtable_test}, //dm/dbman.c
 {"dm: AK_thread_safe_block_access", &AK_thread_safe_block_access_test}, //dm/dbman.c
-//file:
+*///file:
 //---------
-{"file: Ak_id", &Ak_id_test}, //file/id.c
+/*{"file: Ak_id", &Ak_id_test}, //file/id.c
 {"file: AK_lo", &AK_lo_test}, //file/blobs.c
 {"file: Ak_files_test", &Ak_files_test}, //file/files.c
 {"file: Ak_fileio_test", &Ak_fileio_test}, //file/fileio.c
@@ -114,26 +115,28 @@ function fun[] = {
 {"file: Ak_filesearch", &Ak_filesearch_test}, //file/filesearch.c
 {"file: AK_sequence", &AK_sequence_test}, //file/sequence.c 
 {"file: AK_op_table", &AK_table_test}, //file/table.c
-
+*/
 //file/idx:
 //-------------
-{"idx: Ak_bitmap", &Ak_bitmap_test}, //file/idx/bitmap.c
+/*{"idx: Ak_bitmap", &Ak_bitmap_test}, //file/idx/bitmap.c
 {"idx: Ak_btree", &Ak_btree_test}, //file/idx/btree.c
 {"idx: Ak_hash", &Ak_hash_test}, //file/idx/hash.c
+*/
 //mm:
 //-------
-{"mm: AK_memoman", &AK_memoman_test}, //mm/memoman.c
+/*{"mm: AK_memoman", &AK_memoman_test}, //mm/memoman.c
 {"mm: AK_block", &AK_memoman_test2}, //mm/memoman.c
+*/
 //opti:
 //---------
-{"opti: AK_rel_eq_assoc", &AK_rel_eq_assoc_test}, //opti/rel_eq_assoc.c
+/*{"opti: AK_rel_eq_assoc", &AK_rel_eq_assoc_test}, //opti/rel_eq_assoc.c
 {"opti: AK_rel_eq_comut", &AK_rel_eq_comut_test}, //opti/rel_eq_comut.c
 {"opti: AK_rel_eq_selection", &AK_rel_eq_selection_test}, //opti/rel_eq_selection.c
 {"opti: AK_rel_eq_projection", &AK_rel_eq_projection_test}, //opti/rel_eq_projection.c
 {"opti: AK_query_optimization", &AK_query_optimization_test}, //opti/query_optimization.c
-//rel:
+*///rel:
 //--------
-{"rel: AK_op_union", &AK_op_union_test}, //rel/union.c
+/*{"rel: AK_op_union", &AK_op_union_test}, //rel/union.c
 {"rel: AK_op_join", &AK_op_join_test}, // rel/nat_join.c
 {"rel: AK_op_product", &AK_op_product_test}, //rel/product.c
 {"rel: Ak_aggregation", &Ak_aggregation_test}, //rel/aggregation.c
@@ -145,9 +148,9 @@ function fun[] = {
 {"rel: AK_op_difference", &Ak_op_difference_test}, //rel/difference.c
 {"rel: AK_op_projection", &AK_op_projection_test}, //rel/projection.c
 {"rel: AK_op_theta_join", &AK_op_theta_join_test}, //rel/theta_join.c
-//sql:
+*///sql:
 //--------
-{"sql: AK_command", &AK_test_command}, //sql/command.c
+/*{"sql: AK_command", &AK_test_command}, //sql/command.c
 {"sql: AK_drop", &AK_drop_test}, //sql/drop.c
 {"sql: AK_view", &AK_view_test}, //sql/view.c
 {"sql: AK_null", &AK_null_test}, //sql/cs/nnull.c
@@ -160,12 +163,12 @@ function fun[] = {
 {"sql: Ak_constraint_between", &Ak_constraint_between_test}, //sql/cs/between.c
 {"sql: AK_check_constraint", &AK_check_constraint_test}, //sql/cs/check_constraint.c
 {"sql: AK_constraint_names", &AK_constraint_names_test}, //sql/cs/constraint_names.c
-//trans:
+*///trans:
 //----------
-{"trans: AK_transaction", &AK_test_Transaction}, //src/trans/transaction.c
+//{"trans: AK_transaction", &AK_test_Transaction}, //src/trans/transaction.c
 //rec:
 //----------
-{"rec: AK_recovery", &AK_recovery_test} //rec/recovery.c
+//{"rec: AK_recovery", &AK_recovery_test} //rec/recovery.c
 };
 //here are all tests in a order like in the folders from the github
 /**
@@ -354,8 +357,8 @@ void choose_test()
         if(ans)
         {
             ans--;
-            TestResult result = fun[ans].func();
-            TEST_output_results(result);
+            //TestResult result = fun[ans].func();
+            TEST_output_results(fun[ans].func());
             printf("\n\nPress Enter to continue:");
             getchar();
             getchar();

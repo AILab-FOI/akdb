@@ -23,6 +23,7 @@
 
 #include "constants.h"
 #include "configuration.h"
+#include "test.h"
 
 #include "assert.h"
 #include "time.h"
@@ -181,7 +182,7 @@ AK_stack AK_pop_from_stack();
 AK_stack AK_search_in_stack(int id);
 int MIN(int X, int Y);
 void AK_tarjan(int id);
-void AK_tarjan_test();
+TestResult AK_tarjan_test();
 
 AK_synchronization_info* AK_init_critical_section();
 void AK_destroy_critical_section(AK_synchronization_info* info);
