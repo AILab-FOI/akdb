@@ -18,8 +18,8 @@ class Functions:
 
     def update_Row(self, table, column1, column2, key, new_value):
         element = ak47.list_node()
-        ak47.Ak_Init_L3(&element)
-        ak47.Ak_DeleteAll_L3(&element)
+        ak47.Ak_Init_L3(element)
+        ak47.Ak_DeleteAll_L3(element)
         
         if type(key) == int:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
@@ -40,8 +40,8 @@ class Functions:
         
     def delete_Row(self, table, column1, key):
         element = ak47.list_node()
-        ak47.Ak_Init_L3(&element)
-        ak47.Ak_DeleteAll_L3(&element)
+        ak47.Ak_Init_L3(element)
+        ak47.Ak_DeleteAll_L3(element)
         
         if type(key) == int:
             ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
@@ -75,8 +75,8 @@ class Functions:
 
     def get_value(self, row, col, table):
         element = ak47.list_node()
-        ak47.Ak_Init_L3(&element)
-        ak47.Ak_DeleteAll_L3(&element)
+        ak47.Ak_Init_L3(element)
+        ak47.Ak_DeleteAll_L3(element)
 
         element = ak47.AK_get_tuple(row, col, table)
         return ak47.AK_tuple_to_string(element)
@@ -104,8 +104,8 @@ class Functions:
                 break
                 
         element = ak47.list_node()
-        ak47.Ak_Init_L3(&element)
-        ak47.Ak_DeleteAll_L3(&element)
+        ak47.Ak_Init_L3(element)
+        ak47.Ak_DeleteAll_L3(element)
         
         operatori = ["<", ">", "=", "AND", "OR", "+", "-", "*"]
 
@@ -130,12 +130,12 @@ class Functions:
 
     def nat_Join(self, table1, table2, table_res, attributes):
         att = ak47.list_node()
-        ak47.Ak_Init_L3(&att)
-        ak47.Ak_DeleteAll_L3(&att)
+        ak47.Ak_Init_L3(att)
+        ak47.Ak_DeleteAll_L3(att)
         for attribute in attributes:
             ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
         return ak47.AK_join(table1, table2, table_res, att)
-        #ak47.Ak_DeleteAll_L3(&att)
+        #ak47.Ak_DeleteAll_L3(att)
         
     def union(self, table1, table2, table_res):
         return ak47.AK_union(table1, table2, table_res)
@@ -145,8 +145,8 @@ class Functions:
         
     def projection(self, table1, table_res, attributes):
         att = ak47.list_node()
-        ak47.Ak_Init_L3(&att)
-        ak47.Ak_DeleteAll_L3(&att)
+        ak47.Ak_Init_L3(att)
+        ak47.Ak_DeleteAll_L3(att)
         for attribute in attributes:
             ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
         return ak47.AK_projection(table1, table_res, att)
