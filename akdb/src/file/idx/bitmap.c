@@ -727,7 +727,7 @@
             also prints original tables indexes tables and indexes,tests updating into tables
  * @return No return value
  * */
- void Ak_bitmap_test()
+ TestResult Ak_bitmap_test()
  {
     int id_prof;
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -799,4 +799,5 @@
     printf("\n\n********** BITMAP INDEX TEST END**********\n\n");
     printf("\n\n BITMAP INDEX TEST PASSED\n\n");
     AK_EPI;
+    return TEST_result(0,0);
 }

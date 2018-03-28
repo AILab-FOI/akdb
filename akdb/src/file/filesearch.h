@@ -20,6 +20,7 @@
 #ifndef FILESEARCH
 #define FILESEARCH
 
+#include "../auxi/test.h"
 #include "../mm/memoman.h"
 #include "files.h"
 #include "../auxi/mempro.h"
@@ -69,6 +70,6 @@ typedef struct {
 
 search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params);
 void AK_deallocate_search_result(search_result srResult);
-void Ak_filesearch_test();
+TestResult Ak_filesearch_test();
 
 #endif

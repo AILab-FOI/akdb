@@ -20,6 +20,7 @@
 #ifndef OBSERVABLE
 #define OBSERVABLE
 
+#include "test.h"
 #include "constants.h"
 #include "debug.h"
 #include "mempro.h"
@@ -79,7 +80,7 @@ typedef struct Observable AK_observable;
 
 extern AK_observer * AK_init_observer(void *observable_type, void (*observable_type_event_handler)(void*, void*, AK_ObservableType_Enum));
 extern AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_Enum AK_ObservableType_Def, void * AK_custom_action);
-extern void AK_observable_test();
-void AK_observable_pattern();
+extern TestResult AK_observable_test();
+TestResult AK_observable_pattern();
 
 #endif

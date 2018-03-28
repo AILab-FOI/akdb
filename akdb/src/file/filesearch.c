@@ -212,7 +212,7 @@ void AK_deallocate_search_result(search_result srResult) {
   * @brief Function for testing file search
   * @return No return value
   */
-void Ak_filesearch_test() {
+TestResult Ak_filesearch_test() {
     int i;
     double f;
     AK_mem_block *mem_block, tmp;
@@ -296,4 +296,5 @@ void Ak_filesearch_test() {
         AK_deallocate_search_result(sr);
     }
     AK_EPI;
+    return TEST_result(0,0);
 }

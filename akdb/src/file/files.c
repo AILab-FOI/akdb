@@ -149,4 +149,6 @@ void Ak_files_test() {
 
     AK_printout_redolog();
     AK_EPI;
+
+    return TEST_result(0,0);
 }

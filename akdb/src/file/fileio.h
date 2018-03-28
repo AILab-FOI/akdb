@@ -19,6 +19,7 @@
 #ifndef FILEIO
 #define FILEIO
 
+#include "../auxi/test.h"
 #include "../auxi/constants.h"
 #include "../sql/cs/reference.h"
 #include "../mm/memoman.h"
@@ -37,7 +38,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root);
 int Ak_delete_update_segment(struct list_node *row_root, int del);
 int Ak_delete_row(struct list_node *row_root) ;
 int Ak_update_row(struct list_node *row_root);
-void Ak_fileio_test();
+TestResult Ak_fileio_test();
 void Ak_delete_row_by_id(int id, char* tableName);
 
 #endif

@@ -20,6 +20,7 @@
 #ifndef BITMAP
 #define BITMAP
 
+#include "../../auxi/test.h"
 #include "../../mm/memoman.h"
 #include "index.h"
 #include "../../file/table.h"
@@ -38,7 +39,7 @@ void Ak_print_Att_Test(list_ad *list);
 list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeValue);
 void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue);
 int Ak_write_block(AK_block * block);
-void Ak_bitmap_test();
+TestResult Ak_bitmap_test();
 
 void AK_delete_bitmap_index(char *indexName);
 void AK_add_to_bitmap_index(char *tableName, char *attributeName);

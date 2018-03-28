@@ -2570,18 +2570,20 @@ AK_init_disk_manager()
   return EXIT_ERROR;
 }
 
-void AK_allocationbit_test()
+TestResult AK_allocationbit_test()
 {
     AK_PRO;
     AK_blocktable_dump(1);
     AK_EPI;
+    return TEST_result(0,0);
 }
 
-void AK_allocationtable_test()
+TestResult AK_allocationtable_test()
 {
     AK_PRO;
     AK_allocationtable_dump(1);
     AK_EPI;
+    return TEST_result(0,0);
 }
 
 /**
@@ -2591,7 +2593,7 @@ void AK_allocationtable_test()
  * Each reading thread should read
  * the data (character) that was set by last writing thread
  */
-void AK_thread_safe_block_access_test()
+TestResult AK_thread_safe_block_access_test()
 {
   int i, j, sum_of_suceeded_tests = 0;
   int block_address = 0;
@@ -2665,6 +2667,7 @@ void AK_thread_safe_block_access_test()
   printf("\n%d out of 50 tests succeeded.", sum_of_suceeded_tests);
     
   AK_EPI;
+  return TEST_result();
 }
 
 

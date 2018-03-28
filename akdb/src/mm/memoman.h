@@ -20,6 +20,7 @@
 #ifndef MEMOMAN
 #define MEMOMAN
 
+#include "../auxi/test.h"
 #include "../dm/dbman.h"
 #include "../auxi/mempro.h"
 
@@ -187,7 +188,7 @@ table_addresses *AK_get_index_addresses(char * index);
 int AK_find_AK_free_space(table_addresses * addresses);
 int AK_init_new_extent(char *table_name, int extent_type);
 int AK_flush_cache();
-void AK_memoman_test();
-void AK_memoman_test2();
+TestResult AK_memoman_test();
+TestResult AK_memoman_test2();
 
 #endif

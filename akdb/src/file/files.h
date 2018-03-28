@@ -20,6 +20,7 @@
 #ifndef FILES
 #define FILES
 
+#include "../auxi/test.h"
 #include "id.h"
 #include "../auxi/mempro.h"
 
@@ -27,7 +28,7 @@
 int AK_initialize_new_segment(char *name, int type, AK_header *header);
 int AK_initialize_new_index_segment(char *name, char *table_id,int attr_id , AK_header *header);
 
-void Ak_files_test();
+TestResult Ak_files_test();
 
 #endif
 

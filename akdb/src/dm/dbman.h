@@ -21,6 +21,7 @@ of Kalashnikov DB
 #ifndef DBMAN
 #define DBMAN
 
+#include "../auxi/test.h"
 #include "../auxi/auxiliary.h"
 #include <errno.h>
 #include <pthread.h>
@@ -236,8 +237,8 @@ AK_block_activity *AK_block_activity_info;
 AK_synchronization_info* dbmanFileLock;
 
 int AK_print_block(AK_block * block, int num, char* gg, FILE *fpp);
-void AK_allocationbit_test();
-void AK_allocationtable_test();
+TestResult AK_allocationbit_test();
+TestResult AK_allocationtable_test();
 int* AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header, int gl);
 int* AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode, int border, int target, AK_header *header, int gl);
 int AK_get_allocation_set(int* bitsetbs, int fromWhere, int gaplength, int num, AK_allocation_set_mode mode, int target);
@@ -248,7 +249,7 @@ void AK_allocationtable_dump(int zz);
 void AK_blocktable_dump(int zz);
 int AK_blocktable_flush();
 // void AK_allocate_array_currently_accessed_blocks(); // ne postoji nikakva implementacija
-void AK_thread_safe_block_access_test();
+TestResult AK_thread_safe_block_access_test();
 void* AK_read_block_for_testing(void *address);
 void* AK_write_block_for_testing(void *block);
 int AK_blocktable_get();

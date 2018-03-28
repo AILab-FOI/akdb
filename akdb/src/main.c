@@ -96,17 +96,16 @@ function fun[] = {
 //src/auxi:
 //---------
 {"auxi: AK_tarjan", &AK_tarjan_test},  //auxi/auxiliary.c
-/*{"auxi: AK_observable", &AK_observable_test}, //auxi/observable.c
+{"auxi: AK_observable", &AK_observable_test}, //auxi/observable.c
 {"auxi: AK_observable_pattern", &AK_observable_pattern},//auxi/observable.c
-*/
 //dm:
 //-------
-/*{"dm: AK_allocationbit", &AK_allocationbit_test}, //dm/dbman.c
+{"dm: AK_allocationbit", &AK_allocationbit_test}, //dm/dbman.c
 {"dm: AK_allocationtable", &AK_allocationtable_test}, //dm/dbman.c
 {"dm: AK_thread_safe_block_access", &AK_thread_safe_block_access_test}, //dm/dbman.c
-*///file:
+//file:
 //---------
-/*{"file: Ak_id", &Ak_id_test}, //file/id.c
+{"file: Ak_id", &Ak_id_test}, //file/id.c
 {"file: AK_lo", &AK_lo_test}, //file/blobs.c
 {"file: Ak_files_test", &Ak_files_test}, //file/files.c
 {"file: Ak_fileio_test", &Ak_fileio_test}, //file/fileio.c
@@ -115,18 +114,15 @@ function fun[] = {
 {"file: Ak_filesearch", &Ak_filesearch_test}, //file/filesearch.c
 {"file: AK_sequence", &AK_sequence_test}, //file/sequence.c 
 {"file: AK_op_table", &AK_table_test}, //file/table.c
-*/
 //file/idx:
 //-------------
-/*{"idx: Ak_bitmap", &Ak_bitmap_test}, //file/idx/bitmap.c
+{"idx: Ak_bitmap", &Ak_bitmap_test}, //file/idx/bitmap.c
 {"idx: Ak_btree", &Ak_btree_test}, //file/idx/btree.c
 {"idx: Ak_hash", &Ak_hash_test}, //file/idx/hash.c
-*/
 //mm:
 //-------
-/*{"mm: AK_memoman", &AK_memoman_test}, //mm/memoman.c
+{"mm: AK_memoman", &AK_memoman_test}, //mm/memoman.c
 {"mm: AK_block", &AK_memoman_test2}, //mm/memoman.c
-*/
 //opti:
 //---------
 /*{"opti: AK_rel_eq_assoc", &AK_rel_eq_assoc_test}, //opti/rel_eq_assoc.c

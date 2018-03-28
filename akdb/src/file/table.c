@@ -1059,7 +1059,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 
     @update by Ana-Marija Balen - added getRow function to the test
  */
-void AK_table_test() {
+TestResult AK_table_test() {
     AK_PRO;
     printf("table.c: Present!\n");
 
@@ -1121,13 +1121,14 @@ void AK_table_test() {
     }
 	
     AK_EPI;
+    return TEST_result(0,0);
 }
 /**
  * @author Mislav Čakarić, edited by Ljubo Barać
  * @brief Function for rename operator testing (moved from rename.c)
  * @return No return value
  */
-void AK_op_rename_test() {
+TestResult AK_op_rename_test() {
     AK_PRO;
     //printf( "rename_test: Present!\n" );
     printf("\n********** RENAME TEST **********\n\n");
@@ -1139,11 +1140,11 @@ void AK_op_rename_test() {
 
     AK_print_table("AK_relation");
 	
+    AK_EPI;
 	if (rename != EXIT_ERROR ){
-	  printf("\nTest succeeded!\n");
+	  return TEST_result(1,0);
     }
     else{
-	  printf("\nTest failed!\n");
+	  return TEST_result(0,1);
     }
-    AK_EPI;
 }

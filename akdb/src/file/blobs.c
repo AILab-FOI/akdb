@@ -445,7 +445,7 @@ int AK_lo_unlink(char *oid) {
  * @author Samuel Picek
  * @brief  Tests
  */
-void AK_lo_test() {
+TestResult AK_lo_test() {
 
   FILE *f;
   FILE *f2;
@@ -487,4 +487,5 @@ long size2;
 	  printf("\nTest failed!\n");
   }
 
+  return TestResult(0,0);
 }
