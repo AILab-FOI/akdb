@@ -191,6 +191,7 @@ void AK_cache_result(char *srcTable,AK_block *temp_block,AK_header header[]){
  */
 int AK_query_mem_AK_malloc()
 {
+	int i=0;
 	AK_PRO;
 	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Start query_mem_AK_malloc\n");
 
@@ -231,7 +232,8 @@ int AK_query_mem_AK_malloc()
 	query_mem_result->results=AK_malloc(MAX_QUERY_RESULT_MEMORY*sizeof(*query_mem_result->results));
 
 	/// allocate memory for variable tuple_dict which is used in query_mem->dictionary->dictionary[]
-	AK_tuple_dict * tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict));
+	/* wrong - there is array of pointers to AK_tupple_dict structures, not only one
+	AK_tuple_dict * tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict)); <=== Allocated and forgotten
 	if ((tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))) == NULL)
 	{
 		printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple dictionary memory \n");
@@ -240,14 +242,25 @@ int AK_query_mem_AK_malloc()
 	}
 
 	memcpy(query_mem_dict->dictionary, tuple_dict, sizeof (* tuple_dict));
+	*/
+	for(i = 0; i< MAX_QUERY_RESULT_MEMORY; i++)
+	{
+		if(query_mem_dict->dictionary[i]=(AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))==NULL)
+		{
+			printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple in query result memory \n");
+			AK_EPI;
+			exit(EXIT_ERROR);
+		}
+	}
 
 	query_mem->parsed = query_mem_lib;
 	query_mem->dictionary = query_mem_dict;
 	query_mem->result = query_mem_result;
 	//initializing values for result block status
 	//by default all blocks are free
-	int i=0;
-	for(i=0; i<MAX_QUERY_RESULT_MEMORY; i++){
+	
+	for(i=0; i<MAX_QUERY_RESULT_MEMORY; i++)
+	{
 		query_mem->result->results[i].free=1;
 	}
 	/*	wrong way because we don't have data only adress which must be written in query_mem variables
