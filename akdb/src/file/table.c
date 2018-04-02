@@ -187,7 +187,7 @@ AK_header *AK_get_header(char *tblName) {
     int num_attr = AK_num_attr(tblName);
     AK_header *head = (AK_header*) AK_calloc(num_attr, sizeof (AK_header));
     memcpy(head, temp->block->header, num_attr * sizeof (AK_header));
-
+	AK_free(addresses);
     AK_EPI;
     return head;
 }

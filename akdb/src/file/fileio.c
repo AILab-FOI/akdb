@@ -168,6 +168,7 @@ int Ak_insert_row(struct list_node *row_root) {
     struct list_node *some_element = (struct list_node *) Ak_First_L2(row_root);
 
     char table[MAX_ATT_NAME];
+	table_addresses *table_addresses_return;
 
 
     memset(table, '\0', MAX_ATT_NAME);
@@ -176,14 +177,18 @@ int Ak_insert_row(struct list_node *row_root) {
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
 
-    adr_to_write = (int) AK_find_AK_free_space(AK_get_table_addresses(table));
-
+	table_addresses_return = AK_get_table_addresses(table);	
+    adr_to_write = (int) AK_find_AK_free_space(table_addresses_return);
+	AK_free(table_addresses_return);
 
     if (adr_to_write == -1)
         adr_to_write = (int) AK_init_new_extent(table, SEGMENT_TYPE_TABLE);
 
-    if(strstr(some_element->table,"_bmapIndex")){
-        adr_to_write = (int) AK_find_AK_free_space(AK_get_index_addresses(table));
+    if(strstr(some_element->table,"_bmapIndex"))
+	{
+		table_addresses_return = AK_get_index_addresses(table);
+        adr_to_write = (int) AK_find_AK_free_space(table_addresses_return);
+		AK_free(table_addresses_return);
     }
 
     if (adr_to_write == 0) {
@@ -451,6 +456,7 @@ int Ak_delete_update_segment(struct list_node *row_root, int del) {
         } else
             break;
     }
+	AK_free(addresses);
     AK_EPI;
     return EXIT_SUCCESS;
 }
