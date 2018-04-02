@@ -34,6 +34,8 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 	int uniqueConstraintName;
 	struct list_node *row;
 	struct list_node *attribute;
+	
+	char *tupple_to_string_return;
 
 	AK_PRO;
 
@@ -57,12 +59,14 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 			row = AK_get_row(i, tableName);
 			attribute = Ak_GetNth_L2(positionOfAtt, row);
 			
-			if(AK_tuple_to_string(attribute) == NULL)
+			if((tupple_to_string_return=AK_tuple_to_string(attribute)) == NULL)
 			{
 				printf("\nFAILURE!\nTable: %s\ncontains NULL sign and that would violate NOT NULL constraint which You would like to set on attribute: %s\n\n", tableName, attName);
 				AK_EPI;
 				return EXIT_ERROR;
 			}
+			else
+				AK_free(tupple_to_string_return);
 		}
 	}
 

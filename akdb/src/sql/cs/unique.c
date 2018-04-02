@@ -338,6 +338,8 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		char *value2;
 		char newValueCopy2[MAX_VARCHAR_LENGTH];
 		char values[numOfValues][MAX_VARCHAR_LENGTH];
+		
+		char *tuple_to_string_return;
 
 		strncpy(newValueCopy2, newValue, sizeof(newValueCopy2));
 
@@ -358,15 +360,18 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 			for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
 			{
 				attribute2 = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
-				if(AK_tuple_to_string(attribute2) == NULL)
+				tuple_to_string_return = AK_tuple_to_string(attribute2);
+				if(tuple_to_string_return == NULL)
 				{
 					match = 0;
 				}
-				else if(strcmp(values[impoIndexInArray], AK_tuple_to_string(attribute2)) != 0)
+				else if(strcmp(values[impoIndexInArray], tuple_to_string_return) != 0)
 				{
 					match = 0 ;
+					AK_free(tuple_to_string_return);
 				}
-
+				else
+					AK_free(tuple_to_string_return);
 			}
 			
 			if(match == 1)
