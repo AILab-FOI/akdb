@@ -71,6 +71,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 		char attNameCopy[MAX_VARCHAR_LENGTH];
 		char *nameOfOneAtt;
 		char namesOfAtts[numOfAttsInTable][MAX_VARCHAR_LENGTH];
+		char *key, *val;
 		
 		strncpy(attNameCopy, attName, sizeof(attNameCopy));
 
@@ -109,8 +110,12 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 				}
 				else if(dictionary_get(dict, AK_tuple_to_string(attribute), NULL) == NULL)
 				{
-					dictionary_set(dict, AK_tuple_to_string(attribute), AK_tuple_to_string(attribute));
+					key=AK_tuple_to_string(attribute);
+					val=AK_tuple_to_string(attribute);
+					dictionary_set(dict, key, val);
 					match = 0;
+					AK_free(key);
+					AK_free(val);
 				}
 			}
 				

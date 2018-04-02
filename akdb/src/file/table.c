@@ -329,6 +329,7 @@ struct list_node *AK_get_row(int num, char * tblName) {
         i++;
     }
     AK_free(addresses);
+	AK_free(row_root);
     AK_EPI;
     return NULL;
 }
@@ -403,7 +404,8 @@ char * AK_tuple_to_string(struct list_node *tuple) {
 
     //assert(tuple->type);
 
-    switch (tuple->type) {
+    switch (tuple->type) 
+	{
         case TYPE_INT:
             memcpy(&temp_int, tuple->data, tuple->size);
             sprintf(buff, "%d", temp_int);
@@ -424,6 +426,7 @@ char * AK_tuple_to_string(struct list_node *tuple) {
             return buff;
             break;
     }
+	AK_free(buff);
     AK_EPI;
     return NULL;
 }
