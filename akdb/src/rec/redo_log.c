@@ -46,10 +46,6 @@ int AK_add_to_redolog(int command, struct list_node *row_root){
     	return EXIT_FAILURE;
     }
 
-    char* int_char = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
-    char* float_char = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
-    char* default_char = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
-
     char table[MAX_ATT_NAME];
     memset(table, '\0', MAX_ATT_NAME);
     memcpy(&table, el->table, strlen(el->table));
@@ -67,42 +63,40 @@ int AK_add_to_redolog(int command, struct list_node *row_root){
                 attrs[i] = "null";
                 break;
             case TYPE_INT:
-                sprintf (int_char, "%i", *((int *) el->data));
-                attrs[i] = int_char;
-                strncat(record, int_char, strlen(int_char));
+				attrs[i] = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+                sprintf (attrs[i], "%i", *((int *) el->data));
+                strncat(record, attrs[i], strlen(attrs[i]));
                 break;
             case TYPE_FLOAT:
-               	sprintf (float_char, "%.3f", *((float *) el->data));
-                attrs[i] = float_char;
-               	strncat(record, float_char, strlen(float_char));
+				attrs[i] = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+               	sprintf (attrs[i], "%.3f", *((float *) el->data));
+               	strncat(record, attrs[i], strlen(attrs[i]));
                 break;
             case TYPE_VARCHAR:
             default:
-                default_char = AK_check_attributes(el->data);
-                attrs[i] = default_char;
-                strncat(record, default_char, strlen(el->data));
+                attrs[i] = AK_check_attributes(el->data);
+                strncat(record, attrs[i], strlen(el->data));
                 break;
         }
         if(numAttr < max){
             strncat(record, "|", 1);
         }
         numAttr++;
+		i++;
         el = el->next;
     }
     
     printf("AK_add_to_redolog: redolog new entry -- %s, %s\n", table, record);
     memcpy(redo_log->command_recovery[n].table_name, table, strlen(table));
-    memcpy(redo_log->command_recovery[n].arguments, attrs, strlen(attrs));
+	for(i=0; i<numAttr-1; i++)
+		strcpy(redo_log->command_recovery[n].arguments[i], attrs[i]);
     redo_log->command_recovery[n].operation = command;
     redo_log->command_recovery[n].finished = 0;
-    int x = n + 1;
-
-    redo_log->number = x;
+    redo_log->number = n+1;
     AK_free(record);
-    AK_free(int_char);
-    AK_free(float_char);
-    AK_free(default_char);
-    AK_free(attrs);
+	for(i=0; i < numAttr-1; i++)
+		AK_free(attrs[i]);
+	AK_free(attrs);
     printf("AK_add_to_redolog: Recovery checkpoint saved\n");
     AK_EPI;
     return EXIT_SUCCESS;
