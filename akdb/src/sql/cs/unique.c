@@ -88,6 +88,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 		
 		int match;
 		int impoIndexInArray;
+		char *tuple_to_string_return;
 		
 
 		dict = dictionary_new(0);
@@ -104,11 +105,12 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 			for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
 			{
 				attribute = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
-				if(AK_tuple_to_string(attribute)==NULL)
+				tuple_to_string_return = AK_tuple_to_string(attribute);
+				if(tuple_to_string_return==NULL)
 				{
 					match = 0;
 				}
-				else if(dictionary_get(dict, AK_tuple_to_string(attribute), NULL) == NULL)
+				else if(dictionary_get(dict, tuple_to_string_return, NULL) == NULL)
 				{
 					key=AK_tuple_to_string(attribute);
 					val=AK_tuple_to_string(attribute);
@@ -117,6 +119,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 					AK_free(key);
 					AK_free(val);
 				}
+				AK_free(tuple_to_string_return);
 			}
 				
 			if(match == 1)
