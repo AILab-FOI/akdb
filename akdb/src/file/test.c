@@ -603,6 +603,8 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     AK_print_table(tblName);
+	
+
     //-------------------------------------------------------------------------------------------------------
 
 
@@ -726,6 +728,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
     AK_print_table(tblName);
+	
     //-------------------------------------------------------------------------------------------------------
 
 
@@ -750,11 +753,13 @@ void AK_create_test_tables() {
 		printf("\nTABLE %s CREATED!\n", tblName);
 
 	//row_root = (element) AK_malloc(sizeof (list));
+	
+	Ak_DeleteAll_L3(&row_root);
 	Ak_Init_L3(&row_root);
 
 	id_prof = 35890;
 	id_prof++;
-	Ak_DeleteAll_L3(&row_root);
+	//Ak_DeleteAll_L3(&row_root);
 	Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root);
 	Ak_Insert_New_Element(TYPE_VARCHAR, "Baca", tblName, "lastname", row_root);
@@ -853,6 +858,7 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
+	
     //row_root = (element) AK_malloc(sizeof (list));
     Ak_Init_L3(&row_root);
 
@@ -979,6 +985,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     AK_print_table(tblName);
+	
     //-------------------------------------------------------------------------------------------------------
 
 
@@ -1001,7 +1008,11 @@ void AK_create_test_tables() {
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	/* not needed - row_root is still allocated 
+		AK_free(row_root);
+    	row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+	*/
+	Ak_DeleteAll_L3(&row_root);
     Ak_Init_L3(&row_root);
 
     id_department = 1;
