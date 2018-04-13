@@ -291,14 +291,19 @@ void AK_create_test_tables() {
     AK_PRO;
     temp = (AK_header*) AK_create_header("mbr", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header + 1, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header + 2, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("year", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header + 3, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("weight", TYPE_FLOAT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header + 4, temp, sizeof ( AK_header));
+	AK_free(temp);
     memset(t_header + 5, 0, MAX_ATTRIBUTES - 5);
 
     //create table
@@ -614,16 +619,22 @@ void AK_create_test_tables() {
 
     temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header2, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header2 + 1, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header2 + 2, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("tel", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header2 + 3, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("email", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header2 + 4, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("web_page", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header2 + 5, temp, sizeof ( AK_header));
+	AK_free(temp);
     memset(t_header2 + 6, 0, MAX_ATTRIBUTES - 6);
 
     //create table
@@ -737,12 +748,16 @@ void AK_create_test_tables() {
 	
 	temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
 	memcpy(t_header2, temp, sizeof ( AK_header));
+	AK_free(temp);
 	temp = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
 	memcpy(t_header2 + 1, temp, sizeof ( AK_header));
+	AK_free(temp);
 	temp = (AK_header*) AK_create_header("lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
 	memcpy(t_header2 + 2, temp, sizeof ( AK_header));
+	AK_free(temp);
 	temp = (AK_header*) AK_create_header("tel", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
 	memcpy(t_header2 + 3, temp, sizeof ( AK_header));
+	AK_free(temp);
 	memset(t_header2 + 4, 0, MAX_ATTRIBUTES - 4);
 
 	//create table
@@ -831,6 +846,7 @@ void AK_create_test_tables() {
 	Ak_insert_row(row_root);
 
 	AK_print_table(tblName);
+	Ak_DeleteAll_L3(&row_root);
     //-------------------------------------------------------------------------------------------------------
 
 
@@ -840,16 +856,22 @@ void AK_create_test_tables() {
 
     temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header3, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header3 + 1, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("lastname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header3 + 2, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("tel", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header3 + 3, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("email", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header3 + 4, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("web_page", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header3 + 5, temp, sizeof ( AK_header));
+	AK_free(temp);
     memset(t_header3 + 6, 0, MAX_ATTRIBUTES - 6);
 
     tblName = "assistant";
@@ -912,8 +934,10 @@ void AK_create_test_tables() {
 
     temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header4, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("id_department", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header4 + 1, temp, sizeof ( AK_header));
+	AK_free(temp);
     memset(t_header4 + 2, 0, MAX_ATTRIBUTES - 2);
 
     //create table
@@ -924,6 +948,7 @@ void AK_create_test_tables() {
         printf("\nTABLE %s CREATED!\n", tblName);
 
     //row_root = (element) AK_malloc(sizeof (list));
+	Ak_DeleteAll_L3(&row_root);
     Ak_Init_L3(&row_root);
 
     id_prof = 35890;
@@ -995,10 +1020,13 @@ void AK_create_test_tables() {
 
     temp = (AK_header*) AK_create_header("id_department", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header5, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("dep_name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header5 + 1, temp, sizeof ( AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("manager", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header5 + 2, temp, sizeof ( AK_header));
+	AK_free(temp);
     memset(t_header5 + 3, 0, MAX_ATTRIBUTES - 3);
 
     //create table
@@ -1080,14 +1108,19 @@ void AK_create_test_tables() {
 
     temp = (AK_header*) AK_create_header("id_course", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header6, temp, sizeof (AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("name", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header6 + 1, temp, sizeof (AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("category", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header6 + 2, temp, sizeof (AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("lecturer", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header6 + 3, temp, sizeof (AK_header));
+	AK_free(temp);
     temp = (AK_header*) AK_create_header("active", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
     memcpy(t_header6 + 4, temp, sizeof (AK_header));
+	AK_free(temp);
     memset(t_header6 + 5, '\0', MAX_ATTRIBUTES - 5);
 
     //create table

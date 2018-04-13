@@ -322,7 +322,6 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
         }
         del = 1;
     }
-
     AK_free(new_data);
     AK_EPI;
     return EXIT_SUCCESS;

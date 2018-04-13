@@ -475,7 +475,9 @@ void* AK_malloc(size_t size){
 */
 void AK_free(void* ptr){
 #if !AK_DEBMOD_ON
-    return free(ptr);
+	free(ptr);
+	ptr = NULL;
+    return;
 #endif
     assert(AK_DEBMOD_STATE != NULL && AK_DEBMOD_STATE->init == 1);
     AK_debmod_free(AK_DEBMOD_STATE, ptr);

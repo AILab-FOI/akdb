@@ -369,19 +369,25 @@ int AK_reference_check_entry(struct list_node *lista) {
 	temp = Ak_Next_L2(temp);
     }
 
-    while ((row = AK_get_row(i, "AK_reference")) != NULL) {
-        if (strcmp(row->next->data, lista->next->table) == 0) {
-            for (j = 0; j < con_num; j++) {
-                if (strcmp(constraints[j], row->next->next->data) == 0) {
+    while ((row = AK_get_row(i, "AK_reference")) != NULL) 
+	{
+        if (strcmp(row->next->data, lista->next->table) == 0) 
+		{
+            for (j = 0; j < con_num; j++) 
+			{
+                if (strcmp(constraints[j], row->next->next->data) == 0) 
+				{
                     break;
                 }
             }
-            if (j == con_num) {
+            if (j == con_num) 
+			{
                 strcpy(constraints[con_num], row->next->next->data);
                 con_num++;
             }
         }
         i++;
+		AK_free(row);
     }
 
     if (con_num == 0){
