@@ -61,6 +61,8 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
 
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
         AK_EPI;
+		
+		
         return start_address;
     }
     AK_EPI;
