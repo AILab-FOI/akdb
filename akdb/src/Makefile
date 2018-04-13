@@ -57,5 +57,14 @@ doc:
 swig:
 	export CFLAGS="-Wno-error"; cd swig && swig -python kalashnikovDB.i && python setup.py build_ext --inplace && cd ..
 
+docker-install:
+	cd .. && docker build -t akdb .
+
+docker-mac:
+	cd .. && docker run -it -v $(pwd):/usr/akdb/ --privileged akdb
+
+docker-win:
+	cd .. && docker run -it -v %cd%:/usr/akdb/ --privileged akdb
+
 .DEFAULT_GOAL := all
 
