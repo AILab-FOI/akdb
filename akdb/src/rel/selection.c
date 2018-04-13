@@ -29,7 +29,6 @@
  * @param *expr list with posfix notation of the logical expression
  * @return EXIT_SUCCESS
  */
-//int AK_selection(char *srcTable, char *dstTable, AK_list *expr) {
 int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
         AK_PRO;
 	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
@@ -102,6 +101,7 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 TestResult AK_op_selection_test() { // test 31
 	AK_PRO;
 	printf("\n********** SELECTION TEST **********\n");
+	int successful = 0;
 	int failed = 0;
 
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -114,10 +114,10 @@ TestResult AK_op_selection_test() { // test 31
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
 	Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof("OR"), expr );
 	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
 	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
 	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
+	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "AND", sizeof("AND"), expr);
 	printf("\nQUERY: SELECT * FROM student WHERE year > 2005 AND firstname = 'Robert';\n\n");
 	int sel1 = AK_selection(srcTable, destTable, expr);
 	
@@ -131,7 +131,7 @@ TestResult AK_op_selection_test() { // test 31
 
 	if (sel1 == EXIT_ERROR) {
 		printf("\n Selection test 1 failed.\n");
-		failed = 1;	
+		failed++;	
 	}
 	else { //checking exact row data
 		num_rows1 = AK_get_num_records(destTable);
@@ -140,15 +140,16 @@ TestResult AK_op_selection_test() { // test 31
 			memcpy(&mbr, get_row_attr_data(0,row1), sizeof(int));
 			if (mbr == 35907){
 				printf("\n Selection test 1 succeeded.\n");
+				successful++;
 			}
 			else {
 				printf("\n Selection test 1 failed: Wrong data.\n");
-				failed = 1;
+				failed++;
 			}		
 		}
 		else {
 			printf("\n Selection test 1 failed: Wrong number of rows.\n");
-			failed = 1;
+			failed++;
 		}
 	}	
 
@@ -167,7 +168,7 @@ TestResult AK_op_selection_test() { // test 31
 	int mbr2;
 	if (sel2 == EXIT_ERROR) {
 		printf("\n Selection test 2 failed.\n");
-		failed = 1;	
+		failed++;	
 	}
 	else { //checking exact row data
 		num_rows2 = AK_get_num_records(destTable2);
@@ -177,7 +178,7 @@ TestResult AK_op_selection_test() { // test 31
 			while ((row2 = (struct list_node*)AK_get_row(i,destTable2)) != NULL) {
 				memcpy(&mbr2, get_row_attr_data(0,row2), sizeof(int));
 				if (mbr2 < 35891 || mbr2> 35897) {
-					failed = 1;
+					failed++;
 					local_fail = 1;
 					break;
 				}
@@ -185,6 +186,7 @@ TestResult AK_op_selection_test() { // test 31
 			} 
 			if (!local_fail) {
 				printf("\n Selection test 2 succeded.\n");
+				successful++;
 			}
 			else {
 				printf("\n Selection test 2 failed: Wrong data. \n");
@@ -193,7 +195,7 @@ TestResult AK_op_selection_test() { // test 31
 		}
 		else {
 			printf("\n Selection test 2 failed: Wrong number of rows.\n");
-			failed = 1;
+			failed++;
 		}
 	}
 
@@ -203,7 +205,7 @@ TestResult AK_op_selection_test() { // test 31
 
 	AK_free(expr);
 	AK_EPI;
-	return TEST_result(0,0);
+	return TEST_result(successful, failed);
 }
 
 /**
@@ -214,7 +216,9 @@ TestResult AK_op_selection_test() { // test 31
 TestResult AK_op_selection_test_pattern() { //test 32
 	AK_PRO;
 	printf("\n********** SELECTION TEST 2 - PATTERN MATCH **********\n");
-	
+
+	int successful = 0;
+	int failed = 0;	
 
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
 	Ak_Init_L3(&expr);
@@ -237,10 +241,9 @@ TestResult AK_op_selection_test_pattern() { //test 32
 	int mbr;
 	int num_rows;
 	struct list_node *row;
-	int failed = 0;
 	if (sel3 == EXIT_ERROR) {
 		printf("\n Selection test 3 failed.\n");
-		failed = 1;	
+		failed++;	
 	}
 	else { //checking exact row data
 		num_rows = AK_get_num_records(destTable3);
@@ -250,7 +253,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 			while ((row = (struct list_node*)AK_get_row(i,destTable3)) != NULL) {
 				memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
 				if (mbr != 35891 && mbr != 35900 && mbr != 35913) {
-					failed = 1;
+					failed++;
 					local_fail = 1;
 					break;
 				}
@@ -258,6 +261,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 			} 
 			if (!local_fail) {
 				printf("\n Selection test 3 succeded.\n");
+				successful++;
 			}
 			else {
 				printf("\n Selection test 3 failed: Wrong data. \n");
@@ -266,7 +270,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 		}
 		else {
 			printf("\n Selection test 3 failed: Wrong number of rows.\n");
-			failed = 1;
+			failed++;
 		}
 	}
 
@@ -283,33 +287,25 @@ TestResult AK_op_selection_test_pattern() { //test 32
 
 	if (sel4 == EXIT_ERROR) {
 		printf("\n Selection test 4 failed.\n");
-		failed = 1;	
+		failed++;	
 	}
 	else { //checking exact row data
 		num_rows = AK_get_num_records(destTable4);
 		if (num_rows == 1) {
-			int i=0;
-			int local_fail = 0;
-			while ((row = (struct list_node*)AK_get_row(i,destTable4)) != NULL) {
-				memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
-				if (mbr != 35891) {
-					failed = 1;
-					local_fail = 1;
-					break;
-				}
-				i++;
-			} 
-			if (!local_fail) {
-				printf("\n Selection test 4 succeded.\n");
+			row = (struct list_node*)AK_get_row(0,destTable4);
+			memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
+			if (mbr == 35891){
+				printf("\n Selection test 4 succeeded.\n");
+				successful++;
 			}
 			else {
-				printf("\n Selection test 4 failed: Wrong data. \n");
-			}
-					
+				printf("\n Selection test 4 failed: Wrong data.\n");
+				failed++;
+			}		
 		}
 		else {
 			printf("\n Selection test 4 failed: Wrong number of rows.\n");
-			failed = 1;
+			failed++;
 		}
 	}
 
@@ -325,7 +321,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 
 	if (sel5 == EXIT_ERROR) {
 		printf("\n Selection test 5 failed.\n");
-		failed = 1;	
+		failed++;	
 	}
 	else { //checking exact row data
 		num_rows = AK_get_num_records(destTable5);
@@ -337,7 +333,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 				if (mbr != 35891 && mbr != 35893 && mbr != 35898 && mbr != 35900
 				&& mbr != 35901 && mbr != 35902 && mbr != 35905 && mbr != 35906
 				&& mbr != 35911 && mbr != 35912 && mbr != 35913) {
-					failed = 1;
+					failed++;
 					local_fail = 1;
 					break;
 				}
@@ -345,6 +341,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 			} 
 			if (!local_fail) {
 				printf("\n Selection test 5 succeded.\n");
+				successful++;
 			}
 			else {
 				printf("\n Selection test 5 failed: Wrong data. \n");
@@ -353,7 +350,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 		}
 		else {
 			printf("\n Selection test 5 failed: Wrong number of rows.\n");
-			failed = 1;
+			failed++;
 		}
 	}
 
@@ -369,7 +366,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 
 	if (sel6 == EXIT_ERROR) {
 		printf("\n Selection test 6 failed.\n");
-		failed = 1;	
+		failed++;	
 	}
 	else { //checking exact row data
 		num_rows = AK_get_num_records(destTable6);
@@ -379,7 +376,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 			while ((row = (struct list_node*)AK_get_row(i,destTable6)) != NULL) {
 				memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
 				if (mbr != 35891 && mbr != 35906 && mbr != 35912) {
-					failed = 1;
+					failed++;
 					local_fail = 1;
 					break;
 				}
@@ -387,6 +384,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 			} 
 			if (!local_fail) {
 				printf("\n Selection test 6 succeded.\n");
+				successful++;
 			}
 			else {
 				printf("\n Selection test 6 failed: Wrong data. \n");
@@ -395,7 +393,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 		}
 		else {
 			printf("\n Selection test 6 failed: Wrong number of rows.\n");
-			failed = 1;
+			failed++;
 		}
 	}
 
@@ -404,7 +402,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 	}
     	AK_free(expr);
    	AK_EPI;
-   	return TEST_result(0,0);
+   	return TEST_result(successful, failed);
 }
 
 /**
@@ -415,6 +413,9 @@ TestResult AK_op_selection_test_pattern() { //test 32
 TestResult AK_op_selection_test_redolog(){ // test 37
 	AK_PRO;
 
+	TestResult result;
+	int successful = 0;
+	int failed = 0;
 	int brojac = 0;
 	printf("\n********** REDO LOG TEST ************\n");
 	for (brojac = 0; brojac < 10; brojac ++){
@@ -445,10 +446,11 @@ TestResult AK_op_selection_test_redolog(){ // test 37
 		}
 
 		//alternately testing of fetching table
-		if (brojac%2==0) AK_op_selection_test();
-		else AK_op_selection_test_pattern();
+		result = brojac%2==0 ? AK_op_selection_test() : AK_op_selection_test_pattern();
+		successful += result.testSucceded;
+		failed += result.testFailed;
 
 	}
 	AK_EPI;
-	return TEST_result(0,0);
+	return TEST_result(successful, failed);
 }
