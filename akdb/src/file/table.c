@@ -362,14 +362,19 @@ struct list_node *AK_get_tuple(int row, int column, char *tblName) {
 
     i = 0;
     counter = -1;
-    while (addresses->address_from[ i ] != 0) {
-        for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) {
+    while (addresses->address_from[ i ] != 0) 
+	{
+        for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) 
+		{
             AK_mem_block *temp = (AK_mem_block*) AK_get_block(j);
             if (temp->block->last_tuple_dict_id == 0) break;
-            for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+            for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) 
+			{
                 if (temp->block->tuple_dict[k].size > 0)
                     counter++;
-                if (counter == row) {
+                if (counter == row) 
+				{
+					struct list_node *next;
                     int type = temp->block->tuple_dict[ k + column ].type;
                     int size = temp->block->tuple_dict[ k + column ].size;
                     int address = temp->block->tuple_dict[ k + column ].address;
@@ -377,14 +382,20 @@ struct list_node *AK_get_tuple(int row, int column, char *tblName) {
                     data[ size ] = '\0';
                     Ak_InsertAtEnd_L3(type, data, size, row_root);
                     AK_free(addresses);
+					next = Ak_First_L2(row_root); //store next
+					AK_free(row_root); //now we can free base
                     AK_EPI;
-                    return (struct list_node *) Ak_First_L2(row_root);
+					//returns next in row_root leaving base of the list allocated, so we made some corrections
+                    //return (struct list_node *) Ak_First_L2(row_root);
+					return next; //returns next
                 }
             }
         }
         i++;
     }
     AK_free(addresses);
+	Ak_DeleteAll_L3(&row_root);
+	AK_free(row_root);
     AK_EPI;
     return NULL;
 }
@@ -557,28 +568,37 @@ void AK_print_table(char *tblName) {
         //for each header attribute iterate through all table rows and check if
         //there is longer element than previously longest and store it in array
         for (i = 0; i < num_attr; i++) {
-            for (j = 0; j < num_rows; j++) {
+            for (j = 0; j < num_rows; j++) 
+			{
                 struct list_node *el = AK_get_tuple(j, i, tblName);
-                switch (el->type) {
+                switch (el->type) 
+				{
                     case TYPE_INT:
                         length = AK_chars_num_from_number(*((int *) (el)->data), 10);
-                        if (len[i] < length) {
+                        if (len[i] < length) 
+						{
                             len[i] = length;
                         }
                         break;
                     case TYPE_FLOAT:
                         length = AK_chars_num_from_number(*((float *) (el)->data), 10);
-                        if (len[i] < length) {
+                        if (len[i] < length) 
+						{
                             len[i] = length;
                         }
                         break;
                     case TYPE_VARCHAR:
                     default:
-                        if (len[i] < el->size) {
+                        if (len[i] < el->size) 
+						{
                             len[i] = el->size;
                         }
                         break;
                 }
+				//we don't need this linked list anymore (starting from tupple first to the end
+				//see comment above in function AK_get_tuple - Elvis Popovic
+				Ak_DeleteAll_L3(&el);
+				AK_free(el);
             }
         }
         //num_attr is number of char | + space in printf
