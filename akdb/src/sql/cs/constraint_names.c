@@ -49,17 +49,24 @@ int Ak_check_constraint_name(char *constraintName) {
 
 	AK_PRO;
 
-	for (i = 0; i < constraint_table_names_size; ++i) {
+	for (i = 0; i < constraint_table_names_size; ++i)
+	{
 		num_rows = AK_get_num_records(constraint_table_names[i]);
 
-		for (j = 0; j < num_rows; ++j) {
+		for (j = 0; j < num_rows; ++j)
+		{
 			row = AK_get_row(j, constraint_table_names[i]);
 			attribute = Ak_GetNth_L2(3, row);
 			
-			if (strcmp(attribute->data, constraintName) == 0) {
+			if (strcmp(attribute->data, constraintName) == 0)
+			{
+				Ak_DeleteAll_L3(&row);
+				AK_free(row);
 				AK_EPI;
 				return EXIT_ERROR;
 			}
+			Ak_DeleteAll_L3(&row);
+			AK_free(row);
 		}
 	}
 		
@@ -67,8 +74,10 @@ int Ak_check_constraint_name(char *constraintName) {
 	//WRITE SIMILIAR CODE TO THE CODE ABOVE, CHECK TABLES AND ATTRIBUTES NAMES IN dbman.c
 	//IF THERE ARE PROBLEMS CHECK, ACCORDING TO SYSTEM CATALOG, IF 1. PARAMETER of Ak_GetNth_L2 IS CORRECT (INDEXES START FROM 1!)
 	
-	AK_EPI;
 
+		
+	
+	AK_EPI;
 	return EXIT_SUCCESS;
 }
  

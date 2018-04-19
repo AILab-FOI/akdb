@@ -41,6 +41,9 @@ int AK_get_id() {
     	struct list_node *row = AK_get_row(0, "AK_sequence");
 		struct list_node *attribute = Ak_GetNth_L2(3, row);
 		memcpy(&current_value, &attribute->data, attribute->size);
+		Ak_DeleteAll_L3(&row);
+		AK_free(row);
+		
         current_value++;
 		Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root, SEARCH_CONSTRAINT);
         Ak_Insert_New_Element_For_Update(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root, NEW_VALUE);
@@ -49,6 +52,8 @@ int AK_get_id() {
         AK_free(row_root);
 
         if(result != EXIT_SUCCESS){
+			Ak_DeleteAll_L3(&row);
+			AK_free(row);
             AK_EPI;
             return EXIT_ERROR;
         }

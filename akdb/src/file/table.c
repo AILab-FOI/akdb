@@ -230,13 +230,17 @@ int AK_get_attr_index(char *tblName, char *attrName) {
     int num_attr = AK_num_attr(tblName);
     AK_header *header = AK_get_header(tblName);
     int index = 0;
-    while (index < num_attr) {
-        if (strcmp(attrName, (header + index)->att_name) == 0){
+    while (index < num_attr) 
+	{
+        if (strcmp(attrName, (header + index)->att_name) == 0)
+		{
+			AK_free(header);
             AK_EPI;
             return index;
         }
         index++;
     }
+	AK_free(header);
     AK_EPI;
     return EXIT_WARNING;
 }
@@ -329,6 +333,7 @@ struct list_node *AK_get_row(int num, char * tblName) {
         i++;
     }
     AK_free(addresses);
+	Ak_DeleteAll_L3(&row_root);
 	AK_free(row_root);
     AK_EPI;
     return NULL;
@@ -633,6 +638,7 @@ void AK_print_table(char *tblName) {
                 //print attributes left aligned inside box
                 //printf(" %-*s|", len[i] + MAX_TABLE_BOX_OFFSET, (head + i)->att_name);
             }
+			AK_free(head);
             printf("\n");
             AK_print_row_spacer(len, length);
 
