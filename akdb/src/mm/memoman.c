@@ -288,7 +288,6 @@ int AK_query_mem_AK_free()
 	}
 	if(query_mem->dictionary != NULL)
 		AK_free(query_mem->dictionary);
-	
 	if(query_mem->result != NULL)
 	{
 		if(query_mem->result->results != NULL)
@@ -304,8 +303,6 @@ int AK_query_mem_AK_free()
 	}
 	if(query_mem != NULL)
 		AK_free(query_mem);
-	
-	
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
@@ -333,15 +330,12 @@ int AK_memoman_init()
 		AK_EPI;
 		return EXIT_ERROR;
 	}
-
 	if (AK_query_mem_AK_malloc() == EXIT_ERROR)
 	{
 		AK_EPI;
 		printf("AK_memoman_init: ERROR. AK_query_mem_AK_malloc() failed.\n");
 		return EXIT_ERROR;
 	}
-
-
 	printf("AK_memoman_init: Memory manager initialized...\n");
 	AK_EPI;
 	return EXIT_SUCCESS;
