@@ -294,8 +294,9 @@ TestResult AK_check_constraint_test() {
     success = AK_set_check_constraint("student", "check_student_year", "year", ">", TYPE_INT, 2005);
 
     if (success == EXIT_ERROR) {
-	    br++;
+	br++;
         printf("*** TEST 1 Successful! ***\n");
+	AK_drop("DROP_CONSTRAINT","check_student_year");
     } else {
         printf("*** TEST 1 Failed! ***\n");
     }
@@ -323,8 +324,6 @@ TestResult AK_check_constraint_test() {
         } else {
             printf("*** TEST 2.2 Failed! ***\n");
         }
-
-	    AK_drop("DROP_CONSTRAINT","check_student_year");
     } 
     else {
         printf("*** TEST 2 Failed! ***\n");
@@ -354,8 +353,6 @@ TestResult AK_check_constraint_test() {
         } else {
             printf("*** TEST 3.2 Failed! ***\n");
         }
-
-	    AK_drop("DROP_CONSTRAINT","check_student_year");
     } else {
         printf("*** TEST 3 Failed! ***\n");
     }
@@ -394,8 +391,6 @@ TestResult AK_check_constraint_test() {
         } else {
             printf("*** TEST 5.2 Failed! ***\n");
         }
-
-	    AK_drop("DROP_CONSTRAINT","check_student_year");
     } else {
         printf("*** TEST 5 Failed! ***\n");
     }

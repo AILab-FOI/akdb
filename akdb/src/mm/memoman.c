@@ -220,6 +220,8 @@ int AK_query_mem_AK_malloc()
 		AK_EPI;
 		exit(EXIT_ERROR);
 	}
+	for(i=0; i<MAX_QUERY_DICT_MEMORY; i++)
+		query_mem_dict->dictionary[i] = NULL;
 
 	/// allocate memory for variable query_mem_result which is used in query_mem->result
 	AK_query_mem_result * query_mem_result;
@@ -272,6 +274,42 @@ int AK_query_mem_AK_malloc()
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
+/**
+  *  @author Elvis Popovic
+  *  @brief Function deallocates the global query memory (variable query_mem)
+  *  @return EXIT_SUCCESS if the query memory has been deallocated, EXIT_ERROR otherwise (not yet implemented)
+ */
+int AK_query_mem_AK_free()
+{
+	int i;
+	AK_PRO;
+	if(query_mem->parsed != NULL)
+	{
+		AK_free(query_mem->parsed);
+		for(i=0; i<MAX_QUERY_DICT_MEMORY; i++)
+			if(query_mem->dictionary->dictionary[i] != NULL)
+				AK_free(query_mem->dictionary->dictionary[i]);
+	}
+	if(query_mem->dictionary != NULL)
+		AK_free(query_mem->dictionary);
+	if(query_mem->result != NULL)
+	{
+		if(query_mem->result->results != NULL)
+		{
+			for(i=0; i<MAX_QUERY_RESULT_MEMORY; i++)
+			{
+				if(query_mem->result->results[i].result_block != NULL)
+					AK_free(query_mem->result->results[i].result_block);
+				AK_free(query_mem->result->results);
+			}
+		}
+		AK_free(query_mem->result);
+	}
+	if(query_mem != NULL)
+		AK_free(query_mem);
+	AK_EPI;
+	return EXIT_SUCCESS;
+}
 
 /**
  * @author Miroslav Policki
@@ -309,6 +347,22 @@ int AK_memoman_init()
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
+
+/**
+ * @author Elvis Popovic
+ * @brief  Function deallocates memory manager (cache, redo log and query memory)
+ * @return EXIT_SUCCESS if the query memory manager has been initialized, EXIT_ERROR otherwise
+ */
+int AK_memoman_AK_free()
+{
+	if (AK_query_mem_AK_free() == EXIT_ERROR)
+	{
+		AK_EPI;
+		printf("AK_memoman_free: ERROR. AK_query_mem_AK_free() failed.\n");
+		return EXIT_ERROR;
+	}
+}
+
 
 /**
   * @author Tomislav Fotak, updated by Matija Šestak, Antonio Martinović

@@ -57,14 +57,5 @@ doc:
 swig:
 	export CFLAGS="-Wno-error"; cd swig && swig -python kalashnikovDB.i && python setup.py build_ext --inplace && cd ..
 
-docker-install:
-	$(MAKE) -C .. docker-install
-
-docker-mac:
-	$(MAKE) -C .. docker-mac
-
-docker-win:
-	$(MAKE) -C .. docker-win
-
 .DEFAULT_GOAL := all
 
