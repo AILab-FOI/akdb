@@ -94,3 +94,37 @@ python server.py
 cd src/srv
 python akdb_cli.py
 ```
+
+## Docker
+
+This project can be built and run inside docker container. This is a great alternative to linux VM.
+All prerequisites will be downloaded and installed automatically. You can develop in you native environment and test and compile code inside the container.
+When you start docker container with akdb, akdb host directory will be automatically mapped in container directory. This means that all the changes you make on your machine are automatically seen inside the container where you can immediately compile and test the code
+
+#### Requirements
+
+For docker to work you have to have docker and make installed on local machine.
+* [Docker](https://www.docker.com/) 
+* [Make](https://www.gnu.org/software/make/)
+
+**Windows** users also need to turn on drive sharing in docker settings.
+To do that: open docker settings -> shared drives -> check the drive on which akdb is located -> apply
+
+#### Commands
+
+Install docker container. This will take some time because all prerequisites above will be downloaded and setup automatically.
+For more informations check Dockerfile.
+``` 
+make docker-install 
+```
+
+Run akdb in docker container - Windows OS
+``` 
+make docker-win 
+```
+
+Run akdb in docker container - Mac
+``` 
+make docker-mac
+```
+
