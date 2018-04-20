@@ -75,6 +75,8 @@ int Ak_check_constraint_name(char *constraintName) {
 	//IF THERE ARE PROBLEMS CHECK, ACCORDING TO SYSTEM CATALOG, IF 1. PARAMETER of Ak_GetNth_L2 IS CORRECT (INDEXES START FROM 1!)
 	
 
+		
+	
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
@@ -87,23 +89,15 @@ int Ak_check_constraint_name(char *constraintName) {
 TestResult AK_constraint_names_test() {
 	char *constraintName1 = "nameUnique";
 	char *constraintName2 = "nameUNIQUE";
-	
-	char *constraintName3 = "incrementNotNull";
-	char *constraintName4 = "incrementNotNull123";
-	
 	int result;
 
 	AK_PRO;
 	
 	printf("\nExisting constraints:\n\n");
 	AK_print_table("AK_constraints_not_null");
-	printf("\n\n");
 	AK_print_table("AK_constraints_unique");
-	printf("\n\n");
 	AK_print_table("AK_reference");
-	printf("\n\n");
 	AK_print_table("AK_constraints_between");
-	printf("\n\n");
 	
 	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName1);
 	result = Ak_check_constraint_name(constraintName1);
@@ -112,15 +106,6 @@ TestResult AK_constraint_names_test() {
 	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName2);
 	result = Ak_check_constraint_name(constraintName2);
 	printf("Yes (0) No (-1): %d\n\n", result);
-	
-	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName3);
-	result = Ak_check_constraint_name(constraintName3);
-	printf("Yes (0) No (-1): %d\n\n", result);
-	
-	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName4);
-	result = Ak_check_constraint_name(constraintName4);
-	printf("Yes (0) No (-1): %d\n\n", result);
-	
 	
 	printf("\nTest succeeded.");
 
