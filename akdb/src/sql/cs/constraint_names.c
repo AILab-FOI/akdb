@@ -75,8 +75,6 @@ int Ak_check_constraint_name(char *constraintName) {
 	//IF THERE ARE PROBLEMS CHECK, ACCORDING TO SYSTEM CATALOG, IF 1. PARAMETER of Ak_GetNth_L2 IS CORRECT (INDEXES START FROM 1!)
 	
 
-		
-	
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
