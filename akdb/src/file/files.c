@@ -42,6 +42,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
 
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
+
         AK_EPI;
         return EXIT_ERROR;
 
@@ -60,9 +61,10 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
         Ak_insert_row(row_root);
 
         Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
+		Ak_DeleteAll_L3(&row_root);
+		AK_free(row_root);
         AK_EPI;
-		
-		
+
         return start_address;
     }
     AK_EPI;
