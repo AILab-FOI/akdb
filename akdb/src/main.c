@@ -271,6 +271,8 @@ int main(int argc, char * argv[])
         scanf("%i",&br);
         return ( EXIT_ERROR );
     }
+	
+	
     // delete critical sections
     AK_destroy_critical_section(dbmanFileLock);
     AK_EPI;
