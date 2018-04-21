@@ -62,11 +62,15 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 			if((tupple_to_string_return=AK_tuple_to_string(attribute)) == NULL)
 			{
 				printf("\nFAILURE!\nTable: %s\ncontains NULL sign and that would violate NOT NULL constraint which You would like to set on attribute: %s\n\n", tableName, attName);
+				Ak_DeleteAll_L3(&row);
+				AK_free(row);
 				AK_EPI;
 				return EXIT_ERROR;
 			}
 			else
 				AK_free(tupple_to_string_return);
+			Ak_DeleteAll_L3(&row);
+			AK_free(row);
 		}
 	}
 
@@ -118,18 +122,25 @@ int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue) 
 
 	if(newValue == NULL) {
 		if(numRecords != 0) {
-			for (i = 0; i < numRecords; i++) {
+			for (i = 0; i < numRecords; i++) 
+			{
 				row = AK_get_row(i, "AK_constraints_not_null");
 				attribute = Ak_GetNth_L2(4, row);
 				
-				if(strcmp(attribute->data, attName) == 0) {
+				if(strcmp(attribute->data, attName) == 0) 
+				{
 					table = Ak_GetNth_L2(2, row);
 					
-					if(strcmp(table->data, tableName) == 0) {
+					if(strcmp(table->data, tableName) == 0) 
+					{
+						Ak_DeleteAll_L3(&row);
+						AK_free(row);
 						AK_EPI;
 						return EXIT_ERROR;
 					}
 				}
+				Ak_DeleteAll_L3(&row);
+				AK_free(row);
 			}			
 		}
 	}
