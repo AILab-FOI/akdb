@@ -271,7 +271,7 @@ int main(int argc, char * argv[])
         scanf("%i",&br);
         return ( EXIT_ERROR );
     }
-	AK_query_mem_AK_free();
+	
 	
     // delete critical sections
     AK_destroy_critical_section(dbmanFileLock);
