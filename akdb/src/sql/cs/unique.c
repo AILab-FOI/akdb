@@ -72,7 +72,8 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 		char *nameOfOneAtt;
 		char namesOfAtts[numOfAttsInTable][MAX_VARCHAR_LENGTH];
 		char *key, *val;
-		
+		Ak_DeleteAll_L3(&row);
+		AK_free(row);
 		strncpy(attNameCopy, attName, sizeof(attNameCopy));
 
 		nameOfOneAtt = strtok(attNameCopy, SEPARATOR);
@@ -125,9 +126,13 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 			if(match == 1)
 			{
 				printf("\nFAILURE!\nExisting values in table: %s\nwould violate UNIQUE constraint which You would like to set on (combination of) attribute(s): %s\n\n", tableName, attName);
+				Ak_DeleteAll_L3(&row);
+				AK_free(row);
 				AK_EPI;
 				return EXIT_ERROR;
 			}
+			Ak_DeleteAll_L3(&row);
+			AK_free(row);
 		}
 	}
 
@@ -326,6 +331,8 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		char *nameOfOneAtt;
 		char namesOfAtts[numOfAttsInTable][MAX_VARCHAR_LENGTH];
 		struct list_node *attribute2;
+		Ak_DeleteAll_L3(&row);
+		AK_free(row);
 		
 		strncpy(attNameCopy, attName, sizeof(attNameCopy));
 
@@ -381,7 +388,8 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 				else
 					AK_free(tuple_to_string_return);
 			}
-			
+			Ak_DeleteAll_L3(&row);
+			AK_free(row);
 			if(match == 1)
 			{
 				AK_EPI;

@@ -220,6 +220,8 @@ int AK_query_mem_AK_malloc()
 		AK_EPI;
 		exit(EXIT_ERROR);
 	}
+	for(i=0; i<MAX_QUERY_DICT_MEMORY; i++)
+		query_mem_dict->dictionary[i] = NULL;
 
 	/// allocate memory for variable query_mem_result which is used in query_mem->result
 	AK_query_mem_result * query_mem_result;
@@ -273,6 +275,7 @@ int AK_query_mem_AK_malloc()
 	return EXIT_SUCCESS;
 }
 
+
 /**
  * @author Miroslav Policki
  * @brief  Function initializes memory manager (cache, redo log and query memory)
@@ -309,6 +312,8 @@ int AK_memoman_init()
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
+
+
 
 /**
   * @author Tomislav Fotak, updated by Matija Šestak, Antonio Martinović
