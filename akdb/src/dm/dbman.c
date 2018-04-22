@@ -1427,6 +1427,7 @@ AK_new_extent(int start_address, int old_size, int extent_type, AK_header *heade
   register int i;
   int number_blocks_allocated = 0;
   int first_element_of_set, *allocation_set;
+  AK_block* block;
   AK_PRO;
 
   if (old_size == 0)
@@ -1458,22 +1459,23 @@ AK_new_extent(int start_address, int old_size, int extent_type, AK_header *heade
   first_element_of_set = AK_get_allocation_set(allocation_set, 1, 0, requested_space_in_blocks, allocationSEQUENCE, 6);
     
   if (first_element_of_set == FREE_INT)
-    {
-      if (AK_allocate_blocks(NULL, AK_init_block(), AK_allocationbit->last_initialized, requested_space_in_blocks) != EXIT_SUCCESS)
-	{
-	  printf("AK_new_extent: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
-	  AK_EPI;
-	  return(EXIT_ERROR);
-	}
-
-      first_element_of_set = AK_get_allocation_set(allocation_set, 1, 0, requested_space_in_blocks, allocationSEQUENCE, 6);
-      if (first_element_of_set == FREE_INT)
-	{
-	  printf("AK_new_extent: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
-	  AK_EPI;
-	  return(EXIT_ERROR);
-	} 
-    }
+  {
+      	if (AK_allocate_blocks(NULL, block = AK_init_block(), AK_allocationbit->last_initialized, requested_space_in_blocks) != EXIT_SUCCESS)
+		{
+	  		AK_free(block);
+	  		printf("AK_new_extent: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
+	  		AK_EPI;
+	  		return(EXIT_ERROR);
+		}
+	  	AK_free(block);
+      	first_element_of_set = AK_get_allocation_set(allocation_set, 1, 0, requested_space_in_blocks, allocationSEQUENCE, 6);
+      	if (first_element_of_set == FREE_INT)
+		{
+	  		printf("AK_new_extent: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
+	  		AK_EPI;
+	  		return(EXIT_ERROR);
+		} 
+  	}
   number_blocks_allocated = AK_copy_header(header, allocation_set, requested_space_in_blocks);
 
   printf("AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, number_blocks_allocated= %i\n",

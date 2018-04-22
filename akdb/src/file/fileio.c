@@ -322,6 +322,8 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
         }
         del = 1;
     }
+	// everything from new data has been copied so we can deallocate all in list - corr. Elvis Popovic
+	Ak_DeleteAll_L3(&new_data);
     AK_free(new_data);
     AK_EPI;
     return EXIT_SUCCESS;

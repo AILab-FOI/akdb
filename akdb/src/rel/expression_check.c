@@ -178,14 +178,14 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 
 */
 char *AK_replace_wild_card(const char *s,char ch,const char *repl){
-	
+	AK_PRO;
     int count = 0;
     const char *t;
     for(t=s; *t; t++)
         count += (*t == ch);
 
     size_t rlen = strlen(repl);
-    char *res = malloc(strlen(s) + (rlen-1)*count + 1);
+    char *res = AK_malloc(strlen(s) + (rlen-1)*count + 1);
     char *ptr = res;
     for(t=s; *t; t++) {
         if(*t == ch) {
@@ -196,9 +196,8 @@ char *AK_replace_wild_card(const char *s,char ch,const char *repl){
         }
     }
     *ptr = 0;
-    
+    AK_EPI;
     return res;
-
 }
 
 /**
@@ -215,6 +214,7 @@ int Ak_check_regex_expression(const char * value, const char * expression, int s
 	AK_PRO;
 	char *matcherData = value;
 	char * regexExpreesion = expression;
+	char * result;
 	regex_t regexCompiled;
 	int isMatched;
 	int caseSens;
@@ -227,15 +227,16 @@ int Ak_check_regex_expression(const char * value, const char * expression, int s
 		caseSens = REG_EXTENDED;
 	}
 	if(checkWildCard){
-		regexExpreesion = AK_replace_wild_card(regexExpreesion,'%',".*");
-		regexExpreesion = AK_replace_wild_card(regexExpreesion,'_',".");
-		
+		result = AK_replace_wild_card(regexExpreesion,'%',".*");
+		regexExpreesion = AK_replace_wild_card(result,'_',".");
+		AK_free(result);
 	}
 	if (regcomp(&regexCompiled, regexExpreesion, caseSens)){
       printf("Could not compile regular expression, check your sintax.\n");
       isMatched = 0;
     }
-    
+    if(checkWildCard)
+		AK_free(regexExpreesion);
     if (regexec(&regexCompiled, matcherData, 0, NULL, 0) != REG_NOMATCH){
     	isMatched = 1;
     }

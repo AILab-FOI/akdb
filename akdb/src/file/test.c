@@ -608,7 +608,7 @@ void AK_create_test_tables() {
     Ak_insert_row(row_root);
 
     AK_print_table(tblName);
-	
+	Ak_DeleteAll_L3(&row_root);
 
     //-------------------------------------------------------------------------------------------------------
 

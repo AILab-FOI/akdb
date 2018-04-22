@@ -463,13 +463,18 @@ int AK_if_exist(char *tblName, char *sys_table) {
     AK_PRO;
     int num_rows = AK_get_num_records(sys_table);
     int a;
-
-    for (a = 0; a < num_rows; a++) {
 	struct list_node *el;
+    for (a = 0; a < num_rows; a++) 
+	{
         el = AK_get_tuple(a, 1, sys_table);
-        if (!strcmp(tblName, el->data)) {
+        if (!strcmp(tblName, el->data)) 
+		{
+			Ak_DeleteAll_L3(&el);
+			AK_free(el);
             return 1; // exist
         }
+		Ak_DeleteAll_L3(&el);
+		AK_free(el);
     }
     AK_EPI;
     return 0; // not exist

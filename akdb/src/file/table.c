@@ -528,15 +528,20 @@ int AK_table_exist(char *tblName) {
     int num_rows = AK_get_num_records(sys_table);
     int a;
     int exist = 0;
-
-    for (a = 0; a < num_rows; a++) {
-        struct list_node *el;
+	struct list_node *el;
+	
+    for (a = 0; a < num_rows; a++) 
+	{
         el = AK_get_tuple(a, 1, sys_table);
-
-        if (!strcmp(tblName, el->data)) {
+        if (!strcmp(tblName, el->data)) 
+		{
             exist = 1;
+			Ak_DeleteAll_L3(&el);
+			AK_free(el);
             break;
         }
+		Ak_DeleteAll_L3(&el);
+		AK_free(el);
     }
     AK_EPI;
     return exist;

@@ -126,6 +126,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 			if(match == 1)
 			{
 				printf("\nFAILURE!\nExisting values in table: %s\nwould violate UNIQUE constraint which You would like to set on (combination of) attribute(s): %s\n\n", tableName, attName);
+				dictionary_del(dict);
 				Ak_DeleteAll_L3(&row);
 				AK_free(row);
 				AK_EPI;
@@ -134,9 +135,10 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 			Ak_DeleteAll_L3(&row);
 			AK_free(row);
 		}
+	dictionary_del(dict);
 	}
 
-	dictionary_del(dict);
+	
 
 	uniqueConstraintName = Ak_check_constraint_name(constraintName);
 

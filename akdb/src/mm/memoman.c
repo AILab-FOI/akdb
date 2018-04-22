@@ -222,6 +222,7 @@ int AK_query_mem_AK_malloc()
 	}
 	for(i=0; i<MAX_QUERY_DICT_MEMORY; i++)
 		query_mem_dict->dictionary[i] = NULL;
+	query_mem_dict->next_replace=0;
 
 	/// allocate memory for variable query_mem_result which is used in query_mem->result
 	AK_query_mem_result * query_mem_result;
@@ -233,27 +234,34 @@ int AK_query_mem_AK_malloc()
 	}
 	query_mem_result->results=AK_malloc(MAX_QUERY_RESULT_MEMORY*sizeof(*query_mem_result->results));
 
-	/// allocate memory for variable tuple_dict which is used in query_mem->dictionary->dictionary[]
-	/* wrong - there is array of pointers to AK_tupple_dict structures, not only one
-	AK_tuple_dict * tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict)); <=== Allocated and forgotten
-	if ((tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))) == NULL)
+	
+	AK_tuple_dict *tuple_dict;
+	for(i=0; i<MAX_QUERY_DICT_MEMORY; i++)
 	{
-		printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple dictionary memory \n");
-		AK_EPI;
-		exit(EXIT_ERROR);
-	}
-
-	memcpy(query_mem_dict->dictionary, tuple_dict, sizeof (* tuple_dict));
-	*/
-	for(i = 0; i< MAX_QUERY_RESULT_MEMORY; i++)
-	{
-		if(query_mem_dict->dictionary[i]=(AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))==NULL)
+		if ((tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))) == NULL)
 		{
-			printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple in query result memory \n");
+			printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple dictionary memory \n");
 			AK_EPI;
 			exit(EXIT_ERROR);
 		}
+		query_mem_dict->dictionary[i]=tuple_dict;
 	}
+	query_mem_dict->next_replace=0;
+
+	/* 
+	Edited by Elvis Popovic - please check if this is correct
+	Was:
+		/// allocate memory for variable tuple_dict which is used in query_mem->dictionary->dictionary[]
+		AK_tuple_dict * tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict)); //double allocation
+		if ((tuple_dict = (AK_tuple_dict *) AK_malloc(sizeof (AK_tuple_dict))) == NULL)
+		{
+			printf("  AK_query_mem_AK_malloc: ERROR. Cannot allocate tuple dictionary memory \n");
+			AK_EPI;
+			exit(EXIT_ERROR);
+		}
+
+		memcpy(query_mem_dict->dictionary, tuple_dict, sizeof (* tuple_dict)); //why?
+	*/
 
 	query_mem->parsed = query_mem_lib;
 	query_mem->dictionary = query_mem_dict;
@@ -274,7 +282,25 @@ int AK_query_mem_AK_malloc()
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
-
+/**
+ * @author Elvis Popović
+ * @brief  Function releases the global query memory (variable query_mem)
+ */
+void AK_query_mem_AK_free()
+{
+	int i;
+	AK_PRO;
+	AK_free(query_mem->parsed);
+	for(i=0; i<MAX_QUERY_DICT_MEMORY; i++)
+		if(query_mem->dictionary->dictionary[i] != NULL)
+			AK_free(query_mem->dictionary->dictionary[i]);
+	AK_free(query_mem->dictionary);
+	if(query_mem->result != NULL)
+		AK_free(query_mem->result->results);
+	AK_free(query_mem->result);
+	AK_free(query_mem);
+	AK_EPI;
+}
 
 /**
  * @author Miroslav Policki
