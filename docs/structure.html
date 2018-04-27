@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AKDB Structure</title>
+        <meta charset="UTF-8">
+        <meta name="keywords" content="AKDB, Database, FOI, FOBP">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="style.css" rel="stylesheet" type="text/css">
+        <script>
+            window.addEventListener("load", function(){
+
+                var elements = document.querySelectorAll("button");  
+                var totalWidth = 32; 
+
+                for(var i = 0, length = elements.length; i < length; i++) {   
+                    totalWidth +=  elements[i].offsetWidth;
+                }
+
+                document.getElementById("content").setAttribute("style","width:" + totalWidth + "px");
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="main">
+
+            <div id="header">
+                <img id="logo" src="akdblogo_large.png">
+            </div>
+
+            <div id="container">
+
+                <div id="menu">
+                    <a href="index.html"><button type="button">What is AKDB?</button></a>
+                    <a href="installation.html"><button type="button">Installation</button></a>
+                    <a href="build.html"><button type="button">Building</button></a>
+                    <a href="structure.html"><button type="button">Directories</button></a>
+                    <a href="testing.html"><button type="button">Testing</button></a>
+                    <a href="https://github.com/mschatten/akdb"><button type="button">GitHub</button></a>
+                </div>
+                
+                <div id="content">
+                    <div id="line"></div>
+                    
+                    <p>
+                        AKDB system root directory consists of three folders and two files. Files contained within this
+                        directory are LICENSE file (contains the GNU General Public Licence) and a README file which 
+                        in short describes installation and building of the application. Folders in the root
+                        directory and their purpose be explained next.
+                    </p>
+
+                    <p class="bold">Binary (bin)</p>
+
+                    <p>
+                        Essential folder where application compiles to and from where you can run it. Folder contains
+                        several files and another folder called blobs where all binary files are stored to after running.
+                        Blob folder is created empty, and is created after the application is installed and started
+                        for the first time. Files in bin folder are:
+                        <ul>
+                            <li><b>akdb - </b>main executable for AKDB</li>
+                            <li><b>config - </b>configuration file with default settings</li>
+                            <li><b>kalasnikov - </b>database file created on first run</li>
+                            <li><b>tests - </b>shell script for listing tests</li>
+                        </ul>
+                    </p>
+
+
+                    <p class="bold">Documentation (doc)</p>
+
+                    <p>
+                        Documentation for AKDB is created using Doxygen. It is a tool that generates documentation
+                        from comments in the source code. The end result is a reference manual in PDF format. Doxygen
+                        can create this in HTML or LaTeX format.
+                    </p>
+
+                    <p>
+                        In this folder there are two additional folders. HTML folder contains HTMl and JS elements used for
+                        creation of a manual in web form while LaTeX folder contains Tex elements for creation of PDF and 
+                        RTF manuals. A lengthy AKDB reference manual in PDF format called <i>refman</i> is located in doc 
+                        folder and it is highly recommended you study it if you want to get a better insight into the system.
+                    </p>
+
+                    <p class="bold">Source (src)</p>
+
+                    <p>
+                        This folder containts the main source code for compiling and building the application. It has files
+                        required to start building process and subfolders where the source code files are located. Most of the
+                        source code files are written in C, expect Server and SWIG files which are written in Python and shell 
+                        scripts. Files in source directory:
+                        <ul>
+                            <li><b>build - </b>cleans installation directory and compiles the application</li>
+                            <li><b>doxygen - </b>configuration file with settings for Doxygen</li>
+                            <li><b>main - </b>source code that starts the application and its components</li>
+                            <li><b>main.d &amp; main.o - </b>dictionary and object help files</li>
+                            <li><b>Makefile - </b>configuration paramaters for application building</li>
+                            <li><b>projectDetails - </b>header that contains application version number</li>
+                        </ul>
+                    </p>
+
+                    <p>
+                        <table id="table" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th id="heder">Folder</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Auxiliary (auxi)</td>
+                                    <td>Debugger, Type converter, Constants, Dictionary, Parser, Memory Programmer, Observer, Test reporting</td>
+                                </tr>
+                                <tr>
+                                    <td>Disk manager (dm)</td>
+                                    <td>Source code for managing database and its objects on hard disk</td>
+                                </tr>
+                                <tr>
+                                    <td>File manager (file)</td>
+                                    <td>
+                                        Database indexes (bitmap, btree, hash, regular), Blob management, File input and output, File search,
+                                        File sorting, File identification, Table managment, Sequences, File manager testing
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HTML (html_files)</td>
+                                    <td>Header and footer for Doxygen in HTML (includes CSS and JS scripts)</td>
+                                </tr>
+                                <tr>
+                                    <td>Memory Manager (mm)</td>
+                                    <td>Utility that manages memory allocation and deallocation in database operation</td>
+                                </tr>
+                                <tr>
+                                    <td>Optimization (opti)</td>
+                                    <td>Query optimization, Relational operations optimization (association, comutation, projection, selection)</td>
+                                </tr>
+                                <tr>
+                                    <td>Recovery (rec)</td>
+                                    <td>Archive and redo log manager, Recovery tools for system crash, Database log in textual and binary form</td>
+                                </tr>
+                                <tr>
+                                    <td>Relational algebra (rel)</td>
+                                    <td>
+                                        Operations that are used in queries and are essential for database functionality (aggregation, difference, 
+                                        expression check, intersect, natural Join, product, projection, selection, theta join, union)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SQL commands (sql)</td>
+                                    <td>Responsible for executing SQL commands (command, drop, function, priviliges, select, trigger,
+                                        view, between, check, constraints, not null, reference, unique)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Server (srv)</td>
+                                    <td>Client and Server source code (running and configuration), SQL executor</td>
+                                </tr>
+                                <tr>
+                                    <td>SWIG (swig)</td>
+                                    <td>Wrapper files for integration of C with Python in SWIG tool (includes configuration and test)</td>
+                                </tr>
+                                <tr>
+                                    <td>Shell tools (tools)</td>
+                                    <td>Generation comments, file fetching, C and Pythin parsing, application updating</td>
+                                </tr>
+                                <tr>
+                                    <td>Transactions (trans)</td>
+                                    <td>Source code for performing transactions in the database</td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div id="footer">
+                FAKULTET ORGANIZACIJE I INFORMATIKE<br>
+                VARAŽDIN, 2018.
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

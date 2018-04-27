@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Build AKDB</title>
+        <meta charset="UTF-8">
+        <meta name="keywords" content="AKDB, Database, FOI, FOBP">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="style.css" rel="stylesheet" type="text/css">
+        <script>
+            window.addEventListener("load", function(){
+
+                var elements = document.querySelectorAll("button");  
+                var totalWidth = 32; 
+
+                for(var i = 0, length = elements.length; i < length; i++) {   
+                    totalWidth +=  elements[i].offsetWidth;
+                }
+
+                document.getElementById("content").setAttribute("style","width:" + totalWidth + "px");
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="main">
+
+            <div id="header">
+                <img id="logo" src="akdblogo_large.png">
+            </div>
+
+            <div id="container">
+
+                <div id="menu">
+                    <a href="index.html"><button type="button">What is AKDB?</button></a>
+                    <a href="installation.html"><button type="button">Installation</button></a>
+                    <a href="build.html"><button type="button">Building</button></a>
+                    <a href="structure.html"><button type="button">Directories</button></a>
+                    <a href="testing.html"><button type="button">Testing</button></a>
+                    <a href="https://github.com/mschatten/akdb"><button type="button">GitHub</button></a>
+                </div>
+                
+                <div id="content">
+                    <div id="line"></div>
+
+                    <p class="bold">
+                            Native
+                        </p>
+                    <p>
+                        After you've installed everything system needs to run you can now build the application. To do this you
+                        need to position yourself into src directory and execute:
+                    </p>
+
+                    <p class="code">
+                        make<br>
+                        make doc<br>
+                        make swig
+                    </p>
+
+                    <p>
+                        This will compile and build application, along with creating documentation in Doxygen and connecting C with Python using SWIG. 
+                        To view documentation go to doc directory and open PDF document called refman.pdf.
+                    </p>
+
+                    <p>
+                        To run AKDB position yourself into bin directory and execute:
+                    </p>
+
+                    <p class="code">
+                        ./akdb
+                    </p>
+
+                    <p>
+                        This will initialize disk manager and prepare all tests. To see additional commands type:
+                    </p>
+
+                    <p class="code">
+                        ./akdb help
+                    </p>
+
+                    <p>
+                        You can see other currently available options are testing options, and will be explained on page testing.
+                        If you want to clean the project of files generated during compiling run this:
+                    </p>
+
+                    <p class="code">
+                        make clean<br>
+                        make clean-d
+                    </p>
+                    
+                    <p>
+                        To see if there are some leftover Croatian comments in the code:
+                    </p>
+
+                    <p class="code">
+                        make comments
+                    </p>
+
+                    <p>
+                        As it was said before, the application is not yet functional, so this is currently used for developing
+                        and testing purposes.
+                    </p>
+
+                    <p class="bold">
+                        Docker
+                    </p>
+
+                    <p>
+                        After you've installed Docker and Make you can start docker container with AKDB and its host directory 
+                        will be automatically mapped in container directory. This means that all the changes you make on your machine 
+                        are automatically seen and saved inside the container.
+                    </p>
+
+                    <p>
+                        For more informations examine Dockerfile in root directory. To install Docker execute command:
+                    </p>
+
+                    <p class="code">
+                        make docker-install
+                    </p>
+
+                    <p>
+                        Command for running on Windows:
+                    </p>
+
+                    <p class="code">
+                        make docker-win
+                    </p>
+
+                    <p>
+                        Command for running on Mac OS:
+                    </p>
+
+                    <p class="code">
+                        make docker-mac
+                    </p>
+
+                    <p>
+                        All other commands for starting application and performing tests are the same like in native environment.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div id="footer">
+                FAKULTET ORGANIZACIJE I INFORMATIKE<br>
+                VARAŽDIN, 2018.
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
