@@ -22,7 +22,8 @@
 
 /**
    * @author Matija Novak
-   * @brief Function inserts new element after some element, to insert on first place give list as before element. New element
+   * @brief !! YOU PROBABLY DON'T WANT TO USE THIS FUNCTION !! - Use Ak_Update_Existing_Element or Ak_Insert_New_Element instead. 
+   Function inserts new element after some element, to insert on first place give list as before element. New element
             is allocated. Type, data, attribute name and constraint of new elemets are set according to function arguments. Pointers
             are changed so that before element points to new element.
    * @param newtype type of the data
@@ -59,8 +60,25 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
 }
 
 /**
+   * @author Igor Rinkovec
+   * @brief Used to add a constraint attribute which will define what element gets updated when the operation is executed.
+   * @param newtype type of the data
+   * @param data the data
+   * @param table table name
+   * @param attribute_name attribute name
+   * @param element element after we which insert the new element
+   * @param constraint is NEW_VALUE
+   * @return No return value
+ */
+void Ak_Update_Existing_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore) {
+  AK_PRO;
+  Ak_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, SEARCH_CONSTRAINT);
+  AK_EPI;
+}
+
+/**
    * @author Matija Novak, changed by Dino Laktašić
-   * @brief Function inserts new element after some element, to insert on first place give list as before element. It calls function
+   * @brief Used to add a new element after some element, to insert on first place give list as before element. It calls function
             Ak_Insert_New_Element_For_Update.
    * @param newtype type of the data
    * @param data the data
