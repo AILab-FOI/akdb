@@ -181,6 +181,8 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 		
 	AK_free(src_addr1);
         AK_free(src_addr2);
+		Ak_DeleteAll_L3(&row_root);	
+		AK_free(row_root);
 		Ak_dbg_messg(LOW, REL_OP, "DIFFERENCE_TEST_SUCCESS\n\n");
 		AK_EPI;
 		return EXIT_SUCCESS;
