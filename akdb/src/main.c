@@ -149,7 +149,7 @@ function fun[] = {
 {"sql: AK_command", &AK_test_command}, //sql/command.c
 {"sql: AK_drop", &AK_drop_test}, //sql/drop.c
 {"sql: AK_view", &AK_view_test}, //sql/view.c
-{"sql: AK_null", &AK_null_test}, //sql/cs/nnull.c
+{"sql: AK_nnull", &AK_nnull_constraint_test}, //sql/cs/nnull.c
 {"sql: AK_select", &AK_select_test}, //sql/select.c
 {"sql: AK_trigger", &AK_trigger_test}, //sql/trigger.c
 {"sql: AK_unique", &AK_unique_test}, //sql/cs/unique.c
