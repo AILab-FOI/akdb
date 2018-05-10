@@ -1642,6 +1642,7 @@ AK_insert_entry(AK_block* block_address, int type, void* entry_data, int i)
   /// copy tuple_dict to block->tuple_dict[i]
   /// must use & becouse tuple_dict[i] is value and catalog_tuple_dict adress
   memcpy(&block_address->tuple_dict[i], catalog_tuple_dict, sizeof (*catalog_tuple_dict));
+	AK_free(catalog_tuple_dict);
   AK_EPI;
 }
 
