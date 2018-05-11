@@ -37,7 +37,8 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
     int startAddress1 = src_addr1->address_from[0];
     int startAddress2 = src_addr2->address_from[0];
 
-    if ((startAddress1 != 0) && (startAddress2 != 0)) {
+    if ((startAddress1 != 0) && (startAddress2 != 0)) 
+	{
         register int i, j, k, l;
         i = j = k = l = 0;
 
@@ -62,39 +63,49 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 	struct list_node *row_root = (struct list_node * ) AK_malloc(sizeof(struct list_node));
 
         //TABLE1: for each extent in table1
-        for (i = 0; src_addr1->address_from[i] != 0; i++) {
+        for (i = 0; src_addr1->address_from[i] != 0; i++) 
+		{
             startAddress1 = src_addr1->address_from[i];
 
                 //BLOCK: for each block in table1 extent
-                for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
+                for (j = startAddress1; j < src_addr1->address_to[i]; j++) 
+				{
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
                     //if there is data in the block
-                    if (tbl1_temp_block->block->AK_free_space != 0) {
+                    if (tbl1_temp_block->block->AK_free_space != 0) 
+					{
 
                         //TABLE2: for each extent in table2
-                        for (k = 0; k < (src_addr2->address_from[k] != 0); k++) {
+                        for (k = 0; k < (src_addr2->address_from[k] != 0); k++) 
+						{
                             startAddress2 = src_addr2->address_from[k];
 
-                            if (startAddress2 != 0) {
+                            if (startAddress2 != 0) 
+							{
 
                                 //BLOCK: for each block in table2 extent
-                                for (l = startAddress2; l < src_addr2->address_to[k]; l++) {
+                                for (l = startAddress2; l < src_addr2->address_to[k]; l++) 
+								{
                                     tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 
                                     //if there is data in the block
-                                    if (tbl2_temp_block->block->AK_free_space != 0) {
+                                    if (tbl2_temp_block->block->AK_free_space != 0) 
+									{
 										
                                         //TUPLE_DICTS: for each tuple_dict in the block
-                                        for (m = 0; m < DATA_BLOCK_SIZE; m += num_att) {
+                                        for (m = 0; m < DATA_BLOCK_SIZE; m += num_att) 
+										{
                                             if (tbl1_temp_block->block->tuple_dict[m + 1].type == FREE_INT)
                                                 break;
 
-                                            for (o = 0; o < DATA_BLOCK_SIZE; o += num_att) {
+                                            for (o = 0; o < DATA_BLOCK_SIZE; o += num_att) 
+											{
                                                 if (tbl2_temp_block->block->tuple_dict[o + 1].type == FREE_INT)
                                                     break;
 
-                                                for (n = 0; n < num_att; n++) {
+                                                for (n = 0; n < num_att; n++) 
+												{
                                                     type = tbl1_temp_block->block->tuple_dict[m + n].type;
                                                     size = tbl1_temp_block->block->tuple_dict[m + n].size;
                                                     address = tbl1_temp_block->block->tuple_dict[m + n].address;
@@ -114,8 +125,10 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 													else if(strcmp(data1, data2) == 0 && n==(num_att-1)) thesame=1;
                                                 }
 
-                                                if (thesame==1) {
-                                                    for (n = 0; n < num_att; n++) {
+                                                if (thesame==1) 
+												{
+                                                    for (n = 0; n < num_att; n++) 
+													{
                                                         type = tbl1_temp_block->block->tuple_dict[m + n].type;
                                                         size = tbl1_temp_block->block->tuple_dict[m + n].size;
                                                         address = tbl1_temp_block->block->tuple_dict[m + n].address;
@@ -144,10 +157,12 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_free(src_addr2);
 	Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
 		
-
+	AK_free(row_root);
 	AK_EPI;
-        return EXIT_SUCCESS;
-    } else {
+    return EXIT_SUCCESS;
+    } 
+	else 
+	{
         Ak_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
         AK_free(src_addr1);
         AK_free(src_addr2);
