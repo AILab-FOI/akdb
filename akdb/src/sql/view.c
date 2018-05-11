@@ -148,23 +148,7 @@ int AK_view_remove_by_obj_id(int obj_id) {
     return result;
 }
 
-/**
- * @author Kresimir Ivkovic
- * @brief Removes the view by its name by identifying the view's id and passing id to AK_view_remove_by_obj_id
- * @param name name of the view
- * @return Result of AK_view_remove_by_obj_id or EXIT_ERROR if no id is found
- */
-int AK_view_remove_by_name(char *name) {
-   AK_PRO;
-    
-    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
-    
-   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_view", "name", row_root, 1);
-   int result = Ak_delete_row(row_root);
-   AK_EPI;
-   return result;
-}
+
 
 /**
  * @author Kresimir Ivkovic
@@ -196,6 +180,25 @@ int AK_view_rename(char *name, char *new_name){
    result = AK_view_remove_by_name(name);
    result = AK_view_remove_by_name(name);
    result = AK_view_add(new_name, query, rel_exp, view_id);
+   AK_EPI;
+   return result;
+}
+
+/**
+ * @author Kresimir Ivkovic
+ * @brief Removes the view by its name by identifying the 
+ * view's id and passing id to AK_view_remove_by_obj_id
+ * @param name name of the view
+ * @return Result of AK_view_remove_by_obj_id or EXIT_ERROR if no id is found
+ */
+int AK_view_remove_by_name(char *name) {
+   AK_PRO;
+    
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&row_root);
+    
+   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_view", "name", row_root, 1);
+   int result = Ak_delete_row(row_root);
    AK_EPI;
    return result;
 }
@@ -260,54 +263,125 @@ int AK_test_get_view_data(char *rel_exp){
  */
 TestResult AK_view_test() {
    AK_PRO;
-   printf("\n*******View test**********\n\n");
+
+    int passed=0;
+    int failed=0;
+
+   printf("\n*******VIEW TESTS**********\n\n");
+
    AK_view_add("view1", "SELECT lastname FROM profesor","profesor;lastname;", 0);
+   printf ("\n\n");
    AK_view_add("view2", "query2","firstname;", 0);
+      printf ("\n\n");
+
    AK_view_add("view3", "query3","*;profesor;", 0);
+      printf ("\n\n");
+
    AK_view_add("view4", "query4","2 >;", 0);
-   AK_view_add("view5", "select * from student where firstname=Robert","student;firstname;Robert;=", 0);
+      printf ("\n\n");
+
+   AK_view_add("view5", "select * from student where firstname=Robert",
+   "student;firstname;Robert;=", 0);
+      printf ("\n\n");
+
    AK_view_add("view6", "query6","lastname", 0);
+      printf ("\n\n");
+
    AK_view_add("view7", "query7","student;firstname", 0);
+      printf ("\n\n");
+
    AK_print_table("AK_view");
 
-   printf("Obj_id za view1: %d\n", AK_get_view_obj_id("view1"));
-   printf("Query za view1: %s\n\n", AK_get_view_query("view1"));
+   printf("Obj_id for view1: %d\n", AK_get_view_obj_id("view1"));
+   printf("Query for view1: %s\n\n", AK_get_view_query("view1"));
 
-   printf("Obj_id za view2: %d\n", AK_get_view_obj_id("view2"));
-   printf("Query za view2: %s\n\n", AK_get_view_query("view2"));
-
-   printf("Obj_id za view3: %d\n", AK_get_view_obj_id("view3"));
-   printf("Query za view3: %s\n\n", AK_get_view_query("view3"));
-
-   printf("Obj_id za view4: %d\n", AK_get_view_obj_id("view4"));
-   printf("Query za view4: %s\n\n", AK_get_view_query("view4"));
-
-   printf("Obj_id za view5: %d\n", AK_get_view_obj_id("view5"));
-   printf("Query za view5: %s\n\n", AK_get_view_query("view5"));
-
-   printf("\nRemoving view 'view1' and 'view2'...\n");
-   AK_view_remove_by_name("view1");
-   AK_view_remove_by_name("view2");
-   AK_print_table("AK_view");
-   
-   printf("\nRemoving view 'view2' and 'view6' by Obj_id...\n");
    printf("Obj_id for view2: %d\n", AK_get_view_obj_id("view2"));
-   printf("Obj_id for view6: %d\n", AK_get_view_obj_id("view6"));  
-   AK_view_remove_by_obj_id(AK_get_view_obj_id("view2"));
-   AK_view_remove_by_obj_id(AK_get_view_obj_id("view6"));   
-   AK_print_table("AK_view");
+   printf("Query for view2: %s\n\n", AK_get_view_query("view2"));
+
+   printf("Obj_id for view3: %d\n", AK_get_view_obj_id("view3"));
+   printf("Query for view3: %s\n\n", AK_get_view_query("view3"));
+
+   printf("Obj_id for view4: %d\n", AK_get_view_obj_id("view4"));
+   printf("Query for view4: %s\n\n", AK_get_view_query("view4"));
+
+   printf("Obj_id for view5: %d\n", AK_get_view_obj_id("view5"));
+   printf("Query for view5: %s\n\n", AK_get_view_query("view5"));
+
+   printf("\n**** TEST 1 - DELETE VIEW BY NAME **** \n");
+   printf("\nDeleting views 'view1' and 'view2'...\n");
+   int delete1 = AK_view_remove_by_name("view1");
+   int delete2 = AK_view_remove_by_name("view2");
+    if (delete1 != EXIT_ERROR && delete2 != EXIT_ERROR) {
+        passed++;
+    AK_print_table("AK_view");
+    printf("\n Test 1 is successful!.\n\n");
+
+    }else {
+        failed ++;
+        printf("\n Test 1 failed!.\n\n");
+        }
+
+    printf("\n****TEST 2 - DELETE VIEW BY ID**** \n");
+    printf("\nDeleting views 'view2' and 'view6' by Obj_id...\n");
+   printf("Obj_id for view2: %d\n", AK_get_view_obj_id("view2"));
+   printf("Obj_id for view6: %d\n", AK_get_view_obj_id("view6")); 
+    int delete3=AK_view_remove_by_obj_id(AK_get_view_obj_id("view2"));
+   int delete4= AK_view_remove_by_obj_id(AK_get_view_obj_id("view6"));   
+   if (delete3 != EXIT_ERROR && delete4 != EXIT_ERROR) {
+        passed++;
+    AK_print_table("AK_view");
+    printf("\n Test 2 is successful!\n\n");
+
+    }else {
+        failed ++;
+        printf("\n Test 2 failed!\n\n");
+        }
+
+
   
+   printf("\n **** TEST 3 - RENAME VIEW ****\n");
 
    printf("\nRenaming 'view3' to 'view300'...\n");
-   AK_view_rename("view3","view300");
-   AK_print_table("AK_view");
+   int renameView = AK_view_rename("view3","view300");
+     if (renameView != EXIT_ERROR) {
+        passed++;
+    AK_print_table("AK_view");
+    printf("\n Test 3 is successful!\n\n");
+
+    }else {
+        failed ++;
+        printf("\n Test 3 failed!\n\n");
+        }
+
+
+   printf("\n **** TEST 4 - CHANGE QUERY ****\n");
 
    printf("\nChanging 'view4' query to '44query44'...\n");
-   AK_view_change_query("view4","44query44","student;id");
-   AK_print_table("AK_view");
-   printf("\nShow test view data for view5'...\n");
-   AK_test_get_view_data("student;firstname;Robert;=");
-   AK_EPI;
+   int changeQuery= AK_view_change_query("view4","44query44","student;id");
+   if (changeQuery != EXIT_ERROR) {
+        passed++;
+    AK_print_table("AK_view");
+    printf("\n Test 4 is successful!\n\n");
 
-   return TEST_result(0,0);
+    }else {
+        failed ++;
+        printf("\n Test 4 failed!\n\n");
+        }
+
+printf("\n **** TEST 5 - SHOW VIEW DATA ****\n");   
+printf("\n Show test view data for view5'...\n");
+int showData = AK_test_get_view_data("student;firstname;Robert;=");
+   if (showData != EXIT_ERROR) {
+        passed++;
+    AK_print_table("AK_view");
+    printf("\n Test 5 is successful!\n\n");
+
+    }else {
+        failed ++;
+        printf("\n Test 5 failed!\n\n");
+        }
+
+AK_EPI;
+
+   return TEST_result(passed,failed);
 }

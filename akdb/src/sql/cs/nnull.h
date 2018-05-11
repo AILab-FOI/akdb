@@ -28,7 +28,8 @@
 
 int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintName);
 int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue);
+int AK_check_constraint_not_null(char* tableName, char* attName, char* newValue);
 int AK_delete_constraint_not_null(char* tableName, char attName[], char constraintName[]);
-TestResult AK_null_test();
+TestResult AK_nnull_constraint_test();
 
 #endif
