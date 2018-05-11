@@ -143,12 +143,15 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
         AK_free(src_addr1);
         AK_free(src_addr2);
 	Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
+		
+
 	AK_EPI;
         return EXIT_SUCCESS;
     } else {
         Ak_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
         AK_free(src_addr1);
         AK_free(src_addr2);
+		
 	AK_EPI;
 	return EXIT_ERROR;
     }

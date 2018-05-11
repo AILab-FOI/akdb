@@ -153,6 +153,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_header *att_root = (*input).attributes;
     int *att_tasks = (*input).tasks;
     int num_aggregations = (*input).counter;
+	AK_header *agg_head_ptr[MAX_ATTRIBUTES];
     AK_header agg_head[MAX_ATTRIBUTES];
     int agg_group_number = 0;
     int inttemp = 0;
@@ -168,7 +169,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     char new_table[MAX_ATT_NAME];
     sprintf(new_table, "_%s", agg_table);
 
-    for (i = 0; i < num_aggregations; i++) {
+    for (i = 0; i < num_aggregations; i++) 
+	{
         agg_h_type = att_root[i].type;
         switch (att_tasks[i]) {
             case AGG_TASK_GROUP:
@@ -210,11 +212,13 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
         }
         needed_values[i].agg_task = att_tasks[i];
         strcpy(needed_values[i].att_name, att_root[i].att_name);
-        agg_head[i] = *(AK_header*) AK_create_header(agg_h_name, agg_h_type, FREE_INT, FREE_CHAR, FREE_CHAR);
+		agg_head_ptr[i] = AK_create_header(agg_h_name, agg_h_type, FREE_INT, FREE_CHAR, FREE_CHAR);
+        agg_head[i] = *(agg_head_ptr[i]);
     }
 
     // removing rest of the unneeded attributes (where attribute id is greater than number of used aggregations)
-    for (i = num_aggregations; i < MAX_ATTRIBUTES; i++) {
+    for (i = num_aggregations; i < MAX_ATTRIBUTES; i++) 
+	{
         memcpy(&agg_head[i], "\0", sizeof ( "\0"));
     }
     
@@ -572,7 +576,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     }
 
     //if there is no grouping, we only need to insert one row into the table and we can insert it straight into the destination table
-    if(agg_group_number == 0){
+    if(agg_group_number == 0)
+	{
 
     	AK_header agg_head_final[MAX_ATTRIBUTES];
     	j = 0;
@@ -592,7 +597,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     	
 	Ak_DeleteAll_L3(&row_root);
 
-		for (l = 0; l < num_aggregations; l++) {
+		for (l = 0; l < num_aggregations; l++) 
+		{
 
 			switch (needed_values[l].agg_task) {
 
@@ -621,17 +627,19 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 					Ak_Insert_New_Element(agg_head[l].type, needed_values[l].data, agg_table, agg_head[l].att_name, row_root);
 					break;
 			}
-
 		}
 		Ak_insert_row(row_root);
     }
-    else{
+    else
+	{
 
 	struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
 	Ak_Init_L3(&projection_att);
 
-	for (i = 0; i < num_aggregations; i++) {
-			if (agg_head[i].att_name[0] != '_') {
+	for (i = 0; i < num_aggregations; i++) 
+		{
+			if (agg_head[i].att_name[0] != '_') 
+			{
 				Ak_InsertAtEnd_L3(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
 
 			}
@@ -643,17 +651,23 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		Ak_DeleteAll_L3(&projection_att);
 		AK_free(projection_att);
     }
+	AK_free(addresses);
+		
 
         //TODO replace this segment with AK_drop_table() once when it's done
 	addresses = (table_addresses*) AK_get_table_addresses(new_table);
 	i = 0;
-	while (addresses->address_from[i] != 0) {
+	while (addresses->address_from[i] != 0) 
+	{
 		AK_delete_extent(addresses->address_from[i], addresses->address_to[i]);
 		i++;
 	}
+	for (i = 0; i < num_aggregations; i++)
+		AK_free(agg_head_ptr[i]);
     AK_free(needed_values);
     AK_free(row_root);
     AK_free(temp);
+	AK_free(addresses);
     AK_EPI;
     return EXIT_SUCCESS;
 }

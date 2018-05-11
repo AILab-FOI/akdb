@@ -1054,6 +1054,7 @@ AK_read_block(int address)
   if (AK_fread(block, sizeof(AK_block), 1, database) == 0)
     {
       printf("AK_read_block: ERROR. Cannot read block %d.\n", address);
+	  AK_free(block);
       AK_EPI;
       exit(EXIT_ERROR);
     }
@@ -2424,10 +2425,13 @@ AK_delete_block(int address)
 
     if (AK_write_block(block) == EXIT_SUCCESS)
       {
+		/* added block deallocation, seems no more needed. All positive tests passed. For your convenvenience, I added comment here... Elvis Popovic, 10.05.2018.*/
+		AK_free(block);
         AK_EPI;
         return EXIT_SUCCESS;
       }
-    
+	/* same here Elvis Popovic, 10.05.2018.*/
+    AK_free(block);
     AK_EPI;
     return EXIT_ERROR;
 }

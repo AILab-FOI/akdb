@@ -30,7 +30,11 @@
 void AK_create_block_header(int old_block, char *dstTable, struct list_node *att) {
 //void AK_create_block_header(int old_block, char *dstTable, AK_list *att) {
     AK_PRO;
-    AK_block *temp_block = (AK_block *) AK_malloc(sizeof (AK_block));
+	
+	/* do we really need it??? */
+    /* AK_block *temp_block = (AK_block *) AK_malloc(sizeof (AK_block)); */
+	AK_block *temp_block;
+	
     temp_block = (AK_block *) AK_read_block(old_block);
     AK_header *temp;
 

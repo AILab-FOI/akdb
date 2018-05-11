@@ -63,7 +63,11 @@ void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int a
  */
 void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
     AK_PRO;
-    AK_block *sys_block = (AK_block *) AK_malloc(sizeof (AK_block));
+	
+	/* do we really need this???  Edited by Elvis Popovic*/
+	/* AK_block *sys_block = (AK_block *) AK_malloc(sizeof (AK_block)); */
+	AK_block *sys_block;
+	
     sys_block = (AK_block *) AK_read_block(1);
 
     int startAddress = AK_initialize_new_segment(table, type_segment, header);
