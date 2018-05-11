@@ -1054,6 +1054,7 @@ AK_read_block(int address)
   if (AK_fread(block, sizeof(AK_block), 1, database) == 0)
     {
       printf("AK_read_block: ERROR. Cannot read block %d.\n", address);
+	  AK_free(block);
       AK_EPI;
       exit(EXIT_ERROR);
     }
@@ -1642,6 +1643,7 @@ AK_insert_entry(AK_block* block_address, int type, void* entry_data, int i)
   /// copy tuple_dict to block->tuple_dict[i]
   /// must use & becouse tuple_dict[i] is value and catalog_tuple_dict adress
   memcpy(&block_address->tuple_dict[i], catalog_tuple_dict, sizeof (*catalog_tuple_dict));
+	AK_free(catalog_tuple_dict);
   AK_EPI;
 }
 
@@ -2423,10 +2425,13 @@ AK_delete_block(int address)
 
     if (AK_write_block(block) == EXIT_SUCCESS)
       {
+		/* added block deallocation, seems no more needed. All positive tests passed. For your convenvenience, I added comment here... Elvis Popovic, 10.05.2018.*/
+		AK_free(block);
         AK_EPI;
         return EXIT_SUCCESS;
       }
-    
+	/* same here Elvis Popovic, 10.05.2018.*/
+    AK_free(block);
     AK_EPI;
     return EXIT_ERROR;
 }
