@@ -18,6 +18,7 @@
 #include "../auxi/debug.c"
 #include "../auxi/observable.c"
 #include "../auxi/iniparser.c"
+#include "../auxi/test.c"
 #include "../auxi/auxiliary.c"
 #include "../file/filesearch.c"
 #include "../file/files.c"

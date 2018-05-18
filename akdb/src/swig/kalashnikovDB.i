@@ -255,6 +255,9 @@ Everything in the %{ ... %} block is simply copied verbatim to the resulting wra
 %include "../auxi/auxiliary.c"
 %include "../auxi/auxiliary.h"
 
+%include "../auxi/test.c"
+%include "../auxi/test.h"
+
 %include "../dm/dbman.h"
 %include "../dm/dbman.c"
 extern table_addresses *AK_get_segment_addresses(char * segmentName);
