@@ -2602,9 +2602,14 @@ TestResult AK_allocationbit_test()
 	int bitNo;
     AK_PRO;
     AK_blocktable_dump(1);
+	
+	//for test of test itself
+	//BITSET(AK_allocationbit->bittable,AK_allocationbit->last_allocated);
+	
 	printf("Last allocated bit: %d\n",AK_allocationbit->last_allocated);
 	printf("Last initialized bit: %d\n",AK_allocationbit->last_initialized);
 	printf("Prepared: %d\n",AK_allocationbit->prepared);
+	
 	i=success=failed=0;
 	if(BITTEST(AK_allocationbit->bittable, i))
 	{
@@ -2625,7 +2630,7 @@ TestResult AK_allocationbit_test()
 		}
 	success++;
 	bitNo=0;
-	for(;i<DB_FILE_BLOCKS_NUM; i++,bitNo++)
+	for(i=AK_allocationbit->last_allocated; i<DB_FILE_BLOCKS_NUM; i++,bitNo++)
 	{
 		if(BITTEST(AK_allocationbit->bittable, i))
 		{
