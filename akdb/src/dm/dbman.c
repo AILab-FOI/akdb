@@ -2577,12 +2577,70 @@ AK_init_disk_manager()
   return EXIT_ERROR;
 }
 
+///////////////////////////////////////////////
+/*
+
+for(i = 0; i < DB_FILE_BLOCKS_NUM; i++)
+	{
+	  if(AK_allocationbit->last_initialized < i)
+	    printf("(%3d-U) ", i);
+	  else if(BITTEST(AK_allocationbit->bittable, i))
+	    printf("(%3d-X) ", i);
+	  else
+	    printf("(%3d-O) ", i);
+	  
+	  if(( (i+1) % (CHAR_IN_LINE / 8) == 0))
+	    printf("\n");
+        }
+*/
+///////////////////////////////////////////////
+
 TestResult AK_allocationbit_test()
 {
+	//adding test code
+	int i, success, failed;
+	int bitNo;
     AK_PRO;
     AK_blocktable_dump(1);
+	printf("Last allocated bit: %d\n",AK_allocationbit->last_allocated);
+	printf("Last initialized bit: %d\n",AK_allocationbit->last_initialized);
+	printf("Prepared: %d\n",AK_allocationbit->prepared);
+	i=success=failed=0;
+	if(BITTEST(AK_allocationbit->bittable, i))
+	{
+		failed++;
+		printf("First bit has wrong avalue.\n");
+	}
+	else
+		success++;
+	success++;
+	bitNo=1;
+	for(i=1; i < AK_allocationbit->last_allocated; i++,bitNo++)
+		if(!BITTEST(AK_allocationbit->bittable, i))
+		{
+			failed++;
+			success--;
+			printf("Bit %d has wrong value in allocated area.\n");
+			break;
+		}
+	success++;
+	bitNo=0;
+	for(;i<DB_FILE_BLOCKS_NUM; i++,bitNo++)
+	{
+		if(BITTEST(AK_allocationbit->bittable, i))
+		{
+			failed++;
+			success--;
+			printf("Bit %d has wrong value out of allocated area.\n");
+			break;
+		}
+	}
+	printf("\n");
+	if(failed==0)
+		printf("All bit values O.K.\n");
+	
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }
 
 TestResult AK_allocationtable_test()
