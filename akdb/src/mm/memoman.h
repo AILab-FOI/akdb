@@ -177,7 +177,7 @@ int AK_query_mem_AK_malloc();
 void AK_query_mem_AK_free();
 
 int AK_memoman_init();
-int AK_memoman_AK_free();
+//int AK_memoman_AK_free();
 AK_mem_block *AK_get_block(int num);
 int AK_release_oldest_cache_block();
 void AK_mem_block_modify(AK_mem_block* mem_block, int dirty);
