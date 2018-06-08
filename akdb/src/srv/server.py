@@ -12,7 +12,9 @@ import time
 import kalashnikovDB as ak47
 import sql_executor as sqle
 import colors
+from user_log import logging
 
+logging.info('Server successfully started')
 ##instantiate the colours class
 bcolors = colors.bcolors()
 
@@ -52,6 +54,7 @@ class AK_server_request_handler(SocketServer.BaseRequestHandler):
     # Used to process a command given from a client.
     # Here is where you should call your application logic code.
     def processCommand(self, command):
+	logging.info(command)
         if command=="\q":
             return command
         else:
