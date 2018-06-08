@@ -293,7 +293,7 @@ int AK_function_remove_by_obj_id(int obj_id) {
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_function", "obj_id", row_root, 1);
+    Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_function", "obj_id", row_root);
 
     int result = Ak_delete_row(row_root);
     if (result == EXIT_ERROR) {
@@ -324,7 +324,7 @@ int AK_function_arguments_remove_by_obj_id(int *obj_id) {
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &oid, "AK_function_arguments", "func_id", row_root, 1);
+    Ak_Update_Existing_Element(TYPE_INT, &oid, "AK_function_arguments", "func_id", row_root);
     int result = Ak_delete_row(row_root);
     if (result == EXIT_ERROR) {
         Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_arguments_remove_by_obj_id: Could not delete arguments.\n");
@@ -375,8 +375,8 @@ int AK_function_rename(char *name, struct list_node *arguments_list, char *new_n
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &func_id, "AK_function", "obj_id", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_function", "name", row_root, 0);
+    Ak_Update_Existing_Element(TYPE_INT, &func_id, "AK_function", "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, new_name, "AK_function", "name", row_root);
 
     int result = Ak_update_row(row_root);
 
@@ -413,8 +413,8 @@ int AK_function_change_return_type(char *name, struct list_node *arguments_list,
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &func_id, "AK_function", "obj_id", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &new_return_type, "AK_function", "return_type", row_root, 0);
+    Ak_Update_Existing_Element(TYPE_INT, &func_id, "AK_function", "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &new_return_type, "AK_function", "return_type", row_root);
 
     int result = Ak_update_row(row_root);
 

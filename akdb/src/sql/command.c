@@ -103,8 +103,8 @@ TestResult AK_test_command(){
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L3(&row_root);
 
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &studentId, tblName, "studentId", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
+    Ak_Update_Existing_Element(TYPE_INT, &studentId, tblName, "studentId", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root);
 
     commands[1].id_command = UPDATE;
     commands[1].tblName = "student";
@@ -120,8 +120,8 @@ TestResult AK_test_command(){
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L3(&row_root);
 
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &id_prof, tblName, "id_prof", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root, 0);
+    Ak_Update_Existing_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root);
 
     commands[2].id_command = DELETE;
     commands[2].tblName = "professor";

@@ -140,7 +140,7 @@ int AK_view_remove_by_obj_id(int obj_id) {
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root, 1);
+    Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root);
     int result = Ak_delete_row((AK_list_elem)row_root);
     
     Ak_DeleteAll_L3(&row_root);
@@ -197,7 +197,7 @@ int AK_view_remove_by_name(char *name) {
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     
-   Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_view", "name", row_root, 1);
+   Ak_Update_Existing_Element(TYPE_VARCHAR, name, "AK_view", "name", row_root);
    int result = Ak_delete_row(row_root);
    AK_EPI;
    return result;

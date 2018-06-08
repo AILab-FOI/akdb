@@ -2514,7 +2514,7 @@ AK_delete_segment(char * name, int type)
     }
   
   Ak_DeleteAll_L3(&row_root);
-  Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, system_table, "name", row_root, 1);
+  Ak_Update_Existing_Element(TYPE_VARCHAR, name, system_table, "name", row_root);
   Ak_delete_row(row_root);
   AK_free(row_root);
 
