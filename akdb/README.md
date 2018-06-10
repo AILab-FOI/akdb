@@ -54,6 +54,11 @@ make
 make doc
 make swig
 ```
+### Run swig tests
+Builds swig tests, but fails relAlgebraTests file for unknown reason. You can run tests without error from src/swig folder with instructions from readme in swig folder. 
+```
+make swig-tests
+```
 ### Run the Application
 ```
 cd bin/
