@@ -300,7 +300,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                 while(some_element)
                 {
                     // save data from roow_root in a list new_data where whole row is being inserted 
-                    Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[j].type, some_element->data, some_element->table, some_element->attribute_name, new_data, NEW_VALUE);
+                    Ak_Insert_New_Element(temp_block->tuple_dict[j].type, some_element->data, some_element->table, some_element->attribute_name, new_data);
 
                     if (strcmp(some_element->attribute_name, temp_block->header[j % head].att_name) == 0 && some_element->constraint == NEW_VALUE)
                     {
@@ -317,7 +317,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                                 // if att_names are different, this is old data, and we need to insert it again
                                 if (strcmp(some_element->attribute_name, temp_block->header[k % head].att_name) != 0)
                                 {
-                                    Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[k].type, entry_data, some_element->table, temp_block->header[k % head].att_name, new_data, NEW_VALUE);
+                                    Ak_Insert_New_Element(temp_block->tuple_dict[k].type, entry_data, some_element->table, temp_block->header[k % head].att_name, new_data);
                                 }
 
                                 temp_block->tuple_dict[k].size = 0;
@@ -527,7 +527,7 @@ void Ak_delete_row_by_id(int id, char* tableName){
     } while ( *attributes != '\0' || index < MAX_VARCHAR_LENGTH);
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &id, tableName, nameID, row_root, 1);
+    Ak_Update_Existing_Element(TYPE_INT, &id, tableName, nameID, row_root);
     Ak_delete_row(row_root);
     AK_EPI;
 }
@@ -616,38 +616,38 @@ TestResult Ak_fileio_test() {
 
     Ak_DeleteAll_L3(&row_root);
     broj = 3;
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Vjekoslavoski", "testna", "Prezime", row_root, NEW_VALUE);
+    Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "Vjekoslavoski", "testna", "Prezime", row_root);
     Ak_update_row(row_root);
 
     AK_print_table("testna");
 
     Ak_DeleteAll_L3(&row_root);
     broj = 2;
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Francina", "testna", "Ime", row_root, NEW_VALUE);
+    Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "Francina", "testna", "Ime", row_root);
     Ak_update_row(row_root);
 
     AK_print_table("testna");
 
     Ak_DeleteAll_L3(&row_root);
     broj = 7;
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &broj, "testna", "Redni_broj", row_root, SEARCH_CONSTRAINT);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "M", "testna", "Prezime", row_root, NEW_VALUE);
+    Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "M", "testna", "Prezime", row_root);
     Ak_update_row(row_root);
 
     AK_print_table("testna");
 
     Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, SEARCH_CONSTRAINT);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "DugackoPrezime", "testna", "Prezime", row_root, NEW_VALUE);
+    Ak_Update_Existing_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "DugackoPrezime", "testna", "Prezime", row_root);
     Ak_update_row(row_root);
 
     AK_print_table("testna");
 
     Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root, SEARCH_CONSTRAINT);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "DugackoIme", "testna", "Ime", row_root, NEW_VALUE);
+    Ak_Update_Existing_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "DugackoIme", "testna", "Ime", row_root);
     Ak_update_row(row_root);
 
     AK_print_table("testna");
