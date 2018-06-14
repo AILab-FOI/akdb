@@ -58,7 +58,21 @@ make swig
 Builds swig tests, but fails relAlgebraTests file for unknown reason. You can run tests without error from src/swig folder with instructions from readme in swig folder. 
 ```
 make swig-tests
+
 ```
+### Run all tests from akdb
+if you want to run all tests from doctest and main.c
+NOTES:
+	sometimes akdb crashes so u have to make clean and build project again
+	some test functions are naughty so they access forbidden memory blocks and crash file :(
+
+Go to src/swig and after that, run:
+```
+
+python allTests.py
+
+```
+Go to src/swig
 ### Run the Application
 ```
 cd bin/
@@ -84,6 +98,7 @@ make comments
 ```
 cd bin
 ./akdb alltest
+./akdb test
 ```
 On first use DB file will be initialized. In case it hangs press 1 and Enter
 (don't ask why).

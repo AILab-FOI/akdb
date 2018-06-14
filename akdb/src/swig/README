@@ -22,3 +22,15 @@ to see doctest output, start it with:
 =========
 
 table strings needed for table correction testing are in "table_test.txt" file
+
+
+
+==================RUNNING ALL TESTS=======================================
+if you want to run all tests from doctest and main.c
+NOTES:
+	sometimes akdb crashes so u have to run again allTests
+	some test functions are naughty so they access forbidden memory blocks and crash file -> somebody should fix this 
+
+
+1. python allTests.py
+
