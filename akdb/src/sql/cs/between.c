@@ -326,8 +326,9 @@ TestResult Ak_constraint_between_test() {
     char* newValue_1 = "Department of Zoo";
     char* startValue_1 = "Department of Economy";
     char* endValue_1 = "Department of Organization";
-    int test_status_1 = 0;
-
+    //int test_status_1 = 0;
+    int failed=0;
+    int passed=0;
     AK_PRO;
 
     printf("============= Running Test #1 =============\n");
@@ -337,20 +338,22 @@ TestResult Ak_constraint_between_test() {
     
     if (AK_read_constraint_between(tableName_1, newValue_1, attName_1) == EXIT_ERROR) {
         printf("============= Test successful! ==============\n\n");
+        passed++;
     } 
     else {
         printf("============\tTest failed.\t============\n\n");
+        failed++;
     }
     
 
     // TEST #2
     char* tableName_2 = "department";
     char* attName_2 = "manager";
-    char* constraintName_2 = "manager_between";
+    char* constraintName_2 = "manager_surname_between";
     char* newValue_2 = "Kero";
     char* startValue_2 = "Hutinski";    
     char* endValue_2 = "Redep";
-    int test_status_2 = 0;
+    //int test_status_2 = 0;
 
     AK_PRO;
 
@@ -361,24 +364,32 @@ TestResult Ak_constraint_between_test() {
     
     if (AK_read_constraint_between(tableName_2, newValue_2, attName_2) != EXIT_ERROR) {
         printf("============= Test successful! ==============\n\n");
+        passed++;
     } 
     else {
         printf("============\tTest failed.\t============\n\n");
+        failed++;
     }
-
-    // delete test
-    printf("\n============== Running Delete Test ==============\n");
+    
+      // delete test
+    printf("\n============== Running Test #3 - Delete between constraint ==============\n");
 
     if(AK_delete_constraint_between(tableName_2, constraintName_2, attName_2) == EXIT_SUCCESS) {
         AK_print_constraints(tableName_2);
         printf("============= Test successful! ==============\n\n");
+        passed++;
     } 
     else {
         AK_print_constraints(tableName_2);
         printf("============\tTest failed.\t============\n\n");
+        failed++;
     }
-    
-    // TEST #3
+    AK_EPI;
+    return TEST_result(passed,failed);
+}
+
+/*
+TEST #3
     char* tableName_3 = "student";
     char* attName_3 = "weight";
     char* constraintName_3 = "weight_between";
@@ -395,11 +406,12 @@ TestResult Ak_constraint_between_test() {
     
     if (AK_read_constraint_between(tableName_3, newValue_3, attName_3) != EXIT_ERROR) {
         printf("============= Test successful! ==============\n\n");
+passed++;
     } 
     else {
         printf("============\tTest failed.\t============\n\n");
+failed++;
     }
+*/
 
-    AK_EPI;
-    return TEST_result(0,0);
-}
+
