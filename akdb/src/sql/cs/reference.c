@@ -282,7 +282,7 @@ int AK_reference_update(struct list_node *lista, int action) {
                 memcpy(tempData, tempcell->data, tempcell->size);
                 tempData[tempcell->size] = '\0';
 
-                Ak_Insert_New_Element_For_Update(tempcell->type, tempData, reference.table, reference.attributes[j], row_root, 1);
+                Ak_Update_Existing_Element(tempcell->type, tempData, reference.table, reference.attributes[j], row_root);
 
                 switch (reference.type) {
                     case REF_TYPE_CASCADE:
@@ -293,7 +293,7 @@ int AK_reference_update(struct list_node *lista, int action) {
                                 if (strcmp(temp->attribute_name, reference.parent_attributes[j]) == 0 && temp->constraint == 0) {
                                     memcpy(tempData, tempcell->data, tempcell->size);
                                     //tempData[tempcell->size] == '\0';
-                                    Ak_Insert_New_Element_For_Update(tempcell->type, tempData, reference.table, reference.attributes[j], row_root, 0);
+                                    Ak_Insert_New_Element(tempcell->type, tempData, reference.table, reference.attributes[j], row_root);
                                     break;
                                 }
 
@@ -308,13 +308,13 @@ int AK_reference_update(struct list_node *lista, int action) {
                         break;
                     case REF_TYPE_SET_NULL:
                         if (action == DELETE) {
-                            Ak_Insert_New_Element_For_Update(0, "", reference.table, reference.attributes[j], row_root, 0);
+                            Ak_Insert_New_Element(0, "", reference.table, reference.attributes[j], row_root);
                         } else {
 
 			  temp = Ak_First_L2(lista);
                             while (temp != NULL) {
                                 if (strcmp(temp->attribute_name, reference.parent_attributes[j]) == 0 && temp->constraint == 0) {
-                                    Ak_Insert_New_Element_For_Update(0, "", reference.table, reference.attributes[j], row_root, 0);
+                                    Ak_Insert_New_Element(0, "", reference.table, reference.attributes[j], row_root);
                                     break;
                                 }
 

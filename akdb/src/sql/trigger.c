@@ -35,7 +35,7 @@ int AK_trigger_save_conditions(int trigger, struct list_node *condition) {
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &trigger, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
+    Ak_Update_Existing_Element(TYPE_INT, &trigger, "AK_trigger_conditions", "trigger", row_root);
     if (Ak_delete_row(row_root) == EXIT_ERROR){
 	AK_EPI;
         return EXIT_ERROR;
@@ -198,7 +198,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_trigger", "obj_id", row_root, SEARCH_CONSTRAINT);
+    Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_trigger", "obj_id", row_root);
 
     int result = Ak_delete_row(row_root);
 
@@ -211,7 +211,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
     // the following can be avoided if foreign key is declared...
     
     Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_trigger_conditions", "trigger", row_root, SEARCH_CONSTRAINT);
+    Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_trigger_conditions", "trigger", row_root);
     AK_EPI;
     return Ak_delete_row(row_root);
 }
@@ -262,18 +262,18 @@ int AK_trigger_edit(char *name, char* event, struct list_node *condition, char* 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
 
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &trigger_id, "AK_trigger", "obj_id", row_root, SEARCH_CONSTRAINT);
+    Ak_Update_Existing_Element(TYPE_INT, &trigger_id, "AK_trigger", "obj_id", row_root);
 
     if (event != NULL)
-        Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, event, "AK_trigger", "event", row_root, NEW_VALUE);
+        Ak_Insert_New_Element(TYPE_VARCHAR, event, "AK_trigger", "event", row_root);
     if (condition != NULL){
-        Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "T", "AK_trigger", "condition", row_root, NEW_VALUE);
+        Ak_Insert_New_Element(TYPE_VARCHAR, "T", "AK_trigger", "condition", row_root);
         AK_trigger_save_conditions(trigger_id, condition);
     }
     else
-        Ak_Insert_New_Element_For_Update(0, "", "AK_trigger", "condition", row_root, NEW_VALUE);
+        Ak_Insert_New_Element(0, "", "AK_trigger", "condition", row_root);
     if (function != NULL)
-        Ak_Insert_New_Element_For_Update(TYPE_INT, &function_id, "AK_trigger", "action", row_root, NEW_VALUE);
+        Ak_Insert_New_Element(TYPE_INT, &function_id, "AK_trigger", "action", row_root);
 
     int result = Ak_update_row(row_root);
     AK_free(row_root);
@@ -343,8 +343,8 @@ int AK_trigger_rename(char *old_name, char *new_name, char *table){
 	Ak_Init_L3(&row_root);
 
 
-	Ak_Insert_New_Element_For_Update(TYPE_INT, &trig_id, "AK_trigger", "obj_id", row_root, 1);
-	Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_trigger", "name", row_root, 0);
+	Ak_Update_Existing_Element(TYPE_INT, &trig_id, "AK_trigger", "obj_id", row_root);
+	Ak_Insert_New_Element(TYPE_VARCHAR, new_name, "AK_trigger", "name", row_root);
 
 	int result =  Ak_update_row(row_root);
 	

@@ -104,6 +104,7 @@ int Ak_delete_row(AK_list *row_root) ;
 int Ak_update_row(AK_list *row_root);
 */
 void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore);
+void Ak_Update_Existing_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore);
 int Ak_insert_row(struct list_node *row_root);
 int AK_selection(char *srcTable, char *dstTable, struct list_node *expr);
 void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore, int newconstraint);

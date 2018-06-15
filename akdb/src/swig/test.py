@@ -21,18 +21,18 @@ class Functions:
         element = ak47.list_node()
         
         if type(key) == int:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_INT, key, table, column1, element)
         elif type(key) == float:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_FLOAT, key, table, column1, element)
         elif type(key) == str:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_VARCHAR, key, table, column1, element)
             
         if type(new_value) == int:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, new_value, table, column2, element, 0)
+            ak47.Ak_Insert_New_Element(ak47.TYPE_INT, new_value, table, column2, element)
         elif type(new_value) == float:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, new_value, table, column2, element, 0)
+            ak47.Ak_Insert_New_Element(ak47.TYPE_FLOAT, new_value, table, column2, element)
         elif type(new_value) == str:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, new_value, table, column2, element, 0)
+            ak47.Ak_Insert_New_Element(ak47.TYPE_VARCHAR, new_value, table, column2, element)
         
         return ak47.Ak_update_row(element)
         
@@ -41,11 +41,11 @@ class Functions:
         element = ak47.list_node()
         
         if type(key) == int:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_INT, key, table, column1, element)
         elif type(key) == float:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_FLOAT, key, table, column1, element)
         elif type(key) == str:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_VARCHAR, key, table, column1, element)
             
         return ak47.Ak_delete_row(element)
 

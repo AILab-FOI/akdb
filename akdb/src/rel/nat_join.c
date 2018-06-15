@@ -159,7 +159,7 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
                 //insert data from second table to insert_list
-                Ak_Insert_New_Element_For_Update(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, row_root_insert, 0);
+                Ak_Insert_New_Element(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, row_root_insert);
             }
             not_in_list = 1;
             head++; //next header
@@ -223,9 +223,9 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
 
                     memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
                     //insert element into list on which we compare
-                    Ak_Insert_New_Element_For_Update(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root, 0);
+                    Ak_Insert_New_Element(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root);
                     //insert element into list which we insert into join_table together with second table data
-                    Ak_Insert_New_Element_For_Update(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root_insert, 0);
+                    Ak_Insert_New_Element(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root_insert);
 
                     something_to_copy = 1;
                     not_in_list = 0;
@@ -239,7 +239,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
                 memset(data, '\0', MAX_VARCHAR_LENGTH);
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
-                Ak_Insert_New_Element_For_Update(tbl1_temp_block->tuple_dict[i].type, data, new_table, tbl1_temp_block->header[head].att_name, row_root_insert, 0);
+                Ak_Insert_New_Element(tbl1_temp_block->tuple_dict[i].type, data, new_table, tbl1_temp_block->header[head].att_name, row_root_insert);
             }
             not_in_list = 1; //reset not_in_list
             head++; //next header
