@@ -112,7 +112,7 @@ function fun[] = {
 {"file: AK_op_rename", &AK_op_rename_test}, //file/table.c
 {"file: Ak_filesort", &Ak_filesort_test}, //file/filesort.c
 {"file: Ak_filesearch", &Ak_filesearch_test}, //file/filesearch.c
-{"file: AK_sequence", &AK_sequence_test}, //file/sequence.c 
+{"file: AK_sequence", &AK_sequence_test}, //file/sequence.c
 {"file: AK_op_table", &AK_table_test}, //file/table.c
 //file/idx:
 //-------------
@@ -176,6 +176,7 @@ int main(int argc, char * argv[])
     /*FILE *archiveLog;
     char archiveLogFilename[30];*/ //--uncomment when AK_recover_archive_log is fixed
     AK_PRO;
+    
     // initialize critical sections
     dbmanFileLock = AK_init_critical_section();
     printf("Init: %d, ready: %d", dbmanFileLock->init, dbmanFileLock->ready);
@@ -196,7 +197,7 @@ int main(int argc, char * argv[])
         {
             if( AK_memoman_init() == EXIT_SUCCESS ) {
 
-                // retrieve last archive log filename 
+                // retrieve last archive log filename
 
                 /*char *latest = malloc(strlen(ARCHIVELOG_PATH)+strlen("/latest.txt")+1);
                 strcpy(latest, ARCHIVELOG_PATH);
@@ -211,7 +212,7 @@ int main(int argc, char * argv[])
                 strcpy(destination, ARCHIVELOG_PATH);
                 strcat(destination, "/");
                 strcat(destination, archiveLogFilename);    */  //--uncomment when AK_recover_archive_log is fixed
-    
+
                 sigset(SIGINT, AK_archive_log);
                 AK_recover_archive_log("../src/rec/rec.bin");  // "../src/rec/rec.bin" needs to be replaced with destination when AK_recover_archive_log is fixed
                 /* component test area --- begin */
@@ -236,7 +237,7 @@ int main(int argc, char * argv[])
                     //str - string containing the representation of an integral numbe
                     //endptr - reference to an object of type char*
                     //base - which must be between 2 and 36 inclusive, or be the special value 0
-                    //long int value - min 32 bit velicine, [−2147483647,+2147483647] 
+                    //long int value - min 32 bit velicine, [−2147483647,+2147483647]
                     AK_create_test_tables();
                     //when we start the inputed test, first the tables will be created
                     set_catalog_constraints();
@@ -246,7 +247,7 @@ int main(int argc, char * argv[])
                 /*component test area --- end */
                 if ( AK_flush_cache() == EXIT_SUCCESS ){
                     int ans;
-                    ans = strtol(argv[2], NULL, 10)-1;	
+                    ans = strtol(argv[2], NULL, 10)-1;
                     printf("\nTEST:--- %s --- ENDED!\n", fun[ans].name);
                     //if the test started and ended with a success, we will be informed with this message and with the name
                     printf( "\nEverything was fine!\nBye =)\n" );
@@ -271,8 +272,8 @@ int main(int argc, char * argv[])
         scanf("%i",&br);
         return ( EXIT_ERROR );
     }
-	
-	
+
+
     // delete critical sections
     AK_destroy_critical_section(dbmanFileLock);
     AK_EPI;
@@ -296,7 +297,7 @@ void show_test()
 {
 	int ret; //we use it later for comparing strings
 	AK_PRO;
-	int i=0; 
+	int i=0;
 	int z = 0;
 	int m = sizeof(fun)/sizeof(fun[0]); //m for the number of functions in fun[]
 	printf("\nChoose test:");
@@ -310,7 +311,7 @@ void show_test()
 		{
 			printf("\n\n");
     		z=0;
-			//if ret is not 0, blank space is not the same as the first 4 char of fun[], it will print \n\n for better order for the menu    		
+			//if ret is not 0, blank space is not the same as the first 4 char of fun[], it will print \n\n for better order for the menu
 		}
     	else
     	{
@@ -320,7 +321,7 @@ void show_test()
             //so if the above does not satisfy the statments, this one will start, and after 3 fun[] in a column, \n wil bring it to a new line, new row
     	}
         printf("%2d. %-30.25s", i+1, fun[i].name);
-        //prints the number of the test and the name of the test which is limited to 25 characters and  “whitespace” is added at the end (defined by the minus sign)	
+        //prints the number of the test and the name of the test which is limited to 25 characters and  “whitespace” is added at the end (defined by the minus sign)
         firstLetter = fun[i].name;
         // prints \n\n if there are 3 fun[] in a columns and if they are not the same
         i++;
@@ -417,7 +418,7 @@ void testing (){
     int testNmb; //number of test
     int allTests=sizeof(fun)/sizeof(fun[0]); //dynamic size of all tests
     int goodTest; //number of passed tests
-    float percentage; 
+    float percentage;
     int failedTests[allTests]; //array of names of failed tests
     int i=0;
     ans = 0;
@@ -430,23 +431,23 @@ void testing (){
 
     while(ans<allTests){
 
-        
+
         if (ans==11||ans==10)
             {
                 AK_create_test_tables();
                 set_catalog_constraints();
-            
-            } 
+
+            }
           if (ans==15)
             {
               for ( i; i < 1; i++ ) {
-                  failedTests[i] = 15; 
+                  failedTests[i] = 15;
                }
                i++;
                 ans++; //number of function
                 testNmb++; //test number
                 continue;
-            }  
+            }
 
              if (ans==14||ans==25||ans==34||ans==37||ans==42||ans==44||ans==45||ans==47||ans==49)
             {
@@ -460,9 +461,9 @@ void testing (){
                 testNmb++; //test number
                 goodTest++; //number of good tests, this tests are good, but they have issues with runing in loop
                 continue;
-            
+
             }
-       
+
           printf("Test number: %ld\n", testNmb);
           printf("broj ansa: %ld\n", ans);
           printf("\nStarting test: %s \n", fun[ans].name);
@@ -472,18 +473,18 @@ void testing (){
             printf("\nTEST:--- %s --- ENDED!\n", fun[ans].name);
             printf( "\nEverything was fine!\nBye =)\n" );
             goodTest++;
-            
+
             }
             else{
                 printf("\nTest  %s failed!\n", fun[ans].name);
                 for ( i; i < allTests; i++ ) {
-                  failedTests[i] = ans; 
+                  failedTests[i] = ans;
                }
             }
             ans++;
-            testNmb++;                                             
+            testNmb++;
             if (ans==allTests)
-            {   
+            {
                 printf("Number of all tests: %ld\n", allTests);
                 printf("Number of passed tests: %ld\n", goodTest);
                 percentage = ((double)goodTest/allTests)*100;
@@ -491,14 +492,14 @@ void testing (){
                 //system("rm -rf *~ *.o auxi/*.o dm/*.o mm/*.o file/*.o trans/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/*.log ../doc/* ../bin/kalashnikov.db ../bin/blobs swig/build swig/*.pyc swig/*.so swig/*.log swig/*~ swig/kalashnikovDB_wrap.c swig/kalashnikov.db srv/kalashnikov.db rm -rf *~ *.o auxi/*.o dm/*.o mm/*.o file/*.o trans/*.o file/idx/*.o rec/*.o sql/cs/*.o sql/*.o opti/*.o rel/*.o ../bin/akdb ../bin/*.log ../bin/kalashnikov.db ../bin/blobs swig/build swig/*.pyc swig/*.so swig/*.log swig/*~ swig/kalashnikovDB_wrap.c swig/kalashnikov.db srv/kalashnikov.db");
                 sizeOfArray=sizeof(failedTests)/sizeof(failedTests[0]); //size of array failedTests
                 for ( j=0; j < sizeOfArray; j++ ) {
-                  ans=failedTests[j]; 
+                  ans=failedTests[j];
                   printf("\nFailed tests: %s \n", fun[ans].name);
-                }      
+                }
                 break;
 
             }
 
     }
-    AK_EPI;           
+    AK_EPI;
 
 }
