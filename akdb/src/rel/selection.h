@@ -31,7 +31,6 @@
 int AK_selection(char *srcTable, char *dstTable, struct list_node *expr);
 TestResult AK_op_selection_test();
 TestResult AK_op_selection_test_pattern();
-TestResult AK_op_selection_test_redolog();
 
 #endif
 
