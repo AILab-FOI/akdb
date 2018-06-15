@@ -66,4 +66,8 @@ if __name__ == "__main__":
     sqle.initialize()
     print "\nServer is up and running!\nPort number: 1998\n"
     server = AK_server((ip, port), AK_server_request_handler)
-    server.serve_forever()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    server.server_close()
