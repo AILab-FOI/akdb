@@ -89,6 +89,7 @@ AK_init_db_file(int size)
     return (EXIT_SUCCESS);
 }
 
+// will work for 16-bit sizes
 unsigned char BITMASK(int b) {
   switch(b%8) {
     case 0: return 1;
@@ -99,6 +100,14 @@ unsigned char BITMASK(int b) {
     case 5: return 32;
     case 6: return 64;
     case 7: return 128;
+    case 8: return 256;
+    case 9: return 512;
+    case 10: return 1024;
+    case 11: return 2048;
+    case 12: return 4096;
+    case 13: return 8192;
+    case 14: return 16384;
+    case 15: return 32768;
   }
 }
 
