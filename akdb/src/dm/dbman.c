@@ -2631,12 +2631,107 @@ TestResult AK_allocationbit_test()
     return TEST_result(success,failed);
 }
 
+/**
+* @author Vedran Glozinic
+* @brief  Checks for errors in allocated and unallocated parts of byte allocated field
+* @return Returns number of successes and failures
+*/
 TestResult AK_allocationtable_test()
 {
-    AK_PRO;
-    AK_allocationtable_dump(1);
-    AK_EPI;
-    return TEST_result(0,0);
+  //DEFINE BOOL TYPE (check top for todo)
+  int true = 1, false = 0;
+
+  //VARIABLE SECTION
+  int i;
+  int success = 0;
+  int failure = 0;
+  int allocated = true;
+  int nonallocated = true;
+
+  //COUNTERS
+  int acounter = 0;
+  int nacounter = 0;
+  int acounter_success = 0;
+  int nacounter_success = 0;
+  int acounter_failure = 0;
+  int nacounter_failure = 0;
+
+  AK_PRO;
+  AK_allocationtable_dump(1);
+
+  //FIRST TEST: Checks if first byte is zero (assumed passed at start)
+  success++;
+
+  if(AK_allocationbit->allocationtable[0] != 0){
+    printf("TEST 1 (First byte: 0) - Test failed \n");
+    acounter_failure++;
+    success--;
+    failure++;
+  }
+  else{
+    printf("TEST 1 (First byte: 0) - Test passed \n");
+    acounter_success++;
+  }
+  acounter++;
+
+  //SECOND TEST: Checks if allocated values are numbers and are in range
+  for(i=1; i < AK_allocationbit->last_allocated; i++){
+    acounter++;
+    if(AK_allocationbit->allocationtable[i] < 1){
+      allocated = false;
+      printf("Allocated space at index %d is incorrect \n", i);
+      acounter_failure++;
+    }
+    else{
+      acounter_success++;
+    }
+  }
+
+  if(allocated){
+    printf("TEST 2 (Allocated space) - Test passed \n");
+    success++;
+  }
+  else{
+    printf("TEST 2 (Allocated space) - Test failed \n");
+    failure++;
+  }
+
+  //THIRD TEST: Checks if unallocated values are -1 from last allocated bit
+  for(i=AK_allocationbit->last_allocated; i < DB_FILE_BLOCKS_NUM_EX; i++){
+    nacounter++;
+    if(AK_allocationbit->allocationtable[i] != -1){
+      nonallocated = false;
+      nacounter_failure++;
+      printf("Unallocated space at index %d is incorrect \n", i);
+    }
+    else{
+      nacounter_success++;
+    }
+  }
+
+  if(nonallocated){
+    printf("TEST 3 (Unallocated space) - Test passed \n");
+    success++;
+  }
+  else{
+    printf("TEST 3 (Unallocated space) - Test failed \n");
+    failure++;
+  }
+
+  printf("\nSTATISTICS: \n");
+  printf("Number of bytes in byte field: %d \n",DB_FILE_BLOCKS_NUM_EX);
+  printf("Total number of allocated bytes (including first): %d \n",acounter);
+  printf("Number of correct allocated bytes: %d \n",acounter_success);
+  printf("Number of incorrect allocated bytes: %d \n",acounter_failure);
+  printf("Total number of unallocated bytes: %d \n",nacounter);
+  printf("Number of correct unallocated bytes: %d \n",nacounter_success);
+  printf("Number of incorrect unallocated bytes: %d \n",nacounter_failure);
+  printf("Successes in byte field: %d \n",acounter_success + nacounter_success);
+  printf("Failures in byte field: %d \n",acounter_failure + nacounter_failure);
+  printf("Last allocated byte: %d \n", AK_allocationbit->last_allocated);
+
+  AK_EPI;
+  return TEST_result(success, failure);
 }
 
 /**
