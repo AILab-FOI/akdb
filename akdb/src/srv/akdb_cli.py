@@ -132,6 +132,7 @@ class AK_client():
 		c.set_cli(self)
 		while self.finished != True:
 			c.cmdloop()
+		self.sock.close()
 		print "\nAKDB now exiting."
 
 	##Sends a command to server
@@ -153,4 +154,3 @@ cli = AK_client()
 
 if __name__ == "__main__":
 	cli.AK_client_connect(ip, port, buffer_size)
-

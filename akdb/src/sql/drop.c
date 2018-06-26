@@ -443,7 +443,7 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L3(&row_root);
     
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, tblName, sys_table, "name", row_root, 1);
+    Ak_Update_Existing_Element(TYPE_VARCHAR, tblName, sys_table, "name", row_root);
 
     Ak_delete_row(row_root);
     AK_free(addresses);

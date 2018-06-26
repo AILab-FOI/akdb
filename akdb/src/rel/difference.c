@@ -164,7 +164,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 													memset(data1, '\0', MAX_VARCHAR_LENGTH);
 													memcpy(data1, tbl1_temp_block->block->data + address, size);
 
-													Ak_Insert_New_Element_For_Update(type, data1, dstTable, tbl1_temp_block->block->header[o].att_name, row_root, 0);
+													Ak_Insert_New_Element(type, data1, dstTable, tbl1_temp_block->block->header[o].att_name, row_root);
 												}
 
 												Ak_insert_row(row_root);

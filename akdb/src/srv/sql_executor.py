@@ -897,20 +897,20 @@ class Update_command:
         newValue = token.columnValues[0]
 
         if type(whereValue) == int:
-            ak47.Ak_Insert_New_Element_For_Update(
-                ak47.TYPE_INT, whereValue, table_name, updateColumn, element, 1)
+            ak47.Ak_Update_Existing_Element(
+                ak47.TYPE_INT, whereValue, table_name, updateColumn, element)
         elif type(whereValue) == float:
-            ak47.Ak_Insert_New_Element_For_Update(
-                ak47.TYPE_FLOAT, whereValue, table_name, updateColumn, element, 1)
+            ak47.Ak_Update_Existing_Element(
+                ak47.TYPE_FLOAT, whereValue, table_name, updateColumn, element)
         # elif type(whereValue) == str:
            # ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, whereValue, table_name, updateColumn, element, 1)
 
         if type(newValue) == int:
-            ak47.Ak_Insert_New_Element_For_Update(
-                ak47.TYPE_INT, newValue, table_name, whereColumn, element, 0)
+            ak47.Ak_Insert_New_Element(
+                ak47.TYPE_INT, newValue, table_name, whereColumn, element)
         elif type(newValue) == float:
-            ak47.Ak_Insert_New_Element_For_Update(
-                ak47.TYPE_FLOAT, newValue, table_name, whereColumn, element, 0)
+            ak47.Ak_Insert_New_Element(
+                ak47.TYPE_FLOAT, newValue, table_name, whereColumn, element)
         # elif type(newValue) == str:
             #ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, newValue, table_name, whereColumn, element, 0)
 
