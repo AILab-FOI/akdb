@@ -57,8 +57,8 @@ AK_init_db_file(int size)
 
     sizeOfFile = fsize(db);
     printf("AK_init_db_file: size db file %d. --- %d ---- %d\n", sizeOfFile, AK_ALLOCATION_TABLE_SIZE, AK_allocationbit->last_initialized);
-    
-    
+
+
     if (sizeOfFile > AK_ALLOCATION_TABLE_SIZE)
       {
         printf("AK_init_db_file: Already initialized.\n");
@@ -82,11 +82,33 @@ AK_init_db_file(int size)
     AK_allocationbit->allocationtable[0] = 0;
     AK_allocationbit->last_allocated = 1;
 
-    AK_blocktable_flush();  
+    AK_blocktable_flush();
 
     printf("AK_init_db_file: Done!\n");
     AK_EPI;
     return (EXIT_SUCCESS);
+}
+
+// will work for 16-bit sizes
+unsigned char BITMASK(int b) {
+  switch(b%8) {
+    case 0: return 1;
+    case 1: return 2;
+    case 2: return 4;
+    case 3: return 8;
+    case 4: return 16;
+    case 5: return 32;
+    case 6: return 64;
+    case 7: return 128;
+    case 8: return 256;
+    case 9: return 512;
+    case 10: return 1024;
+    case 11: return 2048;
+    case 12: return 4096;
+    case 13: return 8192;
+    case 14: return 16384;
+    case 15: return 32768;
+  }
 }
 
 
@@ -114,7 +136,7 @@ AK_get_allocation_set(int* allocationSet, int fromWhere, int gaplength, int numR
 
   if (gaplength < 1)
     gaplength = 1;
- 
+
   for (i = 0; i < numRequestedBlocks; i++)
     allocationSet[i] = FREE_INT;
   for (i = 0; i < lastInitilizedBlock; i++)
@@ -162,7 +184,7 @@ AK_get_allocation_set(int* allocationSet, int fromWhere, int gaplength, int numR
 		    &&
 		   (freeBlockIndex  == (startBlockIndex + numRequestedBlocks - 1))) )
 		continue;
-	      
+
 	      hasEnoughSequentialBlocks = 0; //todo: set this to false; when #define true/false is included
 	      startBlockIndex = freeBlockIndex+1;
 	      break;
@@ -174,10 +196,10 @@ AK_get_allocation_set(int* allocationSet, int fromWhere, int gaplength, int numR
 	  for (freeBlockIndex = startBlockIndex; freeBlockIndex < startBlockIndex + numRequestedBlocks; ++freeBlockIndex)
 	    allocationSet[setIndex++] = freeBlocksMap[freeBlockIndex];
 	}
-      
+
       AK_EPI;
       return allocationSet[0];
-	  
+
     case allocationUPPER:
       k = 0; j = 0; i = 0;
       tmp = freeBlocksMap[0];
@@ -206,14 +228,14 @@ AK_get_allocation_set(int* allocationSet, int fromWhere, int gaplength, int numR
 	{
 	  for (i = 0; i < numRequestedBlocks; i++)
 	    allocationSet[i] = FREE_INT;
-	  
+
 	  AK_EPI;
 	  return allocationSet[0];
 	}
-      
+
       AK_EPI;
       return allocationSet[0];
-      
+
     case allocationLOWER:
       k = 0; j = 0;
       i = num_free_blocks_bitmap - 1;
@@ -257,13 +279,13 @@ AK_get_allocation_set(int* allocationSet, int fromWhere, int gaplength, int numR
 
       AK_EPI;
       return allocationSet[0];
-      
+
     case allocationAROUND:
 
       for (i = 0; i < num_free_blocks_bitmap; i++)
 	if (freeBlocksMap[i] == target)
 	  break;
-      
+
       if ((i + 1) == num_free_blocks_bitmap)
 	{
 	  AK_EPI;
@@ -311,10 +333,10 @@ AK_get_allocation_set(int* allocationSet, int fromWhere, int gaplength, int numR
 	  AK_EPI;
 	  return allocationSet[0];
 	}
-      
+
       AK_EPI;
       return allocationSet[0];
-      
+
     case allocationNOMODE:
       ;
     }
@@ -326,7 +348,7 @@ AK_get_allocation_set(int* allocationSet, int fromWhere, int gaplength, int numR
 
 /**
  * @author dv
- * @brief  Dumps the allocation table from the global allocation bit-vector onto standard output 
+ * @brief  Dumps the allocation table from the global allocation bit-vector onto standard output
  * @param  verbosity level of verbosity (1 - minimal, 0 - no output)
  */
 void
@@ -349,14 +371,14 @@ AK_allocationtable_dump(int verbosity)
 	}
       printf("\n - - - - - -\n\n");
     }
-    
+
   AK_EPI;
 }
 
 
 /**
  * @author dv
- * @brief  Dumps the bit-table from the global allocation bit-vector onto standard output 
+ * @brief  Dumps the bit-table from the global allocation bit-vector onto standard output
  * @param  verbosity level of verbosity (1 - verbose, 0 - minimal)
  */
 void
@@ -375,7 +397,7 @@ AK_blocktable_dump(int verbosity)
 	    printf("(%3d-X) ", i);
 	  else
 	    printf("(%3d-O) ", i);
-	  
+
 	  if(( (i+1) % (CHAR_IN_LINE / 8) == 0))
 	    printf("\n");
         }
@@ -390,7 +412,7 @@ AK_blocktable_dump(int verbosity)
 	    printf("X ");
 	  else
 	    printf("O ");
-	  
+
 	  if (( (i+1) % (CHAR_IN_LINE / 2) == 0))
 	    printf("\n");
 	}
@@ -428,7 +450,7 @@ AK_blocktable_flush()
   fclose(db);
   db = NULL;
   AK_EPI;
-  
+
   return(EXIT_SUCCESS);
 }
 
@@ -445,12 +467,12 @@ AK_allocate_block_activity_modes()
 {
   int lastInitializedBlock = AK_allocationbit->last_initialized;
   AK_PRO;
-    
+
   AK_free(AK_block_activity_info);
   if (lastInitializedBlock == 0)
     lastInitializedBlock = 1000;
-    
-  AK_block_activity_info = (AK_block_activity *) 
+
+  AK_block_activity_info = (AK_block_activity *)
     AK_malloc((lastInitializedBlock + 1) * sizeof(AK_block_activity));
 
   int i;
@@ -462,7 +484,7 @@ AK_allocate_block_activity_modes()
       pthread_cond_init (&AK_block_activity_info[i].reading_done, NULL);
       pthread_cond_init (&AK_block_activity_info[i].writing_done, NULL);
     }
-  
+
   AK_EPI;
 }
 
@@ -490,7 +512,7 @@ AK_blocktable_get()
       exit(EXIT_ERROR);
     }
   pthread_mutex_unlock(&fileLockMutex);
-  
+
   fclose(db);
   db = NULL;
 
@@ -508,9 +530,9 @@ fsize(FILE *fp)
 {
   AK_PRO;
   int sizeInBytes = 1;
-    
+
   //todo: stat is POSIX, it will run into trouble on Windows presumably(?). Either way it is not recommended to use both definately.
-  //      Also apparently SEEK_END isn't required to return anything meaningful. Consider unix and windows specific calls for filesize. 
+  //      Also apparently SEEK_END isn't required to return anything meaningful. Consider unix and windows specific calls for filesize.
 #if 0
   struct stat stats;
   stat(DB_FILE, &stats);
@@ -521,7 +543,7 @@ fsize(FILE *fp)
       return sizeInBytes;
     }
 #endif
-    
+
   int prev = ftell(fp);
   fseek(fp, 0L, SEEK_END);
   sizeInBytes = ftell(fp);
@@ -567,7 +589,7 @@ AK_init_allocation_table()
       for (i = 0; i < DB_FILE_BLOCKS_NUM; i++)
 	{
 	  BITCLEAR(AK_allocationbit->bittable, i);
-	  AK_allocationbit->allocationtable[i] = 0xFFFFFFFF;	    
+	  AK_allocationbit->allocationtable[i] = 0xFFFFFFFF;
 	}
       AK_allocationbit->last_allocated   = 0;
       AK_allocationbit->last_initialized = 0;
@@ -923,21 +945,21 @@ AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany)
 	  printf("AK_init_db_file: ERROR. Cannot open db file %s.\n", DB_FILE);
 	  AK_EPI;
 	  return EXIT_ERROR;
-	} 
+	}
     }
-    
+
     pthread_mutex_lock(&fileLockMutex);
     if (fseek(db, AK_ALLOCATION_TABLE_SIZE + FromWhere * sizeof(AK_block), SEEK_SET) != 0)
       {
 	printf("AK_allocationbit: ERROR. Cannot set position to move for AK_blocktable \n");
 	AK_EPI;
-	return EXIT_ERROR;      
+	return EXIT_ERROR;
       }
-    
+
     for (i = FromWhere; i < FromWhere + HowMany; i++)
       {
         block->address = i;
-	
+
         if (AK_fwrite(block, sizeof (*block), 1, db) != 1)
 	  {
 	    printf("AK_init_db_file: ERROR. Cannot write block %d\n", i);
@@ -949,7 +971,7 @@ AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany)
 
     fclose(db);
     db = NULL;
-    
+
     AK_allocationbit->last_initialized = i;
     AK_allocate_block_activity_modes();
     AK_blocktable_flush();
@@ -961,7 +983,7 @@ AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany)
 /**
 * @var test_lastCharacterWritten
 * @brief This variable is used only when TEST_MODE is ON!
-* It is used only for testing functionality of 
+* It is used only for testing functionality of
 * AK_thread_safe_block_access_test() function.
 * It will contain first character of last written block.
 * When reading thread reads the block (written by some other thread),
@@ -977,7 +999,7 @@ char test_lastCharacterWritten = '\0';
 /**
 * @var test_threadSafeBlockAccessSucceeded
 * @brief Used in combination with test_lastCharacterWritten.
-* Will give the answer to question: 
+* Will give the answer to question:
 * "Has AK_thread_safe_block_access_test suceeded?"
 * 0 means NO, 1 means YES
 */
@@ -998,37 +1020,37 @@ AK_read_block(int address)
   int true = 1, false = 0;
   int locked_for_writing, locked_for_reading;
   int thread_id;
-    
+
   if (DB_FILE_BLOCKS_NUM < address || 0 > address)
     {
       printf("AK_read_block: ERROR. Out of range %s  address:%d  DB_FILE_BLOCKS_NUM:%d\n", DB_FILE, address, DB_FILE_BLOCKS_NUM);
       AK_EPI;
       exit(EXIT_ERROR);
     }
-    
+
   FILE * database;
   if ((database = fopen(DB_FILE, "rb")) == NULL)
     {
       printf("AK_read_block: ERROR. Cannot open db file %s.\n", DB_FILE);
       AK_EPI;
       exit(EXIT_ERROR);
-    } 
+    }
 
   pthread_mutex_lock(&AK_block_activity_info[address].block_lock);
   // first we check if block is already locked for writing by another thread
   locked_for_reading = AK_block_activity_info[address].locked_for_reading;
   locked_for_writing = AK_block_activity_info[address].locked_for_writing;
-    
+
   if (!locked_for_reading && !locked_for_writing)
     {
       AK_block_activity_info[address].thread_holding_lock = &thread_id;
     }
-    
+
   // if block is locked for writing, then we have to wait another thread to unlock it
   //   (thus preventing it from accessing disk once again)
   // if another thread is only reading from this block, then we don't have to lock it's mutex, because
   // any number of threads can read the same block at the same time
-  // else, we lock the block for reading and proceed    
+  // else, we lock the block for reading and proceed
   if (locked_for_writing == true)
     {
       pthread_cond_wait(&AK_block_activity_info[address].writing_done, &AK_block_activity_info[address].block_lock);
@@ -1037,9 +1059,9 @@ AK_read_block(int address)
     {
       AK_block_activity_info[address].locked_for_reading = true;
     }
-    
+
   // now we can safely write block to the disk
-    
+
   // first we have to set position in file for reading new block
   if (fseek(database, address * sizeof(AK_block)+AK_ALLOCATION_TABLE_SIZE, SEEK_SET) != 0)
     {
@@ -1047,7 +1069,7 @@ AK_read_block(int address)
       AK_EPI;
       exit(EXIT_ERROR);
     }
-    
+
   AK_block * block = AK_malloc(sizeof(AK_block));
 
   // then we simply read block from the disk
@@ -1058,12 +1080,12 @@ AK_read_block(int address)
       AK_EPI;
       exit(EXIT_ERROR);
     }
-    
+
   // block of code below is used only for testing purposes!
-  // it is executed only when testMode is ON 
+  // it is executed only when testMode is ON
   // (It should be ON in AK_thread_safe_block_access_test function)
   // it takes first character of a block data and reads it
-  // that character is then printed to the stdout. 
+  // that character is then printed to the stdout.
   // If everything goes well, we should get the same character that was written here
   // by last writing thread
   if (testMode == TEST_MODE_ON) {
@@ -1074,19 +1096,19 @@ AK_read_block(int address)
       }
     }
   }
-    
+
   // after reading is done, we unlock this block
   AK_block_activity_info[address].locked_for_reading = false;
   // and signalize other threads that reading is done!
   pthread_cond_signal(&AK_block_activity_info[address].reading_done);
-    
+
   // and after everything is done, we just have to unlock block's mutex
   // thus making it accessible to other blocks which want to write data to it
   if (AK_block_activity_info[address].thread_holding_lock == &thread_id) {
     pthread_mutex_unlock(&AK_block_activity_info[address].block_lock);
   }
   fclose(database);
-    
+
   AK_EPI;
   return block;
 }
@@ -1113,25 +1135,25 @@ AK_write_block(AK_block * block)
       AK_EPI;
       exit(EXIT_ERROR);
     }
-    
+
   // first we have to find out block's address
   address = block->address;
-    
+
   pthread_mutex_lock(&AK_block_activity_info[address].block_lock);
   // first we check if block is already locked for reading and for writing by another threads
   locked_for_writing = AK_block_activity_info[address].locked_for_writing;
-  locked_for_reading = AK_block_activity_info[address].locked_for_reading;    
-    
+  locked_for_reading = AK_block_activity_info[address].locked_for_reading;
+
   if (!locked_for_reading && !locked_for_writing)
     {
       AK_block_activity_info[address].thread_holding_lock = &thread_id;
     }
-    
+
   // if block is locked for writing and/or writing, then we have to wait another thread to unlock it
   //   (thus preventing it from accessing disk once again)
   // if another thread is only reading from this block, then we don't have to lock it's mutex, because
   // any number of threads can read the same block at the same time
-  // else, we lock the block for reading and proceed    
+  // else, we lock the block for reading and proceed
   if (locked_for_reading == true)
     {
       pthread_cond_wait(&AK_block_activity_info[address].reading_done, &AK_block_activity_info[address].block_lock);
@@ -1140,12 +1162,12 @@ AK_write_block(AK_block * block)
     {
       pthread_cond_wait(&AK_block_activity_info[address].writing_done, &AK_block_activity_info[address].block_lock);
     }
-    
+
   // and when there is no other thread reading from it or writing to it, we can proceed
   AK_block_activity_info[address].locked_for_writing = true;
-    
+
   // block of code below is used only for testing purposes!
-  // it is executed only when testMode is ON 
+  // it is executed only when testMode is ON
   // (It should be ON in AK_thread_safe_block_access_test function)
   // it takes first character of a block data and replaces it with random ASCII character
   // than it writes it to the screen. Then, thread which is reading block can read this first character
@@ -1156,7 +1178,7 @@ AK_write_block(AK_block * block)
       block->data[0] = (char)character;
       test_lastCharacterWritten = block->data[0];
     }
-    
+
   // now we can safely write it to the disk
 
   // first we have to set position in file for new block writing
@@ -1174,21 +1196,21 @@ AK_write_block(AK_block * block)
       AK_EPI;
       exit(EXIT_ERROR);
     }
-        
+
   // after writing is done, we unlock this block for reading and/or writing
   AK_block_activity_info[address].locked_for_writing = false;
   // and signalize other threads that writing is done!
   pthread_cond_signal(&AK_block_activity_info[address].writing_done);
-    
+
   // and after everything is done, we just have to unlock block's mutex
   // thus making it accessible to other blocks which want to write data to it or read from it
   if (AK_block_activity_info[address].thread_holding_lock == &thread_id)
     {
       pthread_mutex_unlock(&AK_block_activity_info[address].block_lock);
     }
-    
+
   fclose(database);
-    
+
   AK_EPI;
   return (EXIT_SUCCESS);
 }
@@ -1211,7 +1233,7 @@ AK_copy_header(AK_header *header, int* blockSet, int blockSetSize)
   int num_blocks = 0;
   int header_att_id = 0;
   AK_block *block;
-    
+
   AK_PRO;
   for (j = 0; j < blockSetSize; j++)
     {
@@ -1223,19 +1245,19 @@ AK_copy_header(AK_header *header, int* blockSet, int blockSetSize)
 	{
 	  memcpy(&block->header[header_att_id], &header[header_att_id], sizeof(*header));
 	}
-      
+
       block->type = BLOCK_TYPE_NORMAL;
       block->AK_free_space = 0;
       block->last_tuple_dict_id = 0;
-      
+
       if (AK_write_block(block) == EXIT_SUCCESS)
 	{
 	  num_blocks++;
 	}
-      
+
       AK_free(block);
     }
-  
+
   AK_EPI;
   return num_blocks;
 }
@@ -1277,7 +1299,7 @@ AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode,
 	}
       //get set - addresses of allocated AK_free blocks
       first_element_of_set = AK_get_allocation_set(blocknum, border, gl, desired_size, mode[i], target);
-      
+
       if (first_element_of_set == FREE_INT && mode[i] == allocationSEQUENCE)
 	{
 	  //there is no space at current boundaries - try to get more
@@ -1287,7 +1309,7 @@ AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode,
 	      AK_EPI;
 	      return blocknum;
 	    }
-	  
+
 	  first_element_of_set = AK_get_allocation_set(blocknum, start_address, gl, desired_size, allocationSEQUENCE, 6);
 	  if (first_element_of_set == FREE_INT)
 	    {
@@ -1295,12 +1317,12 @@ AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode,
 	      AK_EPI;
 	      return blocknum;
 	    }
-	  
+
 	}
       if (blocknum[0] != FREE_INT)
 	break;
     }
-  
+
   if (blocknum[0] == FREE_INT)
     {
       AK_EPI;
@@ -1330,7 +1352,7 @@ AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode,
     }
   AK_allocationbit->allocationtable[blocknum[i - 1]] = blocknum[0];
   AK_allocationbit->last_allocated += i;
-  
+
   AK_blocktable_flush();
   //now we have
 
@@ -1362,7 +1384,7 @@ AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode
   unsigned int last_address = 0;
   int * blocknum;
   AK_PRO;
-  
+
   blocknum = (int*)AK_malloc(sizeof(int)*(add_size + 1));
   blocknum[0] = FREE_INT;
 
@@ -1435,7 +1457,7 @@ AK_new_extent(int start_address, int old_size, int extent_type, AK_header *heade
     requested_space_in_blocks = INITIAL_EXTENT_SIZE;
   else
     {
-      float scale_factor = 0; 
+      float scale_factor = 0;
       switch (extent_type)
 	{
 	case SEGMENT_TYPE_TABLE:
@@ -1458,7 +1480,7 @@ AK_new_extent(int start_address, int old_size, int extent_type, AK_header *heade
   allocation_set = (int*) AK_malloc(sizeof(int) * (requested_space_in_blocks + 1));
 
   first_element_of_set = AK_get_allocation_set(allocation_set, 1, 0, requested_space_in_blocks, allocationSEQUENCE, 6);
-    
+
   if (first_element_of_set == FREE_INT)
   {
       	if (AK_allocate_blocks(NULL, block = AK_init_block(), AK_allocationbit->last_initialized, requested_space_in_blocks) != EXIT_SUCCESS)
@@ -1475,7 +1497,7 @@ AK_new_extent(int start_address, int old_size, int extent_type, AK_header *heade
 	  		printf("AK_new_extent: ERROR. Problem with blocks allocation %s.\n", DB_FILE);
 	  		AK_EPI;
 	  		return(EXIT_ERROR);
-		} 
+		}
   	}
   number_blocks_allocated = AK_copy_header(header, allocation_set, requested_space_in_blocks);
 
@@ -1498,7 +1520,7 @@ AK_new_extent(int start_address, int old_size, int extent_type, AK_header *heade
       if (i < (requested_space_in_blocks - 1))
 	AK_allocationbit->allocationtable[allocation_set[i]] = allocation_set[i + 1];
     }
-  
+
   AK_allocationbit->allocationtable[allocation_set[i - 1]] = allocation_set[0];
   AK_allocationbit->last_allocated += i;
 
@@ -1543,7 +1565,7 @@ AK_new_segment(char * name, int type, AK_header *header)
       AK_EPI;
       return (EXIT_ERROR);
     }
-  
+
   AK_EPI;
   return first_allocated_block;
 }
@@ -1564,12 +1586,12 @@ AK_header*
 AK_create_header(char* attribute_name, int type, int integrity, char *constr_name, char *contr_code)
 {
   AK_PRO;
-  
+
   AK_header *catalog_header = (AK_header *)AK_malloc(sizeof (AK_header));
   memset(catalog_header, 0, sizeof (AK_header));
 
   //AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
-  Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", attribute_name, strlen(attribute_name));    
+  Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", attribute_name, strlen(attribute_name));
 
   catalog_header->type = type;
 
@@ -1592,7 +1614,7 @@ AK_create_header(char* attribute_name, int type, int integrity, char *constr_nam
 	  catalog_header->constr_code[i][k] = contr_code;
 	}
     }
-  
+
   AK_EPI;
   return catalog_header;
 }
@@ -1985,7 +2007,7 @@ AK_init_system_catalog()
     user, group, user_group, user_right, group_right, constraint, constraintNull, constraintCheck, constraintUnique, reference;
   int i;
   AK_PRO;
-    
+
   Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: System catalog initialization started...\n");
 
   AK_header hConstraintNotNull[5] =
@@ -2483,10 +2505,10 @@ AK_delete_segment(char * name, int type)
 	  return EXIT_ERROR;
         }
     }
-	
+
   struct list_node* row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
   Ak_Init_L3(&row_root);
-  
+
   char *system_table;
   switch (type)
     {
@@ -2512,7 +2534,7 @@ AK_delete_segment(char * name, int type)
       AK_EPI;
       return EXIT_ERROR;
     }
-  
+
   Ak_DeleteAll_L3(&row_root);
   Ak_Update_Existing_Element(TYPE_VARCHAR, name, system_table, "name", row_root);
   Ak_delete_row(row_root);
@@ -2526,7 +2548,7 @@ AK_delete_segment(char * name, int type)
  * @author Markus Schatten
  * @return Function that calls functions AK_init_db_file() and AK_init_system_catalog() to initialize disk manager.
  * It also calls AK_allocate_array_currently_accessed_blocks() to allocate memory needed for thread-safe reading
- * and writing to disk. 
+ * and writing to disk.
  */
 int
 AK_init_disk_manager()
@@ -2538,7 +2560,7 @@ AK_init_disk_manager()
       AK_EPI;
       exit(EXIT_ERROR);
     }
-    
+
   AK_allocate_block_activity_modes();
 
   if (AK_allocationbit->prepared == 31)
@@ -2546,7 +2568,7 @@ AK_init_disk_manager()
       printf("\n\tDisk manager has been initialized at %s\n\n", asctime(localtime(&AK_allocationbit->ltime)));
       Ak_dbg_messg(LOW, DB_MAN, "Block size is: %d\n", sizeof (AK_block));
       Ak_dbg_messg(LOW, DB_MAN, "%d blocks for %d MiB\n", size, DB_FILE_SIZE);
-	
+
       AK_EPI;
       return EXIT_SUCCESS;
     }
@@ -2585,14 +2607,14 @@ TestResult AK_allocationbit_test()
 	int bitNo;
     AK_PRO;
     AK_blocktable_dump(1);
-	
+
 	//for test of test itself
 	//BITCLEAR(AK_allocationbit->bittable,AK_allocationbit->last_allocated-1);
-	
+
 	printf("Last allocated bit: %d\n",AK_allocationbit->last_allocated);
 	printf("Last initialized bit: %d\n",AK_allocationbit->last_initialized);
 	printf("Prepared: %d\n",AK_allocationbit->prepared);
-	
+
 	i=success=failed=0;
 	if(BITTEST(AK_allocationbit->bittable, i))
 	{
@@ -2626,7 +2648,7 @@ TestResult AK_allocationbit_test()
 	printf("\n");
 	if(failed==0)
 		printf("All bit values O.K.\n");
-	
+
     AK_EPI;
     return TEST_result(success,failed);
 }
@@ -2737,7 +2759,7 @@ TestResult AK_allocationtable_test()
 /**
  * @author Domagoj Šitum
  * @brief This function tests thread safe reading and writing to blocks.
- * There is N writing and N reading threads, which are going through iterations. 
+ * There is N writing and N reading threads, which are going through iterations.
  * Each reading thread should read
  * the data (character) that was set by last writing thread
  */
@@ -2750,29 +2772,29 @@ TestResult AK_thread_safe_block_access_test()
   AK_block *block;
   pthread_t *threads;
   AK_PRO;
-    
+
   srand(time(NULL));
-    
+
   printf("N reading threads + N writing threads are trying to read/write "
 	 "to the same block. Result is printed to the screen.\n\n");
-    
+
   // first we have to read original value of the first block
   // (so that we can save it somewhere and restore it after the whole operation is over)
   block = AK_read_block(block_address);
-    
+
   // we have to backup that first block, because we will make changes to it
   // (explanation of the text above)
   memcpy((void *)backup_block, (void *)block, sizeof(AK_block));
-    
+
   for (j=1; j<=50; j++)
     {
       printf("%d+%d threads: ", j, j);
-        
+
       // we read first block of actual data (after allocation bit-vector)
       block = AK_read_block(block_address);
-        
+
       testMode = TEST_MODE_ON;
-        
+
       // then we create j reading and j writing threads
       threads = (pthread_t *) AK_malloc(2 * j * sizeof(pthread_t));
 
@@ -2782,15 +2804,15 @@ TestResult AK_thread_safe_block_access_test()
 	  pthread_create(&threads[2*i], NULL, AK_write_block_for_testing, (void *)block);
 	  pthread_create(&threads[2*i+1], NULL, AK_read_block_for_testing, (void *)&block_address);
         }
-        
+
       // and then, we just have to wait all threads to finish
-      for (i = 0; i < 2*j; i++) 
+      for (i = 0; i < 2*j; i++)
 	pthread_join(threads[i],NULL);
-        
+
       testMode = TEST_MODE_OFF;
-        
+
       AK_free((void*)threads);
-        
+
       // and at the end of each iteration,
       // we check if thread safe block access (reading/writing) succeeded.
       // if it failed, we count it
@@ -2803,17 +2825,17 @@ TestResult AK_thread_safe_block_access_test()
 	{
 	  printf("Failed\n");
         }
-    
+
       test_lastCharacterWritten = '\0';
       test_threadSafeBlockAccessSucceeded = true;
     }
-    
+
   // and at the end, we write backup block back to the file
   AK_write_block(backup_block);
   AK_free((void*)backup_block);
-    
+
   printf("\n%d out of 50 tests succeeded.", sum_of_suceeded_tests);
-    
+
   AK_EPI;
   return TEST_result(0,0);
 }
