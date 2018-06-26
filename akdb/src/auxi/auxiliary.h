@@ -180,6 +180,8 @@ AK_stack AK_search_empty_stack_link(AK_stack stackRoot);
 AK_stack AK_push_to_stack(int id);
 AK_stack AK_pop_from_stack();
 AK_stack AK_search_in_stack(int id);
+int AK_are_values_unique(char* tableName, int numRows, char values[][MAX_VARCHAR_LENGTH], int numOfImpAttPos, int positionsOfAtts[], int performCleanup);
+char** AK_get_list_of_attribute_names(char attributeNames[MAX_VARCHAR_LENGTH], int* numOfResultRows, int* numOfImpAttPos, int** positionsOfAtts, char* tableName);
 int MIN(int X, int Y);
 void AK_tarjan(int id);
 TestResult AK_tarjan_test();
