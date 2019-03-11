@@ -165,8 +165,6 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 	return EXIT_SUCCESS;
 }
 
-
-
 /**
  * @author Domagoj Tuličić, updated by Nenad Makar 
  * @brief Function checks if insertion of some value(s) would violate UNIQUE constraint
@@ -256,37 +254,68 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 					char attNameCopy[MAX_VARCHAR_LENGTH];
 					char *nameOfOneAtt;
 					char namesOfAtts[numOfAttsInTable][MAX_VARCHAR_LENGTH];
+					struct list_node *attribute2;
 					
-					strncpy(attNameCopy, attName, MAX_VARCHAR_LENGTH);
+					strncpy(attNameCopy, attName, sizeof(attNameCopy));
 
 					nameOfOneAtt = strtok(attNameCopy, SEPARATOR);
 					while(nameOfOneAtt != NULL)
 					{
 						positionsOfAtts[numOfImpAttPos] = AK_get_attr_index(table->data, nameOfOneAtt) + 1;
-						strncpy(namesOfAtts[numOfImpAttPos], nameOfOneAtt, MAX_VARCHAR_LENGTH);
+						strncpy(namesOfAtts[numOfImpAttPos], nameOfOneAtt, sizeof(namesOfAtts[numOfImpAttPos]));
 						numOfImpAttPos++;
 
 						nameOfOneAtt = strtok(NULL, SEPARATOR);
 					}
 					
+					int h;
+					int impoIndexInArray;
+					int match;
 					int index = 0;
 					char *value2;
 					char newValueCopy2[MAX_VARCHAR_LENGTH];
 					char values[numOfValues][MAX_VARCHAR_LENGTH];
 
-					strncpy(newValueCopy2, newValue, MAX_VARCHAR_LENGTH);
+					strncpy(newValueCopy2, newValue, sizeof(newValueCopy2));
 
 					value2 = strtok(newValueCopy2, SEPARATOR);
 					while(value2 != NULL)
 					{
-						strncpy(values[index], value2, MAX_VARCHAR_LENGTH);
+						strncpy(values[index], value2, sizeof(values[index]));
 						index++;
 						value2 = strtok(NULL, SEPARATOR);
 					}
 
-					int result = AK_are_values_unique(table->data, numRows, numOfImpAttPos, positionsOfAtts, values, 0);
+					
+					for(h=0; h<numRows; h++)
+					{
+						row2 = AK_get_row(h, table->data);
+
+						match = 1;
+						
+						for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
+						{
+							attribute2 = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row2);
+							if(AK_tuple_to_string(attribute2) == NULL)
+							{
+								match = 0;
+							}
+							else if(strcmp(values[impoIndexInArray], AK_tuple_to_string(attribute2)) != 0)
+							{
+								match = 0 ;
+							}
+
+						}
+						
+						if(match == 1)
+						{
+							AK_EPI;
+							return EXIT_ERROR;
+						}
+					}
+					
 					AK_EPI;
-					return result;
+					return EXIT_SUCCESS;
 				}
 			}
 		}
@@ -303,6 +332,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		char attNameCopy[MAX_VARCHAR_LENGTH];
 		char *nameOfOneAtt;
 		char namesOfAtts[numOfAttsInTable][MAX_VARCHAR_LENGTH];
+		struct list_node *attribute2;
 		Ak_DeleteAll_L3(&row);
 		AK_free(row);
 		
@@ -312,30 +342,65 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		while(nameOfOneAtt != NULL)
 		{
 			positionsOfAtts[numOfImpAttPos] = AK_get_attr_index(tableName, nameOfOneAtt) + 1;
-			strncpy(namesOfAtts[numOfImpAttPos], nameOfOneAtt, MAX_VARCHAR_LENGTH);
+			strncpy(namesOfAtts[numOfImpAttPos], nameOfOneAtt, sizeof(namesOfAtts[numOfImpAttPos]));
 			numOfImpAttPos++;
 
 			nameOfOneAtt = strtok(NULL, SEPARATOR);
 		}
 		
+		int h;
+		int impoIndexInArray;
+		int match;
 		int index = 0;
 		char *value2;
 		char newValueCopy2[MAX_VARCHAR_LENGTH];
 		char values[numOfValues][MAX_VARCHAR_LENGTH];
 		
-		strncpy(newValueCopy2, newValue, MAX_VARCHAR_LENGTH);
+		char *tuple_to_string_return;
+
+		strncpy(newValueCopy2, newValue, sizeof(newValueCopy2));
 
 		value2 = strtok(newValueCopy2, SEPARATOR);
 		strncpy(values[index], value2, sizeof(values));
 		index++;
 		value2 = strtok(NULL, "");
-		strncpy(values[index], value2+strlen(SEPARATOR)-1, MAX_VARCHAR_LENGTH);
+		strncpy(values[index], value2+strlen(SEPARATOR)-1, sizeof(values[index]));
 
 		int numRows = AK_get_num_records(tableName);
 
-		int result = AK_are_values_unique(tableName, numRows, numOfImpAttPos, positionsOfAtts, values, 1);
+		for(h=0; h<numRows; h++)
+		{
+			row = AK_get_row(h, tableName);
+
+			match = 1;
+			
+			for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
+			{
+				attribute2 = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
+				tuple_to_string_return = AK_tuple_to_string(attribute2);
+				if(tuple_to_string_return == NULL)
+				{
+					match = 0;
+				}
+				else if(strcmp(values[impoIndexInArray], tuple_to_string_return) != 0)
+				{
+					match = 0 ;
+					AK_free(tuple_to_string_return);
+				}
+				else
+					AK_free(tuple_to_string_return);
+			}
+			Ak_DeleteAll_L3(&row);
+			AK_free(row);
+			if(match == 1)
+			{
+				AK_EPI;
+				return EXIT_ERROR;
+			}
+		}
+		
 		AK_EPI;
-		return result;
+		return EXIT_SUCCESS;
 	}
 	else
 	{

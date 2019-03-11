@@ -828,57 +828,6 @@ int MIN(int X, int Y) {
 }
 
 /**
- * @author Darko Žunec
- * @brief Helper function that checks if inserted values would be unique when inserted in specified table
- * @param char* tableName Name of the table inside which it is verified if values
- * @param int numRows Number of table attributes on which is applied UNIQUE constraint, i.e. number of rows in the table "AK_constraints_unique"
- * @param int numOfImpAttPos Number of table attributes in the table "AK_constraints_unique"
- * @param int positionsOfAtts[] Indices of attributes in specified table whose values have to be unique
- * @param char values[][MAX_VARCHAR_LENGTH] Values to be inserted if they are unique
- * @param int performCleanup 1 if clean-up is required, 0 if it isn't
- * @return EXIT_ERROR or EXIT_SUCCESS
- **/
-int AK_are_values_unique(char* tableName, int numRows, char values[][MAX_VARCHAR_LENGTH], int numOfImpAttPos, int positionsOfAtts[], int performCleanup)
-{
-    int h;
-    int impoIndexInArray;
-    int match;
-    struct list_node *row;
-    struct list_node *attribute;
-    for(h=0; h<numRows; h++)
-    {
-        row = AK_get_row(h, tableName);
-        match = 1;
-
-        for(impoIndexInArray=0; (impoIndexInArray<numOfImpAttPos)&&(match==1); impoIndexInArray++)
-        {
-            attribute = Ak_GetNth_L2(positionsOfAtts[impoIndexInArray], row);
-            char *tuple_to_string_return = AK_tuple_to_string(attribute);
-            if(tuple_to_string_return == NULL)
-            {
-                match = 0;
-            }
-            else if(strcmp(values[impoIndexInArray], tuple_to_string_return) != 0)
-            {
-                match = 0 ;
-                if (performCleanup)
-                {
-                    AK_free(tuple_to_string_return);
-                }
-            }
-            else if (performCleanup) {
-                AK_free(tuple_to_string_return);
-            }
-        }
-        if(match == 1)
-        {
-            return EXIT_ERROR;
-        }
-    }
-    return EXIT_SUCCESS;
-}
-
-/**
  * @author Frane Jakelić
  * @brief Tarjan algorithm that looks for a strongly connected component inside all subgraphs; using DFS
  * @param id of the element on which the algorithm looks for a id of a strongly connected component
