@@ -166,6 +166,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 }
 
 
+
 /**
  * @author Domagoj Tuličić, updated by Nenad Makar 
  * @brief Function checks if insertion of some value(s) would violate UNIQUE constraint
@@ -180,6 +181,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
  **/
 
 int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
+	char *value;
 	//Because strtok could create problems for newValue...
 	char newValueCopy[MAX_VARCHAR_LENGTH];
 	int numOfValues = 0;
@@ -187,7 +189,6 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 
 	int strcmpTableName = strcmp(tableName, "AK_constraints_unique");
 	int strcmpAttName = strcmp(attName, "obj_id");
-	int i;
 	
 	//If there's check if combination of values of attributes tableName and attributeName of table AK_constraints_unique are UNIQUE numOfValues is 2
 	//First value is value of attribute tableName and second value is value of attribute attributeName which could be made of more SEPARATORS and then it would seem like
@@ -203,7 +204,6 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 	}
 	else
 	{
-		char *value;
 		strncpy(newValueCopy, newValue, sizeof(newValueCopy));
 
 		value = strtok(newValueCopy, SEPARATOR);
@@ -213,8 +213,8 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 			//http://www.postgresql.org/docs/current/interactive/ddl-constraints.html#DDL-CONSTRAINTS-UNIQUE-CONSTRAINTS
 			if(strcmp(value, " ") == 0)
 			{
-				AK_EPI;
 				return EXIT_SUCCESS;
+				AK_EPI;	
 			}
 			numOfValues++;
 			value = strtok(NULL, SEPARATOR);
@@ -228,6 +228,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		struct list_node *row;
 		struct list_node *attribute;
 		struct list_node *table;
+		int i;
 		
 		for(i=0; i<numRecords; i++)
 		{
@@ -248,27 +249,42 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 						return EXIT_SUCCESS;
 					}
 					
-					int *positionsOfAtts;
-					int numOfImpAttPos;
-					char **namesOfAtts;
-					int numOfAtts = -1;
+					struct list_node *row2 = AK_get_row(0, table->data);
+					int numOfAttsInTable = Ak_Size_L2(row2);
+					int positionsOfAtts[numOfAttsInTable];
+					int numOfImpAttPos = 0;
+					char attNameCopy[MAX_VARCHAR_LENGTH];
+					char *nameOfOneAtt;
+					char namesOfAtts[numOfAttsInTable][MAX_VARCHAR_LENGTH];
 					
-					namesOfAtts = AK_get_list_of_attribute_names(attName, &numOfAtts, &numOfImpAttPos, &positionsOfAtts, table->data);
-					for (i = 0; i<numOfAtts; i++) {
-						AK_free(namesOfAtts[i]);
-					}
-					AK_free(namesOfAtts);
-					
-					char **values;
+					strncpy(attNameCopy, attName, MAX_VARCHAR_LENGTH);
 
-					values = AK_get_list_of_attribute_names(newValue, numOfValues, NULL, NULL, NULL);
+					nameOfOneAtt = strtok(attNameCopy, SEPARATOR);
+					while(nameOfOneAtt != NULL)
+					{
+						positionsOfAtts[numOfImpAttPos] = AK_get_attr_index(table->data, nameOfOneAtt) + 1;
+						strncpy(namesOfAtts[numOfImpAttPos], nameOfOneAtt, MAX_VARCHAR_LENGTH);
+						numOfImpAttPos++;
+
+						nameOfOneAtt = strtok(NULL, SEPARATOR);
+					}
+					
+					int index = 0;
+					char *value2;
+					char newValueCopy2[MAX_VARCHAR_LENGTH];
+					char values[numOfValues][MAX_VARCHAR_LENGTH];
+
+					strncpy(newValueCopy2, newValue, MAX_VARCHAR_LENGTH);
+
+					value2 = strtok(newValueCopy2, SEPARATOR);
+					while(value2 != NULL)
+					{
+						strncpy(values[index], value2, MAX_VARCHAR_LENGTH);
+						index++;
+						value2 = strtok(NULL, SEPARATOR);
+					}
 
 					int result = AK_are_values_unique(table->data, numRows, numOfImpAttPos, positionsOfAtts, values, 0);
-					AK_free(positionsOfAtts);
-					for (i = 0; i<numRows; i++) {
-						AK_free(values[i]);
-					}
-					AK_free(values);
 					AK_EPI;
 					return result;
 				}
@@ -280,18 +296,32 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 	}
 	else if(numRecords !=0 && strcmpTableName==0 && strcmpAttName!=0)
 	{
-		int* positionsOfAtts;
+		struct list_node *row = AK_get_row(0, tableName);
+		int numOfAttsInTable = Ak_Size_L2(row);
+		int positionsOfAtts[numOfAttsInTable];
 		int numOfImpAttPos = 0;
-		int numOfAtts = -1;
-		char** tmp = AK_get_list_of_attribute_names(attName, &numOfAtts, &numOfImpAttPos, &positionsOfAtts, tableName);
-		for (i = 0; i<numOfAtts; i++) {
-			AK_free(tmp[i]);
+		char attNameCopy[MAX_VARCHAR_LENGTH];
+		char *nameOfOneAtt;
+		char namesOfAtts[numOfAttsInTable][MAX_VARCHAR_LENGTH];
+		Ak_DeleteAll_L3(&row);
+		AK_free(row);
+		
+		strncpy(attNameCopy, attName, sizeof(attNameCopy));
+
+		nameOfOneAtt = strtok(attNameCopy, SEPARATOR);
+		while(nameOfOneAtt != NULL)
+		{
+			positionsOfAtts[numOfImpAttPos] = AK_get_attr_index(tableName, nameOfOneAtt) + 1;
+			strncpy(namesOfAtts[numOfImpAttPos], nameOfOneAtt, MAX_VARCHAR_LENGTH);
+			numOfImpAttPos++;
+
+			nameOfOneAtt = strtok(NULL, SEPARATOR);
 		}
-		AK_free(tmp);
+		
 		int index = 0;
+		char *value2;
 		char newValueCopy2[MAX_VARCHAR_LENGTH];
 		char values[numOfValues][MAX_VARCHAR_LENGTH];
-		char* value2;
 		
 		strncpy(newValueCopy2, newValue, MAX_VARCHAR_LENGTH);
 
@@ -304,7 +334,6 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 		int numRows = AK_get_num_records(tableName);
 
 		int result = AK_are_values_unique(tableName, numRows, numOfImpAttPos, positionsOfAtts, values, 1);
-		AK_free(positionsOfAtts);
 		AK_EPI;
 		return result;
 	}

@@ -40,8 +40,7 @@ of Kalashnikov DB
 //#define false 0
 //#define true  !false
 
-// #define BITMASK(b)      (1 << ((b) % CHAR_BIT))
-unsigned char BITMASK(int b);
+#define BITMASK(b)      (1 << ((b) % CHAR_BIT))
 #define BITSLOT(b)      ((int)((b) / CHAR_BIT))
 #define BITSET(a, b)    ((a)[BITSLOT(b)] |=  BITMASK(b))
 #define BITCLEAR(a, b)  ((a)[BITSLOT(b)] &= ~BITMASK(b))

@@ -843,7 +843,6 @@ int AK_are_values_unique(char* tableName, int numRows, char values[][MAX_VARCHAR
     int h;
     int impoIndexInArray;
     int match;
-    AK_PRO;
     struct list_node *row;
     struct list_node *attribute;
     for(h=0; h<numRows; h++)
@@ -873,70 +872,10 @@ int AK_are_values_unique(char* tableName, int numRows, char values[][MAX_VARCHAR
         }
         if(match == 1)
         {
-            AK_EPI;
             return EXIT_ERROR;
         }
     }
-    AK_EPI;
     return EXIT_SUCCESS;
-}
-
-
-/**
- * @author Darko Žunec
- * @brief Helper function in which is extracted redundant/repeating code of AK_read_constraint_unique(char*, char[], char[]) function, but could be also used in function like Ak_set_constraint_unique (char*, char[], char[]). This function actually returns list of attribute names (and their amount through second argument if its passed value was -1) for given attributes glued by default separator
- * @param char* attributeNames Attribute names bounded with default separator on which is set UNIQUE constraint
- * @param int* numOfResultRows Address to a number of attributes listed in @attributeNames parameter (if -1 passed, then following 3 arguments should be set to NULL value because in that case attributes are fetched from @tableName, its total number and positions are calculated and the resulting value are bounded to memory locations of these arguments)
- * @param int* numOfImpAttPos Address to a number of table attributes in the table "AK_constraints_unique"
- * @param int** positionsOfAtts Address to a array of indices of attributes in specified table whose values have to be unique
- * @param char* tableName Name of the table from which it is extracted total number of its attributes (necessary if @numOfResultRows is -1, otherwise pass NULL value)
- * @return Array containing attribute names
- **/
-char** AK_get_list_of_attribute_names(char attributeNames[MAX_VARCHAR_LENGTH], int* numOfResultRows, int* numOfImpAttPos, int** positionsOfAtts, char* tableName) { // maybe this should be split to two functions or union structure object shoud be used??
-	char attName[MAX_VARCHAR_LENGTH];
-	char** namesOfAtts;
-	char* nameOfOneAtt;
-	int numOfAtts = *numOfResultRows;
-	int numOfImpAttPosNonDynamic;
-        AK_PRO;
-	namesOfAtts = NULL;
-	if (tableName != NULL) {
-		struct list_node *row;
-		row = AK_get_row(0, tableName);
-		numOfAtts = Ak_Size_L2(row);
-		Ak_DeleteAll_L3(&row);
-		AK_free(row);
-		positionsOfAtts = AK_malloc(numOfAtts * sizeof(int));
-		namesOfAtts = (char**) AK_malloc(sizeof(char*) * numOfAtts);
-		for (int k = 0; k < numOfAtts; k++) {
-		      namesOfAtts[k] = (char*) AK_malloc(MAX_VARCHAR_LENGTH);
-		}
-		*numOfResultRows = numOfAtts;
-	}
-	else if (numOfAtts != -1) {
-		namesOfAtts = (char**) malloc(sizeof(char*) * numOfAtts);
-		for (int k = 0; k < numOfAtts; k++) {
-		      namesOfAtts[k] = (char*) AK_malloc(MAX_VARCHAR_LENGTH);
-		}
-	}
-	numOfImpAttPosNonDynamic = 0;
-	strncpy(attName, attributeNames, MAX_VARCHAR_LENGTH);
-	nameOfOneAtt = strtok(attName, SEPARATOR);
-	while (nameOfOneAtt != NULL) {
-		if (tableName != NULL) {
-                      positionsOfAtts[numOfImpAttPosNonDynamic] = AK_get_attr_index(tableName, nameOfOneAtt) + 1;
-		}
-		strncpy(namesOfAtts[numOfImpAttPosNonDynamic], nameOfOneAtt, MAX_VARCHAR_LENGTH);
-		numOfImpAttPosNonDynamic++;
-		
-		nameOfOneAtt = strtok(NULL, SEPARATOR);
-	}
-	if (numOfImpAttPos == NULL) {
-		numOfImpAttPos = AK_malloc(sizeof(int));
-	}
-	*numOfImpAttPos = numOfAtts;
-        AK_EPI;
-	return namesOfAtts;
 }
 
 /**
