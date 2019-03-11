@@ -5,8 +5,6 @@ AK (Автомат Калашникова) DB is a simple relational database ma
 developed by students of the Faculty of Organization and Informatics in 
 Varaždin, Croatia.
 
-http://kalashnikovdb.sourceforge.net/
-
 The system is currently in alpha development status and NOT fully functional!
 ***
 ## Getting Started
@@ -14,13 +12,13 @@ To get you started you can simply clone the repository and install the dependenc
 
 #### Prerequisites
 ```
-sudo apt-get install git build-essential swig make doxygen
+sudo apt-get install git build-essential swig make doxygen python-dev texlive-latex-recommended texlive-latex-extra
 ```
 #### Clone Kalashnikov DB
 Clone the repository using [git][git]:
 
 ```
-git clone https://github.com/mschatten/akdb
+git clone https://github.com/AILab-FOI/akdb.git
 cd akdb
 ```
 #### Install Dependencies
