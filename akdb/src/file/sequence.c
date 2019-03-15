@@ -75,7 +75,7 @@ int AK_sequence_remove(char *name){
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
     
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, "AK_sequence", "name", row_root, 1);
+    Ak_Update_Existing_Element(TYPE_VARCHAR, name, "AK_sequence", "name", row_root);
     int result =  Ak_delete_row(row_root); 
    
     if (result == EXIT_ERROR) {
@@ -186,8 +186,8 @@ int AK_sequence_next_value(char *name){
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
     
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &next_value, "AK_sequence", "current_value", row_root, 0);
+    Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &next_value, "AK_sequence", "current_value", row_root);
     int result =  Ak_update_row(row_root); 
     Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
@@ -246,8 +246,8 @@ int AK_sequence_rename(char *old_name, char *new_name){
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root);
     
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, new_name, "AK_sequence", "name", row_root, 0);
+    Ak_Update_Existing_Element(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_VARCHAR, new_name, "AK_sequence", "name", row_root);
     int result =  Ak_update_row(row_root); 
     
     Ak_DeleteAll_L3(&row_root);
@@ -282,12 +282,12 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     Ak_Init_L3(&row_root);
     
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root, 1);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &start_value, "AK_sequence", "current_value", row_root, 0);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &increment, "AK_sequence", "increment", row_root, 0);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &max_value, "AK_sequence", "max", row_root, 0);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &min_value, "AK_sequence", "min", row_root, 0);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &cycle, "AK_sequence", "cycle", row_root, 0);
+    Ak_Update_Existing_Element(TYPE_INT, &seq_id, "AK_sequence", "obj_id", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &start_value, "AK_sequence", "current_value", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &increment, "AK_sequence", "increment", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &max_value, "AK_sequence", "max", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &min_value, "AK_sequence", "min", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &cycle, "AK_sequence", "cycle", row_root);
     int result =  Ak_update_row(row_root); 
     
     Ak_DeleteAll_L3(&row_root);

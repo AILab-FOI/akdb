@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#test.py
 
 import kalashnikovDB as ak47
 import test_strings as ts
@@ -18,37 +19,33 @@ class Functions:
 
     def update_Row(self, table, column1, column2, key, new_value):
         element = ak47.list_node()
-        ak47.Ak_Init_L3(element)
-        ak47.Ak_DeleteAll_L3(element)
         
         if type(key) == int:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_INT, key, table, column1, element)
         elif type(key) == float:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_FLOAT, key, table, column1, element)
         elif type(key) == str:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_VARCHAR, key, table, column1, element)
             
         if type(new_value) == int:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, new_value, table, column2, element, 0)
+            ak47.Ak_Insert_New_Element(ak47.TYPE_INT, new_value, table, column2, element)
         elif type(new_value) == float:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, new_value, table, column2, element, 0)
+            ak47.Ak_Insert_New_Element(ak47.TYPE_FLOAT, new_value, table, column2, element)
         elif type(new_value) == str:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, new_value, table, column2, element, 0)
+            ak47.Ak_Insert_New_Element(ak47.TYPE_VARCHAR, new_value, table, column2, element)
         
         return ak47.Ak_update_row(element)
         
         
     def delete_Row(self, table, column1, key):
         element = ak47.list_node()
-        ak47.Ak_Init_L3(element)
-        ak47.Ak_DeleteAll_L3(element)
         
         if type(key) == int:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_INT, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_INT, key, table, column1, element)
         elif type(key) == float:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_FLOAT, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_FLOAT, key, table, column1, element)
         elif type(key) == str:
-            ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, key, table, column1, element, 1)
+            ak47.Ak_Update_Existing_Element(ak47.TYPE_VARCHAR, key, table, column1, element)
             
         return ak47.Ak_delete_row(element)
 
@@ -74,10 +71,6 @@ class Functions:
         return ak47.AK_get_attr_index(table, attr_name)
 
     def get_value(self, row, col, table):
-        element = ak47.list_node()
-        ak47.Ak_Init_L3(element)
-        ak47.Ak_DeleteAll_L3(element)
-
         element = ak47.AK_get_tuple(row, col, table)
         return ak47.AK_tuple_to_string(element)
 
@@ -145,11 +138,10 @@ class Functions:
         
     def projection(self, table1, table_res, attributes):
         att = ak47.list_node()
-        ak47.Ak_Init_L3(att)
-        ak47.Ak_DeleteAll_L3(att)
+
         for attribute in attributes:
             ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
-        return ak47.AK_projection(table1, table_res, att)
+        return ak47.AK_projection(table1, table_res,att, None)
         
         
     def product(self, table1, table2, table_res):
@@ -287,134 +279,3 @@ def create_tables():
     ak47.insert_data_test("class_3", class_3_attr_name, class_3_attr_value_4, class_3_attr_type)
     return 1
 
-create_tables()
-# author: Luka Rajcevic
-# Test data for selection
-# select * from student where year < 1990
-student_attr_name = ["id_student", "firstname", "lastname", "year", "weight"]
-selection_query_1 = ["year", "1991", ">"]
-selection_query_2 = ["year", "1990", ">"]
-selection_query_3 = ["firstname", "Manuel", "=="]
-selection_query_1_types = [ak47.TYPE_ATTRIBS, ak47.TYPE_INT, ak47.TYPE_OPERATOR]
-
-
-# author: Luka Rajcevic
-# this function tests methods from Functions class,
-# it queries table for its properties (attribute count, record count etc.)
-# bugs:
-#   -> get_row_test() does not print number values
-#   -> rename_Table() does not work (segfault)
-def table_properties_test():
-    '''
-    >>> f.attribute_count("class")
-    3
-    >>> f.records_count("class")
-    4
-    >>> f.clear_file("table_test.txt")
-    0
-    >>> f.get_column_test(1, "class")
-    1
-    >>> f.verify_row_or_column(ts.ct_5, "table_test.txt")
-    0
-    >>> f.clear_file("table_test.txt")
-    0
-    >>> f.get_column_test(0, "class")
-    1
-    >>> f.verify_row_or_column(ts.ct_4, "table_test.txt")
-    0
-    >>> f.clear_file("table_test.txt")
-    0
-    >>> f.get_row_test(1, "class")
-    1
-    >>> f.verify_row_or_column(ts.ct_3, "table_test.txt")
-    0
-    >>> f.get_attr_name("class", 1)
-    'class_name'
-    >>> f.get_attr_name("class", 0)
-    'id_class'
-    >>> f.get_attr_index("class", "year")
-    2
-    >>> f.get_value(1, 2, "class")
-    '2011'
-    >>> f.rename_Attribute("class", "year", "anno")
-    0
-    >>> f.verify_table("class", ts.ct_2, "table_test.txt")
-    0
-    ''' 
-
-# author: Luka Rajcevic
-# test functions for CRUD operations
-# current bugs:
-#   -> select works only on integers (floats and strings do not work)
-#   -> update doesn't do anything (table stays the same)
-#   -> delete is removing the wrong row (eg. 3 instead of 4, or 7 instead of 8)
-def selection_test():
-    '''
-    >>> f.sel("student", "s2", selection_query_1, selection_query_1_types)
-    1
-    >>> f.verify_table("s2", ts.ra_10, "table_test.txt")
-    0
-    >>> f.sel("student", "s3", selection_query_2, selection_query_1_types)
-    1
-    >>> f.verify_table("s3", ts.ra_11, "table_test.txt")
-    0
-    >>> f.update_Row("student", "id_student", "year", 2, 2020)
-    0
-    >>> f.verify_table("student", ts.st_3, "table_test.txt")
-    0
-    >>> f.update_Row("student", "id_student", "year", 1, 200)
-    0
-    >>> f.verify_table("student", ts.st_4, "table_test.txt")
-    0
-    >>> f.delete_Row("student", "id_student", 2)
-    0
-    >>> f.delete_Row("student", "id_student", 6)
-    0
-    >>> f.verify_table("student", ts.st_2, "table_test.txt")
-    0
-    '''
-
-def rel_algebra_test():
-    '''
-    >>> f.product("student", "class", "product")
-    0
-    >>> f.verify_table("product", ts.ra_1, "table_test.txt")
-    0
-    >>> f.intersect("class_2", "class", "intersect")
-    0
-    >>> f.verify_table("intersect", ts.ra_9, "table_test.txt")
-    0
-    >>> f.difference("class_2", "class", "difference")
-    0
-    >>> f.verify_table("difference", ts.ra_8, "table_test.txt")
-    0
-    >>> f.union("class_2", "class", "union")
-    0
-    >>> f.verify_table("union", ts.ra_3, "table_test.txt")
-    0
-    >>> f.projection("student", "projection", ["id_student", "year"])
-    0
-    >>> f.verify_table("projection", ts.ra_4, "table_test.txt")
-    0
-    >>> f.projection("student", "projection2", ["year"])
-    0
-    >>> f.verify_table("projection2", ts.ra_6, "table_test.txt")
-    0
-    >>> f.projection("student", "projection3", ["firstname", "year", "lastname"])
-    0
-    >>> f.verify_table("projection3", ts.ra_7, "table_test.txt")
-    0
-    '''
-#
-# Tests give 3 failures (after update, delete and intersect)
-#
-
-def test_main():
-    ak47.AK_inflate_config()
-    ak47.AK_init_disk_manager()
-    ak47.AK_memoman_init()
-    create_tables()
-
-if __name__ == "__main__":
-    import kalashnikovDB as ak47
-    import test_strings as ts

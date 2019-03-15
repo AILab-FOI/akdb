@@ -139,7 +139,6 @@ function fun[] = {
 {"rel: AK_op_intersect", &Ak_op_intersect_test}, //rel/intersect.c
 {"rel: AK_op_selection", &AK_op_selection_test}, //rel/selection.c
 {"rel: AK_op_selection_pattern", &AK_op_selection_test_pattern}, //rel/selection.c with pattern match selections
-{"rel: AK_op_selection_redolog", &AK_op_selection_test_redolog}, //rel/selection.c redolog
 {"rel: Ak_expression_check_test" , &Ak_expression_check_test},
 {"rel: AK_op_difference", &Ak_op_difference_test}, //rel/difference.c
 {"rel: AK_op_projection", &AK_op_projection_test}, //rel/projection.c

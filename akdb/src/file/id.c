@@ -45,8 +45,8 @@ int AK_get_id() {
 		AK_free(row);
 		
         current_value++;
-		Ak_Insert_New_Element_For_Update(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root, SEARCH_CONSTRAINT);
-        Ak_Insert_New_Element_For_Update(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root, NEW_VALUE);
+		Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root);
+        Ak_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
         int result = Ak_update_row(row_root);
 		Ak_DeleteAll_L3(&row_root);
         AK_free(row_root);

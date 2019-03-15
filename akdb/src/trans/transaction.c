@@ -823,8 +823,8 @@ TestResult AK_test_Transaction() {
     struct list_node *row_root_update = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&row_root_update);
     Ak_DeleteAll_L3(&row_root_update);
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &mbr, tblName, "mbr", row_root_update, SEARCH_CONSTRAINT);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "pppppppppp", tblName, "lastname", row_root_update, NEW_VALUE);
+    Ak_Update_Existing_Element(TYPE_INT, &mbr, tblName, "mbr", row_root_update);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "pppppppppp", tblName, "lastname", row_root_update);
 
     command* commands_ins_up = AK_malloc(sizeof (command) * 2);
     commands_ins_up[0].tblName = "student";
@@ -841,8 +841,8 @@ TestResult AK_test_Transaction() {
     Ak_Init_L3(&row_root_p_update);
     Ak_DeleteAll_L3(&row_root_p_update);
     
-    Ak_Insert_New_Element_For_Update(TYPE_INT, &id_prof, "professor", "id_prof", row_root_p_update, SEARCH_CONSTRAINT);
-    Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, "FOI", "professor", "firstname", row_root_p_update, NEW_VALUE);
+    Ak_Update_Existing_Element(TYPE_INT, &id_prof, "professor", "id_prof", row_root_p_update);
+    Ak_Insert_New_Element(TYPE_VARCHAR, "FOI", "professor", "firstname", row_root_p_update);
 
 
     /**************** DELETE COMMAND TEST ******************/

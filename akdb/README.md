@@ -5,8 +5,6 @@ AK (Автомат Калашникова) DB is a simple relational database ma
 developed by students of the Faculty of Organization and Informatics in 
 Varaždin, Croatia.
 
-http://kalashnikovdb.sourceforge.net/
-
 The system is currently in alpha development status and NOT fully functional!
 ***
 ## Getting Started
@@ -14,13 +12,13 @@ To get you started you can simply clone the repository and install the dependenc
 
 #### Prerequisites
 ```
-sudo apt-get install git build-essential swig make doxygen
+sudo apt-get install git build-essential swig make doxygen python-dev texlive-latex-recommended texlive-latex-extra
 ```
 #### Clone Kalashnikov DB
 Clone the repository using [git][git]:
 
 ```
-git clone https://github.com/mschatten/akdb
+git clone https://github.com/AILab-FOI/akdb.git
 cd akdb
 ```
 #### Install Dependencies
@@ -54,6 +52,25 @@ make
 make doc
 make swig
 ```
+### Run swig tests
+Builds swig tests, but fails relAlgebraTests file for unknown reason. You can run tests without error from src/swig folder with instructions from readme in swig folder. 
+```
+make swig-tests
+
+```
+### Run all tests from akdb
+if you want to run all tests from doctest and main.c
+NOTES:
+	sometimes akdb crashes so u have to make clean and build project again
+	some test functions are naughty so they access forbidden memory blocks and crash file :(
+
+Go to src/swig and after that, run:
+```
+
+python allTests.py
+
+```
+Go to src/swig
 ### Run the Application
 ```
 cd bin/
@@ -79,6 +96,7 @@ make comments
 ```
 cd bin
 ./akdb alltest
+./akdb test
 ```
 On first use DB file will be initialized. In case it hangs press 1 and Enter
 (don't ask why).

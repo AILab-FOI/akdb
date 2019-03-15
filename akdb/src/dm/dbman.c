@@ -2514,7 +2514,7 @@ AK_delete_segment(char * name, int type)
     }
   
   Ak_DeleteAll_L3(&row_root);
-  Ak_Insert_New_Element_For_Update(TYPE_VARCHAR, name, system_table, "name", row_root, 1);
+  Ak_Update_Existing_Element(TYPE_VARCHAR, name, system_table, "name", row_root);
   Ak_delete_row(row_root);
   AK_free(row_root);
 
@@ -2577,23 +2577,6 @@ AK_init_disk_manager()
   return EXIT_ERROR;
 }
 
-///////////////////////////////////////////////
-/*
-
-for(i = 0; i < DB_FILE_BLOCKS_NUM; i++)
-	{
-	  if(AK_allocationbit->last_initialized < i)
-	    printf("(%3d-U) ", i);
-	  else if(BITTEST(AK_allocationbit->bittable, i))
-	    printf("(%3d-X) ", i);
-	  else
-	    printf("(%3d-O) ", i);
-	  
-	  if(( (i+1) % (CHAR_IN_LINE / 8) == 0))
-	    printf("\n");
-        }
-*/
-///////////////////////////////////////////////
 
 TestResult AK_allocationbit_test()
 {
@@ -2604,7 +2587,7 @@ TestResult AK_allocationbit_test()
     AK_blocktable_dump(1);
 	
 	//for test of test itself
-	//BITSET(AK_allocationbit->bittable,AK_allocationbit->last_allocated);
+	//BITCLEAR(AK_allocationbit->bittable,AK_allocationbit->last_allocated-1);
 	
 	printf("Last allocated bit: %d\n",AK_allocationbit->last_allocated);
 	printf("Last initialized bit: %d\n",AK_allocationbit->last_initialized);
@@ -2614,7 +2597,7 @@ TestResult AK_allocationbit_test()
 	if(BITTEST(AK_allocationbit->bittable, i))
 	{
 		failed++;
-		printf("First bit has wrong avalue.\n");
+		printf("First bit has wrong avalue.\n",i);
 	}
 	else
 		success++;
@@ -2625,7 +2608,7 @@ TestResult AK_allocationbit_test()
 		{
 			failed++;
 			success--;
-			printf("Bit %d has wrong value in allocated area.\n");
+			printf("Bit %d has wrong value in allocated area.\n",i);
 			break;
 		}
 	success++;
