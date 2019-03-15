@@ -1,7 +1,0 @@
-<map id="sql/cs/constraint_names.h" name="sql/cs/constraint_names.h">
-<area shape="rect" id="node2" href="$constraint__names_8c.html" title="sql/cs/constraint_names.c" alt="" coords="5,80,196,107"/>
-<area shape="rect" id="node3" href="$nnull_8h.html" title="sql/cs/nnull.h" alt="" coords="221,80,327,107"/>
-<area shape="rect" id="node5" href="$unique_8h.html" title="sql/cs/unique.h" alt="" coords="352,80,471,107"/>
-<area shape="rect" id="node4" href="$nnull_8c.html" title="sql/cs/nnull.c" alt="" coords="221,155,327,181"/>
-<area shape="rect" id="node6" href="$unique_8c.html" title="sql/cs/unique.c" alt="" coords="352,155,471,181"/>
-</map>

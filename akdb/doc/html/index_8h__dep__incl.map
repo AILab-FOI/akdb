@@ -1,9 +1,0 @@
-<map id="file/idx/index.h" name="file/idx/index.h">
-<area shape="rect" id="node2" href="$bitmap_8h.html" title="file/idx/bitmap.h" alt="" coords="5,80,135,107"/>
-<area shape="rect" id="node4" href="$btree_8h.html" title="file/idx/btree.h" alt="" coords="159,80,277,107"/>
-<area shape="rect" id="node6" href="$hash_8h.html" title="file/idx/hash.h" alt="" coords="301,80,415,107"/>
-<area shape="rect" id="node8" href="$index_8c.html" title="file/idx/index.c" alt="" coords="440,80,559,107"/>
-<area shape="rect" id="node3" href="$bitmap_8c.html" title="file/idx/bitmap.c" alt="" coords="6,155,134,181"/>
-<area shape="rect" id="node5" href="$btree_8c.html" title="file/idx/btree.c" alt="" coords="160,155,276,181"/>
-<area shape="rect" id="node7" href="$hash_8c.html" title="file/idx/hash.c" alt="" coords="301,155,415,181"/>
-</map>
