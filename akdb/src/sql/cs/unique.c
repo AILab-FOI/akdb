@@ -21,7 +21,7 @@
 
 /**
  * @author Domagoj Tuličić, updated by Nenad Makar 
- * @brief Function sets unique constraint on attribute(s)
+ * @brief Function that sets unique constraint on attribute(s)
  * @param char* tableName name of table
  * @param char attName[] name(s) of attribute(s), if you want to set UNIQUE constraint on combination of attributes seperate their names with constant SEPARATOR (see test)
  * @param char constraintName[] name of constraint
@@ -167,7 +167,7 @@ int Ak_set_constraint_unique(char* tableName, char attName[], char constraintNam
 
 /**
  * @author Domagoj Tuličić, updated by Nenad Makar 
- * @brief Function checks if insertion of some value(s) would violate UNIQUE constraint
+ * @brief Function that checks if the insertion of some value(s) would violate the UNIQUE constraint
  * @param char* tableName name of table
  * @param char attName[] name(s) of attribute(s), if you want to check combination of values of more attributes seperate names of attributes with constant SEPARATOR (see test)
  * @param char newValue[] new value(s), if you want to check combination of values of more attributes seperate their values with constant SEPARATOR (see test),

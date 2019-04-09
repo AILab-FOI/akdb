@@ -21,7 +21,7 @@
 
 /**
  * @author Dino Laktašić
- * @brief  Function to make product of two tables
+ * @brief  Function that makes a product of two tables
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table
  * @param dstTable name of the product table
@@ -112,7 +112,7 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 
 /**
  * @author Dino Laktašić
- * @brief  Product procedure (iterating trough both tables and concating rows)
+ * @brief  Functions that iterates trough both tables and concates rows
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table
  * @param dstTable name of the product table

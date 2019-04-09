@@ -1,5 +1,5 @@
 /**
-@file debug.c Provides functions for debuging
+@file debug.c Provides a function for debuging
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,7 @@
 
 /**
  * @author Dino Laktašić
- * @brief Function for printing debug message. Provides debug level, debug type and message with corresponding variables for the 		  output. 
+ * @brief Function that prints the debug message. Provides debug level, debug type and message with corresponding variables for the output. 
  * @param level level of debug information for a given DB module
  * @param type the name of DB module for which to print debug information
  * @param format format for the output message

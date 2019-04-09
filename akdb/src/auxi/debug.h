@@ -26,7 +26,7 @@
 #include "mempro.h"
 
 /**
- * @brief Set constant to 1 for complete project debug, else set constant to 0
+ * @brief Set constant to 1 for a complete project debug, else set constant to 0
  * @author Dino Laktašić
  */
 #define DEBUG_ALL 0
@@ -36,8 +36,8 @@
 /**
  * @author Dino Laktašić
  * @struct DEBUG_LEVEL
- * @brief Strecture for setting debug level. Divide debug information according to their importance. 
- *         More levels can be defined in the enum if needed. Each debug level can be easly excluded 
+ * @brief Structure for setting debug level. Divide debug information according to their importance. 
+ *         More levels can be defined in the enum if needed. Each debug level can be easily excluded 
  *         from output by setting corresponding enum element to 0.
  */
 typedef enum debug_level {

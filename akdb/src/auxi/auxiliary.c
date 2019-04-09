@@ -25,10 +25,10 @@ int indexCounter = 0;
 
 /**
  * @author Dino Laktašić.
- * @brief Function gets number of digits for given number
+ * @brief Function that gets  the number of digits for any given number
  * @param number number to evaluate
  * @param int base mathematic base (e.g. 2, 10 etc.)
- * @return number of digits for given number
+ * @return the number of digits for the given number
  */
 int AK_chars_num_from_number(int number, int base) {
     int len = 0;
@@ -45,9 +45,9 @@ int AK_chars_num_from_number(int number, int base) {
 
 /**
  * @author Aleksandra Polak
- * @brief Function that change type of argument from string to integer
- * @param *arg_type type of an argument
- * @return EXIT_SUCCESS of the function (return type of argument in value of integer) or EXIT_ERROR
+ * @brief Function that changes the type of argument from a string to an integer
+ * @param *arg_type type of  argument
+ * @return EXIT_SUCCESS of the function (return type of argument as a value of the integer) or EXIT_ERROR
 */
 char* AK_convert_type(char* arg_type)
 {
@@ -120,10 +120,10 @@ char* AK_convert_type(char* arg_type)
 
 /**
  * @author Miroslav Policki
- * @brief Function returns size in bytes of the provided database type
+ * @brief Function returns the size in bytes for the provided database type
  * @param iDB_type database data type (defined in constants.h)
  * @param szVarchar if iDB_type == TYPE_VARCHAR, pointer to the string, otherwise unused
- * @return size of provided data type in bytes if provided data type is valid, else 0
+ * @return size of provided data type in bytes if the provided data type is valid, else return 0
  */
 size_t AK_type_size(int iDB_type, char *szVarchar) {
     AK_PRO;
@@ -166,10 +166,10 @@ size_t AK_type_size(int iDB_type, char *szVarchar) {
 
 /**
  * @author Dino Laktašić
- * @brief Function compares to Strings
- * @param *a  pointer of value to compare
- * @param *b pointer of value to compare
- * @return result of comparison according to strcmp function
+ * @brief Function compares two Strings
+ * @param *a  pointer of a value to compare
+ * @param *b pointer of a value to compare
+ * @return result of the comparison in line with strcmp function
  */
 int AK_strcmp(const void *a, const void *b) {
     const char **ia = (const char **) a;
@@ -181,7 +181,7 @@ int AK_strcmp(const void *a, const void *b) {
 
 /**
  * @author Ljiljana Pintarić
- * @brief  Function initializes empty list
+ * @brief  Function that initializes an empty list
  * @param L root of the list
  * @return NO return value
  */
@@ -195,7 +195,7 @@ void Ak_Init_L3(struct list_node **L){
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function gets the first element of the list
+ * @brief  Function that fetches the first element of the list
  * @param L root of the list
  * @return first element of the list
  */
@@ -212,7 +212,7 @@ struct list_node *Ak_First_L2(struct list_node *L){
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function gets the last element of the list
+ * @brief  Function that fetches the last element of the list
  * @param L  root of the list
  * @return last element of the list
  */
@@ -242,9 +242,9 @@ struct list_node *Ak_End_L2(struct list_node *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function gets the next element of the list
- * @param current  current element in the list
- * @return next element in the list
+ * @brief  Function that fetches the next element of the list
+ * @param current  current element of the list
+ * @return next element of the list
  */
 
 struct list_node *Ak_Next_L2(struct list_node *current) {
@@ -260,10 +260,10 @@ struct list_node *Ak_Next_L2(struct list_node *current) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function gets the previous element of the list
- * @param current current element in the list
+ * @brief  Function that fetches the previous element of the list
+ * @param current current element of the list
  * @param L root of the list
- * @return previous element in the list
+ * @return previous element of the list
  */
 
 struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L) {
@@ -290,7 +290,7 @@ struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L)
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function tests whether the list is empty
+ * @brief  Function that tests if the list is empty
  * @param L root of the list
  * @return 1 if the list is empty, otherwise returns 0
  */
@@ -305,9 +305,9 @@ unsigned int Ak_IsEmpty_L2(struct list_node *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function inserts new element before the current element in the list.
+ * @brief  Function that inserts a new element before the current element of the list.
  * @param data new data
- * @param current current element in the list
+ * @param current current element of the list
  * @param L root of the list
  * @return No return value
  */
@@ -337,9 +337,9 @@ void Ak_InsertBefore_L2(int type, char* data, int size, struct list_node **curre
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function inserts new element after the current element in the list
+ * @brief  Function that inserts a new element after the current element of the list
  * @param data new data
- * @param current current element in the list
+ * @param current current element of the list
  * @param L root of the list
  * @return No return value.
  */
@@ -367,7 +367,7 @@ void Ak_InsertAfter_L2(int type, char* data, int size, struct list_node **curren
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function inserts new element at the begin of the list. It uses function AK_InsertBefore_L
+ * @brief  Function that inserts a new element at the beginning of the list. It uses function called: AK_InsertBefore_L
  * @param data new data
  * @param L root of the list
  * @return No return value
@@ -386,7 +386,7 @@ void Ak_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function inserts new element at the end of the list. It uses function Ak_InsertAfter_L2
+ * @brief  Function that inserts a new element at the end of the list. It uses a function called: Ak_InsertAfter_L2
  * @param data new data
  * @param L root of the list
  * @return No return value.
@@ -405,8 +405,8 @@ void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function deletes the current element in the list
- * @param current current element in the list
+ * @brief  Function that deletes the current element of the list
+ * @param current current element of the list
  * @param L root of the list
  * @retrun No return value
  */
@@ -428,7 +428,7 @@ void Ak_Delete_L3(struct list_node **current, struct list_node **L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function empties list
+ * @brief  Function that empties the list
  * @param L root of the list
  * @return No return value
  */
@@ -457,7 +457,7 @@ void Ak_DeleteAll_L3(struct list_node **L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function gets a number of the elements in the list.
+ * @brief  Function that fetches the number of the elements in the list.
  * @param L root of the list
  * @return Size of the list
  */
@@ -484,8 +484,8 @@ int Ak_Size_L2(struct list_node *L) {
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function retrieves data from the current element in the list
- * @param current current element in the list
+ * @brief  Function that retrieves the data from the current element of the list
+ * @param current current element of the list
  * @param L root of the list
  * @return data from the list element
  */
@@ -508,10 +508,10 @@ char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Function gets a type of the current list element
+ * @brief  Function that fetches a type of the current element of the list
  * @param current current list element
  * @param L root of the list
- * @return data type  of the current list element
+ * @return data type of the current list element
  */
 
 // 0 uses found
@@ -527,7 +527,7 @@ int Ak_GetType_L(AK_list_elem current, AK_list *L) {
 
 /**
  * @author Matija Šestak.
- * @brief  Function gets a data size of the element
+ * @brief  Function that fetches the data size of the element
  * @param current current list element
  * @param L - root of the list
  * @return data size of the current list element
@@ -545,10 +545,10 @@ int Ak_GetSize_L(AK_list_elem current, AK_list *L) {
 
 /**
  * @author Ljiljana Pintarić
- * @brief Function for fetching nth element in row
- * @param pos position of element in row
- * @param row list of elements of row in table
- * @return element of list of elements of row in table
+ * @brief Function that fetches the nth element in a row
+ * @param pos position of element in a row
+ * @param row list of elements of a row in the table
+ * @return element of list of elements of a row in the table
 
  */
 
@@ -574,7 +574,7 @@ struct list_node * Ak_GetNth_L2(int pos, struct list_node *row) {
 
 /**
  * @author Matija Novak
- * @brief Function gets the position of given element
+ * @brief Function that fetches the position of a given element
  * @param SearchElement element whose posititon we search for
  * @param L root of the list
  * @return returns the posititon number of some elelemnt
@@ -598,8 +598,8 @@ int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L) {
 /**
  * @author Dino Laktašić.
  * @brief  Get all permutations without repetition (currently not used, but it can be helpful)
- * @param arr array of chars to permute
- * @return char pointer to array of pointers to permuted char arrays
+ * @param arr array of chars to perform permutation on
+ * @return char pointer to an array of pointers pointing to permuted char arrays
  */
 char *AK_get_array_perms(char *arr) {
     int div, num_perms = 1;
@@ -642,7 +642,7 @@ char *AK_get_array_perms(char *arr) {
 
 /**
  * @author Frane Jakelić
- * @briefFunction that searches for a specific graph node by its ID
+ * @brief Function that searches for a specific graph node by its ID
  * @param id of the vertex that needs to be found
  * @param graphRoot root node of the graph structure
  * @return found graph nod or null
@@ -665,9 +665,9 @@ AK_vertex AK_search_vertex(int id) {
 }
 /**
  * @author Frane Jakelić
- * @briefLooks for empty link for a new graph node
+ * @brief Looks for empty link for a new graph node
  * @param graphRoot oot node of the graph structure
- * @return empty link for new graph node
+ * @return empty link for a new graph node
  */
 AK_vertex AK_search_empty_link() {
 
@@ -704,7 +704,7 @@ AK_vertex AK_add_vertex(int id) {
 }
 /**
  * @author Frane Jakelić
- * @brief Creates a edge between two nodes
+ * @brief Creates an edge between two nodes
  * @param succesorId id of a newly created edge
  * @param succesorOf source of the newly created edge
  * @return pointer to the newly created edge
@@ -798,7 +798,7 @@ AK_stack AK_pop_from_stack() {
 /**
  * @author Frane Jakelić
  * @brief Finds an element in the stack
- * @param id  of the node that needs to be found in the stac
+ * @param id of the node that needs to be found in the stack
  * @return pointer to the found stack node
  */
 AK_stack AK_search_in_stack(int id) {
@@ -830,7 +830,7 @@ int MIN(int X, int Y) {
 /**
  * @author Frane Jakelić
  * @brief Tarjan algorithm that looks for a strongly connected component inside all subgraphs; using DFS
- * @param id of the element on which the algorithm looks for a id of a strongly connected component
+ * @param id of the element on which the algorithm looks for an id of a strongly connected component
  */
 void AK_tarjan(int id) {
     AK_vertex node;
@@ -897,7 +897,7 @@ TestResult AK_tarjan_test() {
 /**
  * @author Marko Sinko
  * @brief Initializes an AK_synchronization_info structure and returns an owned
- *        pointer that must later be passed to AK_destroy_critical_section.
+ *        pointer that must later be passed on to AK_destroy_critical_section.
  * @return Initialized synchronization object
  */
 AK_synchronization_info* AK_init_critical_section() {
@@ -979,7 +979,7 @@ void AK_leave_critical_section(AK_synchronization_info* info) {
 
 /**
  * @author Krunoslav Bilić
- * @brief Function used to copy one "AK_list_elem" to another.
+ * @brief Function that copies one "AK_list_elem" to another.
  * @param first "AK_list_elem" to be compared - source
  * @param second "AK_list_elem" to be compared - destination
  * @return No return value.
@@ -998,7 +998,7 @@ void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem) {
 
 /**
  * @author Krunoslav Bilić
- * @brief Function used to copy one "AK_list" to another. Uses AK_copy_L_Ele(..) for copying.
+ * @brief Function that copies "AK_list" to another. Uses AK_copy_L_Ele(..) for copying.
  * @param first "AK_list" to be compared - source
  * @param second "AK_list" to be compared - destination
  * @return No return value.
@@ -1031,7 +1031,7 @@ void AK_copy_L(AK_list *src, AK_list *dest) {
 
 /**
  * @author Krunoslav Bilić
- * @brief Function compares two "AK_list" lists by DATA, SIZE and TYPE
+ * @brief Function that compares two "AK_list" lists by DATA, SIZE and TYPE
  * @param first "AK_list" to be compared
  * @param second "AK_list" to be compared
  * @return EXIT_SUCCESS if content is same, otherwise EXIT_FAILURE

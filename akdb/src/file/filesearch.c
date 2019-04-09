@@ -21,7 +21,7 @@
 /**
   * @author Miroslav Policki
   
-  * @brief Searches through unsorted values of multiple attributes in a segment.
+  * @brief Function that searches through unsorted values of multiple attributes in a segment.
  	   Only tuples that are equal on all given attribute values are returned (A == 1 AND B == 7 AND ...).
 	   SEARCH_RANGE is inclusive. Only one value (or range) per attribute allowed - use search_params.pData_lower for SEARCH_PARTICULAR.
  	   Supported types for SEARCH_RANGE: TYPE_INT, TYPE_FLOAT, TYPE_NUMBER, TYPE_DATE, TYPE_DATETIME, TYPE_TIME.
@@ -195,7 +195,7 @@ search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int
 
 /**
   * @author Miroslav Policki
-  * @brief Function deallocates memory used by search result returned by AK_search_unsorted.
+  * @brief Function that deallocates memory used by the search result returned by AK_search_unsorted.
   * @param srResult search result
   * @return No return value
  */
@@ -209,7 +209,7 @@ void AK_deallocate_search_result(search_result srResult) {
 }
 /**
   * @author Miroslav Policki
-  * @brief Function for testing file search
+  * @brief Function that tests file search
   * @return No return value
   */
 TestResult Ak_filesearch_test() {
@@ -234,6 +234,7 @@ TestResult Ak_filesearch_test() {
         exit(EXIT_ERROR);
     }
 
+    //Error: a value of type "void *" cannot be assigned to an entity of type "list_node *"
     row_root = AK_malloc(sizeof (struct list_node));
     if (row_root == NULL) {
         printf("filesearch_test: ERROR. Cannot allocate row_root.\n");
@@ -245,6 +246,7 @@ TestResult Ak_filesearch_test() {
         Ak_Init_L3(&row_root);
         Ak_Insert_New_Element(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
         Ak_Insert_New_Element(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
+        //Error: argument of type "const char *" is incompatible with parameter of type "void *"
         Ak_Insert_New_Element(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);
         Ak_insert_row(row_root);
         Ak_DeleteAll_L3(&row_root);
