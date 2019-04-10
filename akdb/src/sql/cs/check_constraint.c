@@ -23,7 +23,7 @@
 
 /**
  * @author Mislav Jurinić
- * @brief For given value, checks if it satisfies the "check" constraint.
+ * @brief Function that for a given value, checks if it satisfies the "check" constraint.
  * @param condition logical operator ['<', '>', '!=', ...]
  * @param type data type [int, float, varchar, datetime, ...]
  * @param value condition to be set
@@ -129,7 +129,7 @@ int condition_passed(char *condition, int type, void *value, void *row_data) {
 
 /**
  * @author Mislav Jurinić
- * @brief Adds a new "check" constraint into the system table.
+ * @brief Function that adds a new "check" constraint into the system table.
  * @param table_name target table for "check" constraint evaluation
  * @param constraint_name new "check" constraint name that will be visible in the system table
  * @param attribute_name target attribute for "check" constraint evaluation
@@ -214,7 +214,7 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
 
 /**
  * @author Mislav Jurinić
- * @brief Verifies if the value we want to insert satisfies the "check" constraint.
+ * @brief Function that verifies if the value we want to insert satisfies the "check" constraint.
  * @param table target table name
  * @param attribute target attribute name
  * @param value data we want to insert

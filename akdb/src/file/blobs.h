@@ -1,5 +1,5 @@
 /**
-    @file blobs.h Provides data structures for manipulating blobs
+    @file blobs.h Provides data structures, functions and defines for manipulating blobs
  */
 
 /*

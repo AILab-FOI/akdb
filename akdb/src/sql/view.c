@@ -22,7 +22,7 @@
 
 /**
  * @author Kresimir Ivkovic
- * @brief Finds an object's id by its name
+ * @brief Function that finds an object's id by its name
  * @param name name of the view
  * @return View's id or EXIT_ERROR
  */
@@ -46,7 +46,7 @@ int AK_get_view_obj_id(char *name) {
 
 /**
  * @author Danko Sačer
- * @brief Returnes a query by its name
+ * @brief Function that returns a query by its name
  * @param name name of the view
  * @return query string or EXIT_ERROR
  */
@@ -72,7 +72,7 @@ char* AK_get_view_query(char *name){
 
 /**
  * @author Danko Sačer
- * @brief Returnes a relation expression by its name
+ * @brief Function that returns a relation expression by its name
  * param name name of the view
  * @return rel_exp string or EXIT_ERROR
  */
@@ -98,7 +98,8 @@ char* AK_get_rel_exp(char *name){
 
 /**
  * @author Kresimir Ivkovic
- * @brief Adds a new view to the view table with the corresponding name and value (view query); set_id is optional, if it's not set, the system will determine the new id automatically
+ * @brief Function that adds a new view to the view table with the corresponding name and value (view query); 
+ * set_id is optional, if it's not set, the system will determine the new id automatically
  * @param name name og the view
  * @param query query of the view
  * @param rel_exp relation expression of the view
@@ -130,7 +131,7 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
 
 /**
  * @author Kresimir Ivkovic
- * @brief Removes the view by its object id
+ * @brief Function that  removes the view by its object id
  * @param obj_id object id of the view
  * @return Result of AK_delete_row for the view (success or error)
  */
@@ -152,7 +153,7 @@ int AK_view_remove_by_obj_id(int obj_id) {
 
 /**
  * @author Kresimir Ivkovic
- * @brief Renames a view (based on it's name) from "name" to "new_name"
+ * @brief Function that renames a view (based on it's name) from "name" to "new_name"
  * @param name name of the view
  * @param new_name new name of the view
  * @return error or success
@@ -186,7 +187,7 @@ int AK_view_rename(char *name, char *new_name){
 
 /**
  * @author Kresimir Ivkovic
- * @brief Removes the view by its name by identifying the 
+ * @brief Function that removes the view by its name by identifying the 
  * view's id and passing id to AK_view_remove_by_obj_id
  * @param name name of the view
  * @return Result of AK_view_remove_by_obj_id or EXIT_ERROR if no id is found
@@ -205,7 +206,7 @@ int AK_view_remove_by_name(char *name) {
 
 /**
  * @author Kresimir Ivkovic
- * @brief Changes the query for a view (determined by it's name) to "query"
+ * @brief Function that changes the query from a view (determined by it's name) to "query"
  * @param name of the query
  * @param query new query of the view
  * @param rel_exp relation expression of the view
@@ -223,7 +224,7 @@ int AK_view_change_query(char *name, char *query, char *rel_exp){
 
 /**
  * @author Darko Hranic
- * @brief shows data from test view query only for test purpose
+ * @brief Function that shows the data from test view query. Only for test purpose
  * @param rel_exp conditions as string
  */
 int AK_test_get_view_data(char *rel_exp){

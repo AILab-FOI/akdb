@@ -1,5 +1,5 @@
 /**
-@file rel_eq_assoc.c Provides functions for for relational equivalences regarding associativity
+@file rel_eq_assoc.c Provides functions for  relational equivalences regarding associativity
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ int AK_compare(const void *a, const void *b) {
 
 /**
  * @author Dino Laktašić.
- * @brief Main function for generating RA expresion according to associativity equivalence rules 
+ * @brief Main function for generation of RA expresion according to associativity equivalence rules 
  * @param *list_rel_eq RA expresion as the struct list_node
  * @return optimised RA expresion as the struct list_node
  */

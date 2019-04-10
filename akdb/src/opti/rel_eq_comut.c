@@ -295,7 +295,7 @@ struct list_node *AK_rel_eq_comut(struct list_node *list_rel_eq) {
 
 /**
  * @author Dino Laktašić.
- * @brief Check if selection can commute with theta-join or product
+ * @brief Function that checks if the selection can commute with theta-join or product
  * <ol>
  * <li>For each token (delimited by " ") in selection condition first check if token represents attribute/s and is subset in the given table</li>
  * <li>If token is a subset set variable id to 1</li>
@@ -368,7 +368,7 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
 
 /**
  * @author Dino Laktašić (AK_rel_eq_commute_with_theta_join), Davor Tomala (AK_rel_eq_comut)
- * @brief relational equivalences regarding commutativity
+ * @brief Function that tests relational equivalences regarding commutativity
  * @return No return vlaue
  */
 TestResult AK_rel_eq_comut_test() {

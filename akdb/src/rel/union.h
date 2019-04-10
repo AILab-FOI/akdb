@@ -1,5 +1,5 @@
 /**
-@file union.h Header file that provides data structures for relational union operation
+@file union.h Header file that provides functions and defines for relational union operation
  */
 /*
  * This program is free software; you can redistribute it and/or modify

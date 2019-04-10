@@ -1,5 +1,5 @@
 /**
-@file test.h Header file that provides functions for testing purposes
+@file test.h Header file that provides functions and defines for testing purposes
  */
 /*
  * This program is free software; you can redistribute it and/or modify
