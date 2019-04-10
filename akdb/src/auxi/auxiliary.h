@@ -1,5 +1,5 @@
 /**
-@file auxiliary.h Header file that provides a data structure for the auxiliary functions
+@file auxiliary.h Header file zhat provides data structures for the auxiliary functions
  */
 /*
  * This program is free software; you can redistribute it and/or modify

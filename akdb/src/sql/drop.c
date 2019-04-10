@@ -1,9 +1,5 @@
 /**
- *@author Unknown, Jurica Hlevnjak - 
- drop table bugs fixed, reorganized code structure, 
- system catalog tables drop disabled, drop index added, 
- drop view added, drop sequence added, drop trigger added, drop_function added, 
- drop user added, drop group added, AK_drop_test updated
+ *@author Unknown, Jurica Hlevnjak - drop table bugs fixed, reorganized code structure, system catalog tables drop disabled, drop index added, drop view added, drop sequence added, drop trigger added, drop_function added, drop user added, drop group added, AK_drop_test updated
  * 
  *@file drop.c Provides DROP functions
  */
@@ -352,7 +348,7 @@ int AK_drop(int type, AK_drop_arguments *drop_arguments) {
 
 /**
  * @author unknown, Jurica Hlevnjak - fix bugs and reorganize code in this function
- * @brief Help function for the drop command. Delete memory blocks and addresses of table 
+ * @brief Help function for drop command. Delete memory blocks and addresses of table 
  * and removes table or index from system table.
  * @param tblName name of table or index
  * @param sys_table name of system catalog table
@@ -458,7 +454,7 @@ void AK_drop_help_function(char *tblName, char *sys_table) {
 
 /**
  * @author Jurica Hlevnjak, updated by Tomislav Ilisevic
- * @brief Help function for checking if the element(view, function, sequence, user ...) exist in system catalog table
+ * @brief Help function for check if element(view, function, sequence, user ...) exist in system catalog table
  * @param tblName name of table, index view, function, trigger, sequence, user, group or constraint
  * @param sys_table name of system catalog table
  * @return if element exist in system catalog returns 1, if not returns 0

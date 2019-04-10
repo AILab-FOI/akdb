@@ -12,27 +12,27 @@
 
 /**
  * @def DB_NAME
- * @brief Constant declaring the name of the database file
+ * @brief Constant declaring the name oof database file
 */
 #define DB_FILE (iniparser_getstring(AK_config,"general:db_file","kalashnikov.db"))
 /**
  * @def MAX_NUM_OF_BLOCKS
- * @brief Constant declaring the maximum number of blocks in a segment
+ * @brief Constant declaring maximum number of blocks in a segment
 */
 #define MAX_NUM_OF_BLOCKS (iniparser_getint(AK_config,"segments:max_num_of_blocks",200))
 /**
   * @def MAX_EXTENTS_IN_SEGMENT
-  * @brief Constant declaring the maximum number of extents in segment
+  * @brief Constant declaring maximum number of extents in segment
 */
 #define MAX_EXTENTS_IN_SEGMENT 200
 /**
   * @def MAX_FREE_SPACE_SIZE
-  * @brief Constant declaring the maximum free space in block
+  * @brief Constant declaring maximum AK_free space in block
 */
 #define MAX_FREE_SPACE_SIZE (iniparser_getint(AK_config,"blocks:max_AK_free_space_size",4000))
 /**
   * @def MAX_LAST_TUPLE_DICT_SIZE_TO_USE
-  * @brief Constant declaring the maximum size od last tuple in a dictionary
+  * @brief Constant declaring maximum size od last tuple in dictionary
 */
 #define MAX_LAST_TUPLE_DICT_SIZE_TO_USE (iniparser_getint(AK_config,"dictionary:max_last_tuple_dict_size_to_use",470))
 /**
@@ -77,13 +77,13 @@
 #define ARCHIVELOG_PATH (iniparser_getstring(AK_config, "redolog:archivelog_folder", "./archivelog"))
 /**
  * @def MAX_REDO_LOG_MEMORY
- * @brief The maximum size of REDO log memory
+ * @brief maximum size of REDO log memory
  */
 #define MAX_REDO_LOG_MEMORY 4096
 
 /**
  *@def MAX_REDO_LOG_ENTRIES
- *@brief The maximum size of REDO log entries
+ *@brief maximum size of REDO log entries
  */
 #define MAX_REDO_LOG_ENTRIES 100
 

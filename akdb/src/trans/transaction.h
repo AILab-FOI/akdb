@@ -1,5 +1,5 @@
 /**
-@file transaction.h Header file that contains data structures,functions and defines for the transaction execution
+@file transaction.h Header file that defines includes and datastructures for the transaction execution
  */
 /*
  *

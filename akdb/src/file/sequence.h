@@ -1,5 +1,5 @@
 /**
-@file sequence.h Header file that provides functions and defines for sequences
+@file sequence.h Header file that provides data structures for sequences
  */
 /*
  * This program is free software; you can redistribute it and/or modify

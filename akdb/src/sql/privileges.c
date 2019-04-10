@@ -56,7 +56,7 @@ int AK_user_add(char *username, int *password, int set_id) {
 
 /**
  * @author Kristina Takač.
- * @brief  Function that returns an ID of the given user
+ * @brief  Returns an ID of the given user
  * @param *username username of user whose id we are looking for
  * @return user_id, otherwise EXIT_ERROR
  */
@@ -83,7 +83,7 @@ int AK_user_get_id(char *username) {
 
 /**
  * @author Ljubo Barać
- * @brief Function that removes the given user
+ * @brief Removes the given user
  * @param name Name of the user to be removed
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
@@ -104,7 +104,7 @@ int AK_user_remove_by_name(char *name) {
 
 /**
  * @author Ljubo Barać, update by Lidija Lastavec, update by Marko Flajšek
- * @brief Function that renames a given user
+ * @brief Renames the given user
  * @param old_name Name of the user to be renamed
  * @param new_name New name of the user
  * @param password Password of the user to be renamed (should be provided)
@@ -125,7 +125,7 @@ int AK_user_rename(char *old_name, char *new_name, int *password) {
 
 /**
  * @author Kristina Takač, edited by Ljubo Barać
- * @brief Function that adds a new group
+ * @brief Adds a new group
  * @param *name name of group to be added
  * @param set_id non default id to be passed
  * @return id of group                                                      
@@ -158,7 +158,7 @@ int AK_group_add(char *name, int set_id) {
 
 /**
  * @author Kristina Takač.
- * @brief Function that returns the ID  from the given group name
+ * @brief Returns an ID of from the given group name
  * @param *name name of group whose id we are looking for
  * @return id of group, otherwise EXIT_ERROR                                                      
  */
@@ -185,7 +185,7 @@ int AK_group_get_id(char *name) {
 
 /**
  * @author Ljubo Barać
- * @brief Function that removes the given group
+ * @brief Removes the given group
  * @param name Name of the group to be removed
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
@@ -205,7 +205,7 @@ int AK_group_remove_by_name(char *name) {
 
 /**
  * @author Ljubo Barać, update by Lidija Lastavec
- * @brief Function that renames the given group
+ * @brief Renames the given group
  * @param old_name Name of the group to be renamed
  * @param new_name New name of the group
  * @return EXIT_SUCCESS or EXIT_ERROR
@@ -232,7 +232,7 @@ int AK_group_rename(char *old_name, char *new_name) {
 
 /**
  * @author Kristina Takač, updated by Mario Peroković, inserting user id instead of username in AK_user_right, updated by Marko Flajšek
- * @brief Function that grants a specific privilege to the desired user on a given table
+ * @brief Grants specific privilege to the desired user on a given table
  * @param *username username of user to whom we want to grant privilege
  * @param *table name of table on which privilege will be granted to user
  * @param *right type of privilege which will be granted to user on given table
@@ -295,7 +295,7 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
  * NOTICE: Test 12 isn't currently revoking a privilege since the obj_id in the AK_group_right table is passing the value of 127.
      Once the issue #87 on GitHub concerning the data type is solved, the test should be working as expected.
  * @author Kristina Takač, updated by Mario Peroković - added comparing by table id, and use of user_id in AK_user_right
- * @brief Function that revokes users privilege on the given table
+ * @brief Revokes user's privilege on the given table
  * @param *username username of user to whom we want to grant privilege
  * @param *table name of table on which privilege will be revoked from user
  * @param *right type of privilege which will be revoked from user on given table
@@ -373,7 +373,7 @@ int AK_revoke_privilege_user(char *username, char *table, char *right) {
 
 /**
  * @author Jurica Hlevnjak, updated by Marko Flajšek
- * @brief Function that revokes ALL user's privileges on ALL tables (for DROP user)
+ * @brief Revokes ALL user's privileges on ALL tables (for DROP user)
  * @param username name of user from whom we want to revoke all privileges
  * @return EXIT_SUCCESS if privilege is revoked, EXIT_ERROR if it isn't
  */
@@ -420,7 +420,7 @@ int AK_revoke_all_privileges_user(char *username) {
 
 /**
  * @author Kristina Takač.
- * @brief Function that grants a privilege to a given group on a given table
+ * @brief Grants privilege to given group on given table
  * @param *groupname  name of group to which we want to grant privilege
  * @param *table name of table on which privilege will be granted to user
  * @param *right type of privilege which will be granted to user on given table
@@ -482,10 +482,10 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right) {
  * NOTICE: Test 9 isn't currently revoking a privilege since the obj_id in the AK_group_right table is passing the value of 127.
      Once the issue #87 on GitHub concerning the data type is solved, the test should be working as expected.
  * @author Kristina Takač, updated by Mario Peroković - added comparing by table id
- * @brief Function that revokes a groups privilege on the given table 
+ * @brief Revokes group's privilege on the given table 
  * @param *grounamep name of group which user belongs to
  * @param *table name of table on which privilege will be granted to group
- * @param *right type of privilege which will be granted to group on a given table
+ * @param *right type of privilege which will be granted to group on given table
  * @return EXIT_SUCCESS if privilege is revoked, EXIT_ERROR if it isn't
  */
 int AK_revoke_privilege_group(char *groupname, char *table, char *right) {
@@ -564,7 +564,7 @@ int AK_revoke_privilege_group(char *groupname, char *table, char *right) {
 
 /**
  * @author Jurica Hlevnjak
- * @brief Function that revokes ALL privileges from the desired group on ALL tables (needed for DROP group)
+ * @brief Revokes ALL privileges from the desired group on ALL tables (needed for DROP group)
  * @param groupname name of group from which we want to revoke all privileges
  * @return EXIT_SUCCESS if privilege is revoked, EXIT_ERROR if it isn't
  */
@@ -610,7 +610,7 @@ int AK_revoke_all_privileges_group(char *groupname) {
 
 /**
  * @author Kristina Takač, updated by Mario Peroković, added verifying the existence of user in the group, updated by Maja Vračan 
- * @brief Function that puts the desired user in the given group
+ * @brief Puts the desired user in the given group
  * @param *user username of user which will be put in group
  * @param *group name of group in which user will be put
  * @return EXIT_SUCCESS or EXIT_ERROR if the user is already in the group
@@ -655,7 +655,7 @@ int AK_add_user_to_group(char *user, char *group) {
 
 /**
  * @author Jurica Hlevnjak, update by Lidija Lastavec
- * @brief Function that removes user from all groups. Used for DROP user.
+ * @brief Removes user from all groups. Used for DROP user.
  * @param user name of user
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
@@ -701,7 +701,7 @@ int AK_remove_user_from_all_groups(char *user) {
 
 /**
  * @author Jurica Hlevnjak, update by Lidija Lastavec
- * @brief Function that removes all users from a group. Used for DROP group.
+ * @brief Function removes all users from group. Used for DROP group.
  * @param group name of group
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
@@ -747,7 +747,7 @@ int AK_remove_all_users_from_group(char *group) {
 
 /**
  * @author Kristina Takač, updated by Marko Flajšek
- * @brief Function that checks whether the given user has a right for the given operation on the given table
+ * @brief Checks whether the given user has a right for the given operation on the given table
  * @param *user username for which we want check privileges
  * @param *table name of table for which we want to check whether user has right on
  * @param *privilege privilege for which we want to check whether user has right for
@@ -916,7 +916,7 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
 
 /**
  * @author Jurica Hlevnjak, updated by Lidija Lastavec
- * @brief Function that checks if the user has any privileges or belongs to any group. Used in drop user for restriction.
+ * @brief Checks if the user has any privileges or belongs to any group. Used in drop user for restriction.
  * @param user name of user
  * @return EXIT_ERROR or EXIT_SUCCESS
  */
@@ -971,7 +971,7 @@ int AK_check_user_privilege(char *user) {
 
 /**
  * @author Jurica Hlevnjak, updated by Lidija Lastavec, updated by Marko Flajšek
- * @brief Function that checks if the group has any privileges. Used in drop group for restriction.
+ * @brief Checks if the group has any privileges. Used in drop group for restriction.
  * @param group name of group
  * @return EXIT_ERROR or EXIT_SUCCESS
  */

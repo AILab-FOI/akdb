@@ -28,7 +28,7 @@
 
 /**
  * @author Goran Štrok
- * @brief returns a string containing attribute types for the supplied table name, seperated by ATTR_DELIMITER
+ * @brief returns a string containing attribute types for supplied table name, seperated by ATTR_DELIMITER
  * @param tblName name of the table for which the attribute types will be returned
  */
 
@@ -118,7 +118,7 @@ int create_header_test(char* tbl_name, char** attr_name, int _num, int* _type){
 
 /**
  * @author Luka Rajcevic
- * @brief Function for inserting test data into the table (needed for python testing)
+ * @brief Function for inserting test data into table (needed for python testing)
  * @param tbl_name - name of the table for which the header will be created
  * @param attr_name - array of attribute names
  * @param attr_value - values of attributes to be inserted
@@ -202,7 +202,7 @@ int selection_test(char* src_table, char* dest_table, char** sel_query, int _num
 
 /**
  * @author Luka Rajcevic
- * @brief Function that prints the requested column
+ * @brief prints requested column
  * @return 1 if column is found, 0 otherwise
  * @param num - 0 based index of column
  * @param tbl - name of the table
@@ -239,7 +239,7 @@ int get_column_test(int num, char* tbl){
 
 /**
  * @author Luka Rajcevic
- * @brief Function that prints the requested row
+ * @brief prints requested row
  * @return 1 if row is found, 0 otherwise
  * @param num - 0 based index of row
  * @param tbl - name of the table

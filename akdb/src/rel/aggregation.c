@@ -23,7 +23,7 @@ extern search_result AK_search_unsorted(char *szRelation, search_params *aspPara
 
 /**
  @author Dejan Frankovic
- @brief  Function that calculates how many attributes there are in the header with a while loop.
+ @brief  Function calculates how meany attributes there are in a header with while loop.
  @param  header A header array
  @return Number of attributes defined in header array
 
@@ -40,7 +40,7 @@ int AK_header_size(AK_header *header) {
 
 /**
   @author Dejan Frankovic
-  @brief  Function that initializes the input object for aggregation with init values
+  @brief  Function initializes the input object for aggregation whit init values
   @param  input the input object
   @return No return value
  */
@@ -57,7 +57,7 @@ void AK_agg_input_init(AK_agg_input *input) {
 
 /**
   @author Dejan Frankovic
-  @brief  Function that adds a header with a task in input object for aggregation
+  @brief  Function adds a header with a task in input object for aggregation
   @param header a header that is being aggregated
   @param agg_task the task which is to be done on the header
   @param input the input object
@@ -78,8 +78,9 @@ int AK_agg_input_add(AK_header header, int agg_task, AK_agg_input *input) {
 }
 /**
   @author Dejan Frankovic
-  @brief Function that adds a header with a task on the beginning of the input object for aggregation.
-		 With the use of for loop existing attributes and tasks are moved from one place forward in input object
+  @brief Function adds a header with a task on the beginning of the input object for aggregation so
+         with for loop existing attributes and tasks are moved one place forward in input object
+
   @param header a header that is being aggregated
   @param agg_task  the task which is to be done on the header
   @param input the input object
@@ -109,10 +110,10 @@ int AK_agg_input_add_to_beginning(AK_header header, int agg_task, AK_agg_input *
 
 /**
   @author Dejan Frankovic
-  @brief  function that handles AVG (average) aggregation. It  goes through array of tasks in input
-          object until it comes to task with a value of -1. While loop examines whether the task in array is equal to
+  @brief This function is used to handle AVG (average) aggregation. It  goes through array of tasks in input
+          object until it comes to task with value -1. While loop examines whether the task in array is equal to
           AGG_TASK_AVG. If so, AGG_TASK_AVG_COUNT is put on the beginning of input object. After that,
-          AGG_TASK_AVG_SUM is put on the beginning of input object.
+          AGG_TASK_AVG_SUM is put on the begginig of input object.
   @param input the input object
   @return No return value
  */
@@ -133,12 +134,12 @@ void AK_agg_input_fix(AK_agg_input *input) {
 
 /**
    @author Dejan Frankovic
-   @brief Function that aggregates a given table by given attributes. Firstly, AGG_TASK_AVG_COUNT and
+   @brief Function aggregates a given table by given attributes. Firstly, AGG_TASK_AVG_COUNT and
           AGG_TASK_AVG_SUM are put on the beginning of the input object. Then for loop iterates through
           input tasks and assignes the type of aggregation operation according to aggregation operation.
 	  New table has to be created. For loop goes through given table. GROUP operation is executed separately
 	  from other operations. Addresses of records are put in needed_values array and
-	  results are put in new table.
+	  results are put in new table
    @param input input object with list of atributes by which we aggregate and types of aggregations
    @param source_table - table name for the source table
    @param agg_table  table name for aggregated table
@@ -631,7 +632,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     }
     else
 	{
-		//TODO: move struct to .h
+
 	struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
 	Ak_Init_L3(&projection_att);
 
@@ -671,7 +672,6 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     return EXIT_SUCCESS;
 }
 
-//TODO: Needs description
 TestResult Ak_aggregation_test() {
     AK_PRO;
     printf("aggregation.c: Present!\n");

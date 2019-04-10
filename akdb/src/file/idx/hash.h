@@ -1,5 +1,5 @@
 /**
-@file hash.h Header file that provides data structures, functions and defines for Hash indices
+@file hash.h Header file that provides data structures for Hash indices
  */
 /*
  * This program is free software; you can redistribute it and/or modify

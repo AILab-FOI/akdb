@@ -1,5 +1,5 @@
 /**
-@file function.h Header file that provides functions and defines for view.c
+@file function.h Header file that provides data structures functions
  */
 /*
  * This program is free software; you can redistribute it and/or modify

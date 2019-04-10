@@ -22,8 +22,7 @@ pthread_mutex_t fileMut = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * @author Tomislav Fotak, updated by Matija Šestak (function now uses caching)
- * @brief Function that initializes a new segment and writes its start and finish address in system catalog table. 
- * For creting new table, index, temporary table, etc. call this function
+ * @brief Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, 	     etc. call this function
  * @param name segment name
  * @param type segment type
  * @param header pointer to header that should be written to the new extent (all blocks)
@@ -74,8 +73,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
 
 /**
  * @author Tomislav Fotak, updated by Matija Šestak (function now uses caching), reused by Lovro Predovan
- * @brief Function that initializes a new segment and writes its start and finish address in system catalog table.
- *  For creting new table, index, temporary table, etc. call this function
+ * @brief Function initializes new segment and writes its start and finish address in system catalog table. For creting new table, index, temporary table, 	     etc. call this function
  * @param name segment name
  * @param type segment type
  * @param header pointer to header that should be written to the new extent (all blocks)

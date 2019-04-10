@@ -1,5 +1,5 @@
 /**
-@file query_optimization.h Header file that provides data structure, functions and defines for general query optimization
+@file query_optimization.h Header file that provides functions for general query optimization
  */
 /*
  * This program is free software; you can redistribute it and/or modify

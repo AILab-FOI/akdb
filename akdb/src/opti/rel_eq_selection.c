@@ -22,7 +22,7 @@
 
 /**
  * @author Dino Laktašić.
- * @brief Function that checks if some set of attributes is subset of larger set
+ * @brief Check if some set of attributes is subset of larger set
  * <ol>
  * <li>Tokenize set and subset of projection attributes and store each of them to it's own array</li>
  * <li>Check if the size of subset array is larger than the size of set array</li>
@@ -113,7 +113,7 @@ int AK_rel_eq_is_attr_subset(char *set, char *subset) {
 
 /**
  * @author Dino Laktašić.
- * @brief Function that fetches attributes for a given table and store them to the char array 
+ * @brief Get attributes for a given table and store them to the char array 
  * <ol>
  * <li>Get the number of attributes in a given table</li>
  * <li>If there is no attributes return NULL</li>
@@ -224,7 +224,7 @@ char *AK_rel_eq_cond_attributes(char *cond) {
 
 /**
  * @author Dino Laktašić.
- * @brief Function that checks if two sets share one or more of it's attributes
+ * @brief Check if two sets share one or more of it's attributes
  * <ol>
  * <li>If is empty set or subset returns EXIT_FAILURE</li>
  * <li>For each attribute in one set check if there is same attribute in the second set</li>
@@ -276,8 +276,7 @@ int AK_rel_eq_share_attributes(char *set, char *subset) {
 
 /**
  * @author Dino Laktašić.
- * @brief Function that checks if selection can commute with theta-join or product 
- * (if working with conditions in infix format use this function instead - also remember to change code at the other places)
+ * @brief Check if selection can commute with theta-join or product (if working with conditions in infix format use this function insteed - also remember to change code at the other places)
  * <ol>
  * <li>For each token (delimited by " ") in selection condition first check if token represents attribute/s and is subset in the given table</li>
  * <li>If token is a subset set variable id to 1</li>
@@ -398,7 +397,6 @@ char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName) {
  * @param *cond condition expression
  * @result conditions list
  */
-//TODO: Move to .h
 struct list_node *AK_rel_eq_split_condition(char *cond) {
     AK_PRO;
     struct list_node *list_attr = (struct list_node *) AK_malloc(sizeof (struct list_node));

@@ -1,7 +1,7 @@
 import os
 import gzip
 from logging.handlers import RotatingFileHandler
-#TODO: Function needs documentation
+
 class ImprovedRotatingFileHandler(RotatingFileHandler):
     def __init__(self, filename, mode='a', maxBytes=0, backupCount=0, encoding=None, delay=0):
         self.backup_count = backupCount

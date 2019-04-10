@@ -66,7 +66,7 @@ int AK_get_function_obj_id(char* function, struct list_node *arguments_list) {
 
 /**
  * @author Boris Kišić
- * @brief Function that checks whether arguments belongs to a function
+ * @brief Function that checks whether arguments belong to function
  * @param *function_id id of the function
  * @param *arguments_list list of arguments
  * @return EXIT_SUCCESS of the function or EXIT_ERROR
@@ -122,7 +122,7 @@ int AK_check_function_arguments(int function_id, struct list_node *arguments_lis
 
 /**
  * @author Jurica Hlevnjak updated by Aleksandra Polak
- * @brief Function that checks whether arguments belongs to a function but only checks argument type (not name). Used for drop function.
+ * @brief Function that checks whether arguments belong to function but only checks argument type (not name). Used for drop function.
  * @param function_id id of the function
  * @param args function arguments 
  * @return EXIT_SUCCESS or EXIT_ERROR
@@ -283,7 +283,7 @@ int AK_function_arguments_add(int function_id, int arg_number, int arg_type, cha
 
 /**
  * @author Boris Kišić
- * @brief Function that removes a function by its obj_id.
+ * @brief Function removes a function by its obj_id.
  * @param obj_id obj_id of the function
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
@@ -311,7 +311,7 @@ int AK_function_remove_by_obj_id(int obj_id) {
 
 /**
  * @author Boris Kišić
- * @brief Function that removes function arguments by function id.
+ * @brief Function removes function arguments by function id.
  * @param obj_id obj_id of the function
  * @return EXIT_SUCCESS or EXIT_ERROR
  */

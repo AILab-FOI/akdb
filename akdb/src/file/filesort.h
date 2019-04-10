@@ -1,5 +1,5 @@
 /**
-@file filesort.h Header file that provides functions and defines for file sorting
+@file filesort.h Header filr provides data structures for file sorting
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,7 @@
 #define DATA_ROW_SIZE 200
 /**
   * @def DATA_TUPLE_SIZE
-  * @brief Constant declaring size of data to be copied
+  * @brief Costant declaring size of data to be copied
   */
 
 #define DATA_TUPLE_SIZE 500

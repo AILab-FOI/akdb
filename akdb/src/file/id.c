@@ -21,7 +21,7 @@
 
 /**
  * @author Saša Vukšić, updated by Mislav Čakarić, changed by Mario Peroković, now uses Ak_update_row, updated by Nenad Makar
- * @brief Function that fetches unique ID for any object, stored in a sequence
+ * @brief Function for getting unique ID for any object, stored in sequence
  * @return objectID
  */
 int AK_get_id() {
@@ -78,7 +78,7 @@ int AK_get_id() {
 
 /**
  * @author Lovro Predovan
- * @brief Function that fetches unique ID for any object, stored in sequence based on table name
+ * @brief Function for getting unique ID for any object, stored in sequence based on table name
  * @return objectID in string(char) format
  */
 char AK_get_table_id(char *tableName) {

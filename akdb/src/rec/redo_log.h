@@ -1,7 +1,6 @@
 /*
-/**
-@file redo_log.h Header file that provides functions and defines for redo_log.h
-*
+ * redo_log.h
+ *
  *  Created on: Apr 30, 2012
  *      Author: gigai
  */

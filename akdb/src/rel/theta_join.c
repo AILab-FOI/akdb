@@ -21,7 +21,7 @@
 
 /**
  * @author Tomislav Mikulček
- * @brief  Function that creates a header of the new table for theta join
+ * @brief  Function for creating the header of the new table for theta join
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table
  * @param new_table name of the destination table
@@ -140,7 +140,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
 
 /**
  * @author Tomislav Mikulček
- * @brief Function that iterates through blocks of the two tables and copies the rows which pass the constraint check into the new table
+ * @brief Function iterates through blocks of the two tables and copies the rows which pass the constraint check into the new table
  * @param tbl1_temp_block block of the first table
  * @param tbl2_temp_block block of the second join table
  * @param tbl1_num_att number of attributes in the first table
@@ -210,7 +210,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
 
 /**
  * @author Tomislav Mikulček,updated by Nikola Miljancic
- * @brief Function that creates a theta join betwen two tables on specified conditions. Names of the attibutes in the constraints parameter must be prefixed
+ * @brief Function for creating a theta join betwen two tables on specified conditions. Names of the attibutes in the constraints parameter must be prefixed
  *         with the table name followed by a dot if and only if they exist in both tables. This is left for the preprocessing. Also, for now the constraints  
  *	   must come from the two source tables and not from a third.
  * @param srcTable1 name of the first table to join

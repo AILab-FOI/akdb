@@ -23,7 +23,7 @@
 
 /**
  * @author Matija Šestak.
- * @brief  Function that which implements selection
+ * @brief  Function which implements selection
  * @param *srcTable source table name
  * @param *dstTable destination table name
  * @param *expr list with posfix notation of the logical expression

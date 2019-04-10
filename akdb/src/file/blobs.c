@@ -53,7 +53,7 @@ AK_File_Metadata AK_File_Metadata_malloc() {
 
 /**
  * @author Samuel Picek
- * @brief Function that generates GUID
+ * @brief Function for generating GUID
  * @return returns globaly universal identifier based on kernel implementation
  */
 char *AK_GUID() {
@@ -86,7 +86,7 @@ char *AK_GUID() {
 
 /**
  * @author Samuel Picek
- * @brief Function that checks if folder blobs already exists
+ * @brief Function for checking if folder blobs already exists
  * @return returns 0 for true and 1 for false
  */
 int AK_folder_exists(char *foldername) {
@@ -98,7 +98,7 @@ int AK_folder_exists(char *foldername) {
 
 /**
  * @author Samuel Picek
- * @brief Function that creates new folder
+ * @brief Function for creating new folder
  * @return returns 0 for true and 1 for false
  */
 int AK_mkdir(const char *path) {
@@ -183,7 +183,7 @@ char *AK_clear_all_newline(char *s) {
 
 /**
  * @author Samuel Picek
- * @brief Function that checks if folder blobs exists
+ * @brief Function for checking if folder blobs exists
  * @return OID (object ID)
  */
 int AK_check_folder_blobs() {
@@ -212,7 +212,7 @@ int AK_check_folder_blobs() {
 
 /**
  * @author Samuel Picek
- * @brief Function that splits a path from filename
+ * @brief Function for spliting path from filename
  * @return void
  */
 void AK_split_path_file(char **p, char** f, char *pf) {
@@ -239,7 +239,7 @@ void AK_split_path_file(char **p, char** f, char *pf) {
 
 
 
-//TODO: Needs description, author and params
+
 int AK_write_metadata(char *oid, AK_File_Metadata meta) {
 
 
@@ -262,7 +262,7 @@ int AK_write_metadata(char *oid, AK_File_Metadata meta) {
 
 
 
-//TODO: Needs description, author and params
+
 AK_File_Metadata AK_read_metadata(char *oid) {
 
   if (oid == 0x0)
@@ -334,7 +334,7 @@ AK_File_Metadata AK_read_metadata(char *oid) {
 
 /**
  * @author Samuel Picek
- * @brief Function that imports  large objects to database
+ * @brief Function for importing large objects to database
  * @return OID (object ID)
  */
 char *AK_lo_import(char *filepath) {
@@ -381,7 +381,7 @@ char *AK_lo_import(char *filepath) {
 
 /**
  * @author Samuel Picek
- * @brief Function that retrieves large objects
+ * @brief Function for retrieving large objects
  * @return returns 0 for true and 1 for false
  */
 int AK_lo_export(char *oid, char *filepath) {
@@ -418,7 +418,7 @@ int AK_lo_export(char *oid, char *filepath) {
 
 /**
  * @author Samuel Picek
- * @brief Function that deletes large objects
+ * @brief Function for deleting large objects
  * @return OID (object ID)
  */
 int AK_lo_unlink(char *oid) {

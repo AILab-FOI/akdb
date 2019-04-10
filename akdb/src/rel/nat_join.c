@@ -21,7 +21,7 @@
 
 /**
  * @author Matija Novak, optimized, and updated to work with AK_list by Dino Laktašić
- * @brief  Function that makes a header for the new table and call the function to create the segment
+ * @brief  Function to make header for the new table and call the function to create the segment
  * @param table_address1 address of the block of the first table
  * @param table_address2 address of the block of the second table
  * @param new_table name of the join table
@@ -33,7 +33,7 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
     AK_PRO;
     AK_block *temp_block = (AK_block *) AK_read_block(table_address1);
     
-	//Currently it works with headers no longer then MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
+	//Currently it works with headers no longer than MAX_ATTRIBUTES. The same header is written in all allocated table blocks.
 	//This is wrong and need to be corrected.
 	//If header doesn't fit in the first block than system must write the remain attributes from header to the new block.
 	//Correction must be handled in all functions that write, read or count header attributes.
@@ -90,7 +90,7 @@ void AK_create_join_block_header(int table_address1, int table_address2, char *n
 
 /**
  * @author Matija Novak, updated by Dino Laktašić
- * @brief  Function that searches the second block and when found matches with the first one makes a join and writes a row to join the tables
+ * @brief  Function searches the second block and when found matches with the first one makes a join and write row to join table
  * @param row_root - list of values from the first table to be marged with table2
  * @param row_root_insert - list of values from the first table to be inserted into nat_join table
  * @param temp_block - block from the second table to be merged
@@ -176,7 +176,7 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
 
 /**
  * @author Matija Novak, optimized, and updated to work with AK_list by Dino Laktašić
- * @brief Function that iterates through block of the first table and copies data that needs for join, then it calls a merge function to
+ * @brief Function iterates through block of the first table and copies data that needs for join, then it calls a merge function to
         merge with the second table
  * @param tbl1_temp_block block of the first table
  * @param tbl2_temp_block block of the second join table
@@ -262,7 +262,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
 
 /**
  * @author Matija Novak, updated to work with AK_list and support cacheing by Dino Laktašić
- * @brief Function that makes a  nat_join betwen two tables on some attributes
+ * @brief Function to make nat_join betwen two tables on some attributes
  * @param srcTable1 name of the first table to join
  * @param srcTable2 name of the second table to join
  * @param att attributes on which we make nat_join

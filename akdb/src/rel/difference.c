@@ -20,10 +20,10 @@
 
 /**
  * @author Dino Laktašić
- * @brief  Function that produces a difference of the two tables. Table addresses are get through names of tables.
- *         Specially start addresses are taken from them. They are used to allocate blocks for them. It is checked whether
+ * @brief  Function to make difference of the two tables. Table addresses are get through names of tables.
+ *         Speciallly start addresses are taken from them. They are used to allocate blocks for them. It is checked whether
            the tables have same table schemas. If not, it returns EXIT_ERROR. New segment for result of difference operation is
-           initialized. Function compares every block in extent of the first table with every block in extent of second table. If there 
+           initialized. Function compares every block in extent of first table with every block in extent of second table. If there 
 	   is a difference between their rows, they are put in dstTable.
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table

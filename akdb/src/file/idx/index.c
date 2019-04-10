@@ -27,7 +27,7 @@
 
 /**
  * @author Unknown
- * @brief Function that initialises a linked list
+ * @brief Function for initalizing linked list
  * @param list_ad *L linked list head
  * @return No return value
  * */
@@ -39,7 +39,7 @@ void Ak_InitializelistAd(list_ad *L) {
 
 /**
  * @author Unknown
- * @brief Function that finds the first node of linked list
+ * @brief Function for finding first node of linked list
  * @param list_ad *L linked list head
  * @return Address of first node
  * */
@@ -53,7 +53,7 @@ element_ad Ak_Get_First_elementAd(list_ad *L) {
 
 /**
  * @author Unknown
- * @brief Function that finds the last node of linked list
+ * @brief Function for finding last node of linked list
  * @param list_ad *L linked list head
  * @return Address of last node or 0 if list is empty
  * */
@@ -76,7 +76,7 @@ element_ad Ak_Get_Last_elementAd(list_ad *L) {
 
 /**
  * @author Unknown
- * @brief Function that finds the next node of a node in linked list
+ * @brief Function for finding the next node of a node in linked list
  * @param Currentelement_op address of current node
  * @return Address of next node or 0 if current node is last in list
  * */
@@ -96,7 +96,7 @@ element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op) {
 
 /**
  * @author Unknown
- * @brief Function that finds the previous node of a node in linked list
+ * @brief Function for finding the previous node of a node in linked list
  * @param Currentelement_op Address of current node
  * @param L previous element
  * @return Address of previous node or 0 if the current node is the head or the list is empty
@@ -119,7 +119,7 @@ element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L)
 
 /**
  * @author Unknown
- * @brief Function that finds the position of a node in linked list
+ * @brief Function for finding the position of a node in linked list
  * @param Searchedelement_op address of current note
  * @param *L linked list head
  * @return Integer value of current node's order in the list
@@ -139,7 +139,7 @@ int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
 
 /**
  * @author Unknown
- * @brief Function that deletes a node from a linked list
+ * @brief Function for deleting a node in linked list
  * @param Deletedelement_op - address of node to delete
  * @param list_ad *L - list head
  * @return No return value
@@ -158,7 +158,7 @@ void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
 
 /**
  * @author Unknown
- * @brief Function that deletes all nodes in a linked list
+ * @brief Function for deleting all nodes in linked list
  * @param L list head
  * @return No return value
  * */
@@ -178,7 +178,7 @@ void Ak_Delete_All_elementsAd(list_ad *L) {
 
 /**
  * @author Unknown
- * @brief Function that inserts a new element into a linked list
+ * @brief Function for inserting a new element into linked list
  * @param addBlock address block
  * @param indexTd index table destination
  * @param *attname attribute name
@@ -199,7 +199,7 @@ void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad
 
 /**
  * @author Lovro Predovan
- * @brief Function that fetches the number of elements in a index table
+ * @brief Function for getting number of elements in index table
  * @param index table name
  * @return No return value
  * */
@@ -338,7 +338,7 @@ struct list_node *AK_get_index_tuple(int row, int column, char *indexTblName) {
 
 /**
  * @author Matija Šestak, modified for indexes by Lovro Predovan
- * @brief Function that examines whether there is a table with the name "tblName" in the system catalog (AK_relation)
+ * @brief Function examines whether there is a table with the name "tblName" in the system catalog (AK_relation)
  * @param tblName table name
  * @return returns 1 if table exist or returns 0 if table does not exist
  */
@@ -368,7 +368,7 @@ int AK_index_table_exist(char *indexTblName) {
 
 /**
  * @author Matija Šestak, modified for indexes by Lovro Predovan
- * @brief  Function that gets index table header
+ * @brief  Function that getts index table header
  * <ol>
  * <li>Read addresses of extents</li>
  * <li>If there is no extents in the table, return -1</li>
@@ -401,7 +401,7 @@ AK_header *AK_get_index_header(char *indexTblName) {
 
 /**
  * @author Matija Šestak, modified for indexes by Lovro Predovan
- * @brief  Function that prints out the index table
+ * @brief  Function for printing index table
  * @param *tblName table name
  * @return No return value
  */
@@ -630,7 +630,6 @@ void AK_index_test() {
         }
 
     printf("\n********** Printing values after deleting all values**********\n\n");
-    //Error: incomplete type is not allowed
     void Ak_Delete_All_elementsAd(add_root) ;
     element_ad eleme = Ak_Get_First_elementAd(add_root);
     while (elem != 0)
@@ -650,7 +649,6 @@ void AK_index_test() {
 
     struct list_node *att_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&att_root);
-    //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "firstname", tblName, "firstname", att_root);
  
     AK_create_Index_Table(tblName, att_root);

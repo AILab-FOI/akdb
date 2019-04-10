@@ -1,7 +1,5 @@
 /*
- /**
-@file recovery.h Header file that provides functions and defines for recovery.c
- *
+ * recovery.h
  *
  *  Created on: June 12, 2013
  *      Author: Drazen Bandic, 

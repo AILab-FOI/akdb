@@ -1,5 +1,5 @@
 /**
-@file difference.h Header file that provides functions and defines for relational difference operation
+@file difference.h Header file that provides data structures for relational difference operation
  */
 /*
  * This program is free software; you can redistribute it and/or modify

@@ -1,5 +1,5 @@
 /**
-@file memoman.h Header file that contains data structures, defines and functions for the memory manager
+@file memoman.h Header file that defines includes and datastructures for the memory manager
  of Kalashnikov DB
  */
 /*

@@ -21,43 +21,43 @@
 #define CONSTANTS
 /**
   * @def MAX_VARCHAR_LENGTH
-  * @brief Constant declaring the maximum length of varchar data value
+  * @brief Constant declaring maximum length of varchar data value
  */
 #define MAX_VARCHAR_LENGTH 200
 /**
   * @def MAX_ATTRIBUTES
-  * @brief Constant declaring the maximum number of attributes per block
+  * @brief Constant declaring maximum number of attributes per block
  */
 #define MAX_ATTRIBUTES 10
 /**
   * @def MAX_ATT_NAME
-  * @brief Constant declaring the maximum length of attribute name string (used in AK_header->att_name)
+  * @brief Constant declaring maximum length of attribute name string (used in AK_header->att_name)
  */
 #define MAX_ATT_NAME 255
 /**
   * @def MAX_CONSTRAINTS
-  * @brief Constant declaring the maximum number of constraints per attribute
+  * @brief Constant declaring maximum number of constraints per attribute
  */
 #define MAX_CONSTRAINTS 5
 /**
   * @def MAX_CONSTR_NAME
-  * @brief Constant declaring the maximum length of constraint name string (used in AK_header->constr_name)
+  * @brief Constant declaring maximum length of constraint name string (used in AK_header->constr_name)
  */
 #define MAX_CONSTR_NAME 255
 /**
   * @def MAX_CONSTR_CODE
-  * @brief Constant declaring the maximum lenght of constraint code string
+  * @brief Constant declaring maximum lenght of constraint code string
  */
 #define MAX_CONSTR_CODE 255
 /**
   * @def MAX_OBSERVABLE_OBSERVERS
-  * @brief Constant for declaring the maximum number of observers objects for some observable type
+  * @brief Constant for declaring maximum number of observers objects for some observable type
  */
 #define MAX_OBSERVABLE_OBSERVERS 4096
 
 /**
   * @def MAX_ACTIVE_TRANSACTIONS_COUNT
-  * @brief Constant for declaring the maximum number of active trasactions in DBMS
+  * @brief Constant for declaring maximum number of active trasactions in DBMS
  */
 #define MAX_ACTIVE_TRANSACTIONS_COUNT 100
 
@@ -73,28 +73,28 @@
 #define DATA_ENTRY_SIZE 10
 /**
   * @def MAX_QUERY_LIB_MEMORY
-  * @brief Constant declaring the maximum size of query lib memory
+  * @brief Constant declaring maximum size of query lib memory
  */
 #define MAX_QUERY_LIB_MEMORY 255
 /**
   * @def MAX_CACHE_MEMORY
-  * @brief Constant declaring the maximum size of DB cache memory
+  * @brief Constant declaring maximum size of DB cache memory
  */
 #define MAX_CACHE_MEMORY 255
 /**
  * @def MAX_QUERY_DICT_MEMORY
- * @brief Constant declaring the maximum size of query dictionary memory
+ * @brief Constant declaring maximum size of query dictionary memory
  */
 #define MAX_QUERY_DICT_MEMORY 255
 
 /**
  * @def MAX_QUERY_RESULT_MEMORY
- * @brief Constant declaring the maximum size of query result cache memory
+ * @brief Constant declaring maximum size of query result cache memory
  */
 #define MAX_QUERY_RESULT_MEMORY 255
 /**
  * @def MAX_TOKENS
- * @brief Constant declaring the maximum number of attributes to handle in relation equivalence function
+ * @brief Constant declaring maximum number of attributes to handle in relation equivalence function
  */
 #define MAX_TOKENS 255
 /**
@@ -114,17 +114,17 @@
 #define HASH_BUCKET_SIZE 4
 /**
  * @def NUMBER_OF_KEYS
- * @brief Constant declaring the number of buckets in hash table
+ * @brief Constant declaring number of buckets in hash table
 */
 #define NUMBER_OF_KEYS 4096
 /**
   * @def EXIT_SUCCESS
-  * @brief Constant declaring a successful exit
+  * @brief Constant declaring successfull exit
  */
 #define EXIT_SUCCESS 0
 /**
   * @def EXIT_ERROR
-  * @brief Constant declaring unsuccessful exit
+  * @brief Constant declaring unsuccesfull exit
  */
 #define EXIT_ERROR -1
 
@@ -223,7 +223,7 @@
 #define TYPE_DATE 5
 /**
   * @def TYPE_DATETIME
-  * @brief Datetime data type (used in AK_header->type and AK_tuple_dict->type)
+  * @brief datetime data type (used in AK_header->type and AK_tuple_dict->type)
  */
 #define TYPE_DATETIME 6
 /**
@@ -233,7 +233,7 @@
 #define TYPE_TIME 7
 /**
   * @def TYPE_BLOB
-  * @brief Blob data type (used in AK_header->type and AK_tuple_dict->type)
+  * @brief blob data type (used in AK_header->type and AK_tuple_dict->type)
  */
 #define TYPE_BLOB 8
 /**
@@ -299,62 +299,62 @@
 #define RO_THETA_JOIN 't'
 /**
   * @def NEW_VALUE
-  * @brief Constant indicating that the data is a new value
+  * @brief Constant indicating that data is new value
  */
 #define NEW_VALUE 0
 /**
   * @def SEARCH_CONSTRAINT
-  * @brief Constant indicating that the data is constraint to search for
+  * @brief Constant indicating that data is constraint to search for
  */
 #define SEARCH_CONSTRAINT 1
 /**
   * @def UPDATE
-  * @brief Constant indicating that the operation to be performed is 'update'
+  * @brief Constant indicating that operation to be performed is update
  */
 #define UPDATE 0
 /**
  * @def DELETE
- * @brief Constant indicating that the operation to be performed is 'delete'
+ * @brief Constant indicating that operation to be performed is delete
  */
 #define DELETE 1
 /**
  * @def INSERT
- * @brief Constant indicating that the operation to be performed is 'insert'
+ * @brief Constant indicating that operation to be performed is insert
  */
 #define INSERT 2
 /**
  * @def SELECT
- * @brief Constant indicating 'select' operation
+ * @brief Constant indicating select operation
  */
 #define SELECT 3
 /**
  * @def FIND
- * @brief Constant indicating that the operation to be performed is 'search'
+ * @brief Constant indicating that operation to be performed is searching
  */
 #define FIND 2
 /**
  * @def INFO_BUCKET
- * @brief Constant declaring the type of bucket as "info bucket" when inserting bucket to block
+ * @brief Constant declaring type of bucket as "info bucket" when inserting bucket to block
 */
 #define INFO_BUCKET 0
 /**
  * @def MAIN_BUCKET
- * @brief Constant declaring the type of bucket as "main bucket" when inserting bucket to block
+ * @brief Constant declaring type of bucket as "main bucket" when inserting bucket to block
 */
 #define MAIN_BUCKET 1
 /**
  * @def HASH_BUCKET
- * @brief Constant declaring the type of bucket as "hash bucket" when inserting bucket to block
+ * @brief Constant declaring type of bucket as "hash bucket" when inserting bucket to block
 */
 #define HASH_BUCKET 2
 /**
  * @def SHARED_LOCK
- * @brief Constant declaring the type of lock as SHARED LOCK
+ * @brief Constant declaring type of lock as SHARED LOCK
 */
 #define SHARED_LOCK 0
 /**
  * @def EXCLUSIVE_LOCK
- * @brief Constant declaring the type of lock as EXCLUSIVE LOCK
+ * @brief Constant declaring type of lock as EXCLUSIVE LOCK
 */
 #define EXCLUSIVE_LOCK 1
 /**
@@ -396,7 +396,7 @@
 
 /**
  * @def MAX_BLOCKS_CURRENTLY_ACCESSED
- * @brief Indicates the maximum number of threads that can access (read or write) database at the same time
+ * @brief Indicates maximum number of threads that can access (read or write) database at the same time
  */
 #define MAX_BLOCKS_CURRENTLY_ACCESSED 32
 
@@ -450,62 +450,62 @@
 
 /**
  * @def DROP_TABLE
- * @brief Constant which defines the number of drop statement
+ * @brief Constant which defines number of drop statement
  */
 #define DROP_TABLE      0
 
 /**
  * @def DROP_INDEX
- * @brief Constant which defines the number of drop statement
+ * @brief  Constant which defines number of drop statement
  */
 #define DROP_INDEX      1
 
 /**
  * @def DROP_VIEW
- * @brief Constant which defines the number of drop statement
+ * @brief  Constant which defines number of drop statement
  */
 #define DROP_VIEW       2
 
 /**
  * @def DROP_SEQUENCE
- * @brief Constant which defines the number of drop statement
+ * @brief  Constant which defines number of drop statement
  */
 #define DROP_SEQUENCE   3
 
 /**
  * @def DROP_TRIGGER
- * @brief Constant which defines the number of drop statement
+ * @brief  Constant which defines number of drop statement
  */
 #define DROP_TRIGGER    4
 
 /**
  * @def DROP_FUNCTION
- * @brief Constant which defines the number of drop statement
+ * @brief  Constant which defines number of drop statement
  */
 #define DROP_FUNCTION   5
 
 /**
  * @def DROP_USER
- * @brief Constant which defines the number of drop statement
+ * @brief  Constant which defines number of drop statement
  */
 #define DROP_USER       6
 
 /**
  * @def DROP_GROUP
- * @brief Constant which defines the number of drop statement
+ * @brief  Constant which defines number of drop statement
  */
 #define DROP_GROUP      7
 
 /**
  * @def DROP_CONSTRAINT
- * @brief Constant which defines thenumber of drop statement
+ * @brief  Constant which defines number of drop statement
  */
 #define DROP_CONSTRAINT 8
 
 
 /**
  * @def NUM_SYS_TABLES
- * @brief Constant which defines the length of system_catalog
+ * @brief  Constant which defines length of system_catalog
  */
 #define NUM_SYS_TABLES  20
 

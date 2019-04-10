@@ -92,7 +92,7 @@ int AK_sequence_remove(char *name){
 
 /**
  * @author Boris Kišić
- * @brief Function that returns the current value of the sequence.
+ * @brief Function returns the current value of the sequence.
  * @param name name of the sequence
  * @return current_value or EXIT_ERROR
  */
@@ -122,7 +122,7 @@ int AK_sequence_current_value(char *name){
 
 /**
  * @author Boris Kišić
- * @brief Function that returns the next value of the sequence and writes it in a system table as current value.
+ * @brief Function returns the next value of the sequence and writes it in a system table as current value.
  * @param name name of the sequence
  * @return next_value or EXIT_ERROR
  */
@@ -204,7 +204,7 @@ int AK_sequence_next_value(char *name){
 
 /**
  * @author Ljubo Barać
- * @brief Function that fetches sequence id
+ * @brief Function gets sequence id
  * @param name Name of the sequence
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
@@ -231,7 +231,7 @@ int AK_sequence_get_id(char *name){
 
 /**
  * @author Boris Kišić
- * @brief Function that renames the sequence.
+ * @brief Function renames the sequence.
  * @param old_name Name of the sequence to be renamed
  * @param new_name New name of the sequence
  * @return EXIT_SUCCESS or EXIT_ERROR
@@ -264,7 +264,7 @@ int AK_sequence_rename(char *old_name, char *new_name){
 
 /**
  * @author Boris Kišić fixed by Ljubo Barać
- * @brief Function for modifying a sequence
+ * @brief Function for modifying sequence
  * @param name Name of the sequence
  * @param start_value start value of the sequence
  * @param increment increment of the sequence
@@ -304,7 +304,7 @@ int AK_sequence_modify(char *name, int start_value, int increment, int max_value
 
 /**
  * @author Boris Kišić fixed by Ljubo Barać
- * @brief Function used for sequences testing.
+ * @brief Function for sequences testing.
  * @return No return value
  */
 TestResult AK_sequence_test() {

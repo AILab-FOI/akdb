@@ -65,13 +65,13 @@ memory wrappers and debug mode of Kalashnikov DB.
 
 /**
   * @def AK_DEBMOD_PRINT
-  * @brief Defines if the debug mode messages are going to be printed
+  * @brief Defines if debug mode messages are going to be printed
   */
 #define AK_DEBMOD_PRINT 0
 
 /**
   * @def AK_DEBMOD_PAGES_NUM
-  * @brief Defines the total available memory pages for allocation
+  * @brief Defines the total of available memory pages for allocation
   */
 #define AK_DEBMOD_PAGES_NUM 8192
 
@@ -95,7 +95,7 @@ memory wrappers and debug mode of Kalashnikov DB.
 
 /**
   * @def AK_DEBMOD_MAX_FUNC_NAME
-  * @brief Defines the maximum function name length possible
+  * @brief Defines maximum function name length possible
   */
 #define AK_DEBMOD_MAX_FUNC_NAME 80
 

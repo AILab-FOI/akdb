@@ -1,5 +1,5 @@
 /**
-@file rel_eq_assoc.h Header file that provides data structures, functions and defines for relational equivalences regarding associativity
+@file rel_eq_assoc.h Header file that provides data structures for relational equivalences regarding associativity
  */
 /*
  * This program is free software; you can redistribute it and/or modify

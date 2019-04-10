@@ -1,5 +1,5 @@
 /**
-@file rel_eq_projection.h Header file that provides data structures, functions and defines for relational equivalences in projection
+@file rel_eq_projection.h Header file that provides data structures for relational equivalences in projection
  */
 /*
  * This program is free software; you can redistribute it and/or modify

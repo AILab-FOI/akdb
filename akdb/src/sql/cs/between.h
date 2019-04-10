@@ -1,5 +1,5 @@
 /**
-@file between.h Header file that provides functions and defines for between constaint
+@file between.h Header file that provides data structures for between constaint
  */
 /*
  * This program is free software; you can redistribute it and/or modify

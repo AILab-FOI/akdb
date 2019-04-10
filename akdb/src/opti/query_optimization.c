@@ -23,7 +23,7 @@ int error_message=0;
 
 /**
  * @author Dino Laktašić.
- * @brief Function that prints optimization table for testing purposes
+ * @brief Print optimization table for testing purposes
  * @param *list_query optimized RA expresion list 
  * @result list output
  */
@@ -81,7 +81,7 @@ void AK_print_optimized_query(struct list_node *list_query) {
 
 /**
  * @author Dino Laktašić.
- * @brief Function that calls and executes relation equivalence
+ * @brief Call and execute relation equivalence
  * RELATION EQUIVALENCE RULES FLAGS
  * c - commutation
  * a - associativity
@@ -136,7 +136,7 @@ struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel
     
 /**
  * @author Dino Laktašić.
- * @brief Function that executes all relational equivalences provided by FLAGS (one or more), 
+ * @brief Execute all relational equivalences provided by FLAGS (one or more), 
  * if DIFF_PLANS turned on execute permutations without repetition on given RA list from SQL parser output
  * @param *list_query RA expresion list where we need to apply relational equivalences rules
  * @param *FLAGS flags for relation equivalences (execute rel_eq for given flags) 
@@ -232,7 +232,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
 }
 /**
   * @author Dino Laktašić
-  * @param Function for testing *list_query query to be optimized
+  * @param *list_query query to be optimized
   * @return No return value
   */
 TestResult AK_query_optimization_test() { 

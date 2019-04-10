@@ -1,14 +1,12 @@
-
 #include "archive_log.h"
 
 /**
- * Function that creates a binary file that stores all commands that failed to
+ * Function creates a binary file that stores all commands that failed to
  * execute with a number that shows the size of how many commands failed.
  * @todo this function takes static filename to store the failed commands,
  *       create certain logic that would make the function to use dynamic filename
  *       (this is partly implemented inside AK_get_timestamp, but there is no logic
- *       that uses the last file when recovering - recovery.c)                                    
- * {link} recovery.c function test
+ *       that uses the last file when recovering - recovery.c)                                    {link} recovery.c function test
  * @brief  Function for making archive log.
  * @author Dražen Bandić, update by Tomislav Turek
  * @return No retun value
@@ -52,7 +50,7 @@ void AK_archive_log(int sig) {
 }
 
 /**
- * Function that empties the archive log - with dynamic archive log name, this function is no longer needed
+ * Empties archive log - with dynamic archive log name, this function is no longer needed
  */
 void AK_empty_archive_log() {
     //AK_PRO;
@@ -68,7 +66,6 @@ void AK_empty_archive_log() {
 /**
  * This function returns the current timestamp that could be concatenated to a 
  * log file in future usages.
- * 
  * @author Dražen Bandić main logic, replaced by Tomislav Turek
  * @brief Function that returns the current timestamp 
  * @todo Think about this in the future when creating multiple binary recovery

@@ -26,7 +26,7 @@
 
 /**
   * @author Nikola Bakoš, Matija Šestak(revised)
-  * @brief Function that caches a block into the memory.
+  * @brief Function caches block into memory.
   * @param num block number (address)
   * @param mem_block address of memmory block
   * @return EXIT_SUCCESS if the block has been successfully read into memory, EXIT_ERROR otherwise
@@ -55,7 +55,7 @@ int AK_cache_block(int num, AK_mem_block *mem_block)
 
 /**
   * @author Markus Schatten, Matija Šestak(revised)
-  * @brief Function that initializes the global cache memory (variable db_cache)
+  * @brief Function initializes the global cache memory (variable db_cache)
   * @return EXIT_SUCCESS if the cache memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_cache_AK_malloc()
@@ -87,7 +87,7 @@ int AK_cache_AK_malloc()
 
 /**
   * @author Dejan Sambolić updated by Dražen Bandić, updated by Tomislav Turek
-  * @brief Function that initializes the global redo log memory (variable redo_log)
+  * @brief Function initializes the global redo log memory (variable redo_log)
   * @return EXIT_SUCCESS if the redo log memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_redo_log_AK_malloc()
@@ -106,7 +106,7 @@ int AK_redo_log_AK_malloc()
 
 /**
   * @author Mario Novoselec
-  * @brief Function that finds the available block for result caching in a circular array
+  * @brief Function find available block for result caching in circular array
   * @return available_index
  */
 int AK_find_available_result_block(){
@@ -123,7 +123,7 @@ int AK_find_available_result_block(){
 
 /**
   * @author Mario Novoselec
-  * @brief Function that generates a unique hash identifier for each cached result by using djb2 algorithm
+  * @brief Generate unique hash identifier for each cached result by using djb2 algorithm
   * @return hash
  */
 unsigned long AK_generate_result_id(unsigned char *str) {
@@ -141,7 +141,7 @@ unsigned long AK_generate_result_id(unsigned char *str) {
 
 /**
   * @author Mario Novoselec
-  * @brief Function that caches the fetched result block in memory
+  * @brief Cache fetched result block in memory
  */
 void AK_cache_result(char *srcTable,AK_block *temp_block,AK_header header[]){
 	//find available block in memory for query caching
@@ -186,7 +186,7 @@ void AK_cache_result(char *srcTable,AK_block *temp_block,AK_header header[]){
 }
 /**
   *  @author Matija Novak
-  *  @brief Function that initializes the global query memory (variable query_mem)
+  *  @brief Function initializes the global query memory (variable query_mem)
   *  @return EXIT_SUCCESS if the query memory has been initialized, EXIT_ERROR otherwise
  */
 int AK_query_mem_AK_malloc()
@@ -284,7 +284,7 @@ int AK_query_mem_AK_malloc()
 }
 /**
  * @author Elvis Popović
- * @brief  Function that releases the global query memory (variable query_mem)
+ * @brief  Function releases the global query memory (variable query_mem)
  */
 void AK_query_mem_AK_free()
 {
@@ -304,7 +304,7 @@ void AK_query_mem_AK_free()
 
 /**
  * @author Miroslav Policki
- * @brief  Function that initializes the memory manager (cache, redo log and query memory)
+ * @brief  Function initializes memory manager (cache, redo log and query memory)
  * @return EXIT_SUCCESS if the query memory manager has been initialized, EXIT_ERROR otherwise
  */
 int AK_memoman_init()
@@ -343,7 +343,7 @@ int AK_memoman_init()
 
 /**
   * @author Tomislav Fotak, updated by Matija Šestak, Antonio Martinović
-  * @brief Function that reads a block from the memory. If the block is cached, returns the cached block. Else uses AK_cache_block to read the block
+  * @brief Function reads a block from memory. If the block is cached returns the cached block. Else uses AK_cache_block to read the block
 		to cache and then returns it.
   * @param num block number (address)
   * @return segment start address
@@ -414,7 +414,7 @@ AK_mem_block *AK_get_block(int num)
 
 /**
  * @author Antonio Martinović
- * @brief Functions that flushes the oldest block to disk and recalculates the next block to remove
+ * @brief Flushes the oldest block to disk and recalculates the next block to remove
  * @return index of flushed cache block
  */
 int AK_release_oldest_cache_block() {
@@ -474,7 +474,7 @@ int AK_release_oldest_cache_block() {
 
 /**
  * @author Alen Novosel.
- * @brief  Function that modifies the "dirty" bit of a block, and update the timestamps accordingly.
+ * @brief  Modify the "dirty" bit of a block, and update timestamps accordingly.
  */
 void AK_mem_block_modify(AK_mem_block* mem_block, int dirty)
 {
@@ -489,7 +489,7 @@ void AK_mem_block_modify(AK_mem_block* mem_block, int dirty)
 
 /**
  * @author Matija Šestak.
- * @brief  Function that re-reads all the blocks from the disk
+ * @brief  Function re-read all the blocks from disk
  * @result EXIT_SUCCESS
  */
 int AK_refresh_cache()
@@ -550,7 +550,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName)
 
 /**
 * @author Matija Novak, updated by Matija Šestak, Mislav Čakarić, Antonio Martinović
-* @brief Function for getting addresses of some table
+* @brief Function for geting addresses of some table
 * @param tableName table name that you search for
 * @param segmentName segment name
 * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
@@ -607,7 +607,7 @@ table_addresses *AK_get_segment_addresses_internal(char *tableName, char *segmen
 
 /**
  * @author Matija Novak, updated by Matija Šestak, Mislav Čakarić, Antonio Martinović
- * @brief Function that gets the address of a system table by name
+ * @brief get address of a system table by name
  * @param name of system table
  * @return table address
  */
@@ -651,7 +651,7 @@ int AK_get_system_table_address(const char *name) {
 
 /**
   * @author Mislav Čakarić
-  * @brief Function for getting addresses of some table
+  * @brief function for geting addresses of some table
   * @param table table name that you search for
   * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
  */
@@ -666,7 +666,7 @@ table_addresses *AK_get_table_addresses(char *table)
 
 /**
   * @author Mislav Čakarić
-  * @brief Function for getting addresses of some index
+  * @brief Function for geting addresses of some index
   * @param index index name that you search for
   * @return structure table_addresses witch contains start and end adresses of table extents, when form and to are 0 you are on the end of addresses
  */
@@ -681,7 +681,7 @@ table_addresses *AK_get_index_addresses(char * index)
 
 /**
   * @author Matija Novak, updated by Matija Šestak( function now uses caching)
-  * @brief Function that finds AK_free space in some block betwen block addresses. It's made for insert_row()
+  * @brief Function to find AK_free space in some block betwen block addresses. It's made for insert_row()
   * @param address addresses of extents
   * @return address of the block to write in
  */

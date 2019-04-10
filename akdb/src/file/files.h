@@ -1,5 +1,5 @@
 /**
-@file files.h Header file that provides functions and defines for file management
+@file files.h Header file that provides data structures for file management
  */
 /*
  * This program is free software; you can redistribute it and/or modify

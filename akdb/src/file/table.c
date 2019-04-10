@@ -19,7 +19,6 @@
 
 #include "../file/table.h"
 
-//TODO: Add description of the function
 AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name) {
     AK_PRO;
     AK_create_table_parameter* par = AK_malloc(sizeof (AK_create_table_parameter));
@@ -28,7 +27,7 @@ AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name
     AK_EPI;
     return par;
 }
-//TODO: Add description of the function
+
 void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) {
     int i;
     AK_header t_header[ MAX_ATTRIBUTES ];
@@ -56,7 +55,7 @@ void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int a
 
 /**
  * @author Matija Novak, updated by Dino Laktašić
- * @brief  Temporary function that  creates table, and inserts an entry to the system_relation catalog
+ * @brief  Temporaly function to create table, and insert entry to the system_relation catalog
  * @param table table name
  * @param header AK_header of the new table
  * @param type_segment type of the new segment
@@ -92,7 +91,7 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
 
 /**
  * @author Matija Šestak.
- * @brief  Functions that determines the number of attributes in the table
+ * @brief  Determine the number of attributes in the table
  * <ol>
  * <li>Read addresses of extents</li>
  * <li>If there is no extents in the table, return EXIT_WARNING</li>
@@ -123,7 +122,7 @@ int AK_num_attr(char * tblName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Function that determines the number of rows in the table
+ * @brief  Determine number of rows in the table
  * <ol>
  * <li>Read addresses of extents</li>
  * <li>If there is no extents in the table, return EXIT_WARNING</li>
@@ -169,7 +168,7 @@ AK_free(addresses);
 
 /**
  * @author Matija Šestak.
- * @brief  Function that fetches the table header
+ * @brief  Function that getts table header
  * <ol>
  * <li>Read addresses of extents</li>
  * <li>If there is no extents in the table, return 0</li>
@@ -199,7 +198,7 @@ AK_header *AK_get_header(char *tblName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Function that fetches attribute name for some zero-based index
+ * @brief  Function that gets attribute name for some zero-based index
  * @param *tblName table name
  * @param index zero-based index
  * @return attribute name
@@ -221,7 +220,7 @@ char *AK_get_attr_name(char *tblName, int index) {
 
 /**
  * @author Matija Šestak.
- * @brief  Function that fetches zero-based index for atrribute
+ * @brief  Function that gets zero-based index for atrribute
  * @param  *tblName table name
  * @param *attrName attribute name
  * @return zero-based index
@@ -252,7 +251,7 @@ int AK_get_attr_index(char *tblName, char *attrName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Function that fetches all values in some column and put on the list
+ * @brief  Function that gets all values in some column and put on the list
  * @param num zero-based column index
  * @param  *tblName table name
  * @return column values list
@@ -295,7 +294,7 @@ struct list_node *AK_get_column(int num, char *tblName) {
 
 /**
  * @author Markus Schatten, Matija Šestak.
- * @brief  Function that fetches all values in some row and put on the list
+ * @brief  Function that gets all values in some row and put on the list
  * @param num zero-based row index
  * @param  * tblName table name
  * @return row values list
@@ -346,7 +345,7 @@ struct list_node *AK_get_row(int num, char * tblName) {
 
 /**
  * @author Matija Šestak.
- * @brief Function that fetches a value in some row and column
+ * @brief Function that gets value in some row and column
  * @param row zero-based row index
  * @param column zero-based column index
  * @param *tblName table name
@@ -523,7 +522,7 @@ void AK_print_row(int col_len[], struct list_node *row) {
 
 /**
  * @author Jurica Hlevnjak
- * @brief Function that examines whether there is a table with the name "tblName" in the system catalog (AK_relation)
+ * @brief Function examines whether there is a table with the name "tblName" in the system catalog (AK_relation)
  * @param tblName table name
  * @return returns 1 if table exist or returns 0 if table does not exist
  */
@@ -731,7 +730,7 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
 }
 /**
  * @author Leon Palaić
- * @brief  Function that returns the value of an attribute from the row
+ * @brief  Function that returns value of attribute from row
  * @param column index of column atribute
  * @param *row  list with row elements
  * @return atribute data
@@ -754,7 +753,7 @@ char *get_row_attr_data(int column, struct list_node *node){
 
 /**
  * @author Dino Laktašić
- * @brief  Function that prints the table row
+ * @brief  Function that prints table row
  * update by Luka Rajcevic
  * @param col_len[] array of max lengths for each attribute
  * @param *row  list with row elements
@@ -806,7 +805,7 @@ void AK_print_row_to_file(int col_len[], struct list_node * row) {
 /**
  * @author Dino Laktašić and Mislav Čakarić (replaced old print table function by new one)
  * update by Luka Rajcevic
- * @brief  Function that prints a table
+ * @brief  Function for printing table
  * @param *tblName table name
  * @return No return value
  * update by Anto Tomaš (corrected the Ak_DeleteAll_L3 function)
@@ -934,7 +933,7 @@ void AK_print_table_to_file(char *tblName) {
 
 /**
  * @author Matija Šestak.
- * @brief  Function that checks whether the table is empty
+ * @brief  Function that check whether table is empty
  * @param *tblName table name
  * @return true/false
  */
@@ -949,7 +948,7 @@ int AK_table_empty(char *tblName) {
 
 /**
  * @author Dejan Frankovic
- * @brief  Function that fetches an obj_id of named table from AK_relation system table
+ * @brief  Function that gets obj_id of named table from AK_relation system table
  * @param *table table name
  * @return obj_id of the table or EXIT_ERROR if there is no table with that name
  */
@@ -976,7 +975,7 @@ int AK_get_table_obj_id(char *table) {
 
 /**
  * @author Dino Laktašić, abstracted from difference.c for use in difference.c, intersect.c and union.c by Tomislav Mikulček
- * @brief  Function that checks if tables have the same relation schema
+ * @brief  Function to check if tables have the same relation schema
  * @param tbl1_temp_block first cache block of the first table
  * @param tbl2_temp_block first cache block of the second table
  * @param operator_name the name of operator, used for displaying error message
@@ -1164,7 +1163,7 @@ TestResult AK_table_test() {
 }
 /**
  * @author Mislav Čakarić, edited by Ljubo Barać
- * @brief Function for renaming operator testing (moved from rename.c)
+ * @brief Function for rename operator testing (moved from rename.c)
  * @return No return value
  */
 TestResult AK_op_rename_test() {

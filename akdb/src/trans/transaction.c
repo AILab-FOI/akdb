@@ -35,7 +35,7 @@ int transactionsCount = 0;
 
 /**
  * @author Frane Jakelić
- * @brief Function that calculates the hash value for a given memory address. Hash values are used to identify location of locked resources.
+ * @brief Calculates hash value for a given memory address. Hash values are used to identify location of locked resources.
  * @todo The current implementation is very limited it doesn't cope well with collision. recommendation use some better version of hash calculation. Maybe Knuth's memory address hashing function.
  * @param blockMemoryAddress integer representation of memory address, the hash value is calculated from this parameter.
  * @return integer containing the hash value of the passed memory address
@@ -50,7 +50,7 @@ int AK_memory_block_hash(int blockMemoryAddress) {
 
 /**
  * @author Frane Jakelić
- * @brief Function that searches for a existing entry in hash list of active blocks
+ * @brief Searches for a existing entry in hash list of active blocks
  * @param blockAddress integer representation of memory address.
  * @return pointer to the existing hash list entry
  */
@@ -77,7 +77,7 @@ AK_transaction_elem_P AK_search_existing_link_for_hook(int blockAddress){
 
 /**
  * @author Frane Jakelić
- * @brief Function that searches for a empty link for new active block, helper method in case of address collision
+ * @brief Searches for a empty link for new active block, helper method in case of address collision
  * @param blockAddress integer representation of memory address.
  * @return pointer to empty location to store new active address
  */
@@ -100,7 +100,7 @@ AK_transaction_elem_P AK_search_empty_link_for_hook(int blockAddress){
 
 /**
  * @author Frane Jakelić
- * @brief Function that adds an element to the doubly linked list.
+ * @brief Adds an element to the doubly linked list.
  * @param blockAddress integer representation of memory address.
  * @param type of lock issued to the provided memory address.
  * @return pointer to the newly created doubly linked element.
@@ -141,7 +141,7 @@ AK_transaction_elem_P AK_add_hash_entry_list(int blockAddress, int type) {
 
 /**
  * @author Frane Jakelić
- * @brief Function that deletes a specific element in the lockTable doubly linked list.
+ * @brief Deletes a specific element in the lockTable doubly linked list.
  * @param blockAddress integer representation of memory address.
  * @return integer OK or NOT_OK based on success of finding the specific element in the list.
  */
@@ -176,7 +176,7 @@ int AK_delete_hash_entry_list(int blockAddress) {
 
 /**
  * @author Frane Jakelić
- * @brief Function that searches for a specific entry in the Locks doubly linked list using the transaction id as it's key.
+ * @brief Searches for a specific entry in the Locks doubly linked list using the transaction id as it's key.
  * @param memoryAddress integer representation of memory address.
  * @param id integer representation of transaction id.
  * @return NULL pointer if the element is not found otherwise it returns a pointer to the found element
@@ -204,7 +204,7 @@ AK_transaction_lock_elem_P AK_search_lock_entry_list_by_key(AK_transaction_elem_
 
 /**
  * @author Frane Jakelić
- * @brief Function that deletes a specific entry in the Locks doubly linked list using the transaction id as it's key.
+ * @brief Deletes a specific entry in the Locks doubly linked list using the transaction id as it's key.
  * @param blockAddress integer representation of memory address.
  * @param id integer representation of transaction id.
  * @return int OK or NOT_OK based on success of finding the specific element in the list.
@@ -247,7 +247,7 @@ int AK_delete_lock_entry_list(int blockAddress, pthread_t id) {
 
 /**
  * @author Frane Jakelić updated by Ivan Pusic
- * @brief Function that, based on the parameters, puts an transaction action in waiting phase or let's the transaction do it's actions.
+ * @brief Based on the parameters puts an transaction action in waiting phase or let's the transaction do it's actions.
  * @param lockHolder pointer to the hash list entry that is entitled to the specific memory address.
  * @param type of lock issued to the provided memory address.
  * @param transactionId integer representation of transaction id.
@@ -287,7 +287,7 @@ int AK_isLock_waiting(AK_transaction_elem_P lockHolder, int type, pthread_t tran
 
 /**
  * @author Frane Jakelić
- * @brief Function that adds an element to the locks doubly linked list.
+ * @brief Adds an element to the locks doubly linked list.
  * @param memoryAddress integer representation of memory address.
  * @param type of lock issued to the provided memory address.
  * @param transactionId integer representation of transaction id.
@@ -412,7 +412,7 @@ void AK_release_locks(AK_memoryAddresses_link addressesTmp, pthread_t transactio
 
 /**
  * @author Frane Jakelić
- * @brief Function that appends all addresses affected by the transaction
+ * @brief Method that appends all addresses affected by the transaction
  * @param addressList pointer to the linked list where the addresses are stored.
  * @param tblName table name used in the transaction
  * @return OK or NOT_OK based on the success of the function.
@@ -445,7 +445,7 @@ int AK_get_memory_blocks(char *tblName, AK_memoryAddresses_link addressList) {
 
 /**
  * @author Frane Jakelić updated by Ivan Pusic
- * @brief Function that is called in a separate thread that is responsible for acquiring locks, releasing them and finding the associated block addresses
+ * @brief Method that is called in a separate thread that is responsible for acquiring locks releasing them and finding the associated block addresses
  * @todo Check multithreading, check if it's working correctly
  * @param commandArray array filled with commands that need to be secured using transactions
  * @param lengthOfArray length of commandArray
@@ -509,7 +509,7 @@ int AK_execute_commands(command * commandArray, int lengthOfArray) {
 
 /**
  * @author Frane Jakelić updated by Ivan Pusic
- * @brief Function that is the thread start point all relevant functions. It acts as an intermediary between the main thread and other threads
+ * @brief thread start point all relevant functions are called from this function. It acts as an intermediary between the main thread and other threads
  * @param data transmitted to the thread from the main thread
  */
 void * AK_execute_transaction(void *params) {
@@ -577,7 +577,7 @@ int AK_create_new_transaction_thread(AK_transaction_data *transaction_data) {
 
 /**
  * @author Frane Jakelić updated by Ivan Pusic
- * @brief Function that receives all the data and gives an id to that data and starts a thread that executes the transaction 
+ * @brief method that receives all the data and gives an id to that data and starts a thread that executes the transaction 
  * @param commandArray array filled with commands that need to be secured using transactions
  * @param lengthOfArray length of commandArray
  */
@@ -731,7 +731,7 @@ void AK_handle_observable_transaction_action(NoticeType *noticeType) {
 
 /** 
  * @author Ivan Pusic
- * @brief Function which is called when the lock is released
+ * @brief Function which is called when lock is released
  */
 void AK_lock_released() {
     observable_transaction->observable->AK_run_custom_action((NoticeType*)AK_LOCK_RELEASED);
@@ -739,7 +739,7 @@ void AK_lock_released() {
 
 /** 
  * @author Ivan Pusic
- * @brief Function that is called when some transaction is finished
+ * @brief Function which is called when some transaction is finished
  */
 void AK_transaction_finished() {
     AK_PRO;
@@ -749,7 +749,7 @@ void AK_transaction_finished() {
 
 /** 
  * @author Ivan Pusic
- * @brief Function that is called when all transactions are finished
+ * @brief Function which is called when all transactions are finished
  */
 void AK_all_transactions_finished() {
     AK_PRO;

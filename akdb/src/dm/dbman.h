@@ -1,5 +1,5 @@
 /**
-@file dbman.h Header file that contains  all defines, includes and data structures for the disk manager
+@file dbman.h Header file that defines includes and datastructures for the disk manager
 of Kalashnikov DB
 */
 /*

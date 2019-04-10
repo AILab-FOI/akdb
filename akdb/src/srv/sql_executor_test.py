@@ -2,7 +2,7 @@ import sys
 from sql_executor import *
 
 #sql_executor tests by Marko Sinko
-#TODO: Basically.... Rewrite the whole thing.
+
 
 print "\n---------------------------IS NUMERIC TEST -----------------------------\n"
 commands=["1","a","2","b","3","4","c"]

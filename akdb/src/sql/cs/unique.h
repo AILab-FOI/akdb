@@ -1,5 +1,5 @@
 /**
-@file unique.h Header file that provides functions and defines for unique constraint
+@file unique.h Header file that provides functions and data structures for unique constraint
  */
 /*
  * This program is free software; you can redistribute it and/or modify

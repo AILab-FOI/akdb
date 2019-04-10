@@ -22,7 +22,7 @@
 
 /**
  * @author Mislav Jurinić
- * @brief Function that returns system tables addresses by name
+ * @brief Returns system tables address by name
  * @param _systemTableName table name
  * @return int
  **/
@@ -58,7 +58,7 @@ int AK_find_table_address(char* _systemTableName) {
 
 /**
  * @author Saša Vukšić, updated by Mislav Jurinić
- * @brief Function that sets between constraints on particular attribute, string constraint should be writen in lowercase.
+ * @brief Function sets between constraints on particulary attribute, string constraint should be writen in lowercase.
       It searches for AK_free space. Then it inserts id, name of table, name of constraint, name of attribute, start and
        end value in temporary block.      
  * @param tableName table name
@@ -114,7 +114,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
 
 /**
  * @author Saša Vukšić, updated by Mislav Jurinić
- * @brief Function that checks if the given value is between lower and upper bounds of the "between" constraint.
+ * @brief Checks if the given value is between lower and upper bounds of the "between" constraint.
  * @param tableName table name
  * @param newValue value we want to insert
  * @param attNamePar attribute name
@@ -315,7 +315,7 @@ int AK_delete_constraint_between(char* tableName, char* constraintNamePar, char*
 
 /**
   * @author Saša Vukšić, updated by Mislav Jurinić
-  * @brief Function that tests the functionality of implemented between constraint.
+  * @brief Tests the functionality of implemented between constraint.
   * @return No return value
   */
 TestResult Ak_constraint_between_test() {

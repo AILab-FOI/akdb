@@ -1,5 +1,5 @@
 /**
-@file observable.c File that provides the implementations of functions for observable pattern
+@file observable.c File that provides implementations of functions for observable pattern
  */
 /*
  * This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 
 /** 
  * @author Ivan Pusic
- * @brief Function that registers a new observer. Observer is added to the list of all observers
+ * @brief Function to registering new observer. Observer is added to list of all observers
  * @param self Observable object instance
  * @param observer Observer object instance
  * 
@@ -51,7 +51,7 @@ static inline int AK_register_observer(AK_observable *self, AK_observer *observe
 
 /** 
  * @author Ivan Pusic
- * @brief Function that unregisters a observer. Observer will be removed from the list of all observers
+ * @brief Function to unregister observer. Observer will be removed from list of all observers
  * @param self Observable object instance
  * @param observer Observer object instance
  * 
@@ -78,7 +78,7 @@ static inline int AK_unregister_observer(AK_observable *self, AK_observer *obser
 
 /** 
  * @author Ivan Pusic
- * @brief Function that notifies a certain observer
+ * @brief Function to notiy certain observer
  * @param self Observable object instance
  * @param observer Observer object to notify
  * 
@@ -104,7 +104,7 @@ static inline int AK_notify_observer(AK_observable *self, AK_observer *observer)
 
 /** 
  * @author Ivan Pusic
- * @brief Function that notifies all observers
+ * @brief Function to notify all observers
  * @param self Observable object instance
  * 
  * @return Exit status
@@ -127,7 +127,7 @@ static inline int AK_notify_observers(AK_observable *self)
 
 /** 
  * @author Ivan Pusic
- * @brief Function that fetches a observer object from observable type by observer id
+ * @brief Function for getting observer object from observable type by observer id
  * @param self Observable type instance
  * @param id Observer id
  * 
@@ -151,7 +151,7 @@ static inline AK_observer *AK_get_observer_by_id(AK_observable *self, int id)
 
 /** 
  * @author Ivan Pusic
- * @brief Function that initializes a observable object
+ * @brief Function for initializing observable object
  *
  * @return Pointer to new observable object
  */
@@ -182,7 +182,7 @@ AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_E
 
 /** 
  * @author Ivan Pusic
- * @brief Function that destroys a observer object
+ * @brief Function for destroying observer object
  *
  * @return Exit status
  */
@@ -204,7 +204,7 @@ static inline int AK_destroy_observer(AK_observer *self)
 
 /** 
  * @author Ivan Pusic
- * @brief Function that calls event handler for the observer object
+ * @brief Function for calling event handler of observer object
  * @param observer AK_observer type instance
  * @param observable_type Custom observable type instance
  * 
@@ -220,7 +220,7 @@ static inline int AK_notify(AK_observer *observer, void *observable_type, AK_Obs
 
 /** 
  * @author Ivan Pusic
- * @brief Function that initializes the observer object
+ * @brief Function for initializing observer object
  * 
  * @return Pointer to new observer object
  */
@@ -247,7 +247,7 @@ typedef enum {
     WARMING,
 } NotifyType;
 
-// This is also optional. Here we define the structure that holds message, and the notify type
+// This is also optional. Here we define structure that holds message, and notiy type
 typedef struct _notifyDetails {
     char *message;
     NotifyType type;
@@ -307,7 +307,7 @@ void AK_set_notify_info_details(AK_TypeObservable *self, NotifyType type, char *
     AK_EPI;
 }
 
-// this is definition of a custom action which can be called from custom observable type
+// this is definition of custom action which can be called from custom observable type
 int AK_custom_action(void *data) {
     AK_PRO;
     printf ("THIS IS SOME CUSTOM FUNCTION!\n");
@@ -326,7 +326,7 @@ AK_TypeObservable * init_observable_type() {
     self->AK_set_notify_info_details = &AK_set_notify_info_details;
 
     // Very important!!! Call method for initializing AK_Observable and pass instance of custom observable type
-    // Last parameter is a pointer to function which is custom
+    // Last parameter is pointer to function which is custom
     self->observable = AK_init_observable(self, AK_CUSTOM_FIRST, &AK_custom_action);
     AK_EPI;
     return self;

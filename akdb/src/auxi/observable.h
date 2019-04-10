@@ -41,7 +41,7 @@ typedef enum {
 /**
  * @author Ivan Pusic
  * @struct Observer
- * @brief Structure that defines the functions for observer object
+ * @brief Structure defines functions for observer object
  */
 struct Observer {
     // Members
@@ -58,7 +58,7 @@ typedef struct Observer AK_observer;
 /**
  * @author Ivan Pusic
  * @struct Observable
- * @brief Structure that defines the functions for observable object
+ * @brief Structure defines functions for observable object
  */
 struct Observable {
     // Members

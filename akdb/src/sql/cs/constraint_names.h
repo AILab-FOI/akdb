@@ -1,5 +1,5 @@
 /**
-@file constraint_names.h Header file that provides functions and defines for checking if constraint name is unique in database
+@file constraint_names.h Header file that provides functions and data structures for checking if constraint name is unique in database
  */
 /*
  * This program is free software; you can redistribute it and/or modify
