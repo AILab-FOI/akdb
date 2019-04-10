@@ -22,7 +22,7 @@
 
 /**
   @author Saša Vukšić
-  @brief Function examines whether list L contains operator ele
+  @brief Function that examines whether list L contains operator ele
   @param L list of elements
   @param ele operator to be found in list
   @return 1 if operator ele is found in list, otherwise 0
@@ -47,7 +47,7 @@
 
 /**
  * @author Saša Vukšić, Lovro Predovan
- * @brief Function reads table on which we create index and call functions for creating index
+ * @brief Function that reads table on which we create index and call functions for creating index
            Elements that will be in index are put in list indexLista and headerAttributes. According to those elements new indexes
            are created.
 
@@ -195,7 +195,7 @@
                     strcpy(inde, tblName);
                     indexName = strcat(inde, (temp_head + i)->att_name);
                     indexName = strcat(indexName, "_bmapIndex");
-
+                //Error: argument of type "char" is incompatible with parameter of type "char *"
                     startAddress = AK_initialize_new_index_segment(indexName,AK_get_table_id(tblName),indexed_attr_position, t_header);
 
 
@@ -235,7 +235,7 @@
                     strcpy(inde, tblName);
                     indexName = strcat(inde, (temp_head + i)->att_name);
                     indexName = strcat(indexName, "_bmapIndex");
-
+                //Error: argument of type "char" is incompatible with parameter of type "char *"
                     startAddress = AK_initialize_new_index_segment(indexName,AK_get_table_id(tblName),indexed_attr_position, t_headerr);
                     if (startAddress != EXIT_ERROR)
                     {
@@ -261,7 +261,7 @@
 
 /**
  * @author Saša Vukšić, Lovro Predovan
- * @brief Function that loads index table with value of particulary atribute
+ * @brief Function that loads index table with the value of particulary atribute
  * @param tblName source table
  * @param tblNameIndex new name of index table
  * @param attributeName attribute on which we make index
@@ -311,6 +311,7 @@
 
                             Ak_Insert_New_Element(TYPE_INT, &(temp->address), tblNameIndex, "addBlock", row_root);
                             Ak_Insert_New_Element(TYPE_INT, &temp_indexTd, tblNameIndex, "indexTd", row_root);
+                            //Error: argument of type "const char *" is incompatible with parameter of type "void *"
                             Ak_Insert_New_Element(TYPE_VARCHAR, "1", tblNameIndex, temp_char, row_root);
 
                             Ak_insert_row(row_root);
@@ -355,8 +356,8 @@
 
 /**
  * @author Saša Vukšić, Lovro Predovan
- * @brief Function gets adresses of the particuliary attribute from bitmap index. It fetches addresses of indexes and header
-          of index table.  Using while loop it goes through index and gets necessary data. Those data are put in list called
+ * @brief Function that gets adresses of the particuliar attribute from bitmap index. It fetches addresses of indexes and header
+          of index table.  Using while loop it goes through index and gets necessary data. That data is put in a list called
           add_root.
  * @param indexName name of index
  * @param attribute name of attribute
@@ -452,7 +453,7 @@
 
 /**
  * @author Saša Vukšić, Lovro Predovan
- * @brief Function for printing list of adresses
+ * @brief Function that prints the list of adresses
  * @param list list of adresses
  * @return No return value
  **/
@@ -472,7 +473,8 @@
 
 /**
  * @author Saša Vukšić
- * @brief Function for getting values from the bitmap index if there is one for given table. It should be started when we are 		  making selection on the table with bitmap index.
+ * @brief Function that fetches the values from the bitmap index if there is one for a given table.
+ * It should be started when we are making selection on the table with bitmap index.
  * @param tableName name of table
  * @param attributeValue value of attribute
  * @return list of adresses
@@ -505,7 +507,8 @@
 
 /**
  * @author Saša Vukšić
- * @brief Function for updating the index, only on values that alredy exist. If there is no value in bitmap index or bitmap index on this value, warning is showed to the user. Otherwise, bitmap index is updated with new attribute value.
+ * @brief Function that updates the index, only on values that alredy exist. 
+ * If there is no value in bitmap index or bitmap index on this value, warning is showed to the user. Otherwise, bitmap index is updated with new attribute value.
  * @param addBlock adress of block
  * @param addTD adress of tuple dict
  * @param tableName name of table
@@ -609,10 +612,12 @@
 
 /**
  * @author Saša Vukšić
- * @brief Function for writing new value in block when index is updated
+ * @brief Function that writes the new value in block when index is updated
  * @param block block to write on
  * @return EXIT_SUCESS when write operation is successful, otherwise EXIT_ERROR
  **/
+
+//TODO: Check the method uses and possibly delete unused code
  int Ak_write_block(AK_block * block)
  {
     /*Legacy method -> not really working
@@ -650,7 +655,7 @@
 
 /**
  * @author Lovro Predovan
- * @brief Function for updating the index,function deletes and recrates index values again if different number of params is detected 
+ * @brief Function that updates the index. Function deletes and recreates the index values again if different number of params is detected 
  * @param tableName name of table
  * @param attributeName name of attribute
  * @param newAttributeValue new value of updated attribute
@@ -708,7 +713,7 @@
 
 /**
  * @author Lovro Predovan
- * @brief Function that deletes bitmap index based on name of index
+ * @brief Function that deletes bitmap index based on the name of index
  * @param Bitmap index table name
    @return No return value
  **/
@@ -724,7 +729,7 @@
 /**
  * @author Saša Vukšić updated by Lovro Predovan
  * @brief Function that creates test table and makes index on test table,
-            also prints original tables indexes tables and indexes,tests updating into tables
+    also prints original tables indexes tables and indexes, tests updating into tables
  * @return No return value
  * */
  TestResult Ak_bitmap_test()
@@ -742,11 +747,13 @@
     //CREATING BITMAP INDEXES ON ATTRIBUTES FIRSTNAME AND TEL
     struct list_node *att_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&att_root);
+    //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "firstname", tblName, "firstname", att_root);
     
 
     struct list_node *some_element;
     some_element = (struct list_node *) Ak_First_L2(att_root);
+    //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "tel", tblName, "tel", some_element);
     AK_create_Index_Table(tblName, att_root);
 
@@ -772,10 +779,15 @@
     id_prof = 35890;
     Ak_DeleteAll_L3(&row_root);
     Ak_Insert_New_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+    //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "Miran", tblName, "firstname", row_root);
+        //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "Zlatović", tblName, "lastname", row_root);
+        //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_INT, "042390858", tblName, "tel", row_root);
+        //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "miran.zlatovic@foi.hr", tblName, "email", row_root);
+        //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "www.foi.hr/nastavnici/zlatovic.miran/index.html", tblName, "web_page", row_root);
     Ak_insert_row(row_root);
     Ak_DeleteAll_L3(&row_root);

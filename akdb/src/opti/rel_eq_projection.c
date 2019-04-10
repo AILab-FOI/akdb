@@ -41,7 +41,7 @@
 
 /**
  * @author Dino Laktašić.
- * @brief Check if some set of attributes is subset of larger set, used in cascading of the projections
+ * @brief Function that checks if some set of attributes is subset of larger set, used in cascading of the projections
  * <ol>
  * <li>Tokenize set and subset of projection attributes and store each of them to it's own array</li>
  * <li>Check if the size of subset array is larger than the size of set array</li>
@@ -126,7 +126,7 @@ int AK_rel_eq_is_subset(struct list_node *list_elem_set, struct list_node *list_
 
 /**
  * @author Dino Laktašić.
- * @brief Check if selection uses only attributes retained by the projection before commuting
+ * @brief Function that checks if selection uses only attributes retained by the projection before commuting
  * <ol>
  * <li>Tokenize set of projection attributes and store them to the array</li>
  * <li>For each attribute in selection condition check if exists in array of projection attributes</li>
@@ -193,7 +193,7 @@ int AK_rel_eq_can_commute(struct list_node *list_elem_attribs, struct list_node 
 
 /**
  * @author Dino Laktašić.
- * @brief Get attributes for a given table and store them to the struct list_node 
+ * @brief Function that gets attributes for a given table and store them to the struct list_node 
  * <ol>
  * <li>Get the number of attributes in a given table</li>
  * <li>Get the table header for a given table</li>
@@ -248,7 +248,7 @@ const char *AK_rel_eq_get_attributes(char *tblName) {
 
 /**
  * @author Dino Laktašić.
- * @brief Filtering and returning only those attributes from list of projection attributes that exist in the given table  
+ * @brief Function used for filtering and returning only those attributes from list of projection attributes that exist in the given table  
  * <ol>
  * <li>Get the attributes for a given table and store them to the AK_list</li>
  * <li>Tokenize set of projection attributes and store them to the array</li>
@@ -317,7 +317,7 @@ char *AK_rel_eq_projection_attributes(char *attribs, char *tblName) {
 
 /**
  * @author Dino Laktašić.
- * @brief Filtering and returning only attributes from selection or theta_join condition 
+ * @brief Function used for filtering and returning only attributes from selection or theta_join condition 
  * @param list_elem list element that contains selection or theta_join condition data
  * @return only attributes from selection or theta_join condition as the AK_list
  */

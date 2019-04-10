@@ -21,7 +21,7 @@
 
 /**
   * @author Anđelko Spevec
-  * @brief Function for creating new btree index on integer attribute in table
+  * @brief Function that creates new btree index on integer attribute in table
   * @param tblName - name of the table on which we are creating index
   * @param attributes - attribute on which we are creating index
   * @param indexName - name of the index
@@ -226,7 +226,7 @@ int AK_btree_delete(char *indexName){
 
 /**
   * @author Anđelko Spevec
-  * @brief Function for searching or deleting a value in btree index
+  * @brief Function that searches or deletes a value in btree index
   * @param indexName - name of the index
   * @param searchValue - value that we are searching in the index
   * @param endRange - if 0 search is for 0 value, else searching in range
@@ -313,6 +313,7 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 	AK_EPI;
 }
 
+//TODO: Add description of the function AK_btree_insert as well as params
 int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insertBlock){
 	AK_PRO;
 	int adr_to_read = (int) AK_find_AK_free_space(AK_get_index_addresses(indexName));
@@ -712,7 +713,7 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
-
+//TODO: Add description of the function AK_btree_test as well as params 
 TestResult Ak_btree_test() {
 	char *tblName = "student";
 	char *indexName = "student_btree_index";

@@ -1,4 +1,4 @@
-/** @file table.h Header file that provides data structures for table abstraction
+/** @file table.h Header file that provides data structures, functions and defines for table abstraction
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

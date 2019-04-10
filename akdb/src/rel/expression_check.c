@@ -20,9 +20,10 @@
 
 /**
  * @author Dino Laktašić, abstracted by Tomislav Mikulček,updated by Nikola Miljancic
- * @brief  Function compares values according to their data type, checks aritmetic statement which is part of expression given in   	       the function below. For every type of arithmetic operator, there is switch-case statement which examines type of el and
+ * @brief  Function that compares values according to their data type, checks arithmetic statement which is part of expression given in 
+ *   	  the function below. For every type of arithmetic operator, there is switch-case statement which examines type of el and
            casts void operands to this type.
- * @param el list element, last element put in list temp which holds elements of row ordered according to expression and results of 		     their evaluation
+ * @param el list element, last element put in list temp which holds elements of row ordered according to expression and results of their evaluation
  * @param *op comparison operator
  * @param *a left operand
  * @param *b right operand
@@ -171,7 +172,7 @@ int AK_check_arithmetic_statement(struct list_node *el, const char *op, const ch
 }
 /**
 	* @Author Leon Palaić
-	* @brief Function that replaces charachter wildcard (%,_) ch in string s with repl charachters.
+	* @brief Function that replaces charachter wildcard (%,_) ch in string s with repl characters.
 	* @param s input string
 	* @param ch charachter to be replaced
 	* @result new sequence of charachters
@@ -202,7 +203,7 @@ char *AK_replace_wild_card(const char *s,char ch,const char *repl){
 
 /**
 	* @Author Leon Palaić
-	* @brief Function that evaluates regex expression on given string input.
+	* @brief Function that evaluates regex expression on a given string input.
 	* @param value string value that must match regex expression
 	* @param expression POSIX regex expression
 	* @param checkWildCard replaces SQL wildcard to correesponding POSIX regex charachter
@@ -251,7 +252,7 @@ int Ak_check_regex_expression(const char * value, const char * expression, int s
 
 /**
 	* @Author Leon Palaić
-	* @brief Function that evaluates regex expression on given string input.
+	* @brief Function that evaluates regex expression on a given string input.
 	* @param value string value that must match regex expression
 	* @param expression POSIX regex expression
 	* @result 0 if regex didnt match or sytnax of regex is incorecct 
@@ -282,7 +283,7 @@ int Ak_check_regex_operator_expression(const char * value, const char * expressi
 }
 /**
  * @author Matija Šestak, updated by Dino Laktašić,Nikola Miljancic, abstracted by Tomislav Mikulček
- * @brief  Function evaluates whether one record (row) satisfies logical expression. It goes through
+ * @brief  Function that evaluates whether one record (row) satisfies logical expression. It goes through
            given row. If it comes to logical operator, it evaluates by itself. For arithmetic operators
            function AK_check_arithmetic_statement() is called.
  * @param row_root beginning of the row that is to be evaluated
@@ -503,7 +504,7 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
     AK_EPI;
     return result;
 }
-
+//TODO: Add description
 TestResult Ak_expression_check_test()
 {
     AK_PRO;

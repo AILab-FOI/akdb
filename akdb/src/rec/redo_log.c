@@ -22,7 +22,7 @@
 
 /**
  * @author @author Krunoslav Bilić updated by Dražen Bandić, second update by Tomislav Turek
- * @brief Function adds new element to redolog
+ * @brief Function that adds a new element to redolog
  * @return EXIT_FAILURE if not allocated memory for ispis, otherwise EXIT_SUCCESS
  */
 int AK_add_to_redolog(int command, struct list_node *row_root){
@@ -112,7 +112,7 @@ void AK_redolog_commit() {
 
 /**
  * @author Krunoslav Bilić updated by Dražen Bandić, second update by Tomislav Turek
- * @brief Function prints out the content of redolog memory
+ * @brief Function that prints out the content of redolog memory
  * @return No return value.
  */
 void AK_printout_redolog(){
@@ -128,7 +128,7 @@ void AK_printout_redolog(){
 
 /**
  * @author Dražen Bandić
- * @brief Checks if the attribute contains '|', and if it does it replaces it with "\|"
+ * @brief Function that checks if the attribute contains '|', and if it does it replaces it with "\|"
  * @return new attribute
  */
 char* AK_check_attributes(char *attributes){

@@ -1,5 +1,5 @@
 /**
- * @file check_constraint.h Header file that provides data structures for check constraint
+ * @file check_constraint.h Header file that provides functions and defines for check constraint
  */
  
 /*

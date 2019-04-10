@@ -402,8 +402,8 @@ AK_blocktable_dump(int verbosity)
 
 /**
  * @author dv
- * @brief  Function flushes bitmask table to disk
- * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
+ * @brief  Function flushes bitmask table to the disk
+ * @return EXIT_SUCCESS if the file has been written to the disk, EXIT_ERROR otherwise
  */
 int
 AK_blocktable_flush()
@@ -436,7 +436,7 @@ AK_blocktable_flush()
 
 /**
  * @author Domagoj Šitum
- * @brief Allocation of array which will contain information about which blocks are being accessed.
+ * @brief Allocation of an array which will contain information about which blocks are being accessed.
  * Creates an array. Each element of this array will correspond to one initialized block.
  * For more info, see explanation in dbman.h
  */
@@ -468,7 +468,7 @@ AK_allocate_block_activity_modes()
 
 /**
  * @author dv
- * @brief  Function gets allocation table from disk
+ * @brief  Function gets allocation table from the disk
  * @return EXIT_SUCCESS if the file has been taken from disk, EXIT_ERROR otherwise
  */
 int
@@ -534,7 +534,7 @@ fsize(FILE *fp)
 
 /**
  * @author dv
- * @brief  Function that initializes allocation table, write it to disk and cache in memory
+ * @brief  Function that initializes the allocation table, writes it to the disk and caches it in memory
  * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
  */
 int
@@ -664,7 +664,7 @@ AK_init_block()
 
 /**
  * @author  dv
- * @brief  Function that dumps block
+ * @brief  Function that dumps a block
  * @return nothing
  */
 int
@@ -908,7 +908,7 @@ AK_print_block(AK_block * block, int num, char* gg, FILE *fpp)
 /**
 * @author Markus Schatten , rearranged by dv
 * @brief  Function that allocates new blocks by placing them to appropriate place
-* and then update last initialized index
+* and then updates the last initialized index
 * @return EXIT_SUCCESS if the file has been written to disk, EXIT_ERROR otherwise
 */
 int
@@ -984,7 +984,7 @@ char test_lastCharacterWritten = '\0';
 int test_threadSafeBlockAccessSucceeded = 1;
 
 /**
- * @author Markus Schatten, updated dv and Domagoj Šitum (thread-safe enabled)
+ * @author Markus Schatten, updated by dv and Domagoj Šitum (thread-safe enabled)
  * @brief  Function that reads a block at a given address (block number less than db_file_size).
  * New block is allocated. Database file is opened. Position is set to provided address block.
  * At the end function reads file from that position. Completely thread-safe.
@@ -995,6 +995,7 @@ AK_block*
 AK_read_block(int address)
 {
   AK_PRO;
+  //TODO: line 999 needs variable names
   int true = 1, false = 0;
   int locked_for_writing, locked_for_reading;
   int thread_id;
@@ -1015,7 +1016,7 @@ AK_read_block(int address)
     } 
 
   pthread_mutex_lock(&AK_block_activity_info[address].block_lock);
-  // first we check if block is already locked for writing by another thread
+  // first we check if the block is already locked for writing by another thread
   locked_for_reading = AK_block_activity_info[address].locked_for_reading;
   locked_for_writing = AK_block_activity_info[address].locked_for_writing;
     
@@ -1024,7 +1025,7 @@ AK_read_block(int address)
       AK_block_activity_info[address].thread_holding_lock = &thread_id;
     }
     
-  // if block is locked for writing, then we have to wait another thread to unlock it
+  // if block is locked for writing, then we have to wait for another thread to unlock it
   //   (thus preventing it from accessing disk once again)
   // if another thread is only reading from this block, then we don't have to lock it's mutex, because
   // any number of threads can read the same block at the same time
@@ -1047,7 +1048,7 @@ AK_read_block(int address)
       AK_EPI;
       exit(EXIT_ERROR);
     }
-    
+  //ERROR: a value of type "void *" cannot be used to initialize an entity of type "AK_block *"   
   AK_block * block = AK_malloc(sizeof(AK_block));
 
   // then we simply read block from the disk
@@ -1093,8 +1094,8 @@ AK_read_block(int address)
 
 /**
 * @author Markus Schatten, updated by Domagoj Šitum (thread-safe enabled)
-* @brief  Function writes a block to DB file. Database file is opened. Position is set to provided address block. Block is
-written to provided address. Completely thread-safe.
+* @brief  Function that writes a block to the DB file. Database file is opened. Position is set to provided address block. Block is
+  written to provided address. Completely thread-safe.
 * @param block poiner to block allocated in memory to write
 * @return EXIT_SUCCESS if successful, EXIT_ERROR otherwise
 */
@@ -1102,6 +1103,7 @@ int
 AK_write_block(AK_block * block)
 {
   AK_PRO;
+  //TODO: line 1107 needs variable names
   int true = 1, false = 0;
   int locked_for_reading = false, locked_for_writing = false, address;
   int thread_id;
@@ -1127,7 +1129,7 @@ AK_write_block(AK_block * block)
       AK_block_activity_info[address].thread_holding_lock = &thread_id;
     }
     
-  // if block is locked for writing and/or writing, then we have to wait another thread to unlock it
+  // if the block is locked for writing and/or is currently writing, then we have to wait for another thread to unlock it
   //   (thus preventing it from accessing disk once again)
   // if another thread is only reading from this block, then we don't have to lock it's mutex, because
   // any number of threads can read the same block at the same time
@@ -1197,7 +1199,7 @@ AK_write_block(AK_block * block)
 
 
 /**
- * @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
+ * @author Nikola Bakoš, updated by Dino Laktašić (fixed header BUG), refurbished by dv
  * @brief Function copy header to blocks. Completely thread-safe
  * @param header Pointer to header which will be copied into each block in blockSet
  * @param blockSet Pointer to array of block addresses into which to copy header
@@ -1243,7 +1245,7 @@ AK_copy_header(AK_header *header, int* blockSet, int blockSetSize)
 
 /**
 * @author dv
-* @brief Function alocates new extent of blocks. Number of blocks is not ordered as well as a way of search for them.
+* @brief Function that allocates new extent of blocks. Number of blocks is not ordered as well as a way of search for them.
 * @param start_address address (block number) to start searching for sufficient space
 * @param desired_size number of desired blocks
 * @param AK_allocation_set_mode a way of trying to fing AK_free space. Can be one of:
@@ -1322,7 +1324,7 @@ AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode,
       return blocknum;
     }
 
-  //still hawen't saved what happened to allocation table
+  //still haven't saved what happened to the allocation table
   for (i = 0; i < desired_size; i++)
     {
       BITSET(AK_allocationbit->bittable, blocknum[i]);
@@ -1341,7 +1343,7 @@ AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode,
 
 /**
 * @author dv
-* @brief  Function alocates new blocks for increasing extent size.
+* @brief  Function that allocates a new blocks for increasing extent size.
 * @param start_address first address of extent that is subject of increasing
 * @param add_size number how many new blocks is to be added to existing extent
 * @param AK_allocation_set_mode a way of trying to fing AK_free space. Can be one of:
@@ -1384,7 +1386,7 @@ AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode
     }
 
 
-  //TODO maybe some situations will ask for start address. Zero covers all situationa.
+  //TODO maybe some situations will ask for start address. Zero covers all situations.
   blocknum = AK_get_extent(0, add_size, mode, border, target, header, gl);
 
   //problem with obtaining new blocks
@@ -1407,7 +1409,7 @@ AK_increase_extent(int start_address, int add_size, AK_allocation_set_mode* mode
 
 /**
 * @author Nikola Bakoš, updated by Dino Laktašiæ (fixed header BUG), refurbished by dv
-* @brief  Function alocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE.
+* @brief  Function that allocates new extent of blocks. If argument "old_size" is 0 than size of extent is INITIAL_EXTENT_SIZE.
 * Otherwise, resize factor is set according to type of extent. If writing of block is successful, number of blocks is
 *         incremented.
 * @param start_address address (block number) to start searching for sufficient space
@@ -1550,7 +1552,7 @@ AK_new_segment(char * name, int type, AK_header *header)
 
 /**
 * @author Matija Novak
-* @brief  Function for creating header and initalize integrity, constraint name and constraint
+* @brief  Function that creates header and initalize integrity, constraint name and constraint
 code with parameter values of function.
 
 * @param name name of the atribute
@@ -1585,10 +1587,12 @@ AK_create_header(char* attribute_name, int type, int integrity, char *constr_nam
       catalog_header->integrity[i] = integrity;
       for (j = 0; j < MAX_CONSTR_NAME; j++)
 	{
+    //Error: a value of type "char *" cannot be assigned to an entity of type "char"
 	  catalog_header->constr_name[i][j] = constr_name;
 	}
       for (k = 0; k < MAX_CONSTR_CODE; k++)
 	{
+    //Error: a value of type "char *" cannot be assigned to an entity of type "char"
 	  catalog_header->constr_code[i][k] = contr_code;
 	}
     }
@@ -1599,7 +1603,7 @@ AK_create_header(char* attribute_name, int type, int integrity, char *constr_nam
 
 /**
 * @author Matija Novak
-* @brief  Function for inserting entry in tuple_dict and data of a block. Address, type and size of
+* @brief  Function that inserts an entry in tuple_dict and data of a block. Address, type and size of
 catalog_tuple_dict are set.  Free space of block is also set.
 * @param block_adress adress of a block in which we want insert data
 * @param type type of entry_data
@@ -1620,11 +1624,13 @@ AK_insert_entry(AK_block* block_address, int type, void* entry_data, int i)
   /// copy data into bloc->data on start position bloc->AK_free_space
   if (type == TYPE_INT)
     {
+      //Error:argument of type "void *" is incompatible with parameter of type "char *"
       memcpy(block_address->data + block_address->AK_free_space, entry_data, AK_type_size(type, entry_data));
       Ak_dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %d  Size of data:\n", (int)entry_data);
     }
   else
     {
+      //Error: argument of type "void *" is incompatible with parameter of type "char *"
       memcpy(block_address->data + block_address->AK_free_space, entry_data, AK_type_size(type, entry_data));
       Ak_dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %s  Size of data:\n", (char *)entry_data);
     }
@@ -1632,12 +1638,14 @@ AK_insert_entry(AK_block* block_address, int type, void* entry_data, int i)
   catalog_tuple_dict->address = block_address->AK_free_space;
 
   /// calculate next AK_free space for the next entry data
+  //Error: argument of type "void *" is incompatible with parameter of type "char *"
   block_address->AK_free_space += AK_type_size(type, entry_data); ///sizeof(entry_data)+1);///(sizeof(int));
   /// no need for "+strlen(entry_data)" while "+1" is like "new line"
 
   /// type of entry data
   catalog_tuple_dict->type = type;
   /// size of entry data
+  //Error: argument of type "void *" is incompatible with parameter of type "char *"
   catalog_tuple_dict->size = AK_type_size(type, entry_data);
 
   /// copy tuple_dict to block->tuple_dict[i]
@@ -1649,7 +1657,7 @@ AK_insert_entry(AK_block* block_address, int type, void* entry_data, int i)
 
 /**
  * @author Matija Novak
- * @brief  Function initialises the sytem table catalog and writes the result in first (0) block in db_file. Catalog block,
+ * @brief  Function that initialises the sytem table catalog and writes the result in first (0) block in db_file. Catalog block,
  catalog header name, catalog header address are allocated. Address, type, chained_with and AK_free_space attributes are
  initialized. Names of various database elements are written in block.
  * @param relation address of system table of relation in db_file
@@ -1709,6 +1717,7 @@ AK_init_system_tables_catalog(int relation, int attribute, int index, int view, 
   // memcpy(catalog_block->tuple_dict, tuple_dict, sizeof (tuple_dict));
 
   int i = 0;
+  //Error: argument of type "const char *" is incompatible with parameter of type "void *"
   AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_relation", i++);
   AK_insert_entry(catalog_block, TYPE_INT, &relation, i++);
   AK_insert_entry(catalog_block, TYPE_VARCHAR, "AK_attribute", i++);
@@ -1783,7 +1792,7 @@ void AK_memset_int(void *block, int value, size_t num) {
 }
 /**
 * @author Unknown
-* @brief Function that registers system tables. Block at the given address is read. Various data from function arguments are            written in block about different database elements.
+* @brief Function that registers system tables. Block at the given address is read. Various data from function arguments are written in block about different database elements.
 * @param relation relation in database
 * @param attribute attribute in databse
 * @param index index in database
@@ -1817,8 +1826,9 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     int end;
     AK_PRO;
     relationTable = AK_read_block(relation);
-
+  
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_relation", j++);
     AK_insert_entry(relationTable, TYPE_INT, &relation, j++);
     end = relation + INITIAL_EXTENT_SIZE;
@@ -1826,6 +1836,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_attribute", j++);
     AK_insert_entry(relationTable, TYPE_INT, &attribute, j++);
     end = attribute + INITIAL_EXTENT_SIZE;
@@ -1833,6 +1844,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_index", j++);
     AK_insert_entry(relationTable, TYPE_INT, &index, j++);
     end = index + INITIAL_EXTENT_SIZE;
@@ -1840,6 +1852,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_view", j++);
     AK_insert_entry(relationTable, TYPE_INT, &view, j++);
     end = view + INITIAL_EXTENT_SIZE;
@@ -1847,6 +1860,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_sequence", j++);
     AK_insert_entry(relationTable, TYPE_INT, &sequence, j++);
     end = sequence + INITIAL_EXTENT_SIZE;
@@ -1854,6 +1868,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_function", j++);
     AK_insert_entry(relationTable, TYPE_INT, &function, j++);
     end = function + INITIAL_EXTENT_SIZE;
@@ -1861,6 +1876,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_function_arguments", j++);
     AK_insert_entry(relationTable, TYPE_INT, &function_arguments, j++);
     end = function_arguments + INITIAL_EXTENT_SIZE;
@@ -1868,6 +1884,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_trigger", j++);
     AK_insert_entry(relationTable, TYPE_INT, &trigger, j++);
     end = trigger + INITIAL_EXTENT_SIZE;
@@ -1875,6 +1892,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_trigger_conditions", j++);
     AK_insert_entry(relationTable, TYPE_INT, &trigger_conditions, j++);
     end = trigger_conditions + INITIAL_EXTENT_SIZE;
@@ -1882,6 +1900,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_db", j++);
     AK_insert_entry(relationTable, TYPE_INT, &db, j++);
     end = db + INITIAL_EXTENT_SIZE;
@@ -1889,6 +1908,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_db_obj++", j++);
     AK_insert_entry(relationTable, TYPE_INT, &db_obj, j++);
     end = db_obj + INITIAL_EXTENT_SIZE;
@@ -1896,6 +1916,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_user", j++);
     AK_insert_entry(relationTable, TYPE_INT, &user, j++);
     end = user + INITIAL_EXTENT_SIZE;
@@ -1903,6 +1924,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_group", j++);
     AK_insert_entry(relationTable, TYPE_INT, &group, j++);
     end = group + INITIAL_EXTENT_SIZE;
@@ -1910,6 +1932,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_user_group", j++);
     AK_insert_entry(relationTable, TYPE_INT, &user_group, j++);
     end = user_group + INITIAL_EXTENT_SIZE;
@@ -1917,6 +1940,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_user_right", j++);
     AK_insert_entry(relationTable, TYPE_INT, &user_right, j++);
     end = user_right + INITIAL_EXTENT_SIZE;
@@ -1924,6 +1948,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_group_right", j++);
     AK_insert_entry(relationTable, TYPE_INT, &group_right, j++);
     end = group_right + INITIAL_EXTENT_SIZE;
@@ -1931,6 +1956,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_between", j++);
     AK_insert_entry(relationTable, TYPE_INT, &constraint, j++);
     end = constraint + INITIAL_EXTENT_SIZE;
@@ -1938,6 +1964,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_not_null", j++);
     AK_insert_entry(relationTable, TYPE_INT, &constraintNull, j++);
     end = constraintNull + INITIAL_EXTENT_SIZE;
@@ -1945,6 +1972,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, AK_CONSTRAINTS_CHECK_CONSTRAINT, j++);
     AK_insert_entry(relationTable, TYPE_INT, &constraintCheck, j++);
     end = constraintCheck + INITIAL_EXTENT_SIZE;
@@ -1952,6 +1980,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_constraints_unique", j++);
     AK_insert_entry(relationTable, TYPE_INT, &constraintUnique, j++);
     end = constraintUnique + INITIAL_EXTENT_SIZE;
@@ -1959,6 +1988,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
     i++;
 
     AK_insert_entry(relationTable, TYPE_INT, &i, j++);
+    //Error:argument of type "const char *" is incompatible with parameter of type "void *"
     AK_insert_entry(relationTable, TYPE_VARCHAR, "AK_reference", j++);
     AK_insert_entry(relationTable, TYPE_INT, &reference, j++);
     end = reference + INITIAL_EXTENT_SIZE;
@@ -1974,7 +2004,7 @@ AK_register_system_tables(int relation, int attribute, int index, int view, int 
 
 /**
  * @author Miroslav Policki
- * @brief  Function initializes the system catalog. Headers for system tables are defined. Segments for those system tables are
+ * @brief  Function that initializes the system catalog. Headers for system tables are defined. Segments for those system tables are
  allocated. Above function AK_register_system_tables() to register system tables.
  * @return EXIT_SUCCESS if the system catalog has been successfully initialized, EXIT_ERROR otherwise
  */
@@ -2362,8 +2392,8 @@ AK_init_system_catalog()
 
 /**
 * @author Markus Schatten
-* @brief  Function deletes a block by a given block address (resets the header and data). Types, integrities, constraint names,
-constraint codes are set to "AK_free" values. In tuple dictionary type, address and size are set to FREE_INT values. Data            of block is set to FREE_CHAR.
+* @brief  Function that deletes a block by a given block address (resets the header and data). Types, integrities, constraint names,
+constraint codes are set to "AK_free" values. In tuple dictionary type, address and size are set to FREE_INT values. Data of block is set to FREE_CHAR.
 * @param address address of the block to be deleted
 * @return returns EXIT_SUCCESS if deletion successful, else EXIT_ERROR
 */
@@ -2437,8 +2467,8 @@ AK_delete_block(int address)
 }
 
 /**
- * @author Dejan Samboliæ
- * @brief  Function deletes an extent between begin and end blocks
+ * @author Dejan Sambolić
+ * @brief  Function that deletes an extent between the first and the last block
  * @param begin address of extent's first block
  * @param end address of extent's last block
  * @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
@@ -2650,6 +2680,7 @@ TestResult AK_thread_safe_block_access_test()
 {
   int i, j, sum_of_suceeded_tests = 0;
   int block_address = 0;
+  //Error: expected an identifier
   int true = 1, false = 0;
   AK_block *backup_block = (AK_block *) AK_malloc(sizeof(AK_block));
   AK_block *block;

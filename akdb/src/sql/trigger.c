@@ -21,7 +21,7 @@
 
 /**
  * @author Unknown, updated by Mario Peroković, check if data is TYPE_INT
- * @brief Saves conditions for a trigger.
+ * @brief Function that saves conditions for a trigger.
  * @param trigger obj_id of the trigger in question
  * @param *condition AK_list list of conditions
  * @return EXIT_SUCCESS or EXIT_ERROR
@@ -70,7 +70,7 @@ int AK_trigger_save_conditions(int trigger, struct list_node *condition) {
 
 /**
  * @author Unknown updated by Aleksandra Polak
- * @brief Function that adds a trigger to system table.
+ * @brief Function that adds a trigger to the system table.
  * @param *name name of the trigger
  * @param *event event that calls the trigger - this should perhaps be an integer with defined constants...
  * @param *condition AK_list list of conditions in postfix
@@ -174,7 +174,7 @@ int AK_trigger_get_id(char *name, char *table) {
 
 /**
  * @author Unknown
- * @brief Function that removes a trigger from system table by name
+ * @brief Function that removes a trigger from the system table by name
  * @param *name name of the trigger
  * @param *table name of the table
  * @return EXIT_SUCCESS or EXIT_ERROR
@@ -188,7 +188,7 @@ int AK_trigger_remove_by_name(char *name, char *table) {
 
 /**
  * @author Unknown
- * @brief Function removes a trigger by its obj_id
+ * @brief Function that removes a trigger by its obj_id
  * @param obj_id obj_id of the trigger
  * @return EXIT_SUCCESS or EXIT_ERROR
  */
@@ -219,7 +219,7 @@ int AK_trigger_remove_by_obj_id(int obj_id) {
 
 /**
  * @author Unknown
- * @brief Function edits information about the trigger in system table. In order to identify the trigger,
+ * @brief Function that edits information about the trigger in system table. In order to identify the trigger,
  *	  either obj_id or table and name parameters should be defined. The other options should be set to NULL.
  *   	  Values of parameters that aren't changing can be left NULL. If conditions are to be removed,
  * 	  condition parameter should hold an empty list.
@@ -289,7 +289,7 @@ int AK_trigger_edit(char *name, char* event, struct list_node *condition, char* 
 
 /**
  * @author Unknown, updated by Mario Peroković
- * @brief Function gets postfix list of conditions for the trigger (compatible with selection)
+ * @brief Function that fetches postfix list of conditions for the trigger (compatible with selection)
  * @param trigger obj_id of the trigger
  * @return list of conditions for the trigger
  */
@@ -328,7 +328,7 @@ struct list_node *AK_trigger_get_conditions(int trigger) {
 
 /**
 * @author Ljubo Barać
-* @brief Function renames the trigger
+* @brief Function that renames the trigger
 * @param old_name Name of the trigger to be renamed
 * @param new_name New name of the trigger
 * @return EXIT_SUCCESS or EXIT_ERROR
