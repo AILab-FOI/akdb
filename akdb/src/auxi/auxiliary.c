@@ -25,7 +25,7 @@ int indexCounter = 0;
 
 /**
  * @author Dino Laktašić.
- * @brief Function that gets  the number of digits for any given number
+ * @brief Function that gets the number of digits for any given number
  * @param number number to evaluate
  * @param int base mathematic base (e.g. 2, 10 etc.)
  * @return the number of digits for the given number
