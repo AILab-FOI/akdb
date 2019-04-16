@@ -196,7 +196,7 @@ class Table_details_command:
 
     # execute method
     # defines what is called when table_details command is invoked
-    def execute1(self):
+    def execute(self):
         print "Printing out: "
         result = "Number of attributes: " + \
             str(ak47.AK_num_attr(self.matcher.group(1)))
