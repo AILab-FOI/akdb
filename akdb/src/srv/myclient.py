@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
 import sys
+import time
 import paramiko
 
 if len(sys.argv) == 3:
@@ -10,21 +11,6 @@ else:
     username = raw_input("Username: ")
     password = raw_input("Password: ")
 
-"""
-ssh_client = paramiko.SSHClient()
-ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-ssh_client.connect(HOST, port=PORT, username=username, password=password)
-session = ssh_client.get_transport().open_session()
-
-while True:
-    cmd = raw_input("akdb> ")
-    session.send(cmd)
-    print session.recv(1024)
-
-session.close()
-ssh_client.close()
-"""
 
 class Client:
     def __init__(self, host="localhost", port=1998):
@@ -37,8 +23,11 @@ class Client:
 
     def __del__(self):
         self.working = False
-        self.session.close()
+        if self.session is not None:
+            self.session.close()
+            print "[+] Session closed succesfully"
         self.sock.close()
+        print "[+] Socket closed successfully"
 
     def start(self):
         global username
@@ -46,29 +35,43 @@ class Client:
         connected = False
         
         while not connected:
-            self.sock.connect(
-                hostname=self.host, 
-                port=self.port, 
-                username=username, 
-                password=password
-            )
-            connected = True
+            print "[*] Attempting to connect..."
+            print username,password
+            try:
+                self.sock.connect(
+                    hostname=self.host, 
+                    port=self.port, 
+                    username=username, 
+                    password=password
+                )
+                connected = True
+            except paramiko.ssh_exception.AuthenticationException:
+                username = raw_input("Username: ")
+                password = raw_input("Password: ")
+            except Exception, e:
+                # wait 2 seconds before attempting to connect again
+                time.sleep(2)
 
         self.session = self.sock.get_transport().open_session()
+        print "[+] Successfully conected to server"
 
-        # receive hello message
-        print self.recv_data()
-        
         while self.working:
-            cmd = raw_input("akdb> ")
-            self.send_command(cmd)
-            out = self.recv_data()
-            print out
+            try:
+                cmd = raw_input("akdb> ")
+                self.send_command(cmd)
+                out = self.recv_data()
+                print out
+            except KeyboardInterrupt:
+                self.working = False
 
 
     def send_command(self, cmd):
         #TODO implement protocol
-        self.session.send(self.pack_data(cmd))
+        if len(cmd) > 0:
+            try:
+                self.session.send(self.pack_data(cmd))
+            except Exception, e:
+                print "[-] Sending failed: %s" %e
 
     def recv_data(self):
         #TODO implement protocol

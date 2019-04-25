@@ -32,21 +32,25 @@ class ParamikoServer(paramiko.ServerInterface):
         return paramiko.AUTH_FAILED
 
 class Connection:
-    def __init__(self, conn):
-        rsa_key = paramiko.RSAKey.generate(2048)        
+    def __init__(self, conn, addr):
+        self.addr = addr
         self.transport = paramiko.Transport(conn)
-        self.transport.add_server_key(rsa_key)
+        self.transport.add_server_key(Server.rsa_key)
         self.transport.start_server(server=ParamikoServer())
-        self.channel = self.transport.accept()
-        self.send_data("Successfully connected to server.")
+        self.channel = self.transport.accept(timeout=1)
 
     def __del__(self):
-        self.channel.close()
-        self.transport.close()
+        if self.channel is not None:
+            self.channel.close()
+        if self.transport is not None:
+            self.transport.close()
 
     def send_data(self, data):
         #TODO implement protocol
-        self.channel.send(self.pack_output(data))
+        try:
+            self.channel.send(self.pack_output(data))
+        except Exception, e:
+            print "[-] Failed sending data to client: %s" %e
 
     def recv_data(self):
         #TODO implement protocol
@@ -61,9 +65,15 @@ class Connection:
         inp = inp.strip()
         return inp
 
+    def is_alive(self):
+        if self.channel is not None and self.transport.is_active():
+            return True
+        return False
+
 class Server:
 
     executor = sqle.sql_executor()
+    rsa_key = paramiko.RSAKey.generate(2048)        
 
     def __init__(self, host="localhost", port=1998):
         self.host = host;
@@ -79,25 +89,38 @@ class Server:
         self.sock.close()
 
     def start(self):
-        self.sock.bind((self.host, self.port))
+        try:
+            self.sock.bind((self.host, self.port))
+        except Exception, e:
+            print "[-] Failed to start server: %s" %e
+            self.__del__()
+
         self.sock.listen(1)
         
         while self.working:
             conn, addr = self.sock.accept()
-            ssh_conn = Connection(conn)
+            print "[*] Incoming connection from %s" %addr[0]
+            ssh_conn = Connection(conn, addr)
             self.handle_connection(ssh_conn)
 
     @Threaded
     def handle_connection(self, conn):
-        while True:
+        while conn.is_alive():
             cmd = conn.recv_data()
             out = Server.process_command(cmd)
             conn.send_data(out)   
+        print "[*] Client from %s disconnected from server" % conn.addr[0]
+        del conn
 
     @staticmethod
     def process_command(cmd):
-        return Server.executor.execute(cmd)
-
+        try:
+            out = Server.executor.execute(cmd)
+        except Exception, e:
+            err = "[-] Failed command execution: %s" %e
+            out = err
+            print err
+        return out
 
 s = Server()
 s.start()
