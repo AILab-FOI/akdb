@@ -1,13 +1,16 @@
 #!/usr/bin/env python2
 
+import sys
 import paramiko
 
-HOST = "localhost"
-PORT = 1998
+if len(sys.argv) == 3:
+    username = sys.argv[1]
+    password = sys.argv[2]
+else:
+    username = raw_input("Username: ")
+    password = raw_input("Password: ")
 
-username = "testingUser" # raw_input("Username: ")
-password = "testingPass" # raw_imput("Password: ")
-
+"""
 ssh_client = paramiko.SSHClient()
 ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -21,3 +24,70 @@ while True:
 
 session.close()
 ssh_client.close()
+"""
+
+class Client:
+    def __init__(self, host="localhost", port=1998):
+        self.sock = paramiko.SSHClient()
+        self.sock.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.session = None
+        self.host = host
+        self.port = port
+        self.working = True
+
+    def __del__(self):
+        self.working = False
+        self.session.close()
+        self.sock.close()
+
+    def start(self):
+        global username
+        global password
+        connected = False
+        
+        while not connected:
+            self.sock.connect(
+                hostname=self.host, 
+                port=self.port, 
+                username=username, 
+                password=password
+            )
+            connected = True
+
+        self.session = self.sock.get_transport().open_session()
+
+        # receive hello message
+        print self.recv_data()
+        
+        while self.working:
+            cmd = raw_input("akdb> ")
+            self.send_command(cmd)
+            out = self.recv_data()
+            print out
+
+
+    def send_command(self, cmd):
+        #TODO implement protocol
+        self.session.send(self.pack_data(cmd))
+
+    def recv_data(self):
+        #TODO implement protocol
+        out = self.session.recv(1024)
+        return self.unpack_data(out)
+
+    # packs data into json
+    def pack_data(self, data):
+        #TODO pack data
+        return data
+
+    # unpacks json data
+    def unpack_data(self, data):
+        #TODO unpack data
+        return data
+
+                    
+
+c = Client()
+c.start()
+
+        

@@ -38,6 +38,7 @@ class Connection:
         self.transport.add_server_key(rsa_key)
         self.transport.start_server(server=ParamikoServer())
         self.channel = self.transport.accept()
+        self.send_data("Successfully connected to server.")
 
     def __del__(self):
         self.channel.close()
