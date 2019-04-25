@@ -1062,7 +1062,7 @@ class sql_executor:
         for elem in self.commands:
             if elem.matches(command) is not None:
                 return elem.execute()
-        return "Wrong command."
+        return "Wrong command: " + command
 
     # execute method
     # called when a new command is received (from client)

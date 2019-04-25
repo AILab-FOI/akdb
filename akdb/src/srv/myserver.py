@@ -5,6 +5,10 @@ import paramiko
 import threading
 import sys
 
+sys.path.append("../swig/")
+import kalashnikovDB as ak47
+import sql_executor as sqle
+
 class ParamikoServer(paramiko.ServerInterface):
     def __init__(self):
         self.event = threading.Event()
@@ -18,6 +22,12 @@ class ParamikoServer(paramiko.ServerInterface):
         if (username == usr) and (password == pas):
             return paramiko.AUTH_SUCCESSFUL
         return paramiko.AUTH_FAILED
+
+def process_command(cmd):
+    executor = sqle.sql_executor()
+    return executor.execute(cmd)
+
+sqle.initialize()
 
 
 HOST = "localhost"
@@ -37,7 +47,11 @@ transport.start_server(server=ParamikoServer())
 channel = transport.accept()
 
 channel.send("Hello")
-
+cmd = channel.recv(1024).strip()
+print cmd
+out = process_command(cmd)
+print out
+channel.send(out)
 
 channel.close()
 transport.close()

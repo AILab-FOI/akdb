@@ -12,3 +12,9 @@ ssh_client.connect(HOST, port=PORT, username="testingUser", password="testingPas
 session = ssh_client.get_transport().open_session()
 
 print session.recv(1024)
+cmd = raw_input("akdb> ")
+session.send(cmd)
+print session.recv(1024)
+
+session.close()
+ssh_client.close()
