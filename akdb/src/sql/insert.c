@@ -21,10 +21,46 @@
 
 #include "insert.h"
 
-int AK_insert() {
+/**
+ * @author Filip Žmuk
+ * @brief Function that implements INSERT comand
+ * @param tableName table in which rows will be inserted
+ * @param columns list of columns
+ * @param values values for columns to be inserted
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
+int AK_insert(char* tableName, struct list_node *columns, struct list_node **values, int rows) 
+{
+    AK_PRO;
+
+    if(columns == NULL) 
+    {
+        // TODO columns = get_columns_for_table(tableName)
+    }
+
+
+    for(int i = 0; i < rows; i++)
+    {
+        struct list_node *row = (struct list_node *) AK_malloc(sizeof (struct list_node));
+        struct list_node *column = columns;
+        Ak_Init_L3(&row);
+        while(column)
+        {
+            // 
+            //  Ak_Insert_New_Element(TYPE_VARCHAR, "Vacenovski", "testna", "Prezime", row_root);
+            column = column->next; 
+        }
+        Ak_insert_row(row);
+        Ak_DeleteAll_L3(&row);
+        AK_free(row);
+    }
+
+    AK_EPI;
     return EXIT_ERROR;
 }
 
 TestResult Ak_insert_test() {
+    AK_PRO;
+    AK_EPI;
     return TEST_result(0, 0);
 }

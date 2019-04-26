@@ -21,10 +21,11 @@
 #ifndef SQL_INSERT
 #define SQL_INSERT
 
+#include "../auxi/mempro.h"
 #include "../auxi/test.h"
 #include "../file/fileio.h"
 
-int AK_insert();
+int AK_insert(char* tableName, struct list_node *columns, struct list_node **values, int rows);
 TestResult Ak_insert_test();
 
 #endif
