@@ -13,6 +13,7 @@ To get you started you can simply clone the repository and install the dependenc
 #### Prerequisites
 ```
 sudo apt-get install git build-essential swig make doxygen python-dev texlive-latex-recommended texlive-latex-extra
+sudo pip install paramiko
 ```
 #### Clone Kalashnikov DB
 Clone the repository using [git][git]:

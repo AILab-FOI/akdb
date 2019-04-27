@@ -20,8 +20,8 @@
 #include "projection.h"
 
 /**
- * @author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list  
- * @brief  Function to create a new header for the projection table
+ * @author Matija Novak, rewritten and optimized by Dino Laktašić to support AK_list  
+ * @brief  Function that creates a new header for the projection table
  * @param old_block_add address of the block from which we copy headers we need
  * @param dstTable name of the new table
  * @param att list of the attributes which should the projeciton table contain
@@ -142,7 +142,7 @@ void removeSubstring(char *s,const char *toremove)
 }
 /**
     * @Author Leon Palaić
-    * @brief Determines new header type
+    * @brief Determines the new header type
     * @param a operand type
     * @param b operand type
     * @result header type
@@ -166,7 +166,7 @@ int AK_determine_header_type(int a,int b){
 }
 /**
     * @Author Leon Palaić
-    * @brief Creates new header name from passed operand names and operator
+    * @brief  Function that creates new header name from passed operand names and operator
     * @param first operand name
     * @param second operand name
     * @param operator 
@@ -185,7 +185,7 @@ char *AK_create_header_name(char * first,char *second, char * operator){
 }
 /** 
   * @author Matija Novak, rewrited and optimized by Dino Laktašić to support AK_list
-  * @brief  Function for copying the data from old table block to the new projection table
+  * @brief  Function that copies the data from old table block to the new projection table
   * @param old_block block from which we copy data
   * @param dstTable name of the new table
   * @param att list of the attributes which should the projeciton table contain
@@ -318,7 +318,7 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
 
 /**
     * @Author Leon Palaić
-    * @brief Performes arithmetics operation on operand data
+    * @brief Function that performes arithmetics operation on operand data
     * @param ab first operand
     * @param bb second operand 
     * @param op operator 
@@ -424,7 +424,7 @@ char *AK_perform_operatrion(char *op,struct AK_operand *ab, struct AK_operand *b
 }
 /**
  * @author Matija Novak, rewrited and optimized by Dino Laktašić, now support cacheing
- * @brief  Function makes a projection of some table
+ * @brief  Function that makes a projection of some table
  * @param att - list of atributes on which we make projection
  * @param dstTable table name for projection table
  * @return EXIT_SUCCESS if continues succesfuly, when not EXIT_ERROR

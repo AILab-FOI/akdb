@@ -1,5 +1,5 @@
 /**
-@file expression_check.h Header file that provides data structures for expression ckecking
+@file expression_check.h Header file that functions and defines for expression ckecking
  */
 /*
  * This program is free software; you can redistribute it and/or modifys

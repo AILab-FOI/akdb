@@ -21,7 +21,7 @@
  
 /**
  * @author Dino Laktašić
- * @brief  Function to make union of the two tables. Union is implemented for working with multiple sets of data, i.e. duplicate 
+ * @brief  Function that makes a union of two tables. Union is implemented for working with multiple sets of data, i.e. duplicate 
  * 	   tuples can be written in same table (union) 
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table

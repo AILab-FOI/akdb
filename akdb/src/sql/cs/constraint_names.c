@@ -22,7 +22,7 @@
 
 /**
  * @author Nenad Makar, updated by Mislav Jurinić
- * @brief Function checks if constraint name would be unique in database 
+ * @brief Function that checks if constraint name would be unique in database 
  * @param char constraintName name which you want to give to constraint which you are trying to create
  * @return EXIT_ERROR or EXIT_SUCCESS
  **/
@@ -83,7 +83,7 @@ int Ak_check_constraint_name(char *constraintName) {
  
 /**
   * @author Nenad Makar 
-  * @brief Function tests if constraint name would be unique in database
+  * @brief Function that tests if constraint name would be unique in database
   * @return No return value
   */
 TestResult AK_constraint_names_test() {

@@ -27,7 +27,7 @@
 #include <unistd.h>
 
 /**
-* This struct is used so tests can report the amount of successful tests.
+* This structure is used so tests can report the amount of successful tests.
 */
 /**
 * @author Igor Rinkovec

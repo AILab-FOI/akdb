@@ -20,7 +20,7 @@
 
 /**
  * @author Unknown
- * @brief Function returns total number of headers in the block
+ * @brief Function that returns the total number of headers in the block
  * @return number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
  */
 int Ak_get_total_headers(AK_block *iBlock) {
@@ -38,7 +38,7 @@ int Ak_get_total_headers(AK_block *iBlock) {
 
 /**
  * @author Unknown
- * @brief Function returns number of header in the block which to sort
+ * @brief Function that returns the number of header in the block which to sort
  * @return number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
  */
 int Ak_get_header_number(AK_block *iBlock, char *attribute_name) {
@@ -61,7 +61,7 @@ int Ak_get_header_number(AK_block *iBlock, char *attribute_name) {
 
 /**
  * @author Unknown
- * @brief Function returns tuples number in block
+ * @brief Function that returns tuples number in block
  * @return tuples number in block
  */
 int Ak_get_num_of_tuples(AK_block *iBlock) {
@@ -87,7 +87,7 @@ int Ak_get_num_of_tuples(AK_block *iBlock) {
 
 /*
  * @author Tomislav Bobinac
- * @brief Function sorts segment
+ * @brief Function that sorts a segment
  * @return No return value.
  */
 void AK_sort_segment(char *table_name, char *attr) {
@@ -107,7 +107,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 		}
 	}
 
-	//create the new temp segment with size equal to the size of the original segment
+	//create a new temp segment with size equal to the size of the original segment
 	char temp_segment[MAX_VARCHAR_LENGTH];
 	memset(temp_segment, '\0', MAX_VARCHAR_LENGTH);
 	strcat(temp_segment, "SORT_TEMP_HELP_");
@@ -156,7 +156,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 	}
 
 	for (i = 0; i<num_records; i++) {
-		//initialize new row
+		//initialize a new row
 		struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 		Ak_Init_L3(&row_root);
 		for (j = 0; j < num_headers; j++) {
@@ -179,7 +179,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 
 /*
  * @author Unknown
- * @brief Function resets block
+ * @brief Function that resets block
  * @param block block to be resetted
  * @return No return value
  */
@@ -230,7 +230,7 @@ void Ak_reset_block(AK_block * block) {
 /**
   * @author Bakoš Nikola
   * @version v1.0
-  * @brief Function sorts the given block
+  * @brief Function that sorts the given block
   * @param iBlock block to be sorted
   * @return No return value
  */
@@ -488,7 +488,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
 //extern int address_of_tempBlock = 0;
 /*
  * @author Unknown, updated Tomislav Bobinac
- * @brief Function for file sorting
+ * @brief Function that sorts files
  * @return No return value
  */
 TestResult Ak_filesort_test() {

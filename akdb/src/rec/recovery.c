@@ -25,7 +25,7 @@
  * Function opens the recovery binary file and executes all commands that were
  * saved inside the redo_log structure
  * @author Dražen Bandić, update by Tomislav Turek
- * @brief Reads binary file where last commands were saved, and executes them
+ * @brief Function that reads the binary file in which last commands were saved, and executes them
  * @param fileName - name of the archive log
  * @return no value
  */
@@ -77,8 +77,9 @@
  * inserted inside. By using the table name, function retrieves table 
  * attributes names and their types which uses afterwards for insert_data_test
  * function to insert data to designated table.
+ * 
  * @author Dražen Bandić, updated by Tomislav Turek
- * @brief Inserts a new row in table with attributes
+ * @brief Function that inserts a new row in the table with attributes
  * @param table - table name to insert to
  * @param commandNumber - number of current command
  * @return no value
@@ -128,7 +129,7 @@ void AK_recovery_insert_row(char* table, int commandNumber){
 
 /** 
  * @author Dražen Bandić
- * @brief Tokenizes the input with the given delimiter and puts them in an double pointer structure (so we can execute an insert)
+ * @brief Function that tokenizes the input with the given delimiter and puts them in an double pointer structure (so we can execute an insert)
  * @param input - input to tokenize
  * @param delimiter - delimiter
  * @param valuesOrNot - 1 if the input are values, 0 otherwise
@@ -177,6 +178,7 @@ short grandfailure = 0;
  * Function is called when SIGINT signal is sent to the system.
  * All commands that are written to rec.bin file are recovered to
  * the designated structure and then executed.
+ * 
  * @author Tomislav Turek
  * @brief Function that recovers and executes failed commands
  * @param sig required integer parameter for SIGINT handler functions
@@ -211,10 +213,12 @@ void AK_recover_operation(int sig) {
 }
 
 /**
- * Function does nothing while waiting a SIGINT signal (signal represents       // doxygen @ for full description ???
- * system failure). Upon retrieving the signal it calls function
+ * Function does nothing while waiting a SIGINT signal 
+ * (signal represents // doxygen @ for full description ???
+ * system failure). 
+ * Upon retrieving the signal it calls function
  * AK_recover_operation which starts the recovery by building commands.
- * To comply with the designated structure AK_command_recovery_struct           // {link} to struct ???
+ * To comply with the designated structure AK_command_recovery_struct // {link} to struct ???
  * it writes dummy commands to the file log.log
  * @brief Function for recovery testing.
  * @author Tomislav Turek

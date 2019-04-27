@@ -22,7 +22,7 @@
 
 /**
  * @author Dino Laktašić
- * @brief  Function to make intersect of the two tables. Intersect is implemented for working with multiple sets of data, i.e. duplicate 
+ * @brief  Function that makes a intersect of the two tables. Intersect is implemented for working with multiple sets of data, i.e. duplicate 
           tuples can be written in same table (intersect)
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table

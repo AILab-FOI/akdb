@@ -1,5 +1,5 @@
 /**
-@file filesearch.h Header file provides data structures for file searching
+@file filesearch.h Header file provides data structures, functions and defines for file searching
  */
 /*
  * This program is free software; you can redistribute it and/or modify

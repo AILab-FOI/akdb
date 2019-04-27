@@ -1,5 +1,5 @@
 /**
-@file bitmap.h Header file that provides data structures for bitmap index
+@file bitmap.h Header file that declares functions
  */
 /*
  * This program is free software; you can redistribute it and/or modify

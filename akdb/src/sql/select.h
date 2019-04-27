@@ -1,9 +1,26 @@
+/**
+@file select.h Header file that provides functions  for select.h
+ */
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
+ */
 #include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rel/selection.h"
 #include "../auxi/auxiliary.h"
 #include "../auxi/mempro.h"
-//int AK_select(char *srcTable,char *destTable,AK_list *atributi,AK_list *uvjet);
 int AK_select(char *srcTable,char *destTable,struct list_node *atributi,struct list_node *uvjet);
 TestResult AK_select_test();

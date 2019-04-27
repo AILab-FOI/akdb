@@ -21,7 +21,7 @@
 
 /**
  * @author Saša Vukšić, updated by Nenad Makar
- * @brief Function that sets NOT NULL constraint on attribute
+ * @brief Function that sets NOT NULL constraint on an attribute
  * @param char* tableName name of table
  * @param char* attName name of attribute
  * @param char* constraintName name of constraint
@@ -77,7 +77,7 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 
 /**
  * @author Saša Vukšić, updated by Nenad Makar
- * @brief Function that checks if constraint name is unique and violation of NOT NULL constraint
+ * @brief Function that checks if constraint name is unique and in violation of NOT NULL constraint
  * @param char* tableName name of table
  * @param char* attName name of attribute
  * @param char* constraintName name of constraint
