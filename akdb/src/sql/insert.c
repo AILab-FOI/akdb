@@ -28,7 +28,7 @@
  * @param size pointer to integer in which size of header will be saved
  * @param tblName table in which rows will be inserted
  * @param columns list of columns in SQL command
- * @return 0 if table doesn't have required columns, 1 othervise
+ * @return header for values to be inserted or EXIT_ERROR
  */
 AK_header *AK_get_insert_header(int *size, char *tblName, struct list_node *columns) {
     AK_PRO;
