@@ -1,5 +1,5 @@
 /**
- * @file insert.h TODO
+ * @file insert.h Header file SQL insert command.
  */
 
 /*
@@ -29,6 +29,7 @@
 #include "../file/table.h"
 #include "drop.h"
 
+AK_header *AK_get_insert_header(int *size, char *tblName, struct list_node *columns);
 int AK_insert(char* tableName, struct list_node *columns, struct list_node *values);
 TestResult Ak_insert_test();
 
