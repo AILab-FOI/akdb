@@ -310,7 +310,6 @@ extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, ele
 %include "../sql/view.c"
 %include "../sql/view.h"
 
-
 %include "../rel/projection.c"
 %include "../rel/projection.h"
 
@@ -409,13 +408,5 @@ extern struct list_node *AK_rel_eq_get_attributes(char *tblName);
 
 %include "../sql/cs/constraint_names.c"
 %include "../sql/cs/constraint_names.h"
-
-/* 
-If those are included swig build will fail for AK_insert_test
-%include "../sql/insert.c"
-%include "../sql/insert.h"
-*/
-extern AK_header *AK_get_insert_header(int *size, char *tblName, struct list_node *columns);
-extern int AK_insert(char* tableName, struct list_node *columns, struct list_node *values);
 
 extern int Ak_check_constraint_name(char *constraintName);
