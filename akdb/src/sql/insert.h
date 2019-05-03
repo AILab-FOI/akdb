@@ -31,6 +31,6 @@
 
 AK_header *AK_get_insert_header(int *size, char *tblName, struct list_node *columns);
 int AK_insert(char* tableName, struct list_node *columns, struct list_node *values);
-TestResult Ak_insert_test();
+TestResult AK_insert_test();
 
 #endif

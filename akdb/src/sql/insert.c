@@ -161,7 +161,7 @@ int AK_insert(char* tblName, struct list_node *columns, struct list_node *values
     return EXIT_SUCCESS;
 }
 
-TestResult Ak_insert_test() {
+TestResult AK_insert_test() {
     struct list_node *row_root;
     struct list_node *col_root;
     int id_field;
