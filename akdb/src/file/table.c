@@ -185,7 +185,7 @@ AK_header *AK_get_header(char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     if (addresses->address_from[0] == 0){
         AK_EPI;
-        return EXIT_WARNING + 2; // TODO: Change it. This is just ridiculous.
+        return EXIT_WARNING + 2;
     }
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
 

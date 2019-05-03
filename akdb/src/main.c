@@ -59,7 +59,6 @@
 //Command
 #include "sql/command.h"
 #include "sql/select.h"
-#include "sql/insert.h"
 // Query processing
 #include "opti/query_optimization.h"
 // Constraints
@@ -159,7 +158,6 @@ function fun[] = {
 {"sql: Ak_constraint_between", &Ak_constraint_between_test}, //sql/cs/between.c
 {"sql: AK_check_constraint", &AK_check_constraint_test}, //sql/cs/check_constraint.c
 {"sql: AK_constraint_names", &AK_constraint_names_test}, //sql/cs/constraint_names.c
-{"sql: AK_insert", &AK_insert_test}, //sql/insert.c
 //trans:
 //----------
 {"trans: AK_transaction", &AK_test_Transaction}, //src/trans/transaction.c
