@@ -1140,7 +1140,7 @@ TestResult AK_table_test() {
 
     printf("Table \"student\": AK_get_attr_name for index 3: ");
     int get_attr_name;
-    printf("%s\n", get_attr_name = AK_get_attr_name("student", 3));
+    printf("%s\n", AK_get_attr_name("student", 3));
     printf("\n");
 
     int get_attr_index;
@@ -1150,7 +1150,7 @@ TestResult AK_table_test() {
 	
     int tuple_to_string;
     printf("Table \"student\": AK_get_tuple for row=0, column=1:");
-    printf("%s\n", tuple_to_string = AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
+    printf("%s\n", AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
 	
 	if (get_num_records != EXIT_WARNING & get_attr_name != NULL & get_attr_index != EXIT_WARNING & tuple_to_string != NULL) {
 	  printf("\nTest succeeded!\n");
