@@ -1100,8 +1100,9 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
  */
 TestResult AK_table_test() {
     AK_PRO;
-    printf("table.c: Present!\n");
+    int numOfErrors=0;
 
+    printf("table.c: Present!\n");
     printf("\n********** TABLE ABSTRACTION TEST by Matija Šestak **********\n\n");
 
     printf("Table \"student\":AK_print_table\n");
@@ -1109,10 +1110,8 @@ TestResult AK_table_test() {
     printf("\n");
 
     printf("Table \"student\": AK_table_empty: ");
-    if (AK_table_empty("student"))
-        printf("true\n");
-    else
-        printf("false\n");
+    if (AK_table_empty("student")) printf("true\n");
+    else printf("false\n");
     printf("\n");
 
     printf("Table \"student\": AK_num_attr: ");
@@ -1121,46 +1120,45 @@ TestResult AK_table_test() {
 	
     int get_num_records;
     printf("Table \"student\": AK_get_num_records: ");
-    printf("%d\n", get_num_records = AK_get_num_records("student"));
+    get_num_records = AK_get_num_records("student");
+    if(get_num_records==EXIT_WARNING) numOfErrors++;
+    printf("%d\n", get_num_records);
     printf("\n");
 
     printf("Table \"student\": AK_get_row: ");
-    
     int i;
-
     AK_header *head = AK_get_header("student");
     int num_attr = AK_num_attr("student");
     int len[num_attr];
-    for (i = 0; i < num_attr; i++) {
-            len[i] = strlen((head + i)->att_name);
+    for (i = 0; i < num_attr; i++) 
+    {
+        len[i] = strlen((head + i)->att_name);
     }
-
     AK_print_row(len, AK_get_row(0,"student"));
     printf("\n");
 
     printf("Table \"student\": AK_get_attr_name for index 3: ");
     int get_attr_name;
+    get_attr_name=AK_get_attr_name("student", 3);
+    if(get_attr_name==NULL) numOfErrors++;
     printf("%s\n", AK_get_attr_name("student", 3));
     printf("\n");
 
-    int get_attr_index;
     printf("Table \"student\": AK_get_attr_index of \"year\": ");
-    printf("%d\n", get_attr_index = AK_get_attr_index("student", "year"));
+    int get_attr_index;
+    get_attr_index=AK_get_attr_index("student", "year");
+    if(get_attr_index==EXIT_WARNING) numOfErrors++;
+    printf("%d\n", get_attr_index);
     printf("\n");
-	
-    int tuple_to_string;
+	 
     printf("Table \"student\": AK_get_tuple for row=0, column=1:");
+    int tuple_to_string;
+    tuple_to_string=AK_tuple_to_string(AK_get_tuple(0, 1, "student"));
+    if(tuple_to_string==NULL) numOfErrors++;
     printf("%s\n", AK_tuple_to_string(AK_get_tuple(0, 1, "student")));
 	
-	if (get_num_records != EXIT_WARNING & get_attr_name != NULL & get_attr_index != EXIT_WARNING & tuple_to_string != NULL) {
-	  printf("\nTest succeeded!\n");
-    }
-    else{
-	  printf("\nTest failed!\n");
-    }
-	
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(4-numOfErrors,numOfErrors);
 }
 /**
  * @author Mislav Čakarić, edited by Ljubo Barać
