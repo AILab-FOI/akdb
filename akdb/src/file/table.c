@@ -28,6 +28,7 @@ AK_create_table_parameter* AK_create_create_table_parameter(int type, char* name
     AK_EPI;
     return par;
 }
+
 //TODO: Add description of the function
 void AK_create_table(char* tblName, AK_create_table_parameter* parameters, int attribute_count) {
     int i;
@@ -729,6 +730,7 @@ void AK_print_row_spacer_to_file(int col_len[], int length) {
     fclose(fp);
     AK_EPI;
 }
+
 /**
  * @author Leon Palaić
  * @brief  Function that returns the value of an attribute from the row
@@ -1076,7 +1078,7 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
         }
     }
 
-    if (strcmp(old_table_name, new_table_name) != 0) {//new name is different than old, and old needs to be replaced
+    if (strcmp(old_table_name, new_table_name) != 0) { //new name is different than old, and old needs to be replaced
         struct list_node *expr;
         expr = 0;
         AK_selection(old_table_name, new_table_name, expr);
@@ -1087,16 +1089,12 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 }
 
 
-
-
-
-
 /**
  * @author Unknown
  * @brief Function for testing table abstraction
  * @return No return value
 
-    @update by Ana-Marija Balen - added getRow function to the test
+ *@update by Ana-Marija Balen - added getRow function to the test
  */
 TestResult AK_table_test() {
     AK_PRO;
@@ -1160,6 +1158,7 @@ TestResult AK_table_test() {
     AK_EPI;
     return TEST_result(4-numOfErrors,numOfErrors);
 }
+
 /**
  * @author Mislav Čakarić, edited by Ljubo Barać
  * @brief Function for renaming operator testing (moved from rename.c)
@@ -1167,21 +1166,22 @@ TestResult AK_table_test() {
  */
 TestResult AK_op_rename_test() {
     AK_PRO;
-    //printf( "rename_test: Present!\n" );
+
     printf("\n********** RENAME TEST **********\n\n");
 
     AK_print_table("AK_relation");
     int rename = AK_rename("student", "weight", "student2", "weight");
     AK_print_table("student2");
-    //AK_print_table("student2");
-
     AK_print_table("AK_relation");
 	
     AK_EPI;
-	if (rename != EXIT_ERROR ){
+
+	if (rename != EXIT_ERROR )
+	{
 	  return TEST_result(1,0);
     }
-    else{
+    else
+    {
 	  return TEST_result(0,1);
     }
 }
