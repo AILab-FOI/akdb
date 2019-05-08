@@ -94,12 +94,6 @@ void AK_temp_create_table(char *table, AK_header *header, int type_segment) {
 /**
  * @author Matija Šestak.
  * @brief  Functions that determines the number of attributes in the table
- * <ol>
- * <li>Read addresses of extents</li>
- * <li>If there is no extents in the table, return EXIT_WARNING</li>
- * <li>else read the first block</li>
- * <li>while  header tuple exists in the block, increment num_attr</li>
- * </ol>
  * @param  * tblName table name
  * @return number of attributes in the table
  */
@@ -107,11 +101,11 @@ int AK_num_attr(char * tblName) {
     int num_attr = 0;
     AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    if (addresses->address_from[0] == 0)
+    if (addresses->address_from[0] == 0) // If there is no extents in the table, return -2 for num_attr
         num_attr = -2;
-    else {
-        AK_mem_block *temp_block = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
+    else { // read first block and while header tuple exists in that block increase number of atributes: num_attr
 
+        AK_mem_block *temp_block = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
         while (strcmp(temp_block->block->header[num_attr].att_name, "\0") != 0) {
             num_attr++;
         }
@@ -125,16 +119,6 @@ int AK_num_attr(char * tblName) {
 /**
  * @author Matija Šestak.
  * @brief  Function that determines the number of rows in the table
- * <ol>
- * <li>Read addresses of extents</li>
- * <li>If there is no extents in the table, return EXIT_WARNING</li>
- * <li>For each extent from table</li>
- * <li>For each block in the extent</li>
- * <li>Get a block</li>
- * <li>Exit if there is no records in block</li>
- * <li>Count tuples in block</li>
- * <li>Return the number of tuples divided by number of attributes</li>
- * </ol>
  * @param *tableName table name
  * @return number of rows in the table
  */
@@ -142,20 +126,20 @@ int AK_get_num_records(char *tblName) {
     int num_rec = 0;
     AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
-    if (addresses->address_from[0] == 0){
+    if (addresses->address_from[0] == 0){ // If there is no extents in the table, return EXIT_WARNING
         AK_EPI;
         return EXIT_WARNING;
     }
     int i = 0, j, k;
     AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
-    while (addresses->address_from[ i ] != 0) {
-        for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) {
-            temp = (AK_mem_block*) AK_get_block(j);
-            if (temp->block->last_tuple_dict_id == 0)
+    while (addresses->address_from[ i ] != 0) { // For each extent from table
+        for (j = addresses->address_from[ i ]; j < addresses->address_to[ i ]; j++) { // For each block in the extent
+            temp = (AK_mem_block*) AK_get_block(j); // Get a block
+            if (temp->block->last_tuple_dict_id == 0) // Exit if there is no records in block
                 break;
-            for (k = 0; k < DATA_BLOCK_SIZE; k++) {
+            for (k = 0; k < DATA_BLOCK_SIZE; k++) { // Count tuples in block
                 if (temp->block->tuple_dict[ k ].size > 0) {
-                    num_rec++;
+                    num_rec++; // Increase variable that holds number of counted tuples
                 }
             }
         }
@@ -165,37 +149,30 @@ int AK_get_num_records(char *tblName) {
 AK_free(addresses);
     int num_head = AK_num_attr(tblName);
     AK_EPI;
-    return num_rec / num_head;
+    return num_rec / num_head; // Return the number of tuples divided by number of attributes
 }
 
 /**
  * @author Matija Šestak.
- * @brief  Function that fetches the table header
- * <ol>
- * <li>Read addresses of extents</li>
- * <li>If there is no extents in the table, return 0</li>
- * <li>else read the first block</li>
- * <li>allocate array</li>
- * <li>copy table header to the array</li>
- * </ol>
+ * @brief  Function that fetches and returns the table header
  * @param  *tblName table name
  * @result array of table header
  */
 AK_header *AK_get_header(char *tblName) {
     AK_PRO;
-    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName); // Read addresses of extents and if there is no extents in table return EXIT_WARNING
     if (addresses->address_from[0] == 0){
         AK_EPI;
         return EXIT_WARNING + 2;
     }
-    AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]);
+    AK_mem_block *temp = (AK_mem_block*) AK_get_block(addresses->address_from[0]); // Read first block
 
-    int num_attr = AK_num_attr(tblName);
+    int num_attr = AK_num_attr(tblName); // Get number of attributes in given table
     AK_header *head = (AK_header*) AK_calloc(num_attr, sizeof (AK_header));
-    memcpy(head, temp->block->header, num_attr * sizeof (AK_header));
+    memcpy(head, temp->block->header, num_attr * sizeof (AK_header)); // copy table header to the array
 	AK_free(addresses);
     AK_EPI;
-    return head;
+    return head; // Return table header as array
 }
 
 /**
@@ -207,12 +184,12 @@ AK_header *AK_get_header(char *tblName) {
  */
 char *AK_get_attr_name(char *tblName, int index) {
     AK_PRO;
-    int num_attr = AK_num_attr(tblName);
-    if (index >= num_attr){
+    int num_attr = AK_num_attr(tblName); // Fetch number of attributes in given table
+    if (index >= num_attr){ // If given index excedes number of attributes than return NULL
         AK_EPI;
-        return NULL;
+        return NULL; 
     }
-    else {
+    else { // Else if, the given index is valid, get table header and return name of the attribute 
         AK_header *header = AK_get_header(tblName);
         AK_EPI;
         return (header + index)->att_name;
@@ -229,20 +206,20 @@ char *AK_get_attr_name(char *tblName, int index) {
  */
 int AK_get_attr_index(char *tblName, char *attrName) {
     AK_PRO;
-    if (tblName == NULL || attrName == NULL){
+    if (tblName == NULL || attrName == NULL){ // If given parameters are invalid return with EXIT_WARNING
         AK_EPI;
         return EXIT_WARNING;
     }
-    int num_attr = AK_num_attr(tblName);
-    AK_header *header = AK_get_header(tblName);
+    int num_attr = AK_num_attr(tblName); // Get number of attributes
+    AK_header *header = AK_get_header(tblName); // Get header of the given table
     int index = 0;
-    while (index < num_attr) 
+    while (index < num_attr) // Go through array holding table header until you find attribute with the same name as attrName
 	{
         if (strcmp(attrName, (header + index)->att_name) == 0)
 		{
 			AK_free(header);
             AK_EPI;
-            return index;
+            return index; // Return index of an attribuute
         }
         index++;
     }
@@ -355,10 +332,10 @@ struct list_node *AK_get_row(int num, char * tblName) {
  */
 struct list_node *AK_get_tuple(int row, int column, char *tblName) {
     AK_PRO;
-    int num_rows = AK_get_num_records(tblName);
-    int num_attr = AK_num_attr(tblName);
+    int num_rows = AK_get_num_records(tblName); // Get number of records in given table
+    int num_attr = AK_num_attr(tblName); // Get number of attributes in given table
 
-    if (row >= num_rows || column >= num_attr){
+    if (row >= num_rows || column >= num_attr){ // If parameters excede fetched coresponding values then return with NULL
         AK_EPI;
         return NULL;
     }
