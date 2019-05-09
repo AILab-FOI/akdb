@@ -1,4 +1,4 @@
-
+﻿
 #include "archive_log.h"
 
 /**
@@ -18,51 +18,37 @@ void AK_archive_log(int sig) {
 
     FILE *fp;
 
-    AK_check_folder_archivelog();
+    AK_check_folder_archivelog();//poziv funkcije za provjeru postojanja archivelog foldera
 
     printf("AK_archive_log: Archiving redo log commands to separate file...\n");
 
-    // open new file named with current timestamp in binary mode
+    //otvaramo novu datoteku sa trenutnim timestampom u binarnom modu
     char* timestamp = AK_get_timestamp();
 
+	//formiramo niz znakova koji ce postati ime datoteke u archivelog folderu
     char *destination = malloc(strlen(ARCHIVELOG_PATH)+strlen(timestamp)+2);
     strcpy(destination, ARCHIVELOG_PATH);
     strcat(destination, "/");
     strcat(destination, timestamp);
-    fp = fopen(destination, "wb");
+    fp = fopen(destination, "wb");//otvaramo datoteku u binarnom modu ya pisanje
 
-    AK_free(timestamp);
+    AK_free(timestamp);//dealociramo memoriju koju smo maloprije alocirali
 	 
     AK_redo_log log;
 
     memcpy(log.command_recovery, redo_log->command_recovery, sizeof(log.command_recovery));
 
     log.number = redo_log->number;
-    // write redo_log structure to binary file
 
     fwrite(&log, sizeof(log), 1, fp);
  
-    fclose(fp);
+    fclose(fp);//zatvaramo datoteku
     AK_free(destination);	
     //AK_EPI;
     if(sig == SIGINT) {
 	
         exit(EXIT_SUCCESS);
     }
-}
-
-/**
- * Function that empties the archive log - with dynamic archive log name, this function is no longer needed
- */
-void AK_empty_archive_log() {
-    //AK_PRO;
-    FILE *fp;
-    printf("AK_archive_log: emptying file...\n");
-
-    // open rec.bin in binary mode
-    fp = fopen("../src/rec/rec.bin", "wb");
-    // immediately close to delete contents
-    fclose(fp);
 }
 
 /**
@@ -75,7 +61,9 @@ void AK_empty_archive_log() {
  *       files. Implementation gives the timestamp, but is not used anywhere for now.
  * @return char array in format day.month.year-hour:min:sec.usecu.bin
  */
+//funkcija za dobavljanje trenutnog timestampa
 char* AK_get_timestamp() {
+
     struct timeval tv;
     struct timezone tz;
     struct tm *tm;
@@ -83,43 +71,47 @@ char* AK_get_timestamp() {
 
     AK_PRO;
     
-    // get time
+    // dobavljanje vremena
     gettimeofday(&tv, &tz);
     tm=localtime(&tv.tv_sec);
 
-    // save timestamp
+    // dobavljanje timestampa
     char* log_name = malloc(30);
     sprintf(log_name, "%d.%d.%d-%d:%02d:%02d.%lu.bin", tm->tm_mday, tm->tm_mon+1,
             tm->tm_year+1900, tm->tm_hour, tm->tm_min, tm->tm_sec, tv.tv_usec);
 
     char *destination = malloc(strlen(ARCHIVELOG_PATH)+strlen("/latest.txt")+1);
     strcpy(destination, ARCHIVELOG_PATH);
-    strcat(destination, "/latest.txt");
+    strcat(destination, "/latest.txt");// u datoteku latest.txt upisujemo ime zadnje kreirane datoteke unutar archivelog foldera
 	
-    // save file name into separate txt file
+    // spremanje datoteke u odvojenu txt datoteku
     fp = fopen(destination, "w+");
     fprintf(fp, log_name);	
-    fclose(fp);
+    fclose(fp);//yatvaranje datoteke
     
-    AK_free(destination);
+    AK_free(destination);//dealociranje memorije
 
     AK_EPI;
     return log_name;
+  
 }
 
+
+//funkcija za provjeru postojanja foldera archivelog
 int AK_check_folder_archivelog() {
   struct stat s;
   int err = stat(ARCHIVELOG_PATH, &s);
   if(-1 == err) {
       if(ENOENT == errno) {
+		//izvrsava se ako folder ne postoji
           printf("[INFO] There is no folder for archive log. Creating folder at: %s\n", ARCHIVELOG_PATH);
-          	#ifdef _WIN32 // not tested
+          	#ifdef _WIN32 // nije testirano
         		return _mkdir(ARCHIVELOG_PATH);
     		#else
     		#if _POSIX_C_SOURCE
         		return mkdir(ARCHIVELOG_PATH, 0755);
     		#else
-        		return mkdir(ARCHIVELOG_PATH, 0755); // not sure if this works on mac
+        		return mkdir "archivelog" 
     		#endif
     		#endif
       } else {
@@ -128,9 +120,34 @@ int AK_check_folder_archivelog() {
       }
   } else {
       if(S_ISDIR(s.st_mode)) {
+	//ako folder vec postoji
         printf("[INFO] Folder archivelog already exists\n");
-      } else {
-          /* exists but is no folder */
+      }else{
+	//ako postoji nesto(datoteka), a to nije folder
+	//kreira se folder s imenom archivelog, a datoteka s
+	//navedenim imenom se brise
+	char *answer;
+	answer=malloc(sizeof(char)*1);
+        printf("[INFO] Something exists, but it is not folder!\n");
+	if(access(ARCHIVELOG_PATH,F_OK)!=-1){
+	printf("[INFO] archivelog is file, delete file and create folder with this name?y/n\n");
+	scanf(" %c",&answer);
+	if(answer=='y'){	
+		remove("archivelog");
+		
+		#ifdef _WIN32 // nije testirano
+                        return _mkdir(ARCHIVELOG_PATH);
+                #else
+                #if _POSIX_C_SOURCE
+                        return mkdir(ARCHIVELOG_PATH, 0755);
+                #else
+                        return mkdir "archivelog"
+                #endif
+                #endif
+
+	}
+	}
+	AK_free(answer);//dealokacija memorije
       }
   }
   return 1;
