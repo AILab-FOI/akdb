@@ -245,7 +245,7 @@ int AK_get_allocation_set(int* bitsetbs, int fromWhere, int gaplength, int num, 
 int AK_copy_header(AK_header *header, int * blocknum, int num);
 int  AK_allocate_blocks(FILE* db, AK_block * block, int FromWhere, int HowMany);
 AK_block *  AK_init_block();
-void AK_allocationtable_dump(int zz);
+int AK_allocationtable_dump(int zz);
 void AK_blocktable_dump(int zz);
 int AK_blocktable_flush();
 // void AK_allocate_array_currently_accessed_blocks(); // ne postoji nikakva implementacija

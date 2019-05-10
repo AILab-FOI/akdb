@@ -199,14 +199,18 @@ TestResult Ak_op_intersect_test() {
 
     AK_print_table(destTable);
 	
+    int success=0;
+    int failed=0;
     if (test_intersect==EXIT_SUCCESS){
-	printf("\nTest succeeded!\n");
+	    printf("\nTest succeeded!\n");
+        success++;
     }
     else{
-	printf("\nTest failed!\n");
+	    printf("\nTest failed!\n");
+        failed++;
     }
     
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }
 

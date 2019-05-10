@@ -113,15 +113,35 @@ char AK_get_table_id(char *tableName) {
  */
 TestResult Ak_id_test() {
     AK_PRO;
+    int result;
+    int failed=0;
+    int success=0;
     printf("\nCurrent value of objectID (depends on number of AK_get_id() calls (when objects are created...) before call of Ak_id_test()):\n\n");
     AK_print_table("AK_sequence");
-    AK_get_id();
+    result=AK_get_id();
+    if(result==EXIT_ERROR)
+    {
+        failed++;
+    }
+    else
+    {
+        success++;
+    }
+    
     printf("\nIncremented value of objectID:\n\n");
     AK_print_table("AK_sequence");
-    AK_get_id();
+    result=AK_get_id();
+    if(result==EXIT_ERROR)
+    {
+        failed++;
+    }
+    else
+    {
+        success++;
+    }
     printf("\nIncremented value of objectID:\n\n");
     AK_print_table("AK_sequence");
-    printf("\nTest succeeded.\nIt's clear that objectID was created after first call of AK_get_id() function (when ./akdb test created first DB object) then incremented after other calls.");
+    printf("\nTest succeeded.\nIt's clear that objectID was created after first call of AK_get_id() function (when ./akdb test created first DB object) then incremented after other calls.\n");
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }

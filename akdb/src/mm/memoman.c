@@ -849,6 +849,8 @@ int AK_flush_cache()
 
 TestResult AK_memoman_test()
 {
+	int success=0;
+	int failed=0;
 	int i;
 	int released_block;
 	int min = 0;
@@ -862,8 +864,12 @@ TestResult AK_memoman_test()
 
 		if(db_cache->cache[i]->block == NULL) {
 			printf("\nTEST FAILED! Cache should be full, block %i, points to NULL\n", i);
-			return TEST_result(0,0);
+			failed++;
+		}else
+		{
+			success++;
 		}
+		
 	}
 
 	for (i = 0; i < MAX_CACHE_MEMORY; i++) {
@@ -882,23 +888,35 @@ TestResult AK_memoman_test()
 	{
 		printf("\nTEST FAILED! Next block to replace can not be last allocated block, is %i, should be %i\n",
 			   AK_allocationbit->last_allocated, min);
-		return TEST_result(0,0);
+		failed++;
+	}else
+	{
+		success++;
 	}
+	
 
 	if(min != db_cache->next_replace)
 	{
 		printf("\nTEST FAILED! next_replace is not set to oldest block, is %i, should be %i\n",
 			   db_cache->next_replace, min);
-		return TEST_result(0,0);
+		failed++;
+	}else
+	{
+		success++;
 	}
+	
 
 	released_block = AK_release_oldest_cache_block();
 
 	if(released_block != min)
 	{
 		printf("\nTEST FAILED! released block not oldest, is %i, should be %i\n", released_block, min);
-		return TEST_result(0,0);
+		failed++;
+	}else
+	{
+		success++;
 	}
+	
 
 	// randomly setting 5 blocks to dirty state to ensure AK_flush_cache() has something to do
 	for(i = 0; i < 5; i++)
@@ -912,17 +930,24 @@ TestResult AK_memoman_test()
 		if(db_cache->cache[i]->dirty != BLOCK_CLEAN)
 		{
 			printf("\nTEST FAILED! block %i has not been flushed to disk\n", i);
-			return TEST_result(0,0);
+			failed++;
 		}
+		else
+		{
+			success++;
+		}
+		
 	}
 
-	printf("\nTEST PASSED!\n");
+	//printf("\nTEST PASSED!\n");
 	AK_EPI;
-	return TEST_result(0,0);
+	return TEST_result(success,failed);
 }
 
 TestResult AK_memoman_test2()
 {
+	int success=0;
+	int failed=0;
 	int i;
 	//int aa=0;
 	int aa=406;
@@ -962,8 +987,12 @@ TestResult AK_memoman_test2()
 	for (i = 0; i < MAX_CACHE_MEMORY; i++) {
 		if(db_cache->cache[i]->block->address == read_block) {
 			printf("\nTEST FAILED! block with address %i already cached at position %i\n", read_block, i);
-			return TEST_result(0,0);
+			failed++;
+		}else
+		{
+			success++;
 		}
+		
 	}
 
 	flushed_pos = AK_release_oldest_cache_block();
@@ -971,8 +1000,13 @@ TestResult AK_memoman_test2()
 
 	if(db_cache->cache[flushed_pos]->block->address != read_block) {
 		printf("\nTEST FAILED! block with address %i is not cached at position %i\n", read_block, flushed_pos);
-		return TEST_result(0,0);
+		failed++;
 	}
+	else
+	{
+		success++;
+	}
+	
 
 	char *ak_relation_name = "AK_relation";
 	addrs = AK_get_segment_addresses_internal(ak_relation_name, AK_REFERENCE);
@@ -981,10 +1015,15 @@ TestResult AK_memoman_test2()
 
 	if(!strcmp(cache_block->block->data, ak_relation_name)) {
 		printf("\nTEST FAILED! returned wrong cache block, is %s, should be %s\n", cache_block->block->data, "AK_relation");
-		return TEST_result(0,0);
+		failed++;
 	}
+	else
+	{
+		success++;
+	}
+	
 
-	printf("\nTEST PASSED!\n");
+	//printf("\nTEST PASSED!\n");
 	AK_EPI;
-	return TEST_result(0,0);
+	return TEST_result(success,failed);
 }

@@ -641,17 +641,21 @@ TestResult AK_drop_test() {
     AK_print_constraints(tableName_3);
     
 
+    int success=0;
+    int failed=0;
     printf("======================END_DROP_TEST======================\n");
     printf("Test results: \n");
     int x=1;
     for (x; x<14; x++){
         if(results[x]== EXIT_SUCCESS){
             printf("Test %d: EXIT_SUCCESS \n", x);
+            success++;
         }
         else{
             printf("Test %d: EXIT_ERROR \n", x);
+            failed++;
         }
     }
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }

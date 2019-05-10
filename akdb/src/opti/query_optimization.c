@@ -426,13 +426,17 @@ TestResult AK_query_optimization_test() {
     AK_print_optimized_query(AK_query_optimization(mylist9, "a", 1));
     AK_print_optimized_query(AK_query_optimization(mylist10, "a", 1));
 
+	int success=0;
+    int failed=0;
 	if (error_message==0){
 	printf("\n\n\nTest succeeded!\n");
+    success++;
     }
     else{
 	printf("\n\n\nTest failed!\n");
+    failed++;
     }
 	
    AK_EPI;
-   return TEST_result(0,0);
+   return TEST_result(success,failed);
 }

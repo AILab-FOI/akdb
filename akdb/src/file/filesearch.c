@@ -298,5 +298,5 @@ TestResult Ak_filesearch_test() {
         AK_deallocate_search_result(sr);
     }
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(1,0);
 }

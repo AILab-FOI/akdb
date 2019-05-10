@@ -221,61 +221,8 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
  * @return 1 - success, 0 - failure 
  */
 int AK_check_constraint(char *table, char *attribute, void *value) {
-    int i;
-    int num_rows = AK_get_num_records(AK_CONSTRAINTS_CHECK_CONSTRAINT);
-    int _row_data; // check constraint value
-    struct list_node *row;
-    struct list_node *constraint_attribute;
-    void *row_data = (void *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (void)); // check constraint value
-
-    AK_PRO;
-
-    if (num_rows != 0) {
-        for (i = 0; i < num_rows; ++i) {
-            row = AK_get_row(i, AK_CONSTRAINTS_CHECK_CONSTRAINT);
-            constraint_attribute = Ak_GetNth_L2(7, row);
-
-            memmove(row_data, constraint_attribute->data, AK_type_size(constraint_attribute->type, constraint_attribute->data));  
-
-            // If table name and attribute name match, check value
-            if (!strcmp(table, Ak_GetNth_L2(2, row)->data) && !strcmp(attribute, Ak_GetNth_L2(4, row)->data)) {
-                if (Ak_GetNth_L2(7, row)->type == TYPE_INT) {
-                    _row_data = *((int *) row_data);
-
-                    if (!condition_passed(Ak_GetNth_L2(6, row)->data, Ak_GetNth_L2(7, row)->type, _row_data, &value)) {
-                        AK_EPI;
-
-                        return EXIT_ERROR;
-                    }
-                    else {
-                        break;
-                    }
-                }
-
-                if (!condition_passed(Ak_GetNth_L2(6, row)->data, Ak_GetNth_L2(7, row)->type, row_data, value)) {
-                    AK_EPI;
-
-                    return EXIT_ERROR;
-                }
-                else {
-                    break;
-                }
-            }
-        }
-    }
-
-    AK_EPI;
-
-    return EXIT_SUCCESS;
-}
-
-/**
- * @author Mislav Jurinić
- * @brief Test function for "check" constraint.
- * @return void
- */
-TestResult AK_check_constraint_test() {
-	int br = 0;
+    int success = 0;
+    int failed = 0;
     // Test 3 data
     float weight_one = 105.5, weight_three = 105.6;
     float *p_weight_one = &weight_one;
@@ -285,129 +232,146 @@ TestResult AK_check_constraint_test() {
     float weight_two = 85.5;
     float *p_weight_two = &weight_two;
 
-    int success;
+    int result;
 
     AK_PRO;
 
     // Should fail
     printf("*** TEST 1 ***\n");
-    success = AK_set_check_constraint("student", "check_student_year", "year", ">", TYPE_INT, 2005);
+    result = AK_set_check_constraint("student", "check_student_year", "year", ">", TYPE_INT, 2005);
 
-    if (success == EXIT_ERROR) {
-	br++;
+    if (result == EXIT_SUCCESS) {
         printf("*** TEST 1 Successful! ***\n");
-	AK_drop("DROP_CONSTRAINT","check_student_year");
+	    AK_drop("DROP_CONSTRAINT","check_student_year");
+        success++;
     } else {
         printf("*** TEST 1 Failed! ***\n");
+        failed++;
     }
 
     // Should pass
     printf("\n\n*** TEST 2 ***\n");
-    success = AK_set_check_constraint("student", "check_student_year", "year", ">", TYPE_INT, 1900);
+    result = AK_set_check_constraint("student", "check_student_year", "year", ">", TYPE_INT, 1900);
 
-    if (success == EXIT_SUCCESS) {
+    if (result == EXIT_SUCCESS) {
         printf("*** TEST 2.1 ***\n");
-        success = AK_check_constraint("student", "year", 1905);
+        result = AK_check_constraint("student", "year", 1905);
+        success++;
 
-        if (success == EXIT_SUCCESS) {
+        if (result == EXIT_SUCCESS) {
             printf("*** TEST 2.1 Successful! ***\n");
+            success++;
         } else {
             printf("*** TEST 2.1 Failed! ***\n");
+            failed++;
         }
 
         printf("*** TEST 2.2 ***\n");
-        success = AK_check_constraint("student", "year", 1899);
+        result = AK_check_constraint("student", "year", 1899);
 
-        if (success == EXIT_ERROR) {
+        if (result == EXIT_SUCCESS) {
             printf("*** TEST 2.2 Successful! ***\n");
-	    br++;	
+	        success++;	
         } else {
             printf("*** TEST 2.2 Failed! ***\n");
+            failed++;
         }
     } 
     else {
         printf("*** TEST 2 Failed! ***\n");
+        failed=failed+3;
     }
 
     // Should pass
     printf("\n\n*** TEST 3 ***\n");
-    success = AK_set_check_constraint("student", "check_student_weight", "weight", "<=", TYPE_FLOAT, p_weight_one);
+    result = AK_set_check_constraint("student", "check_student_weight", "weight", "<=", TYPE_FLOAT, p_weight_one);
 
-    if (success == EXIT_SUCCESS) {
+    if (result == EXIT_SUCCESS) {
         printf("*** TEST 3.1 ***\n");
-        success = AK_check_constraint("student", "weight", p_weight_one);
+        result = AK_check_constraint("student", "weight", p_weight_one);
+        success++;
 
-        if (success == EXIT_SUCCESS) {
-		
+        if (result == EXIT_SUCCESS) {
             printf("*** TEST 3.1 Successful! ***\n");
+            success++;
         } else {
             printf("*** TEST 3.1 Failed! ***\n");
+            failed++;
         }
 
         printf("*** TEST 3.2 ***\n");
-        success = AK_check_constraint("student", "weight", p_weight_three);
+        result = AK_check_constraint("student", "weight", p_weight_three);
 
-        if (success == EXIT_ERROR) {
-		br++;
+        if (result == EXIT_SUCCESS) {
             printf("*** TEST 3.2 Successful! ***\n");
+            success++;
         } else {
+            failed++;
             printf("*** TEST 3.2 Failed! ***\n");
         }
     } else {
         printf("*** TEST 3 Failed! ***\n");
+        failed=failed+3;;
     }
 
     // Should fail
     printf("\n\n*** TEST 4 ***\n");
-    success = AK_set_check_constraint("student", "check_student_weight", "weight", ">", TYPE_FLOAT, p_weight_two);
+    result = AK_set_check_constraint("student", "check_student_weight", "weight", ">", TYPE_FLOAT, p_weight_two);
 
-    if (success == EXIT_ERROR) {
-	br++;
+    if (result == EXIT_SUCCESS) {
         printf("*** TEST 4 Successful! ***\n");
+        success++;
     } else {
         printf("*** TEST 4 Failed! ***\n");
+        failed++;
     }
 
     // Should pass
     printf("\n\n*** TEST 5 ***\n");
-    success = AK_set_check_constraint("student", "check_student_lastname", "lastname", ">", TYPE_VARCHAR, "Anic");
+    result = AK_set_check_constraint("student", "check_student_lastname", "lastname", ">", TYPE_VARCHAR, "Anic");
 
-    if (success == EXIT_SUCCESS) {
+    if (result == EXIT_SUCCESS) {
         printf("*** TEST 5.1 ***\n");
-        success = AK_check_constraint("student", "lastname", "Baric");
+        result = AK_check_constraint("student", "lastname", "Baric");
+        success++;
 
-        if (success == EXIT_SUCCESS) {
+        if (result == EXIT_SUCCESS) {
             printf("*** TEST 5.1 Successful! ***\n");
+            success++;
         } else {
             printf("*** TEST 5.1 Failed! ***\n");
+            failed++;
         }
 
         printf("*** TEST 5.2 ***\n");
-        success = AK_check_constraint("student", "lastname", "Abdullah");
+        result = AK_check_constraint("student", "lastname", "Abdullah");
 
-        if (success == EXIT_ERROR) {
-		br++;
+        if (result == EXIT_SUCCESS) {
             printf("*** TEST 5.2 Successful! ***\n");
+            success++;
         } else {
             printf("*** TEST 5.2 Failed! ***\n");
+            failed++;
         }
     } else {
         printf("*** TEST 5 Failed! ***\n");
+        failed=failed+3;
     }
 
     // Should fail
     printf("\n\n*** TEST 6 ***\n");
-    success = AK_set_check_constraint("student", "check_student_lastname", "lastname", ">", TYPE_VARCHAR, "Smith");
+    result = AK_set_check_constraint("student", "check_student_lastname", "lastname", ">", TYPE_VARCHAR, "Smith");
 
-    if (success == EXIT_ERROR) {
-	br++;
+    if (result == EXIT_SUCCESS) {
         printf("*** TEST 6 Successful! ***\n");
+	    success++;
     } else {
         printf("*** TEST 6 Failed! ***\n");
+        failed++;
     }
 
-	printf("\n\n***uspjesno %d/6 testova ***\n\n",br);
+	//printf("\n\n***uspjesno %d/6 testova ***\n\n",success);
     AK_EPI;
 
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }

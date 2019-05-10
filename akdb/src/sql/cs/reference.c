@@ -521,5 +521,5 @@ TestResult AK_reference_test() {
     AK_print_table("ref_test");
     AK_EPI;
 
-    return TEST_result(0,0);
+    return TEST_result(0,1);
 }
