@@ -1,4 +1,4 @@
-﻿
+
 #include "archive_log.h"
 
 /**
@@ -30,6 +30,20 @@ void AK_archive_log(int sig) {
     strcpy(destination, ARCHIVELOG_PATH);
     strcat(destination, "/");
     strcat(destination, timestamp);
+
+   if(access(destination,F_OK)!=-1){
+	printf("archive_log filename already exists! Getting new filename...\n");
+	timestamp = AK_get_timestamp();
+	destination = NULL;
+	destination = malloc(strlen(ARCHIVELOG_PATH)+strlen(timestamp)+2);
+        strcpy(destination, ARCHIVELOG_PATH);
+        strcat(destination, "/");
+	strcat(destination, timestamp);
+	printf("New archivelog filename sucessfully created! Continuing...\n");
+	}
+   else printf("archive_log filename is ok!...\n");
+ 
+
     fp = fopen(destination, "wb");//otvaramo datoteku u binarnom modu ya pisanje
 
     AK_free(timestamp);//dealociramo memoriju koju smo maloprije alocirali
@@ -42,7 +56,7 @@ void AK_archive_log(int sig) {
 
     fwrite(&log, sizeof(log), 1, fp);
  
-    fclose(fp);//zatvaramo datoteku
+    fclose(fp);//yatvaramo datoteku
     AK_free(destination);	
     //AK_EPI;
     if(sig == SIGINT) {
