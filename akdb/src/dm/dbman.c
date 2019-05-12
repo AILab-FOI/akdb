@@ -329,14 +329,13 @@ AK_get_allocation_set(int* allocationSet, int fromWhere, int gaplength, int numR
  * @brief  Dumps the allocation table from the global allocation bit-vector onto standard output 
  * @param  verbosity level of verbosity (1 - minimal, 0 - no output)
  */
-void
-AK_allocationtable_dump(int verbosity)
+int AK_allocationtable_dump(int verbosity)
 {
   int i;
   AK_PRO;
   printf("Dump of allocation table:\n\n");
   if (verbosity)
-    {
+  {
       for(i = 0; i < DB_FILE_BLOCKS_NUM; i++)
 	{
 	  if(AK_allocationbit->allocationtable[i] != -1)
@@ -346,11 +345,16 @@ AK_allocationtable_dump(int verbosity)
 
 	  if( ((i+1) % (CHAR_IN_LINE / 8) == 0) )
 	    printf(" [%d]\n", i+1);
-	}
+	  }
       printf("\n - - - - - -\n\n");
-    }
-    
-  AK_EPI;
+      return EXIT_SUCCESS;
+      AK_EPI;
+  }
+  else
+  {
+    return EXIT_ERROR;
+    AK_EPI;
+  }
 }
 
 
@@ -2664,9 +2668,20 @@ TestResult AK_allocationbit_test()
 TestResult AK_allocationtable_test()
 {
     AK_PRO;
-    AK_allocationtable_dump(1);
+    int success=0;
+    int failed=0;
+    int result=AK_allocationtable_dump(1);
     AK_EPI;
-    return TEST_result(0,0);
+    if(result==EXIT_ERROR)
+    {
+      failed++;
+    }
+    else
+    {
+      success++;
+    }
+    
+    return TEST_result(success,failed);
 }
 
 /**
@@ -2751,7 +2766,7 @@ TestResult AK_thread_safe_block_access_test()
   printf("\n%d out of 50 tests succeeded.", sum_of_suceeded_tests);
     
   AK_EPI;
-  return TEST_result(0,0);
+  return TEST_result(sum_of_suceeded_tests,50-sum_of_suceeded_tests);
 }
 
 

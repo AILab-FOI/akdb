@@ -110,5 +110,5 @@ TestResult AK_constraint_names_test() {
 	printf("\nTest succeeded.");
 
 	AK_EPI;
-	return TEST_result(0,0);
+	return TEST_result(1,0);
 }

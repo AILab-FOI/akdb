@@ -267,5 +267,5 @@ TestResult AK_recovery_test() {
     while(!grandfailure);                 
     AK_EPI;
 
-    return TEST_result(0,0);
+    return TEST_result(1,0);
 }

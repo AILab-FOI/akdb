@@ -567,6 +567,9 @@ int Ak_update_row(struct list_node *row_root) {
 TestResult Ak_fileio_test() {
     AK_PRO;
     printf("\n\nThis is fileio test!\n");
+    int success=0;
+    int failed=0;
+    int result;
     
     AK_header t_header[4] = {
         {TYPE_INT, "Redni_broj", {0}, {{'\0'}}, {{'\0'}}},
@@ -592,7 +595,14 @@ TestResult Ak_fileio_test() {
     Ak_Insert_New_Element(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "Novak", "testna", "Prezime", row_root);
-    Ak_insert_row(row_root);
+    result=Ak_insert_row(row_root);
+    if(result==EXIT_SUCCESS)
+    {
+        success++;
+    }else
+    {
+        failed++;
+    }
 
 
     Ak_DeleteAll_L3(&row_root);
@@ -602,7 +612,14 @@ TestResult Ak_fileio_test() {
     Ak_Insert_New_Element(TYPE_VARCHAR, "Nikola", "testna", "Ime", row_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
-    Ak_insert_row(row_root);
+    result=Ak_insert_row(row_root);
+    if(result==EXIT_SUCCESS)
+    {
+        success++;
+    }else
+    {
+        failed++;
+    }
 
     Ak_DeleteAll_L3(&row_root);
     broj = 3;
@@ -611,7 +628,14 @@ TestResult Ak_fileio_test() {
     Ak_Insert_New_Element(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
-    Ak_insert_row(row_root);
+    result=Ak_insert_row(row_root);
+    if(result==EXIT_SUCCESS)
+    {
+        success++;
+    }else
+    {
+        failed++;
+    }
 
     int i;
 
@@ -623,7 +647,14 @@ TestResult Ak_fileio_test() {
         Ak_Insert_New_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
         //Error: argument of type "const char *" is incompatible with parameter of type "void *"
         Ak_Insert_New_Element(TYPE_VARCHAR, "Vacenovski", "testna", "Prezime", row_root);
-        Ak_insert_row(row_root);
+        result=Ak_insert_row(row_root);
+        if(result==EXIT_SUCCESS)
+        {
+            success++;
+        }else
+        {
+            failed++;
+        }
     }
 
     AK_print_table("testna");
@@ -633,7 +664,14 @@ TestResult Ak_fileio_test() {
     Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "Vjekoslavoski", "testna", "Prezime", row_root);
-    Ak_update_row(row_root);
+    result = Ak_update_row(row_root);
+    if(result==EXIT_SUCCESS)
+    {
+        success++;
+    }else
+    {
+        failed++;
+    }
 
     AK_print_table("testna");
 
@@ -642,7 +680,14 @@ TestResult Ak_fileio_test() {
     Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "Francina", "testna", "Ime", row_root);
-    Ak_update_row(row_root);
+    result=Ak_update_row(row_root);
+    if(result==EXIT_SUCCESS)
+    {
+        success++;
+    }else
+    {
+        failed++;
+    }
 
     AK_print_table("testna");
 
@@ -651,7 +696,14 @@ TestResult Ak_fileio_test() {
     Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "M", "testna", "Prezime", row_root);
-    Ak_update_row(row_root);
+    result=Ak_update_row(row_root);
+    if(result==EXIT_SUCCESS)
+    {
+        success++;
+    }else
+    {
+        failed++;
+    }
 
     AK_print_table("testna");
 
@@ -660,7 +712,14 @@ TestResult Ak_fileio_test() {
     Ak_Update_Existing_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "DugackoPrezime", "testna", "Prezime", row_root);
-    Ak_update_row(row_root);
+    result=Ak_update_row(row_root);
+    if(result==EXIT_SUCCESS)
+    {
+        success++;
+    }else
+    {
+        failed++;
+    }
 
     AK_print_table("testna");
 
@@ -669,14 +728,19 @@ TestResult Ak_fileio_test() {
     Ak_Update_Existing_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
     Ak_Insert_New_Element(TYPE_VARCHAR, "DugackoIme", "testna", "Ime", row_root);
-    Ak_update_row(row_root);
-
-    AK_print_table("testna");
+    result=Ak_update_row(row_root);
+    if(result==EXIT_SUCCESS)
+    {
+        success++;
+    }else
+    {
+        failed++;
+    }
 
     AK_print_table("testna");
 
     Ak_DeleteAll_L3(&row_root);
     AK_free(row_root);
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }

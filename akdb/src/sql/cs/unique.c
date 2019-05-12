@@ -481,6 +481,10 @@ TestResult AK_unique_test() {
 	char newValue6[MAX_VARCHAR_LENGTH]="";
 	char newValue7[MAX_VARCHAR_LENGTH]="";
 	int result;
+
+	int success=0;
+	int failed=0;
+
 	AK_PRO;
 
 	strcat(attNames1, "mbr");
@@ -540,21 +544,48 @@ TestResult AK_unique_test() {
 	{
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue0, attYear, tableName, AK_read_constraint_unique(tableName, attYear, newValue0));
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue1, attYear, tableName, AK_read_constraint_unique(tableName, attYear, newValue1));
+		success++;
+		printf("\nSUCCESS\n\n");
 	}
+	else
+	{
+		failed++;
+		printf("\nFAILED\n\n");
+	}
+	
         
         printf("\n============== Running Test #2 ==============\n");
         printf("\nDelete test");
         result = AK_delete_constraint_unique(tableName, attYear, constraintYear);
         AK_print_table("AK_constraints_unique");
         if(result == EXIT_SUCCESS) {
-            printf("\nSUCCESS");
+            
+			success++;
+			printf("\nSUCCESS\n\n");
         }
+		else
+		{
+			failed++;
+			printf("\nFAILED\n\n");
+		}
+		
         printf("\nDelete test finish");
         
         printf("\n============== Running Test #3 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s AGAIN...\n\n", attYear, tableName);
 	result = Ak_set_constraint_unique(tableName, attYear, constraintYear);
 	AK_print_table("AK_constraints_unique");
+	if(result==EXIT_SUCCESS)
+	{
+		success++;
+		printf("\nSUCCESS\n\n");
+	}
+	else
+	{
+		failed++;
+		printf("\nFAILED\n\n");
+	}
+	
         
         printf("\n============== Running Test #4 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s...\n\n", attFirstname, tableName);
@@ -564,7 +595,15 @@ TestResult AK_unique_test() {
 	{
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue, attFirstname, tableName, AK_read_constraint_unique(tableName, attFirstname, newValue));
 		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue2, attFirstname, tableName, AK_read_constraint_unique(tableName, attFirstname, newValue2));
+		success++;
+		printf("\nSUCCESS\n\n");
 	}
+	else
+	{
+		failed++;
+		printf("\nFAILED\n\n");
+	}
+	
         
         printf("\n============== Running Test #5 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s...\n\n", attNames1, tableName);
@@ -575,27 +614,64 @@ TestResult AK_unique_test() {
 		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue3, attNames1, tableName, AK_read_constraint_unique(tableName, attNames1, newValue3));
 		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue4, attNames1, tableName, AK_read_constraint_unique(tableName, attNames1, newValue4));
 		printf("\nChecking if combination of values %s would be UNIQUE in attributes %s of table %s...\nYes (0) No (-1): %d\n\n", newValue5, attNames1, tableName, AK_read_constraint_unique(tableName, attNames1, newValue5));
+		success++;
+		printf("\nSUCCESS\n\n");
 	}
+	else
+	{
+		failed++;
+		printf("\nFAILED\n\n");
+	}
+	
         
         
         printf("\n============== Running Test #6 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s ...\n\n", attNames2, tableName);
 	result = Ak_set_constraint_unique(tableName, attNames2, constraintName2);
 	AK_print_table("AK_constraints_unique");
+	if(result==EXIT_SUCCESS)
+	{
+		success++;
+		printf("\nSUCCESS\n\n");
+	}
+	else
+	{
+		failed++;
+		printf("\nFAILED\n\n");
+	}	
 
         
         printf("\n============== Running Test #7 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s AGAIN...\n\n", attNames2, tableName);
 	result = Ak_set_constraint_unique(tableName, attNames2, constraintName2);
 	AK_print_table("AK_constraints_unique");
+	if(result==EXIT_SUCCESS)
+	{
+		success++;
+		printf("\nSUCCESS\n\n");
+	}
+	else
+	{
+		failed++;
+		printf("\nFAILED\n\n");
+	}	
 	
         
         printf("\n============== Running Test #8 ==============\n");
 	printf("\nTrying to set UNIQUE constraint with name %s ...\n\n", constraintMbr);
 	result = Ak_set_constraint_unique(tableName, attNames3, constraintMbr);
 	AK_print_table("AK_constraints_unique");
-	printf("\nTest succeeded.");
+	if(result==EXIT_SUCCESS)
+	{
+		success++;
+		printf("\nSUCCESS\n\n");
+	}
+	else
+	{
+		failed++;
+		printf("\nFAILED\n\n");
+	}	
 	AK_EPI;
 
-	return TEST_result(0,0);
+	return TEST_result(success,failed);
 }

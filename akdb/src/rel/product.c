@@ -283,5 +283,7 @@ TestResult AK_op_product_test()
 	else
 	{
 		printf("Table %s already exists!\n", destTable);
+		AK_print_table(destTable);
+		return TEST_result(1, 0);
 	}
 }

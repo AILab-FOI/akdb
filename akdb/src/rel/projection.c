@@ -520,14 +520,29 @@ TestResult AK_op_projection_test() {
     int test_projection2 = AK_projection("student", "projection_test2", att, expr);
     AK_print_table("projection_test2");
 
-	if (test_projection1 == EXIT_SUCCESS & test_projection2 == EXIT_SUCCESS){
+	int success=0;
+    int failed=0;
+	if (test_projection1 == EXIT_SUCCESS){
 		printf("\n\nTest succeeded!\n");
+        AK_print_table("projection_test");
+        success++;
     }
     else{
 		printf("\n\nTest failed!\n");
+        failed++;
+    }
+
+    if (test_projection2 == EXIT_SUCCESS){
+		printf("\n\nTest succeeded!\n");
+        AK_print_table("projection_test2");
+        success++;
+    }
+    else{
+		printf("\n\nTest failed!\n");
+        failed++;
     }
 	
     Ak_DeleteAll_L3(&att);
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }

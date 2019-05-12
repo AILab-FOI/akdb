@@ -891,7 +891,7 @@ TestResult AK_tarjan_test() {
         root = root->nextVertex;
     }
     AK_EPI;
-	return TEST_result(0,0);
+	return TEST_result(0,1);
 }
 
 /**

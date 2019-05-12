@@ -1488,5 +1488,5 @@ TestResult AK_privileges_test() {
 
     AK_EPI;
 
-    return TEST_result(0,0);
+    return TEST_result(num-numFail,numFail);
 }

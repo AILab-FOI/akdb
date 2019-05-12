@@ -441,7 +441,8 @@ TestResult AK_function_test() {
 
     printf("function.c: Present!\n");
 
-    int flag = 0;
+    int success=0;
+    int failed=0;
 
     struct list_node *arguments_list1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
     Ak_Init_L3(&arguments_list1);
@@ -456,8 +457,9 @@ TestResult AK_function_test() {
 
     if (fun_add1 != EXIT_ERROR || fun_add2 != EXIT_ERROR  || fun_add3 != EXIT_ERROR ){
 	printf("\n\nSuccessfully added 'arguments_list1' to 'test_funkcija', 'test_funkcija2' and 'test_funkcija3'\n\n");
+    success++;
     }else{
-	flag = 1;
+	failed++;
     }
 
     AK_print_table("AK_function");
@@ -483,8 +485,9 @@ TestResult AK_function_test() {
 
     if (fun_add4 != EXIT_ERROR || fun_add5 != EXIT_ERROR  || fun_add6 != EXIT_ERROR ){
 	printf("\n\nSuccessfully added 'arguments_list3' to 'test_funkcija', 'test_funkcija2' and 'test_funkcija3'\n\n");
+    success++;
     }else{
-	flag = 1;
+	failed++;
     }
 
     AK_print_table("AK_function");
@@ -512,8 +515,9 @@ TestResult AK_function_test() {
 
     if (fun_add7 != EXIT_ERROR || fun_add8 != EXIT_ERROR  || fun_add9 != EXIT_ERROR ){
 	printf("\n\nSuccessfully added 'arguments_list4' to 'test_funkcija', 'test_funkcija2' and 'test_funkcija3'\n\n");
+    success++;
     }else{
-	flag = 1;
+	failed++;
     }
 
     // Test bez argumenata
@@ -533,13 +537,13 @@ TestResult AK_function_test() {
     AK_free(arguments_list4);
     Ak_DeleteAll_L3(&arguments_list5);
 
-    if (flag == 0){
+    if (failed == 0){
 	printf("\n\nAll tests has successfully completed!!\n\n");
     }
 
     AK_free(arguments_list5);	
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }
 
 

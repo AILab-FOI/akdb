@@ -446,15 +446,20 @@ TestResult AK_observable_test()
     observable_type->observable->AK_run_custom_action(NULL);
     // Search for observer by ID
     AK_observer *requested_observer = observable_type->observable->AK_get_observer_by_id(observable_type->observable, 1);
-    if(requested_observer) {
+    int success=0;
+    int failed=0;
+	if(requested_observer) {
         printf ("Observer was found. Observer adress: %p\n", requested_observer);
-    }
-    else
+		success++;
+	}
+    else{
         printf ("Requested observer was not found!\n");
+		failed++;
+	}
     
     printf ("========== OBSERVABLE PATTERN END ==========\n");
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }
 
 TestResult AK_observable_pattern(){
@@ -487,15 +492,20 @@ TestResult AK_observable_pattern(){
     observable_type->observable->AK_run_custom_action(NULL);
     // Search for observer by ID
     AK_observer *requested_observer = observable_type->observable->AK_get_observer_by_id(observable_type->observable, 1);
-    if(requested_observer) {
+    int success=0;
+    int failed=0;
+	if(requested_observer) {
         printf ("Observer was found. Observer adress: %p\n", requested_observer);
-    }
-    else
+		success++;
+	}
+    else{
         printf ("Requested observer was not found!\n");
+		failed++;
+	}
     
     printf ("========== OBSERVABLE PATTERN END ==========\n");
 
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }
 

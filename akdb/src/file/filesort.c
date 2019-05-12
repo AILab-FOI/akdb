@@ -90,7 +90,7 @@ int Ak_get_num_of_tuples(AK_block *iBlock) {
  * @brief Function that sorts a segment
  * @return No return value.
  */
-void AK_sort_segment(char *table_name, char *attr) {
+int AK_sort_segment(char *table_name, char *attr) {
 	//initialize variables
 	register int i, j;
 	int blocks_addr[MAX_NUM_OF_BLOCKS];	//array with block addresses
@@ -175,6 +175,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 	}
 
 	AK_EPI;
+	return EXIT_SUCCESS;
 }
 
 /*
@@ -494,11 +495,21 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
 TestResult Ak_filesort_test() {
 	AK_PRO;
 	printf("filesort_test: Present!\n");
-
+    int success=0;
+    int failed=0;
+    int result;
 	AK_print_table("student");
-	AK_sort_segment("student", "lastname");
-	AK_print_table("SORT_TEMP_HELP_student");
+	result=AK_sort_segment("student", "lastname");
+    if(result==EXIT_SUCCESS)
+    {
+        AK_print_table("SORT_TEMP_HELP_student");
+        success++;
+    }
+    else
+    {
+        failed++;
+    }    
 
 	AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success,failed);
 }
