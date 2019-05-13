@@ -28,7 +28,7 @@
  * @param type data type [int, float, varchar, datetime, ...]
  * @param value condition to be set
  * @param row_data data in table
- * @return 1 - success, 0 - failure 
+ * @return 1 - result, 0 - failure 
  */
 int condition_passed(char *condition, int type, void *value, void *row_data) {
     float float_value;
@@ -136,7 +136,7 @@ int condition_passed(char *condition, int type, void *value, void *row_data) {
  * @param condition logical operator ['<', '>', '!=', ...]
  * @param type data type [int, float, varchar, datetime, ...]
  * @param value condition to be set
- * @return 1 - success, 0 - failure 
+ * @return 1 - result, 0 - failure 
  */
 int AK_set_check_constraint(char *table_name, char *constraint_name, char *attribute_name, char *condition, int type, void *value) {
     int i;
@@ -218,10 +218,64 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
  * @param table target table name
  * @param attribute target attribute name
  * @param value data we want to insert
- * @return 1 - success, 0 - failure 
+ * @return 1 - result, 0 - failure 
  */
 int AK_check_constraint(char *table, char *attribute, void *value) {
-    int success = 0;
+    int i;
+    int num_rows = AK_get_num_records(AK_CONSTRAINTS_CHECK_CONSTRAINT);
+    int _row_data; // check constraint value
+    struct list_node *row;
+    struct list_node *constraint_attribute;
+    void *row_data = (void *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (void)); // check constraint value
+
+    AK_PRO;
+
+    if (num_rows != 0) {
+        for (i = 0; i < num_rows; ++i) {
+            row = AK_get_row(i, AK_CONSTRAINTS_CHECK_CONSTRAINT);
+            constraint_attribute = Ak_GetNth_L2(7, row);
+
+            memmove(row_data, constraint_attribute->data, AK_type_size(constraint_attribute->type, constraint_attribute->data));  
+
+            // If table name and attribute name match, check value
+            if (!strcmp(table, Ak_GetNth_L2(2, row)->data) && !strcmp(attribute, Ak_GetNth_L2(4, row)->data)) {
+                if (Ak_GetNth_L2(7, row)->type == TYPE_INT) {
+                    _row_data = *((int *) row_data);
+
+                    if (!condition_passed(Ak_GetNth_L2(6, row)->data, Ak_GetNth_L2(7, row)->type, _row_data, &value)) {
+                        AK_EPI;
+
+                        return EXIT_ERROR;
+                    }
+                    else {
+                        break;
+                    }
+                }
+
+                if (!condition_passed(Ak_GetNth_L2(6, row)->data, Ak_GetNth_L2(7, row)->type, row_data, value)) {
+                    AK_EPI;
+
+                    return EXIT_ERROR;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+    }
+
+    AK_EPI;
+
+    return EXIT_SUCCESS;
+}
+
+/**
+ * @author Mislav Jurinić
+ * @brief Test function for "check" constraint.
+ * @return void
+ */
+TestResult AK_check_constraint_test() {
+	int success = 0;
     int failed = 0;
     // Test 3 data
     float weight_one = 105.5, weight_three = 105.6;
