@@ -50,7 +50,7 @@ int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct
 	///making a new header for the final result from the selected ones from the subscore
 	while(strcmp(temp_block->header[head].att_name, "") != 0) {
 
-		list_attributes = Ak_First_L2(attributes);
+		list_attributes = AK_First_L2(attributes);
 		int create=0;
 		while(list_attributes!=NULL){
 			if(strcmp(temp_block->header[head].att_name,list_attributes->data)==0){
@@ -106,14 +106,14 @@ for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
 						address = temp->block->tuple_dict[l + k].address;
 						memcpy(data, &(temp->block->data[address]), size);
 						data[size] = '\0';
-						Ak_Insert_New_Element(type, data, helptable, header[gl++].att_name, row_root);
+						AK_Insert_New_Element(type, data, helptable, header[gl++].att_name, row_root);
 
 
 					}
 					b=0;
 				}
-				Ak_insert_row(row_root);
-				Ak_DeleteAll_L3(&row_root);
+				AK_insert_row(row_root);
+				AK_DeleteAll_L3(&row_root);
 	}
 	
 }}
@@ -143,12 +143,12 @@ TestResult AK_select_test(){
 	///list of attributes which will be in the result of selection
 
 	struct list_node *attributes = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&attributes);
+	AK_Init_L3(&attributes);
 
 	///list of elements which represent the condition for selection
 
 	struct list_node *condition = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&condition);
+	AK_Init_L3(&condition);
 
 
 	char *num = "2005";
@@ -156,23 +156,23 @@ TestResult AK_select_test(){
 	char *srcTable="student";
 	char *destTable="select_result";
 	
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
 
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
-	Ak_InsertAtEnd_L3(TYPE_INT, num, sizeof (int), condition);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof ("<"), condition);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
+	AK_InsertAtEnd_L3(TYPE_INT, num, sizeof (int), condition);
+	AK_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof ("<"), condition);
 
 	printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
 
 	AK_select(srcTable, destTable, attributes, condition);
 	
-	Ak_DeleteAll_L3(&attributes);
+	AK_DeleteAll_L3(&attributes);
 	AK_free(attributes);
 
 	
-	Ak_DeleteAll_L3(&condition);
+	AK_DeleteAll_L3(&condition);
 	AK_free(condition);
 	AK_EPI;
 

@@ -71,6 +71,6 @@ typedef enum debug_type {
 } DEBUG_TYPE;
 
 
-int Ak_dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...);
+int AK_dbg_messg(DEBUG_LEVEL level, DEBUG_TYPE type, const char *format, ...);
 
 #endif

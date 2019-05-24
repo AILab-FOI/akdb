@@ -63,15 +63,15 @@ int AK_num_index_attr(char *indexTblName);
 struct list_node *AK_get_index_tuple(int row, int column, char *indexTblName);
 
 
-void Ak_InitializelistAd(list_ad *L);
-element_ad Ak_Get_First_elementAd(list_ad *L);
-element_ad Ak_Get_Last_elementAd(list_ad *L);
-element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op);
-element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L) ;
-int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L);
-void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) ;
-void Ak_Delete_All_elementsAd(list_ad *L) ;
-void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore);
+void AK_InitializelistAd(list_ad *L);
+element_ad AK_Get_First_elementAd(list_ad *L);
+element_ad AK_Get_Last_elementAd(list_ad *L);
+element_ad AK_Get_Next_elementAd(element_ad Currentelement_op);
+element_ad AK_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L) ;
+int AK_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L);
+void AK_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) ;
+void AK_Delete_All_elementsAd(list_ad *L) ;
+void AK_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore);
 
 void AK_index_test();
 

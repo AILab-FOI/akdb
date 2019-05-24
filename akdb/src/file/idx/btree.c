@@ -44,7 +44,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 		i++;
 	}
 	AK_header *table_header = (AK_header *)AK_get_header(tblName);
-    	struct list_node *attribute = (struct list_node *) Ak_First_L2(attributes);
+    	struct list_node *attribute = (struct list_node *) AK_First_L2(attributes);
 	AK_header i_header[ MAX_ATTRIBUTES ];
 	AK_header* temp;
     	n = 0;
@@ -53,7 +53,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 		for (i = 0; i < num_attr; i++) {
 		    if (strcmp((table_header + i)->att_name, attribute->data) == 0) {
 			printf("Attribute %s exist in table, found on position: %d\n", (table_header + i)->att_name, i);
-			Ak_dbg_messg(HIGH, INDICES, "Attribute %s exist in table, found on position: %d\n", (table_header + i)->att_name, i);
+			AK_dbg_messg(HIGH, INDICES, "Attribute %s exist in table, found on position: %d\n", (table_header + i)->att_name, i);
 			exist = 1;
 			temp = (AK_header*) AK_create_header((table_header + i)->att_name, (table_header + i)->type, FREE_INT, FREE_CHAR, FREE_CHAR);
 			memcpy(i_header + n, temp, sizeof ( AK_header));
@@ -713,13 +713,13 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 	return EXIT_SUCCESS;
 }
 
-TestResult Ak_btree_test() {
+TestResult AK_btree_test() {
 	char *tblName = "student";
 	char *indexName = "student_btree_index";
 	AK_PRO;
 	struct list_node *att_list = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&att_list);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr\0", 4, att_list);
+	AK_Init_L3(&att_list);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr\0", 4, att_list);
 
 	AK_btree_create(tblName, att_list, indexName);
 	printf("\n\n---------------------------");

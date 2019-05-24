@@ -153,7 +153,7 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
 
         for (i = 0; i < num_rows; ++i) {
             row = AK_get_row(i, table_name);
-            attribute = Ak_GetNth_L2(attribute_position, row);
+            attribute = AK_GetNth_L2(attribute_position, row);
 
             memmove(data, attribute->data, attribute->size);
 
@@ -167,7 +167,7 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
         }
     }
 
-    if (Ak_check_constraint_name(constraint_name) == EXIT_ERROR) {
+    if (AK_check_constraint_name(constraint_name) == EXIT_ERROR) {
         printf("\n*** ERROR ***\nFailed to add 'check constraint' on TABLE: %s\nConstrait '%s' already exists in the database!\n\n", table_name, constraint_name);
 
         AK_EPI;
@@ -176,33 +176,33 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
     }
 
     struct list_node *constraint_row = (struct list_node *) AK_malloc(sizeof(struct list_node));
-    Ak_Init_L3(&constraint_row);
+    AK_Init_L3(&constraint_row);
 
     int obj_id = AK_get_id();
     int type_param = type;
     int value_param;
 
-    Ak_Insert_New_Element(TYPE_INT, &obj_id, AK_CONSTRAINTS_CHECK_CONSTRAINT, "obj_id", constraint_row); // #1
-    Ak_Insert_New_Element(TYPE_VARCHAR, table_name, AK_CONSTRAINTS_CHECK_CONSTRAINT, "table_name", constraint_row); // #2
-    Ak_Insert_New_Element(TYPE_VARCHAR, constraint_name, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_name", constraint_row); // #3
-    Ak_Insert_New_Element(TYPE_VARCHAR, attribute_name, AK_CONSTRAINTS_CHECK_CONSTRAINT, "attribute_name", constraint_row); // #4
-    Ak_Insert_New_Element(TYPE_INT, &type_param, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_value_type", constraint_row); // #5
-    Ak_Insert_New_Element(TYPE_VARCHAR, condition, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_condition", constraint_row); // #6
+    AK_Insert_New_Element(TYPE_INT, &obj_id, AK_CONSTRAINTS_CHECK_CONSTRAINT, "obj_id", constraint_row); // #1
+    AK_Insert_New_Element(TYPE_VARCHAR, table_name, AK_CONSTRAINTS_CHECK_CONSTRAINT, "table_name", constraint_row); // #2
+    AK_Insert_New_Element(TYPE_VARCHAR, constraint_name, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_name", constraint_row); // #3
+    AK_Insert_New_Element(TYPE_VARCHAR, attribute_name, AK_CONSTRAINTS_CHECK_CONSTRAINT, "attribute_name", constraint_row); // #4
+    AK_Insert_New_Element(TYPE_INT, &type_param, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_value_type", constraint_row); // #5
+    AK_Insert_New_Element(TYPE_VARCHAR, condition, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_condition", constraint_row); // #6
 
     if (type == TYPE_INT) { // #7
         value_param = value;
-        Ak_Insert_New_Element(TYPE_INT, &value_param, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_value", constraint_row);
+        AK_Insert_New_Element(TYPE_INT, &value_param, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_value", constraint_row);
     }
     else if (type == TYPE_FLOAT) {
-        Ak_Insert_New_Element(TYPE_FLOAT, value, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_value", constraint_row);
+        AK_Insert_New_Element(TYPE_FLOAT, value, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_value", constraint_row);
     }
     else {
-        Ak_Insert_New_Element(TYPE_VARCHAR, value, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_value", constraint_row);
+        AK_Insert_New_Element(TYPE_VARCHAR, value, AK_CONSTRAINTS_CHECK_CONSTRAINT, "constraint_value", constraint_row);
     }
 
-    Ak_insert_row(constraint_row);
+    AK_insert_row(constraint_row);
 
-    Ak_DeleteAll_L3(&constraint_row);
+    AK_DeleteAll_L3(&constraint_row);
     AK_free(constraint_row);
 
     printf("\nCHECK CONSTRAINT set on attribute: '%s' on TABLE %s!\n\n", attribute_name, table_name);
@@ -233,16 +233,16 @@ int AK_check_constraint(char *table, char *attribute, void *value) {
     if (num_rows != 0) {
         for (i = 0; i < num_rows; ++i) {
             row = AK_get_row(i, AK_CONSTRAINTS_CHECK_CONSTRAINT);
-            constraint_attribute = Ak_GetNth_L2(7, row);
+            constraint_attribute = AK_GetNth_L2(7, row);
 
             memmove(row_data, constraint_attribute->data, AK_type_size(constraint_attribute->type, constraint_attribute->data));  
 
             // If table name and attribute name match, check value
-            if (!strcmp(table, Ak_GetNth_L2(2, row)->data) && !strcmp(attribute, Ak_GetNth_L2(4, row)->data)) {
-                if (Ak_GetNth_L2(7, row)->type == TYPE_INT) {
+            if (!strcmp(table, AK_GetNth_L2(2, row)->data) && !strcmp(attribute, AK_GetNth_L2(4, row)->data)) {
+                if (AK_GetNth_L2(7, row)->type == TYPE_INT) {
                     _row_data = *((int *) row_data);
 
-                    if (!condition_passed(Ak_GetNth_L2(6, row)->data, Ak_GetNth_L2(7, row)->type, _row_data, &value)) {
+                    if (!condition_passed(AK_GetNth_L2(6, row)->data, AK_GetNth_L2(7, row)->type, _row_data, &value)) {
                         AK_EPI;
 
                         return EXIT_ERROR;
@@ -252,7 +252,7 @@ int AK_check_constraint(char *table, char *attribute, void *value) {
                     }
                 }
 
-                if (!condition_passed(Ak_GetNth_L2(6, row)->data, Ak_GetNth_L2(7, row)->type, row_data, value)) {
+                if (!condition_passed(AK_GetNth_L2(6, row)->data, AK_GetNth_L2(7, row)->type, row_data, value)) {
                     AK_EPI;
 
                     return EXIT_ERROR;

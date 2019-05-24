@@ -23,7 +23,7 @@
  * @brief Function returns total number of headers in the block
  * @return number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
  */
-int Ak_get_total_headers(AK_block *iBlock) {
+int AK_get_total_headers(AK_block *iBlock) {
     register int i;
     AK_PRO;
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
@@ -41,7 +41,7 @@ int Ak_get_total_headers(AK_block *iBlock) {
  * @brief Function returns number of header in the block which to sort
  * @return number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
  */
-int Ak_get_header_number(AK_block *iBlock, char *attribute_name) {
+int AK_get_header_number(AK_block *iBlock, char *attribute_name) {
     register int i;
     AK_PRO;
     for (i = 0; i < MAX_ATTRIBUTES; i++) {
@@ -64,7 +64,7 @@ int Ak_get_header_number(AK_block *iBlock, char *attribute_name) {
  * @brief Function returns tuples number in block
  * @return tuples number in block
  */
-int Ak_get_num_of_tuples(AK_block *iBlock) {
+int AK_get_num_of_tuples(AK_block *iBlock) {
     int i = 0;
     int kraj = 1;
     AK_PRO;
@@ -80,7 +80,7 @@ int Ak_get_num_of_tuples(AK_block *iBlock) {
         return 0;
     }
 
-    int max_header_num = Ak_get_total_headers(iBlock);
+    int max_header_num = AK_get_total_headers(iBlock);
     AK_EPI;
     return (i / max_header_num);
 }
@@ -124,8 +124,8 @@ void AK_sort_segment(char *table_name, char *attr) {
 	AK_mem_block * real_table = (AK_mem_block*) AK_get_block(blocks_addr[0]);
 
 	//get total number of headers and the number of header used to sort segment
-	int num_headers = Ak_get_total_headers(real_table->block);
-	int num_sort_header = Ak_get_header_number(real_table->block, attr);
+	int num_headers = AK_get_total_headers(real_table->block);
+	int num_sort_header = AK_get_header_number(real_table->block, attr);
 	int num_records = AK_get_num_records(table_name);
 
 	int type, temp, address, size, temp_field[num_records];
@@ -158,7 +158,7 @@ void AK_sort_segment(char *table_name, char *attr) {
 	for (i = 0; i<num_records; i++) {
 		//initialize new row
 		struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-		Ak_Init_L3(&row_root);
+		AK_Init_L3(&row_root);
 		for (j = 0; j < num_headers; j++) {
 			//get data from column 'j' orginal table -> data
 			address = real_table->block->tuple_dict[j + (temp_field[i] * num_headers)].address;
@@ -167,11 +167,11 @@ void AK_sort_segment(char *table_name, char *attr) {
 			memset(data, '\0', MAX_VARCHAR_LENGTH);
 			memcpy(data, real_table->block->data + address, size);
 			//add column 'j' data into struct row_root
-			Ak_Insert_New_Element(type, data, temp_segment, real_table->block->header[j].att_name, row_root);
+			AK_Insert_New_Element(type, data, temp_segment, real_table->block->header[j].att_name, row_root);
 		}
 		//add row to new sorted table
-		Ak_insert_row(row_root);
-		Ak_DeleteAll_L3(&row_root);
+		AK_insert_row(row_root);
+		AK_DeleteAll_L3(&row_root);
 	}
 
 	AK_EPI;
@@ -183,7 +183,7 @@ void AK_sort_segment(char *table_name, char *attr) {
  * @param block block to be resetted
  * @return No return value
  */
-void Ak_reset_block(AK_block * block) {
+void AK_reset_block(AK_block * block) {
     register int i, j, k;
 
     AK_header empty_header[ MAX_ATTRIBUTES ];
@@ -251,26 +251,26 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
     AK_header *block_header = (AK_header *) AK_malloc(sizeof (AK_header));
     memcpy(block_header, iBlock->header, sizeof (AK_header));
 
-    int num_sort_header = Ak_get_header_number(iBlock, atr_name); //number of headers which are used for sort
+    int num_sort_header = AK_get_header_number(iBlock, atr_name); //number of headers which are used for sort
 
-    int max_header_num = Ak_get_total_headers(iBlock); //total number of headers for one record
-    int num_tuples = Ak_get_num_of_tuples(iBlock);
+    int max_header_num = AK_get_total_headers(iBlock); //total number of headers for one record
+    int num_tuples = AK_get_num_of_tuples(iBlock);
 
-    Ak_dbg_messg(HIGH, FILE_MAN, "\n tu sam: %i, %i", num_sort_header, num_tuples);
+    AK_dbg_messg(HIGH, FILE_MAN, "\n tu sam: %i, %i", num_sort_header, num_tuples);
 
     unsigned char data[MAX_VARCHAR_LENGTH]; //it was 2000 before MAX_VARCHAR_LENGHT
     int ubr1 = num_tuples / 2; //total number of first half
     int ubr2 = num_tuples - ubr1;
 
     for (n = 1; n < num_tuples; n = n * 2) {
-        Ak_reset_block(cTemp1);
-        Ak_reset_block(cTemp2);
+        AK_reset_block(cTemp1);
+        AK_reset_block(cTemp2);
         //n=1;
 
         broj_td = 0;
         //write a half in the first temp block
         for (t = 0; t < ubr1; t++) {
-            Ak_dbg_messg(HIGH, FILE_MAN, "block_sort: 1) sada sam na %i / %i\n", t, num_tuples);
+            AK_dbg_messg(HIGH, FILE_MAN, "block_sort: 1) sada sam na %i / %i\n", t, num_tuples);
 
             for (i = 0; i < max_header_num; i++) {
                 memset(data, '\0', MAX_VARCHAR_LENGTH);
@@ -295,7 +295,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
         //writing other half in second temp block
         broj_td = 0;
         for (; t < num_tuples; t++) {
-            Ak_dbg_messg(HIGH, FILE_MAN, "block_sort: 2) sada sam na %i / %i\n", t, num_tuples);
+            AK_dbg_messg(HIGH, FILE_MAN, "block_sort: 2) sada sam na %i / %i\n", t, num_tuples);
 
             for (i = 0; i < max_header_num; i++) {
                 memset(data, '\0', MAX_VARCHAR_LENGTH);
@@ -319,9 +319,9 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
         printf("\n\n");
 
         //Start sorting
-        Ak_reset_block(iBlock);
+        AK_reset_block(iBlock);
 
-        Ak_dbg_messg(HIGH, FILE_MAN, "                      , size: %i\n", iBlock->AK_free_space);
+        AK_dbg_messg(HIGH, FILE_MAN, "                      , size: %i\n", iBlock->AK_free_space);
 
         memcpy(iBlock->header, block_header, sizeof (AK_header));
 
@@ -341,11 +341,11 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
                         cTemp2->tuple_dict[br2 * max_header_num + num_sort_header].size);
                 //y[cTemp2->tuple_dict[br2 * max_header_num + num_sort_header].size - 1]="\0";
 
-                Ak_dbg_messg(HIGH, FILE_MAN, "slogovi: %s , %s   , head: %i \n", x, y, num_sort_header);
+                AK_dbg_messg(HIGH, FILE_MAN, "slogovi: %s , %s   , head: %i \n", x, y, num_sort_header);
 
                 //comparison
                 if (strcmp(x, y) <= 0) {
-                    Ak_dbg_messg(HIGH, FILE_MAN, "manji je: %s\n", x);
+                    AK_dbg_messg(HIGH, FILE_MAN, "manji je: %s\n", x);
 
                     //insert data
                     for (i = 0; i < max_header_num; i++) {
@@ -371,7 +371,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
                         break;
                     }
                 } else {
-                    Ak_dbg_messg(HIGH, FILE_MAN, "manji je: %s\n", y);
+                    AK_dbg_messg(HIGH, FILE_MAN, "manji je: %s\n", y);
 
                     //insert data
                     for (i = 0; i < max_header_num; i++) {
@@ -477,8 +477,8 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
         }
         printf("\n\n");
     }
-    Ak_reset_block(cTemp1);
-    Ak_reset_block(cTemp2); 
+    AK_reset_block(cTemp1);
+    AK_reset_block(cTemp2); 
 
     AK_write_block(cTemp1); 
     AK_write_block(cTemp2);
@@ -491,7 +491,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
  * @brief Function for file sorting
  * @return No return value
  */
-TestResult Ak_filesort_test() {
+TestResult AK_filesort_test() {
 	AK_PRO;
 	printf("filesort_test: Present!\n");
 

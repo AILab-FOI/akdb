@@ -43,7 +43,7 @@ AK_init_db_file(int size)
     printf("\nInitialization\n");
     int sizeOfFile;
     AK_PRO;
-    Ak_dbg_messg(HIGH, DB_MAN, "AK_block: %i, AK_header: %i, AK_tuple_dict: %i , char: %i, int: %i\n",
+    AK_dbg_messg(HIGH, DB_MAN, "AK_block: %i, AK_header: %i, AK_tuple_dict: %i , char: %i, int: %i\n",
 		 sizeof(AK_block), sizeof(AK_header), sizeof(AK_tuple_dict), sizeof(char), sizeof(int));
 
     db_file_size = size;
@@ -1309,14 +1309,14 @@ AK_get_extent(int start_address, int desired_size, AK_allocation_set_mode* mode,
 
   num_blocks = AK_copy_header(header, blocknum, desired_size);
 
-  Ak_dbg_messg(HIGH, DB_MAN,
+  AK_dbg_messg(HIGH, DB_MAN,
 	       "AK_get_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, num_blocks= %i\n",
 	       blocknum[0], desired_size, blocknum[desired_size - 1], num_blocks);
 
   /// if some blocks are not succesfully allocated, which means that the extend allocation has FAILED
   if (num_blocks != desired_size)
     {
-      Ak_dbg_messg(LOW, DB_MAN, "AK_get_extent: ERROR. Cannot allocate extent %d\n", blocknum[0]);
+      AK_dbg_messg(LOW, DB_MAN, "AK_get_extent: ERROR. Cannot allocate extent %d\n", blocknum[0]);
       blocknum[0] = FREE_INT;
       AK_EPI;
       return blocknum;
@@ -1481,13 +1481,13 @@ AK_new_extent(int start_address, int old_size, int extent_type, AK_header *heade
 
   printf("AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, number_blocks_allocated= %i\n",
 	 allocation_set[0], requested_space_in_blocks, allocation_set[requested_space_in_blocks - 1], number_blocks_allocated);
-  Ak_dbg_messg(HIGH, DB_MAN,
+  AK_dbg_messg(HIGH, DB_MAN,
 	       "AK_new_extent: first_address_of_extent= %i , num_alocated_blocks= %i , end_address= %i, number_blocks_allocated= %i\n",
 	       allocation_set[0], requested_space_in_blocks, allocation_set[requested_space_in_blocks - 1], number_blocks_allocated);
 
   if (number_blocks_allocated != requested_space_in_blocks)
     {
-      Ak_dbg_messg(LOW, DB_MAN, "AK_new_extent: ERROR. Cannot allocate extent %d\n", allocation_set[0]);
+      AK_dbg_messg(LOW, DB_MAN, "AK_new_extent: ERROR. Cannot allocate extent %d\n", allocation_set[0]);
       AK_EPI;
       return (EXIT_ERROR);
     }
@@ -1535,7 +1535,7 @@ AK_new_segment(char * name, int type, AK_header *header)
   int first_allocated_block = -1;
   AK_PRO;
 
-  Ak_dbg_messg(HIGH, DB_MAN, "AK_new_segment: %d, %s.\n", type, name);
+  AK_dbg_messg(HIGH, DB_MAN, "AK_new_segment: %d, %s.\n", type, name);
 
   first_allocated_block = AK_new_extent(segment_start_addr, 0, type, header);
   if (first_allocated_block == -1)
@@ -1569,7 +1569,7 @@ AK_create_header(char* attribute_name, int type, int integrity, char *constr_nam
   memset(catalog_header, 0, sizeof (AK_header));
 
   //AK_archive_log("AK_create_header", name, type, integrity, constr_name, contr_code); //ARCHIVE_LOG
-  Ak_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", attribute_name, strlen(attribute_name));    
+  AK_dbg_messg(HIGH, DB_MAN, "AK_create_header: Header: %s, %d\n", attribute_name, strlen(attribute_name));    
 
   catalog_header->type = type;
 
@@ -1615,18 +1615,18 @@ AK_insert_entry(AK_block* block_address, int type, void* entry_data, int i)
   AK_PRO;
   catalog_tuple_dict = (AK_tuple_dict *)AK_malloc(sizeof (AK_tuple_dict));
 
-  Ak_dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %d  Size of data:\n", *((int *)entry_data));
+  AK_dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %d  Size of data:\n", *((int *)entry_data));
 
   /// copy data into bloc->data on start position bloc->AK_free_space
   if (type == TYPE_INT)
     {
       memcpy(block_address->data + block_address->AK_free_space, entry_data, AK_type_size(type, entry_data));
-      Ak_dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %d  Size of data:\n", (int)entry_data);
+      AK_dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %d  Size of data:\n", (int)entry_data);
     }
   else
     {
       memcpy(block_address->data + block_address->AK_free_space, entry_data, AK_type_size(type, entry_data));
-      Ak_dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %s  Size of data:\n", (char *)entry_data);
+      AK_dbg_messg(HIGH, DB_MAN, "AK_insert_entry: Insert data: %s  Size of data:\n", (char *)entry_data);
     }
   /// address of entry data in block->data
   catalog_tuple_dict->address = block_address->AK_free_space;
@@ -1685,7 +1685,7 @@ AK_init_system_tables_catalog(int relation, int attribute, int index, int view, 
   AK_header* catalog_header_address;
   AK_PRO;
 
-  Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_tables_catalog: Initializing system tables catalog\n");
+  AK_dbg_messg(HIGH, DB_MAN, "AK_init_system_tables_catalog: Initializing system tables catalog\n");
 
   catalog_block = (AK_block *)AK_malloc(sizeof (AK_block));
   /// first header attribute of catalog_block
@@ -1986,7 +1986,7 @@ AK_init_system_catalog()
   int i;
   AK_PRO;
     
-  Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: System catalog initialization started...\n");
+  AK_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: System catalog initialization started...\n");
 
   AK_header hConstraintNotNull[5] =
     {
@@ -2311,7 +2311,7 @@ AK_init_system_catalog()
     memset(hReference[i].constr_code, FREE_CHAR, MAX_CONSTRAINTS * MAX_CONSTR_CODE);
   }
 
-  Ak_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: Creating new segments...\n");
+  AK_dbg_messg(HIGH, DB_MAN, "AK_init_system_catalog: Creating new segments...\n");
 
 
   relation           = AK_new_segment("AK_relation",    SEGMENT_TYPE_SYSTEM_TABLE, hRelation);
@@ -2336,7 +2336,7 @@ AK_init_system_catalog()
   constraintUnique   = AK_new_segment("AK_constraints_unique", SEGMENT_TYPE_SYSTEM_TABLE, hConstraintUnique);
   reference          = AK_new_segment("AK_reference",   SEGMENT_TYPE_SYSTEM_TABLE, hReference);
 
-  Ak_dbg_messg(LOW, DB_MAN, "AK_init_system_catalog: Segments created!\n");
+  AK_dbg_messg(LOW, DB_MAN, "AK_init_system_catalog: Segments created!\n");
 
   if (EXIT_SUCCESS == AK_init_system_tables_catalog(relation, attribute, index, view, sequence, function, function_arguments,
 						    trigger, trigger_conditions, db, db_obj, user, group, user_group, user_right,
@@ -2485,7 +2485,7 @@ AK_delete_segment(char * name, int type)
     }
 	
   struct list_node* row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
-  Ak_Init_L3(&row_root);
+  AK_Init_L3(&row_root);
   
   char *system_table;
   switch (type)
@@ -2513,9 +2513,9 @@ AK_delete_segment(char * name, int type)
       return EXIT_ERROR;
     }
   
-  Ak_DeleteAll_L3(&row_root);
-  Ak_Update_Existing_Element(TYPE_VARCHAR, name, system_table, "name", row_root);
-  Ak_delete_row(row_root);
+  AK_DeleteAll_L3(&row_root);
+  AK_Update_Existing_Element(TYPE_VARCHAR, name, system_table, "name", row_root);
+  AK_delete_row(row_root);
   AK_free(row_root);
 
   AK_EPI;
@@ -2544,16 +2544,16 @@ AK_init_disk_manager()
   if (AK_allocationbit->prepared == 31)
     {
       printf("\n\tDisk manager has been initialized at %s\n\n", asctime(localtime(&AK_allocationbit->ltime)));
-      Ak_dbg_messg(LOW, DB_MAN, "Block size is: %d\n", sizeof (AK_block));
-      Ak_dbg_messg(LOW, DB_MAN, "%d blocks for %d MiB\n", size, DB_FILE_SIZE);
+      AK_dbg_messg(LOW, DB_MAN, "Block size is: %d\n", sizeof (AK_block));
+      AK_dbg_messg(LOW, DB_MAN, "%d blocks for %d MiB\n", size, DB_FILE_SIZE);
 	
       AK_EPI;
       return EXIT_SUCCESS;
     }
 
   printf("AK_init_disk_manager: Initializing disk manager...\n\n");
-  Ak_dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: Block size is: %d\n", sizeof (AK_block));
-  Ak_dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: We need %d blocks for %d MiB\n", size, DB_FILE_SIZE);
+  AK_dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: Block size is: %d\n", sizeof (AK_block));
+  AK_dbg_messg(LOW, DB_MAN, "AK_init_disk_manager: We need %d blocks for %d MiB\n", size, DB_FILE_SIZE);
 
   if (AK_init_db_file(size) == EXIT_SUCCESS)
     {

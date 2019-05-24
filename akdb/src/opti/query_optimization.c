@@ -29,11 +29,11 @@ int error_message=0;
  */
 void AK_print_optimized_query(struct list_node *list_query) {
     AK_PRO;
-    struct list_node *list_elem = (struct list_node *) Ak_First_L2(list_query);
+    struct list_node *list_elem = (struct list_node *) AK_First_L2(list_query);
 
     int length;
     int len[] = {strlen("Type"), strlen("Size"), strlen("Data")};
-    list_elem = (struct list_node *) Ak_First_L2(list_query);
+    list_elem = (struct list_node *) AK_First_L2(list_query);
 
     printf("==>");
     while (list_elem != NULL) {
@@ -68,7 +68,7 @@ void AK_print_optimized_query(struct list_node *list_query) {
             len[1] + TBL_BOX_OFFSET, "Size", len[2] + TBL_BOX_OFFSET, "Data");
     AK_print_row_spacer(len, length);
 
-    list_elem = (struct list_node *) Ak_First_L2(list_query);
+    list_elem = (struct list_node *) AK_First_L2(list_query);
 
     while (list_elem != NULL) {
         printf("\n| %-*i| %-*i| %-*s|\n", len[0] + TBL_BOX_OFFSET, list_elem->type,
@@ -94,37 +94,37 @@ void AK_print_optimized_query(struct list_node *list_query) {
 */ 
 struct list_node *AK_execute_rel_eq(struct list_node *list_query, const char rel_eq, const char *FLAGS) {
     AK_PRO;
-    Ak_dbg_messg(LOW, REL_EQ, "\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
-    Ak_dbg_messg(LOW, REL_EQ, "=================================================\n");
+    AK_dbg_messg(LOW, REL_EQ, "\nATTEMPT TO EXECUTE '%c' AS RELATIONAL EQUIVALENCE\n", rel_eq);
+    AK_dbg_messg(LOW, REL_EQ, "=================================================\n");
 
     if (strchr(FLAGS, rel_eq) != NULL) {
         switch (rel_eq) {
             case 'c':
-                Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_commute.\n");
+                AK_dbg_messg(LOW, REL_EQ, "\napply rel_eq_commute.\n");
                 AK_EPI;
                 return (struct list_node *)AK_rel_eq_comut(list_query);
                 break;
 
             case 'a':
-                Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_assoc.\n");
+                AK_dbg_messg(LOW, REL_EQ, "\napply rel_eq_assoc.\n");
                 AK_EPI;
                 return (struct list_node *) AK_rel_eq_assoc(list_query);
                 break;
 
             case 'p':
-                Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_projection.\n");
+                AK_dbg_messg(LOW, REL_EQ, "\napply rel_eq_projection.\n");
                 AK_EPI;
                 return (struct list_node *) AK_rel_eq_projection(list_query);
                 break;
 
             case 's':
-                Ak_dbg_messg(LOW, REL_EQ, "\napply rel_eq_selection.\n");
+                AK_dbg_messg(LOW, REL_EQ, "\napply rel_eq_selection.\n");
                 AK_EPI;
                 return (struct list_node *) AK_rel_eq_selection(list_query);
                 break;
 
             default:
-                Ak_dbg_messg(LOW, REL_EQ, "Invalid relational equivalence flag: %c", rel_eq);
+                AK_dbg_messg(LOW, REL_EQ, "Invalid relational equivalence flag: %c", rel_eq);
 				error_message++;
                 AK_EPI;
                 return list_query;
@@ -157,12 +157,12 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
     int len_flags = strlen(FLAGS);
 
     struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&temp);
+    AK_Init_L3(&temp);
     
     //change view name for its rel_exp in list_query if exists
     //@author Danko Sacer
-    struct list_node *list_elem = (struct list_node *) Ak_First_L2(list_query);
-    list_elem = (struct list_node *) Ak_First_L2(list_query);
+    struct list_node *list_elem = (struct list_node *) AK_First_L2(list_query);
+    list_elem = (struct list_node *) AK_First_L2(list_query);
     
     while (list_elem != NULL) {
  	//suposed that views have name prefiks or sufics 'view' (viewname_view or view_viewname)
@@ -184,7 +184,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
     struct list_node *temps[num_perms];
 
     if (num_perms > MAX_PERMUTATION) {
-        Ak_dbg_messg(LOW, REL_EQ, "ERROR: max four flags are allowed!\n");
+        AK_dbg_messg(LOW, REL_EQ, "ERROR: max four flags are allowed!\n");
 		error_message++;
         AK_EPI;
         return temp;
@@ -194,14 +194,14 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
         char *perm = (char *) AK_calloc(len_flags, sizeof (char));
         memcpy(perm, FLAGS, len_flags);
 
-        Ak_dbg_messg(LOW, REL_EQ, "\n\t==============================\n\t\t%i. LOGIC PLAN\n\t==============================\n", next_perm + 1 );
+        AK_dbg_messg(LOW, REL_EQ, "\n\t==============================\n\t\t%i. LOGIC PLAN\n\t==============================\n", next_perm + 1 );
         for (next_flag = len_flags, div = num_perms; next_flag > 0; next_flag--) {
             div /= next_flag;
             int index = (next_perm / div) % next_flag;
 
             if (DIFF_PLANS) {
             temps[next_perm] = (struct list_node *)AK_malloc(sizeof(struct list_node));
-            Ak_Init_L3(&temps[next_perm]);
+            AK_Init_L3(&temps[next_perm]);
             temps[next_perm] = AK_execute_rel_eq(temp, perm[index], FLAGS);
             AK_print_optimized_query(temps[next_perm]);
 	    
@@ -219,14 +219,14 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
     }
 
     if (DIFF_PLANS) {
-        Ak_dbg_messg(LOW, REL_EQ, "\nTOTAL REL_EQ OPTIMIZED PLANS: %i\n", num_perms);
+        AK_dbg_messg(LOW, REL_EQ, "\nTOTAL REL_EQ OPTIMIZED PLANS: %i\n", num_perms);
 	
         temp = (struct list_node *)AK_realloc(temp, num_perms * sizeof(temps));
 	sum=num_perms * sizeof(temps);
         memcpy(temp,temps,sum);
     }
 
-    Ak_DeleteAll_L3(&list_query);
+    AK_DeleteAll_L3(&list_query);
     AK_EPI;
     return temp;
 }
@@ -295,124 +295,124 @@ TestResult AK_query_optimization_test() {
 
 
     struct list_node *mylist = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist);
+    AK_Init_L3(&mylist);
 
   
     struct list_node *mylist2 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist2);
+    AK_Init_L3(&mylist2);
 
     struct list_node *mylist3 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist3);
+    AK_Init_L3(&mylist3);
 
     struct list_node *mylist4 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist4);
+    AK_Init_L3(&mylist4);
 
     struct list_node *mylist5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist5);
+    AK_Init_L3(&mylist5);
 
     struct list_node *mylist6 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist6);
+    AK_Init_L3(&mylist6);
 
     struct list_node *mylist7 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist7);
+    AK_Init_L3(&mylist7);
 
     struct list_node *mylist8 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist8);
+    AK_Init_L3(&mylist8);
 
     struct list_node *mylist9 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist9);
+    AK_Init_L3(&mylist9);
 
     struct list_node *mylist10 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&mylist10);
+    AK_Init_L3(&mylist10);
 
 
     //*Associativity of union and intersection
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist);
 
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"), mylist);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "i", sizeof ("i"), mylist);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), mylist);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"), mylist);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "i", sizeof ("i"), mylist);
 
    
 
     //*Commutativity of Selection and Projection
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist2);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`firstname` = 'Dino'", sizeof ("`firstname` = 'Dino'"), mylist2);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist2);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`firstname` = 'Dino'", sizeof ("`firstname` = 'Dino'"), mylist2);
     //...
 
     //*Cascade of Projection p[L1](p[L2](...p[Ln](R)...)) = p[L1](R)
     //[L1,...] < [L2,...] < [...,Ln-1,Ln]
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), mylist3);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname;lastname", sizeof ("firstname;lastname"), mylist3);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), mylist3);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname;lastname;year", sizeof ("firstname;lastname;year"),mylist3);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), mylist3);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), mylist3);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname;lastname", sizeof ("firstname;lastname"), mylist3);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), mylist3);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname;lastname;year", sizeof ("firstname;lastname;year"),mylist3);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), mylist3);
     //---------------------------------------------------------------------------------------------------------
     //*/
 
 
    
     //*Commutativity of Selection and set operations (Union, Intersection, and Set difference)
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist4);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` 35895 < `id_prof` 35897 < OR", sizeof ("`mbr` 35895 < `id_prof` 35897 < OR"), mylist4);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist4);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), mylist4);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), mylist4); //u, i, e
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "i", sizeof ("i"), mylist4); //u, i, e
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist4);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` 35895 < `id_prof` 35897 < OR", sizeof ("`mbr` 35895 < `id_prof` 35897 < OR"), mylist4);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist4);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), mylist4);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), mylist4); //u, i, e
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "i", sizeof ("i"), mylist4); //u, i, e
     //---------------------------------------------------------------------------------------------------------
     //*/
 
     //*Commutativity of Selection and Theta join (or Cartesian product)
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist5);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof ("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"),mylist5);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist5);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"),mylist5);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), mylist5);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof ("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"), mylist5);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "e", sizeof ("e"), mylist5); //u, i, e
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist5);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof ("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"),mylist5);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist5);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"),mylist5);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), mylist5);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR", sizeof ("`name` 'FOBP' = `firstname` 'Alen' = AND `lastname` 'Lovrencic' = OR"), mylist5);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "e", sizeof ("e"), mylist5); //u, i, e
     //*/
 
     //*Cascade of Selection and Commutativity of Selection
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "i", sizeof ("u"), mylist6); //u, i, e
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist6);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`year` 2008 <", sizeof ("`year` 2008 <"), mylist6);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "i", sizeof ("u"), mylist6); //u, i, e
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), mylist6);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`year` 2008 <", sizeof ("`year` 2008 <"), mylist6);
     //...
 
     //*Commutativity of Projection and Theta join (or Cartesian product)
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), mylist7);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr;id_prof", sizeof ("mbr;id_prof"), mylist7);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist7);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), mylist7);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), mylist7);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` 35891 > `id_prof` 35897 < AND", sizeof ("`mbr` 35891 > `id_prof` 35897 < AND"), mylist7);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), mylist7);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr;id_prof", sizeof ("mbr;id_prof"), mylist7);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist7);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), mylist7);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), mylist7);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` 35891 > `id_prof` 35897 < AND", sizeof ("`mbr` 35891 > `id_prof` 35897 < AND"), mylist7);
     //*/
 
     //*Associativity of natural joins
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist8);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"),  mylist8);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"),  mylist8);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr;id_prof", sizeof ("mbr;id_prof"),  mylist8);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"),  mylist8);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"),  mylist8);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_course", sizeof ("id_course"),  mylist8);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist8);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"),  mylist8);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"),  mylist8);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr;id_prof", sizeof ("mbr;id_prof"),  mylist8);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"),  mylist8);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"),  mylist8);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "id_course", sizeof ("id_course"),  mylist8);
     //*/
 
     //*Associativity of union and intersection
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"),  mylist9);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"),  mylist9);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"),  mylist9);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"),  mylist9);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"),  mylist9);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"),  mylist9);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"),  mylist9);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"),  mylist9);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"),  mylist9);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"),  mylist9);
     //*/
 
     //*Associativity of theta-joins
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist10);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), mylist10);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), mylist10);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "`mbr` 35891 > `id_prof` 35897 <", sizeof ("`mbr` 35891 > `id_prof` 35897 <"), mylist10);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"), mylist10);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), mylist10);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`id_course` 7 < `mbr` 35891 > AND", sizeof ("`id_course` 7 < `mbr` 35891 > AND"), mylist10);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "professor", sizeof ("professor"), mylist10);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), mylist10);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), mylist10);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "`mbr` 35891 > `id_prof` 35897 <", sizeof ("`mbr` 35891 > `id_prof` 35897 <"), mylist10);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "course", sizeof ("course"), mylist10);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), mylist10);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`id_course` 7 < `mbr` 35891 > AND", sizeof ("`id_course` 7 < `mbr` 35891 > AND"), mylist10);
     //*/
 
     AK_print_optimized_query(AK_query_optimization(mylist, "a", 1));

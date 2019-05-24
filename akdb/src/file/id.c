@@ -20,7 +20,7 @@
 #include "id.h"
 
 /**
- * @author Saša Vukšić, updated by Mislav Čakarić, changed by Mario Peroković, now uses Ak_update_row, updated by Nenad Makar
+ * @author Saša Vukšić, updated by Mislav Čakarić, changed by Mario Peroković, now uses AK_update_row, updated by Nenad Makar
  * @brief Function for getting unique ID for any object, stored in sequence
  * @return objectID
  */
@@ -29,26 +29,26 @@ int AK_get_id() {
     int current_value;
     AK_PRO;
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root); 
+    AK_Init_L3(&row_root); 
 	
 	/*Assumption was that objectID is always in the first row of table AK_sequence. If in future, for some reason, that won't be the case
-	 * then check all rows of table AK_sequence (for(i=0; i<num_rec; i++)) and update a row which contains objectID (Ak_GetNth_L2(2, row), value in column 
+	 * then check all rows of table AK_sequence (for(i=0; i<num_rec; i++)) and update a row which contains objectID (AK_GetNth_L2(2, row), value in column 
 	 * name must be objectID) or create a row which will contain objectID*/
 	
 	int num_rec = AK_get_num_records("AK_sequence");
 	
     if(num_rec > 0) {
     	struct list_node *row = AK_get_row(0, "AK_sequence");
-		struct list_node *attribute = Ak_GetNth_L2(3, row);
+		struct list_node *attribute = AK_GetNth_L2(3, row);
 		memcpy(&current_value, &attribute->data, attribute->size);
-		Ak_DeleteAll_L3(&row);
+		AK_DeleteAll_L3(&row);
 		AK_free(row);
 		
         current_value++;
-		Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
-        int result = Ak_update_row(row_root);
-		Ak_DeleteAll_L3(&row_root);
+		AK_Update_Existing_Element(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
+        int result = AK_update_row(row_root);
+		AK_DeleteAll_L3(&row_root);
         AK_free(row_root);
 		
         if(result != EXIT_SUCCESS){
@@ -60,14 +60,14 @@ int AK_get_id() {
     }
     else
     {
-		Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root);
-		Ak_Insert_New_Element(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
+		AK_Insert_New_Element(TYPE_INT, &obj_id, "AK_sequence", "obj_id", row_root);
+		AK_Insert_New_Element(TYPE_VARCHAR, "objectID", "AK_sequence", "name", row_root);
 		current_value = ID_START_VALUE;
-		Ak_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
+		AK_Insert_New_Element(TYPE_INT, &current_value, "AK_sequence", "current_value", row_root);
 		int increment = 1;
-		Ak_Insert_New_Element(TYPE_INT, &increment, "AK_sequence", "increment", row_root);
-		Ak_insert_row(row_root);
-		Ak_DeleteAll_L3(&row_root);
+		AK_Insert_New_Element(TYPE_INT, &increment, "AK_sequence", "increment", row_root);
+		AK_insert_row(row_root);
+		AK_DeleteAll_L3(&row_root);
 		AK_free(row_root);
 		AK_EPI;
 		return current_value;
@@ -111,9 +111,9 @@ char AK_get_table_id(char *tableName) {
  * @brief  Function for testing getting ID's
  * @return No retun value
  */
-TestResult Ak_id_test() {
+TestResult AK_id_test() {
     AK_PRO;
-    printf("\nCurrent value of objectID (depends on number of AK_get_id() calls (when objects are created...) before call of Ak_id_test()):\n\n");
+    printf("\nCurrent value of objectID (depends on number of AK_get_id() calls (when objects are created...) before call of AK_id_test()):\n\n");
     AK_print_table("AK_sequence");
     AK_get_id();
     printf("\nIncremented value of objectID:\n\n");

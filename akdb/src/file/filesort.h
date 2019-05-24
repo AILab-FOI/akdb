@@ -41,13 +41,13 @@
 
 
 
-int Ak_get_total_headers(AK_block *iBlock);
-int Ak_get_header_number(AK_block *iBlock, char *attribute_name);
-int Ak_get_num_of_tuples(AK_block *iBlock);
+int AK_get_total_headers(AK_block *iBlock);
+int AK_get_header_number(AK_block *iBlock, char *attribute_name);
+int AK_get_num_of_tuples(AK_block *iBlock);
 void AK_sort_segment(char *table_name, char *attr);
-void Ak_reset_block(AK_block * block);
+void AK_reset_block(AK_block * block);
 void AK_block_sort(AK_block * iBlock, char * atr_name);
-TestResult Ak_filesort_test();
+TestResult AK_filesort_test();
 
 #endif
 

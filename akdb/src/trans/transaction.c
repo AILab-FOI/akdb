@@ -806,25 +806,25 @@ TestResult AK_test_Transaction() {
     /**************** INSERT AND UPDATE COMMAND TEST ******************/
     char *tblName = "student";
     struct list_node *row_root_insert = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root_insert);
-    Ak_DeleteAll_L3(&row_root_insert);
+    AK_Init_L3(&row_root_insert);
+    AK_DeleteAll_L3(&row_root_insert);
     int mbr, year;
     float weight;
     mbr = 38262;
     year = 2012;
     weight = 82.00;
-    Ak_DeleteAll_L3(&row_root_insert);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root_insert);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Ivan", tblName, "firstname", row_root_insert);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Pusic", tblName, "lastname", row_root_insert);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root_insert);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root_insert);
+    AK_DeleteAll_L3(&row_root_insert);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName, "mbr", row_root_insert);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Ivan", tblName, "firstname", row_root_insert);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Pusic", tblName, "lastname", row_root_insert);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root_insert);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root_insert);
 
     struct list_node *row_root_update = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root_update);
-    Ak_DeleteAll_L3(&row_root_update);
-    Ak_Update_Existing_Element(TYPE_INT, &mbr, tblName, "mbr", row_root_update);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "pppppppppp", tblName, "lastname", row_root_update);
+    AK_Init_L3(&row_root_update);
+    AK_DeleteAll_L3(&row_root_update);
+    AK_Update_Existing_Element(TYPE_INT, &mbr, tblName, "mbr", row_root_update);
+    AK_Insert_New_Element(TYPE_VARCHAR, "pppppppppp", tblName, "lastname", row_root_update);
 
     command* commands_ins_up = AK_malloc(sizeof (command) * 2);
     commands_ins_up[0].tblName = "student";
@@ -838,11 +838,11 @@ TestResult AK_test_Transaction() {
     int id_prof;
     id_prof = 35893;
     struct list_node *row_root_p_update = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root_p_update);
-    Ak_DeleteAll_L3(&row_root_p_update);
+    AK_Init_L3(&row_root_p_update);
+    AK_DeleteAll_L3(&row_root_p_update);
     
-    Ak_Update_Existing_Element(TYPE_INT, &id_prof, "professor", "id_prof", row_root_p_update);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "FOI", "professor", "firstname", row_root_p_update);
+    AK_Update_Existing_Element(TYPE_INT, &id_prof, "professor", "id_prof", row_root_p_update);
+    AK_Insert_New_Element(TYPE_VARCHAR, "FOI", "professor", "firstname", row_root_p_update);
 
 
     /**************** DELETE COMMAND TEST ******************/
@@ -853,16 +853,16 @@ TestResult AK_test_Transaction() {
 
 
     struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&expr);
+	AK_Init_L3(&expr);
 	int num = 2010;
 
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
-	Ak_InsertAtEnd_L3(TYPE_INT, (char*)&num, sizeof (int), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof ("<"), expr);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
+	AK_InsertAtEnd_L3(TYPE_INT, (char*)&num, sizeof (int), expr);
+	AK_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof ("<"), expr);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+	AK_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
+	AK_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
+	AK_InsertAtEnd_L3(TYPE_OPERATOR, "OR", sizeof ("OR"), expr);
     
     /**************** SELECT COMMAND TEST ******************/
     command* commands_select = AK_malloc(sizeof(command) * 1);

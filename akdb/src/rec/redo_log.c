@@ -38,7 +38,7 @@ int AK_add_to_redolog(int command, struct list_node *row_root){
         n = 0;
     }
 
-    struct list_node * el = (struct list_node *) Ak_First_L2(row_root);
+    struct list_node * el = (struct list_node *) AK_First_L2(row_root);
     
     char* record;
     if((record = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){

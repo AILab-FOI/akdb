@@ -105,20 +105,20 @@ function fun[] = {
 {"dm: AK_thread_safe_block_access", &AK_thread_safe_block_access_test}, //dm/dbman.c
 //file:
 //---------
-{"file: Ak_id", &Ak_id_test}, //file/id.c
+{"file: AK_id", &AK_id_test}, //file/id.c
 {"file: AK_lo", &AK_lo_test}, //file/blobs.c
-{"file: Ak_files_test", &Ak_files_test}, //file/files.c
-{"file: Ak_fileio_test", &Ak_fileio_test}, //file/fileio.c
+{"file: AK_files_test", &AK_files_test}, //file/files.c
+{"file: AK_fileio_test", &AK_fileio_test}, //file/fileio.c
 {"file: AK_op_rename", &AK_op_rename_test}, //file/table.c
-{"file: Ak_filesort", &Ak_filesort_test}, //file/filesort.c
-{"file: Ak_filesearch", &Ak_filesearch_test}, //file/filesearch.c
+{"file: AK_filesort", &AK_filesort_test}, //file/filesort.c
+{"file: AK_filesearch", &AK_filesearch_test}, //file/filesearch.c
 {"file: AK_sequence", &AK_sequence_test}, //file/sequence.c 
 {"file: AK_op_table", &AK_table_test}, //file/table.c
 //file/idx:
 //-------------
-{"idx: Ak_bitmap", &Ak_bitmap_test}, //file/idx/bitmap.c
-{"idx: Ak_btree", &Ak_btree_test}, //file/idx/btree.c
-{"idx: Ak_hash", &Ak_hash_test}, //file/idx/hash.c
+{"idx: AK_bitmap", &AK_bitmap_test}, //file/idx/bitmap.c
+{"idx: AK_btree", &AK_btree_test}, //file/idx/btree.c
+{"idx: AK_hash", &AK_hash_test}, //file/idx/hash.c
 //mm:
 //-------
 {"mm: AK_memoman", &AK_memoman_test}, //mm/memoman.c
@@ -135,12 +135,12 @@ function fun[] = {
 {"rel: AK_op_union", &AK_op_union_test}, //rel/union.c
 {"rel: AK_op_join", &AK_op_join_test}, // rel/nat_join.c
 {"rel: AK_op_product", &AK_op_product_test}, //rel/product.c
-{"rel: Ak_aggregation", &Ak_aggregation_test}, //rel/aggregation.c
-{"rel: AK_op_intersect", &Ak_op_intersect_test}, //rel/intersect.c
+{"rel: AK_aggregation", &AK_aggregation_test}, //rel/aggregation.c
+{"rel: AK_op_intersect", &AK_op_intersect_test}, //rel/intersect.c
 {"rel: AK_op_selection", &AK_op_selection_test}, //rel/selection.c
 {"rel: AK_op_selection_pattern", &AK_op_selection_test_pattern}, //rel/selection.c with pattern match selections
-{"rel: Ak_expression_check_test" , &Ak_expression_check_test},
-{"rel: AK_op_difference", &Ak_op_difference_test}, //rel/difference.c
+{"rel: AK_expression_check_test" , &AK_expression_check_test},
+{"rel: AK_op_difference", &AK_op_difference_test}, //rel/difference.c
 {"rel: AK_op_projection", &AK_op_projection_test}, //rel/projection.c
 {"rel: AK_op_theta_join", &AK_op_theta_join_test}, //rel/theta_join.c
 //sql:
@@ -155,7 +155,7 @@ function fun[] = {
 {"sql: AK_function", &AK_function_test}, //sql/function.c
 {"sql: AK_privileges", &AK_privileges_test}, //sql/privileges.c
 {"sql: AK_reference", &AK_reference_test}, //sql/cs/reference.c
-{"sql: Ak_constraint_between", &Ak_constraint_between_test}, //sql/cs/between.c
+{"sql: AK_constraint_between", &AK_constraint_between_test}, //sql/cs/between.c
 {"sql: AK_check_constraint", &AK_check_constraint_test}, //sql/cs/check_constraint.c
 {"sql: AK_constraint_names", &AK_constraint_names_test}, //sql/cs/constraint_names.c
 //trans:
@@ -395,16 +395,16 @@ void set_catalog_constraints()
     strcat(constraintName, SEPARATOR);
     strcat(constraintName, "attributeName");
     strcat(constraintName, "Unique");
-    retValue = Ak_set_constraint_unique("AK_constraints_not_null", attributeName, constraintName);
+    retValue = AK_set_constraint_unique("AK_constraints_not_null", attributeName, constraintName);
     //UNIQUE constraints on table AK_constraints_unique
     memset(constraintName, 0, MAX_VARCHAR_LENGTH);
     strcat(constraintName, "tableName");
     strcat(constraintName, SEPARATOR);
     strcat(constraintName, "attributeName2");
     strcat(constraintName, "Unique");
-    retValue = Ak_set_constraint_unique("AK_constraints_unique", attributeName, constraintName);
+    retValue = AK_set_constraint_unique("AK_constraints_unique", attributeName, constraintName);
     //UNIQUE constraints on table AK_sequence
-    retValue = Ak_set_constraint_unique("AK_sequence", "name", "nameUnique");
+    retValue = AK_set_constraint_unique("AK_sequence", "name", "nameUnique");
     //SET UNIQUE CONSTRAINT ON THE REST OF TABLES IN SYSTEM CATALOG!!!
 
     AK_EPI;

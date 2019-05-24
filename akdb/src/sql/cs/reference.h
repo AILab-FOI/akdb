@@ -96,20 +96,20 @@ int AK_reference_check_entry(struct list_node *lista) ;
 
 TestResult AK_reference_test();
 /*
-void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore);
-int Ak_insert_row(AK_list *row_root);
+void AK_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore);
+int AK_insert_row(AK_list *row_root);
 int AK_selection(char *srcTable, char *dstTable, AK_list *expr);
-void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint);
-int Ak_delete_row(AK_list *row_root) ;
-int Ak_update_row(AK_list *row_root);
+void AK_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, AK_list_elem ElementBefore, int newconstraint);
+int AK_delete_row(AK_list *row_root) ;
+int AK_update_row(AK_list *row_root);
 */
-void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore);
-void Ak_Update_Existing_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore);
-int Ak_insert_row(struct list_node *row_root);
+void AK_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore);
+void AK_Update_Existing_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore);
+int AK_insert_row(struct list_node *row_root);
 int AK_selection(char *srcTable, char *dstTable, struct list_node *expr);
-void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore, int newconstraint);
-int Ak_delete_row(struct list_node *row_root) ;
-int Ak_update_row(struct list_node *row_root);
+void AK_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore, int newconstraint);
+int AK_delete_row(struct list_node *row_root) ;
+int AK_update_row(struct list_node *row_root);
 
 int AK_initialize_new_segment(char *name, int type, AK_header *header);
 

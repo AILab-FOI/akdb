@@ -27,7 +27,7 @@
 #include "../../auxi/dictionary.h"
 #include "constraint_names.h"
 
-int Ak_set_constraint_unique(char* tableName, char attName[], char constraintName[]);
+int AK_set_constraint_unique(char* tableName, char attName[], char constraintName[]);
 int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]);
 int AK_delete_constraint_unique(char* tableName, char attName[], char constraintName[]);
 TestResult AK_unique_test();

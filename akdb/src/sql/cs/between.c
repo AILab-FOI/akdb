@@ -81,7 +81,7 @@ void AK_set_constraint_between(char* tableName, char* constraintName, char* attN
     AK_PRO;
 
     if (systemTableAddress != -1) {
-        Ak_dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
+        AK_dbg_messg(HIGH, CONSTRAINTS, "System table to insert: %s, address: %i\n", systemTableName, systemTableAddress);
 
         tempBlock = (AK_block *) AK_read_block(systemTableAddress);
 
@@ -151,21 +151,21 @@ int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar
             inMemoryTable[strlen(tempBlock->data + tempBlock->tuple_dict[tupleDictID].address) - 1] = FREE_CHAR;
 
             if (strcmp(inMemoryTable, tableName) == 0) {                
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");                
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");                
+                AK_dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
 
                 memmove(attName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
 
                 memmove(constraintName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 1].address, tempBlock->tuple_dict[tupleDictID + 1].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
 
                 memmove(lowerBoundary, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 3].address, tempBlock->tuple_dict[tupleDictID + 3].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %s\n", lowerBoundary);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %s\n", lowerBoundary);
 
                 memmove(upperBoundary, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 4].address, tempBlock->tuple_dict[tupleDictID + 4].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %s\n", upperBoundary);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
+                AK_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %s\n", upperBoundary);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
 
                 if (strcmp(attName, attNamePar) == 0) {
                     if (strcmp(newValue, lowerBoundary) >= 0 && strcmp(newValue, upperBoundary) <= 0) {
@@ -223,21 +223,21 @@ void AK_print_constraints(char* tableName) {
             inMemoryTable[strlen(tempBlock->data + tempBlock->tuple_dict[tupleDictID].address) - 1] = FREE_CHAR;
 
             if (strcmp(inMemoryTable, tableName) == 0) {                
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");                
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");                
+                AK_dbg_messg(HIGH, CONSTRAINTS, "Table name: %s\n", tableName);
 
                 memmove(attName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 2].address, tempBlock->tuple_dict[tupleDictID + 2].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "Attribute name: %s\n", attName);
 
                 memmove(constraintName, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 1].address, tempBlock->tuple_dict[tupleDictID + 1].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "Constraint name: %s\n", constraintName);
 
                 memmove(lowerBoundary, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 3].address, tempBlock->tuple_dict[tupleDictID + 3].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %s\n", lowerBoundary);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "Low boundary: %s\n", lowerBoundary);
 
                 memmove(upperBoundary, tempBlock->data + tempBlock->tuple_dict[tupleDictID + 4].address, tempBlock->tuple_dict[tupleDictID + 4].size);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %s\n", upperBoundary);
-                Ak_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
+                AK_dbg_messg(HIGH, CONSTRAINTS, "High boundary: %s\n", upperBoundary);
+                AK_dbg_messg(HIGH, CONSTRAINTS, "--------------------------------\n");
 
                 // DEBUG
                 printf("\ninMemoryTable: %s\n", inMemoryTable);
@@ -318,7 +318,7 @@ int AK_delete_constraint_between(char* tableName, char* constraintNamePar, char*
   * @brief Tests the functionality of implemented between constraint.
   * @return No return value
   */
-TestResult Ak_constraint_between_test() {
+TestResult AK_constraint_between_test() {
     // TEST #1
     char* tableName_1 = "department";
     char* attName_1 = "dep_name";

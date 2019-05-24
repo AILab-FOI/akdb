@@ -193,7 +193,7 @@ int AK_query_mem_AK_malloc()
 {
 	int i=0;
 	AK_PRO;
-	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Start query_mem_AK_malloc\n");
+	AK_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Start query_mem_AK_malloc\n");
 
 	/// allocate memory for global variable query_mem
 	if ((query_mem = (AK_query_mem *) AK_malloc(sizeof ( AK_query_mem))) == NULL)
@@ -278,7 +278,7 @@ int AK_query_mem_AK_malloc()
 			memcpy(query_mem->dictionary,query_mem_dict,sizeof(* query_mem_dict));
 			memcpy(query_mem->result,query_mem_result,sizeof(* query_mem_result));*/
 
-	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Success!\n");
+	AK_dbg_messg(HIGH, MEMO_MAN, "AK_query_mem_AK_malloc: Success!\n");
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
@@ -522,7 +522,7 @@ table_addresses *AK_get_index_segment_addresses(char * segmentName)
 	table_addresses * addresses;
 	AK_PRO;
 
-	Ak_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
+	AK_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
 	addresses = AK_get_segment_addresses_internal(sys_table, segmentName);
 
 	AK_EPI;
@@ -541,7 +541,7 @@ table_addresses *AK_get_segment_addresses(char * segmentName)
 	table_addresses * addresses;
 	AK_PRO;
 
-	Ak_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
+	AK_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", sys_table);
 	addresses = AK_get_segment_addresses_internal(sys_table, segmentName);
 
 	AK_EPI;
@@ -564,7 +564,7 @@ table_addresses *AK_get_segment_addresses_internal(char *tableName, char *segmen
 
 	AK_PRO;
 
-	Ak_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", tableName);
+	AK_dbg_messg(HIGH, MEMO_MAN,"get_segment_addresses: Serching for %s table \n", tableName);
 	address_sys = AK_get_system_table_address(tableName);
 	mem_block = AK_get_block(address_sys);
 	table_addresses * addresses = (table_addresses *) AK_malloc(sizeof (table_addresses));
@@ -597,7 +597,7 @@ table_addresses *AK_get_segment_addresses_internal(char *tableName, char *segmen
 			addresses->address_from[j] = address_from;
 			addresses->address_to[j] = address_to;
 			j++;
-			Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
+			AK_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses(%s): Found addresses of searching segment: %d , %d \n", name, address_from, address_to);
 		}
 
 	}
@@ -640,7 +640,7 @@ int AK_get_system_table_address(const char *name) {
 
 		if (strcmp(name_sys, name) == 0)
 		{
-			Ak_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses: Found the address of the %s table: %d \n", name, address_sys);
+			AK_dbg_messg(HIGH, MEMO_MAN, "get_segment_addresses: Found the address of the %s table: %d \n", name, address_sys);
 			break;
 		}
 	}
@@ -690,7 +690,7 @@ int AK_find_AK_free_space(table_addresses * addresses)
 	AK_mem_block *mem_block;
 	int from = 0, to = 0, j = 0, i = 0;
 	AK_PRO;
-	Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: Searching for block that has AK_free space < 500 \n");
+	AK_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: Searching for block that has AK_free space < 500 \n");
 
 	for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++)
 	{
@@ -705,7 +705,7 @@ int AK_find_AK_free_space(table_addresses * addresses)
 				mem_block = AK_get_block(i);
 				int AK_free_space_on = mem_block->block->AK_free_space;
 
-				Ak_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: FREE SPACE %d\n", mem_block->block->AK_free_space);
+				AK_dbg_messg(HIGH, MEMO_MAN, "find_AK_free_space: FREE SPACE %d\n", mem_block->block->AK_free_space);
 
 				if ((AK_free_space_on < MAX_FREE_SPACE_SIZE) &&
 					(mem_block->block->last_tuple_dict_id < MAX_LAST_TUPLE_DICT_SIZE_TO_USE))  //found AK_free block to write
@@ -778,7 +778,7 @@ int AK_init_new_extent(char *table_name, int extent_type)
 		AK_EPI;
 		return EXIT_ERROR;
 	}
-	Ak_dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", start_address, old_size, extent_type);
+	AK_dbg_messg(HIGH, MEMO_MAN, "AK_init_new_extent: start_address=%i, old_size=%i, extent_type=%i\n", start_address, old_size, extent_type);
 
 	switch (extent_type)
 	{
@@ -804,13 +804,13 @@ int AK_init_new_extent(char *table_name, int extent_type)
 	//mem_block = (AK_mem_block *) AK_get_block(0);
 
 	row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&row_root);
+	AK_Init_L3(&row_root);
 	//DeleteAllElements(row_root);
-	Ak_Insert_New_Element(TYPE_INT, &obj_id, sys_table, "obj_id", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, table_name, sys_table, "name", row_root);
-	Ak_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
-	Ak_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
-	Ak_insert_row(row_root);
+	AK_Insert_New_Element(TYPE_INT, &obj_id, sys_table, "obj_id", row_root);
+	AK_Insert_New_Element(TYPE_VARCHAR, table_name, sys_table, "name", row_root);
+	AK_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
+	AK_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
+	AK_insert_row(row_root);
 	AK_EPI;
 	return start_address;
 }

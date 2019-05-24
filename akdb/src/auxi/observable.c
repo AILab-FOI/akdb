@@ -39,12 +39,12 @@ static inline int AK_register_observer(AK_observable *self, AK_observer *observe
             // Assigning unique ID to new observer
             observer->observer_id = self->observer_id_counter++;
             self->observers[i] = observer;
-            Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVER ADDED");
+            AK_dbg_messg(LOW, GLOBAL, "NEW OBSERVER ADDED");
             AK_EPI;
             return OK;
         }
     }
-    Ak_dbg_messg(LOW, GLOBAL, "ERROR IN FUNCTION FOR ADDING NEW OBSERVER!");
+    AK_dbg_messg(LOW, GLOBAL, "ERROR IN FUNCTION FOR ADDING NEW OBSERVER!");
     AK_EPI;
     return NOT_OK;
 }
@@ -65,13 +65,13 @@ static inline int AK_unregister_observer(AK_observable *self, AK_observer *obser
         if(observer == self->observers[i]) {
             AK_free(self->observers[i]);
             self->observers[i] = NULL;
-            Ak_dbg_messg(LOW, GLOBAL, "OBSERVER DELETED");
+            AK_dbg_messg(LOW, GLOBAL, "OBSERVER DELETED");
             AK_EPI;
             return OK;
         }
     }
     
-    Ak_dbg_messg(LOW, GLOBAL, "ERROR IN FUNCTION FOR DELETING OBSERVER!");
+    AK_dbg_messg(LOW, GLOBAL, "ERROR IN FUNCTION FOR DELETING OBSERVER!");
     AK_EPI;    
     return NOT_OK;
 }
@@ -91,13 +91,13 @@ static inline int AK_notify_observer(AK_observable *self, AK_observer *observer)
     for(i = 0; i < MAX_OBSERVABLE_OBSERVERS; ++i) {
         if(self->observers[i] != NULL && self->observers[i] == observer) {
             observer->AK_notify(observer, self->AK_observable_type, self->AK_ObservableType_Def);
-            Ak_dbg_messg(LOW, GLOBAL, "NOTIFICATION SENT TO OBSERVER");
+            AK_dbg_messg(LOW, GLOBAL, "NOTIFICATION SENT TO OBSERVER");
             AK_EPI;
             return OK;
         }
     }
     
-    Ak_dbg_messg(LOW, GLOBAL, "ERROR IN FUNCTION FOR SENDING NOTIFICATION TO SPECIFIED OBSERVER!");
+    AK_dbg_messg(LOW, GLOBAL, "ERROR IN FUNCTION FOR SENDING NOTIFICATION TO SPECIFIED OBSERVER!");
     AK_EPI;
     return NOT_OK;
 }
@@ -120,7 +120,7 @@ static inline int AK_notify_observers(AK_observable *self)
         }
     }
     
-    Ak_dbg_messg(LOW, GLOBAL, "OBSERVERS NOTIFIED");
+    AK_dbg_messg(LOW, GLOBAL, "OBSERVERS NOTIFIED");
     AK_EPI;
     return OK;
 }
@@ -139,12 +139,12 @@ static inline AK_observer *AK_get_observer_by_id(AK_observable *self, int id)
     AK_PRO;
     for(i = 0; i < MAX_OBSERVABLE_OBSERVERS; ++i) {
         if(self->observers[i] != NULL && self->observers[i]->observer_id == id) {
-            Ak_dbg_messg(LOW, GLOBAL, "REQUESTED OBSERVER FOUND. RETURNING OBSERVER BY ID");
+            AK_dbg_messg(LOW, GLOBAL, "REQUESTED OBSERVER FOUND. RETURNING OBSERVER BY ID");
             AK_EPI;
             return self->observers[i];
         }
     }
-    Ak_dbg_messg(LOW, GLOBAL, "OBSERVER WITH ID:%d DOESN'T EXIST!", id);
+    AK_dbg_messg(LOW, GLOBAL, "OBSERVER WITH ID:%d DOESN'T EXIST!", id);
     AK_EPI;
     return NULL;
 }
@@ -173,7 +173,7 @@ AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_E
     self->AK_ObservableType_Def = AK_ObservableType_Def;
     self->observer_id_counter = 1;
     self->AK_observable_type = AK_observable_type;
-    Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVABLE OBJECT INITIALIZED!");
+    AK_dbg_messg(LOW, GLOBAL, "NEW OBSERVABLE OBJECT INITIALIZED!");
     AK_EPI;
     return self;
 }
@@ -192,12 +192,12 @@ static inline int AK_destroy_observer(AK_observer *self)
     if(self != NULL) {
         AK_free(self);
         self = NULL;
-        Ak_dbg_messg(LOW, GLOBAL, "OBSERVER DESTROYED!");    
+        AK_dbg_messg(LOW, GLOBAL, "OBSERVER DESTROYED!");    
         AK_EPI;    
         return OK;
     }
     
-    Ak_dbg_messg(LOW, GLOBAL, "ERROR WHILE DESTROYING OBSERVER");
+    AK_dbg_messg(LOW, GLOBAL, "ERROR WHILE DESTROYING OBSERVER");
     AK_EPI;
     return NOT_OK;
 }
@@ -233,7 +233,7 @@ AK_observer *AK_init_observer(void *observer_type, void (*observer_type_event_ha
     self->AK_observer_type = observer_type;
     self->AK_observer_type_event_handler = observer_type_event_handler;
     self->AK_notify = &AK_notify;
-    Ak_dbg_messg(LOW, GLOBAL, "NEW OBSERVER OBJECT INITIALIZED!");  
+    AK_dbg_messg(LOW, GLOBAL, "NEW OBSERVER OBJECT INITIALIZED!");  
     AK_EPI;  
     return self;
 }

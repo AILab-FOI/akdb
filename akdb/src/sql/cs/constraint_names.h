@@ -25,7 +25,7 @@
 #include "../../file/fileio.h"
 #include "../../auxi/mempro.h"
 
-int Ak_check_constraint_name(char *constraintName);
+int AK_check_constraint_name(char *constraintName);
 TestResult AK_constraint_names_test();
 
 #endif

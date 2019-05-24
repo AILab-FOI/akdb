@@ -92,17 +92,17 @@ int AK_product(char *srcTable1, char * srcTable2, char * dstTable) {
 		/* initializing new table with header */
 		AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, header);
 
-		Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
-		Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_product: start copying data\n");
+		AK_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
+		AK_dbg_messg(MIDDLE, REL_OP, "\nAK_product: start copying data\n");
 
 		/*product procedure function */
 		AK_product_procedure(srcTable1,srcTable2,dstTable,header);
 
-		Ak_dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
+		AK_dbg_messg(LOW, REL_OP, "PRODUCT_TEST_SUCCESS\n\n");
 		AK_EPI;
 		return EXIT_SUCCESS;
 	} else {
-		Ak_dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");
+		AK_dbg_messg(LOW, REL_OP, "\n AK_product: Table/s doesn't exist!");
 		AK_free(src_addr1);
 		AK_free(src_addr2);
 		AK_EPI;
@@ -133,7 +133,7 @@ void AK_product_procedure(char *srcTable1, char * srcTable2, char * dstTable, AK
 		char celldata[MAX_VARCHAR_LENGTH];
 
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
-	Ak_Init_L3(&row_root);
+	AK_Init_L3(&row_root);
 
 	register  j, k, l, m, n, o,   u;
 		/**
@@ -194,7 +194,7 @@ void AK_product_procedure(char *srcTable1, char * srcTable2, char * dstTable, AK
 							 			celldata[ cellsize ] = '\0';
 							 		}
 
-							 		Ak_Insert_New_Element( celltype, celldata, dstTable,
+							 		AK_Insert_New_Element( celltype, celldata, dstTable,
 							 			header[ u ].att_name, row_root);
 							 	}
 
@@ -209,13 +209,13 @@ void AK_product_procedure(char *srcTable1, char * srcTable2, char * dstTable, AK
 							 			celldata[ cellsize ] = '\0';
 							 		}
 
-							 		Ak_Insert_New_Element( celltype, celldata, dstTable,
+							 		AK_Insert_New_Element( celltype, celldata, dstTable,
 							 			header[ num_att1 + u ].att_name, row_root);
 							 	}
 
 							 	/* finally, inserting new row in table and emptying linked list */
-							 	Ak_insert_row(row_root);
-							 	Ak_DeleteAll_L3(&row_root);
+							 	AK_insert_row(row_root);
+							 	AK_DeleteAll_L3(&row_root);
 							}
 						}
 						m++;

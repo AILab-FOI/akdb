@@ -22,7 +22,7 @@
 
 /**
    * @author Matija Novak
-   * @brief !! YOU PROBABLY DON'T WANT TO USE THIS FUNCTION !! - Use Ak_Update_Existing_Element or Ak_Insert_New_Element instead. 
+   * @brief !! YOU PROBABLY DON'T WANT TO USE THIS FUNCTION !! - Use AK_Update_Existing_Element or AK_Insert_New_Element instead. 
    Function inserts new element after some element, to insert on first place give list as before element. New element
             is allocated. Type, data, attribute name and constraint of new elemets are set according to function arguments. Pointers
             are changed so that before element points to new element.
@@ -34,7 +34,7 @@
    * @param constraint NEW_VALUE if data is new value, SEARCH_CONSTRAINT if data is constraint to search for
    * @return No return value
  */
-void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore, int newconstraint) {
+void AK_Insert_New_Element_For_Update(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore, int newconstraint) {
     AK_PRO;
 
     struct list_node *newElement = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -70,16 +70,16 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
    * @param constraint is NEW_VALUE
    * @return No return value
  */
-void Ak_Update_Existing_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore) {
+void AK_Update_Existing_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore) {
   AK_PRO;
-  Ak_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, SEARCH_CONSTRAINT);
+  AK_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, SEARCH_CONSTRAINT);
   AK_EPI;
 }
 
 /**
    * @author Matija Novak, changed by Dino Laktašić
    * @brief Used to add a new element after some element, to insert on first place give list as before element. It calls function
-            Ak_Insert_New_Element_For_Update.
+            AK_Insert_New_Element_For_Update.
    * @param newtype type of the data
    * @param data the data
    * @param table table name
@@ -88,9 +88,9 @@ void Ak_Update_Existing_Element(int newtype, void * data, char * table, char * a
    * @param constraint is NEW_VALUE
    * @return No return value
  */
-void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore) {
+void AK_Insert_New_Element(int newtype, void * data, char * table, char * attribute_name, struct list_node *ElementBefore) {
   AK_PRO;
-  Ak_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, NEW_VALUE);
+  AK_Insert_New_Element_For_Update(newtype, data, table, attribute_name, ElementBefore, NEW_VALUE);
   AK_EPI;
 }
 
@@ -103,7 +103,7 @@ void Ak_Insert_New_Element(int newtype, void * data, char * table, char * attrib
         @param temp_block block in which we insert data
         @return EXIT SUCCES if success
  */
-int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
+int AK_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
     struct list_node *some_element;
     int type; //type od entry data
     int id = 0; //id tuple dict in which is inserted next data
@@ -120,10 +120,10 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
         //printf("insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
 
 
-        Ak_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
+        AK_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Position to write (tuple_dict_index) %d, header_att_name %s\n", id, temp_block->header[head].att_name);
 
         search_elem = 1;
-        some_element = (struct list_node *) Ak_First_L2(row_root);
+        some_element = (struct list_node *) AK_First_L2(row_root);
         while (search_elem) {
             if ((strcmp(some_element->attribute_name, temp_block->header[head].att_name) == 0)
                     && (some_element->constraint == 0)) {//found correct element
@@ -134,7 +134,7 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
 
                 search_elem = 0;
             } else {
-                some_element = (struct list_node *) Ak_Next_L2(some_element);
+                some_element = (struct list_node *) AK_Next_L2(some_element);
                 if (some_element == 0) { //no data exist for this header write null
                     some_element =1 ;
                     memcpy(entry_data, "null", strlen("null"));
@@ -152,7 +152,7 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
 
         memcpy(entry_data, temp_block->data + temp_block->tuple_dict[id].address, temp_block->tuple_dict[id].size);
 
-        Ak_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Insert: data: %s, size: %d\n", entry_data, AK_type_size(type, entry_data));
+        AK_dbg_messg(HIGH, FILE_MAN, "insert_row_to_block: Insert: data: %s, size: %d\n", entry_data, AK_type_size(type, entry_data));
         head++; //go to next header
     }
     //writes the last used tuple dict id
@@ -169,9 +169,9 @@ int Ak_insert_row_to_block(struct list_node *row_root, AK_block *temp_block) {
         @return EXIT_SUCCESS if success else EXIT_ERROR
 
  */
-int Ak_insert_row(struct list_node *row_root) {
+int AK_insert_row(struct list_node *row_root) {
     AK_PRO;
-    Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Start testing reference integrity.\n");
+    AK_dbg_messg(HIGH, FILE_MAN, "insert_row: Start testing reference integrity.\n");
 
     // recovery checkpoint
     AK_add_to_redolog(INSERT, row_root);
@@ -182,8 +182,8 @@ int Ak_insert_row(struct list_node *row_root) {
         return EXIT_ERROR;
     }
 
-    Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Start inserting data\n");
-    struct list_node *some_element = (struct list_node *) Ak_First_L2(row_root);
+    AK_dbg_messg(HIGH, FILE_MAN, "insert_row: Start inserting data\n");
+    struct list_node *some_element = (struct list_node *) AK_First_L2(row_root);
 
     char table[MAX_ATT_NAME];
 	table_addresses *table_addresses_return;
@@ -192,7 +192,7 @@ int Ak_insert_row(struct list_node *row_root) {
     memset(table, '\0', MAX_ATT_NAME);
     memcpy(&table, some_element->table, strlen(some_element->table));
 
-    Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
+    AK_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
 
 	table_addresses_return = AK_get_table_addresses(table);	
@@ -213,11 +213,11 @@ int Ak_insert_row(struct list_node *row_root) {
         AK_EPI;
         return EXIT_ERROR;
     }
-    Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into block on adress: %d\n", adr_to_write);
+    AK_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into block on adress: %d\n", adr_to_write);
 
     AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(adr_to_write);
 
-    int end = (int) Ak_insert_row_to_block(row_root, mem_block->block);
+    int end = (int) AK_insert_row_to_block(row_root, mem_block->block);
     
     if(end == EXIT_SUCCESS) {
         AK_redolog_commit();
@@ -235,7 +235,7 @@ int Ak_insert_row(struct list_node *row_root) {
    * @param row_list list of elements which contain data for delete or update
    * @return No return value
 */
-void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) {
+void AK_update_row_from_block(AK_block *temp_block, struct list_node *row_root) {
     int head = 0; //counting headers
     int attPlace = 0;//place of attribute which are same
     int del = 1; //if can delete gorup of tuple dicts which are in the same row of table
@@ -243,9 +243,9 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
     char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
     AK_PRO;
     struct list_node *new_data = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&new_data);
+    AK_Init_L3(&new_data);
 
-    struct list_node *some_element = (struct list_node *) Ak_First_L2(row_root);
+    struct list_node *some_element = (struct list_node *) AK_First_L2(row_root);
 
     int i, overflow, address, size;
 
@@ -289,7 +289,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
             int j;
             for (j = i - attPlace; j < i + head - attPlace; j++)
             {
-                Ak_DeleteAll_L3(&new_data);
+                AK_DeleteAll_L3(&new_data);
                 int a = temp_block->tuple_dict[j].address;
                 int s = temp_block->tuple_dict[j].size;
 
@@ -300,7 +300,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                 while(some_element)
                 {
                     // save data from roow_root in a list new_data where whole row is being inserted 
-                    Ak_Insert_New_Element(temp_block->tuple_dict[j].type, some_element->data, some_element->table, some_element->attribute_name, new_data);
+                    AK_Insert_New_Element(temp_block->tuple_dict[j].type, some_element->data, some_element->table, some_element->attribute_name, new_data);
 
                     if (strcmp(some_element->attribute_name, temp_block->header[j % head].att_name) == 0 && some_element->constraint == NEW_VALUE)
                     {
@@ -317,7 +317,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                                 // if att_names are different, this is old data, and we need to insert it again
                                 if (strcmp(some_element->attribute_name, temp_block->header[k % head].att_name) != 0)
                                 {
-                                    Ak_Insert_New_Element(temp_block->tuple_dict[k].type, entry_data, some_element->table, temp_block->header[k % head].att_name, new_data);
+                                    AK_Insert_New_Element(temp_block->tuple_dict[k].type, entry_data, some_element->table, temp_block->header[k % head].att_name, new_data);
                                 }
 
                                 temp_block->tuple_dict[k].size = 0;
@@ -325,7 +325,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                                 temp_block->tuple_dict[k].address = 0;
                             }
                             // insert new data
-                            Ak_insert_row(new_data);
+                            AK_insert_row(new_data);
                         }
                         // we need to update row
                         else
@@ -333,7 +333,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                             memcpy(temp_block->data + a, some_element->data, s);
                         }
                     }
-                    //some_element = (struct list_node *) Ak_Next_L2(some_element);
+                    //some_element = (struct list_node *) AK_Next_L2(some_element);
 		    some_element = some_element->next;
                 }
             }
@@ -341,7 +341,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
         del = 1;
     }
 	// everything from new data has been copied so we can deallocate all in list - corr. Elvis Popovic
-	Ak_DeleteAll_L3(&new_data);
+	AK_DeleteAll_L3(&new_data);
     AK_free(new_data);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -354,7 +354,7 @@ void Ak_update_row_from_block(AK_block *temp_block, struct list_node *row_root) 
    * @param row_list list of elements which contain data for delete or update
    * @return No return value
 */
-void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) {
+void AK_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) {
     int head = 0; //counting headers
     int attPlace = 0;//place of attribute which are same
     int del = 1; //if can delete gorup of tuple dicts which are in the same row of table
@@ -362,13 +362,13 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) 
     char entry_data[MAX_VARCHAR_LENGTH]; //entry data when haeader is found in list which is copied to compare with data in block
     AK_PRO;
     struct list_node *row_root_backup = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root_backup);
+    AK_Init_L3(&row_root_backup);
 
-    struct list_node *some_element = (struct list_node *) Ak_First_L2(row_root);
+    struct list_node *some_element = (struct list_node *) AK_First_L2(row_root);
 
     while (some_element) {//make a copy of list
-        Ak_Insert_New_Element_For_Update(some_element->type, some_element->data, some_element->table, some_element->attribute_name, row_root_backup, some_element->constraint);
-       //some_element = (struct list_node *) Ak_Next_L2(some_element);
+        AK_Insert_New_Element_For_Update(some_element->type, some_element->data, some_element->table, some_element->attribute_name, row_root_backup, some_element->constraint);
+       //some_element = (struct list_node *) AK_Next_L2(some_element);
 	some_element = some_element->next;
     }
 
@@ -416,7 +416,7 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) 
                 int k = temp_block->tuple_dict[j].address;
                 int l = temp_block->tuple_dict[j].size;
                 memset(temp_block->data + k, '\0', l);
-                Ak_dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);
+                AK_dbg_messg(HIGH, FILE_MAN, "update_delete_row_from_block: from: %d, to: %d\n", k, l + k);
 
                 //clean tuple dict
                 temp_block->tuple_dict[j].size = 0;
@@ -440,14 +440,14 @@ void Ak_delete_row_from_block(AK_block *temp_block, struct list_node *row_root) 
       * @param del - DELETE or UPDATE
       * @return EXIT_SUCCESS if success
 */
-int Ak_delete_update_segment(struct list_node *row_root, int del) {
+int AK_delete_update_segment(struct list_node *row_root, int del) {
     char table[MAX_ATT_NAME];
     AK_PRO;
-    struct list_node *some_element = (struct list_node *) Ak_First_L2(row_root);
+    struct list_node *some_element = (struct list_node *) AK_First_L2(row_root);
 
     strcpy(table, some_element->table);
     table[strlen(some_element->table)] = '\0';
-    Ak_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: table to delete_update from: %s, source %s\n", table, some_element->table);
+    AK_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: table to delete_update from: %s, source %s\n", table, some_element->table);
 
     table_addresses * addresses = (table_addresses *) AK_get_table_addresses(table);
 
@@ -457,18 +457,18 @@ int Ak_delete_update_segment(struct list_node *row_root, int del) {
     for (j = 0; j < MAX_EXTENTS_IN_SEGMENT; j++) { //going through extent
         startAddress = addresses->address_from[j];
         if (startAddress != 0) {
-            Ak_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: delete_update extent: %d\n", j);
+            AK_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: delete_update extent: %d\n", j);
 
             for (i = startAddress; i <= addresses->address_to[j]; i++) { //going through blocks
-                Ak_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: delete_update block: %d\n", i);
+                AK_dbg_messg(HIGH, FILE_MAN, "delete_update_segment: delete_update block: %d\n", i);
 
                 mem_block = (AK_mem_block *) AK_get_block(i);
 
                 if(del == DELETE) {
-                    Ak_delete_row_from_block(mem_block->block, row_root);
+                    AK_delete_row_from_block(mem_block->block, row_root);
                 }
                 else {
-                    Ak_update_row_from_block(mem_block->block, row_root);
+                    AK_update_row_from_block(mem_block->block, row_root);
                 }
                 AK_mem_block_modify(mem_block, BLOCK_DIRTY);
             }
@@ -485,10 +485,10 @@ int Ak_delete_update_segment(struct list_node *row_root, int del) {
         @param row_root elements of one row
         @returs EXIT_SUCCESS if success
  */
-int Ak_delete_row(struct list_node *row_root) {
+int AK_delete_row(struct list_node *row_root) {
     AK_PRO;
     if (AK_reference_check_restricion(row_root, DELETE) == EXIT_ERROR) {
-        Ak_dbg_messg(HIGH, FILE_MAN, "Could not delete row. Reference integrity violation (restricted).\n");
+        AK_dbg_messg(HIGH, FILE_MAN, "Could not delete row. Reference integrity violation (restricted).\n");
         return EXIT_ERROR;
     }
 
@@ -500,7 +500,7 @@ int Ak_delete_row(struct list_node *row_root) {
         AK_reference_update(row_root, DELETE);
     }
 
-    Ak_delete_update_segment(row_root, DELETE);
+    AK_delete_update_segment(row_root, DELETE);
     AK_EPI;
     return EXIT_SUCCESS;
 }
@@ -511,7 +511,7 @@ int Ak_delete_row(struct list_node *row_root) {
  *@param id id of row
  *@param tableName name of table to delete the row
  */
-void Ak_delete_row_by_id(int id, char* tableName){
+void AK_delete_row_by_id(int id, char* tableName){
     AK_PRO;
     char* attributes = AK_rel_eq_get_atrributes_char(tableName);
     char* nameID = AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
@@ -527,8 +527,8 @@ void Ak_delete_row_by_id(int id, char* tableName){
     } while ( *attributes != '\0' || index < MAX_VARCHAR_LENGTH);
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Update_Existing_Element(TYPE_INT, &id, tableName, nameID, row_root);
-    Ak_delete_row(row_root);
+    AK_Update_Existing_Element(TYPE_INT, &id, tableName, nameID, row_root);
+    AK_delete_row(row_root);
     AK_EPI;
 }
 
@@ -537,10 +537,10 @@ void Ak_delete_row_by_id(int id, char* tableName){
         @param row_root elements of one row
         @return EXIT_SUCCESS if success
 */
-int Ak_update_row(struct list_node *row_root) {
+int AK_update_row(struct list_node *row_root) {
     AK_PRO;
     if (AK_reference_check_restricion(row_root, UPDATE) == EXIT_ERROR) {
-        Ak_dbg_messg(HIGH, FILE_MAN, "Could not update row. Reference integrity violation (restricted).\n");
+        AK_dbg_messg(HIGH, FILE_MAN, "Could not update row. Reference integrity violation (restricted).\n");
         AK_EPI;
         return EXIT_ERROR;
     }
@@ -552,13 +552,13 @@ int Ak_update_row(struct list_node *row_root) {
     if (AK_reference_check_if_update_needed(row_root, UPDATE) == EXIT_SUCCESS) {
         AK_reference_update(row_root, UPDATE);
     }
-    Ak_delete_update_segment(row_root, UPDATE);
+    AK_delete_update_segment(row_root, UPDATE);
     AK_EPI;
     return EXIT_SUCCESS;
 }
 
 
-TestResult Ak_fileio_test() {
+TestResult AK_fileio_test() {
     AK_PRO;
     printf("\n\nThis is fileio test!\n");
     
@@ -576,85 +576,85 @@ TestResult Ak_fileio_test() {
 
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     int broj;
 
     broj = 1;
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Novak", "testna", "Prezime", row_root);
-    Ak_insert_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Novak", "testna", "Prezime", row_root);
+    AK_insert_row(row_root);
 
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     broj = 2;
-    Ak_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Nikola", "testna", "Ime", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
-    Ak_insert_row(row_root);
+    AK_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Nikola", "testna", "Ime", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
+    AK_insert_row(row_root);
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     broj = 3;
-    Ak_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
-    Ak_insert_row(row_root);
+    AK_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
+    AK_insert_row(row_root);
 
     int i;
 
     for (i = 5; i < 10; i++) {
-        Ak_DeleteAll_L3(&row_root);
+        AK_DeleteAll_L3(&row_root);
         broj = i;
-        Ak_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
-        Ak_Insert_New_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
-        Ak_Insert_New_Element(TYPE_VARCHAR, "Vacenovski", "testna", "Prezime", row_root);
-        Ak_insert_row(row_root);
+        AK_Insert_New_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+        AK_Insert_New_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
+        AK_Insert_New_Element(TYPE_VARCHAR, "Vacenovski", "testna", "Prezime", row_root);
+        AK_insert_row(row_root);
     }
 
     AK_print_table("testna");
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     broj = 3;
-    Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Vjekoslavoski", "testna", "Prezime", row_root);
-    Ak_update_row(row_root);
+    AK_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Vjekoslavoski", "testna", "Prezime", row_root);
+    AK_update_row(row_root);
 
     AK_print_table("testna");
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     broj = 2;
-    Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Francina", "testna", "Ime", row_root);
-    Ak_update_row(row_root);
+    AK_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Francina", "testna", "Ime", row_root);
+    AK_update_row(row_root);
 
     AK_print_table("testna");
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     broj = 7;
-    Ak_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "M", "testna", "Prezime", row_root);
-    Ak_update_row(row_root);
+    AK_Update_Existing_Element(TYPE_INT, &broj, "testna", "Redni_broj", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "M", "testna", "Prezime", row_root);
+    AK_update_row(row_root);
 
     AK_print_table("testna");
 
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Update_Existing_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "DugackoPrezime", "testna", "Prezime", row_root);
-    Ak_update_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Update_Existing_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "DugackoPrezime", "testna", "Prezime", row_root);
+    AK_update_row(row_root);
 
     AK_print_table("testna");
 
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Update_Existing_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "DugackoIme", "testna", "Ime", row_root);
-    Ak_update_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Update_Existing_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "DugackoIme", "testna", "Ime", row_root);
+    AK_update_row(row_root);
 
     AK_print_table("testna");
 
     AK_print_table("testna");
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     AK_free(row_root);
     AK_EPI;
     return TEST_result(0,0);

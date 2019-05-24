@@ -62,7 +62,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
     //first we copy all of the column names from the first table
     while (strcmp(temp_block_tbl1->header[head1].att_name, "") != 0) {
 
-    	Ak_dbg_messg(HIGH, REL_OP, "Theta join: Copying attribute header: %s from first table", temp_block_tbl1->header[head1].att_name);
+    	AK_dbg_messg(HIGH, REL_OP, "Theta join: Copying attribute header: %s from first table", temp_block_tbl1->header[head1].att_name);
     	memcpy(&header[head1], &temp_block_tbl1->header[head1], sizeof (temp_block_tbl1->header[head1]));
     	head1++;
     }
@@ -85,14 +85,14 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
 			head1++;
     	}
 
-    	Ak_dbg_messg(HIGH, REL_OP, "Theta join: Copying attribute header: %s from second table", temp_block_tbl2->header[head2].att_name);
+    	AK_dbg_messg(HIGH, REL_OP, "Theta join: Copying attribute header: %s from second table", temp_block_tbl2->header[head2].att_name);
     	memcpy(&header[new_head], &temp_block_tbl2->header[head2], sizeof(temp_block_tbl2->header[head2]));
 
 
     	//if an overlap is found, the column is renamed by prepending its table name and a dot.
     	if (rename){
 
-    		Ak_dbg_messg(HIGH, REL_OP, "Theta join: renaming attribute: %s", temp_block_tbl2->header[head2].att_name);
+    		AK_dbg_messg(HIGH, REL_OP, "Theta join: renaming attribute: %s", temp_block_tbl2->header[head2].att_name);
 
     		renamed_att = AK_malloc(length_tbl1 + strlen(temp_block_tbl1->header[head1].att_name) + 2);
     		memcpy(renamed_att, srcTable1, length_tbl1);
@@ -100,7 +100,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
     		memcpy(renamed_att + length_tbl1 + 1, temp_block_tbl1->header[head1].att_name, strlen(temp_block_tbl1->header[head1].att_name) + 1);
 
     		if (strlen(renamed_att) > MAX_ATT_NAME){
-    			Ak_dbg_messg(HIGH, REL_OP, "Theta join: renaming failed for attribute: %s (name is too long)", renamed_att);
+    			AK_dbg_messg(HIGH, REL_OP, "Theta join: renaming failed for attribute: %s (name is too long)", renamed_att);
 			AK_EPI;
     			return EXIT_ERROR;
     		}
@@ -115,7 +115,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
 			memcpy(renamed_att + length_tbl2 + 1, temp_block_tbl2->header[head2].att_name, strlen(temp_block_tbl2->header[head2].att_name) + 1);
 
 			if (strlen(renamed_att) > MAX_ATT_NAME){
-				Ak_dbg_messg(HIGH, REL_OP, "Theta join: renaming failed for attribute: %s (name is too long)", renamed_att);
+				AK_dbg_messg(HIGH, REL_OP, "Theta join: renaming failed for attribute: %s (name is too long)", renamed_att);
 				AK_EPI;
 				return EXIT_ERROR;
 			}
@@ -151,7 +151,7 @@ int AK_create_theta_join_header(char *srcTable1, char * srcTable2, char *new_tab
  */
 void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, int tbl1_num_att, int tbl2_num_att, struct list_node *constraints, char *new_table) {
     AK_PRO;
-    Ak_dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
+    AK_dbg_messg(HIGH, REL_OP, "\n COPYING THETA JOIN");
 
     int tbl1_att, tbl2_att, tbl1_row, tbl2_row;
     int address, size, type;
@@ -162,7 +162,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
 
     AK_header *t_header = (AK_header *) AK_get_header(new_table);
 
-    Ak_Init_L3(&row_root_init);
+    AK_Init_L3(&row_root_init);
 
     for (tbl1_row = 0; tbl1_row < DATA_BLOCK_SIZE; tbl1_row += tbl1_num_att){
 
@@ -175,7 +175,7 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
 			type = tbl1_temp_block->tuple_dict[tbl1_row + tbl1_att].type;
 			memset(data, 0, MAX_VARCHAR_LENGTH);
 			memcpy(data, &(tbl1_temp_block->data[address]), size);
-			Ak_Insert_New_Element(type, data, new_table, t_header[tbl1_att].att_name, row_root_init);
+			AK_Insert_New_Element(type, data, new_table, t_header[tbl1_att].att_name, row_root_init);
 		}
 
 
@@ -192,16 +192,16 @@ void AK_check_constraints(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, 
 				type = tbl2_temp_block->tuple_dict[tbl2_row + tbl2_att].type;
 				memset(data, 0, MAX_VARCHAR_LENGTH);
 				memcpy(data, &(tbl2_temp_block->data[address]), size);
-				Ak_Insert_New_Element(type, data, new_table, t_header[tbl1_att + tbl2_att].att_name, row_root_full);
+				AK_Insert_New_Element(type, data, new_table, t_header[tbl1_att + tbl2_att].att_name, row_root_full);
 			}
 
 			if (AK_check_if_row_satisfies_expression(row_root_full, constraints)){
-    			Ak_insert_row(row_root_full);
+    			AK_insert_row(row_root_full);
 			}
     	}
 
     	
-    	Ak_DeleteAll_L3(&row_root_init);
+    	AK_DeleteAll_L3(&row_root_init);
     }
 
     AK_free(row_root_init);
@@ -237,8 +237,8 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct lis
         	return EXIT_ERROR;
 	}
 
-        Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
-		Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_theta_join: start copying data\n");
+        AK_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s and %s\n", dstTable, srcTable1, srcTable2);
+		AK_dbg_messg(MIDDLE, REL_OP, "\nAK_theta_join: start copying data\n");
 
         AK_mem_block *tbl1_temp_block, *tbl2_temp_block;
 
@@ -250,11 +250,11 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct lis
             startAddress1 = src_addr1->address_from[i];
 
             if (startAddress1 != 0) {
-                Ak_dbg_messg(MIDDLE, REL_OP, "\nTheta join: copying extent of table 1: %d\n", i);
+                AK_dbg_messg(MIDDLE, REL_OP, "\nTheta join: copying extent of table 1: %d\n", i);
 
                 //for each block in table1 extent
                 for (j = startAddress1; j < src_addr1->address_to[i]; j++) {
-                    Ak_dbg_messg(MIDDLE, REL_OP, "Theta join: copying block of table 1: %d\n", j);
+                    AK_dbg_messg(MIDDLE, REL_OP, "Theta join: copying block of table 1: %d\n", j);
 
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
@@ -266,11 +266,11 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct lis
                             startAddress2 = src_addr2->address_from[k];
 
                             if (startAddress2 != 0) {
-                                Ak_dbg_messg(MIDDLE, REL_OP, "Theta join: copying extent of table 2: %d\n", k);
+                                AK_dbg_messg(MIDDLE, REL_OP, "Theta join: copying extent of table 2: %d\n", k);
 
                                 //for each block in table2 extent
                                 for (l = startAddress2; l < src_addr2->address_to[k]; l++) {
-                                    Ak_dbg_messg(MIDDLE, REL_OP, "Theta join: copying block of table 2: %d\n", l);
+                                    AK_dbg_messg(MIDDLE, REL_OP, "Theta join: copying block of table 2: %d\n", l);
 
                                     tbl2_temp_block = (AK_mem_block *) AK_get_block(l);
 
@@ -290,12 +290,12 @@ int AK_theta_join(char *srcTable1, char * srcTable2, char * dstTable, struct lis
         AK_free(src_addr1);
         AK_free(src_addr2);
 
-		Ak_dbg_messg(LOW, REL_OP, "THETA_JOIN_SUCCESS\n\n");
+		AK_dbg_messg(LOW, REL_OP, "THETA_JOIN_SUCCESS\n\n");
 	AK_EPI;
         return EXIT_SUCCESS;
     } else {
 
-        Ak_dbg_messg(LOW, REL_OP, "\n AK_theta_join: Table doesn't exist!");
+        AK_dbg_messg(LOW, REL_OP, "\n AK_theta_join: Table doesn't exist!");
 
         AK_free(src_addr1);
         AK_free(src_addr2);
@@ -314,52 +314,52 @@ TestResult AK_op_theta_join_test() {
     printf("\n********** THETA JOIN TEST **********\n\n");
 
     struct list_node *constraints = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&constraints);
+    AK_Init_L3(&constraints);
     
     //test where no column names overlap
     printf("SELECT * FROM department, professor WHERE manager = lastname;\n");
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "manager", sizeof ("manager"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "manager", sizeof ("manager"), constraints);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), constraints);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
     
     AK_theta_join("department", "professor", "theta_join_test", constraints);
     AK_print_table("theta_join_test");
 
-    Ak_DeleteAll_L3(&constraints);
+    AK_DeleteAll_L3(&constraints);
     
     printf("SELECT * FROM student, professor2 WHERE id_prof=mbr;\n");
 
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr", sizeof ("mbr"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr", sizeof ("mbr"), constraints);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
  
    
     
     AK_theta_join("student", "professor2", "theta_join_test2", constraints);
     AK_print_table("theta_join_test2");
-    Ak_DeleteAll_L3(&constraints);
+    AK_DeleteAll_L3(&constraints);
     
     //test where overlaping columns are a part of the constraints
     printf("SELECT * FROM employee, department WHERE employee.id_department = department.id_department;\n");   
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "department.id_department", sizeof ("department.id_department"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "employee.id_department", sizeof ("employee.id_department"), constraints);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "department.id_department", sizeof ("department.id_department"), constraints);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), constraints);
 
     AK_theta_join("employee", "department", "theta_join_test3", constraints);
     AK_print_table("theta_join_test3");
-    Ak_DeleteAll_L3(&constraints);
+    AK_DeleteAll_L3(&constraints);
     char num = 102;
     printf("SELECT * FROM student, professor2 WHERE year + id_prof > 37895;\n");
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "+", sizeof ("+"), constraints);
-    Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), constraints);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), constraints);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), constraints);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "id_prof", sizeof ("id_prof"), constraints);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "+", sizeof ("+"), constraints);
+    AK_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), constraints);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), constraints);
 
     AK_theta_join("student", "professor2", "theta_join_test4", constraints);
     AK_print_table("theta_join_test4");
     printf("Test is successful :) \n");
-    Ak_DeleteAll_L3(&constraints);
+    AK_DeleteAll_L3(&constraints);
     
     AK_free(constraints);
     AK_EPI;

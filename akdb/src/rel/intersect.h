@@ -39,6 +39,6 @@ typedef struct {
 } intersect_attr;
 
 int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable);
-TestResult Ak_op_intersect_test();
+TestResult AK_op_intersect_test();
 
 #endif

@@ -41,7 +41,7 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
     sys_table = "AK_relation";
 
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
-        Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
+        AK_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
 		
         AK_EPI;
         return EXIT_ERROR;
@@ -51,17 +51,17 @@ int AK_initialize_new_segment(char *name, int type, AK_header *header) {
         end_address += start_address;
 
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-        Ak_Init_L3(&row_root);
+        AK_Init_L3(&row_root);
 
-        Ak_Insert_New_Element(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
-        Ak_Insert_New_Element(TYPE_VARCHAR, name, sys_table, "name", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
+        AK_Insert_New_Element(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
+        AK_Insert_New_Element(TYPE_VARCHAR, name, sys_table, "name", row_root);
+        AK_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
+        AK_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
 
-        Ak_insert_row(row_root);
+        AK_insert_row(row_root);
 
-        Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
-		Ak_DeleteAll_L3(&row_root);
+        AK_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
+		AK_DeleteAll_L3(&row_root);
 		AK_free(row_root);
         AK_EPI;
 
@@ -95,7 +95,7 @@ int AK_initialize_new_index_segment(char *name, char *table_id, int attr_id , AK
     char type = SEGMENT_TYPE_TABLE;
 
     if ((start_address = AK_new_segment(name, type, header)) == EXIT_ERROR) {
-        Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
+        AK_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__ERROR: Cannot initialize segment!\n");
         AK_EPI;
         return EXIT_ERROR;
 
@@ -104,19 +104,19 @@ int AK_initialize_new_index_segment(char *name, char *table_id, int attr_id , AK
         end_address += start_address;
 
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-        Ak_Init_L3(&row_root);
+        AK_Init_L3(&row_root);
 
 
-        Ak_Insert_New_Element(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
-        Ak_Insert_New_Element(TYPE_VARCHAR, name, sys_table, "name", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
-        Ak_Insert_New_Element(TYPE_VARCHAR, table_id, sys_table, "table_id", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &attr_id, sys_table, "attribute_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &objectID, sys_table, "obj_id", row_root);
+        AK_Insert_New_Element(TYPE_VARCHAR, name, sys_table, "name", row_root);
+        AK_Insert_New_Element(TYPE_INT, &start_address, sys_table, "start_address", row_root);
+        AK_Insert_New_Element(TYPE_INT, &end_address, sys_table, "end_address", row_root);
+        AK_Insert_New_Element(TYPE_VARCHAR, table_id, sys_table, "table_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &attr_id, sys_table, "attribute_id", row_root);
 
-        Ak_insert_row(row_root);
+        AK_insert_row(row_root);
 
-        Ak_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
+        AK_dbg_messg(LOW, FILE_MAN, "AK_init_new_segment__NOTIFICATION: New segment initialized at %d\n", start_address);
         AK_EPI;
         return start_address;
     }
@@ -129,7 +129,7 @@ int AK_initialize_new_index_segment(char *name, char *table_id, int attr_id , AK
   * @brief Test function
   * @return No return value
   */
-TestResult Ak_files_test() {
+TestResult AK_files_test() {
     AK_header header[MAX_ATTRIBUTES], header1[MAX_ATTRIBUTES];
     AK_PRO;
     memset(header, '\0', MAX_ATTRIBUTES);
