@@ -1,4 +1,4 @@
-/**
+﻿/**
 @file selection.c Provides functions for relational selection operation
  */
 /*
@@ -404,3 +404,67 @@ TestResult AK_op_selection_test_pattern() { //test 32
    	AK_EPI;
    	return TEST_result(successful, failed);
 }
+
+
+
+
+int AK_selection_op_rename(char *srcTable, char *dstTable, struct list_node *expr) {
+        AK_PRO;
+	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
+	int num_attr = AK_num_attr(srcTable);
+
+		int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
+		if (startAddress == EXIT_ERROR) {
+			AK_EPI;
+			return EXIT_ERROR;
+		}
+		Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
+		table_addresses *src_addr = (table_addresses*) AK_get_table_addresses(srcTable);
+		
+		struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
+		Ak_Init_L3(&row_root);
+		
+		int i, j, k, l, type, size, address;
+		char data[MAX_VARCHAR_LENGTH];
+
+		for (i = 0; src_addr->address_from[i] != 0; i++) {
+
+			for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
+
+				AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
+				if (temp->block->last_tuple_dict_id == 0)
+					break;
+				for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
+
+					if (temp->block->tuple_dict[k].type == FREE_INT)
+						break;
+
+					for (l = 0; l < num_attr; l++) {
+						type = temp->block->tuple_dict[k + l].type;
+						size = temp->block->tuple_dict[k + l].size;
+						address = temp->block->tuple_dict[k + l].address;
+						memcpy(data, &(temp->block->data[address]), size);
+						data[size] = '\0';
+						Ak_Insert_New_Element(type, data, dstTable, t_header[l].att_name, row_root);
+					}
+
+						Ak_insert_row(row_root);
+
+					
+					Ak_DeleteAll_L3(&row_root);
+				}
+			}
+		}
+
+		AK_free(src_addr);
+		AK_free(t_header);
+		AK_free(row_root);
+
+		AK_print_table(dstTable);
+	
+
+	Ak_dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
+	AK_EPI;
+	return EXIT_SUCCESS;
+}
+

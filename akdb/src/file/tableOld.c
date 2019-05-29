@@ -1,4 +1,4 @@
-﻿/**
+/**
 @file table.c Provides functions for table abstraction
  */
 /*
@@ -1079,29 +1079,8 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     if (strcmp(old_table_name, new_table_name) != 0) {//new name is different than old, and old needs to be replaced
         struct list_node *expr;
         expr = 0;
-        AK_selection_op_rename(old_table_name, new_table_name, expr);
-        int i = 0;
-
-  for (;adresses->address_from[i] != 0; ++i)
-    {
-      if (AK_delete_extent(adresses->address_from[i], adresses->address_to[i]) == EXIT_ERROR)
-	{
-	  AK_EPI;
-	  return EXIT_ERROR;
-        }
-    }
-	
-  struct list_node* row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
-  Ak_Init_L3(&row_root);
-  
-  char *system_table;
-  system_table = "AK_relation";
-   
-  
-  Ak_DeleteAll_L3(&row_root);
-  Ak_Update_Existing_Element(TYPE_VARCHAR, old_table_name, system_table, "name", row_root);
-  Ak_delete_row(row_root);
-  AK_free(row_root);
+        AK_selection(old_table_name, new_table_name, expr);
+        AK_delete_segment(old_table_name, SEGMENT_TYPE_TABLE);
     }
     AK_EPI;
     return EXIT_SUCCESS;
@@ -1191,31 +1170,20 @@ TestResult AK_table_test() {
 TestResult AK_op_rename_test() {
     AK_PRO;
     //printf( "rename_test: Present!\n" );
-    printf("\n********** RENAME TEST-rename table assistant **********\n\n");
+    printf("\n********** RENAME TEST **********\n\n");
 
     AK_print_table("AK_relation");
-    AK_rename("assistant", ".", "assistantNew", ".");
+    int rename = AK_rename("student", "weight", "student2", "weight");
+    AK_print_table("student2");
+    //AK_print_table("student2");
+
     AK_print_table("AK_relation");
-    AK_rename("assistantNew", ".", "assistant", ".");
-    AK_print_table("AK_relation");
-
-
-    printf("\n********** RENAME TEST-rename attribute weight (table student) **********\n\n");
-    AK_print_table("student");
-    AK_rename("student", "weight", "student", "weightNew");
-    AK_print_table("student");
-    AK_rename("student", "weightNew", "student", "weight");
-    AK_print_table("student");
-
-    printf("\n\n------------END OF RENAME TEST------------\n\n");
-
 	
-   AK_EPI; 
+    AK_EPI;
 	if (rename != EXIT_ERROR ){
 	  return TEST_result(1,0);
     }
     else{
 	  return TEST_result(0,1);
     }
-
 }
