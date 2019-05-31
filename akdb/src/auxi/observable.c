@@ -463,8 +463,13 @@ TestResult AK_observable_test()
 }
 
 TestResult AK_observable_pattern(){
+
     AK_PRO;
-    printf ("\n========== OBSERVABLE PATTERN BEGIN ==========\n");
+
+    int passed_tests=0;
+    int failed_tests=0;
+
+    printf ("\n========== OBSERVABLE PATTERN TEST BEGIN ==========\n\n");
     
 
     char *m1 = "AK_CUSTOM_FIRST proslijedi dalje!";
@@ -472,40 +477,47 @@ TestResult AK_observable_pattern(){
 
 
 
-    // Fucntion for init custom observable type
+    // Function for init custom observable type
     AK_TypeObservable *observable_type = init_observable_type();
+
     // Init observer type with passing observable type instance
     AK_TypeObserver *observer_first = init_observer_type(observable_type);
 
     // Register out observers to observable type
     observable_type->AK_custom_register_observer(observable_type, observer_first->observer);
+
     // Set notify type and message
     observable_type->AK_set_notify_info_details(observable_type, AK_CUSTOM_FIRST, m1);
+
     // Notify all observers
     observable_type->observable->AK_notify_observers(observable_type->observable);
 
     // Set notify type and message
     observable_type->AK_set_notify_info_details(observable_type, AK_TRANSACTION, m2);
+
     // Notify specified observer
     observable_type->observable->AK_notify_observer(observable_type->observable, observer_first->observer);
 
     observable_type->observable->AK_run_custom_action(NULL);
     // Search for observer by ID
+
     AK_observer *requested_observer = observable_type->observable->AK_get_observer_by_id(observable_type->observable, 1);
-    int success=0;
-    int failed=0;
-	if(requested_observer) {
-        printf ("Observer was found. Observer adress: %p\n", requested_observer);
-		success++;
+    
+    if(requested_observer!=NULL) 
+	{
+        printf ("Observer was found. Observer adress: %p\n\n", requested_observer);
+	passed_tests++;
 	}
+
     else{
-        printf ("Requested observer was not found!\n");
-		failed++;
+        printf ("Requested observer was not found!\n\n");
+	failed_tests++;
 	}
     
-    printf ("========== OBSERVABLE PATTERN END ==========\n");
+    printf ("========== OBSERVABLE PATTERN TEST END ==========\n\n");
 
     AK_EPI;
-    return TEST_result(success,failed);
+
+    return TEST_result(passed_tests,failed_tests);
 }
 
