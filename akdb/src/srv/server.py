@@ -8,73 +8,20 @@ import sys
 sys.path.append("../swig/")
 import kalashnikovDB as ak47
 import sql_executor as sqle
-
-
+import server_functions as srv
+#Refactored and documented by Marko Vertus
+#Creates a threaded wrapper
 def Threaded(fn):
     def wrapper(*args, **kwargs):
         t = threading.Thread(target=fn, args=args, kwargs=kwargs)
         t.start()
     return wrapper
-
-
-class ParamikoServer(paramiko.ServerInterface):
-    def __init__(self):
-        self.event = threading.Event()
-    def check_channel_request(self, kind, chanid):
-        if kind == 'session':
-            return paramiko.OPEN_SUCCEEDED
-        return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
-    def check_auth_password(self, username, password):
-        usr = "testingUser" #TODO get users and passwords from database
-        pas = "testingPass"
-        if (username == usr) and (password == pas):
-            return paramiko.AUTH_SUCCESSFUL
-        return paramiko.AUTH_FAILED
-
-class Connection:
-    def __init__(self, conn, addr):
-        self.addr = addr
-        self.transport = paramiko.Transport(conn)
-        self.transport.add_server_key(Server.rsa_key)
-        self.transport.start_server(server=ParamikoServer())
-        self.channel = self.transport.accept(timeout=1)
-
-    def __del__(self):
-        if self.channel is not None:
-            self.channel.close()
-        if self.transport is not None:
-            self.transport.close()
-
-    def send_data(self, data):
-        #TODO implement protocol
-        try:
-            self.channel.send(self.pack_output(data))
-        except Exception, e:
-            print "[-] Failed sending data to client: %s" %e
-
-    def recv_data(self):
-        #TODO implement protocol
-        return self.unpack_input(self.channel.recv(1024))
-
-    def pack_output(self, out):
-        #TODO pack into json
-        return out
-
-    def unpack_input(self, inp):
-        #TODO unpack json
-        inp = inp.strip()
-        return inp
-
-    def is_alive(self):
-        if self.channel is not None and self.transport.is_active():
-            return True
-        return False
-
+#Main class of the server.py
 class Server:
-
+    #Executor for executing sql commands
     executor = sqle.sql_executor()
-    rsa_key = paramiko.RSAKey.generate(2048)        
-
+           
+    #Constructor of Server class
     def __init__(self, host="localhost", port=1998):
         self.host = host;
         self.port = port;
@@ -83,11 +30,13 @@ class Server:
         self.transport = None
         self.channel = None
         self.working = True
-
+        print self.host
+        print self.port
+    #Destructor of Server class
     def __del__(self):
         self.working = False
         self.sock.close()
-
+    #Functions that starts the server by binding the socket to the IP and port
     def start(self):
         try:
             self.sock.bind((self.host, self.port))
@@ -98,11 +47,12 @@ class Server:
         self.sock.listen(1)
         
         while self.working:
+            print "Awaiting connection"
             conn, addr = self.sock.accept()
             print "[*] Incoming connection from %s" %addr[0]
-            ssh_conn = Connection(conn, addr)
+            ssh_conn = srv.Connection(conn, addr)
             self.handle_connection(ssh_conn)
-
+    #Function for handling connections and also disconnects from the server
     @Threaded
     def handle_connection(self, conn):
         while conn.is_alive():
@@ -111,7 +61,7 @@ class Server:
             conn.send_data(out)   
         print "[*] Client from %s disconnected from server" % conn.addr[0]
         del conn
-
+    #Function for executing SQL commands via sql.executor()
     @staticmethod
     def process_command(cmd):
         try:
@@ -121,7 +71,7 @@ class Server:
             out = err
             print err
         return out
-
+# Starts up the server
 s = Server()
 s.start()
 
