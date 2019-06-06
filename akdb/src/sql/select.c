@@ -25,6 +25,8 @@
  * @param srcTable - original table that is used for selection
  * @param destTable - table that contains the result
  * @param condition - condition for selection
+ * @param attributes - atributes to be selected
+ * @param ordering - atributes for result sorting
  * @return EXIT_SUCCESS if cache result in memory and print table else break 
  */
 //int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
