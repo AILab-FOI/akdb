@@ -86,11 +86,12 @@ int Ak_get_num_of_tuples(AK_block *iBlock) {
 }
 
 /*
- * @author Tomislav Bobinac
+ * @author Tomislav Bobinac, updated by Filip Žmuk
+ * @todo Make it to suport multiple sort atributes and ASC|DESC ordering
  * @brief Function that sorts a segment
  * @return No return value.
  */
-int AK_sort_segment(char *table_name, char *attr) {
+int AK_sort_segment(char *srcTable, char *destTable, struct list_node* attributes) {
 	//initialize variables
 	register int i, j;
 	int blocks_addr[MAX_NUM_OF_BLOCKS];	//array with block addresses
@@ -99,7 +100,7 @@ int AK_sort_segment(char *table_name, char *attr) {
 	AK_PRO;
 
 	//Get number of blocks for given table
-	table_addresses *addresses = (table_addresses *) AK_get_table_addresses(table_name);
+	table_addresses *addresses = (table_addresses *) AK_get_table_addresses(srcTable);
 	for (i = 0; addresses->address_from[i] != 0; i++) {
 		for (j = addresses->address_from[i]; j <= addresses->address_to[i]; j++) {
 			blocks_addr[num_blocks] = j;
@@ -107,14 +108,8 @@ int AK_sort_segment(char *table_name, char *attr) {
 		}
 	}
 
-	//create a new temp segment with size equal to the size of the original segment
-	char temp_segment[MAX_VARCHAR_LENGTH];
-	memset(temp_segment, '\0', MAX_VARCHAR_LENGTH);
-	strcat(temp_segment, "SORT_TEMP_HELP_");
-	strcat(temp_segment, table_name);
-
-	AK_header *head = AK_get_header(table_name);
-	AK_initialize_new_segment(temp_segment, SEGMENT_TYPE_TABLE, head);
+	AK_header *head = AK_get_header(srcTable);
+	AK_initialize_new_segment(destTable, SEGMENT_TYPE_TABLE, head);
 
 	//SORTING ...
 	char x[DATA_ROW_SIZE]; 		//needed data
@@ -125,8 +120,8 @@ int AK_sort_segment(char *table_name, char *attr) {
 
 	//get total number of headers and the number of header used to sort segment
 	int num_headers = Ak_get_total_headers(real_table->block);
-	int num_sort_header = Ak_get_header_number(real_table->block, attr);
-	int num_records = AK_get_num_records(table_name);
+	int num_sort_header = Ak_get_header_number(real_table->block, Ak_First_L2(attributes)->data);
+	int num_records = AK_get_num_records(srcTable);
 
 	int type, temp, address, size, temp_field[num_records];
 	for (i = 0; i<num_records; i++) {
@@ -167,7 +162,7 @@ int AK_sort_segment(char *table_name, char *attr) {
 			memset(data, '\0', MAX_VARCHAR_LENGTH);
 			memcpy(data, real_table->block->data + address, size);
 			//add column 'j' data into struct row_root
-			Ak_Insert_New_Element(type, data, temp_segment, real_table->block->header[j].att_name, row_root);
+			Ak_Insert_New_Element(type, data, destTable, real_table->block->header[j].att_name, row_root);
 		}
 		//add row to new sorted table
 		Ak_insert_row(row_root);
@@ -235,11 +230,14 @@ void Ak_reset_block(AK_block * block) {
   * @param iBlock block to be sorted
   * @return No return value
  */
-void AK_block_sort(AK_block * iBlock, char * atr_name) {
+void AK_block_sort(AK_block * iBlock, char* attribute_name) {
     register int i, j, k, n, t, q;
     char x[DATA_ROW_SIZE]; //data which interests us
     char y[DATA_ROW_SIZE]; //data used for comparison
     AK_PRO;
+
+
+
     AK_block * cTemp1 = (AK_block*) AK_malloc(sizeof (AK_block));
     cTemp1 = (AK_block *) AK_read_block(15);
 
@@ -252,7 +250,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
     AK_header *block_header = (AK_header *) AK_malloc(sizeof (AK_header));
     memcpy(block_header, iBlock->header, sizeof (AK_header));
 
-    int num_sort_header = Ak_get_header_number(iBlock, atr_name); //number of headers which are used for sort
+    int num_sort_header = Ak_get_header_number(iBlock, attribute_name); //number of headers which are used for sort
 
     int max_header_num = Ak_get_total_headers(iBlock); //total number of headers for one record
     int num_tuples = Ak_get_num_of_tuples(iBlock);
@@ -488,7 +486,7 @@ void AK_block_sort(AK_block * iBlock, char * atr_name) {
 
 //extern int address_of_tempBlock = 0;
 /*
- * @author Unknown, updated Tomislav Bobinac
+ * @author Unknown, updated Tomislav Bobinac, Filip Žmuk
  * @brief Function that sorts files
  * @return No return value
  */
@@ -497,12 +495,17 @@ TestResult Ak_filesort_test() {
 	printf("filesort_test: Present!\n");
     int success=0;
     int failed=0;
-    int result;
-	AK_print_table("student");
-	result=AK_sort_segment("student", "lastname");
-    if(result==EXIT_SUCCESS)
+	char *srcTable="student";
+	char *destTable="student_sorted";
+
+	AK_print_table(srcTable);
+
+    struct list_node* attributes = (struct list_node*) AK_malloc(sizeof(struct list_node));
+    Ak_InsertAtBegin_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), attributes); 
+
+	if (AK_sort_segment(srcTable, destTable,  attributes) == EXIT_SUCCESS)
     {
-        AK_print_table("SORT_TEMP_HELP_student");
+        AK_print_table(destTable);
         success++;
     }
     else
