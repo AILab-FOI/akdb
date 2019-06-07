@@ -16,11 +16,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
+
+
+#include "../file/table.h"
 #include "../auxi/test.h"
 #include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rel/selection.h"
+#include "../rel/projection.h"
 #include "../auxi/auxiliary.h"
 #include "../auxi/mempro.h"
-int AK_select(char *srcTable,char *destTable,struct list_node *atributi,struct list_node *uvjet);
+#include "../file/filesort.h"
+
+int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct list_node *condition, struct list_node *ordering);
 TestResult AK_select_test();

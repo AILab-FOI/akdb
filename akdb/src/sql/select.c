@@ -20,175 +20,168 @@
 #include "../mm/memoman.h"
 
 /**
- * @author Renata Mesaros
+ * @author Filip Žmuk
  * @brief Function that implements SELECT relational operator
  * @param srcTable - original table that is used for selection
  * @param destTable - table that contains the result
  * @param condition - condition for selection
+ * @param attributes - atributes to be selected
+ * @param ordering - atributes for result sorting
  * @return EXIT_SUCCESS if cache result in memory and print table else break 
  */
 //int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
-int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct list_node *condition){
-	///calling the relational operator for filtering according to given condition
-	AK_PRO;
-	AK_selection(srcTable,destTable,condition);
+int AK_select(char *srcTable, char *destTable, struct list_node *attributes, struct list_node *condition, struct list_node *ordering)
+{
+    struct list_node *attribute;
+    AK_PRO;
 
-	
-	
+    //create help table name for selection
+    char selection_table[MAX_ATT_NAME] = "";
+    strcat(selection_table, srcTable);
 
-	///help table for the final result
-	char *helptable="help_table";
+    if(condition != NULL)
+    {
+        strcat(selection_table, "__selection");
 
+        //select required rows
+        if (AK_selection(srcTable, selection_table, condition) != EXIT_SUCCESS)
+        {
+            AK_EPI;
+            return EXIT_ERROR;
+        }
+    }
 
-	table_addresses *src_addr=(table_addresses *) AK_get_table_addresses(destTable);
-	int startAddress = src_addr->address_from[0];
-
-	AK_block *temp_block = (AK_block *) AK_read_block(startAddress);
-
-
-	//AK_list_elem list_attributes;
-	struct list_node *list_attributes;
-	
-	AK_header header[MAX_ATTRIBUTES];
- 	memset(header, 0, sizeof( AK_header ) * MAX_ATTRIBUTES);
-
-	int new_head=0;
-	int head_num[6]={7,7,7,7,7,7};
-	int head_counter=0;
-
-	///new header for the resulting table
-	int head = 0;
+    // create copy of attributes
+    struct list_node *projectionAttributes = (struct list_node *)AK_malloc(sizeof(struct list_node));
+    Ak_Init_L3(&projectionAttributes);
+    for (attribute = Ak_First_L2(attributes); attribute; attribute = Ak_Next_L2(attribute))
+    {
+        Ak_InsertAtEnd_L3(TYPE_ATTRIBS, attribute->data, strlen(attribute->data), projectionAttributes);
+    }
 
 
-	///going through the header of the table of subscore
-	///making a new header for the final result from the selected ones from the subscore
-	while(strcmp(temp_block->header[head].att_name, "") != 0) {
+    //create help table name for sorting
+    char sorted_table[ MAX_ATT_NAME ] = "";
+    strcat(sorted_table, selection_table);
+    //sort required rows
+    if (ordering != NULL)
+    {
+        strcat(sorted_table, "__sorted");
+        if (AK_sort_segment(selection_table, sorted_table, ordering) != EXIT_SUCCESS)
+        {
+            Ak_DeleteAll_L3(&projectionAttributes);
+            AK_free(projectionAttributes);
+            AK_EPI;
+            return EXIT_ERROR;
+        }
+    }
 
-		list_attributes = Ak_First_L2(attributes);
-		int create=0;
-		while(list_attributes!=NULL){
-			if(strcmp(temp_block->header[head].att_name,list_attributes->data)==0){
-				head_num[head_counter++]=head;  ///the ordinal number of the selected attribute
-				create=1;
-				break;
-			}
-			else list_attributes=list_attributes->next;
-		}
-		if(create){
-			memcpy(&header[new_head], &temp_block->header[head], sizeof (temp_block->header[head]));
-			new_head++;
-		}
-		head++;
-	}
-	AK_initialize_new_segment(helptable, SEGMENT_TYPE_TABLE, header);
-	
+    //project required rows
+    if (AK_projection(sorted_table, destTable, projectionAttributes, NULL) != EXIT_SUCCESS)
+    {
+        Ak_DeleteAll_L3(&projectionAttributes);
+        AK_free(projectionAttributes);
+        AK_EPI;
+        return EXIT_ERROR;
+    }
 
-	
-	AK_free(temp_block);
+    // free temp tables
+    if(strcmp(srcTable, selection_table) != 0)
+    {
+        AK_delete_segment(selection_table, SEGMENT_TYPE_TABLE);
+        if(strcmp(selection_table, sorted_table) != 0)
+        {
+            AK_delete_segment(sorted_table, SEGMENT_TYPE_TABLE);
+        }
+    }
+    else
+    {
+        if(strcmp(srcTable, sorted_table) != 0)
+        {
+            AK_delete_segment(sorted_table, SEGMENT_TYPE_TABLE);
+        }
+    }
 
-	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-
-    int i, j, k, l, type, size, address;
-    char data[MAX_VARCHAR_LENGTH];
-
-int b = 0;
-printf("\n\n\n");
-
-	for (i = 0; src_addr->address_from[i] != 0; i++) {
-
-			for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
-				AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
-				if (temp->block->last_tuple_dict_id == 0)
-						break;
-
-for (k = 0; k < DATA_BLOCK_SIZE;k+=5) {
-	if (temp->block->tuple_dict[k].type == FREE_INT)
-						break;
-
-			int gl=0;
-
-			for(l=0;l<5;l++){
-				int write=0;
-				///if the attribute number is in the selected list, write it in the resulting table
-				while(head_num[b] != 7) {
-							if(head_num[b++]==l){write=1;break;}
-					}
-					if(write==1){
-						type = temp->block->tuple_dict[l + k].type;
-						size = temp->block->tuple_dict[l + k].size;
-
-						address = temp->block->tuple_dict[l + k].address;
-						memcpy(data, &(temp->block->data[address]), size);
-						data[size] = '\0';
-						Ak_Insert_New_Element(type, data, helptable, header[gl++].att_name, row_root);
-
-
-					}
-					b=0;
-				}
-				Ak_insert_row(row_root);
-				Ak_DeleteAll_L3(&row_root);
-	}
-	
-}}
-
-  AK_print_table(helptable);
-	
-	/**CACHE RESULT IN MEMORY**/
-
-	AK_cache_result(srcTable,temp_block,header);
-	AK_free(temp_block);
-	AK_EPI;
-	return EXIT_SUCCESS;
-
+    Ak_DeleteAll_L3(&projectionAttributes);
+    AK_free(projectionAttributes);
+    AK_EPI;
+    return EXIT_SUCCESS;
 }
 
-
 /**
- * @author Renata Mesaros
+ * @author Renata Mesaros, updatet Filip Žmuk
  * @brief Function for testing the implementation
  */
 TestResult AK_select_test(){
 	AK_PRO;
-
-
-	printf("\n\n\n ***** SELECT RELATIONAL OPERATOR ***** \n\n\n");
+    int succesfulTests = 0;
+    int failedTests = 0;
 	
-	///list of attributes which will be in the result of selection
-
+	// list of attributes which will be in the result of selection
 	struct list_node *attributes = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&attributes);
 
-	///list of elements which represent the condition for selection
-
+	// list of elements which represent the condition for selection
 	struct list_node *condition = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&condition);
 
+    // list of elements which represent the condition for ordering
+	struct list_node *ordering = (struct list_node *) AK_malloc(sizeof (struct list_node));
 
-	char *num = "2005";
 
 	char *srcTable="student";
-	char *destTable="select_result";
-	
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), attributes);
+	char *destTable1="select_result1";
+    char *destTable2="select_result2";
 
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), condition);
-	Ak_InsertAtEnd_L3(TYPE_INT, num, sizeof (int), condition);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof ("<"), condition);
+	Ak_Init_L3(&attributes);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), attributes);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), attributes);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof("weight"), attributes);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight+year", sizeof("weight+year"), attributes);
 
-	printf("\n SELECT firstname,year,weight FROM student WHERE year<2005;\n\n");
+	Ak_Init_L3(&condition);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), condition);
+    int year = 2008;
+	Ak_InsertAtEnd_L3(TYPE_INT, (char *)&year, sizeof(int), condition);
+	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof("<"), condition);
 
-	AK_select(srcTable, destTable, attributes, condition);
-	
+    Ak_Init_L3(&ordering);
+	Ak_InsertAtBegin_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), ordering);
+
+
+    if (AK_select(srcTable, destTable1, attributes, condition, ordering) == EXIT_SUCCESS)
+    {
+        succesfulTests++;
+    }
+    else
+    {
+        failedTests++;
+    }
 	Ak_DeleteAll_L3(&attributes);
-	AK_free(attributes);
-
-	
+    Ak_DeleteAll_L3(&ordering);
 	Ak_DeleteAll_L3(&condition);
+    Ak_Init_L3(&attributes);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), attributes);
+	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), attributes);
+
+    if (AK_select(destTable1, destTable2, attributes, NULL, NULL) == EXIT_SUCCESS)
+    {
+        succesfulTests++;
+    }
+    else
+    {
+        failedTests++;
+    }
+    Ak_DeleteAll_L3(&attributes);
+	
+    AK_print_table(srcTable);
+	printf("\n SELECT firstname,year,weight,weight+year FROM student WHERE year<2005 ORDER BY firstname;\n\n");
+    AK_print_table(destTable1);
+    printf("\n SELECT firstname,year,weight FROM select_result;\n\n");
+    AK_print_table(destTable2);
+	
+	AK_free(attributes);
 	AK_free(condition);
+	AK_free(ordering);
 	AK_EPI;
 
-	return TEST_result(0,0);
+	return TEST_result(succesfulTests, failedTests);
 }
