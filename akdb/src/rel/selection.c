@@ -34,7 +34,6 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
 	int num_attr = AK_num_attr(srcTable);
 	
-	AK_delete_segment(dstTable, SEGMENT_TYPE_TABLE);
 
 		int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
 		if (startAddress == EXIT_ERROR) {
@@ -96,6 +95,7 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 /**
  * @author Matija Šestak, updated by Dino Laktašić,Nikola Miljancic
  * @brief  Function for selection operator testing
+ * using WHERE clause and operators BETWEEN, AND
  *
  */
 TestResult AK_op_selection_test() { // test 31
@@ -209,8 +209,9 @@ TestResult AK_op_selection_test() { // test 31
 }
 
 /**
- * @author Krunoslav Bilić
+ * @author Krunoslav Bilić updated by Filip Belinić
  * @brief  Function for selection operator testing
+ * using operators LIKE, ILIKE, SIMILAR TO
  *
  */
 TestResult AK_op_selection_test_pattern() { //test 32
@@ -242,7 +243,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 	int num_rows;
 	struct list_node *row;
 	if (sel3 == EXIT_ERROR) {
-		printf("\n Selection test 3 failed.\n");
+		printf("\n Selection pattern match test 1 failed.\n");
 		failed++;	
 	}
 	else { //checking exact row data
@@ -260,16 +261,16 @@ TestResult AK_op_selection_test_pattern() { //test 32
 				i++;
 			} 
 			if (!local_fail) {
-				printf("\n Selection test 3 succeded.\n");
+				printf("\n Selection pattern match test 1 succeded.\n");
 				successful++;
 			}
 			else {
-				printf("\n Selection test 3 failed: Wrong data. \n");
+				printf("\n Selection pattern match test 1 failed: Wrong data. \n");
 			}
 					
 		}
 		else {
-			printf("\n Selection test 3 failed: Wrong number of rows.\n");
+			printf("\n Selection pattern match test 1 failed: Wrong number of rows.\n");
 			failed++;
 		}
 	}
@@ -286,7 +287,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 	Ak_DeleteAll_L3(&expr);
 
 	if (sel4 == EXIT_ERROR) {
-		printf("\n Selection test 4 failed.\n");
+		printf("\n Selection pattern match test 2 failed.\n");
 		failed++;	
 	}
 	else { //checking exact row data
@@ -295,16 +296,16 @@ TestResult AK_op_selection_test_pattern() { //test 32
 			row = (struct list_node*)AK_get_row(0,destTable4);
 			memcpy(&mbr, get_row_attr_data(0,row), sizeof(int));
 			if (mbr == 35891){
-				printf("\n Selection test 4 succeeded.\n");
+				printf("\n Selection pattern match test 2 succeeded.\n");
 				successful++;
 			}
 			else {
-				printf("\n Selection test 4 failed: Wrong data.\n");
+				printf("\n Selection pattern match test 2 failed: Wrong data.\n");
 				failed++;
 			}		
 		}
 		else {
-			printf("\n Selection test 4 failed: Wrong number of rows.\n");
+			printf("\n Selection pattern match test 2 failed: Wrong number of rows.\n");
 			failed++;
 		}
 	}
@@ -320,7 +321,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 	Ak_DeleteAll_L3(&expr);
 
 	if (sel5 == EXIT_ERROR) {
-		printf("\n Selection test 5 failed.\n");
+		printf("\n Selection pattern match test 3 failed.\n");
 		failed++;	
 	}
 	else { //checking exact row data
@@ -340,16 +341,16 @@ TestResult AK_op_selection_test_pattern() { //test 32
 				i++;
 			} 
 			if (!local_fail) {
-				printf("\n Selection test 5 succeded.\n");
+				printf("\n Selection pattern match test 3 succeded.\n");
 				successful++;
 			}
 			else {
-				printf("\n Selection test 5 failed: Wrong data. \n");
+				printf("\n Selection pattern match test 3 failed: Wrong data. \n");
 			}
 					
 		}
 		else {
-			printf("\n Selection test 5 failed: Wrong number of rows.\n");
+			printf("\n Selection pattern match test 3 failed: Wrong number of rows.\n");
 			failed++;
 		}
 	}
@@ -365,7 +366,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
     	Ak_DeleteAll_L3(&expr);
 
 	if (sel6 == EXIT_ERROR) {
-		printf("\n Selection test 6 failed.\n");
+		printf("\n Selection pattern match test 4 failed.\n");
 		failed++;	
 	}
 	else { //checking exact row data
@@ -383,16 +384,16 @@ TestResult AK_op_selection_test_pattern() { //test 32
 				i++;
 			} 
 			if (!local_fail) {
-				printf("\n Selection test 6 succeded.\n");
+				printf("\n Selection pattern match test 4 succeded.\n");
 				successful++;
 			}
 			else {
-				printf("\n Selection test 6 failed: Wrong data. \n");
+				printf("\n Selection pattern match test 4 failed: Wrong data. \n");
 			}
 					
 		}
 		else {
-			printf("\n Selection test 6 failed: Wrong number of rows.\n");
+			printf("\n Selection pattern match test 4 failed: Wrong number of rows.\n");
 			failed++;
 		}
 	}
@@ -406,7 +407,14 @@ TestResult AK_op_selection_test_pattern() { //test 32
 }
 
 
-
+/**
+ * @author unknown
+ * @brief  Function that which implements selection rename operation test
+ * @param *srcTable source table name
+ * @param *dstTable destination table name
+ * @param *expr list with posfix notation of the logical expression
+ * @return EXIT_SUCCESS
+ */
 
 int AK_selection_op_rename(char *srcTable, char *dstTable, struct list_node *expr) {
         AK_PRO;
