@@ -4,6 +4,7 @@ import socket
 import paramiko
 import threading
 import sys
+import json
 
 sys.path.append("../swig/")
 import kalashnikovDB as ak47
@@ -29,11 +30,14 @@ class ParamikoServer(paramiko.ServerInterface):
 class Connection:
     #Constructor of the class 
     def __init__(self, conn, addr):
-        self.addr = addr
-        self.transport = paramiko.Transport(conn)
-        self.transport.add_server_key(paramiko.RSAKey.generate(2048))
-        self.transport.start_server(server=ParamikoServer())
-        self.channel = self.transport.accept(timeout=1)
+        try:
+            self.addr = addr
+            self.transport = paramiko.Transport(conn)
+            self.transport.add_server_key(paramiko.RSAKey.generate(2048))
+            self.transport.start_server(server=ParamikoServer())
+            self.channel = self.transport.accept(timeout=1)
+        except Exception, e:
+            self.addr = False
     #Destructor of the class
     def __del__(self):
         if self.channel is not None:
@@ -42,24 +46,72 @@ class Connection:
             self.transport.close()
     #Function that handles sending data to the client
     def send_data(self, data):
-        #TODO implement protocol
         try:
-            self.channel.send(self.pack_output(data))
+            if data[1].startswith('Error'):
+                self.channel.send(self.pack_output({"success": False, "error_msg": data[1]}))
+            elif data[1] == False:                
+                self.channel.send(self.pack_output({"success": False, "error_msg": "There was an error in your command."}))
+            elif data[0] == "Select_command":
+                self.select_protocol(data[1])
+            # Perhaps handle other cases differently
+            else:
+                self.channel.send(self.pack_output({"success": True, "result": data[1]}))
         except Exception, e:
-            print "[-] Failed sending data to client: %s" %e
+            self.channel.send(self.pack_output({"success": False, "error_msg": "[-] Internal server error: %s" %e}))
     #Function that handles recieving data from the client
     def recv_data(self):
-        #TODO implement protocol
-        return self.unpack_input(self.channel.recv(1024))
+        try:
+            data = self.unpack_input(self.channel.recv(1024))
+            if type(data) is dict:
+                if "command" in data:
+                    return data["command"]
+                elif "continue" in data:
+                    return data["continue"]
+            return False
+        except Exception, e:
+            print "[-] Failed while unpacking data: %s" %e
+            return False
+
     #Function that formats data into a JSON format
     def pack_output(self, out):
-        #TODO pack into json
-        return out
+        return json.dumps(out)
     #Fucntion that reads JSON format and converts it to XY
     def unpack_input(self, inp):
-        #TODO unpack json
-        inp = inp.strip()
-        return inp
+        return json.loads(inp)
+    # Function that splits table by newline and sends 1000 by 1000 rows
+    def select_protocol(self, table):
+        l = table.splitlines()
+        n = 2
+        if (len(l) > n):
+            header = [l.pop(0)]
+            for i in xrange(0, len(l), n):
+                if i+n >= len(l):
+                    end = True
+                    endrow = len(l)
+                else:
+                    end = False
+                    endrow = i+n
+                if i == 0:
+                    data = self.pack_output({"startrow": i, "endrow": endrow, "max": len(l),"end": end, "result": '\n'.join(header + l[i:i + n]), "success": True, "packed_data": True})
+                else:
+                    data = self.pack_output({"startrow": i, "endrow": endrow, "max": len(l),"end": end, "result": '\n'.join(l[i:i + n]), "success": True, "packed_data": True})
+                self.channel.send(data)
+                if end == False:
+                    print "Sent " + str(i+n) + "/" + str(len(l)) + " rows to " + self.addr[0]
+                    res = self.recv_data()
+                    if res:
+                        continue
+                    else:
+                        print "Interrupted by client."
+                        break
+                else:
+                    print "Sent all " + str(len(l)) + " rows to " + self.addr[0]
+                    break
+        else:
+            data = self.pack_output({"rows": len(stripped_table-1), "result": table, "success": True})
+            self.channel.send(data)
+
+
     #Function that checks if the server is still running
     def is_alive(self):
         if self.channel is not None and self.transport.is_active():

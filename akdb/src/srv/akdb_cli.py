@@ -5,6 +5,7 @@ import time
 import paramiko
 import tests
 import colors
+import json
 
 #TODO refactor code ( split logic to multiple files)
 if len(sys.argv) == 3:
@@ -16,7 +17,7 @@ else:
 
 
 class Client:
-    def __init__(self, host="127.0.0.1.", port=1998):
+    def __init__(self, host="127.0.0.1", port=1998):
         self.sock = paramiko.SSHClient()
         self.sock.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.session = None
@@ -50,6 +51,7 @@ class Client:
                     timeout=600
                 )
                 connected = True
+                print "[*] Connection established."
             except paramiko.ssh_exception.AuthenticationException:
                 username = raw_input("Username: ")
                 password = raw_input("Password: ")
@@ -359,7 +361,6 @@ class Client:
                 else:
                     self.send_command(cmd)
                     out = self.recv_data()
-                    print out
             except KeyboardInterrupt:
                 self.working = False
 
@@ -368,24 +369,49 @@ class Client:
         #TODO implement protocol
         if len(cmd) > 0:
             try:
-                self.session.send(self.pack_data(cmd))
+                self.session.send(self.pack_data({"command": cmd}))
             except Exception, e:
                 print "[-] Sending failed: %s" %e
 
     def recv_data(self):
         #TODO implement protocol
         out = self.session.recv(1024)
-        return self.unpack_data(out)
+        rec = self.unpack_data(out)
+        if type(rec) is dict:
+            if "success" in rec and rec["success"]: 
+                if "packed_data" in rec:
+                    self.select_protocol(rec)
+                else:
+                    print rec["result"]
+            else:
+                print "There was a problem. Error message: " + rec["error_msg"]
+
+    def select_protocol(self, res):
+        rec = res
+        while "end" in rec and rec["end"] == False:
+            print rec["result"]
+            print str(rec["startrow"]) + "-" + str(rec["endrow"]) + "/" + str(rec["max"])
+            cont = raw_input("Continue (yes/no)? ")
+            if cont == "yes":
+                self.session.send(self.pack_data({"continue": True}))
+                out = self.session.recv(1024)
+                rec = self.unpack_data(out)
+            else:
+                self.session.send(self.pack_data({"continue": False}))
+                return False
+        if rec["success"] == False:
+            print "Interrupted by server: " + rec["error_msg"]
+            return False
+        print rec["result"]
+        print str(rec["startrow"]) + "-" + str(rec["endrow"]) + "/" + str(rec["max"])
 
     # packs data into json
     def pack_data(self, data):
-        #TODO pack data
-        return data
+        return json.dumps(data)
 
     # unpacks json data
     def unpack_data(self, data):
-        #TODO unpack data
-        return data
+        return json.loads(data)
 
                     
 
