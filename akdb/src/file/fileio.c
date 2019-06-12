@@ -181,16 +181,22 @@ int Ak_insert_row(struct list_node *row_root) {
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Start inserting data\n");
     struct list_node *some_element = (struct list_node *) Ak_First_L2(row_root);
     char table[MAX_ATT_NAME];
+    table_addresses *table_addresses_return;
 
     memset(table, '\0', MAX_ATT_NAME);
     memcpy(&table, some_element->table, strlen(some_element->table));
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into table: %s\n", table);
     int adr_to_write;
-
-    adr_to_write = (int) AK_find_AK_free_space(AK_get_index_addresses(table));
+    table_addresses_return = AK_get_table_addresses(table);
+    adr_to_write = (int) AK_find_AK_free_space(table_addresses_return);
+    AK_free(table_addresses_return);
 
     if (adr_to_write == -1) adr_to_write = (int) AK_init_new_extent(table, SEGMENT_TYPE_TABLE);
-    if(strstr(some_element->table,"_bmapIndex")) adr_to_write = (int) AK_find_AK_free_space(AK_get_index_addresses(table));
+    if(strstr(some_element->table,"_bmapIndex")){
+	table_addresses_return = AK_get_index_addresses(table);
+        adr_to_write = (int) AK_find_AK_free_space(table_addresses_return);
+        AK_free(table_addresses_return);
+    }
 
     if (adr_to_write == 0) {
         AK_EPI;
@@ -527,7 +533,7 @@ TestResult Ak_fileio_test() {
     Ak_Insert_New_Element(TYPE_INT, &number, "testna", "Redni_broj", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Novak", "testna", "Prezime", row_root);
-    if (Ak_insert_row(row_root)) ok++;
+    if (Ak_insert_row(row_root)==EXIT_SUCCESS) ok++;
     else fail++;
 
 
@@ -536,7 +542,7 @@ TestResult Ak_fileio_test() {
     Ak_Insert_New_Element(TYPE_INT, &number, "testna", "Redni_broj", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Nikola", "testna", "Ime", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
-    if (Ak_insert_row(row_root)) ok++;
+    if (Ak_insert_row(row_root)==EXIT_SUCCESS) ok++;
     else fail++;
 
     Ak_DeleteAll_L3(&row_root);
@@ -544,7 +550,7 @@ TestResult Ak_fileio_test() {
     Ak_Insert_New_Element(TYPE_INT, &number, "testna", "Redni_broj", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Matija", "testna", "Ime", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Bakoš", "testna", "Prezime", row_root);
-    if (Ak_insert_row(row_root)) ok++;
+    if (Ak_insert_row(row_root)==EXIT_SUCCESS) ok++;
     else fail++;
 
     for (int i = 5; i < 10; i++) {
@@ -553,7 +559,7 @@ TestResult Ak_fileio_test() {
         Ak_Insert_New_Element(TYPE_INT, &number, "testna", "Redni_broj", row_root);
         Ak_Insert_New_Element(TYPE_VARCHAR, "Maja", "testna", "Ime", row_root);
         Ak_Insert_New_Element(TYPE_VARCHAR, "Vacenovski", "testna", "Prezime", row_root);
-        if (Ak_insert_row(row_root)) ok++;
+        if (Ak_insert_row(row_root)==EXIT_SUCCESS) ok++;
         else fail++;
     }
 

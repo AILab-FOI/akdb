@@ -101,7 +101,7 @@ TestResult AK_test_command(){
     year = 2012;
     weight = 82.00;
     Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &studentId, tblName, "studentId", row_root);
+    Ak_Insert_New_Element(TYPE_INT, &studentId, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Mario", tblName, "firstname", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "Kolmacic", tblName, "lastname", row_root);
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
@@ -120,7 +120,7 @@ TestResult AK_test_command(){
     Ak_Init_L3(&row_root);
     Ak_DeleteAll_L3(&row_root);
 
-    Ak_Update_Existing_Element(TYPE_INT, &studentId, tblName, "studentId", row_root);
+    Ak_Update_Existing_Element(TYPE_INT, &studentId, tblName, "mbr", row_root);
     Ak_Insert_New_Element(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root);
 
     commands[1].id_command = UPDATE;
@@ -163,14 +163,16 @@ TestResult AK_test_command(){
     // execute commands
     int test_command = AK_command(commands, commandNum);
     Ak_DeleteAll_L3(&row_root);
-
+    int ok=0, fail=0;
 	if (test_command == EXIT_SUCCESS){
 		printf("\n\nTest succeeded!\n");
+		ok++;
     }
     else{
 		printf("\n\nTest failed!\n");
+		fail++;
     }
 	
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(ok,fail);
 }
