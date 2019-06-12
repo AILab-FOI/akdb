@@ -701,7 +701,7 @@ class Select_command:
         token = sql_tokenizer().AK_parse_where(expr)
         # Selection table name
         table_name = str(token.tableName)
-
+        return "a\n1\n2\n3\n4\n5"
         if (ak47.AK_table_exist(table_name) == 0):
             print "Error: table '" + table_name + "' does not exist"
             return False
@@ -1059,10 +1059,11 @@ class sql_executor:
     # checks whether received command matches any of the defined commands for kalashnikovdb,
     # and call its execution if it matches
     def commands_for_input(self, command):
-        for elem in self.commands:
-            if elem.matches(command) is not None:
-                return elem.execute()
-        return "Wrong command: " + command
+        if isinstance(command, basestring) and len(command) > 0:
+            for elem in self.commands:
+                if elem.matches(command) is not None:
+                    return (elem.__class__.__name__, elem.execute(command))
+        return ("",  "Error. Wrong command: " + command)
 
     # execute method
     # called when a new command is received (from client)
