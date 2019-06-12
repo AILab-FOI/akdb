@@ -5,10 +5,15 @@ import paramiko
 import threading
 import sys
 import json
+import configparser
 
 sys.path.append("../swig/")
 import kalashnikovDB as ak47
 import sql_executor as sqle
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+n = int(config["select_options"]["number_of_rows_in_packet"])
 
 #Interface to override classic python server support
 class ParamikoServer(paramiko.ServerInterface):
@@ -81,7 +86,8 @@ class Connection:
     # Function that splits table by newline and sends 1000 by 1000 rows
     def select_protocol(self, table):
         l = table.splitlines()
-        n = 2
+        print n
+        print len(l)
         if (len(l) > n):
             header = [l.pop(0)]
             for i in xrange(0, len(l), n):
@@ -108,7 +114,7 @@ class Connection:
                     print "Sent all " + str(len(l)) + " rows to " + self.addr[0]
                     break
         else:
-            data = self.pack_output({"rows": len(stripped_table-1), "result": table, "success": True})
+            data = self.pack_output({"rows": len(l)-1, "result": table, "success": True})
             self.channel.send(data)
 
 
