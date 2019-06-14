@@ -26,6 +26,8 @@
 
 
 int AK_add_to_redolog(int command, struct list_node *row_root);
+int AK_add_to_redolog_select(int command, struct list_node *condition, char *srcTable);
+int AK_check_redo_log_select(int command, struct list_node *condition, char *srcTable);
 void AK_printout_redolog();
 void AK_redolog_commit();
 char* AK_check_attributes(char *attributes);
