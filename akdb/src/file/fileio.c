@@ -53,7 +53,6 @@ void Ak_Insert_New_Element_For_Update(int newtype, void * data, char * table, ch
 
     ElementBefore->next = newElement;
 
-
     AK_EPI;
 }
 
