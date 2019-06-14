@@ -33,7 +33,30 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
         AK_PRO;
 	AK_header *t_header = (AK_header *) AK_get_header(srcTable);
 	int num_attr = AK_num_attr(srcTable);
-	
+
+
+    AK_add_to_redolog_select(SELECT, expr, srcTable);
+
+    //commented out code is for testing of AK_check_redo_log_select
+    //should be moved to a test
+
+    /*struct list_node *expr1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    Ak_Init_L3(&expr1);
+
+    char *destTable = "selection_test1";
+    int num = 2005;
+    strcpy(expr1->table,destTable);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr1);
+    Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr1);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr1);
+    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr1);
+    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr1);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr1);
+    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "AND", sizeof("AND"), expr1);*/
+
+    AK_check_redo_log_select(SELECT, expr, srcTable);
+
+    //Ak_DeleteAll_L3(&expr1);
 
 		int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
 		if (startAddress == EXIT_ERROR) {

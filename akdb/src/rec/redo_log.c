@@ -109,6 +109,170 @@ void AK_redolog_commit() {
     }
 }
 
+/**
+ * @author Danko Bukovac
+ * @brief Function that adds a new select to redolog, commented code with the new select from select.c,
+ * current code works with selection.c
+ * @return EXIT_FAILURE if not allocated memory for ispis, otherwise EXIT_SUCCESS
+ */
+int AK_add_to_redolog_select(int command, struct list_node *condition, char *srcTable){
+    AK_PRO;
+
+    if (redo_log == NULL)
+        return EXIT_FAILURE;
+    int n = redo_log->number;
+    printf("AK_add_to_redolog_select: Select checkpoint %d\n", n);
+
+    if(n == MAX_REDO_LOG_ENTRIES){
+        AK_archive_log(-10);
+        n = 0;
+    }
+
+    /*struct list_node * el_attr = (struct list_node *) Ak_First_L2(attributes);
+
+    char* record;
+    if((record = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
+        AK_EPI;
+        return EXIT_FAILURE;
+    }
+
+    int numAttr = 1;
+
+    char** attrs = AK_calloc(MAX_ATTRIBUTES, sizeof(char*));
+    int i = 0;
+    while (el_attr != NULL) {
+        attrs[i] = AK_check_attributes(el_attr->data);
+        strncat(record, attrs[i], strlen(el_attr->data));
+
+        strncat(record, "|", 1);
+        numAttr++;
+        i++;
+        el_attr = el_attr->next;
+    }*/
+
+    struct list_node * el_cond = (struct list_node *) Ak_First_L2(condition);
+
+    char* record_cond;
+    if((record_cond = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
+        AK_EPI;
+        return EXIT_FAILURE;
+    }
+
+    int numConds = 1;
+
+    char** conds = AK_calloc(MAX_ATTRIBUTES, sizeof(char*));
+    int i = 0;
+    while (el_cond != NULL) {
+        switch (el_cond->type) {
+
+            case TYPE_INT:
+                conds[i] = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+                sprintf (conds[i], "%i", *((int *) el_cond->data));
+                strncat(record_cond, conds[i], strlen(conds[i]));
+                break;
+            default:
+                conds[i] = AK_check_attributes(el_cond->data);
+                strncat(record_cond, conds[i], strlen(el_cond->data));
+                break;
+        }
+        strncat(record_cond, "|", 1);
+        numConds++;
+        i++;
+        el_cond = el_cond->next;
+    }
+
+    printf("AK_add_to_redolog_select: redolog_select new entry -- %s, %s\n", srcTable, record_cond);
+    memcpy(redo_log->command_recovery[n].table_name, srcTable, strlen(srcTable));
+
+    /*for(i=0; i<numAttr-1; i++)
+        strcpy(redo_log->command_recovery[n].arguments[i], attrs[i]);*/
+
+    for(i=0; i<numConds-1; i++)
+        strcpy(redo_log->command_recovery[n].condition[i], conds[i]);
+    redo_log->command_recovery[n].operation = command;
+    redo_log->number = n+1;
+
+    /*AK_free(record);
+    for(i=0; i < numAttr-1; i++)
+        AK_free(attrs[i]);
+    AK_free(attrs);*/
+
+    AK_free(record_cond);
+    for(i=0; i < numConds-1; i++)
+        AK_free(conds[i]);
+    AK_free(conds);
+
+    printf("AK_add_to_redolog_select: Select checkpoint saved\n");
+    AK_EPI;
+    return EXIT_SUCCESS;
+}
+
+/**
+ * @author Danko Bukovac
+ * @brief Function that checks redolog for select, works only with selection.c, not select.c
+ * @return 0 if select was not found, otherwise 1
+ */
+int AK_check_redo_log_select(int command, struct list_node *condition, char *srcTable){
+    AK_PRO;
+
+    struct list_node * el_cond = (struct list_node *) Ak_First_L2(condition);
+
+    char* record_cond;
+    if((record_cond = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
+        AK_EPI;
+        return EXIT_FAILURE;
+    }
+
+    int numConds = 1;
+
+    char** conds = AK_calloc(MAX_ATTRIBUTES, sizeof(char*));
+    int i = 0;
+    while (el_cond != NULL) {
+        switch (el_cond->type) {
+
+            case TYPE_INT:
+                conds[i] = (char*) AK_malloc(MAX_VARCHAR_LENGTH * sizeof(char));
+                sprintf (conds[i], "%i", *((int *) el_cond->data));
+                strncat(record_cond, conds[i], strlen(conds[i]));
+                break;
+            default:
+                conds[i] = AK_check_attributes(el_cond->data);
+                strncat(record_cond, conds[i], strlen(el_cond->data));
+                break;
+        }
+        strncat(record_cond, "|", 1);
+        numConds++;
+        i++;
+        el_cond = el_cond->next;
+    }
+
+    int check_var;
+    int j;
+
+    for(i = redo_log->number; i >= 0; i--) {
+        if(redo_log->command_recovery[i].operation == command){
+            if(strcmp(redo_log->command_recovery[i].table_name, srcTable) == 0)
+            {
+                for(j=0; j < numConds-1; j++){
+                    printf("AK_check_redolog: attrs -- %s, %s\n", redo_log->command_recovery[i].condition[j], conds[j]);
+                    check_var = strcmp(redo_log->command_recovery[i].condition[j], conds[j]);
+                    printf("AK_check_redolog: check_var -- %d\n", check_var);
+                    if(check_var != 0)
+                    {
+                        printf("AK_check_redolog: Action mismatch\n");
+                        break;
+                    }
+                }
+                if(check_var == 0){
+                    printf("AK_check_redolog: Action match -- \n");
+                    return 1;
+                }
+            } else printf("AK_check_redolog: Action mismatch\n");
+        }
+    }
+    printf("No such action found \n");
+    return 0;
+}
 
 /**
  * @author Krunoslav Bilić updated by Dražen Bandić, second update by Tomislav Turek

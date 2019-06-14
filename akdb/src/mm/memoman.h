@@ -57,7 +57,8 @@ typedef struct {
  * that is about to execute. It is defined by the operation (INSERT,
  * UPDATE, DELETE that are defined inside the const.c file), table
  * where the data is stored, and certain data that will be stored.
- * @author Tomislav Turek
+ * Updated can be used to save select operation
+ * @author Tomislav Turek updated by Danko Bukovac
  * @struct AK_command_recovery_struct
  * @brief recovery structure used to recover commands from binary file
  */
@@ -65,6 +66,7 @@ typedef struct {
     int operation;
     char table_name[MAX_VARCHAR_LENGTH];
     char arguments[MAX_ATTRIBUTES][MAX_VARCHAR_LENGTH];
+    char condition[MAX_ATTRIBUTES][MAX_VARCHAR_LENGTH];
     int finished;
 } AK_command_recovery_struct;
 
