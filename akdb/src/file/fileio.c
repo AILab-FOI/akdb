@@ -203,9 +203,10 @@ int Ak_insert_row(struct list_node *row_root) {
         return EXIT_ERROR;
     }
 
+    table_addresses *addresses = (table_addresses*) AK_get_table_addresses(table);
     Ak_dbg_messg(HIGH, FILE_MAN, "insert_row: Insert into block on adress: %d\n", adr_to_write);
     AK_mem_block *mem_block = (AK_mem_block *) AK_get_block(adr_to_write);
-
+    
     int end = (int) Ak_insert_row_to_block(row_root, mem_block->block);
 
     if (end == EXIT_SUCCESS) AK_redolog_commit();
