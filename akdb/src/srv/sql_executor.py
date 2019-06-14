@@ -8,6 +8,7 @@ sys.path.append('../swig/')
 import kalashnikovDB as ak47
 import test
 import re
+import ctypes
 
 
 def initialize():
@@ -180,6 +181,26 @@ class Print_table_command:
 # table_derails_command
 # defines the structure of table details command and its execution
 
+class Print_system_table_command:
+    print_system_table_regex = r"^\\ps\s+([a-zA-Z0-9_]+)\s*$"
+    pattern = None
+    matcher = None
+    # matches method
+    # checks whether given input matches print command syntax
+
+    def matches(self, input):
+        self.pattern = re.compile(self.print_system_table_regex)
+        self.matcher = self.pattern.match(input)
+        return self.matcher if self.matcher is not None else None
+
+    # execute method
+    # defines what is called when table_exists command is invoked
+    def execute(self, cmd):
+        
+	string = self.matcher.group(1)	
+ 	string = string.encode('utf-8')
+        ak47.AK_print_table(string)
+        return "OK"
 
 class Table_details_command:
 
@@ -196,7 +217,7 @@ class Table_details_command:
 
     # execute method
     # defines what is called when table_details command is invoked
-    def execute(self):
+    def execute(self, cmd):
         print "Printing out: "
         result = "Number of attributes: " + \
             str(ak47.AK_num_attr(self.matcher.group(1)))
@@ -1037,6 +1058,7 @@ class Drop_command:
 class sql_executor:
 
     # initialize classes for the available commands
+    print_system_table_command = Print_system_table_command()
     print_command = Print_table_command()
     table_details_command = Table_details_command()
     table_exists_command = Table_exists_command()
@@ -1053,7 +1075,7 @@ class sql_executor:
 
     # add command instances to the commands array
     commands = [print_command, table_details_command, table_exists_command, create_sequence_command, create_table_command,
-                create_index_command, create_trigger_command, insert_into_command, grant_command, select_command, update_command, drop_command]
+                create_index_command, create_trigger_command, insert_into_command, grant_command, select_command, update_command, drop_command, print_system_table_command]
 
     # commands for input
     # checks whether received command matches any of the defined commands for kalashnikovdb,
@@ -1156,3 +1178,5 @@ class sql_executor:
         else:
             return False
         return False
+
+
