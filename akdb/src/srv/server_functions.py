@@ -21,6 +21,17 @@ class ParamikoServer(paramiko.ServerInterface):
     #Function that checks if the clients username and password match
     def check_auth_password(self, username, password):
         usr = "testingUser" #TODO get users and passwords from database
+        #Testing the data format of AK_user_get_id(usr)
+        #SIGSEGV ISSUE again
+        #return ak47.AK_user_get_id(usr)
+        pas = "testingPass"
+        #local login using swig
+
+    #    if(ak47.AK_user_get_id(usr)!=null):
+    #       return paramiko.AUTH_SUCCESSFUL
+    #    elif(username == usr) and (password == pas):
+    #        return paramiko.AUTH_SUCCESSFUL
+    #         return paramiko.AUTH_FAILED
         pas = "testingPass"
         if (username == usr) and (password == pas):
             return paramiko.AUTH_SUCCESSFUL
