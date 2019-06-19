@@ -7,6 +7,9 @@ import tests
 import colors
 import json
 
+sys.path.append("../swig/")
+import kalashnikovDB as ak47
+
 #TODO refactor code ( split logic to multiple files)
 if len(sys.argv) == 3:
     username = sys.argv[1]
