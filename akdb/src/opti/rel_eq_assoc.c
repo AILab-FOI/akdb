@@ -420,6 +420,10 @@ TestResult AK_rel_eq_assoc_test() {
     printf("rel_eq_assoc.c: Present!\n");
     printf("\n********** REL_EQ_ASSOCIATIVITY TEST by Dino Laktašić **********\n");
 
+    int success=0;
+    int failed=0;
+    int result;
+
     //create header
     AK_header t_header[MAX_ATTRIBUTES];
     AK_header *temp;
@@ -436,13 +440,19 @@ TestResult AK_rel_eq_assoc_test() {
     memcpy(t_header + 4, temp, sizeof (AK_header));
     memset(t_header + 5, '\0', MAX_ATTRIBUTES - 5);
 
+    //TEST 1
     //create table
     char *tblName = "profesor";
 
     int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header);
 
-    if (startAddress != EXIT_ERROR)
+    if (startAddress != EXIT_ERROR){
+	    success++;
         printf("\nTABLE %s CREATED!\n", tblName);
+    }else{
+        failed++;
+        printf("\nTest failed!\n");
+    }
 
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
@@ -451,7 +461,8 @@ TestResult AK_rel_eq_assoc_test() {
 
     int id = 35890, year = 1999;
     float weight = 80.00;
-
+    
+    //TEST 2
     //insert rows in table student
     id++;
     year++;
@@ -463,6 +474,8 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
     Ak_insert_row(row_root);
+    int insertedRow = AK_reference_check_entry(row_root);
+    
 
     id++;
     year++;
@@ -474,6 +487,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
     Ak_insert_row(row_root);
+    int insertedRow2 = AK_reference_check_entry(row_root);
 
     id++;
     year++;
@@ -485,6 +499,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
     Ak_insert_row(row_root);
+    int insertedRow3 = AK_reference_check_entry(row_root);
 
     id++;
     year++;
@@ -496,6 +511,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
     Ak_insert_row(row_root);
+    int insertedRow4 = AK_reference_check_entry(row_root);
 
     id++;
     year++;
@@ -507,6 +523,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
     Ak_insert_row(row_root);
+    int insertedRow5 = AK_reference_check_entry(row_root);
 
     id++;
     year++;
@@ -518,6 +535,13 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
     Ak_insert_row(row_root);
+    int insertedRow6 = AK_reference_check_entry(row_root);
+
+    if ((insertedRow && insertedRow2 && insertedRow3 && insertedRow4 && insertedRow5 && insertedRow6) != EXIT_ERROR){
+	    success++;  
+    }else{
+        failed++;
+    }
 
     printf("rel_eq_associativity_test: After data insertion: %d\n", AK_num_attr(tblName));
 
@@ -537,13 +561,20 @@ TestResult AK_rel_eq_assoc_test() {
     memcpy(t_header2 + 4, temp2, sizeof (AK_header));
     memset(t_header2 + 5, '\0', MAX_ATTRIBUTES - 5);
 
+    //TEST 3
     //create table
     char *tblName2 = "student";
 
     int startAddress2 = AK_initialize_new_segment(tblName2, SEGMENT_TYPE_TABLE, t_header2);
 
-    if (startAddress2 != EXIT_ERROR)
+    if (startAddress2 != EXIT_ERROR){
+        success++;
         printf("\nTABLE %s CREATED!\n", tblName2);
+    }else{
+        failed++;
+        printf("\nTest failed!\n");
+    }
+
 
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName2));
 
@@ -554,6 +585,7 @@ TestResult AK_rel_eq_assoc_test() {
     year = 1999;
     weight = 80.00;
 
+    //TEST 4
     //insert rows in table student
     mbr++;
     year++;
@@ -565,6 +597,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
     Ak_insert_row(row_root2);
+    int insertedRow7 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
@@ -576,6 +609,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
     Ak_insert_row(row_root2);
+    int insertedRow8 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
@@ -587,6 +621,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
     Ak_insert_row(row_root2);
+    int insertedRow9 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
@@ -598,6 +633,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
     Ak_insert_row(row_root2);
+    int insertedRow10 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
@@ -609,6 +645,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
     Ak_insert_row(row_root2);
+    int insertedRow11 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
@@ -620,6 +657,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
     Ak_insert_row(row_root2);
+    int insertedRow12 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
@@ -631,6 +669,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
     Ak_insert_row(row_root2);
+    int insertedRow13 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
@@ -641,7 +680,16 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_Insert_New_Element(TYPE_VARCHAR, "Laktašić", tblName2, "lastname", row_root2);
     Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
     Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    Ak_insert_row(row_root2);
+    int insertedRow14 = AK_reference_check_entry(row_root2);
     Ak_DeleteAll_L3(&row_root2);
+    
+
+    if ((insertedRow7 && insertedRow8 && insertedRow9 && insertedRow10 && insertedRow11 && insertedRow12 && insertedRow13 && insertedRow14) != EXIT_ERROR){
+	    success++;  
+    }else{
+        failed++;
+    }
 
     printf("rel_eq_associativity_test: After data insertion: %d\n", AK_num_attr(tblName2));
     //-----------------------------------------------------------------------------------------
@@ -683,5 +731,7 @@ TestResult AK_rel_eq_assoc_test() {
     Ak_DeleteAll_L3(&expr);
 
     AK_EPI;
-    return TEST_result(0,0);
+    
+    return TEST_result(success,failed);
 }
+
