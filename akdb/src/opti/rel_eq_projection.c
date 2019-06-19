@@ -692,6 +692,10 @@ TestResult AK_rel_eq_projection_test() {
     printf("rel_eq_projection.c: Present!\n");
     printf("\n********** REL_EQ_PROJECTION TEST by Dino Laktašić **********\n");
 
+    int success=0;
+    int failed=0;
+    int result;
+
     //create header
     AK_header t_header[MAX_ATTRIBUTES];
     AK_header* temp;
@@ -713,8 +717,13 @@ TestResult AK_rel_eq_projection_test() {
 
     int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header);
 
-    if (startAddress != EXIT_ERROR)
+    if (startAddress != EXIT_ERROR){
+	    success++;
         printf("\nTABLE %s CREATED!\n", tblName);
+    }else{
+        failed++;
+        printf("\nTest failed!\n");
+    }
 
     printf("rel_eq_projection_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
@@ -754,31 +763,30 @@ TestResult AK_rel_eq_projection_test() {
         printf("\n------------------> TEST_PROJECTION_FUNCTIONS <------------------\n\n");
 
         //Initialize list elements...
-        //AK_list_elem list_elem_set, list_elem_subset;
-        //AK_list_elem list_elem_cond, list_elem_attr;
+        AK_list_elem list_elem_set, list_elem_subset;
+        AK_list_elem list_elem_cond, list_elem_attr;
 
-        //char *test_cond1, *test_cond2;
-        //char *test_table;
-        //char *test_attribs;
+        char *test_cond1, *test_cond2;
+        char *test_table;
+        char *test_attribs;
 
-        //test_table = "profesor";
-        //test_cond1 = "`mbr` 100 > `firstname` 'Dino' = AND `id` 1000 > OR";
-        //test_cond2 = "`id` 100 > `firstname` 50 < AND `job` 'teacher' = AND";
-        //test_attribs = "id;mbr";
+        test_table = "profesor";
+        test_cond1 = "`mbr` 100 > `firstname` 'Dino' = AND `id` 1000 > OR";
+        test_cond2 = "`id` 100 > `firstname` 50 < AND `job` 'teacher' = AND";
+        test_attribs = "id;mbr";
 
-        //printf("IS_SET_SUBSET_OF_LARGER_SET_TEST  : (%i)\n\n", AK_rel_eq_is_subset(list_elem_set, list_elem_subset));
-        //printf("COMMUTE_PROJECTION_SELECTION_TEST : (%i)\n\n", AK_rel_eq_can_commute(list_elem_attr, list_elem_cond));
-        ////printf("GET_TABLE_ATTRIBUTES_TEST       : (%s)\n\n", (AK_rel_eq_get_attributes(test_table))->data);
-        //printf("GET_PROJECTION_ATTRIBUTES_TEST    : (%s)\n\n", AK_rel_eq_projection_attributes(test_attribs, test_table));
-        //printf("GET_ATTRIBUTES_FROM_CONDITION_TEST: (%s)\n\n", AK_rel_eq_collect_cond_attributes(list_elem_cond));
-        //printf("REMOVE_DUPLICATE_ATTRIBUTES_TEST  : (%s)\n", AK_rel_eq_remove_duplicates(test_attribs));
-        /**/
+        printf("IS_SET_SUBSET_OF_LARGER_SET_TEST  : (%i)\n\n", AK_rel_eq_is_subset(list_elem_set, list_elem_subset));
+        printf("COMMUTE_PROJECTION_SELECTION_TEST : (%i)\n\n", AK_rel_eq_can_commute(list_elem_attr, list_elem_cond));
+        printf("GET_TABLE_ATTRIBUTES_TEST       : (%s)\n\n", (AK_rel_eq_get_attributes(test_table))->data);
+        printf("GET_PROJECTION_ATTRIBUTES_TEST    : (%s)\n\n", AK_rel_eq_projection_attributes(test_attribs, test_table));
+        printf("GET_ATTRIBUTES_FROM_CONDITION_TEST: (%s)\n\n", AK_rel_eq_collect_cond_attributes(list_elem_cond));
+        printf("REMOVE_DUPLICATE_ATTRIBUTES_TEST  : (%s)\n", AK_rel_eq_remove_duplicates(test_attribs));
+        
     } else {
         printf("...\n");
     }
 
     Ak_DeleteAll_L3(&expr);
-    //dealocate variables ;)
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success, failed);
 }

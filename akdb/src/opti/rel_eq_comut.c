@@ -379,6 +379,11 @@ TestResult AK_rel_eq_comut_test() {
 
     printf("rel_eq_comut.c: Present!\n");
     printf("\n********** REL_EQ_COMMUTATION TEST **********\n");
+
+    int success=0;
+    int failed=0;
+    int result;
+
     //create header
     AK_header t_header[MAX_ATTRIBUTES];
     AK_header* temp;
@@ -400,8 +405,13 @@ TestResult AK_rel_eq_comut_test() {
 
     int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header);
 
-    if (startAddress != EXIT_ERROR)
+    if (startAddress != EXIT_ERROR){
+	    success++;
         printf("\nTABLE %s CREATED!\n", tblName);
+    }else{
+        failed++;
+        printf("\nTest failed!\n");
+    }
 
     printf("rel_eq_comut_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
@@ -457,6 +467,6 @@ TestResult AK_rel_eq_comut_test() {
     Ak_DeleteAll_L3(&expr);
 
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(success, failed);
 }
 
