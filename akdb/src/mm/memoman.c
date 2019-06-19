@@ -48,6 +48,12 @@ int AK_cache_block(int num, AK_mem_block *mem_block)
 	mem_block->timestamp_read = timestamp; /// set timestamp_read
 	mem_block->timestamp_last_change = timestamp; /// set timestamp_last_change
 
+	if(sizeof(block_cache) == NULL)
+	{
+		AK_EPI;
+		return EXIT_ERROR;
+	}
+
 	AK_free(block_cache_old);
 	AK_EPI;
 	return EXIT_SUCCESS;
@@ -476,7 +482,7 @@ int AK_release_oldest_cache_block() {
  * @author Alen Novosel.
  * @brief  Function that modifies the "dirty" bit of a block, and update the timestamps accordingly.
  */
-void AK_mem_block_modify(AK_mem_block* mem_block, int dirty)
+int AK_mem_block_modify(AK_mem_block* mem_block, int dirty)
 {
 	unsigned long timestamp;
 	AK_PRO;
@@ -485,6 +491,7 @@ void AK_mem_block_modify(AK_mem_block* mem_block, int dirty)
 	timestamp = clock();
 	mem_block->timestamp_last_change = timestamp;
 	AK_EPI;
+	return EXIT_SUCCESS;
 }
 
 /**
@@ -715,7 +722,11 @@ int AK_find_AK_free_space(table_addresses * addresses)
 				}
 			}
 		}
-		else break;
+		else 
+		{
+			AK_EPI;
+			return EXIT_ERROR;
+		}
 	}
 
 	//I cant call function from memoman must consider another solution to place these functions
@@ -755,6 +766,8 @@ int AK_init_new_extent(char *table_name, int extent_type)
 	int end_address;
 	struct list_node *row_root;
 	int obj_id = 0;
+
+
 	//!!! to correct header BUG iterate through header from 0 to N-th block while there is
 	//header attributes. Than create header and pass it to function for extent creation below.
 	//Current implementation works only with tables with max MAX_ATTRIBUTES.
