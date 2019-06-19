@@ -182,7 +182,7 @@ int AK_memoman_init();
 //int AK_memoman_AK_free();
 AK_mem_block *AK_get_block(int num);
 int AK_release_oldest_cache_block();
-void AK_mem_block_modify(AK_mem_block* mem_block, int dirty);
+int AK_mem_block_modify(AK_mem_block* mem_block, int dirty);
 int AK_refresh_cache();
 
 table_addresses *AK_get_segment_addresses_internal(char *tableName, char *segmentName);
