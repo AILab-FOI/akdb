@@ -733,6 +733,29 @@ int AK_find_AK_free_space(table_addresses * addresses)
 	int adr = -1;
 
 	//need to create new extent
+	printf("\nAK_find_AK_free_space: Creating new extent\n");
+
+	int old_size = 0;
+	int new_size = 0;
+
+	for (i = 0; i < MAX_EXTENTS_IN_SEGMENT; i++)
+	{
+		if (addresses->address_from[i] == 0)
+			break;
+		new_size = addresses->address_to[i] - addresses->address_from[i];
+		if (new_size > old_size) //find largest extent
+			old_size = new_size;
+	}
+
+	old_size++;
+
+	if ( (adr = AK_new_extent(1, old_size, SEGMENT_TYPE_TABLE , mem_block->block->header) ) == EXIT_ERROR)
+	{
+		printf("AK_find_AK_free_space: Could not allocate the new extent\n");
+		AK_EPI;
+		return EXIT_ERROR;
+	}
+
 	AK_EPI;
 	return adr;
 }
