@@ -186,7 +186,7 @@ int AK_strcmp(const void *a, const void *b) {
  * @return NO return value
  */
 
-void Ak_Init_L3(struct list_node **L){
+void AK_Init_L3(struct list_node **L){
     AK_PRO;
     assert(L != NULL);
     (*L)->next = NULL;
@@ -200,7 +200,7 @@ void Ak_Init_L3(struct list_node **L){
  * @return first element of the list
  */
 
-struct list_node *Ak_First_L2(struct list_node *L){
+struct list_node *AK_First_L2(struct list_node *L){
   AK_PRO;
   if(L == NULL){
 	AK_EPI;
@@ -217,10 +217,10 @@ struct list_node *Ak_First_L2(struct list_node *L){
  * @return last element of the list
  */
 
-struct list_node *Ak_End_L2(struct list_node *L) {
+struct list_node *AK_End_L2(struct list_node *L) {
     AK_PRO;
     struct list_node *current;
-    current=Ak_First_L2(L);
+    current=AK_First_L2(L);
 
     if (current == NULL)
     {
@@ -247,7 +247,7 @@ struct list_node *Ak_End_L2(struct list_node *L) {
  * @return next element of the list
  */
 
-struct list_node *Ak_Next_L2(struct list_node *current) {
+struct list_node *AK_Next_L2(struct list_node *current) {
     AK_PRO;
     if (current == NULL)
     {
@@ -266,7 +266,7 @@ struct list_node *Ak_Next_L2(struct list_node *current) {
  * @return previous element of the list
  */
 
-struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L) {
+struct list_node *AK_Previous_L2(struct list_node *current, struct list_node *L) {
     AK_PRO;
 
     if (current == NULL || current == L)
@@ -295,10 +295,10 @@ struct list_node *Ak_Previous_L2(struct list_node *current, struct list_node *L)
  * @return 1 if the list is empty, otherwise returns 0
  */
 
-unsigned int Ak_IsEmpty_L2(struct list_node *L) {
+unsigned int AK_IsEmpty_L2(struct list_node *L) {
     AK_PRO;
     unsigned int ret;
-    ret = (Ak_First_L2(L) == NULL ? 1 : 0);
+    ret = (AK_First_L2(L) == NULL ? 1 : 0);
     AK_EPI;
     return ret;
 }
@@ -312,7 +312,7 @@ unsigned int Ak_IsEmpty_L2(struct list_node *L) {
  * @return No return value
  */
 
-void Ak_InsertBefore_L2(int type, char* data, int size, struct list_node **current, struct list_node **L) {
+void AK_InsertBefore_L2(int type, char* data, int size, struct list_node **current, struct list_node **L) {
     AK_PRO;
     struct list_node *new_elem;
 
@@ -329,7 +329,7 @@ void Ak_InsertBefore_L2(int type, char* data, int size, struct list_node **curre
         AK_EPI;
         return;
     }
-    struct list_node *previous = Ak_Previous_L2((*current), (*L));
+    struct list_node *previous = AK_Previous_L2((*current), (*L));
     previous->next = new_elem;
     new_elem->next = (*current);
     AK_EPI;
@@ -344,7 +344,7 @@ void Ak_InsertBefore_L2(int type, char* data, int size, struct list_node **curre
  * @return No return value.
  */
 
-void Ak_InsertAfter_L2(int type, char* data, int size, struct list_node **current,  struct list_node **L) {
+void AK_InsertAfter_L2(int type, char* data, int size, struct list_node **current,  struct list_node **L) {
 
     AK_PRO;
     struct list_node *new_elem;
@@ -373,32 +373,32 @@ void Ak_InsertAfter_L2(int type, char* data, int size, struct list_node **curren
  * @return No return value
  */
 
-void Ak_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L) {
+void AK_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L) {
     AK_PRO;
     assert(L != NULL);
 
-    struct list_node *current = Ak_First_L2(L);
-    current = Ak_First_L2(L);
-    Ak_InsertBefore_L2(type, data, size, &current, &L);
+    struct list_node *current = AK_First_L2(L);
+    current = AK_First_L2(L);
+    AK_InsertBefore_L2(type, data, size, &current, &L);
 
     AK_EPI;
 }
 
 /**
  * @author Ljiljana Pintarić.
- * @brief  Function that inserts a new element at the end of the list. It uses a function called: Ak_InsertAfter_L2
+ * @brief  Function that inserts a new element at the end of the list. It uses a function called: AK_InsertAfter_L2
  * @param data new data
  * @param L root of the list
  * @return No return value.
  */
 
-void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L) {
+void AK_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L) {
     AK_PRO;
     assert(L != NULL);
     struct list_node *current;
     current = NULL;
-    current = Ak_End_L2(L);
-    Ak_InsertAfter_L2(type,data, size, &current, &L);
+    current = AK_End_L2(L);
+    AK_InsertAfter_L2(type,data, size, &current, &L);
 
     AK_EPI;
 }
@@ -411,14 +411,14 @@ void Ak_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L) {
  * @retrun No return value
  */
 
-void Ak_Delete_L3(struct list_node **current, struct list_node **L) {
+void AK_Delete_L3(struct list_node **current, struct list_node **L) {
     AK_PRO;
     if ((*current) == NULL || (*L) == NULL)
     {
         AK_EPI;
         return;
     }
-    struct list_node * previous = Ak_Previous_L2((*current), (*L));
+    struct list_node * previous = AK_Previous_L2((*current), (*L));
     struct list_node * next = (*current)->next; //NextL( current, L );
 
     previous->next = next;
@@ -433,7 +433,7 @@ void Ak_Delete_L3(struct list_node **current, struct list_node **L) {
  * @return No return value
  */
 
-void Ak_DeleteAll_L3(struct list_node **L) {
+void AK_DeleteAll_L3(struct list_node **L) {
     AK_PRO;
 
     struct list_node *current;
@@ -444,7 +444,7 @@ void Ak_DeleteAll_L3(struct list_node **L) {
     }
 
     int counter = 0;
-    while ( (current = Ak_First_L2(*L)) != NULL )
+    while ( (current = AK_First_L2(*L)) != NULL )
     {
 	(*L)->next = current->next;
 	AK_free(current);
@@ -462,19 +462,19 @@ void Ak_DeleteAll_L3(struct list_node **L) {
  * @return Size of the list
  */
 
-int Ak_Size_L2(struct list_node *L) {
+int AK_Size_L2(struct list_node *L) {
     AK_PRO;
 
     int size = 0;
     struct list_node *current;
 
-    current = Ak_First_L2(L);
+    current = AK_First_L2(L);
 
     int counter = 0;
     while (current)
     {
         size++;
-        current = Ak_Next_L2(current);
+        current = AK_Next_L2(current);
 	counter++;
 	assert(counter < MAX_LOOP_ITERATIONS);
     }
@@ -490,7 +490,7 @@ int Ak_Size_L2(struct list_node *L) {
  * @return data from the list element
  */
 
-char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L) {
+char* AK_Retrieve_L2(struct list_node *current, struct list_node *L) {
     char *data;
     AK_PRO;
 
@@ -516,7 +516,7 @@ char* Ak_Retrieve_L2(struct list_node *current, struct list_node *L) {
 
 // 0 uses found
 /*
-int Ak_GetType_L(AK_list_elem current, AK_list *L) {
+int AK_GetType_L(AK_list_elem current, AK_list *L) {
     int ret;
     AK_PRO;
     ret = (current == NULL) ? 0 : current->type;
@@ -534,7 +534,7 @@ int Ak_GetType_L(AK_list_elem current, AK_list *L) {
  */
 // 0 uses found
 /*
-int Ak_GetSize_L(AK_list_elem current, AK_list *L) {
+int AK_GetSize_L(AK_list_elem current, AK_list *L) {
     int ret;
     AK_PRO;
     ret = (current == NULL) ? 0 : current->size;
@@ -552,13 +552,13 @@ int Ak_GetSize_L(AK_list_elem current, AK_list *L) {
 
  */
 
-struct list_node * Ak_GetNth_L2(int pos, struct list_node *row) {
+struct list_node * AK_GetNth_L2(int pos, struct list_node *row) {
     AK_PRO;
     int i;
     struct list_node *temp_elem;
 
     assert(pos > -1);
-    temp_elem = Ak_First_L2(row);
+    temp_elem = AK_First_L2(row);
     for(i = 1; temp_elem != NULL; ++i)
     {
         if (i == pos)
@@ -566,7 +566,7 @@ struct list_node * Ak_GetNth_L2(int pos, struct list_node *row) {
             AK_EPI;
             return temp_elem;
         }
-        temp_elem = Ak_Next_L2(temp_elem);
+        temp_elem = AK_Next_L2(temp_elem);
     };
     AK_EPI;
     return NULL;
@@ -581,7 +581,7 @@ struct list_node * Ak_GetNth_L2(int pos, struct list_node *row) {
  */
 // 0 uses found
 /*
-int Ak_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L) {
+int AK_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L) {
     AK_list *CurrentElement;
     int i = 0;
     AK_PRO;
@@ -1011,17 +1011,17 @@ void AK_copy_L(AK_list *src, AK_list *dest) {
         AK_list_elem destElem;
         AK_PRO;
         //srcElem = (AK_list_elem) AK_malloc(sizeof(struct list_elem));
-	srcElem = (AK_list_elem) Ak_First_L2(src);
+	srcElem = (AK_list_elem) AK_First_L2(src);
 	destElem = (AK_list_elem) Ak_First_L2(dest);
 
 	do {
 		AK_copy_L_Ele(srcElem, destElem);
 
-		srcElem = (AK_list_elem) Ak_Next_L2(srcElem);
+		srcElem = (AK_list_elem) AK_Next_L2(srcElem);
 
 		if (destElem->next == NULL && srcElem != NULL) {
 			destElem->next = (AK_list_elem) AK_malloc(sizeof(struct list_elem));
-			destElem = (AK_list_elem) Ak_Next_L2(destElem);
+			destElem = (AK_list_elem) AK_Next_L2(destElem);
 			destElem->next = NULL;
 		}
 	} while (srcElem != NULL);
@@ -1043,13 +1043,13 @@ int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal) {
         AK_list_elem srcElemOrig;
         AK_PRO;
 	// inicijalna provjera, da li su velicine identicne, ukoliko nisu : izlaz
-	if (Ak_Size_L(srcInput) != Ak_Size_L(srcOriginal)){
+	if (AK_Size_L(srcInput) != AK_Size_L(srcOriginal)){
                 AK_EPI;
 		return EXIT_FAILURE;
         }
 
-	srcElemInp = (AK_list_elem) Ak_First_L2(srcInput);
-	srcElemOrig = (AK_list_elem) Ak_First_L2(srcOriginal);
+	srcElemInp = (AK_list_elem) AK_First_L2(srcInput);
+	srcElemOrig = (AK_list_elem) AK_First_L2(srcOriginal);
 
 	// provjera za elemente data, size, type, table
 	do {
@@ -1077,8 +1077,8 @@ int AK_compare_L(AK_list *srcInput, AK_list *srcOriginal) {
 
 
 		//dohvaca novi element liste
-		srcElemInp = (AK_list_elem) Ak_Next_L2(srcElemInp);
-		srcElemOrig = (AK_list_elem) Ak_Next_L2(srcElemOrig);
+		srcElemInp = (AK_list_elem) AK_Next_L2(srcElemInp);
+		srcElemOrig = (AK_list_elem) AK_Next_L2(srcElemOrig);
 	} while (srcElemOrig != NULL);
         AK_EPI;
 	return EXIT_SUCCESS;

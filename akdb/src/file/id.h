@@ -32,6 +32,6 @@
 #define ID_START_VALUE 100
 
 int AK_get_id();
-TestResult Ak_id_test();
+TestResult AK_id_test();
 
 #endif

@@ -212,7 +212,7 @@ void AK_deallocate_search_result(search_result srResult) {
   * @brief Function that tests file search
   * @return No return value
   */
-TestResult Ak_filesearch_test() {
+TestResult AK_filesearch_test() {
     int i;
     double f;
     AK_mem_block *mem_block, tmp;
@@ -243,13 +243,13 @@ TestResult Ak_filesearch_test() {
     }
 
     for (i = -10, f = -i; i < 10; i++, f = -i) {
-        Ak_Init_L3(&row_root);
-        Ak_Insert_New_Element(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
-        Ak_Insert_New_Element(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
+        AK_Init_L3(&row_root);
+        AK_Insert_New_Element(TYPE_INT, &i, "filesearch test table", "Number int", row_root);
+        AK_Insert_New_Element(TYPE_FLOAT, &f, "filesearch test table", "Number float", row_root);
         //Error: argument of type "const char *" is incompatible with parameter of type "void *"
-        Ak_Insert_New_Element(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);
-        Ak_insert_row(row_root);
-        Ak_DeleteAll_L3(&row_root);
+        AK_Insert_New_Element(TYPE_VARCHAR, "test text", "filesearch test table", "Varchar column", row_root);
+        AK_insert_row(row_root);
+        AK_DeleteAll_L3(&row_root);
     }
 
     AK_free(row_root);
@@ -277,7 +277,7 @@ TestResult Ak_filesearch_test() {
         dTmp = 2;
         sp[2].pData_lower = &dTmp;
 
-        Ak_dbg_messg(LOW, FILE_MAN, "Calling AK_search_unsorted");
+        AK_dbg_messg(LOW, FILE_MAN, "Calling AK_search_unsorted");
         sr = AK_search_unsorted("filesearch test table", sp, 3);
 
         for (i = 0; i < sr.iNum_tuple_addresses; i++) {

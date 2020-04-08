@@ -140,23 +140,23 @@ void AK_recovery_insert_row(char* table, int commandNumber){
  */
 int recovery_insert_row(char* table, char** attr_name, char** attributes, int n, int* type) {
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
 
     for (int i = 0; i < n; i++) {
         if(type[i] == TYPE_INT){
             int attri = atoi(attributes[i]);
-            Ak_Insert_New_Element(type[i], &attri, table, attr_name[i], row_root);
+            AK_Insert_New_Element(type[i], &attri, table, attr_name[i], row_root);
         }
         if(type[i] == TYPE_FLOAT){
             float attrf = atof(attributes[i]);
-            Ak_Insert_New_Element(type[i], &attrf, table, attr_name[i], row_root);
+            AK_Insert_New_Element(type[i], &attrf, table, attr_name[i], row_root);
         }
         else
-            Ak_Insert_New_Element(type[i], attributes[i], table, attr_name[i], row_root);
+            AK_Insert_New_Element(type[i], attributes[i], table, attr_name[i], row_root);
     }
-    int result = Ak_insert_row(row_root);
+    int result = AK_insert_row(row_root);
     return result;
 }
 
