@@ -143,7 +143,7 @@ print "\n------------------------------ SELECT TEST END ------------------------
 
 
 print "\n------------------------------- UPDATE TEST --------------------------------\n"
-# after the 553 commit it raises a new error: Ak_Insert_New_Element_For_Update()
+# after the 553 commit it raises a new error: AK_Insert_New_Element_For_Update()
 # probably something is wrong with the AK_update_Row(table, column1, column2, key, new_value) function
 # also need to check AK_parse_where() tokenizing 
 update = Update_command()

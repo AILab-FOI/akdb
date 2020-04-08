@@ -1168,10 +1168,10 @@ class sql_tokenizer:
           print "tokens = ", token.dump()
 
 
-  def Ak_create_trigger_test(self):
+  def AK_create_trigger_test(self):
       '''
       @author Davorin Vukelic
-      @brief testing of sql parsing command Ak_create_trigger_test
+      @brief testing of sql parsing command AK_create_trigger_test
       @return No return value
       '''
       print "\n---------------------------------TRIGGER test---------------------------------\n"
@@ -1330,7 +1330,7 @@ test.AK_parse_create_table_test()
 test.AK_parse_insert_into_test()
 
 #testing create trigger statement
-test.Ak_create_trigger_test()
+test.AK_create_trigger_test()
 
 
 #testing create sequence statement

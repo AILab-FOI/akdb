@@ -40,14 +40,14 @@ int AK_user_add(char *username, int *password, int set_id) {
     }
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     int user_id = AK_get_id();
     if (set_id != 0) user_id = set_id;
-    Ak_Insert_New_Element(TYPE_INT, &user_id, tblName, "obj_id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, username, tblName, "username", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &password, tblName, "password", row_root);
-    Ak_insert_row(row_root);
+    AK_Insert_New_Element(TYPE_INT, &user_id, tblName, "obj_id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, username, tblName, "username", row_root);
+    AK_Insert_New_Element(TYPE_INT, &password, tblName, "password", row_root);
+    AK_insert_row(row_root);
     printf("\nAdded user '%s' under ID %d!\n\n", username, user_id);
 
     AK_EPI;
@@ -66,7 +66,7 @@ int AK_user_get_id(char *username) {
     AK_PRO;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_user")) != NULL) {
-        struct list_node *elem_in_strcmp = Ak_GetNth_L2(2, row);
+        struct list_node *elem_in_strcmp = AK_GetNth_L2(2, row);
         if (strcmp(elem_in_strcmp->data, username) == 0) {
             i = (int) * row->next->data;
             AK_free(row);
@@ -93,9 +93,9 @@ int AK_user_remove_by_name(char *name) {
     int user_id = AK_user_get_id(name);
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
-    Ak_Update_Existing_Element(TYPE_VARCHAR, name, "AK_user", "username", row_root);
-    int result = Ak_delete_row(row_root);
+    AK_Init_L3(&row_root);
+    AK_Update_Existing_Element(TYPE_VARCHAR, name, "AK_user", "username", row_root);
+    int result = AK_delete_row(row_root);
     printf("\nRemoved user '%s' under ID %d!\n", name, user_id);
 
     AK_EPI;
@@ -143,13 +143,13 @@ int AK_group_add(char *name, int set_id) {
     }
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     int group_id = AK_get_id();
     if (set_id != 0) group_id = set_id;
 
-    Ak_Insert_New_Element(TYPE_INT, &group_id, tblName, "obj_id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, name, tblName, "name", row_root);
-    Ak_insert_row(row_root);
+    AK_Insert_New_Element(TYPE_INT, &group_id, tblName, "obj_id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, name, tblName, "name", row_root);
+    AK_insert_row(row_root);
     printf("Added group '%s' under ID %d!\n", name, group_id);
 
     AK_EPI;
@@ -168,7 +168,7 @@ int AK_group_get_id(char *name) {
     AK_PRO;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_group")) != NULL) {
-        struct list_node *elem_in_strcmp = Ak_GetNth_L2(2, row);
+        struct list_node *elem_in_strcmp = AK_GetNth_L2(2, row);
         if (strcmp(elem_in_strcmp->data, name) == 0) {
             i = (int) * row->next->data;
             AK_free(row);
@@ -194,9 +194,9 @@ int AK_group_remove_by_name(char *name) {
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     int group_id = AK_group_get_id(name);
 
-    Ak_Init_L3(&row_root);
-    Ak_Update_Existing_Element(TYPE_VARCHAR, name, "AK_group", "name", row_root);
-    int result = Ak_delete_row(row_root);
+    AK_Init_L3(&row_root);
+    AK_Update_Existing_Element(TYPE_VARCHAR, name, "AK_group", "name", row_root);
+    int result = AK_delete_row(row_root);
     printf("Removed group '%s' under ID %d!\n", name, group_id);
 
     AK_EPI;
@@ -260,28 +260,28 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
 
         for (i = 0; i < 4; i++) {
             struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-            Ak_Init_L3(&row_root);
+            AK_Init_L3(&row_root);
             privilege_id = AK_get_id();
 
-            Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
-            Ak_Insert_New_Element(TYPE_INT, &user_id, "AK_user_right", "user_id", row_root);
-            Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "table_id", row_root);
-            Ak_Insert_New_Element(TYPE_VARCHAR, &rights[i * 10], "AK_user_right", "right_type", row_root);
-            Ak_insert_row(row_root);
+            AK_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
+            AK_Insert_New_Element(TYPE_INT, &user_id, "AK_user_right", "user_id", row_root);
+            AK_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "table_id", row_root);
+            AK_Insert_New_Element(TYPE_VARCHAR, &rights[i * 10], "AK_user_right", "right_type", row_root);
+            AK_insert_row(row_root);
             printf("\nGranted privilege to %s data for user '%s' under ID %d on table '%s'!\n\n", right, username, user_id, table);
 
             AK_free(row_root);
         }
     } else {
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-        Ak_Init_L3(&row_root);
+        AK_Init_L3(&row_root);
 
         privilege_id = AK_get_id();
-        Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &user_id, "AK_user_right", "user_id", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "table_id", row_root);
-        Ak_Insert_New_Element(TYPE_VARCHAR, right, "AK_user_right", "right_type", row_root);
-        Ak_insert_row(row_root);
+        AK_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &user_id, "AK_user_right", "user_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "table_id", row_root);
+        AK_Insert_New_Element(TYPE_VARCHAR, right, "AK_user_right", "right_type", row_root);
+        AK_insert_row(row_root);
         printf("\nGranted privilege to %s data for user '%s' under ID %d on table '%s'!\n\n", right, username, user_id, table);
 
         AK_free(row_root);
@@ -315,47 +315,47 @@ int AK_revoke_privilege_user(char *username, char *table, char *right) {
 
     if (strcmp(right, "ALL") == 0) {
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-        Ak_Init_L3(&row_root);
+        AK_Init_L3(&row_root);
         int i = 0;
 
         struct list_node *row;
 
         while ((row = (struct list_node *) AK_get_row(i, "AK_user_right")) != NULL) {
-            struct list_node *obj_id = Ak_GetNth_L2(1, row);
-            struct list_node *user_elem = Ak_GetNth_L2(2, row);
-            struct list_node *table_elem = Ak_GetNth_L2(3, row);
+            struct list_node *obj_id = AK_GetNth_L2(1, row);
+            struct list_node *user_elem = AK_GetNth_L2(2, row);
+            struct list_node *table_elem = AK_GetNth_L2(3, row);
 
             if (((int) *user_elem->data == user_id) && ((int) *table_elem->data == table_id)) {
                 int id = (int) * obj_id->data;
-                Ak_Update_Existing_Element(TYPE_INT, &id, "AK_user_right", "obj_id", row_root);
-                result = Ak_delete_row(row_root);
+                AK_Update_Existing_Element(TYPE_INT, &id, "AK_user_right", "obj_id", row_root);
+                result = AK_delete_row(row_root);
             }
             i++;
 
-            Ak_DeleteAll_L3(&row_root);
+            AK_DeleteAll_L3(&row_root);
             AK_free(row);
         }
         printf("Revoked all privileges for user '%s' under ID %d on table '%s'!\n", username, user_id, table);
     } else {
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-        Ak_Init_L3(&row_root);
+        AK_Init_L3(&row_root);
         int i = 0;
         struct list_node *row;
 
         while ((row = (struct list_node *) AK_get_row(i, "AK_user_right")) != NULL) {
-            struct list_node *obj_id = Ak_GetNth_L2(1, row);
-            struct list_node *user_elem = Ak_GetNth_L2(2, row);
-            struct list_node *table_elem = Ak_GetNth_L2(3, row);
-            struct list_node *right_elem = Ak_GetNth_L2(4, row);
+            struct list_node *obj_id = AK_GetNth_L2(1, row);
+            struct list_node *user_elem = AK_GetNth_L2(2, row);
+            struct list_node *table_elem = AK_GetNth_L2(3, row);
+            struct list_node *right_elem = AK_GetNth_L2(4, row);
 
             if (((int) * user_elem->data == user_id) && (table_id == (int) * table_elem->data) && strcmp(right_elem->data, right) == 0) {
                 int id = (int) * obj_id->data;
-                Ak_Update_Existing_Element(TYPE_INT, &id, "AK_user_right", "obj_id", row_root);
-                result = Ak_delete_row(row_root);
+                AK_Update_Existing_Element(TYPE_INT, &id, "AK_user_right", "obj_id", row_root);
+                result = AK_delete_row(row_root);
             }
             i++;
 
-            Ak_DeleteAll_L3(&row_root);
+            AK_DeleteAll_L3(&row_root);
             AK_free(row);
         }
         printf("Revoked privilege to %s data for user '%s' under ID %d on table '%s'!\n", right, username, user_id, table);
@@ -389,20 +389,20 @@ int AK_revoke_all_privileges_user(char *username) {
     }
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     int i = 0;
 
     struct list_node *row;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_user_right")) != NULL) {
-        struct list_node *user = Ak_GetNth_L2(2, row);
+        struct list_node *user = AK_GetNth_L2(2, row);
         if ((int) *user->data == user_id) {
-            Ak_Update_Existing_Element(TYPE_INT, &user_id, "AK_user_right", "user_id", row_root);
-            result = Ak_delete_row(row_root);
+            AK_Update_Existing_Element(TYPE_INT, &user_id, "AK_user_right", "user_id", row_root);
+            result = AK_delete_row(row_root);
         }
         i++;
 
-        Ak_DeleteAll_L3(&row_root);
+        AK_DeleteAll_L3(&row_root);
         AK_free(row);
     }
 
@@ -447,28 +447,28 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right) {
         int i;
         for (i = 0; i < 4; i++) {
             struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-            Ak_Init_L3(&row_root);
+            AK_Init_L3(&row_root);
             privilege_id = AK_get_id();
 
-            Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
-            Ak_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
-            Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "table_id", row_root);
-            Ak_Insert_New_Element(TYPE_VARCHAR, &rights[i * 10], "AK_group_right", "right_type", row_root);
-            Ak_insert_row(row_root);
+            AK_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
+            AK_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
+            AK_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "table_id", row_root);
+            AK_Insert_New_Element(TYPE_VARCHAR, &rights[i * 10], "AK_group_right", "right_type", row_root);
+            AK_insert_row(row_root);
 
             AK_free(row_root);
         }
         printf("\nGranted all privileges for group '%s' under ID %d on table '%s' under ID %d!\n\n", groupname, group_id, table, table_id);
     } else {
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-        Ak_Init_L3(&row_root);
+        AK_Init_L3(&row_root);
 
         privilege_id = AK_get_id();
-        Ak_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
-        Ak_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "table_id", row_root);
-        Ak_Insert_New_Element(TYPE_VARCHAR, right, "AK_group_right", "right_type", row_root);
-        Ak_insert_row(row_root);
+        AK_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "table_id", row_root);
+        AK_Insert_New_Element(TYPE_VARCHAR, right, "AK_group_right", "right_type", row_root);
+        AK_insert_row(row_root);
         printf("\nGranted privilege to %s data for group '%s' under ID %d on table '%s' under ID %d!\n\n", right, groupname, group_id, table, table_id);
 
         AK_free(row_root);
@@ -503,50 +503,50 @@ int AK_revoke_privilege_group(char *groupname, char *table, char *right) {
 
     if (strcmp(right, "ALL") == 0) {
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-        Ak_Init_L3(&row_root);
+        AK_Init_L3(&row_root);
         int i = 0;
 
         struct list_node *row;
 
         while ((row = (struct list_node *) AK_get_row(i, "AK_group_right")) != NULL) {
-            struct list_node *obj_id = Ak_GetNth_L2(1, row);
-            struct list_node *group_elem = Ak_GetNth_L2(2, row);
-            struct list_node *table_elem = Ak_GetNth_L2(3, row);
+            struct list_node *obj_id = AK_GetNth_L2(1, row);
+            struct list_node *group_elem = AK_GetNth_L2(2, row);
+            struct list_node *table_elem = AK_GetNth_L2(3, row);
 
             if (((int) *group_elem->data == group_id) && ((int) *table_elem->data == table_id)) {
                 int id = (int) * obj_id->data;
-                Ak_Update_Existing_Element(TYPE_INT, &id, "AK_group_right", "obj_id", row_root);
-                result = Ak_delete_row(row_root);
+                AK_Update_Existing_Element(TYPE_INT, &id, "AK_group_right", "obj_id", row_root);
+                result = AK_delete_row(row_root);
             }
 
             i++;
 
-            Ak_DeleteAll_L3(&row_root);
+            AK_DeleteAll_L3(&row_root);
             AK_free(row);
         }
         printf("Revoked all privileges for group '%s' under ID %d on table '%s' under ID %d!\n", groupname, group_id, table, table_id);
     } else {
         struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-        Ak_Init_L3(&row_root);
+        AK_Init_L3(&row_root);
         int i = 0;
 
         struct list_node *row;
 
         while ((row = (struct list_node *) AK_get_row(i, "AK_group_right")) != NULL) {
-            struct list_node *obj_id = Ak_GetNth_L2(1, row);
-            struct list_node *group_elem = Ak_GetNth_L2(2, row);
-            struct list_node *table_elem = Ak_GetNth_L2(3, row);
-            struct list_node *right_elem = Ak_GetNth_L2(4, row);
+            struct list_node *obj_id = AK_GetNth_L2(1, row);
+            struct list_node *group_elem = AK_GetNth_L2(2, row);
+            struct list_node *table_elem = AK_GetNth_L2(3, row);
+            struct list_node *right_elem = AK_GetNth_L2(4, row);
 
             if (((int) * group_elem->data == group_id) && (table_id == (int) * table_elem->data) && strcmp(right_elem->data, right) == 0) {
                 int id = (int) * obj_id->data;
-                Ak_Update_Existing_Element(TYPE_INT, &id, "AK_group_right", "obj_id", row_root);
-                result = Ak_delete_row(row_root);
+                AK_Update_Existing_Element(TYPE_INT, &id, "AK_group_right", "obj_id", row_root);
+                result = AK_delete_row(row_root);
             }
 
             i++;
 
-            Ak_DeleteAll_L3(&row_root);
+            AK_DeleteAll_L3(&row_root);
             AK_free(row);
         }
         printf("Revoked privilege to %s data for group '%s' under ID %d on table '%s' under ID %d!\n", right, groupname, group_id, table, table_id);
@@ -580,21 +580,21 @@ int AK_revoke_all_privileges_group(char *groupname) {
     }
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     int i = 0;
 
     struct list_node *row;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_group_right")) != NULL) {
-        struct list_node *group = Ak_GetNth_L2(2, row);
+        struct list_node *group = AK_GetNth_L2(2, row);
         if ((int) *group->data == group_id) {
-            Ak_Update_Existing_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
+            AK_Update_Existing_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
             printf("Revoked all privilege for group '%s' under ID %d!\n\n", groupname, group_id);
-            result = Ak_delete_row(row_root);
+            result = AK_delete_row(row_root);
         }
         i++;
 
-        Ak_DeleteAll_L3(&row_root);
+        AK_DeleteAll_L3(&row_root);
         AK_free(row);
     }
 
@@ -640,11 +640,11 @@ int AK_add_user_to_group(char *user, char *group) {
     }
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
-    Ak_Insert_New_Element(TYPE_INT, &user_id, "AK_user_group", "user_id", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &group_id, "AK_user_group", "group_id", row_root);
-    Ak_insert_row(row_root);
+    AK_Insert_New_Element(TYPE_INT, &user_id, "AK_user_group", "user_id", row_root);
+    AK_Insert_New_Element(TYPE_INT, &group_id, "AK_user_group", "group_id", row_root);
+    AK_insert_row(row_root);
     printf("Added user '%s' under ID %d to group '%s' under ID %d!\n", user, user_id, group, group_id);
 
     AK_free(row_root);
@@ -663,7 +663,7 @@ int AK_remove_user_from_all_groups(char *user) {
     AK_PRO;
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     int user_id = AK_user_get_id(user);
     int i = 0;
@@ -678,10 +678,10 @@ int AK_remove_user_from_all_groups(char *user) {
     struct list_node *row;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_user_group")) != NULL) {
-        struct list_node *user = Ak_GetNth_L2(1, row);
+        struct list_node *user = AK_GetNth_L2(1, row);
         if (user_id == (int) *user->data) {
-            Ak_Update_Existing_Element(TYPE_INT, &user_id, "AK_user_group", "user_id", row_root);
-            result = Ak_delete_row(row_root);
+            AK_Update_Existing_Element(TYPE_INT, &user_id, "AK_user_group", "user_id", row_root);
+            result = AK_delete_row(row_root);
             if (result == EXIT_ERROR) {
                 printf("User '%s' under ID %d isn't a member of any group!\n", user, user_id);
                 AK_EPI;
@@ -690,7 +690,7 @@ int AK_remove_user_from_all_groups(char *user) {
         }
         i++;
 
-        Ak_DeleteAll_L3(&row_root);
+        AK_DeleteAll_L3(&row_root);
         AK_free(row);
     }
 
@@ -709,7 +709,7 @@ int AK_remove_all_users_from_group(char *group) {
     AK_PRO;
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     int group_id = AK_group_get_id(group);
     int i = 0;
@@ -724,10 +724,10 @@ int AK_remove_all_users_from_group(char *group) {
     struct list_node *row;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_user_group")) != NULL) {
-        struct list_node *group = Ak_GetNth_L2(2, row);
+        struct list_node *group = AK_GetNth_L2(2, row);
         if (group_id == (int) *group->data) {
-            Ak_Update_Existing_Element(TYPE_INT, &group_id, "AK_user_group", "group_id", row_root);
-            result = Ak_delete_row(row_root);
+            AK_Update_Existing_Element(TYPE_INT, &group_id, "AK_user_group", "group_id", row_root);
+            result = AK_delete_row(row_root);
         }
         i++;
         if (result == EXIT_ERROR) {
@@ -736,7 +736,7 @@ int AK_remove_all_users_from_group(char *group) {
             return EXIT_ERROR;
         }
 
-        Ak_DeleteAll_L3(&row_root);
+        AK_DeleteAll_L3(&row_root);
         AK_free(row);
     }
 
@@ -776,11 +776,11 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
         char found_privilege[10];
         while ((row = (struct list_node *) AK_get_row(i, "AK_user_right")) != NULL) {
 
-            struct list_node *username_elem = Ak_GetNth_L2(2, row);
-            struct list_node *table_elem = Ak_GetNth_L2(3, row);
+            struct list_node *username_elem = AK_GetNth_L2(2, row);
+            struct list_node *table_elem = AK_GetNth_L2(3, row);
             if (((int) * username_elem->data == user_id) && (table_id == (int) * table_elem->data)) {
 
-                struct list_node *privilege_elem = Ak_GetNth_L2(4, row);
+                struct list_node *privilege_elem = AK_GetNth_L2(4, row);
                 strcpy(found_privilege, privilege_elem->data);
                 if (strcmp(found_privilege, "UPDATE") == 0)
                     checking_privileges[0] = 1;
@@ -811,9 +811,9 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
         i = 0;
         while ((row = (struct list_node *) AK_get_row(i, "AK_user_group")) != NULL) {
             while ((row = (AK_list *) AK_get_row(i, "AK_user_group")) != NULL) {
-                struct list_node *user = Ak_GetNth_L2(1, row);
+                struct list_node *user = AK_GetNth_L2(1, row);
                 if (user_id == (int) * user->data) {
-                    struct list_node *group = Ak_GetNth_L2(2, row);
+                    struct list_node *group = AK_GetNth_L2(2, row);
                     groups[number_of_groups] = (int) * group->data;
                     number_of_groups++;
                 }
@@ -828,9 +828,9 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
             for (i = 0; i < number_of_groups; i++) {
                 int j = 0;
                 while ((row = (AK_list *) AK_get_row(j, "AK_group_right")) != NULL) {
-                    struct list_node *group_elem = Ak_GetNth_L2(2, row);
-                    struct list_node *table_elem = Ak_GetNth_L2(3, row);
-                    struct list_node *privilege_elem = Ak_GetNth_L2(4, row);
+                    struct list_node *group_elem = AK_GetNth_L2(2, row);
+                    struct list_node *table_elem = AK_GetNth_L2(3, row);
+                    struct list_node *privilege_elem = AK_GetNth_L2(4, row);
 
                     if ((groups[i] == (int) * group_elem->data) && (table_id == (int) * table_elem->data)) {
                         strcpy(found_privilege, privilege_elem->data);
@@ -864,9 +864,9 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
     } else {
 
         while ((row = (struct list_node *) AK_get_row(i, "AK_user_right")) != NULL) {
-            struct list_node *username_elem = Ak_GetNth_L2(2, row);
-            struct list_node *table_elem = Ak_GetNth_L2(3, row);
-            struct list_node *privilege_elem = Ak_GetNth_L2(4, row);
+            struct list_node *username_elem = AK_GetNth_L2(2, row);
+            struct list_node *table_elem = AK_GetNth_L2(3, row);
+            struct list_node *privilege_elem = AK_GetNth_L2(4, row);
 
             if (((int) * username_elem->data == user_id) && (table_id == (int) * table_elem->data) && (strcmp(privilege_elem->data, privilege) == 0)) {
 
@@ -880,10 +880,10 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
         }
         i = 0;
         while ((row = (struct list_node *) AK_get_row(i, "AK_user_group")) != NULL) {
-            struct list_node *user = Ak_GetNth_L2(1, row);
+            struct list_node *user = AK_GetNth_L2(1, row);
 
             if (user_id == (int) * user->data) {
-                struct list_node *group = Ak_GetNth_L2(2, row);
+                struct list_node *group = AK_GetNth_L2(2, row);
                 groups[number_of_groups] = (int) * group->data;
                 number_of_groups++;
             }
@@ -894,9 +894,9 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
             int j = 0;
 
             while ((row = (struct list_node *) AK_get_row(j, "AK_group_right")) != NULL) {
-                struct list_node *groups_elem = Ak_GetNth_L2(2, row);
-                struct list_node *table_elem = Ak_GetNth_L2(3, row);
-                struct list_node *privilege_elem = Ak_GetNth_L2(4, row);
+                struct list_node *groups_elem = AK_GetNth_L2(2, row);
+                struct list_node *table_elem = AK_GetNth_L2(3, row);
+                struct list_node *privilege_elem = AK_GetNth_L2(4, row);
                 if ((groups[i] == (int) * groups_elem->data) && (table_id == (int) * table_elem->data) && (strcmp(privilege_elem->data, privilege) == 0)) {
                     has_right = 1;
                     printf("User '%s' under ID %d has the right to %s data in the '%s' table under ID %d!", username, user_id, privilege, table, table_id);
@@ -935,7 +935,7 @@ int AK_check_user_privilege(char *user) {
     int privilege = 0;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_user_right")) != NULL) {
-        struct list_node *user_elem = Ak_GetNth_L2(2, row);
+        struct list_node *user_elem = AK_GetNth_L2(2, row);
         if ((int) *user_elem->data == user_id) {
             privilege = 1;
             printf("User '%s' under ID %d has some privileges!", user, user_id);
@@ -948,7 +948,7 @@ int AK_check_user_privilege(char *user) {
 
     int j = 0;
     while ((row = (struct list_node *) AK_get_row(j, "AK_user_group")) != NULL) {
-        struct list_node *user_elem = Ak_GetNth_L2(1, row);
+        struct list_node *user_elem = AK_GetNth_L2(1, row);
         if ((int) *user_elem->data == user_id) {
             privilege = 1;
             printf("User '%s' under ID %d belongs to some group!", user, user_id);
@@ -990,7 +990,7 @@ int AK_check_group_privilege(char *group) {
     int privilege = 0;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_group_right")) != NULL) {
-        struct list_node *group_elem = Ak_GetNth_L2(2, row);
+        struct list_node *group_elem = AK_GetNth_L2(2, row);
         if ((int) *group_elem->data == group_id) {
             privilege = 1;
             printf("Group '%s' under ID %d has some privileges!", group, group_id);

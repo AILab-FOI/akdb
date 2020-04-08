@@ -29,6 +29,6 @@ int AK_find_table_address(char *_systemTableName);
 void AK_set_constraint_between(char* tableName, char* constraintName, char* attName, char* startValue, char* endValue);
 int AK_read_constraint_between(char* tableName, char* newValue, char* attNamePar);
 int AK_delete_constraint_between(char* tableName, char attName[], char constraintName[]);
-TestResult Ak_constraint_between_test();
+TestResult AK_constraint_between_test();
 
 #endif

@@ -53,10 +53,10 @@ int AK_select(char *srcTable, char *destTable, struct list_node *attributes, str
 
     // create copy of attributes
     struct list_node *projectionAttributes = (struct list_node *)AK_malloc(sizeof(struct list_node));
-    Ak_Init_L3(&projectionAttributes);
-    for (attribute = Ak_First_L2(attributes); attribute; attribute = Ak_Next_L2(attribute))
+    AK_Init_L3(&projectionAttributes);
+    for (attribute = AK_First_L2(attributes); attribute; attribute = AK_Next_L2(attribute))
     {
-        Ak_InsertAtEnd_L3(TYPE_ATTRIBS, attribute->data, strlen(attribute->data), projectionAttributes);
+        AK_InsertAtEnd_L3(TYPE_ATTRIBS, attribute->data, strlen(attribute->data), projectionAttributes);
     }
 
 
@@ -69,7 +69,7 @@ int AK_select(char *srcTable, char *destTable, struct list_node *attributes, str
         strcat(sorted_table, "__sorted");
         if (AK_sort_segment(selection_table, sorted_table, ordering) != EXIT_SUCCESS)
         {
-            Ak_DeleteAll_L3(&projectionAttributes);
+            AK_DeleteAll_L3(&projectionAttributes);
             AK_free(projectionAttributes);
             AK_EPI;
             return EXIT_ERROR;
@@ -79,7 +79,7 @@ int AK_select(char *srcTable, char *destTable, struct list_node *attributes, str
     //project required rows
     if (AK_projection(sorted_table, destTable, projectionAttributes, NULL) != EXIT_SUCCESS)
     {
-        Ak_DeleteAll_L3(&projectionAttributes);
+        AK_DeleteAll_L3(&projectionAttributes);
         AK_free(projectionAttributes);
         AK_EPI;
         return EXIT_ERROR;
@@ -102,7 +102,7 @@ int AK_select(char *srcTable, char *destTable, struct list_node *attributes, str
         }
     }
 
-    Ak_DeleteAll_L3(&projectionAttributes);
+    AK_DeleteAll_L3(&projectionAttributes);
     AK_free(projectionAttributes);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -131,20 +131,20 @@ TestResult AK_select_test(){
 	char *destTable1="select_result1";
     char *destTable2="select_result2";
 
-	Ak_Init_L3(&attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof("weight"), attributes);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight+year", sizeof("weight+year"), attributes);
+	AK_Init_L3(&attributes);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), attributes);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), attributes);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof("weight"), attributes);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "weight+year", sizeof("weight+year"), attributes);
 
-	Ak_Init_L3(&condition);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), condition);
+	AK_Init_L3(&condition);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), condition);
     int year = 2008;
-	Ak_InsertAtEnd_L3(TYPE_INT, (char *)&year, sizeof(int), condition);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof("<"), condition);
+	AK_InsertAtEnd_L3(TYPE_INT, (char *)&year, sizeof(int), condition);
+	AK_InsertAtEnd_L3(TYPE_OPERATOR, "<", sizeof("<"), condition);
 
-    Ak_Init_L3(&ordering);
-	Ak_InsertAtBegin_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), ordering);
+    AK_Init_L3(&ordering);
+	AK_InsertAtBegin_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), ordering);
 
 
     if (AK_select(srcTable, destTable1, attributes, condition, ordering) == EXIT_SUCCESS)
@@ -155,12 +155,12 @@ TestResult AK_select_test(){
     {
         failedTests++;
     }
-	Ak_DeleteAll_L3(&attributes);
-    Ak_DeleteAll_L3(&ordering);
-	Ak_DeleteAll_L3(&condition);
-    Ak_Init_L3(&attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), attributes);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), attributes);
+	AK_DeleteAll_L3(&attributes);
+    AK_DeleteAll_L3(&ordering);
+	AK_DeleteAll_L3(&condition);
+    AK_Init_L3(&attributes);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof("firstname"), attributes);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof("year"), attributes);
 
     if (AK_select(destTable1, destTable2, attributes, NULL, NULL) == EXIT_SUCCESS)
     {
@@ -170,7 +170,7 @@ TestResult AK_select_test(){
     {
         failedTests++;
     }
-    Ak_DeleteAll_L3(&attributes);
+    AK_DeleteAll_L3(&attributes);
 	
     AK_print_table(srcTable);
 	printf("\n SELECT firstname,year,weight,weight+year FROM student WHERE year<2005 ORDER BY firstname;\n\n");

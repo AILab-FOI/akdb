@@ -41,12 +41,12 @@ AK_header *AK_get_insert_header(int *size, char *tblName, struct list_node *colu
         return tblHeader;
     }
 
-    int columnsNumber = Ak_Size_L2(columns);
+    int columnsNumber = AK_Size_L2(columns);
 
     AK_header *header = (AK_header *) AK_malloc(columnsNumber * sizeof(AK_header));
 
     int j = 0;
-    struct list_node* column = Ak_First_L2(columns);
+    struct list_node* column = AK_First_L2(columns);
     while(column) {
         // search for duplicate column
         for(int i = 0; i < j; i++) {
@@ -77,7 +77,7 @@ AK_header *AK_get_insert_header(int *size, char *tblName, struct list_node *colu
             return EXIT_ERROR;
         }
 
-        column = Ak_Next_L2(column);
+        column = AK_Next_L2(column);
     }
 
     AK_free(tblHeader);
@@ -102,7 +102,7 @@ int AK_insert(char* tblName, struct list_node *columns, struct list_node *values
         return EXIT_ERROR;
     }
 
-    int num_values = Ak_Size_L2(values);
+    int num_values = AK_Size_L2(values);
     int num_columns = 0;
 
     AK_header *header = AK_get_insert_header(&num_columns, tblName, columns);
@@ -120,31 +120,31 @@ int AK_insert(char* tblName, struct list_node *columns, struct list_node *values
 
     struct list_node *row;
     int i = 0; // index of values
-    struct list_node *value = Ak_First_L2(values);
+    struct list_node *value = AK_First_L2(values);
 
     while(value)
     {
         if(i == 0) {
             row = (struct list_node *) AK_malloc(sizeof (struct list_node));
-            Ak_Init_L3(&row);
+            AK_Init_L3(&row);
         }
 
         if(header[i].type != value->type) {
-            Ak_DeleteAll_L3(&row);
+            AK_DeleteAll_L3(&row);
             AK_free(row);
             AK_free(header);
             AK_EPI;
             return EXIT_ERROR;
         }
 
-        Ak_Insert_New_Element(value->type, value->data, tblName, header[i].att_name, row);
+        AK_Insert_New_Element(value->type, value->data, tblName, header[i].att_name, row);
 
         i++;
 
         if(i >= num_columns) {
             i = 0;
-            int result = Ak_insert_row(row);
-            Ak_DeleteAll_L3(&row);
+            int result = AK_insert_row(row);
+            AK_DeleteAll_L3(&row);
             AK_free(row);
             if(result != EXIT_SUCCESS) {
                 AK_free(header);
@@ -153,7 +153,7 @@ int AK_insert(char* tblName, struct list_node *columns, struct list_node *values
             }
         }
 
-        value = Ak_Next_L2(value);
+        value = AK_Next_L2(value);
     }
 
     AK_free(header);
@@ -192,26 +192,26 @@ TestResult AK_insert_test() {
     AK_print_table(testTable);
 
     row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     col_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&col_root);
+    AK_Init_L3(&col_root);
 
     // Test 1
     printf("\nInsert two rows without specifing table columns\n");
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
 
-    // Elements are in reverse order because Ak_Insert_New_Element puts element on first place in list
+    // Elements are in reverse order because AK_Insert_New_Element puts element on first place in list
     id_field = 2;
     size_field = 6.2;
-    Ak_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "", row_root); // size
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Filip", testTable, "", row_root); // name
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root); // id
+    AK_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "", row_root); // size
+    AK_Insert_New_Element(TYPE_VARCHAR, "Filip", testTable, "", row_root); // name
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root); // id
 
     id_field = 1;
     size_field = 3.5;
-    Ak_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "", row_root); // size
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Petrica", testTable, "", row_root); // name
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root); // id
+    AK_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "", row_root); // size
+    AK_Insert_New_Element(TYPE_VARCHAR, "Petrica", testTable, "", row_root); // name
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root); // id
 
     result = AK_insert(testTable, NULL, row_root);
 
@@ -235,11 +235,11 @@ TestResult AK_insert_test() {
     printf("\nInsert should fail if data types don't match\n");
     num_table_rows = AK_get_num_records(testTable);
 
-    Ak_DeleteAll_L3(&row_root);
-    // Elements are in reverse order because Ak_Insert_New_Element puts element on first place in list
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Test", testTable, "", row_root); // size
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Test", testTable, "", row_root); // name
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root); // id
+    AK_DeleteAll_L3(&row_root);
+    // Elements are in reverse order because AK_Insert_New_Element puts element on first place in list
+    AK_Insert_New_Element(TYPE_VARCHAR, "Test", testTable, "", row_root); // size
+    AK_Insert_New_Element(TYPE_VARCHAR, "Test", testTable, "", row_root); // name
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root); // id
 
     result = AK_insert(testTable, NULL, row_root);
     if (result == EXIT_ERROR && num_table_rows == AK_get_num_records(testTable)) {
@@ -257,15 +257,15 @@ TestResult AK_insert_test() {
     id_field = 3;
     size_field = 5.0;
 
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "", row_root); // size
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root); // id
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Ariana", testTable, "", row_root); // name
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "", row_root); // size
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root); // id
+    AK_Insert_New_Element(TYPE_VARCHAR, "Ariana", testTable, "", row_root); // name
 
-    Ak_DeleteAll_L3(&col_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "size", col_root); // size
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "id", col_root); // id
-    Ak_Insert_New_Element(TYPE_VARCHAR, "", testTable, "name", col_root); // name
+    AK_DeleteAll_L3(&col_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "size", col_root); // size
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "id", col_root); // id
+    AK_Insert_New_Element(TYPE_VARCHAR, "", testTable, "name", col_root); // name
 
     result = AK_insert(testTable, col_root, row_root);
 
@@ -286,15 +286,15 @@ TestResult AK_insert_test() {
     printf("\nInsert should fail if attribute doesn't exist\n");
     num_table_rows = AK_get_num_records(testTable);
 
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Ariana", testTable, "", row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "", row_root);
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Ariana", testTable, "", row_root);
 
-    Ak_DeleteAll_L3(&col_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "nothing", col_root); 
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "id", col_root); 
-    Ak_Insert_New_Element(TYPE_VARCHAR, "", testTable, "name", col_root);
+    AK_DeleteAll_L3(&col_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "nothing", col_root); 
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "id", col_root); 
+    AK_Insert_New_Element(TYPE_VARCHAR, "", testTable, "name", col_root);
 
     result = AK_insert(testTable, col_root, row_root);
 
@@ -310,15 +310,15 @@ TestResult AK_insert_test() {
     printf("\nInsert should fail for duplicate attributes\n");
     num_table_rows = AK_get_num_records(testTable);
 
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "", testTable, "", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "", testTable, "", row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "", testTable, "", row_root);
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "", testTable, "", row_root);
 
-    Ak_DeleteAll_L3(&col_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "name", col_root); 
-    Ak_Insert_New_Element(TYPE_INT, &id_field, testTable, "id", col_root); 
-    Ak_Insert_New_Element(TYPE_VARCHAR, "", testTable, "name", col_root);
+    AK_DeleteAll_L3(&col_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &size_field, testTable, "name", col_root); 
+    AK_Insert_New_Element(TYPE_INT, &id_field, testTable, "id", col_root); 
+    AK_Insert_New_Element(TYPE_VARCHAR, "", testTable, "name", col_root);
 
     result = AK_insert(testTable, col_root, row_root);
 
@@ -333,9 +333,9 @@ TestResult AK_insert_test() {
     printf("\nTable after tests:\n");
     AK_print_table(testTable);
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     AK_free(row_root);
-    Ak_DeleteAll_L3(&col_root);
+    AK_DeleteAll_L3(&col_root);
     AK_free(col_root);
     AK_EPI;
     return TEST_result(passed_tests, failed_tests);

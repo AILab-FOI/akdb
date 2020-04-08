@@ -909,8 +909,8 @@ class Update_command:
         # This is Test Data!
         # Iteration required for more than one attribute!
         element = ak47.list_node()
-        ak47.Ak_Init_L3(id(element))
-        ak47.Ak_DeleteAll_L3(id(element))
+        ak47.AK_Init_L3(id(element))
+        ak47.AK_DeleteAll_L3(id(element))
 
         updateColumn = token.columnNames[0]
         whereColumn = token.condition[1][0]
@@ -918,26 +918,26 @@ class Update_command:
         newValue = token.columnValues[0]
 
         if type(whereValue) == int:
-            ak47.Ak_Update_Existing_Element(
+            ak47.AK_Update_Existing_Element(
                 ak47.TYPE_INT, whereValue, table_name, updateColumn, element)
         elif type(whereValue) == float:
-            ak47.Ak_Update_Existing_Element(
+            ak47.AK_Update_Existing_Element(
                 ak47.TYPE_FLOAT, whereValue, table_name, updateColumn, element)
         # elif type(whereValue) == str:
-           # ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, whereValue, table_name, updateColumn, element, 1)
+           # ak47.AK_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, whereValue, table_name, updateColumn, element, 1)
 
         if type(newValue) == int:
-            ak47.Ak_Insert_New_Element(
+            ak47.AK_Insert_New_Element(
                 ak47.TYPE_INT, newValue, table_name, whereColumn, element)
         elif type(newValue) == float:
-            ak47.Ak_Insert_New_Element(
+            ak47.AK_Insert_New_Element(
                 ak47.TYPE_FLOAT, newValue, table_name, whereColumn, element)
         # elif type(newValue) == str:
-            #ak47.Ak_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, newValue, table_name, whereColumn, element, 0)
+            #ak47.AK_Insert_New_Element_For_Update(ak47.TYPE_VARCHAR, newValue, table_name, whereColumn, element, 0)
 
             #update_Row(table, column1, column2, key, new_value)
         # if(ak47.update_Row(table_name, 'weight', 'id_student', 1, 80) == EXIT_SUCCESS):
-        # if(ak47.Ak_update_row(element) == ak47.EXIT_SUCCESS):
+        # if(ak47.AK_update_row(element) == ak47.EXIT_SUCCESS):
             # return True
         else:
             return False

@@ -57,15 +57,15 @@ int AK_set_constraint_not_null(char* tableName, char* attName, char* constraintN
 	
 
 	struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&row_root);
+	AK_Init_L3(&row_root);
 	int obj_id = AK_get_id();
 
-	Ak_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_not_null", "obj_id", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_not_null", "tableName", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_not_null", "constraintName", row_root);
-	Ak_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_not_null", "attributeName", row_root);
-	Ak_insert_row(row_root);
-	Ak_DeleteAll_L3(&row_root);
+	AK_Insert_New_Element(TYPE_INT, &obj_id, "AK_constraints_not_null", "obj_id", row_root);
+	AK_Insert_New_Element(TYPE_VARCHAR, tableName, "AK_constraints_not_null", "tableName", row_root);
+	AK_Insert_New_Element(TYPE_VARCHAR, constraintName, "AK_constraints_not_null", "constraintName", row_root);
+	AK_Insert_New_Element(TYPE_VARCHAR, attName, "AK_constraints_not_null", "attributeName", row_root);
+	AK_insert_row(row_root);
+	AK_DeleteAll_L3(&row_root);
 	AK_free(row_root);
 	printf("\nNOT NULL constraint is successfully set on attribute: %s\nof table: %s\n\n", attName, tableName);
 	
@@ -104,24 +104,24 @@ int AK_check_constraint_not_null(char* tableName, char* attName, char* constrain
 		for(i=0; i<numRows; i++)
 		{
 			row = AK_get_row(i, tableName);
-			attribute = Ak_GetNth_L2(positionOfAtt, row);
+			attribute = AK_GetNth_L2(positionOfAtt, row);
 			
 			if((tupple_to_string_return=AK_tuple_to_string(attribute)) == NULL)
 			{
 				printf("\nFAILURE!\nTable: %s\ncontains NULL sign and that would violate NOT NULL constraint which You would like to set on attribute: %s\n\n", tableName, attName);
-				Ak_DeleteAll_L3(&row);
+				AK_DeleteAll_L3(&row);
 				AK_free(row);
 				AK_EPI;
 				return EXIT_ERROR;
 			}
 			else
 				AK_free(tupple_to_string_return);
-			Ak_DeleteAll_L3(&row);
+			AK_DeleteAll_L3(&row);
 			AK_free(row);
 		}
 	}
 
-	uniqueConstraintName = Ak_check_constraint_name(constraintName);
+	uniqueConstraintName = AK_check_constraint_name(constraintName);
 
 	if(uniqueConstraintName == EXIT_ERROR)
 	{
@@ -159,21 +159,21 @@ int AK_read_constraint_not_null(char* tableName, char* attName, char* newValue) 
 			for (i = 0; i < numRecords; i++) 
 			{
 				row = AK_get_row(i, "AK_constraints_not_null");
-				attribute = Ak_GetNth_L2(4, row);
+				attribute = AK_GetNth_L2(4, row);
 				
 				if(strcmp(attribute->data, attName) == 0) 
 				{
-					table = Ak_GetNth_L2(2, row);
+					table = AK_GetNth_L2(2, row);
 					
 					if(strcmp(table->data, tableName) == 0) 
 					{
-						Ak_DeleteAll_L3(&row);
+						AK_DeleteAll_L3(&row);
 						AK_free(row);
 						AK_EPI;
 						return EXIT_ERROR;
 					}
 				}
-				Ak_DeleteAll_L3(&row);
+				AK_DeleteAll_L3(&row);
 				AK_free(row);
 			}			
 		}

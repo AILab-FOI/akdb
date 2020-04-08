@@ -36,14 +36,14 @@ int AK_get_function_obj_id(char* function, struct list_node *arguments_list) {
 
     int num_args;
     AK_PRO;
-    num_args = Ak_Size_L2(arguments_list) / 2; // u paru "naziv" - "vrsta" argumenta pa / 2
+    num_args = AK_Size_L2(arguments_list) / 2; // u paru "naziv" - "vrsta" argumenta pa / 2
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_function")) != NULL) {
-	struct list_node *elem_in_memcpy = Ak_GetNth_L2(3,row);
+	struct list_node *elem_in_memcpy = AK_GetNth_L2(3,row);
         memcpy(&arg_num, elem_in_memcpy->data, sizeof (int));
-	struct list_node *elem_in_strcmp = Ak_GetNth_L2(2,row);
+	struct list_node *elem_in_strcmp = AK_GetNth_L2(2,row);
         if ((strcmp(elem_in_strcmp->data, function) == 0) && (arg_num == num_args)) {
-	    struct list_node *elem_in_memcpy2 = Ak_GetNth_L2(1,row);
+	    struct list_node *elem_in_memcpy2 = AK_GetNth_L2(1,row);
             memcpy(&id, elem_in_memcpy2->data, sizeof (int));
             
 			if(num_args>0){
@@ -87,14 +87,14 @@ int AK_check_function_arguments(int function_id, struct list_node *arguments_lis
     char *arguments_list_argtype;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_function_arguments")) != NULL) {
-	struct list_node *current_elem = Ak_First_L2(row); //set current_elem to first element in a list
+	struct list_node *current_elem = AK_First_L2(row); //set current_elem to first element in a list
         memcpy(&fid, current_elem->data, sizeof (int));
         printf("\n %d  %d function id: ", function_id, fid);
 
         if (fid == function_id) {
-            current_elem = Ak_Next_L2(current_elem);
+            current_elem = AK_Next_L2(current_elem);
             argtype_catalog = current_elem->data;
-	    current_elem = Ak_Next_L2(current_elem);
+	    current_elem = AK_Next_L2(current_elem);
             argname_catalog = current_elem->data;
 
             printf("\n %s %s", argtype_catalog, argname_catalog);
@@ -138,13 +138,13 @@ int AK_check_function_arguments_type(int function_id, struct list_node *args) {
     char *argtype;
     char *args_argtype;
     while ((row = (struct list_node *) AK_get_row(i, "AK_function_arguments")) != NULL) {
-	struct list_node *current_elem = Ak_First_L2(row);
+	struct list_node *current_elem = AK_First_L2(row);
 
         memcpy(&fid, current_elem->data, sizeof (int));
 
         if (fid == function_id) {
-            current_elem = Ak_Next_L2(current_elem);
-	    current_elem = Ak_Next_L2(current_elem);
+            current_elem = AK_Next_L2(current_elem);
+	    current_elem = AK_Next_L2(current_elem);
             
 	    argtype = current_elem->data;
             
@@ -177,31 +177,31 @@ int AK_check_function_arguments_type(int function_id, struct list_node *args) {
 int AK_function_add(char *name, int return_type, struct list_node *arguments_list) {
     AK_PRO;
     if (return_type < 0 || return_type > 13) {
-        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_add: Invalid parameter value for return type.\n");
+        AK_dbg_messg(HIGH, FUNCTIONS, "AK_function_add: Invalid parameter value for return type.\n");
 		AK_EPI;
         return EXIT_ERROR;
     }
     
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     int function_id = AK_get_id(); //get function_id
-    int num_args = Ak_Size_L2(arguments_list) / 2; //get number of arguments
-    Ak_Insert_New_Element(TYPE_INT, &function_id, "AK_function", "obj_id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, name, "AK_function", "name", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &num_args, "AK_function", "arg_num", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &return_type, "AK_function", "return_type", row_root);
-    Ak_insert_row(row_root);
+    int num_args = AK_Size_L2(arguments_list) / 2; //get number of arguments
+    AK_Insert_New_Element(TYPE_INT, &function_id, "AK_function", "obj_id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, name, "AK_function", "name", row_root);
+    AK_Insert_New_Element(TYPE_INT, &num_args, "AK_function", "arg_num", row_root);
+    AK_Insert_New_Element(TYPE_INT, &return_type, "AK_function", "return_type", row_root);
+    AK_insert_row(row_root);
 
 	if(num_args > 0){
 		int i;
-		struct list_node *current_elem = Ak_First_L2(arguments_list); //set current_elem to first element in a list
+		struct list_node *current_elem = AK_First_L2(arguments_list); //set current_elem to first element in a list
 		//add arguments list to arguments system table
 		for (i = 1; i <= num_args; i++) {
-			char* argname = Ak_Retrieve_L2(current_elem, arguments_list);
-			current_elem = Ak_Next_L2(current_elem);
-			char* argtype = Ak_Retrieve_L2(current_elem, arguments_list);
+			char* argname = AK_Retrieve_L2(current_elem, arguments_list);
+			current_elem = AK_Next_L2(current_elem);
+			char* argtype = AK_Retrieve_L2(current_elem, arguments_list);
 			int argtype_int = atoi(argtype);
-			current_elem = Ak_Next_L2(current_elem);
+			current_elem = AK_Next_L2(current_elem);
 			AK_function_arguments_add(function_id, i, argtype_int, argname);
 		}
 	}
@@ -222,7 +222,7 @@ int AK_function_arguments_add(int function_id, int arg_number, int arg_type, cha
     AK_PRO;
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     char *arg_type_name;
     switch (arg_type) {
         case 0:
@@ -271,11 +271,11 @@ int AK_function_arguments_add(int function_id, int arg_number, int arg_type, cha
             arg_type_name = "unknown";
             break;
     }
-    Ak_Insert_New_Element(TYPE_INT, &function_id, "AK_function_arguments", "func_id", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &arg_number, "AK_function_arguments", "att_num", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, arg_type_name, "AK_function_arguments", "att_type", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, argname, "AK_function_arguments", "att_name", row_root);
-    Ak_insert_row(row_root);
+    AK_Insert_New_Element(TYPE_INT, &function_id, "AK_function_arguments", "func_id", row_root);
+    AK_Insert_New_Element(TYPE_INT, &arg_number, "AK_function_arguments", "att_num", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, arg_type_name, "AK_function_arguments", "att_type", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, argname, "AK_function_arguments", "att_name", row_root);
+    AK_insert_row(row_root);
     
     AK_EPI;
     return function_id;
@@ -291,19 +291,19 @@ int AK_function_remove_by_obj_id(int obj_id) {
     AK_PRO;
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
-    Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_function", "obj_id", row_root);
+    AK_Update_Existing_Element(TYPE_INT, &obj_id, "AK_function", "obj_id", row_root);
 
-    int result = Ak_delete_row(row_root);
+    int result = AK_delete_row(row_root);
     if (result == EXIT_ERROR) {
-        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_remove_by_obj_id: Could not delete function.\n");
+        AK_dbg_messg(HIGH, FUNCTIONS, "AK_function_remove_by_obj_id: Could not delete function.\n");
 	AK_EPI;
         return EXIT_ERROR;
     }
 
     //delete function arguments
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     AK_function_arguments_remove_by_obj_id(&obj_id);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -322,16 +322,16 @@ int AK_function_arguments_remove_by_obj_id(int *obj_id) {
     memcpy(&oid, obj_id, sizeof (int));
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     
-    Ak_Update_Existing_Element(TYPE_INT, &oid, "AK_function_arguments", "func_id", row_root);
-    int result = Ak_delete_row(row_root);
+    AK_Update_Existing_Element(TYPE_INT, &oid, "AK_function_arguments", "func_id", row_root);
+    int result = AK_delete_row(row_root);
     if (result == EXIT_ERROR) {
-        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_arguments_remove_by_obj_id: Could not delete arguments.\n");
+        AK_dbg_messg(HIGH, FUNCTIONS, "AK_function_arguments_remove_by_obj_id: Could not delete arguments.\n");
 	AK_EPI;
         return EXIT_ERROR;
     }
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     AK_free(row_root);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -350,7 +350,7 @@ int AK_function_remove_by_name(char *name, struct list_node *arguments_list) {
     int result = AK_function_remove_by_obj_id(func_id);
 
     if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
-        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_remove_by_name: Could not delete function.\n");
+        AK_dbg_messg(HIGH, FUNCTIONS, "AK_function_remove_by_name: Could not delete function.\n");
 	AK_EPI;
         return EXIT_ERROR;
     }
@@ -373,21 +373,21 @@ int AK_function_rename(char *name, struct list_node *arguments_list, char *new_n
     int func_id = AK_get_function_obj_id(name, arguments_list);
     
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
-    Ak_Update_Existing_Element(TYPE_INT, &func_id, "AK_function", "obj_id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, new_name, "AK_function", "name", row_root);
+    AK_Update_Existing_Element(TYPE_INT, &func_id, "AK_function", "obj_id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, new_name, "AK_function", "name", row_root);
 
-    int result = Ak_update_row(row_root);
+    int result = AK_update_row(row_root);
 
     if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
-        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_rename: Could not rename function.\n");
+        AK_dbg_messg(HIGH, FUNCTIONS, "AK_function_rename: Could not rename function.\n");
         AK_EPI;
         return EXIT_ERROR;
     }
 
 
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     AK_free(row_root);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -411,21 +411,21 @@ int AK_function_change_return_type(char *name, struct list_node *arguments_list,
     printf("%d %d", func_id, new_return_type);
     
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
-    Ak_Update_Existing_Element(TYPE_INT, &func_id, "AK_function", "obj_id", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &new_return_type, "AK_function", "return_type", row_root);
+    AK_Update_Existing_Element(TYPE_INT, &func_id, "AK_function", "obj_id", row_root);
+    AK_Insert_New_Element(TYPE_INT, &new_return_type, "AK_function", "return_type", row_root);
 
-    int result = Ak_update_row(row_root);
+    int result = AK_update_row(row_root);
 
     if (result == EXIT_ERROR || func_id == EXIT_ERROR) {
-        Ak_dbg_messg(HIGH, FUNCTIONS, "AK_function_change_return_type: Could not change return type.\n");
+        AK_dbg_messg(HIGH, FUNCTIONS, "AK_function_change_return_type: Could not change return type.\n");
         AK_EPI;
         return EXIT_ERROR;
     }
 
     
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     AK_free(row_root);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -445,11 +445,11 @@ TestResult AK_function_test() {
     int failed=0;
 
     struct list_node *arguments_list1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&arguments_list1);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list1);
-    Ak_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list1);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list1);
-    Ak_InsertAtEnd_L3(TYPE_INT, "3", sizeof (int), arguments_list1);
+    AK_Init_L3(&arguments_list1);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list1);
+    AK_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list1);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list1);
+    AK_InsertAtEnd_L3(TYPE_INT, "3", sizeof (int), arguments_list1);
     
     int fun_add1 = AK_function_add("test_funkcija", 1, arguments_list1);
     int fun_add2 = AK_function_add("test_funkcija2", 3, arguments_list1);
@@ -466,18 +466,18 @@ TestResult AK_function_test() {
     AK_print_table("AK_function_arguments");
 
     
-    Ak_DeleteAll_L3(&arguments_list1);
+    AK_DeleteAll_L3(&arguments_list1);
     AK_free(arguments_list1);
 
     struct list_node *arguments_list3 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&arguments_list3);
+    AK_Init_L3(&arguments_list3);
 
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list3);
-    Ak_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list3);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list3);
-    Ak_InsertAtEnd_L3(TYPE_INT, "3", sizeof (int), arguments_list3);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument3", sizeof ("argument3"), arguments_list3);
-    Ak_InsertAtEnd_L3(TYPE_INT, "1", sizeof (int), arguments_list3);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list3);
+    AK_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list3);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list3);
+    AK_InsertAtEnd_L3(TYPE_INT, "3", sizeof (int), arguments_list3);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "argument3", sizeof ("argument3"), arguments_list3);
+    AK_InsertAtEnd_L3(TYPE_INT, "1", sizeof (int), arguments_list3);
 
     int fun_add4 = AK_function_add("test_funkcija", 1, arguments_list3);
     int fun_add5 = AK_function_add("test_funkcija2", 2, arguments_list3);
@@ -494,18 +494,18 @@ TestResult AK_function_test() {
     AK_print_table("AK_function_arguments");
 
 
-    Ak_DeleteAll_L3(&arguments_list3);
+    AK_DeleteAll_L3(&arguments_list3);
     AK_free(arguments_list3);
 
     struct list_node *arguments_list4 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&arguments_list4);
+    AK_Init_L3(&arguments_list4);
 
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list4);
-    Ak_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list4);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list4);
-    Ak_InsertAtEnd_L3(TYPE_INT, "3", sizeof (int), arguments_list4);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "argument3", sizeof ("argument3"), arguments_list4);
-    Ak_InsertAtEnd_L3(TYPE_INT, "2", sizeof (int), arguments_list4);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "argument1", sizeof ("argument1"), arguments_list4);
+    AK_InsertAtEnd_L3(TYPE_INT, "5", sizeof (int), arguments_list4);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "argument2", sizeof ("argument2"), arguments_list4);
+    AK_InsertAtEnd_L3(TYPE_INT, "3", sizeof (int), arguments_list4);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "argument3", sizeof ("argument3"), arguments_list4);
+    AK_InsertAtEnd_L3(TYPE_INT, "2", sizeof (int), arguments_list4);
     
 
     int fun_add7 = AK_function_add("test_funkcija", 2, arguments_list4);
@@ -522,7 +522,7 @@ TestResult AK_function_test() {
 
     // Test bez argumenata
     struct list_node *arguments_list5 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&arguments_list5);
+    AK_Init_L3(&arguments_list5);
 	
     AK_function_add("test_without_arg", 1, arguments_list5);
     
@@ -533,9 +533,9 @@ TestResult AK_function_test() {
     AK_print_table("AK_function_arguments");
 
     
-    Ak_DeleteAll_L3(&arguments_list4);
+    AK_DeleteAll_L3(&arguments_list4);
     AK_free(arguments_list4);
-    Ak_DeleteAll_L3(&arguments_list5);
+    AK_DeleteAll_L3(&arguments_list5);
 
     if (failed == 0){
 	printf("\n\nAll tests has successfully completed!!\n\n");

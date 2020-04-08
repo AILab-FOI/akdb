@@ -44,7 +44,7 @@ int AK_command(command * commands, int commandNum) {
             
         case UPDATE:
             printf("***UPDATE***\n");
-            if(Ak_update_row( (struct list_node *) (commands[i].parameters)) == EXIT_ERROR){
+            if(AK_update_row( (struct list_node *) (commands[i].parameters)) == EXIT_ERROR){
                 AK_EPI;
                 return EXIT_ERROR;
             }
@@ -53,7 +53,7 @@ int AK_command(command * commands, int commandNum) {
             break;
         case DELETE:
             printf("***DELETE***\n");            
-            if(Ak_delete_row( (struct list_node *) (commands[i].parameters)) == EXIT_ERROR){
+            if(AK_delete_row( (struct list_node *) (commands[i].parameters)) == EXIT_ERROR){
         AK_EPI;
                 return EXIT_ERROR;
         }
@@ -62,7 +62,7 @@ int AK_command(command * commands, int commandNum) {
            
         case INSERT:
             printf("***INSERT***\n");
-            if(Ak_insert_row( (struct list_node *) (commands[i].parameters)) == EXIT_ERROR){
+            if(AK_insert_row( (struct list_node *) (commands[i].parameters)) == EXIT_ERROR){
         AK_EPI;
                 return EXIT_ERROR;
         }
@@ -91,7 +91,7 @@ TestResult AK_test_command(){
     // test for insert
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     
     char *tblName = "student";
    
@@ -100,12 +100,12 @@ TestResult AK_test_command(){
     studentId = 35917;
     year = 2012;
     weight = 82.00;
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &studentId, tblName, "mbr", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Mario", tblName, "firstname", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Kolmacic", tblName, "lastname", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_INT, &studentId, tblName, "mbr", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Mario", tblName, "firstname", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Kolmacic", tblName, "lastname", row_root);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
 
     commands[0].id_command = INSERT;
     commands[0].tblName = "student";
@@ -117,11 +117,11 @@ TestResult AK_test_command(){
     studentId = 35900;
     
     row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
-    Ak_Init_L3(&row_root);
-    Ak_DeleteAll_L3(&row_root);
+    AK_Init_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
 
-    Ak_Update_Existing_Element(TYPE_INT, &studentId, tblName, "mbr", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root);
+    AK_Update_Existing_Element(TYPE_INT, &studentId, tblName, "mbr", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root);
 
     commands[1].id_command = UPDATE;
     commands[1].tblName = "student";
@@ -134,11 +134,11 @@ TestResult AK_test_command(){
     id_prof = 35893;
     
     row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
-    Ak_Init_L3(&row_root);
-    Ak_DeleteAll_L3(&row_root);
+    AK_Init_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
 
-    Ak_Update_Existing_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root);
+    AK_Update_Existing_Element(TYPE_INT, &id_prof, tblName, "id_prof", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "FOI", tblName, "firstname", row_root);
 
     commands[2].id_command = DELETE;
     commands[2].tblName = "professor";
@@ -148,12 +148,12 @@ TestResult AK_test_command(){
     // Test for select
 
     row_root = (struct list_node *) AK_malloc(sizeof (struct list_node ));
-    Ak_Init_L3(&row_root);
-    Ak_DeleteAll_L3(&row_root);
+    AK_Init_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
 
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), row_root);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), row_root);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), row_root);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), row_root);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), row_root);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), row_root);
 
     commands[3].id_command = SELECT;
     commands[3].tblName = "student";
@@ -162,7 +162,7 @@ TestResult AK_test_command(){
 
     // execute commands
     int test_command = AK_command(commands, commandNum);
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     int ok=0, fail=0;
 	if (test_command == EXIT_SUCCESS){
 		printf("\n\nTest succeeded!\n");
