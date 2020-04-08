@@ -155,7 +155,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 											//if there is a difference between tuple_dicts
 											if (summ == 0) {
 												
-												Ak_DeleteAll_L3(&row_root);	
+												AK_DeleteAll_L3(&row_root);	
 												for (o = 0; o < num_att; o++) {
 													address = tbl1_temp_block->block->tuple_dict[m + o].address;
 													size = tbl1_temp_block->block->tuple_dict[m + o].size;
@@ -164,10 +164,10 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 													memset(data1, '\0', MAX_VARCHAR_LENGTH);
 													memcpy(data1, tbl1_temp_block->block->data + address, size);
 
-													Ak_Insert_New_Element(type, data1, dstTable, tbl1_temp_block->block->header[o].att_name, row_root);
+													AK_Insert_New_Element(type, data1, dstTable, tbl1_temp_block->block->header[o].att_name, row_root);
 												}
 
-												Ak_insert_row(row_root);
+												AK_insert_row(row_root);
 											}
 											num_rows = different = summ = 0;
 										}
@@ -181,13 +181,13 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
 		
 	AK_free(src_addr1);
         AK_free(src_addr2);
-		Ak_DeleteAll_L3(&row_root);	
+		AK_DeleteAll_L3(&row_root);	
 		AK_free(row_root);
-		Ak_dbg_messg(LOW, REL_OP, "DIFFERENCE_TEST_SUCCESS\n\n");
+		AK_dbg_messg(LOW, REL_OP, "DIFFERENCE_TEST_SUCCESS\n\n");
 		AK_EPI;
 		return EXIT_SUCCESS;
 	} else {
-		Ak_dbg_messg(LOW, REL_OP, "\nAK_difference: Table/s doesn't exist!");
+		AK_dbg_messg(LOW, REL_OP, "\nAK_difference: Table/s doesn't exist!");
         AK_free(src_addr1);
         AK_free(src_addr2);
 		AK_EPI;
@@ -200,7 +200,7 @@ int AK_difference(char *srcTable1, char *srcTable2, char *dstTable) {
  * @brief  Function for difference operator testing
  * @author Dino Laktašić
  */
-TestResult Ak_op_difference_test() {
+TestResult AK_op_difference_test() {
     AK_PRO;
     char *sys_table = "AK_relation";
     char *destTable = "difference_test";

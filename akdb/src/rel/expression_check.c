@@ -211,7 +211,7 @@ char *AK_replace_wild_card(const char *s,char ch,const char *repl){
 	* @result 0 if regex didnt match or sytnax of regex is incorecct 
 			  1 if string matches coresponding regex expression
 */
-int Ak_check_regex_expression(const char * value, const char * expression, int sensitive, int checkWildCard){
+int AK_check_regex_expression(const char * value, const char * expression, int sensitive, int checkWildCard){
 	AK_PRO;
 	char *matcherData = value;
 	char * regexExpreesion = expression;
@@ -258,7 +258,7 @@ int Ak_check_regex_expression(const char * value, const char * expression, int s
 	* @result 0 if regex didnt match or sytnax of regex is incorecct 
 			  1 if string matches coresponding regex expression
 */
-int Ak_check_regex_operator_expression(const char * value, const char * expression){
+int AK_check_regex_operator_expression(const char * value, const char * expression){
 	AK_PRO;
 	char *matcherData = value;
 	char * regexExpreesion = expression;
@@ -305,12 +305,12 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
    
     //list of values
     struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&temp);
+    AK_Init_L3(&temp);
     //list of results (0,1)
     struct list_node *temp_result = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&temp_result);
+    AK_Init_L3(&temp_result);
 
-    struct list_node *el = Ak_First_L2(expr);
+    struct list_node *el = AK_First_L2(expr);
     struct list_node *row;
     struct list_node *a, *b,*last,*previous,*c;
 
@@ -338,7 +338,7 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
             }
 
             if (!found) {
-            	Ak_dbg_messg(MIDDLE, REL_OP, "Expression ckeck was not able to find column: %s\n", el->data);
+            	AK_dbg_messg(MIDDLE, REL_OP, "Expression ckeck was not able to find column: %s\n", el->data);
 				AK_EPI;
                 return 0;
 
@@ -349,25 +349,25 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
                 memcpy(data, &row->data, sizeof(row->data));
 
      
-				Ak_InsertAtEnd_L3(type, data, sizeof(row->data), temp);
+				AK_InsertAtEnd_L3(type, data, sizeof(row->data), temp);
             }
 
         } else if (el->type == TYPE_OPERATOR) {
 
         	
 
-	    	b = Ak_End_L2(temp);
-            a = Ak_Previous_L2(b, temp);
-            c = Ak_Previous_L2(a,temp);
+	    	b = AK_End_L2(temp);
+            a = AK_Previous_L2(b, temp);
+            c = AK_Previous_L2(a,temp);
 
             if (strcmp(el->data, "=") == 0) {
                 if (memcmp(a->data, b->data, sizeof(a->type)) == 0){
                 	
-					Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (char), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &true, sizeof (char), temp_result);
 
 				}else{
 
-					Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
 
 				}
 
@@ -376,45 +376,45 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
 
                 if (memcmp(a->data, b->data, a->size) != 0){
 
-					Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
 
 				}
                 else{
 
-					Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
 
 				}
 
             } else if (strcmp(el->data, "OR") == 0) {
 
                 char val_a, val_b;
-	        	last = Ak_End_L2(temp_result);
-                previous = Ak_Previous_L2(last, temp_result);
+	        	last = AK_End_L2(temp_result);
+                previous = AK_Previous_L2(last, temp_result);
                 memcpy(&val_a, last->data, sizeof (char));
                 memcpy(&val_b, previous->data, sizeof (char));
 
                 if (val_a || val_b){
 
-					Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
 				}
                 else{
 
-					Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
 
 				}
 
             } else if (strcmp(el->data, "AND") == 0) {
                 char val_a, val_b;
-				last = Ak_End_L2(temp_result);
-                previous = Ak_Previous_L2(last, temp_result);
+				last = AK_End_L2(temp_result);
+                previous = AK_Previous_L2(last, temp_result);
                 memcpy(&val_a, last->data, sizeof (char));
                 memcpy(&val_b, previous->data, sizeof (char));
 
                 if (val_a && val_b){
                 	
-					Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
 				}else{
-					Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
 				}
 
             } else if(strcmp(el->data,"BETWEEN")==0){
@@ -427,35 +427,35 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
                 
 
 	            if(rs && rs2){
-	            	Ak_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
+	            	AK_InsertAtEnd_L3(TYPE_INT, &true, sizeof (int), temp_result);
 	            }
 	            else{
-	            	Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+	            	AK_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
 	            }
 
             }else if(strcmp(el->data,"LIKE")==0 || strcmp(el->data,"~~")==0){
 
            		char like_regex[] = "([]:alpha:[!%_^]*)";	
 
-           		if(Ak_check_regex_operator_expression(b->data,&like_regex)){
+           		if(AK_check_regex_operator_expression(b->data,&like_regex)){
             	int rs;
-            	rs = Ak_check_regex_expression(a->data,b->data,1,1);
-            	Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
+            	rs = AK_check_regex_expression(a->data,b->data,1,1);
+            	AK_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
             	}else{
-            		Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+            		AK_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
             	}
 
             }else if(strcmp(el->data,"ILIKE")==0 || strcmp(el->data,"~~*")==0){
 
             	char like_regex[] = "([]:alpha:[!%_^]*)";
             	int rs;
-            	if(Ak_check_regex_operator_expression(b->data,&like_regex)){
+            	if(AK_check_regex_operator_expression(b->data,&like_regex)){
 
-            		rs = Ak_check_regex_expression(a->data,b->data,0,1);
-            		Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
+            		rs = AK_check_regex_expression(a->data,b->data,0,1);
+            		AK_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
 
             	}else{
-            		Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+            		AK_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
             	}
             	
 
@@ -463,43 +463,43 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
             	char similar_regex[] = "([]:alpha:[!%_^|*+()!]*)";
             	int rs;
 
-            	if(Ak_check_regex_operator_expression(b->data,similar_regex)){
-            		rs = Ak_check_regex_expression(a->data,b->data,1,1);
-            		Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
+            	if(AK_check_regex_operator_expression(b->data,similar_regex)){
+            		rs = AK_check_regex_expression(a->data,b->data,1,1);
+            		AK_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
             	}else{
-            		Ak_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
+            		AK_InsertAtEnd_L3(TYPE_INT, &false, sizeof (int), temp_result);
             	}
             	
             }else if(strcmp(el->data,"~")==0){
             	//regex match implementation case sensitive
             	int rs;
-            	rs = Ak_check_regex_expression(a->data,b->data,1,0);
-            	Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
+            	rs = AK_check_regex_expression(a->data,b->data,1,0);
+            	AK_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
 
 
             }else if(strcmp(el->data,"~*")==0){
             	//regex match implementation case sensitive insensitive
             	int rs;
-            	rs = Ak_check_regex_expression(a->data,b->data,0,0);
-            	Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
+            	rs = AK_check_regex_expression(a->data,b->data,0,0);
+            	AK_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
             }else{
 
             		char rs;
 
                 	rs = AK_check_arithmetic_statement(b, el->data, a->data, b->data);
-					Ak_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
+					AK_InsertAtEnd_L3(TYPE_INT, &rs, sizeof (int), temp_result);
             }      
 
         } else {
-			Ak_InsertAtEnd_L3(el->type, el->data, el->size, temp);
+			AK_InsertAtEnd_L3(el->type, el->data, el->size, temp);
         }
         el = el->next;
     }
 
-    memcpy(&result, ((struct list_node *) Ak_End_L2(temp_result))->data, sizeof (char));
-    Ak_DeleteAll_L3(&temp);
+    memcpy(&result, ((struct list_node *) AK_End_L2(temp_result))->data, sizeof (char));
+    AK_DeleteAll_L3(&temp);
     AK_free(temp);
-    Ak_DeleteAll_L3(&temp_result);
+    AK_DeleteAll_L3(&temp_result);
     AK_free(temp_result);
     AK_EPI;
     return result;
@@ -531,11 +531,11 @@ TestResult Ak_expression_check_test()
  	const char * expression4 = "%Thomas%";
  	const char * expression5 = "%thomas%";
 
- 	successful += Ak_check_regex_expression(value,expression,1,1);
- 	successful += Ak_check_regex_expression(value,expression2,1,1);
- 	successful += Ak_check_regex_expression(value,expression3,1,1);
- 	successful += Ak_check_regex_expression(value2, expression4,0,1);
- 	successful += Ak_check_regex_expression(value2, expression5,1,1);
+ 	successful += AK_check_regex_expression(value,expression,1,1);
+ 	successful += AK_check_regex_expression(value,expression2,1,1);
+ 	successful += AK_check_regex_expression(value,expression3,1,1);
+ 	successful += AK_check_regex_expression(value2, expression4,0,1);
+ 	successful += AK_check_regex_expression(value2, expression5,1,1);
 
  	printf("Test for like,Ilike with wildcards \n");
     printf("abc - expression 'abc' outcome is: %d\n", likeOutcome1);

@@ -32,8 +32,8 @@ int AK_check_if_row_satisfies_expression(AK_list_elem row_root, AK_list *expr);
 
 int AK_check_arithmetic_statement(struct list_node *el, const char *op, const char *a, const char *b);
 int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list_node *expr);
-int Ak_check_regex_expression(const char *value,const char *expression,int sensitive,int checkWildCard);
-int Ak_check_regex_operator_expression(const char *value,const char *expression);
-TestResult Ak_expression_check_test();
+int AK_check_regex_expression(const char *value,const char *expression,int sensitive,int checkWildCard);
+int AK_check_regex_operator_expression(const char *value,const char *expression);
+TestResult AK_expression_check_test();
 
 #endif /* CONSTRAINT_CHECKER_H_ */

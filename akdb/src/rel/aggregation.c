@@ -244,7 +244,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_mem_block *mem_block;
 
     struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     i = 0;
     counter = 0;
@@ -369,7 +369,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 					sresult = AK_search_unsorted(new_table, search_parameters, agg_group_number);
 
 					if (sresult.iNum_tuple_addresses == 0) {
-						Ak_DeleteAll_L3(&row_root);
+						AK_DeleteAll_L3(&row_root);
 
 						for (l = 0; l < num_aggregations; l++) {
 							switch (needed_values[l].agg_task) {
@@ -412,7 +412,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 									 */
 									memcpy(needed_values[l].data, &inttemp, sizeof(int));
 									needed_values[l].data[sizeof (int) ] = '\0';
-									Ak_Insert_New_Element(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
+									AK_Insert_New_Element(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
 									break;
 
 								case AGG_TASK_AVG:
@@ -428,12 +428,12 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 								case AGG_TASK_AVG_SUM:
 									//no break is intentional
 								default:
-									Ak_Insert_New_Element(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
+									AK_Insert_New_Element(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root);
 							}
 
 						}
                         //FILE  -  fix this!
-						Ak_insert_row(row_root);
+						AK_insert_row(row_root);
 
 					} else {
 						mem_block = AK_get_block(sresult.aiBlocks[0]);
@@ -555,17 +555,17 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 						}
 						AK_deallocate_search_result(sresult);
 						
-						Ak_DeleteAll_L3(&row_root);
+						AK_DeleteAll_L3(&row_root);
 
 						for (l = 0; l<num_aggregations;l++) {
 							if (needed_values[l].agg_task == AGG_TASK_GROUP)
 							   inttemp = 1;
 							else
 								inttemp = 0;
-							Ak_Insert_New_Element_For_Update(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root, inttemp);
+							AK_Insert_New_Element_For_Update(agg_head[l].type, needed_values[l].data, new_table, agg_head[l].att_name, row_root, inttemp);
 						}
 
-						//Ak_update_delete_row_from_block(mem_block->block, row_root, 0);
+						//AK_update_delete_row_from_block(mem_block->block, row_root, 0);
                         AK_mem_block_modify(mem_block, BLOCK_DIRTY);
 					}
 				}
@@ -594,7 +594,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 			printf("\nTABLE %s CREATED!\n", agg_table);
 
     	
-	Ak_DeleteAll_L3(&row_root);
+	AK_DeleteAll_L3(&row_root);
 
 		for (l = 0; l < num_aggregations; l++) 
 		{
@@ -623,23 +623,23 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 				case AGG_TASK_SUM:
 					//no break is intentional
 				default:
-					Ak_Insert_New_Element(agg_head[l].type, needed_values[l].data, agg_table, agg_head[l].att_name, row_root);
+					AK_Insert_New_Element(agg_head[l].type, needed_values[l].data, agg_table, agg_head[l].att_name, row_root);
 					break;
 			}
 		}
-		Ak_insert_row(row_root);
+		AK_insert_row(row_root);
     }
     else
 	{
 		//TODO: move struct to .h
 	struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
-	Ak_Init_L3(&projection_att);
+	AK_Init_L3(&projection_att);
 
 	for (i = 0; i < num_aggregations; i++) 
 		{
 			if (agg_head[i].att_name[0] != '_') 
 			{
-				Ak_InsertAtEnd_L3(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
+				AK_InsertAtEnd_L3(TYPE_ATTRIBS, agg_head[i].att_name, strlen(agg_head[i].att_name), projection_att);
 
 			}
 		}
@@ -647,7 +647,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 		AK_projection(new_table, agg_table, projection_att,NULL);
 
 		
-		Ak_DeleteAll_L3(&projection_att);
+		AK_DeleteAll_L3(&projection_att);
 		AK_free(projection_att);
     }
 	AK_free(addresses);
@@ -672,7 +672,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
 }
 
 //TODO: Needs description
-TestResult Ak_aggregation_test() {
+TestResult AK_aggregation_test() {
     AK_PRO;
     printf("aggregation.c: Present!\n");
  
