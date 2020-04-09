@@ -71,6 +71,6 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 int AK_btree_delete(char *indexName);
 void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *toDo);
 int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insertBlock);
-TestResult Ak_btree_test();
+TestResult AK_btree_test();
 
 #endif

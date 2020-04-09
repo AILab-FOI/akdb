@@ -265,7 +265,7 @@ struct list_node *AK_get_column(int num, char *tblName) {
         return NULL;
     }
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     int i, j, k;
@@ -283,7 +283,7 @@ struct list_node *AK_get_column(int num, char *tblName) {
                     int address = temp->block->tuple_dict[k].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L3(type, data, size, row_root);
+                    AK_InsertAtEnd_L3(type, data, size, row_root);
                 }
             }
         }
@@ -304,7 +304,7 @@ struct list_node *AK_get_row(int num, char * tblName) {
     AK_PRO;
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
     struct list_node *row_root = (struct list_node *)AK_calloc(1, sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     int num_attr = AK_num_attr(tblName);
     int i, j, k, l, counter;
@@ -327,7 +327,7 @@ struct list_node *AK_get_row(int num, char * tblName) {
                         int address = temp->block->tuple_dict[k + l].address;
                         memcpy(data, &(temp->block->data[address]), size);
                         data[size] = '\0';
-                        Ak_InsertAtEnd_L3(type, data, size, row_root);
+                        AK_InsertAtEnd_L3(type, data, size, row_root);
                     }
                     AK_free(addresses);
                     AK_EPI;
@@ -338,7 +338,7 @@ struct list_node *AK_get_row(int num, char * tblName) {
         i++;
     }
     AK_free(addresses);
-	Ak_DeleteAll_L3(&row_root);
+	AK_DeleteAll_L3(&row_root);
 	AK_free(row_root);
     AK_EPI;
     return NULL;
@@ -365,7 +365,7 @@ struct list_node *AK_get_tuple(int row, int column, char *tblName) {
     table_addresses *addresses = (table_addresses*) AK_get_table_addresses(tblName);
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     int i, j, k, counter;
     char data[ MAX_VARCHAR_LENGTH ];
@@ -390,13 +390,13 @@ struct list_node *AK_get_tuple(int row, int column, char *tblName) {
                     int address = temp->block->tuple_dict[ k + column ].address;
                     memcpy(data, &(temp->block->data[address]), size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L3(type, data, size, row_root);
+                    AK_InsertAtEnd_L3(type, data, size, row_root);
                     AK_free(addresses);
-					next = Ak_First_L2(row_root); //store next
+					next = AK_First_L2(row_root); //store next
 					AK_free(row_root); //now we can free base
                     AK_EPI;
 					//returns next in row_root leaving base of the list allocated, so we made some corrections
-                    //return (struct list_node *) Ak_First_L2(row_root);
+                    //return (struct list_node *) AK_First_L2(row_root);
 					return next; //returns next
                 }
             }
@@ -404,7 +404,7 @@ struct list_node *AK_get_tuple(int row, int column, char *tblName) {
         i++;
     }
     AK_free(addresses);
-	Ak_DeleteAll_L3(&row_root);
+	AK_DeleteAll_L3(&row_root);
 	AK_free(row_root);
     AK_EPI;
     return NULL;
@@ -485,7 +485,7 @@ void AK_print_row_spacer(int col_len[], int length) {
  */
 void AK_print_row(int col_len[], struct list_node *row) {
     AK_PRO;
-    struct list_node *el = (struct list_node *) Ak_First_L2(row);
+    struct list_node *el = (struct list_node *) AK_First_L2(row);
 
     int i = 0;
     void *data = (void *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (void));
@@ -541,11 +541,11 @@ int AK_table_exist(char *tblName) {
         if (!strcmp(tblName, el->data)) 
 		{
             exist = 1;
-			Ak_DeleteAll_L3(&el);
+			AK_DeleteAll_L3(&el);
 			AK_free(el);
             break;
         }
-		Ak_DeleteAll_L3(&el);
+		AK_DeleteAll_L3(&el);
 		AK_free(el);
     }
     AK_EPI;
@@ -612,7 +612,7 @@ void AK_print_table(char *tblName) {
                 }
 				//we don't need this linked list anymore (starting from tupple first to the end
 				//see comment above in function AK_get_tuple - Elvis Popovic
-				Ak_DeleteAll_L3(&el);
+				AK_DeleteAll_L3(&el);
 				AK_free(el);
             }
         }
@@ -653,7 +653,7 @@ void AK_print_table(char *tblName) {
             AK_print_row_spacer(len, length);
 
             struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-            Ak_Init_L3(&row_root);
+            AK_Init_L3(&row_root);
 
             i = 0;
             int type, size, address;
@@ -669,11 +669,11 @@ void AK_print_table(char *tblName) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
-                                Ak_InsertAtEnd_L3(type, &temp->block->data[address], size, row_root);
+                                AK_InsertAtEnd_L3(type, &temp->block->data[address], size, row_root);
                             }
                             AK_print_row(len, row_root);
                             AK_print_row_spacer(len, length);
-                            Ak_DeleteAll_L3(&row_root);
+                            AK_DeleteAll_L3(&row_root);
                         }
                     }
                 }
@@ -767,7 +767,7 @@ void AK_print_row_to_file(int col_len[], struct list_node * row) {
     
 	AK_PRO;
     fp = fopen(FILEPATH, "a");
-    struct list_node *el = (struct list_node *) Ak_First_L2(row);
+    struct list_node *el = (struct list_node *) AK_First_L2(row);
 
     int i = 0;
     void *data = (void *) AK_calloc(MAX_VARCHAR_LENGTH, sizeof (void));
@@ -809,7 +809,7 @@ void AK_print_row_to_file(int col_len[], struct list_node * row) {
  * @brief  Function that prints a table
  * @param *tblName table name
  * @return No return value
- * update by Anto Tomaš (corrected the Ak_DeleteAll_L3 function)
+ * update by Anto Tomaš (corrected the AK_DeleteAll_L3 function)
  */
 void AK_print_table_to_file(char *tblName) {
 
@@ -898,7 +898,7 @@ void AK_print_table_to_file(char *tblName) {
             fclose(fp);
             AK_print_row_spacer_to_file(len, length);
             struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-            Ak_Init_L3(&row_root);
+            AK_Init_L3(&row_root);
 
             i = 0;
             int type, size, address;
@@ -914,11 +914,11 @@ void AK_print_table_to_file(char *tblName) {
                                 type = temp->block->tuple_dict[k + l].type;
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
-                                Ak_InsertAtEnd_L3(type, &(temp->block->data[address]), size, row_root);
+                                AK_InsertAtEnd_L3(type, &(temp->block->data[address]), size, row_root);
                             }
                             AK_print_row_to_file(len, row_root);
                             AK_print_row_spacer_to_file(len, length);
-                            Ak_DeleteAll_L3(&row_root);
+                            AK_DeleteAll_L3(&row_root);
                         }
                     }
                 }
@@ -1057,12 +1057,12 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
 
         for (i = 0; i < MAX_ATTRIBUTES; i++) {
             if (strcmp(newHeader[i].att_name, old_attr) == 0) {
-                Ak_dbg_messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
+                AK_dbg_messg(HIGH, REL_OP, "AK_rename: the attribute names are the same at position %d!\n", i);
                 memset(&newHeader[i].att_name, 0, MAX_ATT_NAME);
                 memcpy(&newHeader[i].att_name, new_attr, strlen(new_attr));
                 break;
             } else if (strcmp(newHeader[i].att_name, "\0") == 0) { //if there is no more attributes
-                Ak_dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: atribute: %s does not exist in this table\n", old_attr);
+                AK_dbg_messg(MIDDLE, REL_OP, "AK_rename: ERROR: atribute: %s does not exist in this table\n", old_attr);
                 AK_EPI;
                 return (EXIT_ERROR);
             }
@@ -1092,15 +1092,15 @@ int AK_rename(char *old_table_name, char *old_attr, char *new_table_name, char *
     }
 	
   struct list_node* row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
-  Ak_Init_L3(&row_root);
+  AK_Init_L3(&row_root);
   
   char *system_table;
   system_table = "AK_relation";
    
   
-  Ak_DeleteAll_L3(&row_root);
-  Ak_Update_Existing_Element(TYPE_VARCHAR, old_table_name, system_table, "name", row_root);
-  Ak_delete_row(row_root);
+  AK_DeleteAll_L3(&row_root);
+  AK_Update_Existing_Element(TYPE_VARCHAR, old_table_name, system_table, "name", row_root);
+  AK_delete_row(row_root);
   AK_free(row_root);
     }
     AK_EPI;

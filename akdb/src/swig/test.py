@@ -21,33 +21,33 @@ class Functions:
         element = ak47.list_node()
         
         if type(key) == int:
-            ak47.Ak_Update_Existing_Element(ak47.TYPE_INT, key, table, column1, element)
+            ak47.AK_Update_Existing_Element(ak47.TYPE_INT, key, table, column1, element)
         elif type(key) == float:
-            ak47.Ak_Update_Existing_Element(ak47.TYPE_FLOAT, key, table, column1, element)
+            ak47.AK_Update_Existing_Element(ak47.TYPE_FLOAT, key, table, column1, element)
         elif type(key) == str:
-            ak47.Ak_Update_Existing_Element(ak47.TYPE_VARCHAR, key, table, column1, element)
+            ak47.AK_Update_Existing_Element(ak47.TYPE_VARCHAR, key, table, column1, element)
             
         if type(new_value) == int:
-            ak47.Ak_Insert_New_Element(ak47.TYPE_INT, new_value, table, column2, element)
+            ak47.AK_Insert_New_Element(ak47.TYPE_INT, new_value, table, column2, element)
         elif type(new_value) == float:
-            ak47.Ak_Insert_New_Element(ak47.TYPE_FLOAT, new_value, table, column2, element)
+            ak47.AK_Insert_New_Element(ak47.TYPE_FLOAT, new_value, table, column2, element)
         elif type(new_value) == str:
-            ak47.Ak_Insert_New_Element(ak47.TYPE_VARCHAR, new_value, table, column2, element)
+            ak47.AK_Insert_New_Element(ak47.TYPE_VARCHAR, new_value, table, column2, element)
         
-        return ak47.Ak_update_row(element)
+        return ak47.AK_update_row(element)
         
         
     def delete_Row(self, table, column1, key):
         element = ak47.list_node()
         
         if type(key) == int:
-            ak47.Ak_Update_Existing_Element(ak47.TYPE_INT, key, table, column1, element)
+            ak47.AK_Update_Existing_Element(ak47.TYPE_INT, key, table, column1, element)
         elif type(key) == float:
-            ak47.Ak_Update_Existing_Element(ak47.TYPE_FLOAT, key, table, column1, element)
+            ak47.AK_Update_Existing_Element(ak47.TYPE_FLOAT, key, table, column1, element)
         elif type(key) == str:
-            ak47.Ak_Update_Existing_Element(ak47.TYPE_VARCHAR, key, table, column1, element)
+            ak47.AK_Update_Existing_Element(ak47.TYPE_VARCHAR, key, table, column1, element)
             
-        return ak47.Ak_delete_row(element)
+        return ak47.AK_delete_row(element)
 
     def sel(self, src_table, dest_table, query, query_types ):
         return ak47.selection_test(src_table, dest_table, query, query_types)
@@ -97,38 +97,38 @@ class Functions:
                 break
                 
         element = ak47.list_node()
-        ak47.Ak_Init_L3(element)
-        ak47.Ak_DeleteAll_L3(element)
+        ak47.AK_Init_L3(element)
+        ak47.AK_DeleteAll_L3(element)
         
         operatori = ["<", ">", "=", "AND", "OR", "+", "-", "*"]
 
         c = 0        
         for el in expr:
             if operatori.count(el) == 1:
-                ak47.Ak_InsertAtEnd_L3(ak47.TYPE_OPERATOR, el, len(el), element)
+                ak47.AK_InsertAtEnd_L3(ak47.TYPE_OPERATOR, el, len(el), element)
                 c = 0
             elif table1_attributes.count(el) == 1 or table2_attributes.count(el) == 1:
-                ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, el, len(el), element)
+                ak47.AK_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, el, len(el), element)
                 c = 1
             else:
                 if type(el) == int:
-                    ak47.Ak_InsertAtEnd_L3(ak47.TYPE_INT, el, 4, element)
+                    ak47.AK_InsertAtEnd_L3(ak47.TYPE_INT, el, 4, element)
                 elif type(el) == float:
-                    ak47.Ak_InsertAtEnd_L3(ak47.TYPE_FLOAT, el, 4, element)
+                    ak47.AK_InsertAtEnd_L3(ak47.TYPE_FLOAT, el, 4, element)
                 elif type(el) == str:
-                    ak47.Ak_InsertAtEnd_L3(ak47.TYPE_VARCHAR, el, len(el), element)
+                    ak47.AK_InsertAtEnd_L3(ak47.TYPE_VARCHAR, el, len(el), element)
                 c = 0
        
         ak47.AK_theta_join(table1, table2, table_res, element)
 
     def nat_Join(self, table1, table2, table_res, attributes):
         att = ak47.list_node()
-        ak47.Ak_Init_L3(att)
-        ak47.Ak_DeleteAll_L3(att)
+        ak47.AK_Init_L3(att)
+        ak47.AK_DeleteAll_L3(att)
         for attribute in attributes:
-            ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
+            ak47.AK_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
         return ak47.AK_join(table1, table2, table_res, att)
-        #ak47.Ak_DeleteAll_L3(att)
+        #ak47.AK_DeleteAll_L3(att)
         
     def union(self, table1, table2, table_res):
         return ak47.AK_union(table1, table2, table_res)
@@ -140,7 +140,7 @@ class Functions:
         att = ak47.list_node()
 
         for attribute in attributes:
-            ak47.Ak_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
+            ak47.AK_InsertAtEnd_L3(ak47.TYPE_ATTRIBS, attribute, len(attribute), att)
         return ak47.AK_projection(table1, table_res,att, None)
         
         

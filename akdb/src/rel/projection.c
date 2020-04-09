@@ -53,7 +53,7 @@ void AK_create_block_header(int old_block, char *dstTable, struct list_node *att
  
     while (strcmp(temp_block->header[head].att_name, "") != 0) {
    
-	list_elem = Ak_First_L2(att);	
+	list_elem = AK_First_L2(att);	
         while (list_elem != NULL ) {
             
             //if header is found than copy header
@@ -64,7 +64,7 @@ void AK_create_block_header(int old_block, char *dstTable, struct list_node *att
                 memcpy(&header[new_head], &temp_block->header[head], sizeof (temp_block->header[head]));
              
                 
-                Ak_dbg_messg(HIGH, REL_OP, "Copy attribute header: %s\n", header[new_head].att_name);
+                AK_dbg_messg(HIGH, REL_OP, "Copy attribute header: %s\n", header[new_head].att_name);
 
                 new_head++;
             }else if(strstr(list_elem->data,temp_block->header[head].att_name)!=NULL){
@@ -195,7 +195,7 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
     AK_PRO;
  
     struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     struct list_node * list_elem,*a,*c,*operator;
     struct list_node * end_list;
@@ -219,7 +219,7 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
 
         while (strcmp(old_block->header[head].att_name, "") != 0) {
         
-	    list_elem = (struct list_node *) Ak_First_L2(att);
+	    list_elem = (struct list_node *) AK_First_L2(att);
 
             while (list_elem != NULL) {
                 size = old_block->tuple_dict[i].size;
@@ -234,7 +234,7 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
                     memcpy(data, old_block->data + old_block->tuple_dict[i].address, old_block->tuple_dict[i].size);
                    
                     //insert element to list to be inserted into new table
-                    Ak_Insert_New_Element(old_block->tuple_dict[i].type, data, dstTable, list_elem->data, row_root); //ForUpdate 0
+                    AK_Insert_New_Element(old_block->tuple_dict[i].type, data, dstTable, list_elem->data, row_root); //ForUpdate 0
                     something_to_copy = 1;
                 }else if((strstr(list_elem->data,old_block->header[head].att_name)!=NULL)&& (size != 0)
                         && (overflow < old_block->AK_free_space + 1) && (overflow > -1)){
@@ -272,9 +272,9 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
                                 int type = AK_determine_header_type(first->type,second->type);
 
                                 if(positionSecond<positionFirst)
-                                    Ak_Insert_New_Element(type, AK_perform_operatrion(AK_get_operator(list_elem->data),second,first,type), dstTable, list_elem->data, row_root);
+                                    AK_Insert_New_Element(type, AK_perform_operatrion(AK_get_operator(list_elem->data),second,first,type), dstTable, list_elem->data, row_root);
                                 else
-                                    Ak_Insert_New_Element(type, AK_perform_operatrion(AK_get_operator(list_elem->data),first,second,type), dstTable, list_elem->data, row_root);
+                                    AK_Insert_New_Element(type, AK_perform_operatrion(AK_get_operator(list_elem->data),first,second,type), dstTable, list_elem->data, row_root);
 
                                 break;
                         }
@@ -294,19 +294,19 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
 
         //write row to the projection table
         if (something_to_copy) {
-            Ak_dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
+            AK_dbg_messg(HIGH, REL_OP, "\nInsert row to projection table.\n");
 
             if(expr != NULL){
                 if(AK_check_if_row_satisfies_expression(row_root,expr)){
-                    Ak_insert_row(row_root);
+                    AK_insert_row(row_root);
                 }
             }else{
-                Ak_insert_row(row_root);
+                AK_insert_row(row_root);
             }
 
             
             	    
-            Ak_DeleteAll_L3(&row_root);
+            AK_DeleteAll_L3(&row_root);
         }
     }
     AK_EPI;
@@ -439,8 +439,8 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct 
         //create new segmenet for the projection table
         AK_create_block_header(src_addr->address_from[0], dstTable, att);
 
-        Ak_dbg_messg(LOW, REL_OP, "TABLE %s CREATED from %s!\n", dstTable, srcTable);
-        Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: start copying data\n");
+        AK_dbg_messg(LOW, REL_OP, "TABLE %s CREATED from %s!\n", dstTable, srcTable);
+        AK_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: start copying data\n");
 
         int startAddress = 0, i = 0, j;
 
@@ -449,7 +449,7 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct 
             startAddress = src_addr->address_from[i];
 
             if (startAddress != 0) {
-                Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy extent: %d\n", i);
+                AK_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy extent: %d\n", i);
 
                 //for each block in extent
                 for (j = startAddress; j <= src_addr->address_to[i]; j++) {
@@ -459,7 +459,7 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct 
                         break;
                     }
 
-                    Ak_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy block: %d\n", j);
+                    AK_dbg_messg(MIDDLE, REL_OP, "\nAK_projection: copy block: %d\n", j);
 
                     //get projection tuples from block
                     AK_copy_block_projection(temp->block, att, dstTable,expr);
@@ -468,12 +468,12 @@ int AK_projection(char *srcTable, char *dstTable, struct list_node *att, struct 
         }
 		
         AK_free(src_addr);
-        Ak_dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n\n");
+        AK_dbg_messg(LOW, REL_OP, "PROJECTION_TEST_SUCCESS\n\n");
 	AK_EPI;
         return EXIT_SUCCESS;
     } else {
 		AK_free(src_addr);
-        Ak_dbg_messg(LOW, REL_OP, "\n AK_projection: Table doesn't exist!");
+        AK_dbg_messg(LOW, REL_OP, "\n AK_projection: Table doesn't exist!");
         AK_EPI;
         return EXIT_ERROR;
     }
@@ -493,28 +493,28 @@ TestResult AK_op_projection_test() {
     struct list_node * att = (struct list_node *) AK_malloc(sizeof(struct list_node));
     struct list_node * expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
     struct list_node * att_operation = (struct list_node*) AK_malloc(sizeof(struct list_node));
-    Ak_Init_L3(&att);
-    Ak_Init_L3(&att_operation);
+    AK_Init_L3(&att);
+    AK_Init_L3(&att_operation);
     char *destTable2 = "projection_test2";
     printf("\nSelect firstname,lastname from student,weight,weight+year,weight-year\n\n");
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight+year", sizeof("weight+year"),att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight-year", sizeof("weight-year"),att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year*year", sizeof("year*year"),att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year-weight", sizeof("year-weight"),att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year/weight", sizeof("year/weight"),att);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "lastname", sizeof ("lastname"), att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "weight+year", sizeof("weight+year"),att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "weight-year", sizeof("weight-year"),att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year*year", sizeof("year*year"),att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year-weight", sizeof("year-weight"),att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year/weight", sizeof("year/weight"),att);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "weight", sizeof ("weight"), att);
 
     int test_projection1 = AK_projection("student", "projection_test", att,  NULL);
     AK_print_table("projection_test");
 
     strcpy(expr->table,destTable2);
     char expression []= "%in%";
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression, sizeof (char), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, &expression, sizeof (char), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
 
     printf("\nSelect firstname,lastname from student where firstname LIKE .*in.*\n\n");
     int test_projection2 = AK_projection("student", "projection_test2", att, expr);
@@ -542,7 +542,7 @@ TestResult AK_op_projection_test() {
         failed++;
     }
 	
-    Ak_DeleteAll_L3(&att);
+    AK_DeleteAll_L3(&att);
     AK_EPI;
     return TEST_result(success,failed);
 }

@@ -272,10 +272,10 @@ extern table_addresses *AK_get_segment_addresses(char * segmentName);
 
 %include "../file/idx/index.h"
 
-extern element_ad Ak_Get_First_elementAd(list_ad *L);
-extern element_ad Ak_Get_Last_elementAd(list_ad *L);
-extern element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op);
-extern void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore);
+extern element_ad AK_Get_First_elementAd(list_ad *L);
+extern element_ad AK_Get_Last_elementAd(list_ad *L);
+extern element_ad AK_Get_Next_elementAd(element_ad Currentelement_op);
+extern void AK_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore);
 
 %include "../file/idx/bitmap.c"
 
@@ -418,4 +418,4 @@ extern AK_header *AK_get_insert_header(int *size, char *tblName, struct list_nod
 extern int AK_insert(char* tableName, struct list_node *columns, struct list_node *values);
 
 
-extern int Ak_check_constraint_name(char *constraintName);
+extern int AK_check_constraint_name(char *constraintName);

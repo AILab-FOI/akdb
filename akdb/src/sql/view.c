@@ -33,7 +33,7 @@ int AK_get_view_obj_id(char *name) {
     AK_PRO;
     //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
-        struct list_node *name_elem = Ak_GetNth_L2(2,row);
+        struct list_node *name_elem = AK_GetNth_L2(2,row);
         if (!strcmp(name_elem->data, name)) {
             memcpy(&id, row->next->data, sizeof(int));
 	    AK_EPI;
@@ -58,9 +58,9 @@ char* AK_get_view_query(char *name){
     AK_PRO;
 
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
-        struct list_node *name_elem = Ak_GetNth_L2(2,row);
+        struct list_node *name_elem = AK_GetNth_L2(2,row);
         if (!strcmp(name_elem->data, name)) {
-            struct list_node *query_elem = Ak_GetNth_L2(3,row);
+            struct list_node *query_elem = AK_GetNth_L2(3,row);
             query = query_elem->data;
 	    AK_EPI;
 	    return query;
@@ -84,9 +84,9 @@ char* AK_get_rel_exp(char *name){
     AK_PRO;
 
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
-        struct list_node *name_elem = Ak_GetNth_L2(2,row);
+        struct list_node *name_elem = AK_GetNth_L2(2,row);
         if (!strcmp(name_elem->data, name)) {
-            struct list_node *rel_exp_elem = Ak_GetNth_L2(3,row);
+            struct list_node *rel_exp_elem = AK_GetNth_L2(3,row);
             rel_exp = rel_exp_elem->data;
 	    AK_EPI;
 	    return rel_exp;
@@ -111,20 +111,20 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
     AK_PRO;
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     
     int view_id = AK_get_id();
     if(set_id!=0) view_id = set_id;
-    Ak_Insert_New_Element(TYPE_INT, &view_id, tblName, "obj_id", row_root);
+    AK_Insert_New_Element(TYPE_INT, &view_id, tblName, "obj_id", row_root);
 
     //adding prefics '_view' to view name for integration of view relation expression (used in query_optimization.c for now) by Danko Sacer NOT SET
     //char set_name[strlen(name)];
     //strcpy(set_name, name);
     //strcat(set_name, "_view");
-    Ak_Insert_New_Element(TYPE_VARCHAR, name, tblName, "name", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, query, tblName, "query", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, rel_exp, tblName, "rel_exp", row_root);
-    Ak_insert_row(row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, name, tblName, "name", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, query, tblName, "query", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, rel_exp, tblName, "rel_exp", row_root);
+    AK_insert_row(row_root);
     AK_EPI;
     return view_id;
 }
@@ -139,12 +139,12 @@ int AK_view_remove_by_obj_id(int obj_id) {
     AK_PRO;
       
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     
-    Ak_Update_Existing_Element(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root);
-    int result = Ak_delete_row((AK_list_elem)row_root);
+    AK_Update_Existing_Element(TYPE_INT, &obj_id, "AK_view", "obj_id", row_root);
+    int result = AK_delete_row((AK_list_elem)row_root);
     
-    Ak_DeleteAll_L3(&row_root);
+    AK_DeleteAll_L3(&row_root);
     AK_EPI;
     return result;
 }
@@ -168,10 +168,10 @@ int AK_view_rename(char *name, char *new_name){
    AK_PRO;
    
    while ((row = (struct list_node *)AK_get_row(i++, "AK_view"))) {
-       struct list_node *name_elem = Ak_GetNth_L2(2,row);
+       struct list_node *name_elem = AK_GetNth_L2(2,row);
         if (!strcmp(name_elem->data, name)) {
-            struct list_node *view_elem = Ak_GetNth_L2(1,row);
-            struct list_node *query_rel_exp_elem = Ak_GetNth_L2(3,row);
+            struct list_node *view_elem = AK_GetNth_L2(1,row);
+            struct list_node *query_rel_exp_elem = AK_GetNth_L2(3,row);
             memcpy(&view_id, view_elem->data, sizeof(int));
             query = query_rel_exp_elem->data;
 	    rel_exp = query_rel_exp_elem->data;
@@ -196,10 +196,10 @@ int AK_view_remove_by_name(char *name) {
    AK_PRO;
     
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
     
-   Ak_Update_Existing_Element(TYPE_VARCHAR, name, "AK_view", "name", row_root);
-   int result = Ak_delete_row(row_root);
+   AK_Update_Existing_Element(TYPE_VARCHAR, name, "AK_view", "name", row_root);
+   int result = AK_delete_row(row_root);
    AK_EPI;
    return result;
 }
@@ -232,7 +232,7 @@ int AK_test_get_view_data(char *rel_exp){
 	char *str = strdup(rel_exp);
 	char *part;
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&expr);
+	AK_Init_L3(&expr);
 	char *srcTable;
 	char *destTable = "resultTable";
 	strcpy(expr->table,destTable);
@@ -244,13 +244,13 @@ int AK_test_get_view_data(char *rel_exp){
 
 		}else{
 			if(!strcmp(part, "<")||!strcmp(part, ">")||!strcmp(part, "=")||!strcmp(part, "OR")||!strcmp(part, "AND")){
-				 Ak_InsertAtEnd_L3(TYPE_OPERATOR, part, sizeof (part), expr);
+				 AK_InsertAtEnd_L3(TYPE_OPERATOR, part, sizeof (part), expr);
 			}
 			else if(!strcmp(part, "firstname")){
-				Ak_InsertAtEnd_L3(TYPE_ATTRIBS, part, sizeof (part), expr);	
+				AK_InsertAtEnd_L3(TYPE_ATTRIBS, part, sizeof (part), expr);	
 			}
 			else{
-				Ak_InsertAtEnd_L3(TYPE_VARCHAR, part, sizeof (part), expr);
+				AK_InsertAtEnd_L3(TYPE_VARCHAR, part, sizeof (part), expr);
 			}
 		}		 
 		

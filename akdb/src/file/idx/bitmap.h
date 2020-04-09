@@ -29,17 +29,17 @@
 #include "../../auxi/mempro.h"
 
 
-int Ak_If_ExistOp(struct list_node *L, char *ele);
+int AK_If_ExistOp(struct list_node *L, char *ele);
 void AK_create_Index_Table(char *tblName, struct list_node *attributes);
-void Ak_print_Header_Test(char* tblName);
-void Ak_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex);
-list_ad* Ak_get_Attribute(char *indexName, char *attribute);
-void Ak_create_List_Address_Test();
-void Ak_print_Att_Test(list_ad *list);
+void AK_print_Header_Test(char* tblName);
+void AK_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int positionTbl, int numAtributes, AK_header *headerIndex);
+list_ad* AK_get_Attribute(char *indexName, char *attribute);
+void AK_create_List_Address_Test();
+void AK_print_Att_Test(list_ad *list);
 list_ad* AK_get_Attribute(char *tableName, char *attributeName, char *attributeValue);
 void AK_update(int addBlock, int addTd, char *tableName, char *attributeName, char *attributeValue, char *newAttributeValue);
-int Ak_write_block(AK_block * block);
-TestResult Ak_bitmap_test();
+int AK_write_block(AK_block * block);
+TestResult AK_bitmap_test();
 
 void AK_delete_bitmap_index(char *indexName);
 void AK_add_to_bitmap_index(char *tableName, char *attributeName);

@@ -26,7 +26,7 @@
  * @param char constraintName name which you want to give to constraint which you are trying to create
  * @return EXIT_ERROR or EXIT_SUCCESS
  **/
-int Ak_check_constraint_name(char *constraintName) {
+int AK_check_constraint_name(char *constraintName) {
 	int i, j;
 	int num_rows;
 
@@ -56,23 +56,23 @@ int Ak_check_constraint_name(char *constraintName) {
 		for (j = 0; j < num_rows; ++j)
 		{
 			row = AK_get_row(j, constraint_table_names[i]);
-			attribute = Ak_GetNth_L2(3, row);
+			attribute = AK_GetNth_L2(3, row);
 			
 			if (strcmp(attribute->data, constraintName) == 0)
 			{
-				Ak_DeleteAll_L3(&row);
+				AK_DeleteAll_L3(&row);
 				AK_free(row);
 				AK_EPI;
 				return EXIT_ERROR;
 			}
-			Ak_DeleteAll_L3(&row);
+			AK_DeleteAll_L3(&row);
 			AK_free(row);
 		}
 	}
 		
 	//OTHER CONSTRAINTS ARE NOT YET IMPLEMENTED, COMPLETE THIS FUNCTION WHEN THAT HAPPENS!!!
 	//WRITE SIMILIAR CODE TO THE CODE ABOVE, CHECK TABLES AND ATTRIBUTES NAMES IN dbman.c
-	//IF THERE ARE PROBLEMS CHECK, ACCORDING TO SYSTEM CATALOG, IF 1. PARAMETER of Ak_GetNth_L2 IS CORRECT (INDEXES START FROM 1!)
+	//IF THERE ARE PROBLEMS CHECK, ACCORDING TO SYSTEM CATALOG, IF 1. PARAMETER of AK_GetNth_L2 IS CORRECT (INDEXES START FROM 1!)
 	
 
 		
@@ -100,11 +100,11 @@ TestResult AK_constraint_names_test() {
 	AK_print_table("AK_constraints_between");
 	
 	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName1);
-	result = Ak_check_constraint_name(constraintName1);
+	result = AK_check_constraint_name(constraintName1);
 	printf("Yes (0) No (-1): %d\n\n", result);
 	
 	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName2);
-	result = Ak_check_constraint_name(constraintName2);
+	result = AK_check_constraint_name(constraintName2);
 	printf("Yes (0) No (-1): %d\n\n", result);
 	
 	printf("\nTest succeeded.");

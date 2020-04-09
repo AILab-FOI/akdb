@@ -46,10 +46,10 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
     AK_PRO;
     //Initialize temporary linked list
     struct list_node *temp = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&temp);
+    AK_Init_L3(&temp);
 
     struct list_node *tmp, *temp_elem, *temp_elem_prev;
-    struct list_node *list_elem_next, *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
+    struct list_node *list_elem_next, *list_elem = (struct list_node *) AK_First_L2(list_rel_eq);
 
     //Iterate through all the elements of RA linked list
     while (list_elem != NULL) {
@@ -57,11 +57,11 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
         switch (list_elem->type) {
 
             case TYPE_OPERATOR:
-                Ak_dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
-				Ak_dbg_messg(LOW, REL_EQ, "----------------------\n");
-                temp_elem = (struct list_node *) Ak_End_L2(temp);
-                temp_elem_prev = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
-                list_elem_next = (struct list_node *) Ak_Next_L2(list_elem);
+                AK_dbg_messg(LOW, REL_EQ, "\nOPERATOR '%c' SELECTED\n", list_elem->data[0]);
+				AK_dbg_messg(LOW, REL_EQ, "----------------------\n");
+                temp_elem = (struct list_node *) AK_End_L2(temp);
+                temp_elem_prev = (struct list_node *) AK_Previous_L2(temp_elem, temp);
+                list_elem_next = (struct list_node *) AK_Next_L2(list_elem);
 
                 switch (list_elem->data[0]) {
                     //Associativity of set operations: Union and Intersection are associative but Set Difference is not
@@ -87,33 +87,33 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                 qsort(cost, 3, sizeof (cost_eval), AK_compare);
 
                                 //Change inserted relation to largest table
-								Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem_prev->data, cost[2].data); 
+								AK_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem_prev->data, cost[2].data); 
                                 temp_elem_prev->size = strlen(cost[2].data) + 1;
                                 memset(temp_elem_prev->data, '\0', MAX_VARCHAR_LENGTH);
                                 strcpy(temp_elem_prev->data, cost[2].data);
 
                                 //Change last inserted relation
-                                Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[1].data);
+                                AK_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[1].data);
                                 temp_elem->size = strlen(cost[1].data) + 1;
                                 memset(temp_elem->data, '\0', MAX_VARCHAR_LENGTH);
                                 strcpy(temp_elem->data, cost[1].data);
 
                                 //Insert smallest table at the end of temp list
-                                Ak_InsertAtEnd_L3(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
-								Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
+                                AK_InsertAtEnd_L3(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
+								AK_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
 								
                                 //Insert operator
-								Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
-								Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+								AK_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+								AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
 								
                                 list_elem = list_elem->next;
                             } else {
-                            	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
-								Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+                            	AK_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+								AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                             }
                         } else {
-                        	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
-                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+                        	AK_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                            AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         }
                         break;
 
@@ -150,7 +150,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                     cost[next_cost].value = AK_get_num_records(temp_elem->data);
                                     strcpy(cost[next_cost].data, temp_elem->data);
                                     next_cost++;
-                                    temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                    temp_elem = (struct list_node *) AK_Previous_L2(temp_elem, temp);
                                 }
 
                                 //see comment on the previous operator for getting heuristics values
@@ -164,20 +164,20 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
 
                                 //if values for all three relations are saved, rearrange tables in list
                                 if (next_cost-- == 2) {
-                                    temp_elem = (struct list_node *) Ak_End_L2(temp);
+                                    temp_elem = (struct list_node *) AK_End_L2(temp);
                                     while (next_cost < 3) {
                                         if (temp_elem->type == TYPE_OPERAND) {
                                             temp_elem->size = strlen(cost[next_cost].data) + 1;
                                             memset(temp_elem->data, '\0', MAX_VARCHAR_LENGTH);
                                             strcpy(temp_elem->data, cost[next_cost].data);
-                                            Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
+                                            AK_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
                                             next_cost++;
                                         }
-                                        temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                        temp_elem = (struct list_node *) AK_Previous_L2(temp_elem, temp);
                                     }
                                     //insert final relation
-                                    Ak_InsertAtEnd_L3(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
-                                    Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
+                                    AK_InsertAtEnd_L3(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
+                                    AK_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
 
                                     next_cost = 1;
                                 } else {
@@ -186,15 +186,15 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                             }
                         }
                         //insert operator
-                        Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
-                        Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                        AK_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                        AK_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                        AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
 
                         if (next_cost) {
                             //dbg_messg(MIDDLE, REL_EQ, "TMP: (%s), TMP_NEXT: (%s)\n", tmp->data, (tmp->next)->data);
-                        	Ak_InsertAtEnd_L3(tmp->type, tmp->data, tmp->size, temp);
-                        	Ak_InsertAtEnd_L3((tmp->next)->type, (tmp->next)->data, (tmp->next)->size, temp);
-                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", tmp->data, (tmp->next)->data);
+                        	AK_InsertAtEnd_L3(tmp->type, tmp->data, tmp->size, temp);
+                        	AK_InsertAtEnd_L3((tmp->next)->type, (tmp->next)->data, (tmp->next)->size, temp);
+                            AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", tmp->data, (tmp->next)->data);
                             list_elem = tmp->next;
                         } else {
                             list_elem = list_elem_next;
@@ -284,7 +284,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                     cost[next_cost].value = AK_get_num_records(temp_elem->data);
                                     strcpy(cost[next_cost].data, temp_elem->data);
                                     next_cost++;
-                                    temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                    temp_elem = (struct list_node *) AK_Previous_L2(temp_elem, temp);
                                 }
 
                                 if (next_cost > 1) {
@@ -300,14 +300,14 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                             temp_elem->size = strlen(cost[next_cost].data) + 1;
                                             memset(temp_elem->data, '\0', MAX_VARCHAR_LENGTH);
                                             strcpy(temp_elem->data, cost[next_cost].data);
-                                            Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
+                                            AK_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) in temp list changed to %s\n", temp_elem->data, cost[next_cost].data);
                                             next_cost++;
                                         }
-                                        temp_elem = (struct list_node *) Ak_Previous_L2(temp_elem, temp);
+                                        temp_elem = (struct list_node *) AK_Previous_L2(temp_elem, temp);
                                     }
 
-                                    Ak_InsertAtEnd_L3(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
-                                    Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
+                                    AK_InsertAtEnd_L3(TYPE_OPERAND, cost[0].data, strlen(cost[0].data) + 1, temp);
+                                    AK_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in temp list\n", cost[0].data);
                                     next_cost = 1;
                                 } else {
                                     next_cost = -1;
@@ -315,40 +315,40 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                             }
                         }
 
-                        Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
-                        Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                        AK_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                        AK_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
 
                         if (next_cost > 0) {
-                        	Ak_InsertAtEnd_L3((tmp->next)->type, (tmp->next)->data, (tmp->next)->size, temp);
-                            Ak_InsertAtEnd_L3((tmp->next->next)->type, (tmp->next->next)->data, (tmp->next->next)->size, temp);
-                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
-                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", (tmp->next)->data, (tmp->next->next)->data);
+                        	AK_InsertAtEnd_L3((tmp->next)->type, (tmp->next)->data, (tmp->next)->size, temp);
+                            AK_InsertAtEnd_L3((tmp->next->next)->type, (tmp->next->next)->data, (tmp->next->next)->size, temp);
+                            AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                            AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with attributes (%s) in temp list\n", (tmp->next)->data, (tmp->next->next)->data);
                             list_elem = tmp->next;
                         } else {
-                            Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                            AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                             list_elem = list_elem->next;
                         }
                         break;
                     case RO_PROJECTION:
                     case RO_SELECTION:
-                    	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
-                        Ak_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
-                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
+                    	AK_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                        AK_InsertAtEnd_L3(list_elem_next->type, list_elem_next->data, list_elem_next->size, temp);
+                        AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted with condition (%s) in temp list\n", list_elem->data, list_elem_next->data);
                         list_elem = list_elem->next;
                         break;
 
                     case RO_EXCEPT:
-                    	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
-                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+                    	AK_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                        AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     case RO_RENAME:
-                    	Ak_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
-                        Ak_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
+                    	AK_InsertAtEnd_L3(list_elem->type, list_elem->data, list_elem->size, temp);
+                        AK_dbg_messg(MIDDLE, REL_EQ, "::operator %s inserted in temp list\n", list_elem->data);
                         break;
 
                     default:
-                        Ak_dbg_messg(LOW, REL_EQ, "Invalid operator: %s", list_elem->data);
+                        AK_dbg_messg(LOW, REL_EQ, "Invalid operator: %s", list_elem->data);
                         break;
                 }
                 break;
@@ -364,12 +364,12 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                 break;
 
             case TYPE_OPERAND:
-                Ak_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in the temp list\n", list_elem->data);
-                Ak_InsertAtEnd_L3(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
+                AK_dbg_messg(MIDDLE, REL_EQ, "::table_name (%s) inserted in the temp list\n", list_elem->data);
+                AK_InsertAtEnd_L3(TYPE_OPERAND, list_elem->data, list_elem->size, temp);
                 break;
 
             default:
-                Ak_dbg_messg(LOW, REL_EQ, "Invalid type: %s", list_elem->data);
+                AK_dbg_messg(LOW, REL_EQ, "Invalid type: %s", list_elem->data);
                 break;
         }
 
@@ -389,7 +389,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
     //	}
     //}
 
-    Ak_DeleteAll_L3(&list_rel_eq);
+    AK_DeleteAll_L3(&list_rel_eq);
     AK_EPI;
     return temp;
 }
@@ -401,7 +401,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
  */
 void AK_print_rel_eq_assoc(struct list_node *list_rel_eq) {
     AK_PRO;
-    struct list_node *list_elem = (struct list_node *) Ak_First_L2(list_rel_eq);
+    struct list_node *list_elem = (struct list_node *) AK_First_L2(list_rel_eq);
 
     printf("\n");
     while (list_elem != NULL) {
@@ -457,7 +457,7 @@ TestResult AK_rel_eq_assoc_test() {
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName));
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     int id = 35890, year = 1999;
     float weight = 80.00;
@@ -467,74 +467,74 @@ TestResult AK_rel_eq_assoc_test() {
     id++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Mirko", tblName, "firstname", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Sestak", tblName, "job", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
-    Ak_insert_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Mirko", tblName, "firstname", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Sestak", tblName, "job", row_root);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
+    AK_insert_row(row_root);
     int insertedRow = AK_reference_check_entry(row_root);
     
 
     id++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Mesaric", tblName, "job", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
-    Ak_insert_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Igor", tblName, "firstname", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Mesaric", tblName, "job", row_root);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
+    AK_insert_row(row_root);
     int insertedRow2 = AK_reference_check_entry(row_root);
 
     id++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Dalibor", tblName, "firstname", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Slunjski", tblName, "job", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
-    Ak_insert_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Dalibor", tblName, "firstname", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Slunjski", tblName, "job", row_root);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
+    AK_insert_row(row_root);
     int insertedRow3 = AK_reference_check_entry(row_root);
 
     id++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Alagic", tblName, "job", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
-    Ak_insert_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Dino", tblName, "firstname", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Alagic", tblName, "job", row_root);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
+    AK_insert_row(row_root);
     int insertedRow4 = AK_reference_check_entry(row_root);
 
     id++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Zver", tblName, "job", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
-    Ak_insert_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Miroslav", tblName, "firstname", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Zver", tblName, "job", row_root);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
+    AK_insert_row(row_root);
     int insertedRow5 = AK_reference_check_entry(row_root);
 
     id++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root);
-    Ak_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Josip", tblName, "firstname", row_root);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Vincek", tblName, "job", row_root);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
-    Ak_insert_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+    AK_Insert_New_Element(TYPE_INT, &id, tblName, "id", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Josip", tblName, "firstname", row_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Vincek", tblName, "job", row_root);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName, "year", row_root);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName, "weight", row_root);
+    AK_insert_row(row_root);
     int insertedRow6 = AK_reference_check_entry(row_root);
 
     if ((insertedRow && insertedRow2 && insertedRow3 && insertedRow4 && insertedRow5 && insertedRow6) != EXIT_ERROR){
@@ -579,7 +579,7 @@ TestResult AK_rel_eq_assoc_test() {
     printf("rel_eq_associativity_test: After segment initialization: %d\n", AK_num_attr(tblName2));
 
     struct list_node *row_root2 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root2);
+    AK_Init_L3(&row_root2);
 
     int mbr = 35890;
     year = 1999;
@@ -590,99 +590,99 @@ TestResult AK_rel_eq_assoc_test() {
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Matija", tblName2, "firstname", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Sestak", tblName2, "lastname", row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
-    Ak_insert_row(row_root2);
+    AK_DeleteAll_L3(&row_root2);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Matija", tblName2, "firstname", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Sestak", tblName2, "lastname", row_root2);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    AK_insert_row(row_root2);
     int insertedRow7 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Igor", tblName2, "firstname", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Mesaric", tblName2, "lastname", row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
-    Ak_insert_row(row_root2);
+    AK_DeleteAll_L3(&row_root2);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Igor", tblName2, "firstname", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Mesaric", tblName2, "lastname", row_root2);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    AK_insert_row(row_root2);
     int insertedRow8 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Dalibor", tblName2, "firstname", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Slunjski", tblName2, "lastname", row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
-    Ak_insert_row(row_root2);
+    AK_DeleteAll_L3(&row_root2);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Dalibor", tblName2, "firstname", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Slunjski", tblName2, "lastname", row_root2);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    AK_insert_row(row_root2);
     int insertedRow9 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Dino", tblName2, "firstname", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Alagic", tblName2, "lastname", row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
-    Ak_insert_row(row_root2);
+    AK_DeleteAll_L3(&row_root2);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Dino", tblName2, "firstname", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Alagic", tblName2, "lastname", row_root2);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    AK_insert_row(row_root2);
     int insertedRow10 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Miroslav", tblName2, "firstname", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Zver", tblName2, "lastname", row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
-    Ak_insert_row(row_root2);
+    AK_DeleteAll_L3(&row_root2);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Miroslav", tblName2, "firstname", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Zver", tblName2, "lastname", row_root2);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    AK_insert_row(row_root2);
     int insertedRow11 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Josip", tblName2, "firstname", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Vincek", tblName2, "lastname", row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
-    Ak_insert_row(row_root2);
+    AK_DeleteAll_L3(&row_root2);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Josip", tblName2, "firstname", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Vincek", tblName2, "lastname", row_root2);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    AK_insert_row(row_root2);
     int insertedRow12 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Netko", tblName2, "firstname", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Netkic", tblName2, "lastname", row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
-    Ak_insert_row(row_root2);
+    AK_DeleteAll_L3(&row_root2);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Netko", tblName2, "firstname", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Netkic", tblName2, "lastname", row_root2);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    AK_insert_row(row_root2);
     int insertedRow13 = AK_reference_check_entry(row_root2);
 
     mbr++;
     year++;
     weight += 0.75;
-    Ak_DeleteAll_L3(&row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Dino", tblName2, "firstname", row_root2);
-    Ak_Insert_New_Element(TYPE_VARCHAR, "Laktašić", tblName2, "lastname", row_root2);
-    Ak_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
-    Ak_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
-    Ak_insert_row(row_root2);
+    AK_DeleteAll_L3(&row_root2);
+    AK_Insert_New_Element(TYPE_INT, &mbr, tblName2, "mbr", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Dino", tblName2, "firstname", row_root2);
+    AK_Insert_New_Element(TYPE_VARCHAR, "Laktašić", tblName2, "lastname", row_root2);
+    AK_Insert_New_Element(TYPE_INT, &year, tblName2, "year", row_root2);
+    AK_Insert_New_Element(TYPE_FLOAT, &weight, tblName2, "weight", row_root2);
+    AK_insert_row(row_root2);
     int insertedRow14 = AK_reference_check_entry(row_root2);
-    Ak_DeleteAll_L3(&row_root2);
+    AK_DeleteAll_L3(&row_root2);
     
 
     if ((insertedRow7 && insertedRow8 && insertedRow9 && insertedRow10 && insertedRow11 && insertedRow12 && insertedRow13 && insertedRow14) != EXIT_ERROR){
@@ -695,40 +695,40 @@ TestResult AK_rel_eq_assoc_test() {
     //-----------------------------------------------------------------------------------------
 
     struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&expr);
+    AK_Init_L3(&expr);
 
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof ("L1;L2;L3;L4"), expr); //projection attribute
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`L1` > 100 OR `L2` < 50", sizeof ("`L1` > 100 OR `L2` < 50"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr;firstname;job", sizeof ("mbr;firstname;job"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` = `id`", sizeof ("`mbr` = `id`"), expr); //theta join attribute
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L2;L3;L4", sizeof ("L1;L2;L3;L4"), expr); //projection attribute
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "L1;L4;L3;L2;L5", sizeof ("L1;L4;L3;L2;L5"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "s", sizeof ("s"), expr);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`L1` > 100 OR `L2` < 50", sizeof ("`L1` > 100 OR `L2` < 50"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "u", sizeof ("u"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "p", sizeof ("p"), expr);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr;firstname;job", sizeof ("mbr;firstname;job"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "t", sizeof ("t"), expr);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "`mbr` = `id`", sizeof ("`mbr` = `id`"), expr); //theta join attribute
 
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "mbr;job", sizeof ("mbr;job"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"), expr);
-    Ak_InsertAtEnd_L3(TYPE_CONDITION, "mbr;job", sizeof ("mbr;job"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "student", sizeof ("student"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "mbr;job", sizeof ("mbr;job"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERAND, "profesor", sizeof ("profesor"), expr);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "n", sizeof ("n"), expr);
+    AK_InsertAtEnd_L3(TYPE_CONDITION, "mbr;job", sizeof ("mbr;job"), expr);
 
     AK_print_rel_eq_assoc(AK_rel_eq_assoc(expr));
 
     printf("\n------------------> TEST_ASSOCIATIVITY_FUNCTIONS <------------------\n\n");
     printf("...");
 
-    Ak_DeleteAll_L3(&expr);
+    AK_DeleteAll_L3(&expr);
 
     AK_EPI;
     

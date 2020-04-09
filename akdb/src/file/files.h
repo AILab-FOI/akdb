@@ -28,7 +28,7 @@
 int AK_initialize_new_segment(char *name, int type, AK_header *header);
 int AK_initialize_new_index_segment(char *name, char *table_id,int attr_id , AK_header *header);
 
-TestResult Ak_files_test();
+TestResult AK_files_test();
 
 #endif
 

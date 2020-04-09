@@ -136,11 +136,11 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
                                                         memcpy(data1, &(tbl1_temp_block->block->data[address]), size);
                                                         data1[size] = '\0';
 														
-                                                        Ak_Insert_New_Element(type, data1, dstTable, tbl1_temp_block->block->header[n].att_name, row_root);
+                                                        AK_Insert_New_Element(type, data1, dstTable, tbl1_temp_block->block->header[n].att_name, row_root);
                                                     }
-                                                    Ak_insert_row(row_root);
+                                                    AK_insert_row(row_root);
                                                     
-                        						    Ak_DeleteAll_L3(&row_root);
+                        						    AK_DeleteAll_L3(&row_root);
                                                     thesame=0;
                                                 }
                                             }
@@ -155,7 +155,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
 
         AK_free(src_addr1);
         AK_free(src_addr2);
-	Ak_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
+	AK_dbg_messg(LOW, REL_OP, "INTERSECT_TEST_SUCCESS\n\n");
 		
 	AK_free(row_root);
 	AK_EPI;
@@ -163,7 +163,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
     } 
 	else 
 	{
-        Ak_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
+        AK_dbg_messg(LOW, REL_OP, "\nAK_intersect: Table/s doesn't exist!");
         AK_free(src_addr1);
         AK_free(src_addr2);
 		
@@ -178,7 +178,7 @@ int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable) {
  * @brief  Function for intersect operator testing
  * @return No return value
  */
-TestResult Ak_op_intersect_test() {
+TestResult AK_op_intersect_test() {
     AK_PRO;
     char *sys_table = "AK_relation";
     char *destTable = "intersect_test";

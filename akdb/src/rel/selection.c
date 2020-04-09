@@ -41,33 +41,33 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
     //should be moved to a test
 
     /*struct list_node *expr1 = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&expr1);
+    AK_Init_L3(&expr1);
 
     char *destTable = "selection_test1";
     int num = 2005;
     strcpy(expr1->table,destTable);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr1);
-    Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr1);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr1);
-    Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr1);
-    Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr1);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr1);
-    Ak_InsertAtEnd_L3(TYPE_OPERATOR, "AND", sizeof("AND"), expr1);*/
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr1);
+    AK_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr1);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr1);
+    AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr1);
+    AK_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr1);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr1);
+    AK_InsertAtEnd_L3(TYPE_OPERATOR, "AND", sizeof("AND"), expr1);*/
 
     AK_check_redo_log_select(SELECT, expr, srcTable);
 
-    //Ak_DeleteAll_L3(&expr1);
+    //AK_DeleteAll_L3(&expr1);
 
 		int startAddress = AK_initialize_new_segment(dstTable, SEGMENT_TYPE_TABLE, t_header);
 		if (startAddress == EXIT_ERROR) {
 			AK_EPI;
 			return EXIT_ERROR;
 		}
-		Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
+		AK_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
 		table_addresses *src_addr = (table_addresses*) AK_get_table_addresses(srcTable);
 		
 		struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
-		Ak_Init_L3(&row_root);
+		AK_Init_L3(&row_root);
 		
 		int i, j, k, l, type, size, address;
 		char data[MAX_VARCHAR_LENGTH];
@@ -90,14 +90,14 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 						address = temp->block->tuple_dict[k + l].address;
 						memcpy(data, &(temp->block->data[address]), size);
 						data[size] = '\0';
-						Ak_Insert_New_Element(type, data, dstTable, t_header[l].att_name, row_root);
+						AK_Insert_New_Element(type, data, dstTable, t_header[l].att_name, row_root);
 					}
 
 					if (AK_check_if_row_satisfies_expression(row_root, expr))
-						Ak_insert_row(row_root);
+						AK_insert_row(row_root);
 
 					
-					Ak_DeleteAll_L3(&row_root);
+					AK_DeleteAll_L3(&row_root);
 				}
 			}
 		}
@@ -109,7 +109,7 @@ int AK_selection(char *srcTable, char *dstTable, struct list_node *expr) {
 		AK_print_table(dstTable);
 	
 
-	Ak_dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
+	AK_dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
@@ -128,23 +128,23 @@ TestResult AK_op_selection_test() { // test 31
 	int failed = 0;
 
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof (struct list_node));
-	Ak_Init_L3(&expr);	
+	AK_Init_L3(&expr);	
 	char *srcTable = "student";
 
 	char *destTable = "selection_test1";
 	int num = 2005;
 	strcpy(expr->table,destTable);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
-	Ak_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr);
-	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-	Ak_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
-	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "AND", sizeof("AND"), expr);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
+	AK_InsertAtEnd_L3(TYPE_INT, &num, sizeof (int), expr);
+	AK_InsertAtEnd_L3(TYPE_OPERATOR, ">", sizeof (">"), expr);
+	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+	AK_InsertAtEnd_L3(TYPE_VARCHAR, "Robert", sizeof ("Robert"), expr);
+	AK_InsertAtEnd_L3(TYPE_OPERATOR, "=", sizeof ("="), expr);
+	AK_InsertAtEnd_L3(TYPE_OPERATOR, "AND", sizeof("AND"), expr);
 	printf("\nQUERY: SELECT * FROM student WHERE year > 2005 AND firstname = 'Robert';\n\n");
 	int sel1 = AK_selection(srcTable, destTable, expr);
 	
-	Ak_DeleteAll_L3(&expr);
+	AK_DeleteAll_L3(&expr);
 
 	int num_rows1;
 	int num_rows2;
@@ -180,13 +180,13 @@ TestResult AK_op_selection_test() { // test 31
 	strcpy(expr->table,destTable2);
 	int a = 2000;
     	int b = 2006;
-    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
-    	Ak_InsertAtEnd_L3(TYPE_INT, &a, sizeof (int), expr);
-    	Ak_InsertAtEnd_L3(TYPE_INT, &b, sizeof (int), expr);
-    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "BETWEEN", sizeof ("BETWEEN"), expr);
+    	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "year", sizeof ("year"), expr);
+    	AK_InsertAtEnd_L3(TYPE_INT, &a, sizeof (int), expr);
+    	AK_InsertAtEnd_L3(TYPE_INT, &b, sizeof (int), expr);
+    	AK_InsertAtEnd_L3(TYPE_OPERATOR, "BETWEEN", sizeof ("BETWEEN"), expr);
     	printf("\nQUERY: SELECT * FROM student WHERE year BETWEEN 2000 AND 2006';\n\n");
     	int sel2 = AK_selection(srcTable, destTable2, expr);
-    	Ak_DeleteAll_L3(&expr);
+    	AK_DeleteAll_L3(&expr);
 
 	int mbr2;
 	if (sel2 == EXIT_ERROR) {
@@ -245,7 +245,7 @@ TestResult AK_op_selection_test_pattern() { //test 32
 	int failed = 0;	
 
 	struct list_node *expr = (struct list_node *) AK_malloc(sizeof(struct list_node));
-	Ak_Init_L3(&expr);
+	AK_Init_L3(&expr);
 	
 	char *srcTable = "student";
 	char *destTable3 = "selection_test3";
@@ -255,12 +255,12 @@ TestResult AK_op_selection_test_pattern() { //test 32
 
     	strcpy(expr->table,destTable3);
     	char expression []= "%in%";
-    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    	Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression, sizeof (char), expr);
-    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
+    	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    	AK_InsertAtEnd_L3(TYPE_VARCHAR, &expression, sizeof (char), expr);
+    	AK_InsertAtEnd_L3(TYPE_OPERATOR, "LIKE", sizeof ("LIKE"), expr);
     	printf("\nQUERY: SELECT * FROM student WHERE firstname Like .*in.*;\n\n");
 	int sel3 = AK_selection(srcTable, destTable3, expr);
-	Ak_DeleteAll_L3(&expr);
+	AK_DeleteAll_L3(&expr);
 
 	int mbr;
 	int num_rows;
@@ -302,12 +302,12 @@ TestResult AK_op_selection_test_pattern() { //test 32
 
     	strcpy(expr->table,destTable4);
     	char expression2 []= "%dino%";
-    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    	Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression2, sizeof (char), expr);
-    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "ILIKE", sizeof ("ILIKE"), expr);
+    	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    	AK_InsertAtEnd_L3(TYPE_VARCHAR, &expression2, sizeof (char), expr);
+    	AK_InsertAtEnd_L3(TYPE_OPERATOR, "ILIKE", sizeof ("ILIKE"), expr);
     	printf("\nQUERY: SELECT * FROM student WHERE firstname ILIKE .*dino.*;\n\n");
 	int sel4 = AK_selection(srcTable, destTable4, expr);
-	Ak_DeleteAll_L3(&expr);
+	AK_DeleteAll_L3(&expr);
 
 	if (sel4 == EXIT_ERROR) {
 		printf("\n Selection pattern match test 2 failed.\n");
@@ -336,12 +336,12 @@ TestResult AK_op_selection_test_pattern() { //test 32
 
     	strcpy(expr->table,destTable5);
     	char expression3 []= "%(d|i)%";
-    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-   	Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression3, sizeof (char), expr);
-    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "SIMILAR TO", sizeof ("SIMILAR TO"), expr);
+    	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+   	AK_InsertAtEnd_L3(TYPE_VARCHAR, &expression3, sizeof (char), expr);
+    	AK_InsertAtEnd_L3(TYPE_OPERATOR, "SIMILAR TO", sizeof ("SIMILAR TO"), expr);
     	printf("\nQUERY: SELECT * FROM student WHERE firstname SIMILAR TO .*(d|i).*;\n\n");
 	int sel5 = AK_selection(srcTable, destTable5, expr);
-	Ak_DeleteAll_L3(&expr);
+	AK_DeleteAll_L3(&expr);
 
 	if (sel5 == EXIT_ERROR) {
 		printf("\n Selection pattern match test 3 failed.\n");
@@ -381,12 +381,12 @@ TestResult AK_op_selection_test_pattern() { //test 32
 
     	strcpy(expr->table,destTable6);
     	char expression4 []= "^D";
-    	Ak_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
-    	Ak_InsertAtEnd_L3(TYPE_VARCHAR, &expression4, sizeof (char), expr);
-    	Ak_InsertAtEnd_L3(TYPE_OPERATOR, "~", sizeof ("~"), expr);
+    	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname", sizeof ("firstname"), expr);
+    	AK_InsertAtEnd_L3(TYPE_VARCHAR, &expression4, sizeof (char), expr);
+    	AK_InsertAtEnd_L3(TYPE_OPERATOR, "~", sizeof ("~"), expr);
     	printf("\nQUERY: SELECT * FROM student WHERE firstname ~ '^D' ;\n\n");
     	int sel6 = AK_selection(srcTable, destTable6, expr);
-    	Ak_DeleteAll_L3(&expr);
+    	AK_DeleteAll_L3(&expr);
 
 	if (sel6 == EXIT_ERROR) {
 		printf("\n Selection pattern match test 4 failed.\n");
@@ -449,11 +449,11 @@ int AK_selection_op_rename(char *srcTable, char *dstTable, struct list_node *exp
 			AK_EPI;
 			return EXIT_ERROR;
 		}
-		Ak_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
+		AK_dbg_messg(LOW, REL_OP, "\nTABLE %s CREATED from %s!\n", dstTable, srcTable);
 		table_addresses *src_addr = (table_addresses*) AK_get_table_addresses(srcTable);
 		
 		struct list_node * row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
-		Ak_Init_L3(&row_root);
+		AK_Init_L3(&row_root);
 		
 		int i, j, k, l, type, size, address;
 		char data[MAX_VARCHAR_LENGTH];
@@ -476,13 +476,13 @@ int AK_selection_op_rename(char *srcTable, char *dstTable, struct list_node *exp
 						address = temp->block->tuple_dict[k + l].address;
 						memcpy(data, &(temp->block->data[address]), size);
 						data[size] = '\0';
-						Ak_Insert_New_Element(type, data, dstTable, t_header[l].att_name, row_root);
+						AK_Insert_New_Element(type, data, dstTable, t_header[l].att_name, row_root);
 					}
 
-						Ak_insert_row(row_root);
+						AK_insert_row(row_root);
 
 					
-					Ak_DeleteAll_L3(&row_root);
+					AK_DeleteAll_L3(&row_root);
 				}
 			}
 		}
@@ -494,7 +494,7 @@ int AK_selection_op_rename(char *srcTable, char *dstTable, struct list_node *exp
 		AK_print_table(dstTable);
 	
 
-	Ak_dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
+	AK_dbg_messg(LOW, REL_OP, "SELECTION_TEST_SUCCESS\n\n");
 	AK_EPI;
 	return EXIT_SUCCESS;
 }

@@ -38,7 +38,7 @@ int AK_add_to_redolog(int command, struct list_node *row_root){
         n = 0;
     }
 
-    struct list_node * el = (struct list_node *) Ak_First_L2(row_root);
+    struct list_node * el = (struct list_node *) AK_First_L2(row_root);
     
     char* record;
     if((record = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
@@ -128,7 +128,7 @@ int AK_add_to_redolog_select(int command, struct list_node *condition, char *src
         n = 0;
     }
 
-    /*struct list_node * el_attr = (struct list_node *) Ak_First_L2(attributes);
+    /*struct list_node * el_attr = (struct list_node *) AK_First_L2(attributes);
 
     char* record;
     if((record = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
@@ -150,7 +150,7 @@ int AK_add_to_redolog_select(int command, struct list_node *condition, char *src
         el_attr = el_attr->next;
     }*/
 
-    struct list_node * el_cond = (struct list_node *) Ak_First_L2(condition);
+    struct list_node * el_cond = (struct list_node *) AK_First_L2(condition);
 
     char* record_cond;
     if((record_cond = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){
@@ -215,7 +215,7 @@ int AK_add_to_redolog_select(int command, struct list_node *condition, char *src
 int AK_check_redo_log_select(int command, struct list_node *condition, char *srcTable){
     AK_PRO;
 
-    struct list_node * el_cond = (struct list_node *) Ak_First_L2(condition);
+    struct list_node * el_cond = (struct list_node *) AK_First_L2(condition);
 
     char* record_cond;
     if((record_cond = (char*) AK_calloc(MAX_VARCHAR_LENGTH, sizeof(char))) == NULL){

@@ -26,6 +26,6 @@
 #include "../sql/drop.h"
 
 int AK_difference(char *srcTable1, char *srcTable2, char *dstTable);
-TestResult Ak_op_difference_test();
+TestResult AK_op_difference_test();
 
 #endif

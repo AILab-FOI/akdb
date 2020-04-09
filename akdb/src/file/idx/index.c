@@ -31,7 +31,7 @@
  * @param list_ad *L linked list head
  * @return No return value
  * */
-void Ak_InitializelistAd(list_ad *L) {
+void AK_InitializelistAd(list_ad *L) {
     AK_PRO;
     L->next = 0;
     AK_EPI;
@@ -43,7 +43,7 @@ void Ak_InitializelistAd(list_ad *L) {
  * @param list_ad *L linked list head
  * @return Address of first node
  * */
-element_ad Ak_Get_First_elementAd(list_ad *L) {
+element_ad AK_Get_First_elementAd(list_ad *L) {
     AK_PRO;
     element_ad ret;
     ret = (element_ad) L->next;
@@ -57,7 +57,7 @@ element_ad Ak_Get_First_elementAd(list_ad *L) {
  * @param list_ad *L linked list head
  * @return Address of last node or 0 if list is empty
  * */
-element_ad Ak_Get_Last_elementAd(list_ad *L) {
+element_ad AK_Get_Last_elementAd(list_ad *L) {
     list_ad *Currentelement_op;
     AK_PRO;
     Currentelement_op = L;
@@ -80,7 +80,7 @@ element_ad Ak_Get_Last_elementAd(list_ad *L) {
  * @param Currentelement_op address of current node
  * @return Address of next node or 0 if current node is last in list
  * */
-element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op) {
+element_ad AK_Get_Next_elementAd(element_ad Currentelement_op) {
     AK_PRO;
     if (Currentelement_op->next == 0) {
         AK_EPI;
@@ -101,7 +101,7 @@ element_ad Ak_Get_Next_elementAd(element_ad Currentelement_op) {
  * @param L previous element
  * @return Address of previous node or 0 if the current node is the head or the list is empty
  * */
-element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L) {
+element_ad AK_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L) {
     element_ad Previouselement_op;
     AK_PRO;
     Previouselement_op = L;
@@ -124,7 +124,7 @@ element_ad Ak_Get_Previous_elementAd(element_ad Currentelement_op, element_ad L)
  * @param *L linked list head
  * @return Integer value of current node's order in the list
  * */
-int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
+int AK_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
     list_ad *Currentelement_op;
     int i = 0;
     AK_PRO;
@@ -144,9 +144,9 @@ int Ak_Get_Position_Of_elementAd(element_ad Searchedelement_op, list_ad *L) {
  * @param list_ad *L - list head
  * @return No return value
  * */
-void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
+void AK_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
     AK_PRO;
-    element_ad Previouselement_op = (element_ad) Ak_Get_Previous_elementAd(Deletedelement_op, L);
+    element_ad Previouselement_op = (element_ad) AK_Get_Previous_elementAd(Deletedelement_op, L);
     if (Previouselement_op != 0) {
         Previouselement_op->next = Deletedelement_op->next;
     } else {
@@ -162,7 +162,7 @@ void Ak_Delete_elementAd(element_ad Deletedelement_op, list_ad *L) {
  * @param L list head
  * @return No return value
  * */
-void Ak_Delete_All_elementsAd(list_ad *L) {
+void AK_Delete_All_elementsAd(list_ad *L) {
     AK_PRO;
     list_ad *Currentelement_op = L;
     list_ad *Deletedelement_op = (list_ad *) L->next;
@@ -185,7 +185,7 @@ void Ak_Delete_All_elementsAd(list_ad *L) {
  * @param elementBefore address of the node after which the new node will be inserted
  * @return No return value
  * */
-void Ak_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore) {
+void AK_Insert_NewelementAd(int addBlock, int indexTd, char *attName, element_ad elementBefore) {
     AK_PRO;
     list_structure_ad* newelement_op = (list_structure_ad*)AK_malloc(sizeof (list_structure_ad));
     newelement_op->add.addBlock = addBlock;
@@ -301,7 +301,7 @@ struct list_node *AK_get_index_tuple(int row, int column, char *indexTblName) {
     table_addresses *addresses = (table_addresses*) AK_get_index_addresses(indexTblName);
 
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&row_root);
+    AK_Init_L3(&row_root);
 
     int i, j, k, counter;
     char data[ MAX_VARCHAR_LENGTH ];
@@ -321,10 +321,10 @@ struct list_node *AK_get_index_tuple(int row, int column, char *indexTblName) {
                     int address = temp->block->tuple_dict[ k + column ].address;
                     memcpy(data, &temp->block->data[address], size);
                     data[ size ] = '\0';
-                    Ak_InsertAtEnd_L3(type, data, size, row_root);
+                    AK_InsertAtEnd_L3(type, data, size, row_root);
                     AK_free(addresses);
                     AK_EPI;
-                    return (struct list_node *) Ak_First_L2(row_root);
+                    return (struct list_node *) AK_First_L2(row_root);
                 }
             }
         }
@@ -494,7 +494,7 @@ void AK_print_index_table(char *indexTblName) {
             //END HEADER
 
             struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-            Ak_Init_L3(&row_root);
+            AK_Init_L3(&row_root);
             int type, size, address,last_addres_value;
             i = 0;
 
@@ -537,7 +537,7 @@ void AK_print_index_table(char *indexTblName) {
                                 size = temp->block->tuple_dict[k + l].size;
                                 address = temp->block->tuple_dict[k + l].address;
 
-                                Ak_InsertAtEnd_L3(type, &temp->block->data[address], size, row_root);
+                                AK_InsertAtEnd_L3(type, &temp->block->data[address], size, row_root);
                             }
 
                             AK_print_row(len, row_root);
@@ -574,69 +574,69 @@ void AK_index_test() {
     add_root = (list_ad *) AK_malloc(sizeof (list_ad));
 
 
-    Ak_InitializelistAd(add_root);
+    AK_InitializelistAd(add_root);
 
-    Ak_Insert_NewelementAd(1, 1, "Alen", add_root);
+    AK_Insert_NewelementAd(1, 1, "Alen", add_root);
     element_ad some_element;
 
-    some_element = Ak_Get_First_elementAd(add_root);
-    Ak_Insert_NewelementAd(2, 2, "Markus", some_element);
+    some_element = AK_Get_First_elementAd(add_root);
+    AK_Insert_NewelementAd(2, 2, "Markus", some_element);
 
-    element_ad some_elementt = Ak_Get_Last_elementAd(add_root);
-    Ak_Insert_NewelementAd(3, 3, "Mirko", some_elementt);
+    element_ad some_elementt = AK_Get_Last_elementAd(add_root);
+    AK_Insert_NewelementAd(3, 3, "Mirko", some_elementt);
 
-    element_ad some_elementtt = Ak_Get_Last_elementAd(add_root);
-    Ak_Insert_NewelementAd(4, 4, "Sandra", some_elementtt);
+    element_ad some_elementtt = AK_Get_Last_elementAd(add_root);
+    AK_Insert_NewelementAd(4, 4, "Sandra", some_elementtt);
 
-    element_ad some_elementttt = Ak_Get_Last_elementAd(add_root);
-    Ak_Insert_NewelementAd(5, 5, "Tonimir", some_elementttt);
+    element_ad some_elementttt = AK_Get_Last_elementAd(add_root);
+    AK_Insert_NewelementAd(5, 5, "Tonimir", some_elementttt);
 
 
     printf("\n********** Printing all values **********\n\n");
-    element_ad ele = Ak_Get_First_elementAd(add_root);
+    element_ad ele = AK_Get_First_elementAd(add_root);
     while (ele != 0)
     {
         printf("Value : %s\n", ele->attName);
-        ele = Ak_Get_Next_elementAd(ele);
+        ele = AK_Get_Next_elementAd(ele);
     }
 
     printf("\n********** Printing position values **********\n\n");
-     element_ad last = Ak_Get_Last_elementAd(add_root);   
+     element_ad last = AK_Get_Last_elementAd(add_root);   
      printf("Last element in list: %s \n",last->attName);
 
-     element_ad previous = Ak_Get_Previous_elementAd(last,add_root);
+     element_ad previous = AK_Get_Previous_elementAd(last,add_root);
      printf("Previous element from list: %s \n",previous->attName);
 
-     element_ad first = Ak_Get_First_elementAd(add_root);
+     element_ad first = AK_Get_First_elementAd(add_root);
      printf("First element in list: %s \n",first->attName);
 
-     element_ad next = Ak_Get_Next_elementAd(first);
+     element_ad next = AK_Get_Next_elementAd(first);
      printf("Next element in list after '%s' is : %s \n",first->attName,next->attName);
 
-     printf("Position of element '%s' above is : %i \n",next->attName,Ak_Get_Position_Of_elementAd(next, add_root));
+     printf("Position of element '%s' above is : %i \n",next->attName,AK_Get_Position_Of_elementAd(next, add_root));
 
     printf("\n********** Deleting values **********\n\n");
 
     printf("Deleting element: %s \n",previous->attName);
-    Ak_Delete_elementAd(previous, add_root) ;
-    element_ad elem = Ak_Get_First_elementAd(add_root);
+    AK_Delete_elementAd(previous, add_root) ;
+    element_ad elem = AK_Get_First_elementAd(add_root);
 
     printf("\n********** Printing values after delete**********\n\n");
 
         while (elem != 0)
         {
             printf("Value : %s\n", elem->attName);
-            elem = Ak_Get_Next_elementAd(elem);
+            elem = AK_Get_Next_elementAd(elem);
         }
 
     printf("\n********** Printing values after deleting all values**********\n\n");
     //Error: incomplete type is not allowed
-    void Ak_Delete_All_elementsAd(add_root) ;
-    element_ad eleme = Ak_Get_First_elementAd(add_root);
+    void AK_Delete_All_elementsAd(add_root) ;
+    element_ad eleme = AK_Get_First_elementAd(add_root);
     while (elem != 0)
         {
             printf("Value : %s\n", eleme->attName);
-            eleme = Ak_Get_Next_elementAd(eleme);
+            eleme = AK_Get_Next_elementAd(eleme);
 
         }
 
@@ -649,9 +649,9 @@ void AK_index_test() {
     char *notExistingIndexName = "assistantincome_bmapIndex";
 
     struct list_node *att_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
-    Ak_Init_L3(&att_root);
+    AK_Init_L3(&att_root);
     //Error: argument of type "const char *" is incompatible with parameter of type "void *"
-    Ak_Insert_New_Element(TYPE_VARCHAR, "firstname", tblName, "firstname", att_root);
+    AK_Insert_New_Element(TYPE_VARCHAR, "firstname", tblName, "firstname", att_root);
  
     AK_create_Index_Table(tblName, att_root);
 
