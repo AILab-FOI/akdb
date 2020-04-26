@@ -39,7 +39,12 @@ struct drop_arguments {
 
 typedef struct drop_arguments AK_drop_arguments;
 
-
+/**
+ * @author Unknown, Jurica Hlevnjak, updated by Tomislav Ilisevic, Maja Vračan
+ * @brief Function for DROP table, index, view, sequence, trigger, function, user, group and constraint.
+ * @param type drop type
+ * @param drop_arguments arguments of DROP command
+ */
 int AK_drop(int type, AK_drop_arguments *drop_arguments);
 TestResult AK_drop_test();
 int AK_if_exist(char *tblName, char *sys_table);

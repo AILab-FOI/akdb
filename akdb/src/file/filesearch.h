@@ -67,8 +67,29 @@ typedef struct {
 } search_result;
 
 
+/**
+  * @author Miroslav Policki
+  
+  * @brief Function that searches through unsorted values of multiple attributes in a segment.
+ 	   Only tuples that are equal on all given attribute values are returned (A == 1 AND B == 7 AND ...).
+	   SEARCH_RANGE is inclusive. Only one value (or range) per attribute allowed - use search_params.pData_lower for SEARCH_PARTICULAR.
+ 	   Supported types for SEARCH_RANGE: TYPE_INT, TYPE_FLOAT, TYPE_NUMBER, TYPE_DATE, TYPE_DATETIME, TYPE_TIME.
+           Do not provide the wrong data types in the array of search parameters. There is no way to test for that and it could cause a memory access  	violation.
+  * @param szRelation relation name
+  * @param aspParams array of search parameters
+  * @param iNum_search_params number of search parameters
+  * @return search_result structure defined in filesearch.h. Use AK_deallocate_search_result to deallocate.
+ */
 
 search_result AK_search_unsorted(char *szRelation, search_params *aspParams, int iNum_search_params);
+
+/**
+  * @author Miroslav Policki
+  * @brief Function that deallocates memory used by the search result returned by AK_search_unsorted.
+  * @param srResult search result
+  * @return No return value
+ */
+
 void AK_deallocate_search_result(search_result srResult);
 TestResult AK_filesearch_test();
 

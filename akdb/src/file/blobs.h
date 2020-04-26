@@ -41,25 +41,74 @@ typedef struct _file_metadata *AK_File_Metadata;
 AK_File_Metadata AK_File_Metadata_malloc();
 
 /* Helper functions */
+/**
+ * @author Samuel Picek
+ * @brief Function that creates new folder
+ * @return returns 0 for true and 1 for false
+ */
 int AK_mkdir(const char *path);
 int AK_mkdir(const char *path);
 int AK_copy(const char *from, const char *to);
+
+/**
+ * @author Samuel Picek
+ * @brief Function for AK_concatinating 2 strings
+ * @return returns new string
+ */
 char *AK_concat(char *s1, char *s2);
 char *AK_clear_all_newline(char *str);
+
+/**
+ * @author Samuel Picek
+ * @brief Function that splits a path from filename
+ * @return void
+ */
 void AK_split_path_file(char **p, char **f, char *pf);
 
-
+/**
+ * @author Samuel Picek
+ * @brief Function that generates GUID
+ * @return returns globaly universal identifier based on kernel implementation
+ */
+char 
 char *AK_GUID();
 
+/**
+ * @author Samuel Picek
+ * @brief Function that checks if folder blobs already exists
+ * @return returns 0 for true and 1 for false
+ */
 int AK_folder_exists(char *foldername);
+
+/**
+ * @author Samuel Picek
+ * @brief Function that checks if folder blobs exists
+ * @return OID (object ID)
+ */
 int AK_check_folder_blobs();
 
 int AK_write_metadata(char *oid, AK_File_Metadata meta);
 AK_File_Metadata AK_read_metadata(char *oid);
 
-
+/**
+ * @author Samuel Picek
+ * @brief Function that imports  large objects to database
+ * @return OID (object ID)
+ */
 char *AK_lo_import(char *filepath);
+
+/**
+ * @author Samuel Picek
+ * @brief Function that retrieves large objects
+ * @return returns 0 for true and 1 for false
+ */
 int AK_lo_export(char *oid, char *filepath);
+
+/**
+ * @author Samuel Picek
+ * @brief Function that deletes large objects
+ * @return OID (object ID)
+ */
 int AK_lo_unlink(char *oid);
 
 TestResult AK_lo_test();

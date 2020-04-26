@@ -38,10 +38,36 @@ struct cost_eval_t {
 
 typedef struct cost_eval_t cost_eval;
 
-
+/**
+ * @author Dino Laktašić
+ * @brief Function for Struct cost_eval comparison 
+ * @param *a first value
+ * @param *b second value
+ * @return returns result of comparison
+ */
 int AK_compare(const void *a, const void *b) ;
+
+/**
+ * @author Dino Laktašić.
+ * @brief Main function for generation of RA expresion according to associativity equivalence rules 
+ * @param *list_rel_eq RA expresion as the struct list_node
+ * @return optimised RA expresion as the struct list_node
+ */
 struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) ;
+
+/**
+ * @author Dino Laktašić.
+ * @brief Function for printing RA expresion struct list_node
+ * @param *list_rel_eq RA expresion as the struct list_node
+ * @return optimised RA expresion as the struct list_node
+ */
 void AK_print_rel_eq_assoc(struct list_node *list_rel_eq) ;
+
+/**
+ * @author Dino Laktašić.
+ * @brief Function for testing relational equivalences regarding associativity
+ * @return No return value
+ */
 TestResult AK_rel_eq_assoc_test();
 
 #endif

@@ -40,12 +40,50 @@
 #define DATA_TUPLE_SIZE 500
 
 
-
+/**
+ * @author Unknown
+ * @brief Function that returns the total number of headers in the block
+ * @return number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
+ */
 int AK_get_total_headers(AK_block *iBlock);
+
+/**
+ * @author Unknown
+ * @brief Function that returns the number of header in the block which to sort
+ * @return number of attribute in header (0 - MAX_ATTRIBUTES). USE in tuple_dict[num]...
+ */
 int AK_get_header_number(AK_block *iBlock, char *attribute_name);
+
+/**
+ * @author Unknown
+ * @brief Function that returns tuples number in block
+ * @return tuples number in block
+ */
 int AK_get_num_of_tuples(AK_block *iBlock);
+
+/**
+ * @author Tomislav Bobinac, updated by Filip Žmuk
+ * @todo Make it to suport multiple sort atributes and ASC|DESC ordering
+ * @brief Function that sorts a segment
+ * @return No return value.
+ */
 int AK_sort_segment(char *srcTable, char *destTable, struct list_node* attributes);
+
+/**
+ * @author Unknown
+ * @brief Function that resets block
+ * @param block block to be resetted
+ * @return No return value
+ */
 void AK_reset_block(AK_block * block);
+
+/**
+  * @author Bakoš Nikola
+  * @version v1.0
+  * @brief Function that sorts the given block
+  * @param iBlock block to be sorted
+  * @return No return value
+ */
 void AK_block_sort(AK_block * iBlock, char * atr_name);
 TestResult AK_filesort_test();
 

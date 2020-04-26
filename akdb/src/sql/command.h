@@ -33,6 +33,13 @@ struct AK_command_struct {
 
 typedef struct AK_command_struct command;
 
+/** 
+ * @author Mario Kolmacic updated by Ivan Pusic and Tomislav Ilisevic
+ * @brief Function for executing given commands (SELECT, UPDATE, DELETE AND INSERT)
+ * @param commands Commands array to execute
+ * @param commandNum Number of commands in array
+ * @return ERROR_EXIT only if command can't be executed returns EXIT_ERROR
+ */
 int AK_command(command * komande, int brojkomandi);
 TestResult AK_test_command();
 

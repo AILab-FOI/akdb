@@ -29,8 +29,25 @@
 #include "../file/table.h"
 #include "drop.h"
 
+/**
+ * @author Filip Žmuk
+ * @brief Function creates headers based on entered columns in SQL command.
+ * If no columns are entered it will use table header.
+ * @param size pointer to integer in which size of header will be saved
+ * @param tblName table in which rows will be inserted
+ * @param columns list of columns in SQL command
+ * @return header for values to be inserted or EXIT_ERROR
+ */
 AK_header *AK_get_insert_header(int *size, char *tblName, struct list_node *columns);
 
+/**
+ * @author Filip Žmuk
+ * @brief Function that implements SQL insert command
+ * @param tableName table in which rows will be inserted
+ * @param columns list of columns
+ * @param values values to be inserted
+ * @return EXIT_SUCCESS or EXIT_ERROR
+ */
 int AK_insert(char* tableName, struct list_node *columns, struct list_node *values);
 
 #ifndef SWIG

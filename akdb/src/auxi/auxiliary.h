@@ -149,44 +149,273 @@ typedef struct {
 #endif
 } AK_synchronization_info;
 
+/**
+ * @author Dino Laktašić.
+ * @brief Function that gets the number of digits for any given number
+ * @param number number to evaluate
+ * @param int base mathematic base (e.g. 2, 10 etc.)
+ * @return the number of digits for the given number
+ */
 int AK_chars_num_from_number(int number, int base);
+
+/**
+ * @author Miroslav Policki
+ * @brief Function returns the size in bytes for the provided database type
+ * @param iDB_type database data type (defined in constants.h)
+ * @param szVarchar if iDB_type == TYPE_VARCHAR, pointer to the string, otherwise unused
+ * @return size of provided data type in bytes if the provided data type is valid, else return 0
+ */
 size_t AK_type_size(int iDB_type, char *szVarchar);
+
+/**
+ * @author Dino Laktašić
+ * @brief Function compares two Strings
+ * @param *a  pointer of a value to compare
+ * @param *b pointer of a value to compare
+ * @return result of the comparison in line with strcmp function
+ */
 int AK_strcmp(const void *a, const void *b);
+/**
+ * @author Ljiljana Pintarić
+ * @brief  Function that initializes an empty list
+ * @param L root of the list
+ * @return NO return value
+ */
 void AK_Init_L3(struct list_node **L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that fetches the first element of the list
+ * @param L root of the list
+ * @return first element of the list
+ */
 struct list_node *AK_First_L2(struct list_node *L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that fetches the last element of the list
+ * @param L  root of the list
+ * @return last element of the list
+ */
 struct list_node *AK_End_L2(struct list_node *L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that fetches the next element of the list
+ * @param current  current element of the list
+ * @return next element of the list
+ */
 struct list_node *AK_Next_L2(struct list_node *current);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that fetches the previous element of the list
+ * @param current current element of the list
+ * @param L root of the list
+ * @return previous element of the list
+ */
+
 struct list_node *AK_Previous_L2(struct list_node *current, struct list_node *L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that tests if the list is empty
+ * @param L root of the list
+ * @return 1 if the list is empty, otherwise returns 0
+ */
 unsigned int AK_IsEmpty_L2(struct list_node *L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that inserts a new element before the current element of the list.
+ * @param data new data
+ * @param current current element of the list
+ * @param L root of the list
+ * @return No return value
+ */
 void AK_InsertBefore_L2(int type, char* data, int size, struct list_node **current, struct list_node **L);
+
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that inserts a new element after the current element of the list
+ * @param data new data
+ * @param current current element of the list
+ * @param L root of the list
+ * @return No return value.
+ */
 void AK_InsertAfter_L2(int type, char* data, int size, struct list_node **current,  struct list_node **L);
+
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that inserts a new element at the beginning of the list. It uses function called: AK_InsertBefore_L
+ * @param data new data
+ * @param L root of the list
+ * @return No return value
+ */
+
 void AK_InsertAtBegin_L3(int type, char* data, int size, struct list_node *L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that inserts a new element at the end of the list. It uses a function called: AK_InsertAfter_L2
+ * @param data new data
+ * @param L root of the list
+ * @return No return value.
+ */
 void AK_InsertAtEnd_L3(int type, char* data, int size, struct list_node *L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that deletes the current element of the list
+ * @param current current element of the list
+ * @param L root of the list
+ * @retrun No return value
+ */
 void AK_Delete_L3(struct list_node **current, struct list_node **L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that empties the list
+ * @param L root of the list
+ * @return No return value
+ */
 void AK_DeleteAll_L3(struct list_node **L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that fetches the number of the elements in the list.
+ * @param L root of the list
+ * @return Size of the list
+ */
 int AK_Size_L2(struct list_node *L);
+/**
+ * @author Ljiljana Pintarić.
+ * @brief  Function that retrieves the data from the current element of the list
+ * @param current current element of the list
+ * @param L root of the list
+ * @return data from the list element
+ */
 char* AK_Retrieve_L2(struct list_node *current, struct list_node *L);
+
 //int AK_GetType_L(AK_list_elem current, AK_list *L);
 //int AK_GetSize_L(AK_list_elem current, AK_list *L);
+
+/**
+ * @author Ljiljana Pintarić
+ * @brief Function that fetches the nth element in a row
+ * @param pos position of element in a row
+ * @param row list of elements of a row in the table
+ * @return element of list of elements of a row in the table
+
+ */
 struct list_node * AK_GetNth_L2(int pos, struct list_node *row);
 
 //int AK_Get_Position_Of_Element(AK_list_elem SearchedElement, AK_list *L);
+
+/**
+ * @author Dino Laktašić.
+ * @brief  Get all permutations without repetition (currently not used, but it can be helpful)
+ * @param arr array of chars to perform permutation on
+ * @return char pointer to an array of pointers pointing to permuted char arrays
+ */
 char *AK_get_array_perms(char *arr) ;
+
+/**
+ * @author Frane Jakelić
+ * @brief Function that searches for a specific graph node by its ID
+ * @param id of the vertex that needs to be found
+ * @param graphRoot root node of the graph structure
+ * @return found graph nod or null
+ */
 AK_vertex AK_search_vertex(int id);
+
+/**
+ * @author Frane Jakelić
+ * @brief Looks for empty link for a new graph node
+ * @param graphRoot oot node of the graph structure
+ * @return empty link for a new graph node
+ */
 AK_vertex AK_search_empty_link() ;
+
+/**
+ * @author Frane Jakelić
+ * @brief Function that adds a new graph node
+ * @param id of the vertex that needs to be added
+ * @param graphRoot root node of the graph structure
+ * @return pointer to the newly created node
+ */
 AK_vertex AK_add_vertex(int id);
+
+/**
+ * @author Frane Jakelić
+ * @brief Creates an edge between two nodes
+ * @param succesorId id of a newly created edge
+ * @param succesorOf source of the newly created edge
+ * @return pointer to the newly created edge
+ */
 AK_succesor AK_add_succesor(int succesorId, int succesorOf);
+
+/**
+ * @author Frane Jakelić
+ * @brief Returns a empty link for the stack
+ * @param stackRoot root node of the selected stack
+ * @return pointer to the empty link
+ */
 AK_stack AK_search_empty_stack_link(AK_stack stackRoot);
+
+/**
+ * @author Frane Jakelić
+ * @brief Adds a entry to the stack
+ * @param id of the element that is being added to the stack
+ * @return pointer to the newly added stack node
+ */
 AK_stack AK_push_to_stack(int id);
+
+/**
+ * @author Frane Jakelić
+ * @brief Pops a entry to the stack
+ * @return pointer to the popped stack node
+ */
 AK_stack AK_pop_from_stack();
+
+/**
+ * @author Frane Jakelić
+ * @brief Finds an element in the stack
+ * @param id of the node that needs to be found in the stack
+ * @return pointer to the found stack node
+ */
 AK_stack AK_search_in_stack(int id);
 int MIN(int X, int Y);
+
+/**
+ * @author Frane Jakelić
+ * @brief Tarjan algorithm that looks for a strongly connected component inside all subgraphs; using DFS
+ * @param id of the element on which the algorithm looks for an id of a strongly connected component
+ */
 void AK_tarjan(int id);
 TestResult AK_tarjan_test();
 
+/**
+ * @author Marko Sinko
+ * @brief Initializes an AK_synchronization_info structure and returns an owned
+ *        pointer that must later be passed on to AK_destroy_critical_section.
+ * @return Initialized synchronization object
+ */
 AK_synchronization_info* AK_init_critical_section();
+
+/**
+ * @author Marko Sinko
+ * @param info Synchronization info structure
+ * @brief Destroys a synchronization object when it is no longer necessary and
+ *        frees the pointer.
+ * @return void
+ */
 void AK_destroy_critical_section(AK_synchronization_info* info);
+
+/**
+ * @author Marko Sinko
+ * @param info Synchronization info structure
+ * @brief Enters a critical section.
+ * @return void
+ */
 void AK_enter_critical_section(AK_synchronization_info* info);
+
+/**
+ * @author Marko Sinko
+ * @param info Synchronization info structure
+ * @brief Leaves a critical section
+ * @return void
+ */
 void AK_leave_critical_section(AK_synchronization_info* info);
 
 //void AK_copy_L_Ele(AK_list_elem srcElem, AK_list_elem destElem);

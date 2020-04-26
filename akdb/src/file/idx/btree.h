@@ -67,8 +67,24 @@ typedef struct{
 }root_info;
 
 
+/**
+  * @author Anđelko Spevec
+  * @brief Function that creates new btree index on integer attribute in table
+  * @param tblName - name of the table on which we are creating index
+  * @param attributes - attribute on which we are creating index
+  * @param indexName - name of the index
+ */
 int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName);
 int AK_btree_delete(char *indexName);
+
+/**
+  * @author Anđelko Spevec
+  * @brief Function that searches or deletes a value in btree index
+  * @param indexName - name of the index
+  * @param searchValue - value that we are searching in the index
+  * @param endRange - if 0 search is for 0 value, else searching in range
+  * @param toDo - if 0 we just search else we delete the element if we find it
+ */
 void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *toDo);
 int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insertBlock);
 TestResult AK_btree_test();

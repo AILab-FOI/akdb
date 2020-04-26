@@ -25,6 +25,14 @@
 #include "../file/fileio.h"
 #include "../auxi/mempro.h"
 
+/**
+ * @author Dino Laktašić
+ * @brief  Function that makes a union of two tables. 
+ * @param srcTable1 name of the first table
+ * @param srcTable2 name of the second table
+ * @param dstTable name of the new table
+ * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
+ */
 int AK_union(char *srcTable1, char *srcTable2, char *dstTable);
 TestResult AK_op_union_test();
 

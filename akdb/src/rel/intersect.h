@@ -38,6 +38,15 @@ typedef struct {
     char att_name[ MAX_ATT_NAME ];
 } intersect_attr;
 
+/**
+ * @author Dino Laktašić
+ * @brief  Function that makes a intersect of the two tables. Intersect is implemented for working with multiple sets of data, i.e. duplicate 
+          tuples can be written in same table (intersect)
+ * @param srcTable1 name of the first table
+ * @param srcTable2 name of the second table
+ * @param dstTable name of the new table
+ * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
+ */
 int AK_intersect(char *srcTable1, char *srcTable2, char *dstTable);
 TestResult AK_op_intersect_test();
 
