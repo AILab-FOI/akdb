@@ -26,9 +26,44 @@
 #include "../auxi/mempro.h"
 #include "../auxi/auxiliary.h"
 
+/**
+ * @author Davor Tomala
+ * @brief Function for printing optimized relation equivalence expression list regarding commutativity
+ * @param *list_rel_eq RA expresion as the struct list_node
+ */
 void AK_print_rel_eq_comut(struct list_node *list_rel_eq);
+
+/**
+ * @author Davor Tomala
+ * @brief Main function for generating RA expresion according to commutativity equivalence rules 
+ * @param *list_rel_eq RA expresion as the struct list_node
+ * @return optimised RA expresion as the struct list_node
+ */
 struct list_node *AK_rel_eq_comut(struct list_node *list_rel_eq);
+
+/**
+ * @author Dino Laktašić.
+ * @brief Function that checks if the selection can commute with theta-join or product
+ * <ol>
+ * <li>For each token (delimited by " ") in selection condition first check if token represents attribute/s and is subset in the given table</li>
+ * <li>If token is a subset set variable id to 1</li>
+ * <li>else set id to 0, else make no changes to variable id</li>
+ * <li>if token differs from "AND" and "OR" and id equals to 1 append current token to result condition</li>
+ * <li>else if token equals to "AND" or "OR" and id equals to 1 and there are two added tokens add "AND" or "OR" to condition string</li>
+ * <li>When exits from loop, return pointer to char array that contains new condition for a given table
+ * </ol>
+ * @param *cond condition array that contains condition data 
+ * @param *tblName name of the table
+ * @result pointer to char array that contains new condition for a given table
+ */
+
 char *AK_rel_eq_commute_with_theta_join(char *cond, char *tblName);
+
+/**
+ * @author Dino Laktašić (AK_rel_eq_commute_with_theta_join), Davor Tomala (AK_rel_eq_comut)
+ * @brief Function that tests relational equivalences regarding commutativity
+ * @return No return vlaue
+ */
 TestResult AK_rel_eq_comut_test();
 
 #endif

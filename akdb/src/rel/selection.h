@@ -28,6 +28,15 @@
 #include "../file/files.h"
 #include "../auxi/mempro.h"
 
+
+/**
+ * @author Matija Šestak.
+ * @brief  Function that which implements selection
+ * @param *srcTable source table name
+ * @param *dstTable destination table name
+ * @param *expr list with posfix notation of the logical expression
+ * @return EXIT_SUCCESS
+ */
 int AK_selection(char *srcTable, char *dstTable, struct list_node *expr);
 TestResult AK_op_selection_test();
 TestResult AK_op_selection_test_pattern();

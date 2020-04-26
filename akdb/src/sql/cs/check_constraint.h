@@ -27,8 +27,39 @@
 #include "../../rel/expression_check.h"
 #include "../../auxi/mempro.h"
 
+
+/**
+ * @author Mislav Jurinić
+ * @brief Function that for a given value, checks if it satisfies the "check" constraint.
+ * @param condition logical operator ['<', '>', '!=', ...]
+ * @param type data type [int, float, varchar, datetime, ...]
+ * @param value condition to be set
+ * @param row_data data in table
+ * @return 1 - result, 0 - failure 
+ */
 int condition_passed(char *condition, int type, void *value, void *row_data);
+
+/**
+ * @author Mislav Jurinić
+ * @brief Function that adds a new "check" constraint into the system table.
+ * @param table_name target table for "check" constraint evaluation
+ * @param constraint_name new "check" constraint name that will be visible in the system table
+ * @param attribute_name target attribute for "check" constraint evaluation
+ * @param condition logical operator ['<', '>', '!=', ...]
+ * @param type data type [int, float, varchar, datetime, ...]
+ * @param value condition to be set
+ * @return 1 - result, 0 - failure 
+ */
 int AK_set_check_constraint(char *table_name, char *constraint_name, char *attribute_name, char *condition, int type, void *value);
+
+/**
+ * @author Mislav Jurinić
+ * @brief Function that verifies if the value we want to insert satisfies the "check" constraint.
+ * @param table target table name
+ * @param attribute target attribute name
+ * @param value data we want to insert
+ * @return 1 - result, 0 - failure 
+ */
 int AK_check_constraint(char *table, char *attribute, void *value);
 TestResult AK_check_constraint_test();
 

@@ -31,6 +31,11 @@
 */
 #define ID_START_VALUE 100
 
+/**
+ * @author Saša Vukšić, updated by Mislav Čakarić, changed by Mario Peroković, now uses AK_update_row, updated by Nenad Makar
+ * @brief Function that fetches unique ID for any object, stored in a sequence
+ * @return objectID
+ */
 int AK_get_id();
 TestResult AK_id_test();
 

@@ -85,7 +85,7 @@ int AK_get_num_of_tuples(AK_block *iBlock) {
     return (i / max_header_num);
 }
 
-/*
+/**
  * @author Tomislav Bobinac, updated by Filip Žmuk
  * @todo Make it to suport multiple sort atributes and ASC|DESC ordering
  * @brief Function that sorts a segment
@@ -173,7 +173,7 @@ int AK_sort_segment(char *srcTable, char *destTable, struct list_node* attribute
 	return EXIT_SUCCESS;
 }
 
-/*
+/**
  * @author Unknown
  * @brief Function that resets block
  * @param block block to be resetted

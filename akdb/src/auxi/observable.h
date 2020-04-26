@@ -78,6 +78,12 @@ struct Observable {
 };
 typedef struct Observable AK_observable;
 
+/** 
+ * @author Ivan Pusic
+ * @brief Function that initializes the observer object
+ * 
+ * @return Pointer to new observer object
+ */
 extern AK_observer * AK_init_observer(void *observable_type, void (*observable_type_event_handler)(void*, void*, AK_ObservableType_Enum));
 extern AK_observable * AK_init_observable(void *AK_observable_type, AK_ObservableType_Enum AK_ObservableType_Def, void * AK_custom_action);
 extern TestResult AK_observable_test();

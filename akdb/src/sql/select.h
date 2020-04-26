@@ -28,5 +28,15 @@
 #include "../auxi/mempro.h"
 #include "../file/filesort.h"
 
+/**
+ * @author Filip Žmuk
+ * @brief Function that implements SELECT relational operator
+ * @param srcTable - original table that is used for selection
+ * @param destTable - table that contains the result
+ * @param condition - condition for selection
+ * @param attributes - atributes to be selected
+ * @param ordering - atributes for result sorting
+ * @return EXIT_SUCCESS if cache result in memory and print table else break 
+ */
 int AK_select(char *srcTable,char *destTable,struct list_node *attributes,struct list_node *condition, struct list_node *ordering);
 TestResult AK_select_test();

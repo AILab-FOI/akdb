@@ -40,9 +40,20 @@ typedef struct TestResult {
 	char implemented;
 } TestResult;
 
-
+/**
+ * @author Igor Rinkovec
+ * @brief Returns the amount of successful and failed tests.
+ * @param successfulAmount amount of successful tests
+ * @param failedAmount amount of failed tests
+ * @return TestResult
+ */
 TestResult TEST_result(int successfulAmount, int failedAmount);
 
+/**
+ * @author Igor Rinkovec
+ * @brief Prints a beautiful string informing the user of test results in the terminal.
+ * @return void
+ */
 void TEST_output_results(TestResult result);
 
 #endif

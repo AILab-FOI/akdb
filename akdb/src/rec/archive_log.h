@@ -27,7 +27,18 @@
 #include <fcntl.h>
 #include "../auxi/mempro.h"
 
+/**
+ * @brief  Function for making archive log.
+ * @author Dražen Bandić, update by Tomislav Turek
+ * @return No retun value
+ */
 void AK_archive_log(int sig);
+
+/**
+ * @author Dražen Bandić main logic, replaced by Tomislav Turek
+ * @brief Function that returns the current timestamp 
+ * @return char array in format day.month.year-hour:min:sec.usecu.bin
+ */
 char* AK_get_timestamp();
 
 #endif

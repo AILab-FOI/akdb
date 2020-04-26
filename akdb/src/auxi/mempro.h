@@ -175,40 +175,242 @@ typedef struct {
 
 AK_debmod_state* AK_DEBMOD_STATE;
 
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param message string to print
+* @brief Function prints debug message [private function]
+* @return void
+*/
 void AK_debmod_d(AK_debmod_state*, const char *);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param format format string like printf
+* @brief Function prints debug message [private function]
+* @return void
+*/
 void AK_debmod_dv(AK_debmod_state*, const char *, ...);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @brief Reserves ds for use [private function]
+* @return void
+*/
 void AK_debmod_enter_critical_sec(AK_debmod_state*);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @brief Makes ds available [private function]
+* @return void
+*/
 void AK_debmod_leave_critical_sec(AK_debmod_state*);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @brief Initializes debug mode structure [public function]
+* @return initialized debug mode state
+*/
 AK_debmod_state* AK_debmod_init(void);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @brief Destroy debug mode state (call before main() exit) [public function]
+* @return void
+*/
 void AK_debmod_die(AK_debmod_state*);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param size in bytes to allocate
+* @brief Allocates memory [private function]
+* @return pointer to allocated memory or NULL
+*/
 void* AK_debmod_calloc(AK_debmod_state*, uint32_t);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param memory
+* @brief Frees memory allocated with debmod_alloc [private function]
+* @return void
+*/
 void AK_debmod_free(AK_debmod_state*, void*);
 
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param num number of elements
+* @param size of element in bytes
+* @brief Allocates memory (see calloc) [public function]
+* @return allocated memory or NULL
+*/
 void* AK_calloc(size_t, size_t);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param size of memory to allocate in bytes
+* @brief Allocate memory (see malloc) [public function]
+* @return allocated memory or NULL
+*/
 void* AK_malloc(size_t);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ptr pointer to memory
+* @brief Free memory at ptr (see free) [public function]
+* @return void
+*/
 void AK_free(void*);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ptr old memory
+* @param size new size
+* @brief Reallocates memory (see realloc) [public function]
+* @return reallocated memory or NULL
+*/
 void* AK_realloc(void*, size_t);
 
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param memory
+* @brief Function write-protects memory [public function]
+* @return void
+*/
 void AK_write_protect(void*);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param memory
+* @brief Function write-unprotects memory [public function]
+* @return void
+*/
 void AK_write_unprotect(void*);
 
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @brief Marks pages dirty if there were writes between calls to this function
+* @return void
+*/
 void AK_check_for_writes(void);
 
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param func_name function name [private function]
+* @brief Returns function id for given func_name
+* @return function id
+*/
 int32_t AK_debmod_func_id(AK_debmod_state*, const char *);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param function_id
+* @brief Lookup function name [private function]
+* @return function name for given function_id
+*/
 const char * AK_debmod_func_get_name(AK_debmod_state*, int32_t);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param func_name
+* @brief Adds function name to list [private function]
+* @return id for added function name
+*/
 int32_t AK_debmod_func_add(AK_debmod_state*, const char *);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param func_id function id
+* @brief Push function id on stack [private function]
+* @return void
+*/
 void AK_debmod_fstack_push(AK_debmod_state*, int32_t);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @brief Pops function id from stack [private function]
+* @return function id popped
+*/
 int32_t AK_debmod_fstack_pop(AK_debmod_state*);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param ds debug mode state
+* @param new_function_id
+* @brief Sets current function [private function]
+* @return void
+*/
 void AK_debmod_function_current(AK_debmod_state*, int32_t);
 
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param func_name function name as in source
+* @param source_file file name where function is defined
+* @param source_line line from which this function is called
+* @brief Not for direct use (only with macro AK_PRO). Marks function prologue
+* @return void
+*/
 void AK_debmod_function_prologue(const char *, const char *, int);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param func_name function name as in source
+* @param source_file file name where function is defined
+* @param source_line line from which this function is called
+* @brief Not for direct use (only with macro AK_EPI). Marks function epilogue
+* @return void
+*/
 void AK_debmod_function_epilogue(const char *, const char *, int);
 
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param func_id calling function id
+* @brief print debmod information on function [private function]
+* @return void
+*/
 void AK_debmod_log_memory_alloc(int32_t);
 
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param func_name function name
+* @param in_recur called in recursion
+* @brief Print function dependency [private function]
+* @return void
+*/
 void AK_debmod_print_function_use(const char *, uint8_t);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @param func_name function name
+* @brief Print function dependency [public function]
+* @return void
+*/
 void AK_print_function_use(const char *);
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @brief Print function dependency for all functions [public function]
+* @return void
+*/
 void AK_print_function_uses();
+
+/**
+* @author Marin Rukavina, Mislav Bozicevic
+* @brief Print all detected functions
+* @return void
+*/
 void AK_print_active_functions();
 
 void AK_mempro_test();
