@@ -288,7 +288,7 @@ int AK_execute_commands(command* , int);
  */
 void * AK_execute_transaction(void*);
 
-**
+/**
  * @author Frane Jakelić updated by Ivan Pusic
  * @brief Function that receives all the data and gives an id to that data and starts a thread that executes the transaction 
  * @param commandArray array filled with commands that need to be secured using transactions
