@@ -505,7 +505,7 @@ int AK_check_if_row_satisfies_expression(struct list_node *row_root, struct list
     return result;
 }
 //TODO: Add description
-TestResult Ak_expression_check_test()
+TestResult AK_expression_check_test()
 {
     AK_PRO;
 

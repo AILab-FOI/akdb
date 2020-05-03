@@ -79,7 +79,7 @@ void AK_create_Index(char *tblName, char *tblNameIndex, char *attributeName, int
  * @param attribute name of attribute
  * @return list of adresses
  **/
-list_ad* AK_get_Attribute(char *indexName, char *attribute);
+list_ad* AK_get_attribute(char *indexName, char *attribute);
 
 
 void AK_create_List_Address_Test();

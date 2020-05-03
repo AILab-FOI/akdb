@@ -292,7 +292,7 @@ struct list_node *AK_rel_eq_assoc(struct list_node *list_rel_eq) {
                                     cost[next_cost].value = AK_get_num_records((list_elem_next->next)->data);
                                     strcpy(cost[next_cost].data, (list_elem_next->next)->data);
                                     qsort(cost, 3, sizeof (cost_eval), AK_compare);
-                                    temp_elem = (struct list_node *) Ak_End_L2(temp);
+                                    temp_elem = (struct list_node *) AK_End_L2(temp);
 
                                     next_cost = 1;
                                     while (next_cost < 3) {

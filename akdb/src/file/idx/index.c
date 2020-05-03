@@ -542,7 +542,7 @@ void AK_print_index_table(char *indexTblName) {
 
                             AK_print_row(len, row_root);
                             AK_print_row_spacer(len, length);
-                            Ak_DeleteAll_L3(&row_root);
+                            AK_DeleteAll_L3(&row_root);
                         }
                     }
                 }

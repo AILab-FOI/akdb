@@ -363,7 +363,7 @@
  * @param attribute name of attribute
  * @return list of adresses
  **/
- list_ad* AK_get_Attribute(char *indexName, char *attribute)
+ list_ad* AK_get_attribute(char *indexName, char *attribute)
  {
     int num_attr;
     int i, j, k;
@@ -499,7 +499,7 @@
     }
     else
     {
-        list = AK_get_Attribute(indexName, attributeValue);
+        list = AK_get_attribute(indexName, attributeValue);
     }
     AK_EPI;
     return list;
@@ -595,7 +595,7 @@
                                         
 					AK_PRO;
 
-                                        Ak_write_block(temp);
+                                        AK_write_block(temp);
                                     }
                                 }
                             }
@@ -618,9 +618,9 @@
  **/
 
 //TODO: Check the method uses and possibly delete unused code
- int AK_write_block(AK_block * block)
+/* int AK_write_block(AK_block * block)
  {
-    /*Legacy method -> not really working
+    //Legacy method -> not really working
     AK_PRO;
     //Method for updating should be implemented or reused some existing one...waiting for feedback
     if ((db = fopen(DB_FILE, "r+")) == NULL)
@@ -649,8 +649,8 @@
         printf("AK_write_block: ERROR. Cannot write block at provided address %d.\n", block->address);
         AK_EPI;
         exit(EXIT_ERROR);
-    }*/
     }
+    }*/
 
 
 /**

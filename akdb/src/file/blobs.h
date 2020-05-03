@@ -70,7 +70,7 @@ void AK_split_path_file(char **p, char **f, char *pf);
  * @brief Function that generates GUID
  * @return returns globaly universal identifier based on kernel implementation
  */
-char 
+
 char *AK_GUID();
 
 /**
