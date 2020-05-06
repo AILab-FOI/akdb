@@ -20,6 +20,7 @@
 
 #include "../file/table.h"
 #include "../auxi/test.h"
+#include "../file/table.h"
 #include "../file/fileio.h"
 #include "../rel/selection.h"
 #include "../rel/projection.h"
