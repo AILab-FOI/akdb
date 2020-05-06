@@ -25,11 +25,10 @@
  * @param srcTable - original table that is used for selection
  * @param destTable - table that contains the result
  * @param condition - condition for selection
- * @param attributes - atributes to be selected
- * @param ordering - atributes for result sorting
+ * @param attributes - attributes to be selected
+ * @param ordering - attributes for result sorting
  * @return EXIT_SUCCESS if cache result in memory and print table else break 
  */
-//int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
 int AK_select(char *srcTable, char *destTable, struct list_node *attributes, struct list_node *condition, struct list_node *ordering)
 {
     struct list_node *attribute;
@@ -109,7 +108,7 @@ int AK_select(char *srcTable, char *destTable, struct list_node *attributes, str
 }
 
 /**
- * @author Renata Mesaros, updatet Filip Žmuk
+ * @author Renata Mesaros, updated Filip Žmuk
  * @brief Function for testing the implementation
  */
 TestResult AK_select_test(){
