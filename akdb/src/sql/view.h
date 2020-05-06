@@ -87,4 +87,12 @@ char* AK_get_view_query(char *name);
 char* AK_get_rel_exp(char *name);
 
 
+/**
+ * @author Sara Kisic
+ * @brief Function that checks if the name of the view already exists in AK_view table
+ * @param name Name of the view
+ * @return EXIT_ERROR if the name already exists or name
+ */
+char* AK_check_view_name(char *name)
+
 #endif
