@@ -45,6 +45,14 @@ int AK_user_add(char *username, int *password, int set_id);
  */
 int AK_user_get_id(char *username);
 /**
+* @author Fran MIkolić.
+* @brief  Function that checks if there is user with given password
+* @param *username username of user whose password we are checking
+* @param *password password of given username whom we will check
+* @return check 0 if false or 1 if true
+*/
+int AK_user_check_pass(char *username, int *password);
+/**
  * @author Kristina Takač, edited by Ljubo Barać
  * @brief Function that adds a new group
  * @param *name name of group to be added

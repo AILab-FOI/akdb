@@ -82,6 +82,40 @@ int AK_user_get_id(char *username) {
 }
 
 /**
+ * @author Fran MIkolić.
+ * @brief  Function that checks if there is user with given password
+ * @param *username username of user whose password we are checking
+ * @param *password password of given username whom we will check
+ * @return check 0 if false or 1 if true
+ */
+int AK_user_check_pass(char *username, int *password) {
+    int i = 0;
+    int check = 0;
+    struct list_node *row;
+    AK_PRO;
+
+    while ((row = (struct list_node *) AK_get_row(i, "AK_user")) != NULL) {
+        struct list_node *elem_in_strcmp = AK_GetNth_L2(2, row);
+        if (strcmp(elem_in_strcmp->data, username) == 0) {
+            row->next->data;
+            row->next->data;
+            if (strcmp(row->next->data, password) == 0) {
+                check = 1;
+                AK_free(row);
+                AK_EPI;
+                return check;
+            }
+        }
+        i++;
+    }
+    AK_free(row);
+
+    AK_EPI;
+    return check;
+}
+
+
+/**
  * @author Ljubo Barać
  * @brief Function that removes the given user
  * @param name Name of the user to be removed
@@ -1473,12 +1507,33 @@ TestResult AK_privileges_test() {
     printf("\n\n||====================================================================|| \n");
 
 
+    /**************************************/
+    /* 19. AK_user_check_pass */
+    /**************************************/
+
+    printf("\n19. Test - AK_user_check_pass function - Checks if given username and matching password exists in database\n");
+    printf("Result:\n\n");
+
+
+    if (AK_user_check_pass("user1", 1111) == 0) {
+        printf("\n\nTest 19. - Fail!\n");
+    } else {
+        printf("\n\nTest 19. - Pass!\n");
+        successful[18] = 1;
+    }
+
+    printf("\n");
+    AK_print_table("AK_user");
+
+    printf("\n\n||====================================================================|| \n");
+
+
     /* END SUMMARY*/
 
     printf("\nSummary: \n");
     int num = 0;
     int numFail = 0;
-    for (num = 0; num < 18; num++) {
+    for (num = 0; num < 19; num++) {
         printf("%i. Test: %s \n", (num + 1), (successful[num] == 1 ? "Pass" : "Fail"));
         if (successful[num] == 0) numFail++;
     }
