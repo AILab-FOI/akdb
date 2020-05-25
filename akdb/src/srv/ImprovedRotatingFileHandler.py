@@ -2,17 +2,21 @@ import os
 import gzip
 from logging.handlers import RotatingFileHandler
 #TODO: Function needs documentation
+
+#Class which inherits handler from Python logging module - RotatingFileHandler
 class ImprovedRotatingFileHandler(RotatingFileHandler):
     def __init__(self, filename, mode='a', maxBytes=0, backupCount=0, encoding=None, delay=0):
         self.backup_count = backupCount
         RotatingFileHandler.__init__(self, filename, mode, maxBytes, backupCount, encoding, delay)
 
+    #Method used for creating archive with old log files and deleting them
     def doArchive(self, old_log):
         with open(old_log) as log:
             with gzip.open(old_log + '.gz', 'wb') as comp_log:
                 comp_log.writelines(log)
         os.remove(old_log)
 
+    #Method used for rolling over files when writing logs
     def doRollover(self):
         if self.stream:
             self.stream.close()
