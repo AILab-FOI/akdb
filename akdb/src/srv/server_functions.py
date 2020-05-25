@@ -33,15 +33,23 @@ class ParamikoServer(paramiko.ServerInterface):
         pas = "testingPass"
         #local login using swig
 
+    #Fran fix:
+    if(ak47.AK_user_check_pass(username,password)==1)
+        return paramiko.AUTH_SUCCESSFUL
+    return paramiko.AUTH_FAILED
+
+
+
+
     #    if(ak47.AK_user_get_id(usr)!=null):
     #       return paramiko.AUTH_SUCCESSFUL
     #    elif(username == usr) and (password == pas):
     #        return paramiko.AUTH_SUCCESSFUL
     #         return paramiko.AUTH_FAILED
-        pas = "testingPass"
-        if (username == usr) and (password == pas):
-            return paramiko.AUTH_SUCCESSFUL
-        return paramiko.AUTH_FAILED
+    #    pas = "testingPass"
+    #    if (username == usr) and (password == pas):
+    #        return paramiko.AUTH_SUCCESSFUL
+    #    return paramiko.AUTH_FAILED
 #Class that handles connection from client to the server
 class Connection:
     #Constructor of the class 
