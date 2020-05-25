@@ -21,6 +21,33 @@
 #include "view.h"
 
 /**
+ * @author Sara Kisic
+ * @brief Function that checks if the name of the view already exists in AK_view table
+ * @param name Name of the view
+ * @return EXIT_ERROR if the name already exists or name
+ */
+char* AK_check_view_name(char *name){
+	int i = 0;
+	char *result;
+    
+    struct list_node *row;
+    AK_PRO;
+    
+    while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
+        struct list_node *name_elem = AK_GetNth_L2(2,row);
+        if (strcmp(name_elem->data, name) == 0) {
+            result = (char*)(EXIT_ERROR);
+            break;
+        }
+        else{
+            result = name;
+        }
+    }
+    AK_EPI;
+    return result;
+}
+
+/**
  * @author Kresimir Ivkovic
  * @brief Function that finds an object's id by its name
  * @param name name of the view
@@ -31,7 +58,6 @@ int AK_get_view_obj_id(char *name) {
     
     struct list_node *row;
     AK_PRO;
-    //while ((row = (AK_list*)AK_get_row(i++, "AK_view"))) {
     while ((row = (struct list_node*)AK_get_row(i++, "AK_view"))) {
         struct list_node *name_elem = AK_GetNth_L2(2,row);
         if (!strcmp(name_elem->data, name)) {
@@ -116,14 +142,13 @@ int AK_view_add(char *name, char *query, char *rel_exp, int set_id){
     int view_id = AK_get_id();
     if(set_id!=0) view_id = set_id;
     AK_Insert_New_Element(TYPE_INT, &view_id, tblName, "obj_id", row_root);
-
-    //adding prefics '_view' to view name for integration of view relation expression (used in query_optimization.c for now) by Danko Sacer NOT SET
-    //char set_name[strlen(name)];
-    //strcpy(set_name, name);
-    //strcat(set_name, "_view");
     AK_Insert_New_Element(TYPE_VARCHAR, name, tblName, "name", row_root);
     AK_Insert_New_Element(TYPE_VARCHAR, query, tblName, "query", row_root);
     AK_Insert_New_Element(TYPE_VARCHAR, rel_exp, tblName, "rel_exp", row_root);
+    if(AK_check_view_name(name) == EXIT_ERROR){
+        AK_EPI;
+        return EXIT_ERROR;
+    }
     AK_insert_row(row_root);
     AK_EPI;
     return view_id;
@@ -177,12 +202,14 @@ int AK_view_rename(char *name, char *new_name){
 	    rel_exp = query_rel_exp_elem->data;
         }
     }
-
-   result = AK_view_remove_by_name(name);
-   result = AK_view_remove_by_name(name);
-   result = AK_view_add(new_name, query, rel_exp, view_id);
-   AK_EPI;
-   return result;
+    if(AK_check_view_name(new_name) == EXIT_ERROR){
+        AK_EPI;
+        return EXIT_ERROR;
+    }
+    result = AK_view_remove_by_name(name);
+    result = AK_view_add(new_name, query, rel_exp, view_id);
+    AK_EPI;
+    return result;
 }
 
 /**
@@ -382,7 +409,20 @@ int showData = AK_test_get_view_data("student;firstname;Robert;=");
         printf("\n Test 5 failed!\n\n");
         }
 
-AK_EPI;
+printf("\n **** TEST 6 - ADD VIEW WITH EXISTING NAME ****\n");   
+	printf("\n Checking if name 'view4' already exists...\n");
+	int addResult = AK_view_add("view4", "test","lastname;", 0);
+	if (addResult == EXIT_ERROR) {
+		passed++;
+        printf("\n Name already exists! View not added.");
+		printf("\n Test 6 is successful!\n\n");
+	}else {
+		failed ++;
+		printf("\n Test 6 failed!\n\n");
+	}
+    AK_print_table("AK_view");
+    AK_EPI;
+
 
    return TEST_result(passed,failed);
 }
