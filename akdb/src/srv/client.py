@@ -373,6 +373,7 @@ class Client:
                     print rec["result"]
             else:
                 print "There was a problem. Error message: " + rec["error_msg"]
+        return rec
 
     def select_protocol(self, res):
         rec = res

@@ -340,7 +340,7 @@ class Create_table_command:
             return None
 
     # executes the create table expression
-    def execute(self):
+    def execute(self, expression):
         parser = sql_tokenizer()
         token = parser.AK_parse_create_table(self.expr)
         # checking syntax
