@@ -1,7 +1,6 @@
 import os
 import gzip
 from logging.handlers import RotatingFileHandler
-#TODO: Function needs documentation
 
 #Class which inherits handler from Python logging module - RotatingFileHandler
 class ImprovedRotatingFileHandler(RotatingFileHandler):
