@@ -182,7 +182,8 @@ class Print_table_command:
 # defines the structure of print system table command and its execution
 
 class Print_system_table_command:
-    print_system_table_regex = r"^\\ps\s+([a-zA-Z0-9_]+)\sdefines the structure of print command and its execution    pattern = None
+    print_system_table_regex = r"^\\ps\s+([a-zA-Z0-9_]+)\s*$"
+    pattern = None
     matcher = None
     # matches method
     # checks whether given input matches print command syntax
