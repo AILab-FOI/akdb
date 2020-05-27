@@ -27,6 +27,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "signal.h"
+#include <dirent.h>
 
 /** 
  * Function opens the recovery binary file and executes all commands that were
@@ -73,5 +74,25 @@ TestResult AK_recovery_test();
  * @param sig required integer parameter for SIGINT handler functions
  */
 void AK_recover_operation(int sig);
+
+/** 
+ * Function lists the contents of the archive_log directory.
+ * The user then writes the name of the desired bin file to perform the neccessary actions.
+ * @author Matija Večenaj
+ * @brief Executes the recovery operation for the chosen bin file
+ * @param none
+ * @return no value
+ */
+void AK_load_chosen_log ();
+
+/** 
+ * Function reads the latest.txt file which contains the name of the latest bin file that's been created.
+ * Then it loads it and does the neccessary recovery operations.
+ * @author Matija Večenaj
+ * @brief Executes the recovery operation for the latest bin file
+ * @param none
+ * @return no value
+ */
+void AK_load_latest_log ();
 
 #endif /* RECOVERY */

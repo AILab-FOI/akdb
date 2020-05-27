@@ -302,3 +302,188 @@ TestResult AK_recovery_test() {
 
     return TEST_result(1,0);
 }
+
+/** 
+ * Function lists the contents of the archive_log directory.
+ * The user then types in the name of the desired bin file to open and perform the neccessary actions.
+ * @author Matija Večenaj
+ * @brief Executes the recovery operation for the chosen bin file
+ * @param none
+ * @return no value
+ */
+void AK_load_chosen_log () {
+	AK_PRO;
+	
+	//pointer for the dir
+	struct dirent *de;
+	char name[35];
+	char path[] = "akdb/akdb/bin/archivelog/";
+	
+	//opendir will return a pointer of DIR type
+	DIR *dr = opendir("akdb/akdb/bin/archivelog/");
+	
+	//will return NULL if there's an error
+	if(dr == NULL){
+		printf("Cannot open directory\n");
+		AK_EPI;
+		exit(EXIT_FAILURE);
+	}
+	
+	//reading the dir contents
+	while((de=readdir(dr)) != NULL){
+		
+		//printing file names
+		printf("%s\n", de->d_name);
+	}
+	
+	//ask the user for the log name
+	printf("\nEnter the log name you wish to open\n");
+	scanf("%s", name);
+	
+	//get and save the destination for the bin file to open
+	char * dest;
+	dest = (char*) malloc(sizeof(name)+sizeof(path));
+	strcpy(dest, path);
+    strcpy(dest+strlen(path), name);
+	
+	//open the log file 
+	FILE *fp = fopen(dest, "rb");
+	if (fp) {
+				
+		 // read structure from file
+	    AK_redo_log log_file;
+	    log_file.number = 0;
+	    int i = 0;
+
+      //read 1 element form the fp stream the size of log_file into log_file
+	    fread(&log_file, sizeof(log_file), 1, fp);
+	
+	    // reading commands and storing them
+	    for(i = 0; i < log_file.number; i++) {
+	        memcpy(redo_log->command_recovery, log_file.command_recovery, sizeof(log_file.command_recovery));
+	    }
+	
+		//getting the neccessary number for the next for-loop
+	    redo_log->number = log_file.number;
+
+	    //looking for unfinished commands and passing them on for recovery
+	    for(i = 0; i < redo_log->number; i++) {
+	        if(redo_log->command_recovery[i].finished != 1) {
+	            AK_recovery_insert_row(redo_log->command_recovery[i].table_name, i);
+			}
+	    }
+		
+		//deallocation
+		free(de);
+		free(dest);
+		fclose(fp);
+	}
+	
+	//failed to open
+	else{
+		perror("fopen");
+		free(dest);
+		free(de);
+        AK_EPI;
+        exit(EXIT_FAILURE);
+	}
+	
+	free(dest);
+	free(de);
+	closedir(dr);
+	AK_EPI;
+}
+
+/** 
+ * Function reads the latest.txt file which contains the name of the latest bin file that's been created.
+ * Then it loads it and does the neccessary recovery operations.
+ * @author Matija Večenaj
+ * @brief Executes the recovery operation for the latest bin file
+ * @param none
+ * @return no value
+ */
+void AK_load_latest_log () {
+	AK_PRO;	
+	
+	//get the path to archivelog
+	char path[] = "akdb/akdb/bin/archivelog/";
+	char buf[50];
+	char * name;
+	
+	//open the txt file where the latest log name is written
+	FILE *file = fopen("akdb/akdb/bin/archivelog/latest.txt", "r");
+	
+	//successfully opened
+	if (file) {
+		
+		//read the file
+		while (fgets(buf, sizeof(buf), file)) {
+			
+			//store the name of the log file
+			name = (char *)malloc(sizeof(buf));
+			strcpy(name, buf);
+		}
+	    fclose(file);
+	}
+	
+	//failed to open
+	else{
+		perror("fopen");
+        AK_EPI;
+        exit(EXIT_FAILURE);
+	}
+	
+	
+	//get and save the destination for the bin file to open
+	char * dest;
+	dest = (char*) malloc(sizeof(name)+sizeof(path));
+	
+	//merging the two strings together
+	strcpy(dest, path);
+    strcpy(dest+strlen(path), name);
+	
+	//open the log file 
+	FILE *fp = fopen(dest, "rb");
+	if (fp) {
+		
+		 // read structure from file
+	    AK_redo_log log_file;
+	    log_file.number = 0;
+	    int i = 0;
+
+      //read 1 element form the fp stream the size of log_file into log_file
+	    fread(&log_file, sizeof(log_file), 1, fp);
+	
+	    // reading commands and storing them
+	    for(i = 0; i < log_file.number; i++) {
+	        memcpy(redo_log->command_recovery, log_file.command_recovery, sizeof(log_file.command_recovery));
+	    }
+	
+		//getting the neccessary number for the next for-loop
+	    redo_log->number = log_file.number;
+
+	    //looking for unfinished commands and passing them on for recovery
+	    for(i = 0; i < redo_log->number; i++) {
+	        if(redo_log->command_recovery[i].finished != 1) {
+	            AK_recovery_insert_row(redo_log->command_recovery[i].table_name, i);
+			}
+	    }
+		
+		//deallocation
+		free(name);
+		free(dest);
+		fclose(fp);
+	}
+	
+	//failed to open
+	else{
+		perror("fopen");
+		free(dest);
+		free(name);
+        AK_EPI;
+        exit(EXIT_FAILURE);
+	}
+	
+
+	AK_EPI;
+}
