@@ -705,7 +705,8 @@ class Grant_command:
 # @parama expr the expression to be executed
 class Select_command:
 
-    select_command_regex = r"^(?i)select(\s([a-zA-Z0-9_]+))+?$"
+    #Commented regex is not valid, rewrite it.
+    select_command_regex = r".*" #r"^(?i)select(\s([a-zA-Z0-9_]+))+?$"
     pattern = None
     matcher = None
 
@@ -804,6 +805,9 @@ class Select_command:
 
         expression.append(expr)
 
+        #Make a TypeMap for mapping from a PyList (Python) to a struct list_node (C) in SWIG interface
+        #Call next function: int AK_select(char *srcTable, char *destTable, struct list_node *attributes, struct list_node *condition, struct list_node *ordering)
+        
         # TEST DATA!
         print expression
         expression = ["year", "1990", ">"]

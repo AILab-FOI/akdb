@@ -389,6 +389,8 @@ class Client:
             else:
                 print "There was a problem. Error message: " + rec["error_msg"]
 
+	return rec
+
     def select_protocol(self, res):
         rec = res
         while "end" in rec and rec["end"] == False:
