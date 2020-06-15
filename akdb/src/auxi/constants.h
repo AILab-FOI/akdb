@@ -443,6 +443,30 @@
 #define AK_CONSTRAINTS_UNIQUE "AK_constraints_unique"
 
 /**
+ *  * @def AK_CONSTRAINTS_INDEX
+ *   * @brief Defines system table name for storing check constraints
+ *    */
+#define AK_CONSTRAINTS_INDEX "AK_constraints_index"
+
+/**
+ *  * @def AK_CONSTRAINTS_PRIMARY_KEY
+ *   * @brief Defines system table name for storing check constraints
+ *    */
+#define AK_CONSTRAINTS_PRIMARY_KEY "AK_constraints_primary_key"
+
+/**
+ *  * @def AK_CONSTRAINTS_FOREIGN_KEY
+ *   * @brief Defines system table name for storing check constraints
+ *    */
+#define AK_CONSTRAINTS_FOREIGN_KEY "AK_constraints_foreign_key"
+
+/**
+ *  * @def AK_CONSTRAINTS_DEFAULT
+ *   * @brief Defines system table name for storing check constraints
+ *    */
+#define AK_CONSTRAINTS_DEFAULT "AK_constraints_default"
+
+/**
  * @def AK_REFERENCE
  * @brief Defines system table name for storing check constraints
  */
