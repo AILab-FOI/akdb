@@ -178,8 +178,8 @@ class Print_table_command:
         ak47.AK_print_table(self.matcher.group(1))
         return "OK"
 
-# table_derails_command
-# defines the structure of table details command and its execution
+# print_system_table_command
+# defines the structure of print system table command and its execution
 
 class Print_system_table_command:
     print_system_table_regex = r"^\\ps\s+([a-zA-Z0-9_]+)\s*$"
@@ -196,12 +196,14 @@ class Print_system_table_command:
     # execute method
     # defines what is called when table_exists command is invoked
     def execute(self, cmd):
-        
-	string = self.matcher.group(1)	
+
+	string = self.matcher.group(1)
  	string = string.encode('utf-8')
         ak47.AK_print_table(string)
         return "OK"
 
+# table_details_command
+# defines the structure of table details command and its execution
 class Table_details_command:
 
     table_details_regex = r"^\\d\s+([a-zA-Z0-9_]+)\s*$"
@@ -226,6 +228,8 @@ class Table_details_command:
         return result
 
 
+# table_exists_command
+# defines the structure of table exists command and its execution
 class Table_exists_command:
 
     table_details_regex = r"^\\t\s+([a-zA-Z0-9_]+)\?\s*$"
@@ -336,7 +340,7 @@ class Create_table_command:
             return None
 
     # executes the create table expression
-    def execute(self):
+    def execute(self, expression):
         parser = sql_tokenizer()
         token = parser.AK_parse_create_table(self.expr)
         # checking syntax
@@ -611,10 +615,10 @@ class Create_group_command:
 	def execute(self):
 		print "Printing out: "
 		result = "CREATE GROUP "
-		
+
 		pars = sql_tokenizer()
 		tokens = pars.AK_create_group(self.command)
-		         
+
 		if isinstance(tokens, basestring):
 			result = "Wrong command!"
 		else:
@@ -1178,5 +1182,3 @@ class sql_executor:
         else:
             return False
         return False
-
-

@@ -9,7 +9,10 @@ RUN apt-get install git build-essential swig make doxygen python2.7 python-pip d
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
 RUN apt-get install texlive -y
 RUN apt-get install texlive-latex-extra -y
-RUN pip install virtualenv paramiko pyparsing
+RUN pip install virtualenv
+RUN pip install paramiko
+RUN pip install pyparsing
+RUN pip install configparser
 
 RUN mkdir -p /usr/akdb
 VOLUME ["/usr/akdb"]
