@@ -27,6 +27,14 @@
 #include "../auxi/mempro.h"
 
 /**
+ * @author Sara Kisic
+ * @brief Function that checks if the name of the view already exists in AK_view table
+ * @param name Name of the view
+ * @return EXIT_ERROR if the name already exists or name
+ */
+char* AK_check_view_name(char *name);
+
+/**
  * @author Kresimir Ivkovic
  * @brief Function that finds an object's id by its name
  * @param name name of the view

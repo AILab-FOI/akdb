@@ -29,7 +29,6 @@
  * @param ordering - atributes for result sorting
  * @return EXIT_SUCCESS if cache result in memory and print table else break 
  */
-//int AK_select(char *srcTable,char *destTable,AK_list *attributes,AK_list *condition){
 int AK_select(char *srcTable, char *destTable, struct list_node *attributes, struct list_node *condition, struct list_node *ordering)
 {
     struct list_node *attribute;

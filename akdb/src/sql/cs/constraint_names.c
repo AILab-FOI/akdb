@@ -21,7 +21,7 @@
 #include "constraint_names.h"
 
 /**
- * @author Nenad Makar, updated by Mislav Jurinić
+ * @author Nenad Makar, updated by Matej Lipovača
  * @brief Function that checks if constraint name would be unique in database 
  * @param char constraintName name which you want to give to constraint which you are trying to create
  * @return EXIT_ERROR or EXIT_SUCCESS
@@ -31,14 +31,18 @@ int AK_check_constraint_name(char *constraintName) {
 	int num_rows;
 
 	/**
-	 * TODO add other constraint names from the catalog
-	 * Also add them to "constants.h"
+	 * Updated by Matej Lipovača
+	 * Added other constraint names from catalog, aswell in "constants.h"
 	 */
 	char constraint_table_names[][50] = {
 		AK_CONSTRAINTS_BEWTEEN,
 		AK_CONSTRAINTS_UNIQUE,
 		AK_CONSTRAINTS_CHECK_CONSTRAINT,
 		AK_CONSTRAINTS_NOT_NULL,
+		AK_CONSTRAINTS_INDEX,
+		AK_CONSTRAINTS_PRIMARY_KEY,
+		AK_CONSTRAINTS_FOREIGN_KEY,
+		AK_CONSTRAINTS_DEFAULT,
 		AK_REFERENCE
 	};
 
@@ -98,6 +102,10 @@ TestResult AK_constraint_names_test() {
 	AK_print_table("AK_constraints_unique");
 	AK_print_table("AK_reference");
 	AK_print_table("AK_constraints_between");
+	AK_print_table("AK_constraints_index");
+	AK_print_table("AK_constraints_foreign_key");
+	AK_print_table("AK_constraints_primary_key");
+	AK_print_table("AK_constraints_default");
 	
 	printf("\nChecking if constraint name %s would be unique in database...\n", constraintName1);
 	result = AK_check_constraint_name(constraintName1);
