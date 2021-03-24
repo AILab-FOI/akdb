@@ -1109,4 +1109,5 @@ void AK_mempro_test()
     printf("Number of test that fail: %i\n", failed_test);
 
     AK_EPI;
+    return TEST_result(passed_test,failed_test);
 }
