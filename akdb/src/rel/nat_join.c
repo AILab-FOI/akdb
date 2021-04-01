@@ -348,10 +348,10 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
  * @return No return value
  */
 TestResult AK_op_join_test() {
- //Testing join-a ne radi adekvatno 
- //nema registrirano prolazak testa.
- //tablica ne ispisuje podatke druge tablice
-
+ //Testing not set as specified in documentation.
+ //The code needs dubgging.
+ //The result table is not retrieving data from table 2 (right side of the table)
+ 
 
     AK_PRO;
     char *sys_table = "AK_relation";
