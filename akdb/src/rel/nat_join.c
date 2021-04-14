@@ -159,7 +159,7 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
                 //insert data from second table to insert_list
-                AK_Insert_New_Element(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, row_root_insert);
+                AK_Insert_New_Element(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, &row_root_insert);
             }
             not_in_list = 1;
             head++; //next header
@@ -348,6 +348,11 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
  * @return No return value
  */
 TestResult AK_op_join_test() {
+ //Testing not set as specified in documentation.
+ //The code needs dubgging.
+ //The result table is not retrieving data from table 2 (right side of the table)
+ 
+
     AK_PRO;
     char *sys_table = "AK_relation";
     char *destTable = "nat_join_test";
@@ -370,9 +375,10 @@ TestResult AK_op_join_test() {
 	printf("Table %s already exists!\n", destTable);
     }
 
+    ///    
     AK_print_table(destTable);
 
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(0,1);
 }
 
