@@ -31,11 +31,13 @@ NOTES: 1. For now we assume that table is sorted on attribute on which we are
 creating index. We should check that with filesort.c and include it in this function.
 That file had some errors, so I couldn't test it. 2.working with multiple blocks
 */
-int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName){
+AK_block * AK_btree_create(char *tblName, struct list_node *attributes, char *indexName){
 	int i,n,exist;
 	table_addresses *addresses;
 	int num_attr;
 	AK_PRO;
+	
+	//get table address
 	addresses = (table_addresses*) AK_get_table_addresses(tblName);
 	num_attr = AK_num_attr(tblName);
 
@@ -43,11 +45,15 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 		printf("\nAddress of the TABLE is from %u to %u \n",(addresses->address_from[ i ]),(addresses->address_to[ i ]));
 		i++;
 	}
+	
+	//get table header
 	AK_header *table_header = (AK_header *)AK_get_header(tblName);
     	struct list_node *attribute = (struct list_node *) AK_First_L2(attributes);
 	AK_header i_header[ MAX_ATTRIBUTES ];
 	AK_header* temp;
     	n = 0;
+    	
+    	//get table attributes
 	while (attribute != 0) {
 		exist = 0;
 		for (i = 0; i < num_attr; i++) {
@@ -61,19 +67,22 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 			if ((table_header)->type != TYPE_INT) {
 			    printf("Unsupported data type for bree index! Only int!");
 			    AK_EPI;
-			    return EXIT_ERROR;
+			    return NULL;
+			    //return EXIT_ERROR;
 			}
 		    }
 		}
 		if (!exist) {
 		    printf("Attribute %s does not exists in table", attribute->data);
 		    AK_EPI;
-		    return EXIT_ERROR;
+		    return NULL;
+		    //return EXIT_ERROR;
 		}
 		attribute = attribute->next;
 	} 
 	memset(i_header + n, 0, MAX_ATTRIBUTES - n);
 
+	//creating index
 	int startAddress = AK_initialize_new_segment(indexName, SEGMENT_TYPE_INDEX, i_header);
 	if (startAddress != EXIT_ERROR)
 		printf("\nINDEX %s CREATED!\n", indexName);
@@ -97,7 +106,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 		number_leaf = number_leaf + 1;
 	}//instead of ceil function
 	rootEl->level[0] = number_leaf;
-
+	
 	//number of NODES (level above leafs)--------(B+1)-----number_node
 	float m = (float) number_leaf;
 	float node = m/(B+1);
@@ -127,6 +136,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 		if(temp_two == 1)
 			go = 0;
 	}
+	
 	//writing root_info
 	rootEl->root = number_leaf + number_node;
 	memcpy(block->data, rootEl, sizeof(root_info));
@@ -136,6 +146,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 	block->AK_free_space += sizeof (root_info);
 	block->last_tuple_dict_id = 0;
 	AK_write_block(block);
+	
 	//writting leafs
 	int id,lf,b,help=0,elements=0;
 	int help_two[number_el];
@@ -171,6 +182,7 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 		block->last_tuple_dict_id = id;
 		AK_write_block(block);
 	}
+	
 	//writting nodes
 	int no=1,v=1,d,e=0,f,h,offset,diff,skip=1,check;
 	while(no==1){
@@ -214,9 +226,15 @@ int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName
 	}
 	printf("B tree created succesfully.");
 	AK_EPI;
-	return EXIT_SUCCESS;
+	return block;
+	//return EXIT_SUCCESS;
 }
 
+/**
+  * @author unknown
+  * @brief Function that deletes index
+  * @param indexName - name of the index+
+ */
 int AK_btree_delete(char *indexName){
     AK_PRO;
     AK_delete_segment(indexName, SEGMENT_TYPE_INDEX);
@@ -232,7 +250,7 @@ int AK_btree_delete(char *indexName){
   * @param endRange - if 0 search is for 0 value, else searching in range
   * @param toDo - if 0 we just search else we delete the element if we find it
  */
-void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *toDo){
+int AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *toDo, AK_block * inputBlock){
 	int contin = 1;
         AK_PRO;
 	if((searchValue == endRange) || (endRange <= 0)){
@@ -244,14 +262,17 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 		searchValue = endRange;
 		endRange = &help;
 	}
-
+	
+	//finding correct block 
 	int adr_to_read = (int) AK_find_AK_free_space(AK_get_index_addresses(indexName));
-	AK_block *block = (AK_block*) AK_read_block(adr_to_read);
+	//AK_block *block = (AK_block*) AK_read_block(adr_to_read);     functions AK_find_AK_free_space, AK_get_index_addresses and AK_read_block should be checked for mistakes
+	AK_block *block = inputBlock;
 	root_info *root = (root_info*) AK_malloc(sizeof (root_info));
 	memset(root, 0, sizeof (root_info));
 	memcpy(root,block->data,sizeof (root_info));
 	btree_node *temp = (btree_node*) AK_malloc(sizeof(btree_node));
-
+	
+	//navigating through the tree
 	int address= block->tuple_dict[root->root].address;
 	int type = block->tuple_dict[root->root].type; //node == 1, leaf == 0
 	while(type == 1){
@@ -271,19 +292,20 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 	memset(temp,0,sizeof(btree_node));
 	memcpy(temp,&block->data[address],sizeof(btree_node));
 	int f,found = 0,idNext;
+	
+	//searching for value
 	for(f=0;f<B;f++){
 		if(*searchValue == (temp->values[f])){
 			found = 1;
 		}
 		if((found == 1) && (temp->values[f] <= *endRange) && (*endRange > 0)) {
-			printf("\n Value %i found! Block %u - IDX_TBL = %u", temp->values[f], temp->pointers[f].addBlock, temp->pointers[f].indexTd);	
+			//printing data after finding node
+			printf("\n Value %i found! Block %u - IDX_TBL = %u", temp->values[f], temp->pointers[f].addBlock, temp->pointers[f].indexTd);
+				
+			//deleting node
 			if(*toDo == 1){
-				temp->values[f] = -1;
-				temp->pointers[f].addBlock = 0;
-				temp->pointers[f].indexTd = 0;
-				memcpy(&block->data[address],temp,sizeof(btree_node));
+				btree_delete(temp,block,address,f);
 				AK_write_block(block);
-				printf("\n Value deleted!");
 			}
 		}
 		idNext=temp->pointers[B].indexTd;
@@ -294,15 +316,16 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 	while(contin == 1){
 		memset(temp,0,sizeof(btree_node));
 		memcpy(temp,&block->data[block->tuple_dict[idNext].address],sizeof(btree_node));
+		
+		//searching for value
 		for(f=0;f<B;f++){
 			if((temp->values[f]) <= *endRange){
+				//printing data after finding node
 				printf("\n Value %i found! Block %u - IDX_TBL = %u", temp->values[f], temp->pointers[f].addBlock, temp->pointers[f].indexTd);
+				
+				//deleting node
 				if(*toDo == 1){
-					temp->values[f] = -1;
-					temp->pointers[f].addBlock = 0;
-					temp->pointers[f].indexTd = 0;
-					memcpy(&block->data[idNext],temp,sizeof(btree_node));
-					printf("\n Value deleted!");
+					btree_delete(temp,block,idNext,f);
 				}
 			}else
 				contin = 0;
@@ -311,16 +334,48 @@ void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *
 		}
 	}
 	AK_EPI;
+	return EXIT_SUCCESS;
 }
 
-//TODO: Add description of the function AK_btree_insert as well as params
-int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insertBlock){
+
+/**
+  * @author Anđelko Spevec
+  * @brief Function that deletes a value in btree index
+  * @param temp - node for deletion
+  * @param block - block that contains binary tree
+  * @param idNext - index of the node that is to be deleted
+ */
+void btree_delete(btree_node * temp, AK_block * block, int idNext, int i){
+	temp->values[i] = -1;
+	temp->pointers[i].addBlock = 0;
+	temp->pointers[i].indexTd = 0;
+	memcpy(&block->data[idNext],temp,sizeof(btree_node));
+	printf("\n Value deleted!");
+}
+
+/**
+  * @author unknown
+  * @brief Function that inserts a value in btree index
+  * @param indexName - name of the index
+  * @param insertValue - value for insert
+  * @param insertTd - index table destination
+  * @param insertBlock - block address
+  * @param inputBlock - block containing btree
+  * @param EXIT_SUCCESS if successful 
+ */
+int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insertBlock, AK_block * inputBlock){
 	AK_PRO;
+	//finding correct block           !!!functions AK_find_AK_free_space, AK_get_index_addresses and AK_read_block should be checked for mistakes!!!
 	int adr_to_read = (int) AK_find_AK_free_space(AK_get_index_addresses(indexName));
-	AK_block *block = (AK_block*) AK_read_block(adr_to_read);
+	//AK_block *block = (AK_block*) AK_read_block(adr_to_read);    
+	AK_block *block = inputBlock;
+	
+	//assign root node to root_info variable
 	root_info *root = (root_info*) AK_malloc(sizeof (root_info));
 	memset(root, 0, sizeof (root_info));
 	memcpy(root,block->data,sizeof (root_info));
+	
+	//assign values to properties of root node
 	btree_node *temp = (btree_node*) AK_malloc(sizeof(btree_node));
 	int insertPath[ORDER];//id of the selected node, iP[0] root
 	int insertIndexPath[ORDER];//index of a pointer selected in node, iIP[0] is index selected in root
@@ -328,6 +383,8 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 	insertPath[0] = root->root;
 	int type = block->tuple_dict[root->root].type;
 	int inc=1;
+	
+	//navigating through the tree
 	while(type == 1){
 		memset(temp,0,sizeof(btree_node));
 		memcpy(temp,&block->data[address],sizeof(btree_node));
@@ -346,6 +403,8 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 			inc++;
 		}//node == 1, leaf == 0
 	}
+	
+	//assign values to properties of leaf node
 	int j;
 	int destinationAddress = block->tuple_dict[insertPath[inc]].address;
 	memset(temp,0,sizeof(btree_node));
@@ -359,130 +418,44 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 	int inserted = 0,increase=0;
 	btree_node *temp_help = (btree_node*) AK_malloc(sizeof(btree_node));
 	memset(temp_help,0,sizeof(btree_node));
-	if(AK_freeSpace != 0){ //we have FREE space in LEAF
-		for(j=0;j<B;j++){
-			if(inserted == 0){
-				if(*insertValue < temp->values[increase]){
-					temp_help->values[j] = *insertValue;
-					temp_help->pointers[j].indexTd = *insertTd;
-					temp_help->pointers[j].addBlock = *insertBlock;
-					inserted = 1;	
-				}else{
-					if(temp->values[increase] == -1){
-						temp_help->values[j] = *insertValue;
-						temp_help->pointers[j].indexTd = *insertTd;
-						temp_help->pointers[j].addBlock = *insertBlock;
-						inserted = 1;
-					}else{
-						temp_help->values[j] = temp->values[increase];
-						temp_help->pointers[j].indexTd = temp->pointers[increase].indexTd;
-						temp_help->pointers[j].addBlock = temp->pointers[increase].addBlock;
-						increase++;
-					}
-				}
-			}else{
-				temp_help->values[j] = temp->values[increase];
-				temp_help->pointers[j] = temp->pointers[increase];
-				increase++;
-			}	
-		}
+	//we have FREE space in LEAF
+	if(AK_freeSpace != 0){ 
+		temp_help = searchValue(inserted, *insertValue, temp, temp_help, *insertTd,*insertBlock,&increase,-1);
 		memset(&block->data[destinationAddress],0,sizeof(btree_node));
 		memcpy(&block->data[destinationAddress],temp_help,sizeof(btree_node));
 		AK_write_block(block);
 		printf("\nNew value is added in leaf with available space");	
-	}else{//we have to SPLIT the LEAF
+	}
+	//we have to SPLIT the LEAF
+	else{
 		btree_node *temp_help_two = (btree_node*) AK_malloc(sizeof(btree_node));
 		memset(temp_help_two,0,sizeof(btree_node));
-		int stop=0;
-		int numberElementsFirst,numberElementsSecond;
-		int numberPointersFirst,numberPointersSecond;
-		int amount = B % 2;
-		if(amount == 0){//uneven number of pointers (B+1)%2 = 1
-			//we need to insert B+1 elements in two leafs -> 4+1=3+2
-			numberElementsFirst = (B/2) + 1; //B=4,(4/2)+1=3 elements in first leaf
-			numberElementsSecond = B/2; //B=4,(4/2)=2 elements in second leaf
-			numberPointersFirst = (B + 2)/2;  //B=4, (B+1+1)/2 = 3 pointers in first LEAF
-			numberPointersSecond = (B + 2)/2; //B=4, (B+1+1)/2 = 3 pointers in second LEAF
-		}else{//even number of pointers (B+1)%2 = 0
-			//we need to insert B+1 elements in two leafs -> 3+1=2+2
-			numberElementsFirst = (B + 1)/2; //B=3,(3+1)/2=2 elements in first leaf
-			numberElementsSecond = (B + 1)/2; //B=3,(3+1)/2=2 elements in second leaf 
-			numberPointersFirst = ((B + 1)/2) + 1; //B=3, ((3+1)/2)+1= 3 pointers in first leaf
-			numberPointersSecond = (B + 1)/2; //B=3 (3+1)/2=2 pointers in second leaf			
-		}
-		for(j=0;j<B;j++){
-			if(stop == 0){
-				if(inserted == 0){
-					if(*insertValue < temp->values[increase]){
-						temp_help->values[j] = *insertValue;
-						temp_help->pointers[j].indexTd = *insertTd;
-						temp_help->pointers[j].addBlock = *insertBlock;
-						inserted = 1;
-					}else{
-						temp_help->values[j] = temp->values[increase];
-						temp_help->pointers[j].indexTd = temp->pointers[increase].indexTd;
-						temp_help->pointers[j].addBlock = temp->pointers[increase].addBlock;
-						increase++;
-					}
-				}else{
-					temp_help->values[j] = temp->values[increase];
-					temp_help->pointers[j].indexTd = temp->pointers[increase].indexTd;
-					temp_help->pointers[j].addBlock = temp->pointers[increase].addBlock;
-					increase++;	
-				}
-				if((j+1)==numberElementsFirst)
-					stop = 1;
-			}else{
-				temp_help->values[j] = -1;
-				temp_help->pointers[j].indexTd = 0;
-				temp_help->pointers[j].addBlock = 0;
-			}
-		}
+		
+		//assign values to temporary node
+		temp_help = searchValue(inserted, *insertValue, temp, temp_help, *insertTd,*insertBlock,&increase,findCorrectNumber(1));
 		temp_help->pointers[B].indexTd = block->last_tuple_dict_id + 1; //points to new leaf
 		temp_help->pointers[B].addBlock = adr_to_read; //update when fix multiple blocks
 		memset(&block->data[destinationAddress],0,sizeof(btree_node));
 		memcpy(&block->data[destinationAddress],temp_help,sizeof(btree_node)); 
-		stop = 0;
-		for(j=0;j<B;j++){
-			if(stop == 0){
-				if(inserted == 0){
-					if(*insertValue < temp->values[increase]){
-						temp_help_two->values[j] = *insertValue;
-						temp_help_two->pointers[j].indexTd = *insertTd;
-						temp_help_two->pointers[j].addBlock = *insertBlock;
-						inserted = 1;
-					}else{
-						temp_help_two->values[j] = temp->values[increase];
-						temp_help_two->pointers[j].indexTd = temp->pointers[increase].indexTd;
-						temp_help_two->pointers[j].addBlock = temp->pointers[increase].addBlock;
-						increase++;
-					}
-				}else{
-					temp_help_two->values[j] = temp->values[increase];
-					temp_help_two->pointers[j].indexTd = temp->pointers[increase].indexTd;
-					temp_help_two->pointers[j].addBlock = temp->pointers[increase].addBlock;
-					increase++;	
-				}
-				if((j+1)==numberElementsSecond)
-					stop = 1;
-			}else{
-				temp_help_two->values[j] = -1;
-				temp_help_two->pointers[j].indexTd = 0;
-				temp_help_two->pointers[j].addBlock = 0;
-			}		
-		}
+		
+		//assign values to temporary node
+		temp_help_two = searchValue(inserted, *insertValue, temp, temp_help_two, *insertTd,*insertBlock,&increase,findCorrectNumber(2));
 		temp_help_two->pointers[B].indexTd = temp->pointers[B].indexTd; //points to next leaf
 		temp_help_two->pointers[B].addBlock = temp->pointers[B].addBlock;
-		memcpy(&block->data[block->AK_free_space], temp_help_two, sizeof(btree_node)); 
+		memcpy(&block->data[block->AK_free_space], temp_help_two, sizeof(btree_node));
+		 
+		//assign values to block
 		int id = block->last_tuple_dict_id + 1;
 		block->tuple_dict[id].address = block->AK_free_space;
 		block->tuple_dict[id].type = LEAF;
 		block->AK_free_space += sizeof(btree_node);
 		block->last_tuple_dict_id = id;
+		
 		//update root_info->level[0] number of leafs
 		root->level[0]++;
 		memcpy(&block->data[0],root,sizeof(root_info));
 		AK_write_block(block);
+		
 		//checking nodes above 
 		int pathIndex = inc - 1;
 		int nodeAddress = block->tuple_dict[insertPath[pathIndex]].address;
@@ -490,48 +463,17 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 		memset(temp,0,sizeof(btree_node));
 		memcpy(temp,&block->data[nodeAddress],sizeof(btree_node));
 
-		int firstValue = temp_help->values[0];
-		int secondValue = temp_help_two->values[0];//secondValue > firstValue
-		int firstPointer = insertPath[inc]; //pointer to original leaf
-		int secondPointer = id; //pointer to new leaf
 		memset(temp_help,0,sizeof(btree_node));
-
 		int AK_freePointer = 0;
 		for(j=0;j<B;j++){
 			if(temp->values[j] == -1)
 				AK_freePointer = 1;
 		}
+		
 		int startSecond = 0, copyNode = 1,skip = 1;
-		increase = 0;
 		if(AK_freePointer == 1){//in node above we have FREE POINTER to insert NEW LEAF
-			temp_help->pointers[0].indexTd = temp->pointers[0].indexTd;
-			if(pointerIndex == 0){
-				startSecond = 1;
-				copyNode = 0;
-				skip = 0;
-			}
-			for(j=1;j<=B;j++){
-				if((copyNode == 1) && (j != pointerIndex)){
-					temp_help->values[j-1] = temp->values[increase];
-					temp_help->pointers[j].indexTd = temp->pointers[increase+1].indexTd;
-					increase++;
-				}
-				if(startSecond == 1){
-					temp_help->values[j-1] = secondValue;
-					temp_help->pointers[j].indexTd = secondPointer;
-					if(skip == 1){
-						increase++;
-					}
-					startSecond = 0;
-					copyNode = 1;
-				}
-				if(j == pointerIndex){
-					temp_help->values[j-1] = firstValue;
-					temp_help->pointers[j].indexTd = firstPointer;
-					startSecond = 1;
-					copyNode = 0;
-				}
-			}
+			//adding value
+			temp_help = setNodePointers(temp_help,temp,pointerIndex,temp_help_two->values[0],insertPath[inc],id);
 			memset(&block->data[nodeAddress],0,sizeof(btree_node));
 			memcpy(&block->data[nodeAddress],temp_help,sizeof(btree_node)); 
 			AK_write_block(block);
@@ -539,6 +481,7 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 		}else{//spliting nodes
 			int nodeIncrease,nodeInserted,helpAddress,helpType,nodeAboveAddress;
 			int again = 1,newRoot=0,updateIdx = 1;
+			
 			btree_node *temp_node_one = (btree_node*) AK_malloc(sizeof(btree_node));
 			btree_node *temp_node_two = (btree_node*) AK_malloc(sizeof(btree_node));
 			btree_node *value_help = (btree_node*) AK_malloc(sizeof(btree_node));
@@ -551,62 +494,20 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 				nodeIncrease = 0;
 				nodeInserted = 0;
 				helpType=NODE;
+				
 				//pointers for first node
-				for(j=0;j<numberPointersFirst;j++){
-					if((j==(pointerIndex+1)) && (nodeInserted == 0)){
-						temp_node_one->pointers[j].indexTd = secondPointer;
-						temp_node_one->pointers[j].addBlock = 0;//update when fixing blocks
-						nodeInserted = 1;
-					}
-					else{
-						temp_node_one->pointers[j].indexTd = temp->pointers[nodeIncrease].indexTd;
-						temp_node_one->pointers[j].addBlock = temp->pointers[nodeIncrease].addBlock;
-						nodeIncrease++;
-					}
-				}
+				temp_node_one = findPointers(temp_node_one, temp, id, &nodeInserted, &nodeIncrease, 3, pointerIndex);
+				
 				//values for first node
-				for(j=0;j<B;j++){
-					if(temp_node_one->pointers[j+1].indexTd != 0){
-						helpAddress = block->tuple_dict[temp_node_one->pointers[j+1].indexTd].address;
-						helpType = block->tuple_dict[temp_node_one->pointers[j+1].indexTd].type;
-						memset(value_help,0,sizeof(btree_node));
-						memcpy(value_help,&block->data[helpAddress],sizeof(btree_node));			
-						while(helpType == NODE){
-							helpAddress = block->tuple_dict[value_help->pointers[0].indexTd].address;
-							helpType = block->tuple_dict[value_help->pointers[0].indexTd].type;
-							memset(value_help,0,sizeof(btree_node));
-							memcpy(value_help,&block->data[helpAddress],sizeof(btree_node));
-						}
-						temp_node_one->values[j] = value_help->values[0];
-					}
-				}
+				temp_node_one = findValues(temp_node_one, block, &helpAddress, &helpType, value_help);
+				
 				//pointers for second node
-				for(j=0;j<numberPointersSecond;j++){
-					if((nodeIncrease == (pointerIndex+1)) && (nodeInserted == 0))  {
-						temp_node_two->pointers[j].indexTd = secondPointer;
-						temp_node_two->pointers[j].addBlock = 0;//update when fixing blocks
-					}else{
-						temp_node_two->pointers[j].indexTd = temp->pointers[nodeIncrease].indexTd;
-						temp_node_two->pointers[j].addBlock = temp->pointers[nodeIncrease].addBlock;
-						nodeIncrease++;
-					}
-				}
+				temp_node_two = findPointers(temp_node_two, temp, id, &nodeInserted, &nodeIncrease, 4, pointerIndex);
+				
 				//values for second node
-				for(j=0;j<B;j++){
-					if(temp_node_two->pointers[j+1].indexTd != 0){
-						helpAddress = block->tuple_dict[temp_node_two->pointers[j+1].indexTd].address;
-						helpType = block->tuple_dict[temp_node_two->pointers[j+1].indexTd].type;
-						memset(value_help,0,sizeof(btree_node));
-						memcpy(value_help,&block->data[helpAddress],sizeof(btree_node));			
-						while(helpType == NODE){
-							helpAddress = block->tuple_dict[value_help->pointers[0].indexTd].address;
-							helpType = block->tuple_dict[value_help->pointers[0].indexTd].type;
-							memset(value_help,0,sizeof(btree_node));
-							memcpy(value_help,&block->data[helpAddress],sizeof(btree_node));
-						}
-						temp_node_two->values[j] = value_help->values[0];
-					}
-				}
+				temp_node_two = findValues(temp_node_two, block, &helpAddress, &helpType, value_help);
+				
+				//updating block with btree
 				memset(&block->data[block->tuple_dict[insertPath[pathIndex]].address],0,sizeof(btree_node));
 				memcpy(&block->data[block->tuple_dict[insertPath[pathIndex]].address],temp_node_one,sizeof(btree_node)); 
 				memcpy(&block->data[block->AK_free_space],temp_node_two,sizeof(btree_node)); 
@@ -615,23 +516,18 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 				block->tuple_dict[id].type = NODE;
 				block->AK_free_space += sizeof(btree_node);
 				block->last_tuple_dict_id = id;
-
 				root->level[updateIdx]++;
 				memcpy(&block->data[0],root,sizeof(root_info));
 				updateIdx++;
 				AK_write_block(block);
 
-				firstPointer = insertPath[pathIndex]; 
-				secondPointer = id;
-
 				if(newRoot == 1){
 					again = 0;
 					memset(temp,0,sizeof(btree_node));
-					temp->pointers[0].indexTd = firstPointer;
-					temp->pointers[1].indexTd = secondPointer;
-					
-					helpAddress = block->tuple_dict[secondPointer].address;
-					helpType = block->tuple_dict[secondPointer].type;
+					temp->pointers[0].indexTd = insertPath[pathIndex];
+					temp->pointers[1].indexTd = id;
+					helpAddress = block->tuple_dict[id].address;
+					helpType = block->tuple_dict[id].type;
 					memset(value_help,0,sizeof(btree_node));
 					memcpy(value_help,&block->data[helpAddress],sizeof(btree_node));			
 					while(helpType == NODE){
@@ -642,24 +538,25 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 					}
 					temp->values[0] = value_help->values[0];
 					printf("\nNew value is added and tree is updated! New root added, so order of the tree increased!");
+					//updating block with btree
 					memcpy(&block->data[block->AK_free_space],temp,sizeof(btree_node)); 
 					id = block->last_tuple_dict_id + 1;
 					block->tuple_dict[id].address = block->AK_free_space;
 					block->tuple_dict[id].type = NODE;
 					block->AK_free_space += sizeof(btree_node);
 					block->last_tuple_dict_id = id;
-
 					root->level[updateIdx] = 1;
 					root->root = id;
 					memcpy(&block->data[0],root,sizeof(root_info));
-					AK_write_block(block);					
+					AK_write_block(block);	
 				}else{
 					//get above node !
-					pathIndex = pathIndex - 1; //0, insertPath[0] = 13 (root)
+					if(pathIndex != 0)
+						pathIndex = pathIndex - 1; //0, insertPath[0] = 13 (root)
 					nodeAboveAddress = block->tuple_dict[insertPath[pathIndex]].address;
-
 					memset(temp,0,sizeof(btree_node));
 					memcpy(temp,&block->data[nodeAboveAddress],sizeof(btree_node));
+					
 					for(j=0;j<B;j++){
 						if(temp->values[j] == -1)
 							AK_freePointer = 1;
@@ -670,27 +567,14 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 						memset(temp_help,0,sizeof(btree_node));
 						for(j=0;j<=B;j++){
 							if(j == (insertIndexPath[pathIndex]+1)){
-								temp_help->pointers[j].indexTd = secondPointer;
+								temp_help->pointers[j].indexTd = id;
 							}else{
 								temp_help->pointers[j].indexTd = temp->pointers[increase].indexTd;
 								increase++;
 							}	
 						}
-						for(j=0;j<B;j++){
-							if(temp_help->pointers[j+1].indexTd != 0){
-								helpAddress = block->tuple_dict[temp_help->pointers[j+1].indexTd].address;
-								helpType = block->tuple_dict[temp_help->pointers[j+1].indexTd].type;
-								memset(value_help,0,sizeof(btree_node));
-								memcpy(value_help,&block->data[helpAddress],sizeof(btree_node));			
-								while(helpType == NODE){
-									helpAddress = block->tuple_dict[value_help->pointers[0].indexTd].address;
-									helpType = block->tuple_dict[value_help->pointers[0].indexTd].type;
-									memset(value_help,0,sizeof(btree_node));
-									memcpy(value_help,&block->data[helpAddress],sizeof(btree_node));
-								}
-								temp_help->values[j] = value_help->values[0];
-							}
-						}
+						//updating block with btree
+						temp_help = findValues(temp_help, block, &helpAddress, &helpType, value_help);
 						memcpy(&block->data[block->AK_free_space],temp,sizeof(btree_node)); 
 						id = block->last_tuple_dict_id + 1;
 						block->tuple_dict[id].address = block->AK_free_space;
@@ -713,8 +597,227 @@ int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insert
 	AK_EPI;
 	return EXIT_SUCCESS;
 }
-//TODO: Add description of the function AK_btree_test as well as params 
+
+
+/**
+  * @author unknown
+  * @brief Function that sets values for node
+  * @param temp_help - node that has it's values set
+  * @param insertValue - value for insert
+  * @param insertTd - index table destination
+  * @param insertBlock - block address
+  * @param i - determins the index of element of node
+  * @return  node that has it's values set 
+ */
+btree_node * makevalues(btree_node * temp_help, int insertValue, int insertTd, int insertBlock, int i){
+	temp_help->values[i] = insertValue;
+	temp_help->pointers[i].indexTd = insertTd;
+	temp_help->pointers[i].addBlock = insertBlock;
+	return temp_help;
+}
+
+/**
+  * @author unknown
+  * @brief returns data about a leaf
+  * @return required value
+ */
+int findCorrectNumber(int number){
+	int amount = B % 2;
+	if(amount == 0){//uneven number of pointers (B+1)%2 = 1
+		//we need to insert B+1 elements in two leafs -> 4+1=3+2
+		if(number == 1)
+			return (B/2) + 1; //B=4,(4/2)+1=3 elements in first leaf
+		if(number == 2)
+			return B/2; //B=4,(4/2)=2 elements in second leaf
+		if(number == 3)
+			return (B + 2)/2;  //B=4, (B+1+1)/2 = 3 pointers in first LEAF
+		if(number == 4)
+			return (B + 2)/2; //B=4, (B+1+1)/2 = 3 pointers in second LEAF
+	}else{//even number of pointers (B+1)%2 = 0
+		//we need to insert B+1 elements in two leafs -> 3+1=2+2
+		if(number == 1)
+			return (B + 1)/2; //B=3,(3+1)/2=2 elements in first leaf
+		if(number == 2)
+			return (B + 1)/2; //B=3,(3+1)/2=2 elements in second leaf 
+		if(number == 3)
+			return ((B + 1)/2) + 1; //B=3, ((3+1)/2)+1= 3 pointers in first leaf
+		if(number == 4)
+			return (B + 1)/2; //B=3 (3+1)/2=2 pointers in second leaf			
+	}
+}
+
+/**
+  * @author unknown
+  * @brief Function that sets values for node
+  * @param inserted - determins if a value in a tree smaller then the value for insert has been found
+  * @param insertValue - value for insert
+  * @param temp - node with data about existing node
+  * @param temp_help - node that has it's values set
+  * @param insertTd - index table destination
+  * @param insertBlock - block address
+  * @param increase - determins the index of element of a node
+  * @param number - gives information about the number of elements in a leaf
+  * @return  node that has it's values set 
+ */
+btree_node * searchValue(int inserted, int insertValue, btree_node * temp, btree_node * temp_help, int *insertTd, int *insertBlock,int* increase, int number){
+	int stop = 0;
+	for(int j=0;j<B;j++){
+		if(stop == 0){
+			if(inserted == 0){
+				if(insertValue < temp->values[*increase]){
+					temp_help = makevalues(temp_help,insertValue,*insertTd,*insertBlock,j);
+					inserted = 1;
+				}else{
+					temp_help = makevalues(temp_help,temp->values[*increase],temp->pointers[*increase].indexTd,temp->pointers[*increase].addBlock,j);
+					*increase++;
+				}
+			}else{
+				if(temp->values[*increase] == -1 && number == -1){
+					temp_help = makevalues(temp_help,insertValue,*insertTd,*insertBlock,j);
+					inserted = 1;
+				}else{
+					temp_help = makevalues(temp_help,temp->values[*increase],temp->pointers[*increase].indexTd,temp->pointers[*increase].addBlock,j);
+					*increase++;
+				}	
+			}
+			if((j+1) == number)
+				stop = 1;
+		}else{	
+			if(number != -1) 
+				temp_help = makevalues(temp_help,-1,0,0,j);
+			else{
+				temp_help->values[j] = temp->values[*increase];
+				temp_help->pointers[j] = temp->pointers[*increase];
+				*increase++;
+			}
+		}		
+	}
+	return temp_help;
+}
+
+/**
+  * @author unknown
+  * @brief Function that sets values for node
+  * @param temp - node with data about existing node
+  * @param temp_help - node that has it's values set
+  * @param pointerIndex - indicates what pointer is used
+  * @param secondValue - value of a node
+  * @param firstPointer - value to which a pointer of a node is to be set
+  * @param secondPointer - value to which a pointer of a node is to be set
+  * @return  node that has it's values set 
+ */
+btree_node * setNodePointers(btree_node * temp, btree_node * temp_help,int pointerIndex,int secondValue,int firstPointer,int secondPointer){
+	int firstValue = temp_help->values[0];
+	int AK_freePointer = 0;
+	for(int j=0;j<B;j++){
+		if(temp->values[j] == -1)
+			AK_freePointer = 1;
+	}
+	int startSecond = 0, copyNode = 1,skip = 1;
+	int increase = 0;
+	temp_help->pointers[0].indexTd = temp->pointers[0].indexTd;
+	if(pointerIndex == 0){
+		startSecond = 1;
+		copyNode = 0;
+		skip = 0;
+	}
+	for(int j=1;j<=B;j++){
+		if((copyNode == 1) && (j != pointerIndex)){
+			temp_help->values[j-1] = temp->values[increase];
+			temp_help->pointers[j].indexTd = temp->pointers[increase+1].indexTd;
+			increase++;
+		}
+		if(startSecond == 1){
+			temp_help->values[j-1] = secondValue;
+			temp_help->pointers[j].indexTd = secondPointer;
+			if(skip == 1){
+				increase++;
+			}
+			startSecond = 0;
+			copyNode = 1;
+		}
+		if(j == pointerIndex){
+			temp_help->values[j-1] = firstValue;
+			temp_help->pointers[j].indexTd = firstPointer;
+			startSecond = 1;
+			copyNode = 0;
+		}
+	}
+	return temp_help;
+}
+
+/**
+  * @author unknown
+  * @brief Function that sets values for node
+  * @param temp_node_one - node that has it's values set
+  * @param temp - node with data about existing node
+  * @param id - value to which a pointer of a node is to be set
+  * @param nodeInserted - determins if a node has value
+  * @param nodeIncrease - shows node that is currently watched
+  * @param number - determins the way node values are checked
+  * @param pointerIndex - indicates what pointer is used
+  * @return  node that has it's values set 
+ */
+btree_node * findPointers(btree_node * temp_node_one, btree_node * temp, int id, int* nodeInserted,int* nodeIncrease, int number, int pointerIndex){
+	for(int j=0;j<findCorrectNumber(number);j++){
+		int compare;
+		if(number == 3)
+			compare = j;
+		else
+			compare = *nodeIncrease;
+		if((compare==(pointerIndex+1)) && (*nodeInserted == 0)){
+			temp_node_one->pointers[j].indexTd = id;
+			temp_node_one->pointers[j].addBlock = 0;//update when fixing blocks
+			if(number == 3)
+				*nodeInserted = 1;
+		}
+		else{
+			temp_node_one->pointers[j].indexTd = temp->pointers[*nodeIncrease].indexTd;
+			temp_node_one->pointers[j].addBlock = temp->pointers[*nodeIncrease].addBlock;
+			*nodeIncrease++;
+		}
+	}
+	return temp_node_one;
+}
+
+/**
+  * @author unknown
+  * @brief Function that sets values for node
+  * @param temp_node_one - node that has it's values set
+   * @param block - block containing btree
+  * @param helpAddress - address of current node
+  * @param helpType - type of current node
+  * @param value_help - node in helpAddress
+  * @return  node that has it's values set 
+ */
+btree_node * findValues(btree_node * temp_node_one, AK_block * block, int* helpAddress,int* helpType, btree_node *value_help){
+	for(int j=0;j<B;j++){
+		if(temp_node_one->pointers[j+1].indexTd != 0){
+			*helpAddress = block->tuple_dict[temp_node_one->pointers[j+1].indexTd].address;
+			*helpType = block->tuple_dict[temp_node_one->pointers[j+1].indexTd].type;
+			memset(value_help,0,sizeof(btree_node));
+			memcpy(value_help,&block->data[*helpAddress],sizeof(btree_node));			
+			while(*helpType == NODE){
+				*helpAddress = block->tuple_dict[value_help->pointers[0].indexTd].address;
+				*helpType = block->tuple_dict[value_help->pointers[0].indexTd].type;
+				memset(value_help,0,sizeof(btree_node));
+				memcpy(value_help,&block->data[*helpAddress],sizeof(btree_node));
+			}
+			temp_node_one->values[j] = value_help->values[0];
+		}
+	}
+	return temp_node_one;
+}
+
+/**
+ * @author unknown
+ * @brief Returns the amount of successful and failed tests.
+ * @return TestResult
+ */ 
 TestResult AK_btree_test() {
+	int passed_tests=0;
+    	int failed_tests=0;
+    	
 	char *tblName = "student";
 	char *indexName = "student_btree_index";
 	AK_PRO;
@@ -722,7 +825,13 @@ TestResult AK_btree_test() {
 	AK_Init_L3(&att_list);
 	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr\0", 4, att_list);
 
-	AK_btree_create(tblName, att_list, indexName);
+	AK_block * block = AK_btree_create(tblName, att_list, indexName);
+	if(block == NULL){
+		failed_tests++;
+	}
+	else{
+		passed_tests++;
+	}
 	printf("\n\n---------------------------");
 	printf("\nInserting new value...\n");
 	int iv=39123;
@@ -732,21 +841,38 @@ TestResult AK_btree_test() {
 	//int *insertValue = 35901; //insert in full leaf -> new leaf, full node above - split
 	int *insertTd = &ii;
 	int *insertBlock = &ib;
-	AK_btree_insert(indexName,insertValue,insertTd,insertBlock);
+	if(AK_btree_insert(indexName,insertValue,insertTd,insertBlock,block) == EXIT_SUCCESS){
+		passed_tests++;
+	}
+	else{
+		failed_tests++;
+	}
 	//use insert function for 39123 and again for 39000 to test spliting leaf with AK_free space above
-	//insertValue = 39000; //insert in full leaf -> new leaf, AK_free space in node above
-	//AK_btree_insert(indexName,insertValue,insertTd,insertBlock);
+	iv=39000;
+	insertValue = &iv; //insert in full leaf -> new leaf, AK_free space in node above
+	if(AK_btree_insert(indexName,insertValue,insertTd,insertBlock,block) == EXIT_SUCCESS){
+		passed_tests++;
+	}
+	else{
+		failed_tests++;
+	}
 	printf("\n\n---------------------------");
 	printf("\nSearching value...\n");
 	int sv=35906;
 	int er=35916;
-	int td=0;
+	int td=1;
 	int *searchValue = &sv;
 	int *endRange = &er;
 	//int *endRange = 0;
 	int *toDo = &td;//0 search, 1 delete
-	AK_btree_search_delete(indexName, searchValue, endRange, toDo);
+	if(AK_btree_search_delete(indexName, searchValue, endRange, toDo, block) == EXIT_SUCCESS){
+		passed_tests++;
+	}
+	else{
+		failed_tests++;
+	}
+	printf("\n");
 	AK_EPI;
-	return TEST_result(0,0);
+	return TEST_result(passed_tests,failed_tests);
 }
 
