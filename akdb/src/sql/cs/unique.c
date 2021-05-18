@@ -410,7 +410,7 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 }
  
 /**
- * @author Maja Vračan, updated by Blaž Rajič
+ * @author Blaž Rajič, updated by Bruno Pilošta
  * @brief Function for deleting specific unique constraint
  * @param tableName name of table on which constraint refers
  * @param constraintName name of constraint 
@@ -420,46 +420,24 @@ int AK_delete_constraint_unique(char* tableName, char* constraintName){
     AK_PRO;
 
     char* constraint_attr = "constraintName";
-	struct list_node *row;
-	struct list_node *attribute;
-	struct list_node *obj_id;
-	int j,id;
 
     if(AK_check_constraint_name(constraintName) == EXIT_SUCCESS){
-        printf("FAILURE! -- CONSTRAINT with name %s doesn't exist as UNIQUE CONSTRAINT.", constraintName);
+        printf("FAILURE! -- CONSTRAINT with name %s doesn't exist in TABLE %s", constraintName, tableName);
         AK_EPI;
         return EXIT_ERROR;
     }
 
-	int num_rows = AK_get_num_records(AK_CONSTRAINTS_UNIQUE);
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    AK_Init_L3(&row_root);
+    
+    AK_Update_Existing_Element(TYPE_VARCHAR, constraintName, tableName, constraint_attr, row_root);
+    int result = AK_delete_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+	AK_free(row_root);    
 
-	for (j = 0; j < num_rows; ++j)
-	{
-		row = AK_get_row(j, AK_CONSTRAINTS_UNIQUE);
-		attribute = AK_GetNth_L2(3, row);
-			
-		if (strcmp(attribute->data, constraintName) == 0)
-		{
-			obj_id = AK_GetNth_L2(1, row);
-			
-			char** conds = (char*) AK_malloc(sizeof(char));
-            sprintf (conds, "%i", *((int *) obj_id->data));
-			id = atoi(conds);
-
-			AK_delete_row_by_id(id,AK_CONSTRAINTS_UNIQUE);
-
-			AK_DeleteAll_L3(&row);
-			AK_free(row);
-			AK_DeleteAll_L3(&conds);
-			AK_EPI;
-			return EXIT_SUCCESS;
-		}
-		AK_DeleteAll_L3(&row);
-		AK_free(row);
-	}
     AK_EPI;
 
-    return EXIT_ERROR;
+    return result;
 }
 
 /**
@@ -676,10 +654,26 @@ TestResult AK_unique_test() {
 		printf("\nFAILED\n\n");
 	}
 
-	AK_delete_constraint_unique("AK_constraints_unique", constraintMbr);
-    AK_delete_constraint_unique("AK_constraints_unique", constraintYear);
-    AK_delete_constraint_unique("AK_constraints_unique", constraintName1);
-    AK_delete_constraint_unique("AK_constraints_unique", constraintName2);
+	printf("\n============== Running Test #9 ==============\n");
+	printf("\nTrying to set delete all existing UNIQUE constraints ...\n\n");
+	int delete1 = AK_delete_constraint_unique("AK_constraints_unique", constraintMbr);
+	int delete2 = AK_delete_constraint_unique("AK_constraints_unique", constraintYear);
+	int delete3 = AK_delete_constraint_unique("AK_constraints_unique", constraintName1);
+	int delete4 = AK_delete_constraint_unique("AK_constraints_unique", constraintName2);
+
+	if (delete1 == EXIT_SUCCESS && delete2 == EXIT_SUCCESS && delete3 == EXIT_SUCCESS && delete4 == EXIT_SUCCESS)
+	{
+		success++;
+		printf("\nSUCCESS\n\n");
+		printf("All existing UNIQUE constraints deleted successfully\n");
+	}
+	else{
+		failed++;
+		printf("\nFAILED\n\n");
+		printf("One or two UNIQUE constraints not deleted successfully\n");
+	}
+	
+	AK_print_table("AK_constraints_unique");
 
 	AK_EPI;
 

@@ -60,7 +60,7 @@ int AK_set_check_constraint(char *table_name, char *constraint_name, char *attri
  * @param value data we want to insert
  * @return 1 - result, 0 - failure 
  */
-int AK_check_constraint(char *table, char *attribute, void *value);
+int AK_delete_check_constraint(char* tableName, char* constraintName);
 TestResult AK_check_constraint_test();
 
 #endif
