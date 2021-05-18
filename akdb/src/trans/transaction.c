@@ -581,7 +581,7 @@ int AK_create_new_transaction_thread(AK_transaction_data *transaction_data) {
  * @param commandArray array filled with commands that need to be secured using transactions
  * @param lengthOfArray length of commandArray
  */
-void AK_transaction_manager(command * commandArray, int lengthOfArray) {
+int AK_transaction_manager(command * commandArray, int lengthOfArray) {
     AK_PRO;
     AK_transaction_data* params = AK_malloc(sizeof(AK_transaction_data));
     params->array = AK_malloc(sizeof(command));
@@ -601,6 +601,7 @@ void AK_transaction_manager(command * commandArray, int lengthOfArray) {
         AK_create_new_transaction_thread(params);
     }
     AK_EPI;
+    return OK;
 }
 
 /** 
@@ -793,10 +794,18 @@ AK_observer_lock * AK_init_observer_lock() {
 
 TestResult AK_test_Transaction() {
     AK_PRO;
+    int successfulTest = 0;
+    int failedTest = 0;
     printf("***Test Transaction***\n");
     pthread_mutex_lock(&endTransationTestLockMutex);
     pthread_mutex_lock(&newTransactionLockMutex);
-    AK_init_observable_transaction();
+    
+    if(AK_init_observable_transaction() != NULL){
+    	successfulTest++;
+    }
+    else{
+    	failedTest++;
+    }
 
     // NOTE: This is the way on which we can broadcast notice to all observers
     // observable_transaction->observable->AK_notify_observers(observable_transaction->observable);
@@ -871,13 +880,32 @@ TestResult AK_test_Transaction() {
     commands_select[0].parameters = expr;
 
     /**************** EXECUTE TRANSACTIONS ******************/
-    AK_transaction_manager(commands_ins_up, 2);
-    AK_transaction_manager(commands_ins_up, 2);
-    AK_transaction_manager(commands_delete, 1);
-    AK_transaction_manager(commands_select, 1);
- 
+    if(AK_transaction_manager(commands_ins_up, 2) == OK){
+    	successfulTest++;
+    }
+    else{
+    	failedTest++;
+    }
+    if(AK_transaction_manager(commands_ins_up, 2) == OK){
+    	successfulTest++;
+    }
+    else{
+    	failedTest++;
+    }
+    if(AK_transaction_manager(commands_delete, 1) == OK){
+    	successfulTest++;
+    }
+    else{
+    	failedTest++;
+    }
+    if(AK_transaction_manager(commands_select, 1) == OK){
+    	successfulTest++;
+    }
+    else{
+    	failedTest++;
+    }
+    
     pthread_mutex_lock(&endTransationTestLockMutex);
-
     AK_free(expr);
     AK_free(commands_delete);
     AK_free(commands_select);
@@ -892,5 +920,5 @@ TestResult AK_test_Transaction() {
     printf("***End test Transaction***\n");
     AK_EPI;
 
-    return TEST_result(0,0);
+    return TEST_result(successfulTest,failedTest);
 }
