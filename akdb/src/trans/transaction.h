@@ -294,7 +294,7 @@ void * AK_execute_transaction(void*);
  * @param commandArray array filled with commands that need to be secured using transactions
  * @param lengthOfArray length of commandArray
  */
-void AK_transaction_manager(command*, int);
+int AK_transaction_manager(command*, int);
 TestResult AK_test_Transaction();
 
 /** 
