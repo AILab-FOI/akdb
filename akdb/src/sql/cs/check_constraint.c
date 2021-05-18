@@ -269,6 +269,37 @@ int AK_check_constraint(char *table, char *attribute, void *value) {
     return EXIT_SUCCESS;
 }
 
+/**
+ * @author Bruno Pilošta
+ * @brief Function that deletes existing check constraint
+ * @param tableName System table where constraint will be deleted from
+ * @param constraintName Name of the constraint that will be deleted
+ * @return 1 - result, 0 - failure 
+ */
+int AK_delete_check_constraint(char* tableName, char* constraintName){
+    AK_PRO;
+
+    char* constraint_attr = "constraint_name";
+
+    if(AK_check_constraint_name(constraintName) == EXIT_SUCCESS){
+        printf("FAILURE! -- CONSTRAINT with name %s doesn't exist in TABLE %s", constraintName, tableName);
+        AK_EPI;
+        return EXIT_ERROR;
+    }
+
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+    AK_Init_L3(&row_root);
+    
+    AK_Update_Existing_Element(TYPE_VARCHAR, constraintName, tableName, constraint_attr, row_root);
+    int result = AK_delete_row(row_root);
+    AK_DeleteAll_L3(&row_root);
+	AK_free(row_root);    
+
+    AK_EPI;
+
+    return result;
+}
+
 
 /**
  * @author Mislav Jurinić, updated by Bruno Pilošta
@@ -277,25 +308,9 @@ int AK_check_constraint(char *table, char *attribute, void *value) {
  */
 TestResult AK_check_constraint_test() {
 
-    //Need num_rows to identify test run number
-    int num_rows = AK_get_num_records(AK_CONSTRAINTS_CHECK_CONSTRAINT);
-    if (num_rows == 0)
-    {
-        num_rows = 1;
-    }
-    else{
-       num_rows = num_rows/3 +1 ;
-    }  
-
-    //printf(num_rows);
-
-    char constraintYearName[50];
-    char constraintWeightName[50];
-    char constraintLastnameName[50];
-
-    sprintf(constraintYearName, "%s%d", "check_student_year", num_rows);
-    sprintf(constraintWeightName, "%s%d", "check_student_weight", num_rows);
-    sprintf(constraintLastnameName, "%s%d", "check_student_lastname", num_rows);
+    char constraintYearName[50] = "check_student_year";
+    char constraintWeightName[50] = "check_student_weight";
+    char constraintLastnameName[50] = "check_student_lastname";
 
 	int success = 0;
     int failed = 0;
@@ -525,6 +540,23 @@ TestResult AK_check_constraint_test() {
         failed++;
     }
 
+
+        AK_print_table(AK_CONSTRAINTS_CHECK_CONSTRAINT);
+
+    printf("\n\n*** TEST 8 *** trying to delete all existing CHECK constraints \n");
+    int delete1 =AK_delete_check_constraint(AK_CONSTRAINTS_CHECK_CONSTRAINT, constraintYearName);
+    int delete2 =AK_delete_check_constraint(AK_CONSTRAINTS_CHECK_CONSTRAINT, constraintWeightName);
+    int delete3 =AK_delete_check_constraint(AK_CONSTRAINTS_CHECK_CONSTRAINT, constraintLastnameName);
+    AK_print_table(AK_CONSTRAINTS_CHECK_CONSTRAINT);
+    if (delete1 == EXIT_SUCCESS && delete2 == EXIT_SUCCESS && delete3 == EXIT_SUCCESS)
+	{
+		success++;
+        printf("*** TEST 8 Successful! ***\n");
+	}
+	else{
+		failed++;
+        printf("*** TEST 8 Failed! ***\n");
+	}
 
     AK_EPI;
 
