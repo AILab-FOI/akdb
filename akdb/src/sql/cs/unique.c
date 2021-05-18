@@ -410,47 +410,56 @@ int AK_read_constraint_unique(char* tableName, char attName[], char newValue[]){
 }
  
 /**
- * @author Maja Vračan
+ * @author Maja Vračan, updated by Blaž Rajič
  * @brief Function for deleting specific unique constraint
  * @param tableName name of table on which constraint refers
- * @param attName name of attribute on which constraint is declared
  * @param constraintName name of constraint 
  * @return EXIT_SUCCESS when constraint is deleted, else EXIT_ERROR
  */
-int AK_delete_constraint_unique(char* tableName, char attName[], char constraintName[]){
-    int address, i, j, k, l, size;
-	AK_PRO;
-    int num_attr = AK_num_attr("AK_constraints_unique");
-    AK_header *t_header = (AK_header *) AK_get_header("AK_constraints_unique");
-    table_addresses *src_addr = (table_addresses*) AK_get_table_addresses("AK_constraints_unique");
-    for (i = 0; src_addr->address_from[i] != 0; i++) {
-        for (j = src_addr->address_from[i]; j < src_addr->address_to[i]; j++) {
-            AK_mem_block *temp = (AK_mem_block *) AK_get_block(j);
-            if (temp->block->last_tuple_dict_id == 0)
-                break;
-            for (k = 0; k < DATA_BLOCK_SIZE; k += num_attr) {
-                if (temp->block->tuple_dict[k].type == FREE_INT)
-                    break;
+int AK_delete_constraint_unique(char* tableName, char* constraintName){
+    AK_PRO;
 
-                for (l = 0; l < num_attr; l++) {
-                    if(strcmp(t_header[l].att_name, "constraintName") == 0) {
-                        size = temp->block->tuple_dict[k + l].size;
-                        address = temp->block->tuple_dict[k + l].address;
-                        char data[size];
-                        memcpy(data, &(temp->block->data[address]), size);
-                        data[size] = '\0';
-                        if(strcmp(data, constraintName) == 0) { 
-                            temp->block->tuple_dict[k].size = 0;
-							AK_EPI;
-							return EXIT_SUCCESS;
-                        }
-                    }
-                }
-            }
-        }
+    char* constraint_attr = "constraintName";
+	struct list_node *row;
+	struct list_node *attribute;
+	struct list_node *obj_id;
+	int j,id;
+
+    if(AK_check_constraint_name(constraintName) == EXIT_SUCCESS){
+        printf("FAILURE! -- CONSTRAINT with name %s doesn't exist as UNIQUE CONSTRAINT.", constraintName);
+        AK_EPI;
+        return EXIT_ERROR;
     }
-	AK_EPI;
-	return EXIT_ERROR;
+
+	int num_rows = AK_get_num_records(AK_CONSTRAINTS_UNIQUE);
+
+	for (j = 0; j < num_rows; ++j)
+	{
+		row = AK_get_row(j, AK_CONSTRAINTS_UNIQUE);
+		attribute = AK_GetNth_L2(3, row);
+			
+		if (strcmp(attribute->data, constraintName) == 0)
+		{
+			obj_id = AK_GetNth_L2(1, row);
+			
+			char** conds = (char*) AK_malloc(sizeof(char));
+            sprintf (conds, "%i", *((int *) obj_id->data));
+			id = atoi(conds);
+
+			AK_delete_row_by_id(id,AK_CONSTRAINTS_UNIQUE);
+
+			AK_DeleteAll_L3(&row);
+			AK_free(row);
+			AK_DeleteAll_L3(&conds);
+			AK_EPI;
+			return EXIT_SUCCESS;
+		}
+		AK_DeleteAll_L3(&row);
+		AK_free(row);
+	}
+    AK_EPI;
+
+    return EXIT_ERROR;
 }
 
 /**
@@ -553,25 +562,22 @@ TestResult AK_unique_test() {
 		printf("\nFAILED\n\n");
 	}
 	
+    printf("\n============== Running Test #2 ==============\n");
+    printf("\nTrying to delete constraint %s \n\n", constraintYear);
+    //result = AK_delete_constraint_unique(tableName, attYear, constraintYear);
+	result = AK_delete_constraint_unique("AK_constraints_unique", constraintYear);
+    AK_print_table("AK_constraints_unique");
+    if(result == EXIT_SUCCESS) {
+    	success++;
+		printf("\nSUCCESS\n\n");
+    }
+	else
+	{
+		failed++;
+		printf("\nFAILED\n\n");
+	}
         
-        printf("\n============== Running Test #2 ==============\n");
-        printf("\nDelete test");
-        result = AK_delete_constraint_unique(tableName, attYear, constraintYear);
-        AK_print_table("AK_constraints_unique");
-        if(result == EXIT_SUCCESS) {
-            
-			success++;
-			printf("\nSUCCESS\n\n");
-        }
-		else
-		{
-			failed++;
-			printf("\nFAILED\n\n");
-		}
-		
-        printf("\nDelete test finish");
-        
-        printf("\n============== Running Test #3 ==============\n");
+    printf("\n============== Running Test #3 ==============\n");
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s AGAIN...\n\n", attYear, tableName);
 	result = AK_set_constraint_unique(tableName, attYear, constraintYear);
 	AK_print_table("AK_constraints_unique");
@@ -591,10 +597,8 @@ TestResult AK_unique_test() {
 	printf("\nTrying to set UNIQUE constraint on attribute %s of table %s...\n\n", attFirstname, tableName);
 	result = AK_set_constraint_unique(tableName, attFirstname, constraintName);
 	AK_print_table("AK_constraints_unique");
-	if(result == EXIT_SUCCESS)
+	if(result==EXIT_ERROR)
 	{
-		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue, attFirstname, tableName, AK_read_constraint_unique(tableName, attFirstname, newValue));
-		printf("\nChecking if value %s would be UNIQUE in attribute %s of table %s...\nYes (0) No (-1): %d\n\n", newValue2, attFirstname, tableName, AK_read_constraint_unique(tableName, attFirstname, newValue2));
 		success++;
 		printf("\nSUCCESS\n\n");
 	}
@@ -645,7 +649,7 @@ TestResult AK_unique_test() {
 	printf("\nTrying to set UNIQUE constraint on combination of attributes %s of table %s AGAIN...\n\n", attNames2, tableName);
 	result = AK_set_constraint_unique(tableName, attNames2, constraintName2);
 	AK_print_table("AK_constraints_unique");
-	if(result==EXIT_SUCCESS)
+	if(result==EXIT_ERROR)
 	{
 		success++;
 		printf("\nSUCCESS\n\n");
@@ -670,7 +674,13 @@ TestResult AK_unique_test() {
 	{
 		failed++;
 		printf("\nFAILED\n\n");
-	}	
+	}
+
+	AK_delete_constraint_unique("AK_constraints_unique", constraintMbr);
+    AK_delete_constraint_unique("AK_constraints_unique", constraintYear);
+    AK_delete_constraint_unique("AK_constraints_unique", constraintName1);
+    AK_delete_constraint_unique("AK_constraints_unique", constraintName2);
+
 	AK_EPI;
 
 	return TEST_result(success,failed);
