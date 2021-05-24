@@ -221,10 +221,33 @@ int AK_delete_constraint_not_null(char* tableName, char* constraintName){
   * @return No return value
   */
 TestResult AK_nnull_constraint_test() {
+	// TABLES
 	char* tableName = "student";
+	char* tableName2 = "professor";
+	char* tableName3 = "professor2";
+	char* tableName4 = "assistant";
+	char* tableName5 = "employee";
+	char* tableName6 = "department";
+	
+	// ATTRIBUTES
+	char* attMbr = "mbr";
+	char* attIdProf = "id_prof";
+	char* attIdProf2 = "id_prof";
+	char* attIdAssistant = "id_prof";
+	char* attIdEmployeeProf = "id_prof";
+	char* attIdEmployeeDept = "id_department";
+	char* attIdDepartment = "id_department";
 	char* attName = "firstname";
 	char* attName2 = "lastname";
+	
+	// CONSTRAINTS
 	char* constraintName = "firstnameNotNull";
+	char* constraintName2 = "id_prof_NotNull";
+	char* constraintName3 = "id_prof_2_NotNull";
+	char* constraintName4 = "id_assistant_NotNull";
+	char* constraintName5 = "id_employee_prof_NotNull";
+	char* constraintName6 = "id_employee_dept_NotNull";
+	char* constraintName7 = "id_department_NotNull";
 	char* newValue = NULL;
 	int passed=0;
 	int failed=0;
@@ -314,6 +337,151 @@ TestResult AK_nnull_constraint_test() {
 		}
 
 	AK_print_table("AK_constraints_not_null");
+	
+	
+	printf("\n\n");
+	
+	printf("-------------------------------------------------------------------------------------");
+	printf("\n\n");
+
+	printf("\n TEST 5 - Trying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attMbr, tableName);
+	int resultTest5 = AK_set_constraint_not_null(tableName, attMbr, constraintName);
+	if(resultTest5 == EXIT_SUCCESS) 
+		{
+			passed++;
+            printf("\nTest successful!");
+        }
+		else
+		{
+			printf("\n Test failed!");
+
+		}
+	AK_print_table("AK_constraints_not_null");
+
+	printf("\n\n");
+	
+	printf("-------------------------------------------------------------------------------------");
+	printf("\n\n");
+
+	printf("\n TEST 6 - Trying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attIdProf, tableName2);
+	int resultTest6 = AK_set_constraint_not_null(tableName2, attIdProf, constraintName2);
+	if(resultTest6 == EXIT_SUCCESS) 
+		{
+			passed++;
+            printf("\nTest successful!");
+        }
+		else
+		{
+			printf("\n Test failed!");
+
+		}
+	AK_print_table("AK_constraints_not_null");
+
+	printf("\n\n");
+
+	
+		printf("-------------------------------------------------------------------------------------");
+	printf("\n\n");
+
+	printf("\n TEST 7 - Trying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attIdProf2, tableName3);
+	int resultTest7 = AK_set_constraint_not_null(tableName3, attIdProf2, constraintName3);
+	if(resultTest7 == EXIT_SUCCESS) 
+		{
+			passed++;
+            printf("\nTest successful!");
+        }
+		else
+		{
+			printf("\n Test failed!");
+
+		}
+	AK_print_table("AK_constraints_not_null");
+
+	printf("\n\n");
+
+printf("-------------------------------------------------------------------------------------");
+	printf("\n\n");
+
+	printf("\n TEST 8 - Trying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attIdAssistant, tableName4);
+	int resultTest8 = AK_set_constraint_not_null(tableName4, attIdAssistant, constraintName4);
+	if(resultTest8 == EXIT_SUCCESS) 
+		{
+			passed++;
+            printf("\nTest successful!");
+        }
+		else
+		{
+			printf("\n Test failed!");
+
+		}
+	AK_print_table("AK_constraints_not_null");
+
+	printf("\n\n");
+	
+	
+	printf("-------------------------------------------------------------------------------------");
+	printf("\n\n");
+
+	printf("\n TEST 9 - Trying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attIdEmployeeProf, tableName5);
+	int resultTest9 = AK_set_constraint_not_null(tableName5, attIdEmployeeProf, constraintName5);
+	if(resultTest9 == EXIT_SUCCESS) 
+		{
+			passed++;
+            printf("\nTest successful!");
+        }
+		else
+		{
+			printf("\n Test failed!");
+
+		}
+	AK_print_table("AK_constraints_not_null");
+
+	printf("\n\n");
+	
+	
+	printf("-------------------------------------------------------------------------------------");
+	printf("\n\n");
+
+	printf("\n TEST 10 - Trying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attIdEmployeeDept, tableName5);
+	int resultTest10 = AK_set_constraint_not_null(tableName5, attIdEmployeeDept, constraintName6);
+	if(resultTest10 == EXIT_SUCCESS) 
+		{
+			passed++;
+            printf("\nTest successful!");
+        }
+		else
+		{
+			printf("\n Test failed!");
+
+		}
+	AK_print_table("AK_constraints_not_null");
+
+	printf("\n\n");
+	
+	
+	printf("-------------------------------------------------------------------------------------");
+	printf("\n\n");
+
+	printf("\n TEST 11 - Trying to set NOT NULL constraint on attribute %s of table %s AGAIN...\n\n", attIdDepartment, tableName6);
+	int resultTest11 = AK_set_constraint_not_null(tableName6, attIdDepartment, constraintName7);
+	if(resultTest11 == EXIT_SUCCESS) 
+		{
+			passed++;
+            printf("\nTest successful!");
+        }
+		else
+		{
+			printf("\n Test failed!");
+
+		}
+	AK_print_table("AK_constraints_not_null");
+
+	printf("\n\n");
+	
+	
+	
+	
+	
 	AK_EPI;
 
 	return TEST_result(passed,failed);
