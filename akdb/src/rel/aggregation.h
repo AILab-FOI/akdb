@@ -57,6 +57,10 @@ typedef struct {
     int counter;
 } AK_agg_input;
 
+struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
+
+struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
+
 /**
  @author Dejan Frankovic
  @brief  Function that calculates how many attributes there are in the header with a while loop.
