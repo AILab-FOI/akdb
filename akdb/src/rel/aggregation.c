@@ -243,6 +243,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     AK_block *temp;
     AK_mem_block *mem_block;
 
+    struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
     AK_Init_L3(&row_root);
 
     i = 0;
@@ -630,6 +631,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     }
     else
 	{
+		//TODO: move struct to .h
+	struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
 	AK_Init_L3(&projection_att);
 
 	for (i = 0; i < num_aggregations; i++) 
@@ -649,8 +652,8 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     }
 	AK_free(addresses);
 		
-	
-    //TODO replace this segment with AK_drop_table() once when it's done
+
+        //TODO replace this segment with AK_drop_table() once when it's done
 	addresses = (table_addresses*) AK_get_table_addresses(new_table);
 	i = 0;
 	while (addresses->address_from[i] != 0) 
@@ -668,19 +671,7 @@ int AK_aggregation(AK_agg_input *input, char *source_table, char *agg_table) {
     return EXIT_SUCCESS;
 }
 
-/**
- * This test is seemingly problematic because it only passes the first time (or after make clean) and every other time it throws 'core dumped'.
- * This needs to be fixed in the future. What it is supposed to do will be described here.
- * Firstly using AK_header an array of attributes is created which is then passed to various functions to group, average, count, sum, max and min weight.
- * After that, results are being checked within the created table using a generated array; brief descriptions can be seen above every function.
- * In the while loop starting on line 797 the data is being checked, after each aggregated value is compared with the previously created table 
- * the error message is being printed if the comparison output is not true. Also, a counter is being incremented every time an error occurs.
- * Memcpy is being used to set the value to 1. After each check the counter value is being incremented to get to the next row which also serves
- * as a loop break; if the next row is empty the loop breaks and testing is finished.
- * 
- * At the end the memory is freed and if the error counter is 0 the message is being printed that there were no errors, and if the error counter 
- * is more than one then a message is being printed which says that there were some errors and their number.
- */
+//TODO: Needs description
 TestResult AK_aggregation_test() {
     AK_PRO;
     printf("aggregation.c: Present!\n");
