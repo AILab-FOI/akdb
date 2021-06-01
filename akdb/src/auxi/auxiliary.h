@@ -150,6 +150,13 @@ typedef struct {
 } AK_synchronization_info;
 
 /**
+ * @author Blaž Rajič
+ * @brief Function for creating graph for testing tarjan algorithm
+ * @param graph AK_graph where graph will be created
+ */
+void AK_define_tarjan_graph();
+
+/**
  * @author Dino Laktašić.
  * @brief Function that gets the number of digits for any given number
  * @param number number to evaluate
