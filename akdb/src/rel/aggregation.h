@@ -57,9 +57,15 @@ typedef struct {
     int counter;
 } AK_agg_input;
 
-struct list_node * row_root = (struct list_node*) AK_malloc(sizeof(struct list_node));
+typedef struct{
+    struct list_node * row_root;
+} rowroot_struct;
 
-struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
+typedef struct{
+    struct list_node * projection_att;
+} projection_att_struct;
+
+//struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
 
 /**
  @author Dejan Frankovic
