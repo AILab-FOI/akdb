@@ -1,235 +1,242 @@
-import sys
 from sql_executor import *
-
-#sql_executor tests by Marko Sinko
-#TODO: Basically.... Rewrite the whole thing.
-
-print "\n---------------------------IS NUMERIC TEST -----------------------------\n"
-commands=["1","a","2","b","3","4","c"]
-print "Array with testing data:", commands
-for command in commands:
-	num = command
-	print is_numeric(num)
-print "\n--------------------------IS NUMERIC TEST END ---------------------------\n"
+import kalashnikovDB as ak47
 
 
+# sql_executor tests by Marko Sinko
 
 
-print "\n---------------------------IS DATE TEST -----------------------------\n"
-commands=["2011-12-12","21234","2013-05-21","2011.23.45"]
-print "Array with testing data:", commands
-for command in commands:
-	date = command
-	print is_date(date)
-print "\n--------------------------IS DATE TEST END ---------------------------\n"
+def is_numeric_test():
+    """
+	>>> map(is_numeric, ["1", "a", "0", "b", "3.3", "4", "c"])
+	[1, None, 0, None, 3.3, 4, None]
+	"""
 
 
+def is_date_test():
+    """
+	>>> map(is_date, ["2011-12-12", "21234", "2013-05-21", "2011.23.45"])
+	[True, False, True, False]
+	"""
 
 
-print "\n---------------------------IS DATETname TEST -----------------------------\n"
-commands=["12:12:12","21234","13:21:56","2011.23.45"]
-print "Array with testing data:", commands
-for command in commands:
-	date = command
-	print is_datetname(date)
-print "\n--------------------------IS DATETname TEST END ---------------------------\n"
+def is_datetime_test():
+    """
+	>>> map(is_datetime, ["2011-12-12 13:42:30", "2011-12-12", "13:42:30", "13:42:30 2011-12-12", "2011-12-12 33:42:30"])
+	[True, False, False, False, False]
+	"""
 
 
+def is_time_test():
+    """
+	>>> map(is_time, ["12:12:12", "21234", "13:55:66", "2011-23-10", "30:20:10"])
+	[True, False, False, False, False]
+	"""
 
 
-print "\n---------------------------IS Tname TEST -----------------------------\n"
-commands=["12:12:12","21234","13:21:56","2011.23.45"]
-print "Array with testing data:", commands
-for command in commands:
-	date = command
-	print is_tname(date)
-print "\n--------------------------IS Tname TEST END ---------------------------\n"
+def is_bool_test():
+    """
+	>>> map(is_bool, ["TRUE", "FALSE", "tRue", "True", "False", "faLsE", "istina"])
+	[True, True, True, True, True, True, False]
+	"""
 
 
-
-
-print "\n---------------------------GET ATTRIBUTE TYPE TEST -----------------------------\n"
-commands=["1","1.2","a","#"]
-print "Array with testing data:", commands
-for command in commands:
-	att_type = command
-	print get_attr_type(att_type)
-
-print "\n---------------------------GET ATTRIBUTE TYPE TEST END -----------------------------\n"
-
-
-
-
+def get_attr_type_test():
+    """
+	>>> map(get_type_name, map(get_attr_type, ["1", "1.2", "a", "#", "2021-05-10", "12:12:12", "false", "2011-12-12 13:42:30"]))
+	['int', 'float', 'varchar', 'varchar', 'date', 'time', 'boolean', 'datetime']
+	"""
 
 
 # init and load sql_executor function
 initialize()
 executor = sql_executor()
 
-# crate attribute: id_student, name, last name, year_of_birth, gradeAvg
-student_attr_name = ["id_student", "name", "lastName", "year_of_birth", "gradeAvg"]
-
-# def the type of every attribute
+student_attr_name = ["id_student", "first_name", "last_name", "year_of_birth", "grade_avg"]
 student_attr_type = [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT]
-
-# create table with student name with the attributes above and attribute types
 ak47.create_header_test("student", student_attr_name, student_attr_type)
 
+insert_into1_output = executor.insert("INSERT INTO student VALUES ('1','Marko','Sinko','1990','2.0')")
+insert_into2_output = executor.insert(
+    "INSERT INTO student(id_student, first_name, last_name, year_of_birth, grade_avg) VALUES ('2','Marinko','Radic','1991','3.3')")
+insert_into3_output = executor.insert(
+    "INSERT INTO profesor(id_student, first_name, last_name, year_of_birth, grade_avg) VALUES ('2','Marinko','Radic','1991','3.3')")
 
 
+def insert_into_test():
+    """
+	>>> insert_into1_output
+	True
+	>>> insert_into2_output
+	True
+	>>> insert_into3_output
+	False
+	"""
 
 
-print "\n----------------------------- TEST TABLE------------------------\n"
-
-# PRINT THE CREATED TABLE STUDENT
-ak47.AK_print_table("student")
-print "\n---------------------------- TEST TABLE END------------------------\n"
-
-
-
-
-print "\n---------------------------- INSERT INTO TEST -----------------------------\n"
-
-# creating the querie that's passed to the sql_executor class, insert method
-# execute the queries, do the whole insert
-print "First query: INSERT INTO student VALUES ('1','Marko','Sinko','1990','2.0') " + str(executor.insert("INSERT INTO student VALUES ('1','Marko','Sinko','1990','2.0')"))
-print "\n"
-print "Second query: INSERT INTO student(id_student, name, lastName, year_of_birth, gradeAvg) VALUES ( '2','Marinko','Radic','1991','3.3') " + str(executor.insert("INSERT INTO student(id_student, name, lastName, year_of_birth, gradeAvg) VALUES ( '2','Marinko','Radic','1991','3.3')"))
-print "\n"
-
-# print after executing query
-ak47.AK_print_table("student")
-print "\n--------------------------- INSERT INTO TEST END -------------------------------\n"
-
-
-
-
-
-print "\n---------------------------CREATE GROUP TEST -----------------------------\n"
+# CREATE GROUP TEST
 # tokens are not implemented for this test, need to create Create_group_command() token
 # for further testing, need implementation, need to check AK_group_add() function
 # AK_group_add(tokens.groupname, ak47.NEW_ID) -- weird input params?? groupname-NEW_ID??
-print "\n---------------------------CREATE GROUP TEST END -----------------------------\n"
 
 
+# GRANT TEST
+# ak47.AK_user_add("100", id(1111), "10")
+# grant = Grant_command()
+# grant.command = "GRANT INSERT ON student TO Marko"
+# grant_output = grant.execute()
 
-
-
-print "\n---------------------------CREATE GRANT TEST -----------------------------\n"
-grant = Grant_command()
-grant.command = "GRANT INSERT ON student TO Marko"
-#Tokenizer works well, need to check in the Grand_command() class how the grand.execute method
-# is executed becauze it doesn't accept the command like it should. That can be seen from the 
+# Tokenizer works well, need to check in the Grand_command() class how the grand.execute method
+# is executed because it doesn't accept the command like it should. That can be seen from the
 # return value when executing the grand.execute() method, need to check the implementation of
 # AK_grant_privilege_user(user, table, privilege) function
 
-print grant.execute()
 
-print "\n---------------------------CREATE GRANT TEST END -----------------------------\n"
+#  def create_grand_test():
+# 	"""
+# 	>>> grant_output
+#   TODO
+# 	"""
 
 
-
-
-print "\n------------------------------ SELECT TEST -------------------------------\n"
 # SELECT TEST always returns the whole table, WHERE doesn't work, probably the selection_test() doesn't
 # work as well, need to check the implementation in the lower level of the SELECT statement or need to
 # test AK_parse_where() tokenizing
-select = Select_command()
-print str(select.execute("SELECT * FROM student"))
-print "\n------------------------------ SELECT TEST END ------------------------------\n"
+# TODO: rewrite select_test() after select.execute() is fixed
+
+# select = Select_command()
+# select1_output = select.execute("SELECT * FROM student")
+# select2_output = select.execute("SELECT last_name from student")
+# select3_output = select.execute("SELECT random_attr from student")
+# select4_output = select.execute("SELECT first_name from profesor")
+# select5_output = select.execute("SELECT * FROM student WHERE year_of_birth>1990")
 
 
+# def select_test():
+#     """
+# 	>>> select1_output
+# 	True
+# 	>>> select2_output
+# 	True
+# 	>>> select3_output
+# 	False
+# 	>>> select4_output
+# 	False
+# 	>>> select5_output
+# 	True
+# 	"""
 
 
-
-print "\n------------------------------- UPDATE TEST --------------------------------\n"
 # after the 553 commit it raises a new error: AK_Insert_New_Element_For_Update()
 # probably something is wrong with the AK_update_Row(table, column1, column2, key, new_value) function
-# also need to check AK_parse_where() tokenizing 
-update = Update_command()
-print str(update.execute("UPDATE student SET gradeAvg = 2.200 WHERE id_student = 1"))
-ak47.AK_print_table("student")
-print "\n------------------------------- UPDATE TEST END ------------------------------\n"
+# also need to check AK_parse_where() tokenizing
+# update = Update_command()
+# update1_output = update.execute("UPDATE student SET grade_avg = 2.200 WHERE id_student = 1")
+# update2_output = update.execute("UPDATE profesor SET grade_avg = 2.200 WHERE id_student = 1")
 
 
+# def update_test():
+#     """
+#     >>> update1_output
+#     True
+#     >>> update2_output
+#     False
+#     """
 
 
-
-print "\n------------------------------- EXECUTOR TEST --------------------------------\n"
-
-
-print "\nCreate sequence numac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1"
-#sequence = Create_sequence_command()
-
-# the method above also doesn't work as it should
+# sequence also doesn't work as it should
 # also need to check AK_sequence_add function
-# sequence.execute("Create sequence numac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1")
-# this query had an overflow buffer error but in my test it works okay
-
-print "\nSljedeci query:\n"
-
-#sequence.execute("Create sequence numac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
-print "\n---------------------------- EXECUTOR TEST END ----------------------------------\n"
+# query had an overflow buffer error but in my test it works okay
+sequence = Create_sequence_command()
+sequence1_output = sequence.execute("Create sequence numac_1 start with 1 increment by 2 minvalue 0 maxvalue 100 cycle 1")
+sequence2_output = sequence.execute("Create sequence numac_2 start with 1 increment by 2 minvalue 0 maxvalue 100")
 
 
+def sequence_test():
+    """
+    >>> sequence1_output
+    "Command succesfully executed"
+    >>> sequence2_output
+    "Command succesfully executed"
+    """
 
 
-
-print "\n--------------------------------- CREATE TABLE TEST --------------------------------\n"
-create = Create_table_command()
-create.expr = "CREATE TABLE tbl (var1 INT, var2 INT)"
 # create table doesn't work
-# need to reimplement tokenizing of AK_parse_create_table() because it doesn't have AK_TYPE_INT,AK_TYPE_VARCHAR types that are 
+# need to reimplement tokenizing of AK_parse_create_table() because it doesn't have AK_TYPE_INT,AK_TYPE_VARCHAR types that are
 # needed for adding attributes to the table
 # INT is not used
 # need to have this structure: [ak47.TYPE_INT, ak47.TYPE_VARCHAR, ak47.TYPE_VARCHAR, ak47.TYPE_INT, ak47.TYPE_FLOAT] like in the example above
+# UPDATE:
+# parameter in execute method is not used and it should be removed or the need of using the expr attribute should be changed
+# IMPORTANT: execute method returns result that table is created but that table cannot be printed (it says table doesn't exist)
+create = Create_table_command()
+create.expr = "CREATE TABLE tbl (var1 INT, var2 INT)"
+create_table_output = create.execute("CREATE TABLE tbl (var1 INT, var2 INT)")
 ak47.AK_print_table("tbl")
-print "\n--------------------------------- CREATE TABLE TEST END ------------------------------\n"
 
 
+def create_table_test():
+    """
+    >>> create_table_output
+    'Table created'
+    """
 
 
-print "\n--------------------------------- CREATE INDEX TEST ---------------------------------\n"
+# in the Create_index_command class the execute method doesn't work properly, tokens are tested and they work okay
+# need to check AK_create_index function and comments in execute method
 index = Create_index_command()
-commands = ["CREATE INDEX Pindex ON student ( stupac1, stupac2 ) USING Btree",\
-                    "create index Pindex on student ( stupac1, stupac2 ) USING Hash"]
-for command in commands:
-        index.expr = command
-# in the Create_index_command class the execute method doesn't work properly, tokens are tested and they work
-# okay, need to check AK_create_index function
-        print index.execute()
-print "\n--------------------------------- CREATE INDEX TEST END--------------------------------\n"
+index.expr = "CREATE INDEX Pindex ON student ( stupac1, stupac2 ) USING Btree"
+index1_output = index.execute()
+index.expr = "create index Pindex on student ( stupac1, stupac2 ) USING Hash"
+index2_output = index.execute()
 
 
+def create_index_text():
+    """
+    >>> index1_output
+    'Index created'
+    >>> index2_output
+    'Index created'
+    """
 
 
-print "\n------------------------------- CREATE TRIGGER TEST -------------------------------\n"
-trigger = Create_trigger_command()
-commands=["CREATE TRIGGER accept_conn AFTER INSERT ON conn FOR ROW EXECUTE PROCEDURE conn_accepted()",\
-          "CREATE TRIGGER accept_conn BEFORE  DELETE OR INSERT ON conn EXECUTE PROCEDURE conn_accepted()",\
-          "CREATE TRIGGER accept_conn BEFORE DELETE OR INSERT ON conn FOR EACH STATEMENT EXECUTE PROCEDURE conn_accepted(2,3,'data')",\
-          "CREATE TRIGGER accept_conn AFTER DELETE OR INSERT OR UPDATE ON conn FOR EACH STATEMENT EXECUTE PROCEDURE conn_accepted(2,10.5,'data')"]
-for command in commands:
-        trigger.expr = command
 # in Create_trigger_command class its execute method doesn't work properly. Tokens are tested and they work okay
 # need to check AK_trigger_add function - 3rd argument raises error: TypeError: in method 'AK_trigger_add', argument 3 of type 'AK_list *'
-        print trigger.execute()
-print "\n------------------------------- CREATE TRIGGER TEST END --------------------------\n"
+trigger = Create_trigger_command()
+trigger.expr = "CREATE TRIGGER accept_conn AFTER INSERT ON conn FOR ROW EXECUTE PROCEDURE conn_accepted()"
+trigger1_output = trigger.execute()
+trigger.expr = "CREATE TRIGGER accept_conn BEFORE DELETE OR INSERT ON conn EXECUTE PROCEDURE conn_accepted()"
+trigger2_output = trigger.execute()
+trigger.expr = "CREATE TRIGGER accept_conn BEFORE DELETE OR INSERT ON conn FOR EACH STATEMENT EXECUTE PROCEDURE conn_accepted(2,3,'data')"
+trigger3_output = trigger.execute()
+trigger.expr = "CREATE TRIGGER accept_conn AFTER DELETE OR INSERT OR UPDATE ON conn FOR EACH STATEMENT EXECUTE PROCEDURE conn_accepted(2,10.5,'data')"
+trigger4_output = trigger.execute()
 
 
+def create_trigger_test():
+    """
+    >>> trigger1_output
+    'Trigger created'
+    >>> trigger2_output
+    'Trigger created'
+    >>> trigger3_output
+    'Trigger created'
+    >>> trigger4_output
+    'Trigger created'
+    """
 
 
-print "\n------------------------------------ DROP TEST ------------------------------------\n"
-
-ak47.AK_print_table("student")
-
+# drop test works, need to correct the implementation of the tests below so that the rest of the drops will be tested, but they should work
+# tokenizing works okay
+# IMPORTANT UPDATE: execute() method raises AttributeError: 'module' object has no attribute 'AK_drop_test_helper'
 drop = Drop_command()
 drop.expr = "DROP TABLE student"
-# drop test works, need to correct the implementation of the tests above so that the rest of the drops will be tested, but they should work
-# tokenizing works okay
-print drop.execute()
-ak47.AK_print_table("student")
-print "\n------------------------------------DROP TEST END ------------------------------------\n"
+
+
+def drop_test():
+    """
+    >>> drop.execute() != False
+    True
+    """
 
 
 '''

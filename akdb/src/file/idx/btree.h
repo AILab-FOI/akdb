@@ -74,8 +74,17 @@ typedef struct{
   * @param attributes - attribute on which we are creating index
   * @param indexName - name of the index
  */
-int AK_btree_create(char *tblName, struct list_node *attributes, char *indexName);
+AK_block * AK_btree_create(char *tblName, struct list_node *attributes, char *indexName);
 int AK_btree_delete(char *indexName);
+
+btree_node * makevalues(btree_node * temp_help, int insertValue, int insertTd, int insertBlock, int i);
+btree_node * searchValue(int inserted, int insertValue, btree_node * temp, btree_node * temp_help, int *insertTd, int *insertBlock,int* increase, int number);
+btree_node * setNodePointers(btree_node * temp, btree_node * temp_help,int pointerIndex,int secondValue,int firstPointer,int secondPointer);
+int findCorrectNumber(int number);
+btree_node * findPointers(btree_node * temp_node_one, btree_node * temp, int id, int* nodeInserted,int* nodeIncrease, int number, int pointerIndex);
+btree_node * findValues(btree_node * temp_node_one, AK_block * block, int* helpAddress,int* helpType, btree_node *value_help);
+void btree_delete(btree_node * temp, AK_block * block, int idNext, int i);
+
 
 /**
   * @author Anđelko Spevec
@@ -85,8 +94,8 @@ int AK_btree_delete(char *indexName);
   * @param endRange - if 0 search is for 0 value, else searching in range
   * @param toDo - if 0 we just search else we delete the element if we find it
  */
-void AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *toDo);
-int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insertBlock);
+int AK_btree_search_delete(char *indexName,int *searchValue,int *endRange,int *toDo,AK_block * inputBlock);
+int AK_btree_insert(char *indexName,int *insertValue, int *insertTd, int *insertBlock,AK_block * inputBlock);
 TestResult AK_btree_test();
 
 #endif

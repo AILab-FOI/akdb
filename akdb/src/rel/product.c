@@ -25,6 +25,7 @@
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table
  * @param dstTable name of the product table
+ * @result Created destination table as a result of product operation 
  * @return if success returns EXIT_SUCCESS, else returns EXIT_ERROR
  */
 int AK_product(char *srcTable1, char *srcTable2, char *dstTable)
@@ -121,10 +122,11 @@ int AK_product(char *srcTable1, char *srcTable2, char *dstTable)
 
 /**
  * @author Dino Laktašić, Fabijan Josip Kraljić
- * @brief  Functions that iterates trough both tables and concates rows. The result is in destination table.
+ * @brief  Functions that iterates trough both tables and concates rows comparing headers and their row values.
  * @param srcTable1 name of the first table
  * @param srcTable2 name of the second table
  * @param dstTable name of the product table
+ * @result destination table filled with data sized n(rows srcTable1)*m(rows srcTable2)
  * @param header header of product table
  */
 void AK_product_procedure(char *srcTable1, char *srcTable2, char *dstTable, AK_header header[MAX_ATTRIBUTES])
@@ -246,11 +248,14 @@ void AK_product_procedure(char *srcTable1, char *srcTable2, char *dstTable, AK_h
 
 /**
  * @author Dino Laktašić, Fabijan Josip Kraljić
- * @brief  Function for product operator testing
- *
+ * @brief  Function for product operator testing, where it is given 2 source table on which product operations are managed.
+ * @result Product destination table and number od passed tests. 
+ * @return Test result - number of successful and unsuccessful tests.
  */
 TestResult AK_op_product_test()
 {
+
+	//Setting tables for testing
 	AK_PRO;
 	char *sys_table = "AK_relation";
 	char *destTable = "product_test";
@@ -261,9 +266,11 @@ TestResult AK_op_product_test()
 
 	printf("\n********** PRODUCT TEST **********\n\n");
 
+	//Checking if destination tables already exists
 	if (AK_if_exist(destTable, sys_table) == 0)
 	{
 		printf("Table %s does not exist!\n", destTable);
+		//Execution of main function that retrieves int value
 		test = AK_product(tblName1, tblName2, destTable);
 
 		AK_EPI;
@@ -271,6 +278,7 @@ TestResult AK_op_product_test()
 		{
 			AK_print_table("employee");
 			AK_print_table("department");
+			//prints table size n*m rows
 			AK_print_table(destTable);
 			return TEST_result(1, 0);
 		}

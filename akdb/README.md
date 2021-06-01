@@ -1,4 +1,4 @@
-# Kalashnikov DB 
+# Kalashnikov DB  {#mainpage}
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/92d1b22c17054c36931b033bac1a7c52)](https://www.codacy.com/app/TheWildHorse/akdb?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mschatten/akdb&amp;utm_campaign=Badge_Grade)
 
 AK (Автомат Калашникова) DB is a simple relational database management system 
@@ -11,8 +11,18 @@ The system is currently in alpha development status and NOT fully functional!
 To get you started you can simply clone the repository and install the dependencies:
 
 #### Prerequisites
+Ubuntu:
 ```
 sudo apt-get install git build-essential swig make doxygen python-dev texlive-latex-recommended texlive-latex-extra
+sudo pip install paramiko
+```
+Mac:
+
+https://www.python.org/downloads/release/python-272/
+```
+brew install swig make doxygen mactex-no-gui graphviz
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+python2.7 get-pip.py
 sudo pip install paramiko
 ```
 #### Clone Kalashnikov DB

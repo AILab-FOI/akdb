@@ -50,6 +50,8 @@ int AK_user_add(char *username, int *password, int set_id) {
     AK_insert_row(row_root);
     printf("\nAdded user '%s' under ID %d!\n\n", username, user_id);
 
+    AK_free(row_root);
+
     AK_EPI;
     return user_id;
 }
@@ -92,23 +94,27 @@ int AK_user_check_pass(char *username, int *password) {
     int i = 0;
     int check = 0;
     struct list_node *row;
+    
     AK_PRO;
 
     while ((row = (struct list_node *) AK_get_row(i, "AK_user")) != NULL) {
-        struct list_node *elem_in_strcmp = AK_GetNth_L2(2, row);
-        if (strcmp(elem_in_strcmp->data, username) == 0) {
-            row->next->data;
-            row->next->data;
-            if (strcmp(row->next->data, password) == 0) {
+       struct list_node *elem_in_strcmp = AK_GetNth_L2(2, row);
+        if (strcmp(elem_in_strcmp->data, username) == 0) {                                 
+            elem_in_strcmp = AK_GetNth_L2(3, row);
+                             
+            if (strcmp(elem_in_strcmp->data, &password) == 0) {
                 check = 1;
+                AK_free(elem_in_strcmp);
                 AK_free(row);
-                AK_EPI;
+                AK_EPI;                
                 return check;
             }
-        }
-        i++;
+        }   
+             
+        i++;        
     }
-    AK_free(row);
+
+    AK_free(row);   
 
     AK_EPI;
     return check;
@@ -185,6 +191,8 @@ int AK_group_add(char *name, int set_id) {
     AK_Insert_New_Element(TYPE_VARCHAR, name, tblName, "name", row_root);
     AK_insert_row(row_root);
     printf("Added group '%s' under ID %d!\n", name, group_id);
+
+    AK_free(row_root);
 
     AK_EPI;
     return group_id;
@@ -774,6 +782,7 @@ int AK_remove_all_users_from_group(char *group) {
         AK_free(row);
     }
 
+    AK_free(row_root);
     printf("Users deleted from group '%s' under ID %d!\n", group, group_id);
     AK_EPI;
     return EXIT_SUCCESS;
@@ -895,17 +904,16 @@ int AK_check_privilege(char *username, char *table, char *privilege) {
                 return EXIT_SUCCESS;
             }
         }
-    } else {
-
-        while ((row = (struct list_node *) AK_get_row(i, "AK_user_right")) != NULL) {
+    } else {        
+        while ((row = (struct list_node *) AK_get_row(i, "AK_user_right")) != NULL) {           
             struct list_node *username_elem = AK_GetNth_L2(2, row);
             struct list_node *table_elem = AK_GetNth_L2(3, row);
-            struct list_node *privilege_elem = AK_GetNth_L2(4, row);
+            struct list_node *privilege_elem = AK_GetNth_L2(4, row);                
 
             if (((int) * username_elem->data == user_id) && (table_id == (int) * table_elem->data) && (strcmp(privilege_elem->data, privilege) == 0)) {
 
                 has_right = 1;
-                printf("User '%s' under ID %d has the right to %s data in the '%s' table under ID %d!", username, user_id, privilege, table, table_id);
+                printf("User '%s' under ID %d has the right to %s data in the '%s' table under ID %d!", username, user_id, privilege, table, table_id);                
                 AK_EPI;
                 return EXIT_SUCCESS;
             }
@@ -1053,7 +1061,7 @@ int AK_check_group_privilege(char *group) {
 TestResult AK_privileges_test() {
     AK_PRO;
 
-    int successful[18] = {0};
+    int successful[19] = {0};
 
     printf("\n\n");
     printf("||====================================================================|| \n");
@@ -1472,7 +1480,7 @@ TestResult AK_privileges_test() {
 
     if (AK_remove_user_from_all_groups("user1") == EXIT_SUCCESS) {
         printf("\n\nTest 17. - Pass!\n");
-        successful[17] = 1;
+        successful[16] = 1;
     } else {
         printf("\n\nTest 17. - Fail!\n");
     }
@@ -1496,7 +1504,7 @@ TestResult AK_privileges_test() {
 
     if (AK_remove_all_users_from_group("group1") == EXIT_SUCCESS) {
         printf("\n\nTest 18. - Pass!\n");
-        successful[16] = 1;
+        successful[17] = 1;
     } else {
         printf("\n\nTest 18. - Fail!\n");
     }
@@ -1515,7 +1523,7 @@ TestResult AK_privileges_test() {
     printf("Result:\n\n");
 
 
-    if (AK_user_check_pass("user1", 1111) == 0) {
+    if (AK_user_check_pass("user2", 2222) == 0) {
         printf("\n\nTest 19. - Fail!\n");
     } else {
         printf("\n\nTest 19. - Pass!\n");

@@ -22,6 +22,7 @@
 AK_graph G;
 AK_stackHead S;
 int indexCounter = 0;
+int testLowArray[8];
 
 /**
  * @author Dino Laktašić.
@@ -828,7 +829,71 @@ int MIN(int X, int Y) {
 }
 
 /**
- * @author Frane Jakelić
+ * @author Blaž Rajič
+ * @brief Function for creating graph for testing tarjan algorithm
+ */
+void AK_define_tarjan_graph() {
+    AK_vertex node0;
+    AK_vertex node1;
+    AK_vertex node2;
+    AK_vertex node3;
+    AK_vertex node4;
+    AK_vertex node5;
+    AK_vertex node6;
+    AK_vertex node7;
+
+    AK_succesor node0_succ;
+    AK_succesor node1_succ;
+    AK_succesor node2_succ;
+    AK_succesor node3_succ;
+    AK_succesor node4_succ;
+    AK_succesor node5_succ;
+    AK_succesor node6_succ;
+    AK_succesor node7_succ;
+
+    AK_PRO;
+
+    node0 = AK_add_vertex(0);
+    node1 = AK_add_vertex(1);
+    node2 = AK_add_vertex(2);
+    node3 = AK_add_vertex(3);
+    node4 = AK_add_vertex(4);
+    node5 = AK_add_vertex(5);
+    node6 = AK_add_vertex(6);
+    node7 = AK_add_vertex(7);
+
+    node0_succ = AK_add_succesor(node1->vertexId,node0->vertexId);
+    node1_succ = AK_add_succesor(node2->vertexId,node1->vertexId);
+    node2_succ = AK_add_succesor(node0->vertexId,node2->vertexId);
+    AK_add_succesor(node3->vertexId,node2->vertexId);
+    node3_succ = AK_add_succesor(node4->vertexId,node3->vertexId);
+    AK_add_succesor(node5->vertexId,node3->vertexId);
+    node4_succ = AK_add_succesor(node3->vertexId,node4->vertexId);
+    node5_succ = AK_add_succesor(node6->vertexId,node5->vertexId);
+    node6_succ = AK_add_succesor(node7->vertexId,node6->vertexId);
+    node7_succ = AK_add_succesor(node5->vertexId,node7->vertexId);
+
+    node0->nextVertex = node1;
+    node0->nextSuccesor = node0_succ;
+    node1->nextVertex = node2;
+    node1->nextSuccesor = node1_succ;
+    node2->nextVertex = node3;
+    node2->nextSuccesor = node2_succ;
+    node3->nextVertex = node4;
+    node3->nextSuccesor = node3_succ;
+    node4->nextVertex = node5;
+    node4->nextSuccesor = node4_succ;
+    node5->nextVertex = node6;
+    node5->nextSuccesor = node5_succ;
+    node6->nextVertex = node7;
+    node6->nextSuccesor = node6_succ;
+    node7->nextSuccesor = node7_succ;
+
+    AK_EPI;
+}
+
+/**
+ * @author Frane Jakelić, updated by Blaž Rajič
  * @brief Tarjan algorithm that looks for a strongly connected component inside all subgraphs; using DFS
  * @param id of the element on which the algorithm looks for an id of a strongly connected component
  */
@@ -842,7 +907,7 @@ void AK_tarjan(int id) {
     indexCounter = indexCounter + 1;
     succ = node->nextSuccesor;
 
-    if (succ != NULL)AK_push_to_stack(id);
+    AK_push_to_stack(id);
 
     while (succ != NULL) {
 
@@ -860,38 +925,80 @@ void AK_tarjan(int id) {
 
     if (node->lowLink == node->index) {
         AK_vertex loop = NULL;
-        printf("############\nStrongy connected component. Edges:\n");
-        do {
-            AK_stack elem = AK_pop_from_stack();
-            if (elem == NULL)break;
-            loop = elem->link;
-            printf("%i\n", loop->vertexId);
-        } while (loop->vertexId != node->vertexId);
-        printf("############\n");
+        AK_stack elem = AK_pop_from_stack();
+        
+        if(elem->link != node){
+            printf("\nStrongy connected component detected. Edges:\n");
+            do {
+                if (elem == NULL) break;
+                loop = elem->link;
+                printf("%i\n", loop->vertexId);
+                if(elem->link == node) break;
+                elem = AK_pop_from_stack();
+            } while (loop->vertexId != node->vertexId);
+        }
     }
+    testLowArray[node->vertexId] = node->lowLink;
     AK_EPI;
 }
+
+/**
+  * @author Blaž Rajič
+  * @brief Function for testing Tarjan's algorithm
+  * @return No return value
+  */
 
 TestResult AK_tarjan_test() {
     AK_vertex root;
     AK_vertex ro_ot;
+    AK_vertex loop;
     AK_PRO;
+    AK_define_tarjan_graph();
     root = G.nextVertex;
     ro_ot = G.nextVertex;
-    while (root != NULL) {
-        if (root->index == -1) {
 
-            AK_tarjan(root->vertexId);
+    //TEST 1
+    printf("\n============== Running Test #1 ==============\n");
+    printf("\nTarjan's algorithm in short finds all strongly connected components(SCC) in a directed graph, SCC is when each vertex of the graph is reachable from every other vertex in that SCC.\n");
+    printf("\nTarjan's algorithm will be tested on the graph below, SCC's in this graph are (0,1,2), (3,4) and (5,6,7).\n");
+
+    printf("                    ┌────────┐ \n");
+    printf("                    ▼        │ \n");
+    printf(" ┌─┐     ┌─┐       ┌─┐      ┌┴┐\n");
+    printf(" │0│◄────┤2├──────►│3├─────►│4│\n");
+    printf(" └┬┘     └─┘       └┬┘      └─┘\n");
+    printf("  │       ▲         │  \n");
+    printf("  │  ┌─┐  │         ▼  \n");
+    printf("  └─►│1├──┘        ┌─┐ \n");
+    printf("     └─┘      ┌───►│5├────┐ \n");
+    printf("              │    └─┘    │ \n");
+    printf("              │           │ \n");
+    printf("              │           ▼ \n");
+    printf("             ┌┴┐         ┌─┐ \n");
+    printf("             │7│◄────────┤6│ \n");
+    printf("             └─┘         └─┘ \n");
+
+    for (int i = 0; i < 5; i++)
+    {
+        loop = AK_search_vertex(i);
+        if (loop->index == -1)
+        {
+            AK_tarjan(loop->vertexId);
         }
-        while (ro_ot != NULL) {
-            ro_ot->index = -1;
-            ro_ot->lowLink = -1;
-            ro_ot = ro_ot->nextVertex;
-        }
-        root = root->nextVertex;
     }
+
+    int testingArray[8] =  {0,0,0,3,3,5,5,5}; //values that are expected as end result
+    for (int i = 0; i < 8; i++)
+    {
+        if(testLowArray[i] != testingArray[i]){
+            printf("\nFAILURE\n");
+            AK_EPI;
+            return TEST_result(0,1);
+        }
+    }
+    printf("\nSUCCESS\n");
     AK_EPI;
-	return TEST_result(0,1);
+    return TEST_result(1,0);
 }
 
 /**

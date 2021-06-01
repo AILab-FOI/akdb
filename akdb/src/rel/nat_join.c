@@ -158,8 +158,11 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
                 memset(data, '\0', MAX_VARCHAR_LENGTH);
                 //data[MAX_VARCHAR_LENGHT] = '\0';
                 memcpy(data, temp_block->data + temp_block->tuple_dict[i].address, temp_block->tuple_dict[i].size);
+
                 //insert data from second table to insert_list
+                //AK_Insert_New_Element(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, &row_root_insert);
                 AK_Insert_New_Element(temp_block->tuple_dict[i].type, data, new_table, temp_block->header[head].att_name, row_root_insert);
+
             }
             not_in_list = 1;
             head++; //next header
@@ -187,7 +190,6 @@ void AK_merge_block_join(struct list_node *row_root, struct list_node *row_root_
 void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, struct list_node *att, char *new_table) {
     AK_PRO;
     AK_dbg_messg(HIGH, REL_OP, "\n COPYING NAT JOIN");
-
     
     struct list_node *row_root = (struct list_node *) AK_malloc(sizeof(struct list_node));
     struct list_node *row_root_insert = (struct list_node *) AK_malloc(sizeof(struct list_node));
@@ -210,9 +212,9 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
         while (strcmp(tbl1_temp_block->header[head].att_name, "") != 0) {
             
 	  list_elem = AK_First_L2(att);
-
             //going through list of elements on which we merge
             while (list_elem != NULL) {
+                
                 size = tbl1_temp_block->tuple_dict[i].size;
                 overflow = size + tbl1_temp_block->tuple_dict[i].address;
 
@@ -226,9 +228,11 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
                     AK_Insert_New_Element(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root);
                     //insert element into list which we insert into join_table together with second table data
                     AK_Insert_New_Element(tbl1_temp_block->tuple_dict[i].type, data, new_table, list_elem->data, row_root_insert);
+                    
 
                     something_to_copy = 1;
                     not_in_list = 0;
+                    
                     break; //check for break here, to speed up execution  
                 }
                 list_elem = list_elem->next;
@@ -236,10 +240,11 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
 
             //copy element which is not for merge only for insert
             if ((not_in_list == 1) && (size != 0) && (overflow < tbl1_temp_block->AK_free_space + 1) && (overflow > -1)) {
-                memset(data, '\0', MAX_VARCHAR_LENGTH);
-                //data[MAX_VARCHAR_LENGHT] = '\0';
-                memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
-                AK_Insert_New_Element(tbl1_temp_block->tuple_dict[i].type, data, new_table, tbl1_temp_block->header[head].att_name, row_root_insert);
+                    memset(data, '\0', MAX_VARCHAR_LENGTH);
+                    //data[MAX_VARCHAR_LENGHT] = '\0';
+                    memcpy(data, tbl1_temp_block->data + tbl1_temp_block->tuple_dict[i].address, tbl1_temp_block->tuple_dict[i].size);
+                    AK_Insert_New_Element(tbl1_temp_block->tuple_dict[i].type, data, new_table, tbl1_temp_block->header[head].att_name, row_root_insert);
+
             }
             not_in_list = 1; //reset not_in_list
             head++; //next header
@@ -250,6 +255,7 @@ void AK_copy_blocks_join(AK_block *tbl1_temp_block, AK_block *tbl2_temp_block, s
         if (something_to_copy) {
             //merge data with second table
             AK_merge_block_join(row_root, row_root_insert, tbl2_temp_block, new_table);
+            
             
 	    AK_DeleteAll_L3(&row_root);
 	    AK_DeleteAll_L3(&row_root_insert);
@@ -289,6 +295,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
         int i, j, k, l;
         i = j = k = l = 0;
 
+
         //for each extent in table1 that contains blocks needed for join
         for (i = 0; i < (src_addr1->address_from[i] != 0); i++) {
             startAddress1 = src_addr1->address_from[i];
@@ -302,11 +309,13 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
 
                     tbl1_temp_block = (AK_mem_block *) AK_get_block(j);
 
+
                     //if there is data in the block
                     if (tbl1_temp_block->block->AK_free_space != 0) {
                         //for each extent in table2 that contains blocks needed for join
                         for (k = 0; k < (src_addr2->address_from[k] != 0); k++) {
                             startAddress2 = src_addr2->address_from[k];
+
 
                             if (startAddress2 != 0) {
                                 AK_dbg_messg(MIDDLE, REL_OP, "Natural join: copy extent2: %d\n", k);
@@ -341,6 +350,7 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
         return EXIT_ERROR;
     }
     AK_EPI;
+    
 }
 /**
  * @author Matija Novak
@@ -348,11 +358,13 @@ int AK_join(char *srcTable1, char * srcTable2, char * dstTable, struct list_node
  * @return No return value
  */
 TestResult AK_op_join_test() {
+
     AK_PRO;
     char *sys_table = "AK_relation";
     char *destTable = "nat_join_test";
-    char *tblName1 = "employee";
-    char *tblName2 = "department";
+    char *tblName2 = "employee";
+    char *tblName1 = "department";
+    	int test;
 
     printf("\n********** NAT JOIN TEST **********\n\n");
 
@@ -360,19 +372,31 @@ TestResult AK_op_join_test() {
     	printf("Table %s does not exist!\n", destTable);
 	struct list_node *att = (struct list_node *) AK_malloc(sizeof(struct list_node));
     	AK_Init_L3(&att);
-    	AK_InsertAtEnd_L3(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);
+    	AK_InsertAtBegin_L3(TYPE_ATTRIBS, "id_department", sizeof ("id_department"), att);
 
-    	AK_join(tblName1, tblName2, destTable, att);
-	AK_DeleteAll_L3(&att);
+    	test = AK_join(tblName1, tblName2, destTable, att);
+	    AK_DeleteAll_L3(&att);
     }
 
     else {
 	printf("Table %s already exists!\n", destTable);
+    AK_print_table(destTable);
+    return TEST_result(1, 0);
     }
 
-    AK_print_table(destTable);
-
     AK_EPI;
-    return TEST_result(0,0);
-}
+    if (test == EXIT_SUCCESS)
+            {
+                AK_print_table("employee");
+                AK_print_table("department");
+                AK_print_table(destTable);
+                return TEST_result(1, 0);
+            }
+            else
+            {
+                AK_print_table("product_test");
+                return TEST_result(0, 1);
+            }
+
+    }
 

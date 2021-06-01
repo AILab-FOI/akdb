@@ -57,6 +57,7 @@ typedef struct {
     int counter;
 } AK_agg_input;
 
+
 typedef struct{
     struct list_node * row_root;
 } rowroot_struct;
@@ -66,6 +67,7 @@ typedef struct{
 } projection_att_struct;
 
 //struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
+
 
 /**
  @author Dejan Frankovic

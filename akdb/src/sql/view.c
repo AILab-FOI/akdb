@@ -335,14 +335,25 @@ TestResult AK_view_test() {
    printf("Obj_id for view5: %d\n", AK_get_view_obj_id("view5"));
    printf("Query for view5: %s\n\n", AK_get_view_query("view5"));
 
-   printf("\n**** TEST 1 - DELETE VIEW BY NAME **** \n");
-   printf("\nDeleting views 'view1' and 'view2'...\n");
+   printf("\n****TEST 1 - DELETE VIEW BY NAME**** \n");
+   
+   int addResult300 = AK_view_add("view300", "query3","*;profesor;", 0);
+   int addResult1 = AK_view_add("view1", "SELECT lastname FROM profesor","profesor;lastname;", 0);
+   int addResult2 = AK_view_add("view2", "query2","firstname;", 0);
+	if (addResult1== EXIT_ERROR && addResult2== EXIT_ERROR && addResult300 == EXIT_ERROR  ) {
+         printf("\nDeleting views 'view1',  'view2' and 'view300' n");
+	}else {
+		   printf("\nDeleting views 'view1' and 'view2'  \n");
+	}
+	
    int delete1 = AK_view_remove_by_name("view1");
    int delete2 = AK_view_remove_by_name("view2");
-    if (delete1 != EXIT_ERROR && delete2 != EXIT_ERROR) {
+   int delete300 = AK_view_remove_by_name("view300");
+    if (delete1 != EXIT_ERROR && delete2 != EXIT_ERROR || delete300!= EXIT_ERROR)  {
+	
         passed++;
     AK_print_table("AK_view");
-    printf("\n Test 1 is successful!.\n\n");
+    printf("\n Test 1 is successful! \n\n");
 
     }else {
         failed ++;
