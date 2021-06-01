@@ -189,7 +189,6 @@ void AK_delete_hash_index(char *indexName) ;
   * @author Mislav Čakarić
   * @brief Function that tests hash index
   * @return No return value 
-
  */
 TestResult AK_hash_test();
 

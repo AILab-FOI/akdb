@@ -593,9 +593,10 @@ void AK_delete_hash_index(char *indexName) {
   * @author Mislav Čakarić
   * @brief Function that tests hash index
   * @return No return value 
-
  */
 TestResult AK_hash_test() {
+    int passedTest = 0;
+    int failedTest = 0;
     char *tblName = "student";
     char *indexName = "student_hash_index";
     //AK_print_table("AK_relation");
@@ -605,7 +606,12 @@ TestResult AK_hash_test() {
     AK_InsertAtEnd_L3(TYPE_ATTRIBS, "mbr\0", 4, att_list);
     AK_InsertAtEnd_L3(TYPE_ATTRIBS, "firstname\0", 10, att_list);
 
-    AK_create_hash_index(tblName, att_list, indexName);
+    if(AK_create_hash_index(tblName, att_list, indexName) == EXIT_ERROR){
+    	failedTest++;
+    }
+    else{
+    	passedTest++;
+    }
 
     struct list_node *values = (struct list_node *) AK_malloc(sizeof (struct list_node));
     struct list_node *row = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -615,6 +621,12 @@ TestResult AK_hash_test() {
 
     hash_info *info = (hash_info*) AK_malloc(sizeof (hash_info));
     info = AK_get_hash_info(indexName);
+    if(info == NULL){
+    	failedTest++;
+    }
+    else{
+    	passedTest++;
+    }
     printf("Main buckets:%d, Hash buckets:%d, Modulo:%d\n", info->main_bucket_num, info->hash_bucket_num, info->modulo);
 
     //AK_delete_hash_index(indexName);
@@ -625,17 +637,22 @@ TestResult AK_hash_test() {
     int i, num_rec = AK_get_num_records(tblName);
     for (i = 0; i < num_rec; i++) {
         row = AK_get_row(i, tblName);
-        struct list_node *value = AK_GetNth_L2(0, row);
+        struct list_node *value = AK_GetNth_L2(1, row);
         AK_InsertAtEnd_L3(value->type, value->data, value->size, values);
         value = AK_GetNth_L2(1, row);
         AK_InsertAtEnd_L3(value->type, value->data, value->size, values);
         struct_add *add = AK_find_in_hash_index(indexName, values);
+        if(add->addBlock == NULL){
+    		failedTest++;
+    	}
+    	else{
+    		passedTest++;
+    	}
         AK_DeleteAll_L3(&values);
         if (add->addBlock && add->indexTd)
             printf("Record found in table block %d and TupleDict ID %d\n", add->addBlock, add->indexTd);
     }
     printf("hash_test: Present!\n");
     AK_EPI;
-    return TEST_result(0,0);
+    return TEST_result(passedTest,failedTest);
 }
-
