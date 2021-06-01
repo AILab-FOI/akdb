@@ -57,17 +57,22 @@ typedef struct {
     int counter;
 } AK_agg_input;
 
-
+/**
+  * @author Ena Dujak
+  * @struct rowroot_struct
+  * @brief Structure that defines a new row in table using list_node
+  */
 typedef struct{
     struct list_node * row_root;
 } rowroot_struct;
-
+/**
+  * @author Ena Dujak
+  * @struct projection_att_struct
+  * @brief Structure that defines projection_att which is a new list_node
+  */
 typedef struct{
     struct list_node * projection_att;
 } projection_att_struct;
-
-//struct list_node * projection_att = (struct list_node*) AK_malloc(sizeof(struct list_node));
-
 
 /**
  @author Dejan Frankovic
