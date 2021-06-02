@@ -306,8 +306,8 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
             privilege_id = AK_get_id();
 
             AK_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
-            AK_Insert_New_Element(TYPE_INT, &user_id, "AK_user_right", "user_id", row_root);
-            AK_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "table_id", row_root);
+            AK_Insert_New_Element(TYPE_INT, &user_id, "AK_user_right", "name", row_root);
+            AK_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "artifact_id ", row_root);
             AK_Insert_New_Element(TYPE_VARCHAR, &rights[i * 10], "AK_user_right", "right_type", row_root);
             AK_insert_row(row_root);
             printf("\nGranted privilege to %s data for user '%s' under ID %d on table '%s'!\n\n", right, username, user_id, table);
@@ -320,8 +320,8 @@ int AK_grant_privilege_user(char *username, char *table, char *right) {
 
         privilege_id = AK_get_id();
         AK_Insert_New_Element(TYPE_INT, &privilege_id, "AK_user_right", "obj_id", row_root);
-        AK_Insert_New_Element(TYPE_INT, &user_id, "AK_user_right", "user_id", row_root);
-        AK_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "table_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &user_id, "AK_user_right", "name", row_root);
+        AK_Insert_New_Element(TYPE_INT, &table_id, "AK_user_right", "artifact_id", row_root);
         AK_Insert_New_Element(TYPE_VARCHAR, right, "AK_user_right", "right_type", row_root);
         AK_insert_row(row_root);
         printf("\nGranted privilege to %s data for user '%s' under ID %d on table '%s'!\n\n", right, username, user_id, table);
@@ -494,7 +494,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right) {
 
             AK_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
             AK_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
-            AK_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "table_id", row_root);
+            AK_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "artifact_id", row_root);
             AK_Insert_New_Element(TYPE_VARCHAR, &rights[i * 10], "AK_group_right", "right_type", row_root);
             AK_insert_row(row_root);
 
@@ -508,7 +508,7 @@ int AK_grant_privilege_group(char *groupname, char *table, char *right) {
         privilege_id = AK_get_id();
         AK_Insert_New_Element(TYPE_INT, &privilege_id, "AK_group_right", "obj_id", row_root);
         AK_Insert_New_Element(TYPE_INT, &group_id, "AK_group_right", "group_id", row_root);
-        AK_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "table_id", row_root);
+        AK_Insert_New_Element(TYPE_INT, &table_id, "AK_group_right", "artifact_id", row_root);
         AK_Insert_New_Element(TYPE_VARCHAR, right, "AK_group_right", "right_type", row_root);
         AK_insert_row(row_root);
         printf("\nGranted privilege to %s data for group '%s' under ID %d on table '%s' under ID %d!\n\n", right, groupname, group_id, table, table_id);
