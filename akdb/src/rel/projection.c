@@ -108,7 +108,6 @@ void AK_create_block_header(int old_block, char *dstTable, struct list_node *att
     * @return character  
 */
 char *AK_get_operator(char *exp){
-
     //iterates through given string expression and finds out which aritmetic operator is it
     if(strstr(exp,"+"))
         return "+";
@@ -208,23 +207,22 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
 
     struct list_node * list_elem,*a,*c,*operator;
     struct list_node * end_list;
-    int i; //tuple_dict counter
+    int i; //holds the count of tuple_dict inside the main for loop 
     int head; //head counter
     int something_to_copy; //boolean variable to indicate if there is data to copy in these set of tuple_dicts
-    int size; //current tuple_dict data size
-    int perform = 0;
+    int size; //holds the tuple_dict data size of the current tuple_dict in the main for loop
 
     char data[MAX_VARCHAR_LENGTH]; //data to copy
 
-    // data for operation
+    //data for operation
     struct AK_operand *first=(struct AK_operand *) AK_malloc(sizeof(struct AK_operand));
     struct AK_operand *second=(struct AK_operand *) AK_malloc(sizeof(struct AK_operand));
-
         
-    //iterate through all tuple_dicts in block
+    //loop for iterate through all tuple_dicts in block
     for (i = 0; i < DATA_BLOCK_SIZE;) {
         head = something_to_copy = 0;
 
+        //iterates through header attributes and determinates if header is a legit string different from empty
         while (strcmp(old_block->header[head].att_name, "") != 0) {
         
 	    list_elem = (struct list_node *) AK_First_L2(att);
@@ -232,21 +230,27 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
             while (list_elem != NULL) {
                 size = old_block->tuple_dict[i].size;
 
-                //used to check if the data is correct
+                //used to check if the data is correct, it calculates the size of the data
                 int overflow = old_block->tuple_dict[i].size + old_block->tuple_dict[i].address;
                 
-                //if the data is what we need, if the size is not null, and data is correct
+                //if the data is what we need, if the size is not null, and data is correct and less than 
+                //the needed free space, sets all characters from the data string to 0 (comparable with 
+                //initialization), and copies data to the curent tuple_dict address from old block into string
                 if ((strcmp(list_elem->data, old_block->header[head].att_name) == 0) && (size != 0)
                         && (overflow < old_block->AK_free_space + 1) && (overflow > -1)) {
                     
-                    memset(data, 0, MAX_VARCHAR_LENGTH);
+                    memset(data, 0, MAX_VARCHAR_LENGTH); 
                     memcpy(data, old_block->data + old_block->tuple_dict[i].address, old_block->tuple_dict[i].size); //copy data
                    
                     //insert element to list to be inserted into new table
                     AK_Insert_New_Element(old_block->tuple_dict[i].type, data, dstTable, list_elem->data, row_root); //ForUpdate 0
+
+                    //set indicator for existing data in touple_dict that can be copied
                     something_to_copy = 1;
 
-                
+                //if the data is not what we need, but the size is not null, and data is correct and less than the needed free space
+                //sets all characters from the first data operation string to 0,
+                //and copies data to the first operation data string from the old block 
                 }else if((strstr(list_elem->data,old_block->header[head].att_name)!=NULL)&& (size != 0)
                         && (overflow < old_block->AK_free_space + 1) && (overflow > -1)){
 
@@ -262,7 +266,9 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
                             int cached_head = head;
                             int j=i;
                             int size2 = old_block->tuple_dict[j].size;
-                            int positionFirst = strstr(list_elem->data,old_block->header[head].att_name) - list_elem->data;                          
+
+                            //returns the first occurrence in data of the given header name (first position)
+                            int positionFirst = strstr(list_elem->data,old_block->header[head].att_name) - list_elem->data;                       
                             
                             //used to check if the data is correct
                             
@@ -274,11 +280,13 @@ void AK_copy_block_projection(AK_block *old_block, struct list_node *att, char *
                                 memset(second->value, 0, MAX_VARCHAR_LENGTH);
                                 memcpy(second->value, old_block->data + old_block->tuple_dict[j].address, old_block->tuple_dict[j].size);
                                 second->type = old_block->header[cached_head].type;
+
+                                 //returns the second occurrence in data of the given header based on cached_head
                                 int positionSecond = strstr(list_elem->data,old_block->header[cached_head].att_name) - list_elem->data;
                                
                                 int type = AK_determine_header_type(first->type,second->type); // determinate type of attributes to be in table
 
-                                if(positionSecond<positionFirst)
+                                if(positionSecond < positionFirst)
                                     //insert element to list to be inserted into new table
                                     AK_Insert_New_Element(type, AK_perform_operation(AK_get_operator(list_elem->data),second,first,type), dstTable, list_elem->data, row_root);
                                 else
