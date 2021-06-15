@@ -321,7 +321,7 @@ footer p:last-of-type {
     margin-bottom: 0.6rem;
 }
 
-.h-split-right img:active {
+.h-split-right img:hover {
     border-radius: 2px;
     box-shadow: 0 3px 12px var(--shadow-color-dark);
     transform: scale(2.5);
@@ -488,6 +488,7 @@ h1::before {
 
 .test-set p {
     margin-right: 2rem;
+    padding: 0.1rem 10rem;
 }
 
 .test-set p span {
