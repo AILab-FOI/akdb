@@ -169,7 +169,7 @@ struct list_node *AK_query_optimization(struct list_node *list_query, const char
     	if (list_elem->type == TYPE_OPERAND && strstr(list_elem->data,"view")!=NULL){
 		//list_elem->data change value from view name to view query
 		
-		char* record = AK_get_rel_exp(list_elem->data);
+		char* record = AK_get_relation_expression(list_elem->data);
 		strcpy(list_elem->data, record);
 	}
 	
