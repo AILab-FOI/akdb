@@ -1,9 +1,9 @@
 #!/usr/bin/env python2
-import kalashnikovDB as ak47
 import sys
 from client import Client
 
 sys.path.append("../swig/")
+import kalashnikovDB as ak47
 
 if len(sys.argv) == 3:
     username = sys.argv[1]
