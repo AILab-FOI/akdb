@@ -13,3 +13,4 @@ src/swig/kalashnikovDB.py
 CMakeLists.txt
 cmake-build-debug/
 doc/*
+*.pyc

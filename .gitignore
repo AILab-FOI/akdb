@@ -9,3 +9,4 @@ kalasnjikov.workspace
 src/swig/kalashnikovDB_wrap.c
 src/swig/_kalashnikovDB.so
 src/swig/kalashnikovDB.py
+.DS_Store
