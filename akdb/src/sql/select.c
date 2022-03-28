@@ -108,13 +108,14 @@ int AK_select(char *srcTable, char *destTable, struct list_node *attributes, str
 }
 
 /**
- * @author Renata Mesaros, updatet Filip Žmuk
+ * @author Renata Mesaros, updated by Filip Žmuk and Josip Susnjara
  * @brief Function for testing the implementation
  */
 TestResult AK_select_test(){
-	AK_PRO;
+	
     int succesfulTests = 0;
     int failedTests = 0;
+    AK_PRO;
 	
 	// list of attributes which will be in the result of selection
 	struct list_node *attributes = (struct list_node *) AK_malloc(sizeof (struct list_node));
@@ -154,6 +155,7 @@ TestResult AK_select_test(){
     {
         failedTests++;
     }
+    
 	AK_DeleteAll_L3(&attributes);
     AK_DeleteAll_L3(&ordering);
 	AK_DeleteAll_L3(&condition);
@@ -169,12 +171,13 @@ TestResult AK_select_test(){
     {
         failedTests++;
     }
+    
     AK_DeleteAll_L3(&attributes);
 	
     AK_print_table(srcTable);
-	printf("\n SELECT firstname,year,weight,weight+year FROM student WHERE year<2005 ORDER BY firstname;\n\n");
+	printf("\n SELECT firstname, year, weight, weight+year FROM student WHERE year < 2008 ORDER BY firstname;\n\n");
     AK_print_table(destTable1);
-    printf("\n SELECT firstname,year,weight FROM select_result;\n\n");
+    printf("\n SELECT firstname, year FROM select_result1;\n\n");
     AK_print_table(destTable2);
 	
 	AK_free(attributes);

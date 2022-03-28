@@ -24,6 +24,7 @@
 //      solution is to (#define false 0) and (#define true !false) in this header, or even better in the constants
 //      header
 #include "dbman.h"
+#include "../mm/memoman.h"
 pthread_mutex_t fileLockMutex = PTHREAD_MUTEX_INITIALIZER;
 
 
@@ -2496,7 +2497,7 @@ AK_delete_extent(int begin, int end)
 }
 
 /**
- * @author Mislav Èakariæ
+ * @author Mislav Èakariæ, fixed by Josip Susnjara
  * @param name name of the segment
  * @param type type of the segment
  * @return EXIT_SUCCESS if extent has been successfully deleted, EXIT_ERROR otherwise
@@ -2511,7 +2512,7 @@ AK_delete_segment(char * name, int type)
   addresses = (table_addresses*)AK_get_segment_addresses(name);
   for (;addresses->address_from[i] != 0; ++i)
     {
-      if (AK_delete_extent(addresses->address_from[i], addresses->address_to[i]) == EXIT_ERROR)
+      if (AK_delete_extent(addresses->address_from[i], addresses->address_to[i] - 1) == EXIT_ERROR)
 	{
 	  AK_EPI;
 	  return EXIT_ERROR;
