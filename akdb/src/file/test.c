@@ -276,11 +276,26 @@ int get_column_test(int num, char* tbl){
 
 
 /**
- * @author Dino Laktašić
- * @brief Function for creating test tables
+ * @author Dino Laktašić edited by Žan Žlender @2022
+ * @brief Function that calls all functions for creating test tables in this file
  * @return No return value
  */
 void AK_create_test_tables() {
+    AK_create_test_table_student();
+    AK_create_test_table_professor();
+    AK_create_test_table_professor2();
+    AK_create_test_table_assistant();
+    AK_create_test_table_employee();
+    AK_create_test_table_department();
+    AK_create_test_table_course();
+}
+
+/**
+ * @author Žan Žlender
+ * @brief Creates table "student" and fills it with arbitrary data, for testing purposes.
+ * @return No return value
+ */
+void AK_create_test_table_student(){
     int mbr, year, id_prof, id_department;
     float weight;
 
@@ -610,11 +625,22 @@ void AK_create_test_tables() {
     AK_print_table(tblName);
 	AK_DeleteAll_L3(&row_root);
 
-    //-------------------------------------------------------------------------------------------------------
+    AK_EPI;
+}
 
-
+/**
+ * @author Žan Žlender
+ * @brief Creates table "professor" and fills it with arbitrary data, for testing purposes.
+ * @return No return value
+ */
+void AK_create_test_table_professor(){
+    int mbr, year, id_prof, id_department;
+    float weight;
+    
     //--------------------------------------> CREATE TABLE 'PROFESSOR' <-------------------------------------
     //create header
+    AK_PRO;
+    AK_header* temp;
     AK_header t_header2[ MAX_ATTRIBUTES ];
 
     temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -638,13 +664,13 @@ void AK_create_test_tables() {
     memset(t_header2 + 6, 0, MAX_ATTRIBUTES - 6);
 
     //create table
-    tblName = "professor";
-    startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header2);
+    char *tblName = "professor";
+    int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header2);
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-    //row_root = (element) AK_malloc(sizeof (list));
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     AK_Init_L3(&row_root);
 
     id_prof = 35890;
@@ -739,14 +765,26 @@ void AK_create_test_tables() {
 	AK_insert_row(row_root);
 
     AK_print_table(tblName);
-	
-    //-------------------------------------------------------------------------------------------------------
 
+    AK_EPI;
+}
 
-	//--------------------------------------> CREATE TABLE 'PROFESSOR2' <-------------------------------------
+/**
+ * @author Žan Žlender
+ * @brief Creates table "professor2" and fills it with arbitrary data, for testing purposes.
+ * @return No return value
+ */
+void AK_create_test_table_professor2(){
+    int mbr, year, id_prof, id_department;
+    float weight;
+
+    //--------------------------------------> CREATE TABLE 'PROFESSOR2' <-------------------------------------
 	//create header
-	
+	AK_PRO;
+    AK_header* temp;
+    AK_header t_header2[ MAX_ATTRIBUTES ];
 	temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
+
 	memcpy(t_header2, temp, sizeof ( AK_header));
 	AK_free(temp);
 	temp = (AK_header*) AK_create_header("firstname", TYPE_VARCHAR, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -761,14 +799,14 @@ void AK_create_test_tables() {
 	memset(t_header2 + 4, 0, MAX_ATTRIBUTES - 4);
 
 	//create table
-	tblName = "professor2";
-	startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header2);
+	char *tblName = "professor2";
+	int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header2);
 
 	if (startAddress != EXIT_ERROR)
 		printf("\nTABLE %s CREATED!\n", tblName);
 
-	//row_root = (element) AK_malloc(sizeof (list));
-	
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+
 	AK_DeleteAll_L3(&row_root);
 	AK_Init_L3(&row_root);
 
@@ -847,11 +885,23 @@ void AK_create_test_tables() {
 
 	AK_print_table(tblName);
 	AK_DeleteAll_L3(&row_root);
-    //-------------------------------------------------------------------------------------------------------
 
+    AK_EPI;
+}
+
+/**
+ * @author Žan Žlender
+ * @brief Creates table "assistant" and fills it with arbitrary data, for testing purposes.
+ * @return No return value
+ */
+void AK_create_test_table_assistant(){
+    int mbr, year, id_prof, id_department;
+    float weight;
 
     //--------------------------------------> CREATE TABLE 'ASSISTANT' <-------------------------------------
     //create table, same header as professor for intersect test
+    AK_PRO;
+    AK_header* temp;
     AK_header t_header3[ MAX_ATTRIBUTES ];
 
     temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -874,13 +924,13 @@ void AK_create_test_tables() {
 	AK_free(temp);
     memset(t_header3 + 6, 0, MAX_ATTRIBUTES - 6);
 
-    tblName = "assistant";
-    startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header3);
+    char *tblName = "assistant";
+    int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header3);
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
-	
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     //row_root = (element) AK_malloc(sizeof (list));
     AK_Init_L3(&row_root);
 
@@ -925,11 +975,23 @@ void AK_create_test_tables() {
     AK_insert_row(row_root);
 
     AK_print_table(tblName);
-    //-------------------------------------------------------------------------------------------------------
 
+    AK_EPI;
+}
+
+/**
+ * @author Žan Žlender
+ * @brief Creates table "employee" and fills it with arbitrary data, for testing purposes.
+ * @return No return value
+ */
+void AK_create_test_table_employee(){
+    int mbr, year, id_prof, id_department;
+    float weight;     
 
     //--------------------------------------> CREATE TABLE 'EMPLOYEE' <--------------------------------------
     //create header
+    AK_PRO;
+    AK_header *temp;
     AK_header t_header4[ MAX_ATTRIBUTES ];
 
     temp = (AK_header*) AK_create_header("id_prof", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -941,12 +1003,13 @@ void AK_create_test_tables() {
     memset(t_header4 + 2, 0, MAX_ATTRIBUTES - 2);
 
     //create table
-    tblName = "employee";
-    startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header4);
+    char *tblName = "employee";
+    int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header4);
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
 
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
     //row_root = (element) AK_malloc(sizeof (list));
 	AK_DeleteAll_L3(&row_root);
     AK_Init_L3(&row_root);
@@ -1009,13 +1072,24 @@ void AK_create_test_tables() {
     AK_Insert_New_Element(TYPE_INT, &id_department, tblName, "id_department", row_root);
     AK_insert_row(row_root);
 
-    AK_print_table(tblName);
-	
-    //-------------------------------------------------------------------------------------------------------
+    AK_print_table(tblName);  
 
+    AK_EPI;
+}
+
+/**
+ * @author Žan Žlender
+ * @brief Creates table "department" and fills it with arbitrary data, for testing purposes.
+ * @return No return value
+ */
+void AK_create_test_table_department(){
+    int mbr, year, id_prof, id_department;
+    float weight;
 
     //-------------------------------------> CREATE TABLE 'DEPARTMENT' <-------------------------------------
     //create header
+    AK_PRO;
+    AK_header *temp;
     AK_header t_header5[ MAX_ATTRIBUTES ];
 
     temp = (AK_header*) AK_create_header("id_department", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -1030,8 +1104,8 @@ void AK_create_test_tables() {
     memset(t_header5 + 3, 0, MAX_ATTRIBUTES - 3);
 
     //create table
-    tblName = "department";
-    startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header5);
+    char *tblName = "department";
+    int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header5);
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
@@ -1040,6 +1114,8 @@ void AK_create_test_tables() {
 		AK_free(row_root);
     	row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 	*/
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
+
 	AK_DeleteAll_L3(&row_root);
     AK_Init_L3(&row_root);
 
@@ -1095,15 +1171,23 @@ void AK_create_test_tables() {
     insert_row(row_root);*/
 
     AK_print_table(tblName);
-    //-------------------------------------------------------------------------------------------------------
 
+    AK_EPI;
+}
 
-    
-    
-    
-    
+/**
+ * @author Žan Žlender
+ * @brief Creates table "Course" and fills it with arbitrary data, for testing purposes.
+ * @return No return value
+ */
+void AK_create_test_table_course(){
+    int mbr, year, id_prof, id_department;
+    float weight;
+
     //---------------------------------------> CREATE TABLE 'COURSE' <---------------------------------------
     //create header
+    AK_PRO;
+    AK_header *temp;
     AK_header t_header6[MAX_ATTRIBUTES];
 
     temp = (AK_header*) AK_create_header("id_course", TYPE_INT, FREE_INT, FREE_CHAR, FREE_CHAR);
@@ -1124,16 +1208,17 @@ void AK_create_test_tables() {
     memset(t_header6 + 5, '\0', MAX_ATTRIBUTES - 5);
 
     //create table
-    tblName = "course";
-    startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header6);
+    char *tblName = "course";
+    int startAddress = AK_initialize_new_segment(tblName, SEGMENT_TYPE_TABLE, t_header6);
 
     if (startAddress != EXIT_ERROR)
         printf("\nTABLE %s CREATED!\n", tblName);
+
+    struct list_node *row_root = (struct list_node *) AK_malloc(sizeof (struct list_node));
 
     AK_DeleteAll_L3(&row_root);
     AK_free(row_root);
 
     AK_EPI;
 }
-
 
